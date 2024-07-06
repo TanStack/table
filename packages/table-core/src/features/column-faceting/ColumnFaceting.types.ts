@@ -3,15 +3,15 @@ import { RowData, RowModel, Table } from '../../types'
 export interface TableOptions_ColumnFaceting<TData extends RowData> {
   getFacetedMinMaxValues?: (
     table: Table<TData>,
-    columnId: string
+    columnId: string,
   ) => () => undefined | [number, number]
   getFacetedRowModel?: (
     table: Table<TData>,
-    columnId: string
+    columnId: string,
   ) => () => RowModel<TData>
   getFacetedUniqueValues?: (
     table: Table<TData>,
-    columnId: string
+    columnId: string,
   ) => () => Map<any, number>
 }
 

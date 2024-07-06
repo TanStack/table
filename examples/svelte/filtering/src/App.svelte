@@ -31,11 +31,11 @@
 
   let columns: ColumnDef<Person>[] = [
     {
-      accessorFn: row => `${row.firstName} ${row.lastName}`,
+      accessorFn: (row) => `${row.firstName} ${row.lastName}`,
       id: 'fullName',
       header: 'Name',
-      cell: info => info.getValue(),
-      footer: props => props.column.id,
+      cell: (info) => info.getValue(),
+      footer: (props) => props.column.id,
       filterFn: 'fuzzy',
     },
   ]

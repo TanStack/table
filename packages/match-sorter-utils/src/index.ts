@@ -78,7 +78,7 @@ export type Ranking = (typeof rankings)[keyof typeof rankings]
 export function rankItem<TItem>(
   item: TItem,
   value: string,
-  options?: RankItemOptions<TItem>
+  options?: RankItemOptions<TItem>,
 ): RankingInfo {
   options = options || {}
 
@@ -148,7 +148,7 @@ export function rankItem<TItem>(
 function getMatchRanking<TItem>(
   testString: string,
   stringToRank: string,
-  options: RankItemOptions<TItem>
+  options: RankItemOptions<TItem>,
 ): Ranking {
   testString = prepareValueForComparison(testString, options)
   stringToRank = prepareValueForComparison(stringToRank, options)
@@ -211,9 +211,9 @@ function getMatchRanking<TItem>(
 function getAcronym(string: string): string {
   let acronym = ''
   const wordsInString = string.split(' ')
-  wordsInString.forEach(wordInString => {
+  wordsInString.forEach((wordInString) => {
     const splitByHyphenWords = wordInString.split('-')
-    splitByHyphenWords.forEach(splitByHyphenWord => {
+    splitByHyphenWords.forEach((splitByHyphenWord) => {
       acronym += splitByHyphenWord.substr(0, 1)
     })
   })
@@ -232,14 +232,14 @@ function getAcronym(string: string): string {
  */
 function getClosenessRanking(
   testString: string,
-  stringToRank: string
+  stringToRank: string,
 ): Ranking {
   let matchingInOrderCharCount = 0
   let charNumber = 0
   function findMatchingCharacter(
     matchChar: undefined | string,
     string: string,
-    index: number
+    index: number,
   ) {
     for (let j = index, J = string.length; j < J; j++) {
       const stringChar = string[j]
@@ -292,7 +292,7 @@ export function compareItems<TItem>(a: RankingInfo, b: RankingInfo): number {
  */
 function prepareValueForComparison<TItem>(
   value: string,
-  { keepDiacritics }: RankItemOptions<TItem>
+  { keepDiacritics }: RankItemOptions<TItem>,
 ): string {
   // value might not actually be a string at this point (we don't get to choose)
   // so part of preparing the value for comparison is ensure that it is a string
@@ -311,7 +311,7 @@ function prepareValueForComparison<TItem>(
  */
 function getItemValues<TItem>(
   item: TItem,
-  accessor: Accessor<TItem>
+  accessor: Accessor<TItem>,
 ): Array<string> {
   let accessorFn = accessor as AccessorFn<TItem>
 
@@ -341,7 +341,7 @@ function getItemValues<TItem>(
  */
 function getAllValuesToRank<TItem>(
   item: TItem,
-  accessors: ReadonlyArray<Accessor<TItem>>
+  accessors: ReadonlyArray<Accessor<TItem>>,
 ) {
   const allValues: Array<{
     itemValue: string
@@ -371,7 +371,7 @@ const defaultKeyAttributes = {
  * @return object containing the accessor's attributes
  */
 function getAccessorAttributes<TItem>(
-  accessor: Accessor<TItem>
+  accessor: Accessor<TItem>,
 ): AccessorAttributes {
   if (typeof accessor === 'function') {
     return defaultKeyAttributes

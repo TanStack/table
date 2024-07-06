@@ -59,7 +59,7 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
       rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!
+      rowB.columnFiltersMeta[columnId]?.itemRank!,
     )
   }
 
@@ -116,50 +116,50 @@ const columnHelper = createColumnHelper<Person>()
 const columns = [
   columnHelper.group({
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       }),
-      columnHelper.accessor(row => row.lastName, {
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
         sortingFn: fuzzySort,
       }),
-      columnHelper.accessor(row => `${row.firstName} ${row.lastName}`, {
+      columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
         id: 'fullName',
         header: 'Full Name',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
         sortingFn: fuzzySort,
       }),
     ],
   }),
   columnHelper.group({
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       columnHelper.accessor('age', {
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
       columnHelper.group({
         header: 'More Info',
         columns: [
           columnHelper.accessor('visits', {
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('status', {
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('progress', {
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
         ],
       }),
@@ -182,12 +182,12 @@ const App = component$(() => {
       columnFilters: columnFilters.value,
       globalFilter: globalFilter.value,
     },
-    onColumnFiltersChange: updater => {
+    onColumnFiltersChange: (updater) => {
       const updated =
         updater instanceof Function ? updater(columnFilters.value) : updater
       columnFilters.value = updated
     },
-    onGlobalFilterChange: updater => {
+    onGlobalFilterChange: (updater) => {
       const updated = updater(globalFilter.value)
       globalFilter.value = updated
     },
@@ -218,9 +218,9 @@ const App = component$(() => {
       </div>
       <table class="table">
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
@@ -235,7 +235,7 @@ const App = component$(() => {
                         >
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           {{
                             asc: ' 🔼',
@@ -256,10 +256,10 @@ const App = component$(() => {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
+                {row.getVisibleCells().map((cell) => (
                   <td key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

@@ -32,7 +32,7 @@ export const RowExpanding: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): TableOptions_RowExpanding<TData> => {
     return {
       onExpandedChange: makeStateUpdater('expanded', table),
@@ -47,12 +47,12 @@ export const RowExpanding: TableFeature = {
     table._autoResetExpanded = () =>
       table_autoResetExpanded(table, registered, queued)
 
-    table.setExpanded = updater => table_setExpanded(table, updater)
+    table.setExpanded = (updater) => table_setExpanded(table, updater)
 
-    table.toggleAllRowsExpanded = expanded =>
+    table.toggleAllRowsExpanded = (expanded) =>
       table_toggleAllRowsExpanded(table, expanded)
 
-    table.resetExpanded = defaultState =>
+    table.resetExpanded = (defaultState) =>
       table_resetExpanded(table, defaultState)
 
     table.getCanSomeRowsExpand = () => table_getCanSomeRowsExpand(table)
@@ -73,9 +73,9 @@ export const RowExpanding: TableFeature = {
 
   _createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
-    row.toggleExpanded = expanded => row_toggleExpanded(row, table, expanded)
+    row.toggleExpanded = (expanded) => row_toggleExpanded(row, table, expanded)
 
     row.getIsExpanded = () => row_getIsExpanded(row, table)
 

@@ -19,33 +19,33 @@
   const columns: ColumnDef<Person>[] = [
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
           header: ({ header }) => renderComponent(Header, { header }),
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
+          cell: (info) => info.getValue(),
           header: ({ header }) =>
             renderComponent(Header, { label: 'Last Name', header }),
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
           header: ({ header }) =>
             renderComponent(Header, { label: 'Age', header }),
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
@@ -54,19 +54,19 @@
               accessorKey: 'visits',
               header: ({ header }) =>
                 renderComponent(Header, { label: 'Visits', header }),
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
               header: ({ header }) =>
                 renderComponent(Header, { label: 'Status', header }),
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
               header: ({ header }) =>
                 renderComponent(Header, { label: 'Progress', header }),
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
           ],
         },

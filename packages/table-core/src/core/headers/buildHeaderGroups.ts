@@ -5,7 +5,7 @@ export function buildHeaderGroups<TData extends RowData>(
   allColumns: Column<TData, unknown>[],
   columnsToGroup: Column<TData, unknown>[],
   table: Table<TData>,
-  headerFamily?: 'center' | 'left' | 'right'
+  headerFamily?: 'center' | 'left' | 'right',
 ) {
   // Find the max depth of the columns:
   // build the leaf column row
@@ -19,8 +19,8 @@ export function buildHeaderGroups<TData extends RowData>(
     maxDepth = Math.max(maxDepth, depth)
 
     columns
-      .filter(column => column.getIsVisible())
-      .forEach(column => {
+      .filter((column) => column.getIsVisible())
+      .forEach((column) => {
         if (column.columns?.length) {
           findMaxDepth(column.columns, depth + 1)
         }
@@ -33,7 +33,7 @@ export function buildHeaderGroups<TData extends RowData>(
 
   const createHeaderGroup = (
     headersToGroup: Header<TData, unknown>[],
-    depth: number
+    depth: number,
   ) => {
     // The header group we are creating
     const headerGroup: HeaderGroup<TData> = {
@@ -46,7 +46,7 @@ export function buildHeaderGroups<TData extends RowData>(
     const pendingParentHeaders: Header<TData, unknown>[] = []
 
     // Scan each column for parents
-    headersToGroup.forEach(headerToGroup => {
+    headersToGroup.forEach((headerToGroup) => {
       // What is the latest (last) parent column?
 
       const latestPendingParentHeader = [...pendingParentHeaders].reverse()[0]
@@ -79,7 +79,7 @@ export function buildHeaderGroups<TData extends RowData>(
             .join('_'),
           isPlaceholder,
           placeholderId: isPlaceholder
-            ? `${pendingParentHeaders.filter(d => d.column === column).length}`
+            ? `${pendingParentHeaders.filter((d) => d.column === column).length}`
             : undefined,
           depth,
           index: pendingParentHeaders.length,
@@ -107,7 +107,7 @@ export function buildHeaderGroups<TData extends RowData>(
     _createHeader(table, column, {
       depth: maxDepth,
       index,
-    })
+    }),
   )
 
   createHeaderGroup(bottomHeaders, maxDepth - 1)
@@ -119,13 +119,13 @@ export function buildHeaderGroups<TData extends RowData>(
   // })
 
   const recurseHeadersForSpans = (
-    headers: Header<TData, unknown>[]
+    headers: Header<TData, unknown>[],
   ): { colSpan: number; rowSpan: number }[] => {
-    const filteredHeaders = headers.filter(header =>
-      header.column.getIsVisible()
+    const filteredHeaders = headers.filter((header) =>
+      header.column.getIsVisible(),
     )
 
-    return filteredHeaders.map(header => {
+    return filteredHeaders.map((header) => {
       let colSpan = 0
       let rowSpan = 0
       let childRowSpans = [0]
@@ -137,7 +137,7 @@ export function buildHeaderGroups<TData extends RowData>(
           ({ colSpan: childColSpan, rowSpan: childRowSpan }) => {
             colSpan += childColSpan
             childRowSpans.push(childRowSpan)
-          }
+          },
         )
       } else {
         colSpan = 1

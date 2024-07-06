@@ -63,7 +63,7 @@ export type ColumnHelper<TData extends RowData> = {
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
       ? DisplayColumnDef<TData, TValue>
-      : IdentifiedColumnDef<TData, TValue>
+      : IdentifiedColumnDef<TData, TValue>,
   ) => TAccessor extends AccessorFn<TData>
     ? AccessorFnColumnDef<TData, TValue>
     : AccessorKeyColumnDef<TData, TValue>
@@ -86,41 +86,41 @@ export function createColumnHelper<
             accessorKey: accessor,
           }
     },
-    display: column => column,
-    group: column => column,
+    display: (column) => column,
+    group: (column) => column,
   }
 }
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'columns'>
+  options: Omit<TableOptions<TData>, 'columns'>,
 ): Omit<TableOptions<TData>, 'columns'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data'>
+  options: Omit<TableOptions<TData>, 'data'>,
 ): Omit<TableOptions<TData>, 'data'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'getCoreRowModel'>
+  options: Omit<TableOptions<TData>, 'getCoreRowModel'>,
 ): Omit<TableOptions<TData>, 'getCoreRowModel'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'columns'>
+  options: Omit<TableOptions<TData>, 'data' | 'columns'>,
 ): Omit<TableOptions<TData>, 'data' | 'columns'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>
+  options: Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>,
 ): Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>
+  options: Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>,
 ): Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>
+  options: Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>,
 ): Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: TableOptions<TData>
+  options: TableOptions<TData>,
 ): TableOptions<TData>
 
 export function tableOptions(options: unknown) {

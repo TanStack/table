@@ -8,5 +8,5 @@ export default mergeConfig(
   tanstackViteConfig({
     entry: './src/index.tsx',
     srcDir: './src',
-  })
+  }),
 )

@@ -79,7 +79,7 @@ export const DensityFeature: TableFeature<any> = {
 
   // define the new feature's default options
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): DensityOptions => {
     return {
       enableDensity: true,
@@ -93,15 +93,15 @@ export const DensityFeature: TableFeature<any> = {
 
   // define the new feature's table instance methods
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setDensity = updater => {
-      const safeUpdater: Updater<DensityState> = old => {
+    table.setDensity = (updater) => {
+      const safeUpdater: Updater<DensityState> = (old) => {
         let newState = functionalUpdate(updater, old)
         return newState
       }
       return table.options.onDensityChange?.(safeUpdater)
     }
-    table.toggleDensity = value => {
-      table.setDensity(old => {
+    table.toggleDensity = (value) => {
+      table.setDensity((old) => {
         if (value) return value
         return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' //cycle through the 3 options
       })
@@ -125,38 +125,38 @@ function App() {
     () => [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'visits',
         header: () => <span>Visits</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
-    []
+    [],
   )
 
   const [data, _setData] = React.useState(() => makeData(1000))
@@ -188,9 +188,9 @@ function App() {
       </button>
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th
                     key={header.id}
@@ -216,7 +216,7 @@ function App() {
                     >
                       {flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                       {{
                         asc: ' 🔼',
@@ -235,10 +235,10 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getVisibleCells().map((cell) => {
                   return (
                     <td
                       key={cell.id}
@@ -255,7 +255,7 @@ function App() {
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   )
@@ -307,7 +307,7 @@ function App() {
           <input
             type="number"
             defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
@@ -316,11 +316,11 @@ function App() {
         </span>
         <select
           value={table.getState().pagination.pageSize}
-          onChange={e => {
+          onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
@@ -354,7 +354,7 @@ function Filter({
       <input
         type="number"
         value={(columnFilterValue as [number, number])?.[0] ?? ''}
-        onChange={e =>
+        onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
             old?.[1],
@@ -366,7 +366,7 @@ function Filter({
       <input
         type="number"
         value={(columnFilterValue as [number, number])?.[1] ?? ''}
-        onChange={e =>
+        onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             old?.[0],
             e.target.value,
@@ -380,7 +380,7 @@ function Filter({
     <input
       type="text"
       value={(columnFilterValue ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
+      onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder={`Search...`}
       className="w-36 border shadow rounded"
     />
@@ -393,5 +393,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

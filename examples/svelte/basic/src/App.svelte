@@ -46,35 +46,35 @@
   const defaultColumns: ColumnDef<Person>[] = [
     {
       accessorKey: 'firstName',
-      cell: info => info.getValue(),
-      footer: info => info.column.id,
+      cell: (info) => info.getValue(),
+      footer: (info) => info.column.id,
     },
     {
-      accessorFn: row => row.lastName,
+      accessorFn: (row) => row.lastName,
       id: 'lastName',
-      cell: info => info.getValue(),
+      cell: (info) => info.getValue(),
       header: () => 'Last Name',
-      footer: info => info.column.id,
+      footer: (info) => info.column.id,
     },
     {
       accessorKey: 'age',
       header: () => 'Age',
-      footer: info => info.column.id,
+      footer: (info) => info.column.id,
     },
     {
       accessorKey: 'visits',
       header: () => 'Visits',
-      footer: info => info.column.id,
+      footer: (info) => info.column.id,
     },
     {
       accessorKey: 'status',
       header: 'Status',
-      footer: info => info.column.id,
+      footer: (info) => info.column.id,
     },
     {
       accessorKey: 'progress',
       header: 'Profile Progress',
-      footer: info => info.column.id,
+      footer: (info) => info.column.id,
     },
   ]
 

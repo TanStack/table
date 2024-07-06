@@ -14,7 +14,7 @@ type PersonColumn = ColumnDef<Person, string | number | Person[] | undefined>
 function generateColumns(people: Person[]): PersonColumn[] {
   const columnHelper = createColumnHelper<Person>()
   const person = people[0]
-  return Object.keys(person).map(key => {
+  return Object.keys(person).map((key) => {
     const typedKey = key as personKeys
     return columnHelper.accessor(typedKey, { id: typedKey })
   })

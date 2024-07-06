@@ -26,7 +26,7 @@ export const RowPinning: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): RowPinningDefaultOptions => {
     return {
       onRowPinningChange: makeStateUpdater('rowPinning', table),
@@ -35,7 +35,7 @@ export const RowPinning: TableFeature = {
 
   _createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     row.getCanPin = () => row_getCanPin(row, table)
 
@@ -48,32 +48,33 @@ export const RowPinning: TableFeature = {
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setRowPinning = updater => table.options.onRowPinningChange?.(updater)
+    table.setRowPinning = (updater) =>
+      table.options.onRowPinningChange?.(updater)
 
-    table.resetRowPinning = defaultState =>
+    table.resetRowPinning = (defaultState) =>
       table_resetRowPinning(table, defaultState)
 
-    table.getIsSomeRowsPinned = position =>
+    table.getIsSomeRowsPinned = (position) =>
       table_getIsSomeRowsPinned(table, position)
 
     table.getTopRows = memo(
       () => [table.getRowModel().rows, table.getState().rowPinning.top],
       (allRows, topPinnedRowIds) =>
         table_getTopRows(table, allRows, topPinnedRowIds),
-      getMemoOptions(table.options, 'debugRows', 'getTopRows')
+      getMemoOptions(table.options, 'debugRows', 'getTopRows'),
     )
 
     table.getBottomRows = memo(
       () => [table.getRowModel().rows, table.getState().rowPinning.bottom],
       (allRows, bottomPinnedRowIds) =>
         table_getBottomRows(table, allRows, bottomPinnedRowIds),
-      getMemoOptions(table.options, 'debugRows', 'getBottomRows')
+      getMemoOptions(table.options, 'debugRows', 'getBottomRows'),
     )
 
     table.getCenterRows = memo(
       () => [table.getRowModel().rows, table.getState().rowPinning],
       (allRows, rowPinning) => table_getCenterRows(allRows, rowPinning),
-      getMemoOptions(table.options, 'debugRows', 'getCenterRows')
+      getMemoOptions(table.options, 'debugRows', 'getCenterRows'),
     )
   },
 }

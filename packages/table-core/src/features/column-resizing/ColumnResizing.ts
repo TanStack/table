@@ -23,7 +23,7 @@ export const ColumnResizing: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): ColumnResizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',
@@ -34,7 +34,7 @@ export const ColumnResizing: TableFeature = {
 
   _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getCanResize = () => column_getCanResize(table, column)
 
@@ -43,17 +43,17 @@ export const ColumnResizing: TableFeature = {
 
   _createHeader: <TData extends RowData, TValue>(
     header: Header<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
-    header.getResizeHandler = _contextDocument =>
+    header.getResizeHandler = (_contextDocument) =>
       header_getResizeHandler(header, table, _contextDocument)
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setColumnSizingInfo = updater =>
+    table.setColumnSizingInfo = (updater) =>
       table_setColumnSizingInfo(table, updater)
 
-    table.resetHeaderSizeInfo = defaultState =>
+    table.resetHeaderSizeInfo = (defaultState) =>
       table_resetHeaderSizeInfo(table, defaultState)
   },
 }

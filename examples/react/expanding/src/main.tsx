@@ -77,37 +77,37 @@ function App() {
             </div>
           </div>
         ),
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'visits',
         header: () => <span>Visits</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
-    []
+    [],
   )
 
   const [data, setData] = React.useState(() => makeData(100, 5, 3))
@@ -122,7 +122,7 @@ function App() {
       expanded,
     },
     onExpandedChange: setExpanded,
-    getSubRows: row => row.subRows,
+    getSubRows: (row) => row.subRows,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -137,16 +137,16 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {header.column.getCanFilter() ? (
                           <div>
@@ -162,15 +162,15 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getVisibleCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   )
@@ -222,7 +222,7 @@ function App() {
           <input
             type="number"
             defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
@@ -231,11 +231,11 @@ function App() {
         </span>
         <select
           value={table.getState().pagination.pageSize}
-          onChange={e => {
+          onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
@@ -275,7 +275,7 @@ function Filter({
       <input
         type="number"
         value={(columnFilterValue as [number, number])?.[0] ?? ''}
-        onChange={e =>
+        onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
             old?.[1],
@@ -287,7 +287,7 @@ function Filter({
       <input
         type="number"
         value={(columnFilterValue as [number, number])?.[1] ?? ''}
-        onChange={e =>
+        onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             old?.[0],
             e.target.value,
@@ -301,7 +301,7 @@ function Filter({
     <input
       type="text"
       value={(columnFilterValue ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
+      onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder={`Search...`}
       className="w-36 border shadow rounded"
     />
@@ -337,5 +337,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

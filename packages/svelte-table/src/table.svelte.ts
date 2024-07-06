@@ -33,7 +33,7 @@ import {
  * ```
  */
 export function createTable<TData extends RowData>(
-  options: TableOptions<TData>
+  options: TableOptions<TData>,
 ) {
   const resolvedOptions: TableOptionsResolved<TData> = mergeObjects(
     {
@@ -42,19 +42,19 @@ export function createTable<TData extends RowData>(
       renderFallbackValue: null,
       mergeOptions: (
         defaultOptions: TableOptions<TData>,
-        options: Partial<TableOptions<TData>>
+        options: Partial<TableOptions<TData>>,
       ) => {
         return mergeObjects(defaultOptions, options)
       },
     },
-    options
+    options,
   )
 
   const table = _createTable(resolvedOptions)
   let state = $state<Partial<TableState>>(table.initialState)
 
   function updateOptions() {
-    table.setOptions(prev => {
+    table.setOptions((prev) => {
       return mergeObjects(prev, options, {
         state: mergeObjects(state, options.state || {}),
         onStateChange: (updater: any) => {
@@ -87,7 +87,7 @@ function mergeObjects<T, U, V, W>(
   source: T,
   source1: U,
   source2: V,
-  source3: W
+  source3: W,
 ): T & U & V & W
 function mergeObjects(...sources: any): any {
   const target = {}

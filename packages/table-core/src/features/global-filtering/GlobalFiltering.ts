@@ -21,12 +21,12 @@ export const GlobalFiltering: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): TableOptions_GlobalFiltering<TData> => {
     return {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       globalFilterFn: 'auto',
-      getColumnCanGlobalFilter: column => {
+      getColumnCanGlobalFilter: (column) => {
         const value = table!.getCoreRowModel!()
           .flatRows[0]?._getAllCellsByColumnId()
           [column.id]?.getValue()
@@ -38,7 +38,7 @@ export const GlobalFiltering: TableFeature = {
 
   _createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getCanGlobalFilter = () => column_getCanGlobalFilter(column, table)
   },
@@ -48,9 +48,9 @@ export const GlobalFiltering: TableFeature = {
 
     table.getGlobalFilterFn = () => table_getGlobalFilterFn(table)
 
-    table.setGlobalFilter = updater => table_setGlobalFilter(table, updater)
+    table.setGlobalFilter = (updater) => table_setGlobalFilter(table, updater)
 
-    table.resetGlobalFilter = defaultState =>
+    table.resetGlobalFilter = (defaultState) =>
       table_resetGlobalFilter(table, defaultState)
   },
 }

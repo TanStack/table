@@ -4,7 +4,7 @@ import { ExpandedState, ExpandedStateList } from './RowExpanding.types'
 export function table_autoResetExpanded<TData extends RowData>(
   table: Table<TData>,
   registered: boolean,
-  queued: boolean
+  queued: boolean,
 ) {
   if (!registered) {
     table._queue(() => {
@@ -29,14 +29,14 @@ export function table_autoResetExpanded<TData extends RowData>(
 
 export function table_setExpanded<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<ExpandedState>
+  updater: Updater<ExpandedState>,
 ) {
   table.options.onExpandedChange?.(updater)
 }
 
 export function table_toggleAllRowsExpanded<TData extends RowData>(
   table: Table<TData>,
-  expanded?: boolean
+  expanded?: boolean,
 ) {
   if (expanded ?? !table.getIsAllRowsExpanded()) {
     table.setExpanded(true)
@@ -47,21 +47,21 @@ export function table_toggleAllRowsExpanded<TData extends RowData>(
 
 export function table_resetExpanded<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setExpanded(defaultState ? {} : table.initialState?.expanded ?? {})
 }
 
 export function table_getCanSomeRowsExpand<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return table
     .getPrePaginationRowModel()
-    .flatRows.some(row => row.getCanExpand())
+    .flatRows.some((row) => row.getCanExpand())
 }
 
 export function table_getToggleAllRowsExpandedHandler<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (e: unknown) => {
     ;(e as any).persist?.()
@@ -70,14 +70,14 @@ export function table_getToggleAllRowsExpandedHandler<TData extends RowData>(
 }
 
 export function table_getIsSomeRowsExpanded<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const expanded = table.getState().expanded
   return expanded === true || Object.values(expanded).some(Boolean)
 }
 
 export function table_getIsAllRowsExpanded<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const expanded = table.getState().expanded
 
@@ -91,7 +91,7 @@ export function table_getIsAllRowsExpanded<TData extends RowData>(
   }
 
   // If any row is not expanded, return false
-  if (table.getRowModel().flatRows.some(row => !row.getIsExpanded())) {
+  if (table.getRowModel().flatRows.some((row) => !row.getIsExpanded())) {
     return false
   }
 
@@ -100,7 +100,7 @@ export function table_getIsAllRowsExpanded<TData extends RowData>(
 }
 
 export function table_getExpandedDepth<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   let maxDepth = 0
 
@@ -109,7 +109,7 @@ export function table_getExpandedDepth<TData extends RowData>(
       ? Object.keys(table.getRowModel().rowsById)
       : Object.keys(table.getState().expanded)
 
-  rowIds.forEach(id => {
+  rowIds.forEach((id) => {
     const splitId = id.split('.')
     maxDepth = Math.max(maxDepth, splitId.length)
   })
@@ -118,13 +118,13 @@ export function table_getExpandedDepth<TData extends RowData>(
 }
 
 export function table_getPreExpandedRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return table.getSortedRowModel()
 }
 
 export function table_getExpandedRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   if (!table._getExpandedRowModel && table.options.getExpandedRowModel) {
     table._getExpandedRowModel = table.options.getExpandedRowModel(table)
@@ -140,15 +140,15 @@ export function table_getExpandedRowModel<TData extends RowData>(
 export function row_toggleExpanded<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
-  expanded?: boolean
+  expanded?: boolean,
 ) {
-  table.setExpanded(old => {
+  table.setExpanded((old) => {
     const exists = old === true ? true : !!old?.[row.id]
 
     let oldExpanded: ExpandedStateList = {}
 
     if (old === true) {
-      Object.keys(table.getRowModel().rowsById).forEach(rowId => {
+      Object.keys(table.getRowModel().rowsById).forEach((rowId) => {
         oldExpanded[rowId] = true
       })
     } else {
@@ -175,7 +175,7 @@ export function row_toggleExpanded<TData extends RowData>(
 
 export function row_getIsExpanded<TData extends RowData>(
   row: Row<TData>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const expanded = table.getState().expanded
 
@@ -187,7 +187,7 @@ export function row_getIsExpanded<TData extends RowData>(
 
 export function row_getCanExpand<TData extends RowData>(
   row: Row<TData>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
     table.options.getRowCanExpand?.(row) ??
@@ -197,7 +197,7 @@ export function row_getCanExpand<TData extends RowData>(
 
 export function row_getIsAllParentsExpanded<TData extends RowData>(
   row: Row<TData>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   let isFullyExpanded = true
   let currentRow = row
@@ -211,7 +211,7 @@ export function row_getIsAllParentsExpanded<TData extends RowData>(
 }
 
 export function row_getToggleExpandedHandler<TData extends RowData>(
-  row: Row<TData>
+  row: Row<TData>,
 ) {
   const canExpand = row.getCanExpand()
 

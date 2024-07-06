@@ -38,7 +38,7 @@ export const RowSelection: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): TableOptions_RowSelection<TData> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
@@ -52,15 +52,15 @@ export const RowSelection: TableFeature = {
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setRowSelection = updater => table_setRowSelection(table, updater)
+    table.setRowSelection = (updater) => table_setRowSelection(table, updater)
 
-    table.resetRowSelection = defaultState =>
+    table.resetRowSelection = (defaultState) =>
       table_resetRowSelection(table, defaultState)
 
-    table.toggleAllRowsSelected = value =>
+    table.toggleAllRowsSelected = (value) =>
       table_toggleAllRowsSelected(table, value)
 
-    table.toggleAllPageRowsSelected = value =>
+    table.toggleAllPageRowsSelected = (value) =>
       table_toggleAllPageRowsSelected(table, value)
 
     // addRowSelectionRange: rowId => {
@@ -127,21 +127,25 @@ export const RowSelection: TableFeature = {
       () => [table.getState().rowSelection, table.getCoreRowModel()],
       (rowSelection, rowModel) =>
         table_getSelectedRowModel(table, rowSelection, rowModel),
-      getMemoOptions(table.options, 'debugTable', 'getSelectedRowModel')
+      getMemoOptions(table.options, 'debugTable', 'getSelectedRowModel'),
     )
 
     table.getFilteredSelectedRowModel = memo(
       () => [table.getState().rowSelection, table.getFilteredRowModel()],
       (rowSelection, rowModel) =>
         table_getFilteredSelectedRowModel(table, rowSelection, rowModel),
-      getMemoOptions(table.options, 'debugTable', 'getFilteredSelectedRowModel')
+      getMemoOptions(
+        table.options,
+        'debugTable',
+        'getFilteredSelectedRowModel',
+      ),
     )
 
     table.getGroupedSelectedRowModel = memo(
       () => [table.getState().rowSelection, table.getSortedRowModel()],
       (rowSelection, rowModel) =>
         table_getGroupedSelectedRowModel(table, rowSelection, rowModel),
-      getMemoOptions(table.options, 'debugTable', 'getGroupedSelectedRowModel')
+      getMemoOptions(table.options, 'debugTable', 'getGroupedSelectedRowModel'),
     )
 
     ///
@@ -178,7 +182,7 @@ export const RowSelection: TableFeature = {
 
   _createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     row.toggleSelected = (value, opts) =>
       row_toggleSelected(row, table, value, opts)

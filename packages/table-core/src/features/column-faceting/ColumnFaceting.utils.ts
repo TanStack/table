@@ -8,7 +8,7 @@ export function column_getFacetedMinMaxValues<
   column: Column<TData, TValue>,
   table: Table<TData> & {
     options: TableOptions_ColumnFaceting<TData>
-  }
+  },
 ): () => [number, number] | undefined {
   return (
     table.options.getFacetedMinMaxValues?.(table, column.id) ??
@@ -23,7 +23,7 @@ export function column_getFacetedRowModel<
   column: Column<TData, TValue>,
   table: Table<TData> & {
     options: TableOptions_ColumnFaceting<TData>
-  }
+  },
 ): () => RowModel<TData> {
   return (
     table.options.getFacetedRowModel?.(table, column.id) ??
@@ -38,7 +38,7 @@ export function column_getFacetedUniqueValues<
   column: Column<TData, TValue>,
   table: Table<TData> & {
     options: TableOptions_ColumnFaceting<TData>
-  }
+  },
 ): () => Map<any, number> {
   return (
     table.options.getFacetedUniqueValues?.(table, column.id) ??

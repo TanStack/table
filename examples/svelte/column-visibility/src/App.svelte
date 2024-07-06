@@ -52,30 +52,30 @@
   const columns: ColumnDef<Person>[] = [
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
+          cell: (info) => info.getValue(),
           header: () => 'Last Name',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
           header: () => 'Age',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
@@ -83,17 +83,17 @@
             {
               accessorKey: 'visits',
               header: () => 'Visits',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
               header: 'Status',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
               header: 'Profile Progress',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
           ],
         },
@@ -132,7 +132,7 @@
       <label>
         <input
           checked={table.getIsAllColumnsVisible()}
-          onchange={e => {
+          onchange={(e) => {
             console.info(table.getToggleAllColumnsVisibilityHandler()(e))
           }}
           type="checkbox"

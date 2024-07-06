@@ -5,7 +5,7 @@ import { _createCell } from '../cells/_createCell'
 export function row_getValue<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
-  columnId: string
+  columnId: string,
 ) {
   if (row._valuesCache.hasOwnProperty(columnId)) {
     return row._valuesCache[columnId]
@@ -19,7 +19,7 @@ export function row_getValue<TData extends RowData>(
 
   row._valuesCache[columnId] = column.accessorFn(
     row.original as TData,
-    row.index
+    row.index,
   )
 
   return row._valuesCache[columnId] as any
@@ -28,7 +28,7 @@ export function row_getValue<TData extends RowData>(
 export function row_getUniqueValues<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
-  columnId: string
+  columnId: string,
 ) {
   if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
     return row._uniqueValuesCache[columnId]
@@ -47,7 +47,7 @@ export function row_getUniqueValues<TData extends RowData>(
 
   row._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
     row.original as TData,
-    row.index
+    row.index,
   )
 
   return row._uniqueValuesCache[columnId] as any
@@ -56,27 +56,27 @@ export function row_getUniqueValues<TData extends RowData>(
 export function row_renderValue<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
-  columnId: string
+  columnId: string,
 ) {
   return row_getValue(row, table, columnId) ?? table.options.renderFallbackValue
 }
 
 export function row_getLeafRows<TData extends RowData>(
-  row: Row<TData>
+  row: Row<TData>,
 ): Row<TData>[] {
-  return flattenBy(row.subRows, d => d.subRows)
+  return flattenBy(row.subRows, (d) => d.subRows)
 }
 
 export function row_getParentRow<TData extends RowData>(
   row: Row<TData>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return row.parentId ? table.getRow(row.parentId, true) : undefined
 }
 
 export function row_getParentRows<TData extends RowData>(
   row: Row<TData>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   let parentRows: Row<TData>[] = []
   let currentRow = row
@@ -92,22 +92,22 @@ export function row_getParentRows<TData extends RowData>(
 export function row_getAllCells<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
-  leafColumns: Column<TData, unknown>[]
+  leafColumns: Column<TData, unknown>[],
 ): Cell<TData, unknown>[] {
-  return leafColumns.map(column => {
+  return leafColumns.map((column) => {
     return _createCell(column, row, table)
   })
 }
 
 export function row_getAllCellsByColumnId<TData extends RowData>(
-  allCells: Cell<TData, unknown>[]
+  allCells: Cell<TData, unknown>[],
 ) {
   return allCells.reduce(
     (acc, cell) => {
       acc[cell.column.id] = cell
       return acc
     },
-    {} as Record<string, Cell<TData, unknown>>
+    {} as Record<string, Cell<TData, unknown>>,
   )
 }
 
@@ -115,7 +115,7 @@ export function table_getRowId<TData extends RowData>(
   row: TData,
   table: Table<TData>,
   index: number,
-  parent?: Row<TData>
+  parent?: Row<TData>,
 ) {
   return (
     table.options.getRowId?.(row, index, parent) ??
@@ -126,7 +126,7 @@ export function table_getRowId<TData extends RowData>(
 export function table_getRow<TData extends RowData>(
   table: Table<TData>,
   rowId: string,
-  searchAll?: boolean
+  searchAll?: boolean,
 ) {
   let row = (searchAll ? table.getPrePaginationRowModel() : table.getRowModel())
     .rowsById[rowId]

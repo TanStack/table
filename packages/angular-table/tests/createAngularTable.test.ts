@@ -38,14 +38,14 @@ describe('injectTable', () => {
     type Data = { id: string; title: string }
     const data = signal<Data[]>([{ id: '1', title: 'Title' }])
     const columns: ColumnDef<Data>[] = [
-      { id: 'id', header: 'Id', cell: context => context.getValue() },
-      { id: 'title', header: 'Title', cell: context => context.getValue() },
+      { id: 'id', header: 'Id', cell: (context) => context.getValue() },
+      { id: 'title', header: 'Title', cell: (context) => context.getValue() },
     ]
     const table = injectTable(() => ({
       data: data(),
       columns: columns,
       getCoreRowModel: getCoreRowModel(),
-      getRowId: row => row.id,
+      getRowId: (row) => row.id,
     }))
     const tablePropertyKeys = Object.keys(table())
 
@@ -65,10 +65,10 @@ describe('injectTable', () => {
     })
 
     test.each(
-      tablePropertyKeys.map(property => [
+      tablePropertyKeys.map((property) => [
         property,
         testShouldBeComputedProperty(untracked(table), property),
-      ])
+      ]),
     )('property (%s) is computed -> (%s)', (name, expected) => {
       const tableProperty = table[name as keyof typeof table]
       expect(isSignal(tableProperty)).toEqual(expected)
@@ -78,7 +78,7 @@ describe('injectTable', () => {
 
 const testShouldBeComputedProperty = (
   table: Table<any>,
-  propertyName: string
+  propertyName: string,
 ) => {
   if (propertyName.endsWith('Handler') || propertyName.endsWith('Model')) {
     return false

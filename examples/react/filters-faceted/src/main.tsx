@@ -30,19 +30,19 @@ declare module '@tanstack/react-table' {
 
 function App() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   )
 
   const columns = React.useMemo<ColumnDef<Person, any>[]>(
     () => [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
       },
       {
@@ -74,11 +74,11 @@ function App() {
         },
       },
     ],
-    []
+    [],
   )
 
   const [data, setData] = React.useState<Person[]>(() => makeData(5_000))
-  const refreshData = () => setData(_old => makeData(100_000)) //stress test
+  const refreshData = () => setData((_old) => makeData(100_000)) //stress test
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
@@ -104,9 +104,9 @@ function App() {
     <div className="p-2">
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
@@ -121,7 +121,7 @@ function App() {
                         >
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           {{
                             asc: ' 🔼',
@@ -142,15 +142,15 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getVisibleCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   )
@@ -202,7 +202,7 @@ function App() {
           <input
             type="number"
             defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
@@ -211,11 +211,11 @@ function App() {
         </span>
         <select
           value={table.getState().pagination.pageSize}
-          onChange={e => {
+          onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
@@ -233,7 +233,7 @@ function App() {
         {JSON.stringify(
           { columnFilters: table.getState().columnFilters },
           null,
-          2
+          2,
         )}
       </pre>
     </div>
@@ -254,7 +254,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         : Array.from(column.getFacetedUniqueValues().keys())
             .sort()
             .slice(0, 5000),
-    [column.getFacetedUniqueValues(), filterVariant]
+    [column.getFacetedUniqueValues(), filterVariant],
   )
 
   return filterVariant === 'range' ? (
@@ -265,7 +265,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           min={Number(minMaxValues?.[0] ?? '')}
           max={Number(minMaxValues?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[0] ?? ''}
-          onChange={value =>
+          onChange={(value) =>
             column.setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
           placeholder={`Min ${
@@ -278,7 +278,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           min={Number(minMaxValues?.[0] ?? '')}
           max={Number(minMaxValues?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[1] ?? ''}
-          onChange={value =>
+          onChange={(value) =>
             column.setFilterValue((old: [number, number]) => [old?.[0], value])
           }
           placeholder={`Max ${
@@ -291,11 +291,11 @@ function Filter({ column }: { column: Column<any, unknown> }) {
     </div>
   ) : filterVariant === 'select' ? (
     <select
-      onChange={e => column.setFilterValue(e.target.value)}
+      onChange={(e) => column.setFilterValue(e.target.value)}
       value={columnFilterValue?.toString()}
     >
       <option value="">All</option>
-      {sortedUniqueValues.map(value => (
+      {sortedUniqueValues.map((value) => (
         //dynamically generated select options from faceted values feature
         <option value={value} key={value}>
           {value}
@@ -313,7 +313,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       <DebouncedInput
         type="text"
         value={(columnFilterValue ?? '') as string}
-        onChange={value => column.setFilterValue(value)}
+        onChange={(value) => column.setFilterValue(value)}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
         className="w-36 border shadow rounded"
         list={column.id + 'list'}
@@ -349,7 +349,11 @@ function DebouncedInput({
   }, [value])
 
   return (
-    <input {...props} value={value} onChange={e => setValue(e.target.value)} />
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
   )
 }
 
@@ -359,5 +363,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

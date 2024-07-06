@@ -1,7 +1,7 @@
 import { RowData, RowModel, Table } from '../../types'
 
 export function table_getGlobalFacetedMinMaxValues<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
     table.options.getFacetedMinMaxValues?.(table, '__global__') ??
@@ -10,7 +10,7 @@ export function table_getGlobalFacetedMinMaxValues<TData extends RowData>(
 }
 
 export function table_getGlobalFacetedRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ): () => RowModel<TData> {
   return (
     table.options.getFacetedRowModel?.(table, '__global__') ??
@@ -19,7 +19,7 @@ export function table_getGlobalFacetedRowModel<TData extends RowData>(
 }
 
 export function table_getGlobalFacetedUniqueValues<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ): () => Map<any, number> {
   return (
     table.options.getFacetedUniqueValues?.(table, '__global__') ??

@@ -9,7 +9,7 @@ export const _createRow = <TData extends RowData>(
   rowIndex: number,
   depth: number,
   subRows?: Row<TData>[],
-  parentId?: string
+  parentId?: string,
 ): Row<TData> => {
   const row: Row_CoreProperties<TData> = {
     _uniqueValuesCache: {},

@@ -41,12 +41,12 @@ function App() {
       },
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
       },
       {
@@ -71,11 +71,11 @@ function App() {
       {
         accessorKey: 'createdAt',
         header: 'Created At',
-        cell: info => info.getValue<Date>().toLocaleString(),
+        cell: (info) => info.getValue<Date>().toLocaleString(),
         size: 200,
       },
     ],
-    []
+    [],
   )
 
   //react-query has a useInfiniteQuery hook that is perfect for this use case
@@ -98,8 +98,8 @@ function App() {
 
   //flatten the array of arrays from the useInfiniteQuery hook
   const flatData = React.useMemo(
-    () => data?.pages?.flatMap(page => page.data) ?? [],
-    [data]
+    () => data?.pages?.flatMap((page) => page.data) ?? [],
+    [data],
   )
   const totalDBRowCount = data?.pages?.[0]?.meta?.totalRowCount ?? 0
   const totalFetched = flatData.length
@@ -119,7 +119,7 @@ function App() {
         }
       }
     },
-    [fetchNextPage, isFetching, totalFetched, totalDBRowCount]
+    [fetchNextPage, isFetching, totalFetched, totalDBRowCount],
   )
 
   //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
@@ -140,7 +140,7 @@ function App() {
   })
 
   //scroll to top of table when sorting changes
-  const handleSortingChange: OnChangeFn<SortingState> = updater => {
+  const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
     setSorting(updater)
     if (!!table.getRowModel().rows.length) {
       rowVirtualizer.scrollToIndex?.(0)
@@ -148,7 +148,7 @@ function App() {
   }
 
   //since this table option is derived from table row model state, we're using the table.setOptions utility
-  table.setOptions(prev => ({
+  table.setOptions((prev) => ({
     ...prev,
     onSortingChange: handleSortingChange,
   }))
@@ -163,7 +163,7 @@ function App() {
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? element => element?.getBoundingClientRect().height
+        ? (element) => element?.getBoundingClientRect().height
         : undefined,
     overscan: 5,
   })
@@ -184,7 +184,7 @@ function App() {
       ({flatData.length} of {totalDBRowCount} rows fetched)
       <div
         className="container"
-        onScroll={e => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
+        onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
         ref={tableContainerRef}
         style={{
           overflow: 'auto', //our scrollable table container
@@ -202,12 +202,12 @@ function App() {
               zIndex: 1,
             }}
           >
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
                 style={{ display: 'flex', width: '100%' }}
               >
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   return (
                     <th
                       key={header.id}
@@ -226,7 +226,7 @@ function App() {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {{
                           asc: ' 🔼',
@@ -246,12 +246,12 @@ function App() {
               position: 'relative', //needed for absolute positioning of rows
             }}
           >
-            {rowVirtualizer.getVirtualItems().map(virtualRow => {
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
               const row = rows[virtualRow.index] as Row<Person>
               return (
                 <tr
                   data-index={virtualRow.index} //needed for dynamic row height measurement
-                  ref={node => rowVirtualizer.measureElement(node)} //measure dynamic row height
+                  ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
                   key={row.id}
                   style={{
                     display: 'flex',
@@ -260,7 +260,7 @@ function App() {
                     width: '100%',
                   }}
                 >
-                  {row.getVisibleCells().map(cell => {
+                  {row.getVisibleCells().map((cell) => {
                     return (
                       <td
                         key={cell.id}
@@ -271,7 +271,7 @@ function App() {
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </td>
                     )
@@ -298,5 +298,5 @@ ReactDOM.createRoot(rootElement).render(
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 )

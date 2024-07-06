@@ -39,7 +39,7 @@ export const RowPagination: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): PaginationDefaultOptions => {
     return {
       onPaginationChange: makeStateUpdater('pagination', table),
@@ -53,28 +53,28 @@ export const RowPagination: TableFeature = {
     table._autoResetPageIndex = () =>
       table_autoResetPageIndex(table, registered, queued)
 
-    table.setPagination = updater => table_setPagination(table, updater)
+    table.setPagination = (updater) => table_setPagination(table, updater)
 
-    table.resetPagination = defaultState =>
+    table.resetPagination = (defaultState) =>
       table_resetPagination(table, defaultState)
 
-    table.setPageIndex = updater => table_setPageIndex(table, updater)
+    table.setPageIndex = (updater) => table_setPageIndex(table, updater)
 
-    table.resetPageIndex = defaultState =>
+    table.resetPageIndex = (defaultState) =>
       table_resetPageIndex(table, defaultState)
 
-    table.resetPageSize = defaultState =>
+    table.resetPageSize = (defaultState) =>
       table_resetPageSize(table, defaultState)
 
-    table.setPageSize = updater => table_setPageSize(table, updater)
+    table.setPageSize = (updater) => table_setPageSize(table, updater)
 
     //deprecated
-    table.setPageCount = updater => table_setPageCount(table, updater)
+    table.setPageCount = (updater) => table_setPageCount(table, updater)
 
     table.getPageOptions = memo(
       () => [table.getPageCount()],
-      pageCount => table_getPageOptions(pageCount),
-      getMemoOptions(table.options, 'debugTable', 'getPageOptions')
+      (pageCount) => table_getPageOptions(pageCount),
+      getMemoOptions(table.options, 'debugTable', 'getPageOptions'),
     )
 
     table.getCanPreviousPage = () => table_getCanPreviousPage(table)

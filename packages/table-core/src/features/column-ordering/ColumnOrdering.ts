@@ -23,7 +23,7 @@ export const ColumnOrdering: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): ColumnOrderDefaultOptions => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', table),
@@ -32,25 +32,25 @@ export const ColumnOrdering: TableFeature = {
 
   _createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getIndex = memo(
-      position => [column_getVisibleLeafColumns(table, position)],
-      columns => column_getIndex(columns, column),
-      getMemoOptions(table.options, 'debugColumns', 'getIndex')
+      (position) => [column_getVisibleLeafColumns(table, position)],
+      (columns) => column_getIndex(columns, column),
+      getMemoOptions(table.options, 'debugColumns', 'getIndex'),
     )
 
-    column.getIsFirstColumn = position =>
+    column.getIsFirstColumn = (position) =>
       column_getIsFirstColumn(column, table, position)
 
-    column.getIsLastColumn = position =>
+    column.getIsLastColumn = (position) =>
       column_getIsLastColumn(column, table, position)
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setColumnOrder = updater => table_setColumnOrder(table, updater)
+    table.setColumnOrder = (updater) => table_setColumnOrder(table, updater)
 
-    table.resetColumnOrder = defaultState =>
+    table.resetColumnOrder = (defaultState) =>
       table_resetColumnOrder(table, defaultState)
 
     table._getOrderColumnsFn = memo(
@@ -63,9 +63,9 @@ export const ColumnOrdering: TableFeature = {
         table_getOrderColumnsFn<TData>(
           columnOrder,
           grouping,
-          groupedColumnMode
+          groupedColumnMode,
         ),
-      getMemoOptions(table.options, 'debugTable', '_getOrderColumnsFn')
+      getMemoOptions(table.options, 'debugTable', '_getOrderColumnsFn'),
     )
   },
 }

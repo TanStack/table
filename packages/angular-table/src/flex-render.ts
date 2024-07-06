@@ -50,7 +50,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     @Inject(ViewContainerRef)
     private readonly viewContainerRef: ViewContainerRef,
     @Inject(TemplateRef)
-    private readonly templateRef: TemplateRef<any>
+    private readonly templateRef: TemplateRef<any>,
   ) {}
 
   ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
@@ -86,7 +86,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     if (content instanceof TemplateRef) {
       return this.viewContainerRef.createEmbeddedView(
         content,
-        this.getTemplateRefContext()
+        this.getTemplateRefContext(),
       )
     } else if (content instanceof FlexRenderComponent) {
       return this.renderComponent(content)
@@ -112,7 +112,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   private renderComponent(
-    flexRenderComponent: FlexRenderComponent<TProps>
+    flexRenderComponent: FlexRenderComponent<TProps>,
   ): ComponentRef<unknown> {
     const { component, inputs, injector } = flexRenderComponent
 
@@ -139,7 +139,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   private renderCustomComponent(
-    component: Type<unknown>
+    component: Type<unknown>,
   ): ComponentRef<unknown> {
     const componentRef = this.viewContainerRef.createComponent(component, {
       injector: this.injector,
@@ -171,12 +171,12 @@ export class FlexRenderComponent<T extends NonNullable<unknown>> {
   constructor(
     readonly component: Type<unknown>,
     readonly inputs: T = {} as T,
-    readonly injector?: Injector
+    readonly injector?: Injector,
   ) {}
 }
 
 const FlexRenderComponentProps = new InjectionToken<NonNullable<unknown>>(
-  '[@tanstack/angular-table] Flex render component context props'
+  '[@tanstack/angular-table] Flex render component context props',
 )
 
 export function injectFlexRenderContext<T extends NonNullable<unknown>>(): T {

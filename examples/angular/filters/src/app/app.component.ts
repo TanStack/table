@@ -36,12 +36,12 @@ export class AppComponent {
   readonly columns: ColumnDef<Person>[] = [
     {
       accessorKey: 'firstName',
-      cell: info => info.getValue(),
+      cell: (info) => info.getValue(),
     },
     {
-      accessorFn: row => row.lastName,
+      accessorFn: (row) => row.lastName,
       id: 'lastName',
-      cell: info => info.getValue(),
+      cell: (info) => info.getValue(),
       header: () => 'Last Name',
     },
     {
@@ -80,7 +80,7 @@ export class AppComponent {
     state: {
       columnFilters: this.columnFilters(),
     },
-    onColumnFiltersChange: updater => {
+    onColumnFiltersChange: (updater) => {
       updater instanceof Function
         ? this.columnFilters.update(updater)
         : this.columnFilters.set(updater)
@@ -98,7 +98,7 @@ export class AppComponent {
   }))
 
   readonly stringifiedFilters = computed(() =>
-    JSON.stringify(this.columnFilters(), null, 2)
+    JSON.stringify(this.columnFilters(), null, 2),
   )
 
   onPageInputChange(event: Event): void {

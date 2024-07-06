@@ -12,7 +12,7 @@ export function _createColumn<TData extends RowData, TValue>(
   table: Table<TData>,
   columnDef: ColumnDef<TData, TValue>,
   depth: number,
-  parent?: Column<TData, TValue>
+  parent?: Column<TData, TValue>,
 ): Column<TData, TValue> {
   const defaultColumn = table._getDefaultColumnDef()
 
@@ -44,7 +44,7 @@ export function _createColumn<TData extends RowData, TValue>(
           result = result?.[key]
           if (process.env.NODE_ENV !== 'production' && result === undefined) {
             console.warn(
-              `"${key}" in deeply nested key "${accessorKey}" returned undefined.`
+              `"${key}" in deeply nested key "${accessorKey}" returned undefined.`,
             )
           }
         }
@@ -62,7 +62,7 @@ export function _createColumn<TData extends RowData, TValue>(
       throw new Error(
         resolvedColumnDef.accessorFn
           ? `Columns require an id when using an accessorFn`
-          : `Columns require an id when using a non-string header`
+          : `Columns require an id when using a non-string header`,
       )
     }
     throw new Error()

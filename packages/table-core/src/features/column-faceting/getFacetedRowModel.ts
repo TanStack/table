@@ -4,7 +4,7 @@ import { filterRows } from '../column-filtering/filterRowsUtils'
 
 export function getFacetedRowModel<TData extends RowData>(): (
   table: Table<TData>,
-  columnId: string
+  columnId: string,
 ) => () => RowModel<TData> {
   return (table, columnId) =>
     memo(
@@ -23,7 +23,7 @@ export function getFacetedRowModel<TData extends RowData>(): (
         }
 
         const filterableIds = [
-          ...columnFilters.map(d => d.id).filter(d => d !== columnId),
+          ...columnFilters.map((d) => d.id).filter((d) => d !== columnId),
           globalFilter ? '__global__' : undefined,
         ].filter(Boolean) as string[]
 
@@ -39,6 +39,6 @@ export function getFacetedRowModel<TData extends RowData>(): (
 
         return filterRows(preRowModel.rows, filterRowsImpl, table)
       },
-      getMemoOptions(table.options, 'debugTable', 'getFacetedRowModel')
+      getMemoOptions(table.options, 'debugTable', 'getFacetedRowModel'),
     )
 }

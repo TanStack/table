@@ -37,7 +37,7 @@ export const ColumnFiltering: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): TableOptions_ColumnFiltering<TData> => {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),
@@ -48,7 +48,7 @@ export const ColumnFiltering: TableFeature = {
 
   _createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getAutoFilterFn = () => column_getAutoFilterFn(column, table)
 
@@ -62,12 +62,13 @@ export const ColumnFiltering: TableFeature = {
 
     column.getFilterIndex = () => column_getFilterIndex(column, table)
 
-    column.setFilterValue = value => column_setFilterValue(column, table, value)
+    column.setFilterValue = (value) =>
+      column_setFilterValue(column, table, value)
   },
 
   _createRow: <TData extends RowData>(
     row: Row<TData>,
-    _table: Table<TData>
+    _table: Table<TData>,
   ): void => {
     row.columnFilters = {}
     row.columnFiltersMeta = {}
@@ -77,7 +78,7 @@ export const ColumnFiltering: TableFeature = {
     table.setColumnFilters = (updater: Updater<ColumnFiltersState>) =>
       table_setColumnFilters(table, updater)
 
-    table.resetColumnFilters = defaultState =>
+    table.resetColumnFilters = (defaultState) =>
       table_resetColumnFilters(table, defaultState)
 
     table.getPreFilteredRowModel = () => table_getPreFilteredRowModel(table)

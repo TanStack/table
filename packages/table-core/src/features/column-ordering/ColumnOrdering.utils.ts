@@ -9,15 +9,15 @@ import { ColumnOrderState } from './ColumnOrdering.types'
 
 export function column_getIndex<TData extends RowData>(
   columns: Column<TData, unknown>[],
-  column: Column<TData, unknown>
+  column: Column<TData, unknown>,
 ) {
-  return columns.findIndex(d => d.id === column.id)
+  return columns.findIndex((d) => d.id === column.id)
 }
 
 export function column_getIsFirstColumn<TData extends RowData>(
   column: Column<TData, unknown>,
   table: Table<TData>,
-  position?: ColumnPinningPosition | 'center'
+  position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
   return columns[0]?.id === column.id
@@ -26,7 +26,7 @@ export function column_getIsFirstColumn<TData extends RowData>(
 export function column_getIsLastColumn<TData extends RowData>(
   column: Column<TData, unknown>,
   table: Table<TData>,
-  position?: ColumnPinningPosition | 'center'
+  position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
   return columns[columns.length - 1]?.id === column.id
@@ -34,14 +34,14 @@ export function column_getIsLastColumn<TData extends RowData>(
 
 export function table_setColumnOrder<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<ColumnOrderState>
+  updater: Updater<ColumnOrderState>,
 ) {
   table.options.onColumnOrderChange?.(updater)
 }
 
 export function table_resetColumnOrder<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setColumnOrder(defaultState ? [] : table.initialState.columnOrder ?? [])
 }
@@ -49,7 +49,7 @@ export function table_resetColumnOrder<TData extends RowData>(
 export function table_getOrderColumnsFn<TData extends RowData>(
   columnOrder: ColumnOrderState,
   grouping: GroupingState,
-  groupedColumnMode?: false | 'reorder' | 'remove'
+  groupedColumnMode?: false | 'reorder' | 'remove',
 ) {
   return (columns: Column<TData, unknown>[]) => {
     // Sort grouped columns to the start of the column list
@@ -70,7 +70,7 @@ export function table_getOrderColumnsFn<TData extends RowData>(
       // Loop over the columns and place them in order into the new array
       while (columnsCopy.length && columnOrderCopy.length) {
         const targetColumnId = columnOrderCopy.shift()
-        const foundIndex = columnsCopy.findIndex(d => d.id === targetColumnId)
+        const foundIndex = columnsCopy.findIndex((d) => d.id === targetColumnId)
         if (foundIndex > -1) {
           orderedColumns.push(columnsCopy.splice(foundIndex, 1)[0]!)
         }
@@ -87,14 +87,14 @@ export function table_getOrderColumnsFn<TData extends RowData>(
 export function orderColumns<TData extends RowData>(
   leafColumns: Column<TData, unknown>[],
   grouping: string[],
-  groupedColumnMode?: GroupingColumnMode
+  groupedColumnMode?: GroupingColumnMode,
 ) {
   if (!grouping?.length || !groupedColumnMode) {
     return leafColumns
   }
 
   const nonGroupingColumns = leafColumns.filter(
-    col => !grouping.includes(col.id)
+    (col) => !grouping.includes(col.id),
   )
 
   if (groupedColumnMode === 'remove') {
@@ -102,7 +102,7 @@ export function orderColumns<TData extends RowData>(
   }
 
   const groupingColumns = grouping
-    .map(g => leafColumns.find(col => col.id === g)!)
+    .map((g) => leafColumns.find((col) => col.id === g)!)
     .filter(Boolean)
 
   return [...groupingColumns, ...nonGroupingColumns]

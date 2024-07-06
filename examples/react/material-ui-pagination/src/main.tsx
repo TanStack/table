@@ -34,30 +34,30 @@ function App() {
     () => [
       {
         header: 'Name',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
         columns: [
           {
             accessorKey: 'firstName',
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
+            cell: (info) => info.getValue(),
+            footer: (props) => props.column.id,
           },
           {
-            accessorFn: row => row.lastName,
+            accessorFn: (row) => row.lastName,
             id: 'lastName',
-            cell: info => info.getValue(),
+            cell: (info) => info.getValue(),
             header: () => <span>Last Name</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
       {
         header: 'Info',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
         columns: [
           {
             accessorKey: 'age',
             header: () => 'Age',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             header: 'More Info',
@@ -65,24 +65,24 @@ function App() {
               {
                 accessorKey: 'visits',
                 header: () => <span>Visits</span>,
-                footer: props => props.column.id,
+                footer: (props) => props.column.id,
               },
               {
                 accessorKey: 'status',
                 header: 'Status',
-                footer: props => props.column.id,
+                footer: (props) => props.column.id,
               },
               {
                 accessorKey: 'progress',
                 header: 'Profile Progress',
-                footer: props => props.column.id,
+                footer: (props) => props.column.id,
               },
             ],
           },
         ],
       },
     ],
-    []
+    [],
   )
 
   const [data, setData] = React.useState(() => makeData(100000))
@@ -127,16 +127,16 @@ function LocalTable({
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   return (
                     <TableCell key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <div>
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           {header.column.getCanFilter() ? (
                             <div>
@@ -152,15 +152,15 @@ function LocalTable({
             ))}
           </TableHead>
           <TableBody>
-            {table.getRowModel().rows.map(row => {
+            {table.getRowModel().rows.map((row) => {
               return (
                 <TableRow key={row.id}>
-                  {row.getVisibleCells().map(cell => {
+                  {row.getVisibleCells().map((cell) => {
                     return (
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </TableCell>
                     )
@@ -186,7 +186,7 @@ function LocalTable({
         onPageChange={(_, page) => {
           table.setPageIndex(page)
         }}
-        onRowsPerPageChange={e => {
+        onRowsPerPageChange={(e) => {
           const size = e.target.value ? Number(e.target.value) : 10
           table.setPageSize(size)
         }}
@@ -214,7 +214,7 @@ function Filter({
       <InputBase
         type="number"
         value={(columnFilterValue as [number, number])?.[0] ?? ''}
-        onChange={e =>
+        onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
             old?.[1],
@@ -226,7 +226,7 @@ function Filter({
       <InputBase
         type="number"
         value={(columnFilterValue as [number, number])?.[1] ?? ''}
-        onChange={e =>
+        onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             old?.[0],
             e.target.value,
@@ -240,7 +240,7 @@ function Filter({
   ) : (
     <InputBase
       value={(columnFilterValue ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
+      onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder={`Search...`}
       className="w-36 border shadow rounded"
       inputProps={{ 'aria-label': 'search' }}
@@ -254,5 +254,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

@@ -10,7 +10,7 @@ export function _createHeader<TData extends RowData, TValue>(
     placeholderId?: string
     index: number
     depth: number
-  }
+  },
 ): Header<TData, TValue> {
   const header: Header_CoreProperties<TData, TValue> = {
     colSpan: 0,
@@ -25,7 +25,7 @@ export function _createHeader<TData extends RowData, TValue>(
     subHeaders: [],
   }
 
-  table._features.forEach(feature => {
+  table._features.forEach((feature) => {
     feature._createHeader?.(header as Header<TData, TValue>, table)
   })
 

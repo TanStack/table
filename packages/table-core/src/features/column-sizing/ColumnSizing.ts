@@ -34,7 +34,7 @@ export const ColumnSizing: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): ColumnSizingDefaultOptions => {
     return {
       onColumnSizingChange: makeStateUpdater('columnSizing', table),
@@ -43,28 +43,28 @@ export const ColumnSizing: TableFeature = {
 
   _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getSize = () => column_getSize(column, table)
 
     column.getStart = memo(
-      position => [
+      (position) => [
         position,
         column_getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
       (position, columns) => column_getStart(columns, column, position),
-      getMemoOptions(table.options, 'debugColumns', 'getStart')
+      getMemoOptions(table.options, 'debugColumns', 'getStart'),
     )
 
     column.getAfter = memo(
-      position => [
+      (position) => [
         position,
         column_getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
       (position, columns) => column_getAfter(columns, column, position),
-      getMemoOptions(table.options, 'debugColumns', 'getAfter')
+      getMemoOptions(table.options, 'debugColumns', 'getAfter'),
     )
 
     column.resetSize = () => column_resetSize(table, column)
@@ -72,7 +72,7 @@ export const ColumnSizing: TableFeature = {
 
   _createHeader: <TData extends RowData, TValue>(
     header: Header<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     header.getSize = () => header_getSize(header)
 
@@ -80,9 +80,9 @@ export const ColumnSizing: TableFeature = {
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setColumnSizing = updater => table_setColumnSizing(table, updater)
+    table.setColumnSizing = (updater) => table_setColumnSizing(table, updater)
 
-    table.resetColumnSizing = defaultState =>
+    table.resetColumnSizing = (defaultState) =>
       table_resetColumnSizing(table, defaultState)
 
     table.getTotalSize = () => table_getTotalSize(table)

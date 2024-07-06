@@ -20,19 +20,19 @@ export const Headers: TableFeature = {
       ],
       (allColumns, leafColumns, left, right) =>
         table_getHeaderGroups(table, allColumns, leafColumns, left, right),
-      getMemoOptions(table.options, 'debugHeaders', 'getHeaderGroups')
+      getMemoOptions(table.options, 'debugHeaders', 'getHeaderGroups'),
     )
 
     table.getFooterGroups = memo(
       () => [table.getHeaderGroups()],
-      headerGroups => table_getFooterGroups(headerGroups),
-      getMemoOptions(table.options, 'debugHeaders', 'getFooterGroups')
+      (headerGroups) => table_getFooterGroups(headerGroups),
+      getMemoOptions(table.options, 'debugHeaders', 'getFooterGroups'),
     )
 
     table.getFlatHeaders = memo(
       () => [table.getHeaderGroups()],
-      headerGroups => table_getFlatHeaders(headerGroups),
-      getMemoOptions(table.options, 'debugHeaders', 'getFlatHeaders')
+      (headerGroups) => table_getFlatHeaders(headerGroups),
+      getMemoOptions(table.options, 'debugHeaders', 'getFlatHeaders'),
     )
 
     table.getLeafHeaders = memo(
@@ -42,13 +42,13 @@ export const Headers: TableFeature = {
         table.getRightHeaderGroups(),
       ],
       (left, center, right) => table_getLeafHeaders(left, center, right),
-      getMemoOptions(table.options, 'debugHeaders', 'getLeafHeaders')
+      getMemoOptions(table.options, 'debugHeaders', 'getLeafHeaders'),
     )
   },
 
   _createHeader: <TData extends RowData>(
     header: Header<TData, unknown>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     header.getLeafHeaders = (): Header<TData, unknown>[] => {
       const leafHeaders: Header<TData, unknown>[] = []

@@ -3,7 +3,7 @@ import { row_getValue } from '../rows/Rows.utils'
 
 export function cell_getValue<TData extends RowData, TValue extends CellData>(
   cell: Cell<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ): TValue {
   return row_getValue(cell.row, table, cell.column.id)
 }
@@ -17,7 +17,7 @@ export function cell_renderValue<
 
 export function cell_getContext<TData extends RowData, TValue extends CellData>(
   cell: Cell<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return {
     table,

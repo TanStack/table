@@ -27,18 +27,18 @@ function App() {
           {
             accessorKey: 'firstName',
             header: 'First Name',
-            cell: info => info.getValue(),
+            cell: (info) => info.getValue(),
             /**
              * override the value used for row grouping
              * (otherwise, defaults to the value derived from accessorKey / accessorFn)
              */
-            getGroupingValue: row => `${row.firstName} ${row.lastName}`,
+            getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
           },
           {
-            accessorFn: row => row.lastName,
+            accessorFn: (row) => row.lastName,
             id: 'lastName',
             header: () => <span>Last Name</span>,
-            cell: info => info.getValue(),
+            cell: (info) => info.getValue(),
           },
         ],
       },
@@ -79,7 +79,7 @@ function App() {
         ],
       },
     ],
-    []
+    [],
   )
 
   const [data, setData] = React.useState(() => makeData(100000))
@@ -107,9 +107,9 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
@@ -131,7 +131,7 @@ function App() {
                         ) : null}{' '}
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                       </div>
                     )}
@@ -142,10 +142,10 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getVisibleCells().map((cell) => {
                   return (
                     <td
                       {...{
@@ -177,7 +177,7 @@ function App() {
                             {row.getIsExpanded() ? '👇' : '👉'}{' '}
                             {flexRender(
                               cell.column.columnDef.cell,
-                              cell.getContext()
+                              cell.getContext(),
                             )}{' '}
                             ({row.subRows.length})
                           </button>
@@ -188,13 +188,13 @@ function App() {
                         flexRender(
                           cell.column.columnDef.aggregatedCell ??
                             cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
                         flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )
                       )}
                     </td>
@@ -247,7 +247,7 @@ function App() {
           <input
             type="number"
             defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
@@ -256,11 +256,11 @@ function App() {
         </span>
         <select
           value={table.getState().pagination.pageSize}
-          onChange={e => {
+          onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
@@ -285,5 +285,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

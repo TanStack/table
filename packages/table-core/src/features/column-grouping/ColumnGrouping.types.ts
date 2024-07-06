@@ -20,7 +20,7 @@ export interface TableState_ColumnGrouping {
 export type AggregationFn<TData extends RowData> = (
   columnId: string,
   leafRows: Row<TData>[],
-  childRows: Row<TData>[]
+  childRows: Row<TData>[],
 ) => any
 
 export type CustomAggregationFns = Record<string, AggregationFn<any>>

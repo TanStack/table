@@ -5,14 +5,14 @@ export const reSplitAlphaNumeric = /([0-9]+)/gm
 const alphanumeric: SortingFn<any> = (rowA, rowB, columnId) => {
   return compareAlphanumeric(
     toString(rowA.getValue(columnId)).toLowerCase(),
-    toString(rowB.getValue(columnId)).toLowerCase()
+    toString(rowB.getValue(columnId)).toLowerCase(),
   )
 }
 
 const alphanumericCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
   return compareAlphanumeric(
     toString(rowA.getValue(columnId)),
-    toString(rowB.getValue(columnId))
+    toString(rowB.getValue(columnId)),
   )
 }
 
@@ -21,7 +21,7 @@ const alphanumericCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
 const text: SortingFn<any> = (rowA, rowB, columnId) => {
   return compareBasic(
     toString(rowA.getValue(columnId)).toLowerCase(),
-    toString(rowB.getValue(columnId)).toLowerCase()
+    toString(rowB.getValue(columnId)).toLowerCase(),
   )
 }
 
@@ -30,7 +30,7 @@ const text: SortingFn<any> = (rowA, rowB, columnId) => {
 const textCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
   return compareBasic(
     toString(rowA.getValue(columnId)),
-    toString(rowB.getValue(columnId))
+    toString(rowB.getValue(columnId)),
   )
 }
 

@@ -4,9 +4,9 @@ import { getMemoOptions, memo } from '../../utils'
 import { filterRows } from './filterRowsUtils'
 
 export function getFilteredRowModel<TData extends RowData>(): (
-  table: Table<TData>
+  table: Table<TData>,
 ) => () => RowModel<TData> {
-  return table =>
+  return (table) =>
     memo(
       () => [
         table.getPreFilteredRowModel(),
@@ -28,7 +28,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
         const resolvedColumnFilters: ResolvedColumnFilter<TData>[] = []
         const resolvedGlobalFilters: ResolvedColumnFilter<TData>[] = []
 
-        ;(columnFilters ?? []).forEach(d => {
+        ;(columnFilters ?? []).forEach((d) => {
           const column = table.getColumn(d.id)
 
           if (!column) {
@@ -40,7 +40,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
           if (!filterFn) {
             if (process.env.NODE_ENV !== 'production') {
               console.warn(
-                `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`
+                `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`,
               )
             }
             return
@@ -53,13 +53,13 @@ export function getFilteredRowModel<TData extends RowData>(): (
           })
         })
 
-        const filterableIds = (columnFilters ?? []).map(d => d.id)
+        const filterableIds = (columnFilters ?? []).map((d) => d.id)
 
         const globalFilterFn = table.getGlobalFilterFn()
 
         const globallyFilterableColumns = table
           .getAllLeafColumns()
-          .filter(column => column.getCanGlobalFilter())
+          .filter((column) => column.getCanGlobalFilter())
 
         if (
           globalFilter &&
@@ -68,7 +68,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
         ) {
           filterableIds.push('__global__')
 
-          globallyFilterableColumns.forEach(column => {
+          globallyFilterableColumns.forEach((column) => {
             resolvedGlobalFilters.push({
               id: column.id,
               filterFn: globalFilterFn,
@@ -98,9 +98,9 @@ export function getFilteredRowModel<TData extends RowData>(): (
                 row,
                 id,
                 currentColumnFilter.resolvedValue,
-                filterMeta => {
+                (filterMeta) => {
                   row.columnFiltersMeta[id] = filterMeta
-                }
+                },
               )
             }
           }
@@ -115,9 +115,9 @@ export function getFilteredRowModel<TData extends RowData>(): (
                   row,
                   id,
                   currentGlobalFilter.resolvedValue,
-                  filterMeta => {
+                  (filterMeta) => {
                     row.columnFiltersMeta[id] = filterMeta
-                  }
+                  },
                 )
               ) {
                 row.columnFilters.__global__ = true
@@ -145,7 +145,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
         return filterRows(rowModel.rows, filterRowsImpl, table)
       },
       getMemoOptions(table.options, 'debugTable', 'getFilteredRowModel', () =>
-        table._autoResetPageIndex()
-      )
+        table._autoResetPageIndex(),
+      ),
     )
 }

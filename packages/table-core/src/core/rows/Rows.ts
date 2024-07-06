@@ -16,18 +16,18 @@ import {
 export const Rows: TableFeature = {
   _createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     row._getAllCellsByColumnId = memo(
       () => [row.getAllCells()],
-      allCells => row_getAllCellsByColumnId(allCells),
-      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId')
+      (allCells) => row_getAllCellsByColumnId(allCells),
+      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId'),
     )
 
     row.getAllCells = memo(
       () => [table.getAllLeafColumns()],
-      leafColumns => row_getAllCells(row, table, leafColumns),
-      getMemoOptions(table.options, 'debugRows', 'getAllCells')
+      (leafColumns) => row_getAllCells(row, table, leafColumns),
+      getMemoOptions(table.options, 'debugRows', 'getAllCells'),
     )
 
     row.getLeafRows = () => row_getLeafRows(row)
@@ -36,11 +36,12 @@ export const Rows: TableFeature = {
 
     row.getParentRows = () => row_getParentRows(row, table)
 
-    row.getUniqueValues = columnId => row_getUniqueValues(row, table, columnId)
+    row.getUniqueValues = (columnId) =>
+      row_getUniqueValues(row, table, columnId)
 
-    row.getValue = columnId => row_getValue(row, table, columnId)
+    row.getValue = (columnId) => row_getValue(row, table, columnId)
 
-    row.renderValue = columnId => row_renderValue(row, table, columnId)
+    row.renderValue = (columnId) => row_renderValue(row, table, columnId)
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {

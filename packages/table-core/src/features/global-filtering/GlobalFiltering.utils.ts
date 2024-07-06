@@ -5,7 +5,7 @@ import { TableOptions_GlobalFiltering } from './GlobalFiltering.types'
 
 export function column_getCanGlobalFilter<TData extends RowData>(
   column: Column<TData, unknown>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
     (column.columnDef.enableGlobalFilter ?? true) &&
@@ -21,7 +21,7 @@ export function table_getGlobalAutoFilterFn() {
 }
 
 export function table_getGlobalFilterFn<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const { globalFilterFn: globalFilterFn } = table.options
 
@@ -35,16 +35,16 @@ export function table_getGlobalFilterFn<TData extends RowData>(
 
 export function table_setGlobalFilter<TData extends RowData>(
   table: Table<TData>,
-  updater: any
+  updater: any,
 ) {
   table.options.onGlobalFilterChange?.(updater)
 }
 
 export function table_resetGlobalFilter<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setGlobalFilter(
-    defaultState ? undefined : table.initialState.globalFilter
+    defaultState ? undefined : table.initialState.globalFilter,
   )
 }

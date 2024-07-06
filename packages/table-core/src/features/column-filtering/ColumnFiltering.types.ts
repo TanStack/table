@@ -33,7 +33,7 @@ export interface FilterFn<TData extends RowData> {
     row: Row<TData>,
     columnId: string,
     filterValue: any,
-    addMeta: (meta: FilterMeta) => void
+    addMeta: (meta: FilterMeta) => void,
   ): boolean
   autoRemove?: ColumnFilterAutoRemoveTestFn<TData>
   resolveFilterValue?: TransformFilterValueFn<TData>
@@ -41,12 +41,12 @@ export interface FilterFn<TData extends RowData> {
 
 export type TransformFilterValueFn<TData extends RowData> = (
   value: any,
-  column?: Column<TData, unknown>
+  column?: Column<TData, unknown>,
 ) => unknown
 
 export type ColumnFilterAutoRemoveTestFn<TData extends RowData> = (
   value: any,
-  column?: Column<TData, unknown>
+  column?: Column<TData, unknown>,
 ) => boolean
 
 export type CustomFilterFns<TData extends RowData> = Record<

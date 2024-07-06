@@ -3,23 +3,23 @@ import { ColumnSizingState } from './ColumnSizing.types'
 
 export function column_getSize<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const columnSize = table.getState().columnSizing[column.id]
 
   return Math.min(
     Math.max(
       column.columnDef.minSize ?? defaultColumnSizing.minSize,
-      columnSize ?? column.columnDef.size ?? defaultColumnSizing.size
+      columnSize ?? column.columnDef.size ?? defaultColumnSizing.size,
     ),
-    column.columnDef.maxSize ?? defaultColumnSizing.maxSize
+    column.columnDef.maxSize ?? defaultColumnSizing.maxSize,
   )
 }
 
 export function column_getStart<TData extends RowData, TValue>(
   columns: Column<TData, unknown>[],
   column: Column<TData, TValue>,
-  position?: false | 'left' | 'right' | 'center'
+  position?: false | 'left' | 'right' | 'center',
 ) {
   return columns
     .slice(0, column.getIndex(position))
@@ -29,7 +29,7 @@ export function column_getStart<TData extends RowData, TValue>(
 export function column_getAfter<TData extends RowData, TValue>(
   columns: Column<TData, unknown>[],
   column: Column<TData, TValue>,
-  position?: false | 'left' | 'right' | 'center'
+  position?: false | 'left' | 'right' | 'center',
 ) {
   return columns
     .slice(column.getIndex(position) + 1)
@@ -38,7 +38,7 @@ export function column_getAfter<TData extends RowData, TValue>(
 
 export function column_resetSize<TData extends RowData, TValue>(
   table: Table<TData>,
-  column: Column<TData, TValue>
+  column: Column<TData, TValue>,
 ) {
   table.setColumnSizing(({ [column.id]: _, ...rest }) => {
     return rest
@@ -46,7 +46,7 @@ export function column_resetSize<TData extends RowData, TValue>(
 }
 
 export function header_getSize<TData extends RowData, TValue>(
-  header: Header<TData, TValue>
+  header: Header<TData, TValue>,
 ) {
   let sum = 0
 
@@ -64,7 +64,7 @@ export function header_getSize<TData extends RowData, TValue>(
 }
 
 export function header_getStart<TData extends RowData, TValue>(
-  header: Header<TData, TValue>
+  header: Header<TData, TValue>,
 ) {
   if (header.index > 0) {
     const prevSiblingHeader = header.headerGroup.headers[header.index - 1]!
@@ -76,17 +76,17 @@ export function header_getStart<TData extends RowData, TValue>(
 
 export function table_setColumnSizing<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<ColumnSizingState>
+  updater: Updater<ColumnSizingState>,
 ) {
   table.options.onColumnSizingChange?.(updater)
 }
 
 export function table_resetColumnSizing<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setColumnSizing(
-    defaultState ? {} : table.initialState.columnSizing ?? {}
+    defaultState ? {} : table.initialState.columnSizing ?? {},
   )
 }
 
@@ -99,7 +99,7 @@ export function table_getTotalSize<TData extends RowData>(table: Table<TData>) {
 }
 
 export function table_getLeftTotalSize<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
     table.getLeftHeaderGroups()[0]?.headers.reduce((sum, header) => {
@@ -109,7 +109,7 @@ export function table_getLeftTotalSize<TData extends RowData>(
 }
 
 export function table_getCenterTotalSize<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
     table.getCenterHeaderGroups()[0]?.headers.reduce((sum, header) => {
@@ -119,7 +119,7 @@ export function table_getCenterTotalSize<TData extends RowData>(
 }
 
 export function table_getRightTotalSize<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
     table.getRightHeaderGroups()[0]?.headers.reduce((sum, header) => {

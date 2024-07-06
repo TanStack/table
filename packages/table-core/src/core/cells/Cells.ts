@@ -5,7 +5,7 @@ import { cell_getContext, cell_getValue, cell_renderValue } from './Cells.utils'
 export const Cells: TableFeature = {
   _createCell: <TData extends RowData, TValue extends CellData>(
     cell: Cell<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ) => {
     cell.getValue = () => cell_getValue(cell, table) as any
 
@@ -14,7 +14,7 @@ export const Cells: TableFeature = {
     cell.getContext = memo(
       () => [table, cell],
       (table, cell) => cell_getContext(cell, table),
-      getMemoOptions(table.options, 'debugCells', 'cell.getContext')
+      getMemoOptions(table.options, 'debugCells', 'cell.getContext'),
     )
   },
 }

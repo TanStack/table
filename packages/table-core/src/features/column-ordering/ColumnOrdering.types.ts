@@ -43,7 +43,7 @@ export interface ColumnOrderDefaultOptions {
 
 export interface Table_ColumnOrdering<TData extends RowData> {
   _getOrderColumnsFn: () => (
-    columns: Column<TData, unknown>[]
+    columns: Column<TData, unknown>[],
   ) => Column<TData, unknown>[]
   /**
    * Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be passed to force a default blank state reset to `[]`.

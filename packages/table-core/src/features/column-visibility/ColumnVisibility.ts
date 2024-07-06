@@ -29,7 +29,7 @@ export const ColumnVisibility: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): VisibilityDefaultOptions => {
     return {
       onColumnVisibilityChange: makeStateUpdater('columnVisibility', table),
@@ -38,9 +38,9 @@ export const ColumnVisibility: TableFeature = {
 
   _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
-    column.toggleVisibility = value =>
+    column.toggleVisibility = (value) =>
       column_toggleVisibility(column, table, value)
 
     column.getIsVisible = () => column_getIsVisible(column, table)
@@ -53,12 +53,12 @@ export const ColumnVisibility: TableFeature = {
 
   _createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     row._getAllVisibleCells = memo(
       () => [row.getAllCells(), table.getState().columnVisibility],
-      cells => row_getAllVisibleCells(cells),
-      getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells')
+      (cells) => row_getAllVisibleCells(cells),
+      getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells'),
     )
 
     row.getVisibleCells = memo(
@@ -68,7 +68,7 @@ export const ColumnVisibility: TableFeature = {
         row.getRightVisibleCells(),
       ],
       (left, center, right) => row_getVisibleCells(left, center, right),
-      getMemoOptions(table.options, 'debugRows', 'getVisibleCells')
+      getMemoOptions(table.options, 'debugRows', 'getVisibleCells'),
     )
   },
 
@@ -76,40 +76,40 @@ export const ColumnVisibility: TableFeature = {
     table.getVisibleFlatColumns = table_makeVisibleColumnsMethod(
       table,
       'getVisibleFlatColumns',
-      () => table.getAllFlatColumns()
+      () => table.getAllFlatColumns(),
     )
 
     table.getVisibleLeafColumns = table_makeVisibleColumnsMethod(
       table,
       'getVisibleLeafColumns',
-      () => table.getAllLeafColumns()
+      () => table.getAllLeafColumns(),
     )
 
     table.getLeftVisibleLeafColumns = table_makeVisibleColumnsMethod(
       table,
       'getLeftVisibleLeafColumns',
-      () => table.getLeftLeafColumns()
+      () => table.getLeftLeafColumns(),
     )
 
     table.getRightVisibleLeafColumns = table_makeVisibleColumnsMethod(
       table,
       'getRightVisibleLeafColumns',
-      () => table.getRightLeafColumns()
+      () => table.getRightLeafColumns(),
     )
 
     table.getCenterVisibleLeafColumns = table_makeVisibleColumnsMethod(
       table,
       'getCenterVisibleLeafColumns',
-      () => table.getCenterLeafColumns()
+      () => table.getCenterLeafColumns(),
     )
 
-    table.setColumnVisibility = updater =>
+    table.setColumnVisibility = (updater) =>
       table_setColumnVisibility(table, updater)
 
-    table.resetColumnVisibility = defaultState =>
+    table.resetColumnVisibility = (defaultState) =>
       table_resetColumnVisibility(table, defaultState)
 
-    table.toggleAllColumnsVisible = value =>
+    table.toggleAllColumnsVisible = (value) =>
       table_toggleAllColumnsVisible(table, value)
 
     table.getIsAllColumnsVisible = () => table_getIsAllColumnsVisible(table)

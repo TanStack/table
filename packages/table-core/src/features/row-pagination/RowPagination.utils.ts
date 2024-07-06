@@ -10,7 +10,7 @@ import {
 export function table_autoResetPageIndex<TData extends RowData>(
   table: Table<TData>,
   registered: boolean,
-  queued: boolean
+  queued: boolean,
 ) {
   if (!registered) {
     table._queue(() => {
@@ -35,9 +35,9 @@ export function table_autoResetPageIndex<TData extends RowData>(
 
 export function table_setPagination<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<PaginationState>
+  updater: Updater<PaginationState>,
 ) {
-  const safeUpdater: Updater<PaginationState> = old => {
+  const safeUpdater: Updater<PaginationState> = (old) => {
     let newState = functionalUpdate(updater, old)
 
     return newState
@@ -48,20 +48,20 @@ export function table_setPagination<TData extends RowData>(
 
 export function table_resetPagination<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setPagination(
     defaultState
       ? getDefaultPaginationState()
-      : table.initialState.pagination ?? getDefaultPaginationState()
+      : table.initialState.pagination ?? getDefaultPaginationState(),
   )
 }
 
 export function table_setPageIndex<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<number>
+  updater: Updater<number>,
 ) {
-  table.setPagination(old => {
+  table.setPagination((old) => {
     let pageIndex = functionalUpdate(updater, old.pageIndex)
 
     const maxPageIndex =
@@ -81,31 +81,31 @@ export function table_setPageIndex<TData extends RowData>(
 
 export function table_resetPageIndex<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setPageIndex(
     defaultState
       ? defaultPageIndex
-      : table.initialState?.pagination?.pageIndex ?? defaultPageIndex
+      : table.initialState?.pagination?.pageIndex ?? defaultPageIndex,
   )
 }
 
 export function table_resetPageSize<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setPageSize(
     defaultState
       ? defaultPageSize
-      : table.initialState?.pagination?.pageSize ?? defaultPageSize
+      : table.initialState?.pagination?.pageSize ?? defaultPageSize,
   )
 }
 
 export function table_setPageSize<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<number>
+  updater: Updater<number>,
 ) {
-  table.setPagination(old => {
+  table.setPagination((old) => {
     const pageSize = Math.max(1, functionalUpdate(updater, old.pageSize))
     const topRowIndex = old.pageSize * old.pageIndex!
     const pageIndex = Math.floor(topRowIndex / pageSize)
@@ -123,9 +123,9 @@ export function table_setPageSize<TData extends RowData>(
  */
 export function table_setPageCount<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<number>
+  updater: Updater<number>,
 ) {
-  return table.setPagination(old => {
+  return table.setPagination((old) => {
     let newPageCount = functionalUpdate(updater, table.options.pageCount ?? -1)
 
     if (typeof newPageCount === 'number') {
@@ -148,13 +148,13 @@ export function table_getPageOptions(pageCount: number) {
 }
 
 export function table_getCanPreviousPage<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return table.getState().pagination.pageIndex > 0
 }
 
 export function table_getCanNextPage<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const { pageIndex } = table.getState().pagination
 
@@ -172,11 +172,11 @@ export function table_getCanNextPage<TData extends RowData>(
 }
 
 export function table_previousPage<TData extends RowData>(table: Table<TData>) {
-  return table.setPageIndex(old => old - 1)
+  return table.setPageIndex((old) => old - 1)
 }
 
 export function table_nextPage<TData extends RowData>(table: Table<TData>) {
-  return table.setPageIndex(old => {
+  return table.setPageIndex((old) => {
     return old + 1
   })
 }
@@ -190,13 +190,13 @@ export function table_lastPage<TData extends RowData>(table: Table<TData>) {
 }
 
 export function table_getPrePaginationRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return table.getExpandedRowModel()
 }
 
 export function table_getPaginationRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   if (!table._getPaginationRowModel && table.options.getPaginationRowModel) {
     table._getPaginationRowModel = table.options.getPaginationRowModel(table)

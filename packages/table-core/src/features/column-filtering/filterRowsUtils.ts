@@ -4,7 +4,7 @@ import { Row, RowModel, Table, RowData } from '../../types'
 export function filterRows<TData extends RowData>(
   rows: Row<TData>[],
   filterRowImpl: (row: Row<TData>) => any,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   if (table.options.filterFromLeafRows) {
     return filterRowModelFromLeafs(rows, filterRowImpl, table)
@@ -16,7 +16,7 @@ export function filterRows<TData extends RowData>(
 function filterRowModelFromLeafs<TData extends RowData>(
   rowsToFilter: Row<TData>[],
   filterRow: (row: Row<TData>) => Row<TData>[],
-  table: Table<TData>
+  table: Table<TData>,
 ): RowModel<TData> {
   const newFilteredFlatRows: Row<TData>[] = []
   const newFilteredRowsById: Record<string, Row<TData>> = {}
@@ -36,7 +36,7 @@ function filterRowModelFromLeafs<TData extends RowData>(
         row.index,
         row.depth,
         undefined,
-        row.parentId
+        row.parentId,
       )
       newRow.columnFilters = row.columnFilters
 
@@ -80,7 +80,7 @@ function filterRowModelFromLeafs<TData extends RowData>(
 function filterRowModelFromRoot<TData extends RowData>(
   rowsToFilter: Row<TData>[],
   filterRow: (row: Row<TData>) => any,
-  table: Table<TData>
+  table: Table<TData>,
 ): RowModel<TData> {
   const newFilteredFlatRows: Row<TData>[] = []
   const newFilteredRowsById: Record<string, Row<TData>> = {}
@@ -107,7 +107,7 @@ function filterRowModelFromRoot<TData extends RowData>(
             row.index,
             row.depth,
             undefined,
-            row.parentId
+            row.parentId,
           )
           newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
           row = newRow

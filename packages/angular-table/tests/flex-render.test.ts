@@ -176,7 +176,7 @@ type FlexRenderDirectiveAllowedContent = FlexRenderDirective<
 
 function expectPrimitiveValueIs(
   fixture: ComponentFixture<unknown>,
-  value: unknown
+  value: unknown,
 ) {
   expect(fixture.nativeElement.matches(':empty')).toBe(false)
   const span = fixture.nativeElement.querySelector('span')

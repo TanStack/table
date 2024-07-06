@@ -124,7 +124,7 @@ export interface TableFeature<TData extends RowData = any> {
   _createTable?: (table: Table<TData>) => void
   _getDefaultColumnDef?: () => Partial<ColumnDef<TData, unknown>>
   _getDefaultOptions?: (
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ) => Partial<TableOptionsResolved<TData>>
   _getInitialState?: (initialState?: Partial<TableState>) => Partial<TableState>
 }
@@ -227,7 +227,7 @@ export interface RowModel<TData extends RowData> {
 
 export type AccessorFn<TData extends RowData, TValue = unknown> = (
   originalRow: TData,
-  index: number
+  index: number,
 ) => TValue
 
 export type ColumnDefTemplate<TProps extends object> =

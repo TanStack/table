@@ -64,7 +64,7 @@ export interface TableOptions_Core<TData extends RowData> {
    */
   mergeOptions?: (
     defaultOptions: TableOptions<TData>,
-    options: Partial<TableOptions<TData>>
+    options: Partial<TableOptions<TData>>,
   ) => TableOptions<TData>
   /**
    * You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.

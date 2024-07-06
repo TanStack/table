@@ -43,44 +43,44 @@ const defaultColumns: ColumnDef<Person>[] = [
     accessorKey: 'firstName',
     id: 'firstName',
     header: 'First Name',
-    cell: info => info.getValue(),
-    footer: props => props.column.id,
+    cell: (info) => info.getValue(),
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => <span>Last Name</span>,
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
     accessorKey: 'age',
     id: 'age',
     header: 'Age',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
     accessorKey: 'visits',
     id: 'visits',
     header: 'Visits',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
     accessorKey: 'status',
     id: 'status',
     header: 'Status',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
     accessorKey: 'progress',
     id: 'progress',
     header: 'Profile Progress',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
 ]
@@ -103,7 +103,7 @@ function App() {
 
   const randomizeColumns = () => {
     table.setColumnOrder(
-      faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
     )
   }
 
@@ -122,7 +122,7 @@ function App() {
             Toggle All
           </label>
         </div>
-        {table.getAllLeafColumns().map(column => {
+        {table.getAllLeafColumns().map((column) => {
           return (
             <div key={column.id} className="px-1">
               <label>
@@ -156,9 +156,9 @@ function App() {
           }}
         >
           <thead>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   const { column } = header
 
                   return (
@@ -173,7 +173,7 @@ function App() {
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}{' '}
                         {/* Demo getIndex behavior */}
                         {column.getIndex(column.getIsPinned() || 'center')}
@@ -229,9 +229,9 @@ function App() {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map(row => (
+            {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getVisibleCells().map((cell) => {
                   const { column } = cell
                   return (
                     <td
@@ -241,7 +241,7 @@ function App() {
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   )
@@ -262,5 +262,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

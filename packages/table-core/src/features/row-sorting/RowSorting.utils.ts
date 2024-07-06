@@ -9,7 +9,7 @@ import { SortingState } from './RowSorting.types'
 
 export function column_getAutoSortingFn<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const firstRows = table.getFilteredRowModel().flatRows.slice(10)
 
@@ -40,7 +40,7 @@ export function column_getAutoSortingFn<TData extends RowData, TValue>(
 
 export function column_getAutoSortDir<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const firstRow = table.getFilteredRowModel().flatRows[0]
 
@@ -55,7 +55,7 @@ export function column_getAutoSortDir<TData extends RowData, TValue>(
 
 export function column_getSortingFn<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   if (!column) {
     throw new Error()
@@ -73,7 +73,7 @@ export function column_toggleSorting<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
   desc?: boolean,
-  multi?: boolean
+  multi?: boolean,
 ) {
   // if (column.columns.length) {
   //   column.columns.forEach((c, i) => {
@@ -88,10 +88,10 @@ export function column_toggleSorting<TData extends RowData, TValue>(
   const nextSortingOrder = column.getNextSortingOrder()
   const hasManualValue = typeof desc !== 'undefined' && desc !== null
 
-  table.setSorting(old => {
+  table.setSorting((old) => {
     // Find any existing sorting for this column
-    const existingSorting = old?.find(d => d.id === column.id)
-    const existingIndex = old?.findIndex(d => d.id === column.id)
+    const existingSorting = old?.find((d) => d.id === column.id)
+    const existingIndex = old?.findIndex((d) => d.id === column.id)
 
     let newSorting: SortingState = []
 
@@ -140,11 +140,11 @@ export function column_toggleSorting<TData extends RowData, TValue>(
       newSorting.splice(
         0,
         newSorting.length -
-          (table.options.maxMultiSortColCount ?? Number.MAX_SAFE_INTEGER)
+          (table.options.maxMultiSortColCount ?? Number.MAX_SAFE_INTEGER),
       )
     } else if (sortAction === 'toggle') {
       // This flips (or sets) the
-      newSorting = old.map(d => {
+      newSorting = old.map((d) => {
         if (d.id === column.id) {
           return {
             ...d,
@@ -154,7 +154,7 @@ export function column_toggleSorting<TData extends RowData, TValue>(
         return d
       })
     } else if (sortAction === 'remove') {
-      newSorting = old.filter(d => d.id !== column.id)
+      newSorting = old.filter((d) => d.id !== column.id)
     } else {
       newSorting = [
         {
@@ -170,7 +170,7 @@ export function column_toggleSorting<TData extends RowData, TValue>(
 
 export function column_getFirstSortDir<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const sortDescFirst =
     column.columnDef.sortDescFirst ??
@@ -182,7 +182,7 @@ export function column_getFirstSortDir<TData extends RowData, TValue>(
 export function column_getNextSortingOrder<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
-  multi?: boolean
+  multi?: boolean,
 ) {
   const firstSortDirection = column.getFirstSortDir()
   const isSorted = column.getIsSorted()
@@ -203,7 +203,7 @@ export function column_getNextSortingOrder<TData extends RowData, TValue>(
 
 export function column_getCanSort<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
     (column.columnDef.enableSorting ?? true) &&
@@ -214,7 +214,7 @@ export function column_getCanSort<TData extends RowData, TValue>(
 
 export function column_getCanMultiSort<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
     column.columnDef.enableMultiSort ??
@@ -225,32 +225,32 @@ export function column_getCanMultiSort<TData extends RowData, TValue>(
 
 export function column_getIsSorted<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
-  const columnSort = table.getState().sorting?.find(d => d.id === column.id)
+  const columnSort = table.getState().sorting?.find((d) => d.id === column.id)
   return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
 }
 
 export function column_getSortIndex<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
-  return table.getState().sorting?.findIndex(d => d.id === column.id) ?? -1
+  return table.getState().sorting?.findIndex((d) => d.id === column.id) ?? -1
 }
 
 export function column_clearSorting<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   //clear sorting for just 1 column
-  table.setSorting(old =>
-    old?.length ? old.filter(d => d.id !== column.id) : []
+  table.setSorting((old) =>
+    old?.length ? old.filter((d) => d.id !== column.id) : [],
   )
 }
 
 export function column_getToggleSortingHandler<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const canSort = column.getCanSort()
 
@@ -259,33 +259,33 @@ export function column_getToggleSortingHandler<TData extends RowData, TValue>(
     ;(e as any).persist?.()
     column.toggleSorting?.(
       undefined,
-      column.getCanMultiSort() ? table.options.isMultiSortEvent?.(e) : false
+      column.getCanMultiSort() ? table.options.isMultiSortEvent?.(e) : false,
     )
   }
 }
 
 export function table_setSorting<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<SortingState>
+  updater: Updater<SortingState>,
 ) {
   table.options.onSortingChange?.(updater)
 }
 
 export function table_resetSorting<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setSorting(defaultState ? [] : table.initialState?.sorting ?? [])
 }
 
 export function table_getPreSortedRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return table.getGroupedRowModel()
 }
 
 export function table_getSortedRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   if (!table._getSortedRowModel && table.options.getSortedRowModel) {
     table._getSortedRowModel = table.options.getSortedRowModel(table)

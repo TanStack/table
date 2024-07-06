@@ -5,7 +5,7 @@ import { expandRows } from '../row-expanding/getExpandedRowModel'
 export function getPaginationRowModel<TData extends RowData>(opts?: {
   initialSync: boolean
 }): (table: Table<TData>) => () => RowModel<TData> {
-  return table =>
+  return (table) =>
     memo(
       () => [
         table.getState().pagination,
@@ -55,6 +55,6 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
 
         return paginatedRowModel
       },
-      getMemoOptions(table.options, 'debugTable', 'getPaginationRowModel')
+      getMemoOptions(table.options, 'debugTable', 'getPaginationRowModel'),
     )
 }

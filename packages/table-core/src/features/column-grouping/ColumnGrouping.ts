@@ -30,7 +30,8 @@ export const ColumnGrouping: TableFeature = {
     unknown
   > => {
     return {
-      aggregatedCell: props => (props.getValue() as any)?.toString?.() ?? null,
+      aggregatedCell: (props) =>
+        (props.getValue() as any)?.toString?.() ?? null,
       aggregationFn: 'auto',
     }
   },
@@ -43,7 +44,7 @@ export const ColumnGrouping: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): TableOptions_ColumnGrouping => {
     return {
       onGroupingChange: makeStateUpdater('grouping', table),
@@ -53,7 +54,7 @@ export const ColumnGrouping: TableFeature = {
 
   _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.toggleGrouping = () => column_toggleGrouping(column, table)
 
@@ -73,9 +74,9 @@ export const ColumnGrouping: TableFeature = {
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setGrouping = updater => table_setGrouping(table, updater)
+    table.setGrouping = (updater) => table_setGrouping(table, updater)
 
-    table.resetGrouping = defaultState =>
+    table.resetGrouping = (defaultState) =>
       table_resetGrouping(table, defaultState)
 
     table.getPreGroupedRowModel = () => table_getPreGroupedRowModel(table)
@@ -85,11 +86,11 @@ export const ColumnGrouping: TableFeature = {
 
   _createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     row.getIsGrouped = () => row_getIsGrouped(row)
 
-    row.getGroupingValue = columnId =>
+    row.getGroupingValue = (columnId) =>
       row_getGroupingValue(row, table, columnId)
 
     row._groupingValuesCache = {}
@@ -97,7 +98,7 @@ export const ColumnGrouping: TableFeature = {
 
   _createCell: <TData extends RowData, TValue>(
     cell: Cell<TData, TValue>,
-    _table: Table<TData>
+    _table: Table<TData>,
   ): void => {
     const { column, row } = cell
 

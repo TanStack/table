@@ -33,12 +33,12 @@ export function useTable<TData extends RowData>(options: TableOptions<TData>) {
       renderFallbackValue: null,
       mergeOptions(
         defaultOptions: TableOptions<TData>,
-        options: TableOptions<TData>
+        options: TableOptions<TData>,
       ) {
         return mergeProxy(defaultOptions, options)
       },
     },
-    options
+    options,
   )
 
   const table = _createTable<TData>(resolvedOptions)
@@ -46,7 +46,7 @@ export function useTable<TData extends RowData>(options: TableOptions<TData>) {
   const state = ref(table.initialState)
 
   watchEffect(() => {
-    table.setOptions(prev => {
+    table.setOptions((prev) => {
       const stateProxy = new Proxy({} as typeof state.value, {
         get: (_, prop) => state.value[prop as keyof typeof state.value],
       })

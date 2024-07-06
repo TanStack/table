@@ -44,16 +44,16 @@ const builtInFeatures = [
 ]
 
 export function getInitialTableState(
-  initialState: Partial<TableState> | undefined = {}
+  initialState: Partial<TableState> | undefined = {},
 ): TableState {
-  builtInFeatures.forEach(feature => {
+  builtInFeatures.forEach((feature) => {
     initialState = feature._getInitialState?.(initialState) ?? initialState
   })
   return initialState as TableState
 }
 
 export function _createTable<TData extends RowData>(
-  options: TableOptionsResolved<TData>
+  options: TableOptionsResolved<TData>,
 ): Table<TData> {
   if (
     process.env.NODE_ENV !== 'production' &&
@@ -90,7 +90,7 @@ export function _createTable<TData extends RowData>(
   const queued: (() => void)[] = []
   let queuedTimeout = false
 
-  table._queue = cb => {
+  table._queue = (cb) => {
     queued.push(cb)
 
     if (!queuedTimeout) {
@@ -105,10 +105,10 @@ export function _createTable<TData extends RowData>(
           }
           queuedTimeout = false
         })
-        .catch(error =>
+        .catch((error) =>
           setTimeout(() => {
             throw error
-          })
+          }),
         )
     }
   }

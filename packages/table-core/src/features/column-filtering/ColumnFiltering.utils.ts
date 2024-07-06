@@ -5,7 +5,7 @@ import { ColumnFiltersState, FilterFn } from './ColumnFiltering.types'
 
 export function column_getAutoFilterFn<TData extends RowData>(
   column: Column<TData, unknown>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   const firstRow = table.getCoreRowModel().flatRows[0]
 
@@ -36,7 +36,7 @@ export function column_getAutoFilterFn<TData extends RowData>(
 
 export function column_getFilterFn<TData extends RowData>(
   column: Column<TData, unknown>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return isFunction(column.columnDef.filterFn)
     ? column.columnDef.filterFn
@@ -48,7 +48,7 @@ export function column_getFilterFn<TData extends RowData>(
 
 export function column_getCanFilter<TData extends RowData>(
   column: Column<TData, unknown>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
     (column.columnDef.enableColumnFilter ?? true) &&
@@ -59,52 +59,52 @@ export function column_getCanFilter<TData extends RowData>(
 }
 
 export function column_getIsFiltered<TData extends RowData>(
-  column: Column<TData, unknown>
+  column: Column<TData, unknown>,
 ) {
   return column.getFilterIndex() > -1
 }
 
 export function column_getFilterValue<TData extends RowData>(
   column: Column<TData, unknown>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
-  return table.getState().columnFilters?.find(d => d.id === column.id)?.value
+  return table.getState().columnFilters?.find((d) => d.id === column.id)?.value
 }
 
 export function column_getFilterIndex<TData extends RowData>(
   column: Column<TData, unknown>,
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return (
-    table.getState().columnFilters?.findIndex(d => d.id === column.id) ?? -1
+    table.getState().columnFilters?.findIndex((d) => d.id === column.id) ?? -1
   )
 }
 
 export function column_setFilterValue<TData extends RowData>(
   column: Column<TData, unknown>,
   table: Table<TData>,
-  value: any
+  value: any,
 ) {
-  table.setColumnFilters(old => {
+  table.setColumnFilters((old) => {
     const filterFn = column.getFilterFn()
-    const previousFilter = old?.find(d => d.id === column.id)
+    const previousFilter = old?.find((d) => d.id === column.id)
 
     const newFilter = functionalUpdate(
       value,
-      previousFilter ? previousFilter.value : undefined
+      previousFilter ? previousFilter.value : undefined,
     )
 
     if (
       shouldAutoRemoveFilter(filterFn as FilterFn<TData>, newFilter, column)
     ) {
-      return old?.filter(d => d.id !== column.id) ?? []
+      return old?.filter((d) => d.id !== column.id) ?? []
     }
 
     const newFilterObj = { id: column.id, value: newFilter }
 
     if (previousFilter) {
       return (
-        old?.map(d => {
+        old?.map((d) => {
           if (d.id === column.id) {
             return newFilterObj
           }
@@ -123,13 +123,13 @@ export function column_setFilterValue<TData extends RowData>(
 
 export function table_setColumnFilters<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<ColumnFiltersState>
+  updater: Updater<ColumnFiltersState>,
 ) {
   const leafColumns = table.getAllLeafColumns()
 
   const updateFn = (old: ColumnFiltersState) => {
-    return functionalUpdate(updater, old)?.filter(filter => {
-      const column = leafColumns.find(d => d.id === filter.id)
+    return functionalUpdate(updater, old)?.filter((filter) => {
+      const column = leafColumns.find((d) => d.id === filter.id)
 
       if (column) {
         const filterFn = column.getFilterFn()
@@ -148,21 +148,21 @@ export function table_setColumnFilters<TData extends RowData>(
 
 export function table_resetColumnFilters<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setColumnFilters(
-    defaultState ? [] : table.initialState?.columnFilters ?? []
+    defaultState ? [] : table.initialState?.columnFilters ?? [],
   )
 }
 
 export function table_getPreFilteredRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   return table.getCoreRowModel()
 }
 
 export function table_getFilteredRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ) {
   if (!table._getFilteredRowModel && table.options.getFilteredRowModel) {
     table._getFilteredRowModel = table.options.getFilteredRowModel(table)
@@ -178,7 +178,7 @@ export function table_getFilteredRowModel<TData extends RowData>(
 export function shouldAutoRemoveFilter<TData extends RowData>(
   filterFn?: FilterFn<TData>,
   value?: any,
-  column?: Column<TData, unknown>
+  column?: Column<TData, unknown>,
 ) {
   return (
     (filterFn && filterFn.autoRemove

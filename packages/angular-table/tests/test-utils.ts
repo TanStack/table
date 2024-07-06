@@ -14,7 +14,7 @@ type ToSignalInputUpdatableMap<T> = {
  */
 export function setSignalInputs<T extends NonNullable<unknown>>(
   component: T,
-  inputs: ToSignalInputUpdatableMap<T>
+  inputs: ToSignalInputUpdatableMap<T>,
 ) {
   for (const inputKey in inputs) {
     if (componentHasSignalInputProperty(component, inputKey)) {
@@ -26,7 +26,7 @@ export function setSignalInputs<T extends NonNullable<unknown>>(
 export function setFixtureSignalInputs<T extends NonNullable<unknown>>(
   componentFixture: ComponentFixture<T>,
   inputs: ToSignalInputUpdatableMap<T>,
-  options: { detectChanges: boolean } = { detectChanges: true }
+  options: { detectChanges: boolean } = { detectChanges: true },
 ) {
   setSignalInputs(componentFixture.componentInstance, inputs)
   if (options.detectChanges) {
@@ -41,7 +41,7 @@ export function setFixtureSignalInput<
 >(
   componentFixture: ComponentFixture<T>,
   inputName: InputName,
-  value: InputMaps[InputName]
+  value: InputMaps[InputName],
 ) {
   setSignalInputs(componentFixture.componentInstance, {
     [inputName]: value,
@@ -50,7 +50,7 @@ export function setFixtureSignalInput<
 
 function componentHasSignalInputProperty<TProperty extends string>(
   component: object,
-  property: TProperty
+  property: TProperty,
 ): component is { [key in TProperty]: InputSignal<unknown> } {
   return (
     component.hasOwnProperty(property) && (component as any)[property][SIGNAL]

@@ -51,9 +51,9 @@ export default function Table<T extends Record<string, string | number>>({
     <div>
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 const fieldMeta = header.column.columnDef.meta
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
@@ -69,7 +69,7 @@ export default function Table<T extends Record<string, string | number>>({
                         >
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           {{
                             asc: ' 🔼',
@@ -81,7 +81,7 @@ export default function Table<T extends Record<string, string | number>>({
                         fieldMeta?.filterKey !== undefined ? (
                           <DebouncedInput
                             className="w-36 border shadow rounded"
-                            onChange={value => {
+                            onChange={(value) => {
                               onFilterChange({
                                 [fieldMeta.filterKey as keyof T]: value,
                               } as Partial<T>)
@@ -104,15 +104,15 @@ export default function Table<T extends Record<string, string | number>>({
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getVisibleCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   )
@@ -163,7 +163,7 @@ export default function Table<T extends Record<string, string | number>>({
           <input
             type="number"
             value={table.getState().pagination.pageIndex + 1}
-            onChange={e => {
+            onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
@@ -172,11 +172,11 @@ export default function Table<T extends Record<string, string | number>>({
         </span>
         <select
           value={table.getState().pagination.pageSize}
-          onChange={e => {
+          onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
         >
-          {[10, 20, 30, 40, 50].map(pageSize => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>

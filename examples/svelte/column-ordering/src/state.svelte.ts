@@ -1,7 +1,7 @@
 import type { Updater } from '@tanstack/svelte-table'
 
 export function createTableState<T>(
-  initialValue: T
+  initialValue: T,
 ): [() => T, (updater: Updater<T>) => void] {
   let value = $state(initialValue)
 

@@ -19,7 +19,7 @@ import { makeColumns, makeData, Person } from './makeData'
 function App() {
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => makeColumns(1_000),
-    []
+    [],
   )
 
   const [data, _setData] = React.useState(() => makeData(1_000, columns))
@@ -42,7 +42,7 @@ function App() {
   //we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
   const columnVirtualizer = useVirtualizer({
     count: visibleColumns.length,
-    estimateSize: index => visibleColumns[index].getSize(), //estimate width of each column for accurate scrollbar dragging
+    estimateSize: (index) => visibleColumns[index].getSize(), //estimate width of each column for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
     horizontal: true,
     overscan: 3, //how many columns to render on each side off screen each way (adjust this for performance)
@@ -57,7 +57,7 @@ function App() {
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? element => element?.getBoundingClientRect().height
+        ? (element) => element?.getBoundingClientRect().height
         : undefined,
     overscan: 5,
   })
@@ -108,7 +108,7 @@ function App() {
               zIndex: 1,
             }}
           >
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
                 style={{ display: 'flex', width: '100%' }}
@@ -117,7 +117,7 @@ function App() {
                   //fake empty column to the left for virtualization scroll padding
                   <th style={{ display: 'flex', width: virtualPaddingLeft }} />
                 ) : null}
-                {virtualColumns.map(vc => {
+                {virtualColumns.map((vc) => {
                   const header = headerGroup.headers[vc.index]
                   return (
                     <th
@@ -137,7 +137,7 @@ function App() {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {{
                           asc: ' 🔼',
@@ -161,14 +161,14 @@ function App() {
               position: 'relative', //needed for absolute positioning of rows
             }}
           >
-            {virtualRows.map(virtualRow => {
+            {virtualRows.map((virtualRow) => {
               const row = rows[virtualRow.index] as Row<Person>
               const visibleCells = row.getVisibleCells()
 
               return (
                 <tr
                   data-index={virtualRow.index} //needed for dynamic row height measurement
-                  ref={node => rowVirtualizer.measureElement(node)} //measure dynamic row height
+                  ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
                   key={row.id}
                   style={{
                     display: 'flex',
@@ -183,7 +183,7 @@ function App() {
                       style={{ display: 'flex', width: virtualPaddingLeft }}
                     />
                   ) : null}
-                  {virtualColumns.map(vc => {
+                  {virtualColumns.map((vc) => {
                     const cell = visibleCells[vc.index]
                     return (
                       <td
@@ -195,7 +195,7 @@ function App() {
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </td>
                     )
@@ -223,5 +223,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

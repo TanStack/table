@@ -42,7 +42,7 @@ export const RowSorting: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>
+    table: Partial<Table<TData>>,
   ): TableOptions_RowSorting<TData> => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
@@ -54,7 +54,7 @@ export const RowSorting: TableFeature = {
 
   _createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getAutoSortingFn = () => column_getAutoSortingFn(column, table)
 
@@ -85,9 +85,10 @@ export const RowSorting: TableFeature = {
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setSorting = updater => table_setSorting(table, updater)
+    table.setSorting = (updater) => table_setSorting(table, updater)
 
-    table.resetSorting = defaultState => table_resetSorting(table, defaultState)
+    table.resetSorting = (defaultState) =>
+      table_resetSorting(table, defaultState)
 
     table.getPreSortedRowModel = () => table_getPreSortedRowModel(table)
 

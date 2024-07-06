@@ -63,7 +63,7 @@ export interface Row_RowPinning {
   pin: (
     position: RowPinningPosition,
     includeLeafRows?: boolean,
-    includeParentRows?: boolean
+    includeParentRows?: boolean,
   ) => void
 }
 

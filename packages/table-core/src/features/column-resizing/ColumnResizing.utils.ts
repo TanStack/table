@@ -4,7 +4,7 @@ import { ColumnResizingInfoState } from './ColumnResizing.types'
 
 export function column_getCanResize<TData extends RowData, TValue>(
   table: Table<TData>,
-  column: Column<TData, TValue>
+  column: Column<TData, TValue>,
 ) {
   return (
     (column.columnDef.enableResizing ?? true) &&
@@ -14,7 +14,7 @@ export function column_getCanResize<TData extends RowData, TValue>(
 
 export function column_getIsResizing<TData extends RowData, TValue>(
   table: Table<TData>,
-  column: Column<TData, TValue>
+  column: Column<TData, TValue>,
 ) {
   return table.getState().columnSizingInfo.isResizingColumn === column.id
 }
@@ -22,7 +22,7 @@ export function column_getIsResizing<TData extends RowData, TValue>(
 export function header_getResizeHandler<TData extends RowData, TValue>(
   header: Header<TData, TValue>,
   table: Table<TData>,
-  _contextDocument?: Document
+  _contextDocument?: Document,
 ) {
   const column = table.getColumn(header.column.id)
   const canResize = column?.getCanResize()
@@ -44,7 +44,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
     const startSize = header.getSize()
 
     const columnSizingStart: [string, number][] = header
-      ? header.getLeafHeaders().map(d => [d.column.id, d.column.getSize()])
+      ? header.getLeafHeaders().map((d) => [d.column.id, d.column.getSize()])
       : [[column.id, column.getSize()]]
 
     const clientX = isTouchStartEvent(e)
@@ -58,20 +58,20 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
         return
       }
 
-      table.setColumnSizingInfo(old => {
+      table.setColumnSizingInfo((old) => {
         const deltaDirection =
           table.options.columnResizeDirection === 'rtl' ? -1 : 1
         const deltaOffset =
           (clientXPos - (old?.startOffset ?? 0)) * deltaDirection
         const deltaPercentage = Math.max(
           deltaOffset / (old?.startSize ?? 0),
-          -0.999999
+          -0.999999,
         )
 
         old.columnSizingStart.forEach(([columnId, headerSize]) => {
           newColumnSizing[columnId] =
             Math.round(
-              Math.max(headerSize + headerSize * deltaPercentage, 0) * 100
+              Math.max(headerSize + headerSize * deltaPercentage, 0) * 100,
             ) / 100
         })
 
@@ -86,7 +86,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
         table.options.columnResizeMode === 'onChange' ||
         eventType === 'end'
       ) {
-        table.setColumnSizing(old => ({
+        table.setColumnSizing((old) => ({
           ...old,
           ...newColumnSizing,
         }))
@@ -98,7 +98,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
     const onEnd = (clientXPos?: number) => {
       updateOffset('end', clientXPos)
 
-      table.setColumnSizingInfo(old => ({
+      table.setColumnSizingInfo((old) => ({
         ...old,
         isResizingColumn: false,
         startOffset: null,
@@ -117,7 +117,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
       upHandler: (e: MouseEvent) => {
         contextDocument?.removeEventListener(
           'mousemove',
-          mouseEvents.moveHandler
+          mouseEvents.moveHandler,
         )
         contextDocument?.removeEventListener('mouseup', mouseEvents.upHandler)
         onEnd(e.clientX)
@@ -136,7 +136,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
       upHandler: (e: TouchEvent) => {
         contextDocument?.removeEventListener(
           'touchmove',
-          touchEvents.moveHandler
+          touchEvents.moveHandler,
         )
         contextDocument?.removeEventListener('touchend', touchEvents.upHandler)
         if (e.cancelable) {
@@ -155,27 +155,27 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
       contextDocument?.addEventListener(
         'touchmove',
         touchEvents.moveHandler,
-        passiveIfSupported
+        passiveIfSupported,
       )
       contextDocument?.addEventListener(
         'touchend',
         touchEvents.upHandler,
-        passiveIfSupported
+        passiveIfSupported,
       )
     } else {
       contextDocument?.addEventListener(
         'mousemove',
         mouseEvents.moveHandler,
-        passiveIfSupported
+        passiveIfSupported,
       )
       contextDocument?.addEventListener(
         'mouseup',
         mouseEvents.upHandler,
-        passiveIfSupported
+        passiveIfSupported,
       )
     }
 
-    table.setColumnSizingInfo(old => ({
+    table.setColumnSizingInfo((old) => ({
       ...old,
       startOffset: clientX,
       startSize,
@@ -189,19 +189,20 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
 
 export function table_setColumnSizingInfo<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<ColumnResizingInfoState>
+  updater: Updater<ColumnResizingInfoState>,
 ) {
   table.options.onColumnSizingInfoChange?.(updater)
 }
 
 export function table_resetHeaderSizeInfo<TData extends RowData>(
   table: Table<TData>,
-  defaultState?: boolean
+  defaultState?: boolean,
 ) {
   table.setColumnSizingInfo(
     defaultState
       ? getDefaultColumnSizingInfoState()
-      : table.initialState.columnSizingInfo ?? getDefaultColumnSizingInfoState()
+      : table.initialState.columnSizingInfo ??
+          getDefaultColumnSizingInfoState(),
   )
 }
 

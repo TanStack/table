@@ -16,7 +16,7 @@ export function table_reset<TData extends RowData>(table: Table<TData>): void {
 
 export function table_mergeOptions<TData extends RowData>(
   table: Table<TData>,
-  newOptions: TableOptionsResolved<TData>
+  newOptions: TableOptionsResolved<TData>,
 ) {
   if (table.options.mergeOptions) {
     return table.options.mergeOptions(table.options, newOptions)
@@ -30,7 +30,7 @@ export function table_mergeOptions<TData extends RowData>(
 
 export function table_setOptions<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<TableOptionsResolved<TData>>
+  updater: Updater<TableOptionsResolved<TData>>,
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
   table.options = table_mergeOptions(table, newOptions) as RequiredKeys<
@@ -40,20 +40,20 @@ export function table_setOptions<TData extends RowData>(
 }
 
 export function table_getState<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ): TableState {
   return table.options.state as TableState
 }
 
 export function table_setState<TData extends RowData>(
   table: Table<TData>,
-  updater: Updater<TableState>
+  updater: Updater<TableState>,
 ): void {
   table.options.onStateChange?.(updater)
 }
 
 export function table_getCoreRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ): RowModel<TData> {
   if (!table._getCoreRowModel) {
     table._getCoreRowModel = table.options.getCoreRowModel(table)
@@ -63,7 +63,7 @@ export function table_getCoreRowModel<TData extends RowData>(
 }
 
 export function table_getRowModel<TData extends RowData>(
-  table: Table<TData>
+  table: Table<TData>,
 ): RowModel<TData> {
   return table_getPaginationRowModel(table)
 }
