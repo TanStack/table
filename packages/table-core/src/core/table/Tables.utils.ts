@@ -7,7 +7,8 @@ import {
   TableState,
   Updater,
 } from '../../types'
-import { functionalUpdate, RequiredKeys } from '../../utils'
+import { functionalUpdate } from '../../utils'
+import { RequiredKeys } from '../../utils.types'
 
 export function table_reset<TData extends RowData>(table: Table<TData>): void {
   table_setState(table, table.initialState)

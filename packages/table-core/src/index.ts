@@ -1,14 +1,11 @@
 /**
- * Types
- */
-
-export * from './types'
-
-/**
  * Core
  */
 
+export * from './core/table/getCoreRowModel'
 export * from './helpers'
+export * from './types'
+export * from './utils'
 
 //Cells
 export * from './core/cells/_createCell'
@@ -23,6 +20,7 @@ export * from './core/columns/Columns.types'
 export * from './core/columns/Columns.utils'
 
 //Headers
+export * from './core/headers/buildHeaderGroups'
 export * from './core/headers/_createHeader'
 export * from './core/headers/Headers'
 export * from './core/headers/Headers.types'
@@ -39,11 +37,6 @@ export * from './core/table/_createTable'
 export * from './core/table/Tables'
 export * from './core/table/Tables.types'
 export * from './core/table/Tables.utils'
-
-//Utils
-export * from './utils'
-export * from './core/headers/buildHeaderGroups'
-export * from './core/table/getCoreRowModel'
 
 /**
  * Features

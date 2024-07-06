@@ -9,7 +9,7 @@ import {
   TableState,
   Updater,
 } from '../../types'
-import { RequiredKeys } from '../../utils'
+import { RequiredKeys } from '../../utils.types'
 
 export interface TableOptions_Core<TData extends RowData> {
   /**

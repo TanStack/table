@@ -104,7 +104,7 @@ import {
   Table_RowSelection,
 } from './features/row-selection/RowSelection.types'
 import { Row_Core, Table_Rows, TableOptions_Rows } from './core/rows/Rows.types'
-import { PartialKeys, UnionToIntersection } from './utils'
+import { PartialKeys, UnionToIntersection } from './utils.types'
 import {
   CellContext,
   Cell_Core,

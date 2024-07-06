@@ -8,7 +8,7 @@ import {
   RowData,
   TableOptions,
 } from './types'
-import { DeepKeys, DeepValue } from './utils'
+import { DeepKeys, DeepValue } from './utils.types'
 
 // type Person = {
 //   firstName: string
