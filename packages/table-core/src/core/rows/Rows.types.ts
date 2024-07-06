@@ -1,5 +1,5 @@
 import { RowData, Cell, Row } from '../../types'
-import { _createCell } from '../cells/CreateCell'
+import { _createCell } from '../cells/_createCell'
 
 export interface Row_CoreProperties<TData extends RowData> {
   _uniqueValuesCache: Record<string, unknown>

@@ -37,7 +37,7 @@ export const ColumnFiltering: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): TableOptions_ColumnFiltering<TData> => {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),

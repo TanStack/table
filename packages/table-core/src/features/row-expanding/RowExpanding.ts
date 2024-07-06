@@ -32,7 +32,7 @@ export const RowExpanding: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): TableOptions_RowExpanding<TData> => {
     return {
       onExpandedChange: makeStateUpdater('expanded', table),

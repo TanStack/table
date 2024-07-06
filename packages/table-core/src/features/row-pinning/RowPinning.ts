@@ -26,7 +26,7 @@ export const RowPinning: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): RowPinningDefaultOptions => {
     return {
       onRowPinningChange: makeStateUpdater('rowPinning', table),

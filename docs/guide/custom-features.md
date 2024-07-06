@@ -188,7 +188,7 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
 
   // define the new feature's default options
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): DensityOptions => {
     return {
       enableDensity: true,

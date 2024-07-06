@@ -1,4 +1,4 @@
-import { _createRow } from '../rows/CreateRow'
+import { _createRow } from '../rows/_createRow'
 import { Table, Row, RowModel, RowData } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
 

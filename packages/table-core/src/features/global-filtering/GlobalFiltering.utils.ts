@@ -48,20 +48,3 @@ export function table_resetGlobalFilter<TData extends RowData>(
     defaultState ? undefined : table.initialState.globalFilter
   )
 }
-
-export function getGlobalFilteringDefaultOptions<TData extends RowData>(
-  table: Table<TData>
-) {
-  return {
-    onGlobalFilterChange: makeStateUpdater('globalFilter', table),
-    globalFilterFn: 'auto',
-    getColumnCanGlobalFilter: column => {
-      const value = table
-        .getCoreRowModel()
-        .flatRows[0]?._getAllCellsByColumnId()
-        [column.id]?.getValue()
-
-      return typeof value === 'string' || typeof value === 'number'
-    },
-  } as TableOptions_GlobalFiltering<TData>
-}

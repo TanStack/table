@@ -42,7 +42,7 @@ export const RowSorting: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): TableOptions_RowSorting<TData> => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),

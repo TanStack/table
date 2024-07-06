@@ -1,6 +1,5 @@
 import {
   column_getCanGlobalFilter,
-  getGlobalFilteringDefaultOptions,
   table_getGlobalAutoFilterFn,
   table_getGlobalFilterFn,
   table_resetGlobalFilter,
@@ -11,6 +10,7 @@ import {
   TableOptions_GlobalFiltering,
   TableState_GlobalFiltering,
 } from './GlobalFiltering.types'
+import { makeStateUpdater } from '../../utils'
 
 export const GlobalFiltering: TableFeature = {
   _getInitialState: (state): TableState_GlobalFiltering => {
@@ -21,9 +21,20 @@ export const GlobalFiltering: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
-  ): TableOptions_GlobalFiltering<TData> =>
-    getGlobalFilteringDefaultOptions(table),
+    table: Partial<Table<TData>>
+  ): TableOptions_GlobalFiltering<TData> => {
+    return {
+      onGlobalFilterChange: makeStateUpdater('globalFilter', table),
+      globalFilterFn: 'auto',
+      getColumnCanGlobalFilter: column => {
+        const value = table!.getCoreRowModel!()
+          .flatRows[0]?._getAllCellsByColumnId()
+          [column.id]?.getValue()
+
+        return typeof value === 'string' || typeof value === 'number'
+      },
+    }
+  },
 
   _createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,

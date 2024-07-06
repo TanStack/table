@@ -34,7 +34,7 @@ export const ColumnSizing: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): ColumnSizingDefaultOptions => {
     return {
       onColumnSizingChange: makeStateUpdater('columnSizing', table),

@@ -1,5 +1,5 @@
 import { RowData, Row, Table } from '../../types'
-import { _createCell } from '../cells/CreateCell'
+import { _createCell } from '../cells/_createCell'
 import { Row_CoreProperties } from './Rows.types'
 
 export const _createRow = <TData extends RowData>(

@@ -39,7 +39,7 @@ export const RowPagination: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): PaginationDefaultOptions => {
     return {
       onPaginationChange: makeStateUpdater('pagination', table),

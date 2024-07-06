@@ -37,18 +37,11 @@ export interface TableOptions_Core<TData extends RowData> {
    */
   debugAll?: boolean
   /**
-   * Set this option to `true` to output header debugging information to the console.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugheaders)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugHeaders?: boolean
-  /**
    * Set this option to `true` to output table debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugtable)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   debugTable?: boolean
-
   /**
    * This required option is a factory for a function that computes and returns the core row model for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
@@ -94,44 +87,24 @@ export interface TableOptions_Core<TData extends RowData> {
   state: Partial<TableState>
 }
 
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'columns'>
-): Omit<TableOptions<TData>, 'columns'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data'>
-): Omit<TableOptions<TData>, 'data'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'getCoreRowModel'>
-): Omit<TableOptions<TData>, 'getCoreRowModel'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'columns'>
-): Omit<TableOptions<TData>, 'data' | 'columns'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>
-): Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>
-): Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>
-): Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: TableOptions<TData>
-): TableOptions<TData>
-
-export function tableOptions(options: unknown) {
-  return options
+export interface Table_CoreProperties<TData extends RowData> {
+  _features: readonly TableFeature[]
+  /**
+   * This is the resolved initial state of the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  initialState: TableState
+  /**
+   * A read-only reference to the table's current options.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#options)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  options: RequiredKeys<TableOptionsResolved<TData>, 'state'>
 }
 
-export interface Table_Core<TData extends RowData> {
-  _features: readonly TableFeature[]
+export interface Table_Core<TData extends RowData>
+  extends Table_CoreProperties<TData> {
   _getCoreRowModel?: () => RowModel<TData>
   _queue: (cb: () => void) => void
   /**
@@ -152,18 +125,6 @@ export interface Table_Core<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   getState: () => TableState
-  /**
-   * This is the resolved initial state of the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  initialState: TableState
-  /**
-   * A read-only reference to the table's current options.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#options)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  options: RequiredKeys<TableOptionsResolved<TData>, 'state'>
   /**
    * Call this function to reset the table state to the initial state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#reset)

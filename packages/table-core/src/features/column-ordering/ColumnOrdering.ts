@@ -23,7 +23,7 @@ export const ColumnOrdering: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): ColumnOrderDefaultOptions => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', table),

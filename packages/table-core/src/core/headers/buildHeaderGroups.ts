@@ -1,5 +1,5 @@
 import { Column, Header, HeaderGroup, RowData, Table } from '../../types'
-import { _createHeader } from './CreateHeader'
+import { _createHeader } from './_createHeader'
 
 export function buildHeaderGroups<TData extends RowData>(
   allColumns: Column<TData, unknown>[],

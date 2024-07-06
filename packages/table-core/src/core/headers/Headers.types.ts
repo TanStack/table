@@ -1,11 +1,39 @@
 import { Column, Header, HeaderGroup, RowData, Table } from '../../types'
 
-export const debugHeaders = 'debugHeaders'
+export interface TableOptions_Headers {
+  /**
+   * Set this option to `true` to output header debugging information to the console.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  debugHeaders?: boolean
+}
 
-export interface HeaderGroup_Core<TData extends RowData> {
-  depth: number
-  headers: Header<TData, unknown>[]
-  id: string
+export interface Table_Headers<TData extends RowData> {
+  /**
+   * Returns all header groups for the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getheadergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getHeaderGroups: () => HeaderGroup<TData>[]
+  /**
+   * Returns the footer groups for the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getfootergroups)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getFooterGroups: () => HeaderGroup<TData>[]
+  /**
+   * Returns headers for all columns in the table, including parent headers.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getflatheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getFlatHeaders: () => Header<TData, unknown>[]
+  /**
+   * Returns headers for all leaf columns in the table, (not including parent headers).
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleafheaders)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
+   */
+  getLeafHeaders: () => Header<TData, unknown>[]
 }
 
 export interface HeaderContext<TData, TValue> {
@@ -23,7 +51,7 @@ export interface HeaderContext<TData, TValue> {
   table: Table<TData>
 }
 
-export interface Header_Core<TData extends RowData, TValue> {
+export interface Header_CoreProperties<TData extends RowData, TValue> {
   /**
    * The col-span for the header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#colspan)
@@ -42,18 +70,6 @@ export interface Header_Core<TData extends RowData, TValue> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
   depth: number
-  /**
-   * Returns the rendering context (or props) for column-based components like headers, footers and filters.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getcontext)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getContext: () => HeaderContext<TData, TValue>
-  /**
-   * Returns the leaf headers hierarchically nested under this header.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getleafheaders)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getLeafHeaders: () => Header<TData, unknown>[]
   /**
    * The header's associated header group object.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#headergroup)
@@ -98,29 +114,24 @@ export interface Header_Core<TData extends RowData, TValue> {
   subHeaders: Header<TData, TValue>[]
 }
 
-export interface Table_Headers<TData extends RowData> {
+export interface Header_Core<TData extends RowData, TValue>
+  extends Header_CoreProperties<TData, TValue> {
   /**
-   * Returns all header groups for the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getheadergroups)
+   * Returns the rendering context (or props) for column-based components like headers, footers and filters.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getcontext)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getHeaderGroups: () => HeaderGroup<TData>[]
+  getContext: () => HeaderContext<TData, TValue>
   /**
-   * Returns the footer groups for the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getfootergroups)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getFooterGroups: () => HeaderGroup<TData>[]
-  /**
-   * Returns headers for all columns in the table, including parent headers.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getflatheaders)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
-   */
-  getFlatHeaders: () => Header<TData, unknown>[]
-  /**
-   * Returns headers for all leaf columns in the table, (not including parent headers).
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleafheaders)
+   * Returns the leaf headers hierarchically nested under this header.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
   getLeafHeaders: () => Header<TData, unknown>[]
+}
+
+export interface HeaderGroup_Core<TData extends RowData> {
+  depth: number
+  headers: Header<TData, unknown>[]
+  id: string
 }

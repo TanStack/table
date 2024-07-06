@@ -38,7 +38,7 @@ export const RowSelection: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): TableOptions_RowSelection<TData> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),

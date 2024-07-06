@@ -1,7 +1,7 @@
-import { RowData, Table, TableFeature } from '../../types'
+import { Header, RowData, Table, TableFeature } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
-import { _createHeader } from './CreateHeader'
-import { debugHeaders } from './Headers.types'
+import { _createHeader } from './_createHeader'
+import { Header_Core } from './Headers.types'
 import {
   table_getFlatHeaders,
   table_getFooterGroups,
@@ -20,19 +20,19 @@ export const Headers: TableFeature = {
       ],
       (allColumns, leafColumns, left, right) =>
         table_getHeaderGroups(table, allColumns, leafColumns, left, right),
-      getMemoOptions(table.options, debugHeaders, 'getHeaderGroups')
+      getMemoOptions(table.options, 'debugHeaders', 'getHeaderGroups')
     )
 
     table.getFooterGroups = memo(
       () => [table.getHeaderGroups()],
       headerGroups => table_getFooterGroups(headerGroups),
-      getMemoOptions(table.options, debugHeaders, 'getFooterGroups')
+      getMemoOptions(table.options, 'debugHeaders', 'getFooterGroups')
     )
 
     table.getFlatHeaders = memo(
       () => [table.getHeaderGroups()],
       headerGroups => table_getFlatHeaders(headerGroups),
-      getMemoOptions(table.options, debugHeaders, 'getFlatHeaders')
+      getMemoOptions(table.options, 'debugHeaders', 'getFlatHeaders')
     )
 
     table.getLeafHeaders = memo(
@@ -42,7 +42,33 @@ export const Headers: TableFeature = {
         table.getRightHeaderGroups(),
       ],
       (left, center, right) => table_getLeafHeaders(left, center, right),
-      getMemoOptions(table.options, debugHeaders, 'getLeafHeaders')
+      getMemoOptions(table.options, 'debugHeaders', 'getLeafHeaders')
     )
+  },
+
+  _createHeader: <TData extends RowData>(
+    header: Header<TData, unknown>,
+    table: Table<TData>
+  ): void => {
+    header.getLeafHeaders = (): Header<TData, unknown>[] => {
+      const leafHeaders: Header<TData, unknown>[] = []
+
+      const recurseHeader = (h: Header_Core<TData, any>) => {
+        if (h.subHeaders && h.subHeaders.length) {
+          h.subHeaders.map(recurseHeader)
+        }
+        leafHeaders.push(h as Header<TData, unknown>)
+      }
+
+      recurseHeader(header)
+
+      return leafHeaders
+    }
+
+    header.getContext = () => ({
+      column: header.column,
+      header,
+      table,
+    })
   },
 }

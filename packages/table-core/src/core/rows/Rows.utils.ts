@@ -1,6 +1,6 @@
 import { Cell, Column, Row, RowData, Table } from '../../types'
 import { flattenBy } from '../../utils'
-import { _createCell } from '../cells/CreateCell'
+import { _createCell } from '../cells/_createCell'
 
 export function row_getValue<TData extends RowData>(
   row: Row<TData>,

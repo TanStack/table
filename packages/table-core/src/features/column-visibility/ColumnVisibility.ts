@@ -29,7 +29,7 @@ export const ColumnVisibility: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): VisibilityDefaultOptions => {
     return {
       onColumnVisibilityChange: makeStateUpdater('columnVisibility', table),

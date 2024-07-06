@@ -1,4 +1,4 @@
-import { TableOptions_Core, Table_Core } from './core/table/Table.types'
+import { TableOptions_Core, Table_Core } from './core/table/Tables.types'
 import {
   Table_ColumnVisibility,
   TableState_ColumnVisibility,
@@ -32,6 +32,7 @@ import {
   HeaderGroup_Core,
   HeaderContext,
   Table_Headers,
+  TableOptions_Headers,
 } from './core/headers/Headers.types'
 import {
   Column_ColumnFaceting,
@@ -123,7 +124,7 @@ export interface TableFeature<TData extends RowData = any> {
   _createTable?: (table: Table<TData>) => void
   _getDefaultColumnDef?: () => Partial<ColumnDef<TData, unknown>>
   _getDefaultOptions?: (
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ) => Partial<TableOptionsResolved<TData>>
   _getInitialState?: (initialState?: Partial<TableState>) => Partial<TableState>
 }
@@ -174,6 +175,7 @@ export interface TableOptionsResolved<TData extends RowData>
     TableOptions_Cell,
     TableOptions_Columns<TData>,
     TableOptions_Rows<TData>,
+    TableOptions_Headers,
     TableOptions_ColumnFaceting<TData>,
     TableOptions_ColumnFiltering<TData>,
     TableOptions_ColumnGrouping,

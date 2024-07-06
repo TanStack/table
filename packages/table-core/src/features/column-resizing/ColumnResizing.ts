@@ -23,7 +23,7 @@ export const ColumnResizing: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): ColumnResizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',

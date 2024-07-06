@@ -1,6 +1,6 @@
 import { getMemoOptions, memo } from '../../utils'
 import { Table, Column, RowData, TableFeature, CellData } from '../../types'
-import { _createColumn } from './CreateColumn'
+import { _createColumn } from './_createColumn'
 import {
   column_getFlatColumns,
   column_getLeafColumns,

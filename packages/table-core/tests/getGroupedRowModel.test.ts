@@ -5,7 +5,7 @@ import {
   getCoreRowModel,
   getGroupedRowModel,
 } from '../src'
-import { createColumnHelper } from '../src/columnHelper'
+import { createColumnHelper } from '../src/helpers'
 import { makeData, Person } from './makeTestData'
 
 type personKeys = keyof Person

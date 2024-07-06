@@ -21,8 +21,9 @@ export function table_toggleAllRowsSelected<TData extends RowData>(
   table: Table<TData>,
   value?: boolean
 ) {
-  table.setRowSelection(old => {
-    value = typeof value !== 'undefined' ? value : !table.getIsAllRowsSelected()
+  table_setRowSelection(table, old => {
+    value =
+      typeof value !== 'undefined' ? value : !table_getIsAllRowsSelected(table)
 
     const rowSelection = { ...old }
 
@@ -213,7 +214,7 @@ export function row_toggleSelected<TData extends RowData>(
 ) {
   const isSelected = row.getIsSelected()
 
-  table.setRowSelection(old => {
+  table_setRowSelection(table, old => {
     value = typeof value !== 'undefined' ? value : !isSelected
 
     if (row.getCanSelect() && isSelected === value) {

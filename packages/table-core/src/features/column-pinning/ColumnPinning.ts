@@ -32,7 +32,7 @@ export const ColumnPinning: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): ColumnPinningDefaultOptions => {
     return {
       onColumnPinningChange: makeStateUpdater('columnPinning', table),

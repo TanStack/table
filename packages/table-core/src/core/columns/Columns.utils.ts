@@ -7,7 +7,7 @@ import {
   RowData,
   Table,
 } from '../../types'
-import { _createColumn } from './CreateColumn'
+import { _createColumn } from './_createColumn'
 
 export function column_getFlatColumns<
   TData extends RowData,

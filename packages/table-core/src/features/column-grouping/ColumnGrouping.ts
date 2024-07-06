@@ -43,7 +43,7 @@ export const ColumnGrouping: TableFeature = {
   },
 
   _getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Partial<Table<TData>>
   ): TableOptions_ColumnGrouping => {
     return {
       onGroupingChange: makeStateUpdater('grouping', table),
