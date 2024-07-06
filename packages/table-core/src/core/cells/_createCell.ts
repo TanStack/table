@@ -1,5 +1,5 @@
-import { RowData, Cell, Column, Row, Table } from '../../types'
-import { Cell_CoreProperties } from './Cells.types'
+import type { Cell, Column, Row, RowData, Table } from '../../types'
+import type { Cell_CoreProperties } from './Cells.types'
 
 export function _createCell<TData extends RowData, TValue>(
   column: Column<TData, TValue>,

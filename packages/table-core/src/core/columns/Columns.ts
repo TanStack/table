@@ -1,5 +1,4 @@
 import { getMemoOptions, memo } from '../../utils'
-import { Table, Column, RowData, TableFeature, CellData } from '../../types'
 import { _createColumn } from './_createColumn'
 import {
   column_getFlatColumns,
@@ -11,6 +10,13 @@ import {
   table_getColumn,
   table_getDefaultColumnDef,
 } from './Columns.utils'
+import type {
+  CellData,
+  Column,
+  RowData,
+  Table,
+  TableFeature,
+} from '../../types'
 
 export const Columns: TableFeature = {
   _createColumn: <TData extends RowData, TValue extends CellData>(
@@ -23,7 +29,7 @@ export const Columns: TableFeature = {
       getMemoOptions(table.options, 'debugColumns', 'column.getFlatColumns'),
     )
 
-    //@ts-ignore
+    //@ts-ignore - don't know
     column.getLeafColumns = memo(
       () => [table._getOrderColumnsFn()],
       (orderColumns) => column_getLeafColumns(column, orderColumns),

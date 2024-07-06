@@ -1,5 +1,5 @@
-import { RowData, Cell, Row } from '../../types'
 import { _createCell } from '../cells/_createCell'
+import type { Cell, Row, RowData } from '../../types'
 
 export interface Row_CoreProperties<TData extends RowData> {
   _uniqueValuesCache: Record<string, unknown>
@@ -33,7 +33,7 @@ export interface Row_CoreProperties<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#originalsubrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  originalSubRows?: TData[]
+  originalSubRows?: Array<TData>
   /**
    * If nested, this row's parent row id.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#parentid)
@@ -45,7 +45,7 @@ export interface Row_CoreProperties<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#subrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  subRows: Row<TData>[]
+  subRows: Array<Row<TData>>
 }
 
 export interface Row_Core<TData extends RowData>
@@ -56,13 +56,13 @@ export interface Row_Core<TData extends RowData>
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getallcells)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  getAllCells: () => Cell<TData, unknown>[]
+  getAllCells: () => Array<Cell<TData, unknown>>
   /**
    * Returns the leaf rows for the row, not including any parent rows.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getleafrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  getLeafRows: () => Row<TData>[]
+  getLeafRows: () => Array<Row<TData>>
   /**
    * Returns the parent row for the row, if it exists.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getparentrow)
@@ -74,13 +74,13 @@ export interface Row_Core<TData extends RowData>
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getparentrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  getParentRows: () => Row<TData>[]
+  getParentRows: () => Array<Row<TData>>
   /**
    * Returns a unique array of values from the row for a given columnId.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getuniquevalues)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  getUniqueValues: <TValue>(columnId: string) => TValue[]
+  getUniqueValues: <TValue>(columnId: string) => Array<TValue>
   /**
    * Returns the value from the row for a given columnId.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getvalue)
@@ -115,7 +115,7 @@ export interface TableOptions_Rows<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getsubrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getSubRows?: (originalRow: TData, index: number) => undefined | TData[]
+  getSubRows?: (originalRow: TData, index: number) => undefined | Array<TData>
 }
 
 export interface Table_Rows<TData extends RowData> {

@@ -1,9 +1,4 @@
-import { Table, Row, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
-import {
-  TableOptions_RowSelection,
-  TableState_RowSelection,
-} from './RowSelection.types'
 import {
   row_getCanMultiSelect,
   row_getCanSelect,
@@ -28,6 +23,11 @@ import {
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './RowSelection.utils'
+import type { Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  TableOptions_RowSelection,
+  TableState_RowSelection,
+} from './RowSelection.types'
 
 export const RowSelection: TableFeature = {
   _getInitialState: (state): TableState_RowSelection => {

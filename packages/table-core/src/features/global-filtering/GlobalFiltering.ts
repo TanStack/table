@@ -1,3 +1,4 @@
+import { makeStateUpdater } from '../../utils'
 import {
   column_getCanGlobalFilter,
   table_getGlobalAutoFilterFn,
@@ -5,12 +6,11 @@ import {
   table_resetGlobalFilter,
   table_setGlobalFilter,
 } from './GlobalFiltering.utils'
-import { Column, Table, RowData, TableFeature } from '../../types'
-import {
+import type { Column, RowData, Table, TableFeature } from '../../types'
+import type {
   TableOptions_GlobalFiltering,
   TableState_GlobalFiltering,
 } from './GlobalFiltering.types'
-import { makeStateUpdater } from '../../utils'
 
 export const GlobalFiltering: TableFeature = {
   _getInitialState: (state): TableState_GlobalFiltering => {
@@ -27,7 +27,7 @@ export const GlobalFiltering: TableFeature = {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: (column) => {
-        const value = table!.getCoreRowModel!()
+        const value = table.getCoreRowModel!()
           .flatRows[0]?._getAllCellsByColumnId()
           [column.id]?.getValue()
 

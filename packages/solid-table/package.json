@@ -46,6 +46,7 @@
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src",
     "test:types": "tsc",
     "test:build": "publint --strict",
     "build": "tsc -p tsconfig.build.json"

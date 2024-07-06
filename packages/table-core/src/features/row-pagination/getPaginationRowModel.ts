@@ -1,6 +1,6 @@
-import { Table, RowModel, Row, RowData } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
 import { expandRows } from '../row-expanding/getExpandedRowModel'
+import type { Row, RowData, RowModel, Table } from '../../types'
 
 export function getPaginationRowModel<TData extends RowData>(opts?: {
   initialSync: boolean
@@ -20,23 +20,23 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
         }
 
         const { pageSize, pageIndex } = pagination
-        let { rows, flatRows, rowsById } = rowModel
+        const { rows, flatRows, rowsById } = rowModel
         const pageStart = pageSize * pageIndex
         const pageEnd = pageStart + pageSize
 
-        rows = rows.slice(pageStart, pageEnd)
+        const paginatedRows = rows.slice(pageStart, pageEnd)
 
         let paginatedRowModel: RowModel<TData>
 
         if (!table.options.paginateExpandedRows) {
           paginatedRowModel = expandRows({
-            rows,
+            rows: paginatedRows,
             flatRows,
             rowsById,
           })
         } else {
           paginatedRowModel = {
-            rows,
+            rows: paginatedRows,
             flatRows,
             rowsById,
           }

@@ -1,13 +1,13 @@
-import { Header, RowData, Table, TableFeature } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
 import { _createHeader } from './_createHeader'
-import { Header_Core } from './Headers.types'
 import {
   table_getFlatHeaders,
   table_getFooterGroups,
   table_getHeaderGroups,
   table_getLeafHeaders,
 } from './Headers.utils'
+import type { Header_Core } from './Headers.types'
+import type { Header, RowData, Table, TableFeature } from '../../types'
 
 export const Headers: TableFeature = {
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
@@ -50,11 +50,11 @@ export const Headers: TableFeature = {
     header: Header<TData, unknown>,
     table: Table<TData>,
   ): void => {
-    header.getLeafHeaders = (): Header<TData, unknown>[] => {
-      const leafHeaders: Header<TData, unknown>[] = []
+    header.getLeafHeaders = (): Array<Header<TData, unknown>> => {
+      const leafHeaders: Array<Header<TData, unknown>> = []
 
       const recurseHeader = (h: Header_Core<TData, any>) => {
-        if (h.subHeaders && h.subHeaders.length) {
+        if (h.subHeaders.length) {
           h.subHeaders.map(recurseHeader)
         }
         leafHeaders.push(h as Header<TData, unknown>)

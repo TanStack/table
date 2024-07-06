@@ -18,7 +18,7 @@ export function lazyInit<T extends object>(initializer: () => T): T {
   const table = () => {}
 
   return new Proxy<T>(table as T, {
-    apply(target: T, thisArg: any, argArray: any[]): any {
+    apply(target: T, thisArg: any, argArray: Array<any>): any {
       initializeObject()
       if (typeof object === 'function') {
         return Reflect.apply(object, thisArg, argArray)

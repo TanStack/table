@@ -1,9 +1,9 @@
-import { Table, RowData, TableFeature } from '../../types'
 import {
   table_getGlobalFacetedMinMaxValues,
   table_getGlobalFacetedRowModel,
   table_getGlobalFacetedUniqueValues,
 } from './GlobalFaceting.utils'
+import type { RowData, Table, TableFeature } from '../../types'
 
 export const GlobalFaceting: TableFeature = {
   _createTable: <TData extends RowData>(table: Table<TData>): void => {

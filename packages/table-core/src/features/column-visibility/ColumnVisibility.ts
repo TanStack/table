@@ -1,9 +1,4 @@
-import { Column, Row, RowData, Table, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
-import {
-  VisibilityDefaultOptions,
-  TableState_ColumnVisibility,
-} from './ColumnVisibility.types'
 import {
   column_getCanHide,
   column_getIsVisible,
@@ -19,6 +14,11 @@ import {
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
 } from './ColumnVisibility.utils'
+import type { Column, Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  TableState_ColumnVisibility,
+  VisibilityDefaultOptions,
+} from './ColumnVisibility.types'
 
 export const ColumnVisibility: TableFeature = {
   _getInitialState: (state): TableState_ColumnVisibility => {

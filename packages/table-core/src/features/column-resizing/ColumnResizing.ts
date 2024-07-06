@@ -1,9 +1,4 @@
-import { RowData, Column, Header, Table, TableFeature } from '../../types'
 import { makeStateUpdater } from '../../utils'
-import {
-  ColumnResizingDefaultOptions,
-  TableState_ColumnResizing,
-} from './ColumnResizing.types'
 import {
   column_getCanResize,
   column_getIsResizing,
@@ -12,6 +7,11 @@ import {
   table_resetHeaderSizeInfo,
   table_setColumnSizingInfo,
 } from './ColumnResizing.utils'
+import type { Column, Header, RowData, Table, TableFeature } from '../../types'
+import type {
+  ColumnResizingDefaultOptions,
+  TableState_ColumnResizing,
+} from './ColumnResizing.types'
 
 export const ColumnResizing: TableFeature = {
   _getInitialState: (state): TableState_ColumnResizing => {

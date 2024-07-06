@@ -1,17 +1,21 @@
-import {
-  _createTable,
+import { _createTable } from '@tanstack/table-core'
+import type {
   RowData,
   Table,
   TableOptions,
   TableOptionsResolved,
   TableState,
 } from '@tanstack/table-core'
-import { ReactiveController, ReactiveControllerHost, TemplateResult } from 'lit'
+import type {
+  ReactiveController,
+  ReactiveControllerHost,
+  TemplateResult,
+} from 'lit'
 
 export * from '@tanstack/table-core'
 
 export function flexRender<TProps>(
-  Comp: ((props: TProps) => string) | string | TemplateResult | undefined,
+  Comp: ((_props: TProps) => string) | string | TemplateResult | undefined,
   props: TProps,
 ): TemplateResult | string | null {
   if (!Comp) return null

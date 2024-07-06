@@ -47,6 +47,7 @@
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src",
     "test:types": "tsc",
     "test:build": "publint --strict",
     "build": "vite build"
@@ -56,6 +57,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
+    "eslint-plugin-vue": "^9.27.0",
     "vue": "^3.4.31"
   },
   "peerDependencies": {

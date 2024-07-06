@@ -19,7 +19,7 @@ type ComputeRange<
 type Index40 = ComputeRange<40>[number]
 
 // Is this type a tuple?
-type IsTuple<T> = T extends readonly any[] & { length: infer Length }
+type IsTuple<T> = T extends ReadonlyArray<any> & { length: infer Length }
   ? Length extends Index40
     ? T
     : never
@@ -35,13 +35,16 @@ type AllowedIndexes<
     ? AllowedIndexes<Tail, Keys | Tail['length']>
     : Keys
 
-export type DeepKeys<T, TDepth extends any[] = []> = TDepth['length'] extends 5
+export type DeepKeys<
+  T,
+  TDepth extends Array<any> = [],
+> = TDepth['length'] extends 5
   ? never
   : unknown extends T
     ? string
-    : T extends readonly any[] & IsTuple<T>
+    : T extends ReadonlyArray<any> & IsTuple<T>
       ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>, TDepth>
-      : T extends any[]
+      : T extends Array<any>
         ? DeepKeys<T[number], [...TDepth, any]>
         : T extends Date
           ? never
@@ -52,7 +55,7 @@ export type DeepKeys<T, TDepth extends any[] = []> = TDepth['length'] extends 5
 type DeepKeysPrefix<
   T,
   TPrefix,
-  TDepth extends any[],
+  TDepth extends Array<any>,
 > = TPrefix extends keyof T & (number | string)
   ? `${TPrefix}.${DeepKeys<T[TPrefix], [...TDepth, any]> & string}`
   : never

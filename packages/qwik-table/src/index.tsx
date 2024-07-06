@@ -1,13 +1,13 @@
 import * as Qwik from '@builder.io/qwik'
-export * from '@tanstack/table-core'
-
-import {
+import { _createTable } from '@tanstack/table-core'
+import type {
+  RowData,
+  Table,
   TableOptions,
   TableOptionsResolved,
-  RowData,
-  _createTable,
-  type Table,
 } from '@tanstack/table-core'
+
+export * from '@tanstack/table-core'
 
 type QwikComps = Qwik.Component | Qwik.FunctionComponent
 

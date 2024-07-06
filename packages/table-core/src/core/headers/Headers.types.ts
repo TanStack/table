@@ -1,4 +1,4 @@
-import { Column, Header, HeaderGroup, RowData, Table } from '../../types'
+import type { Column, Header, HeaderGroup, RowData, Table } from '../../types'
 
 export interface TableOptions_Headers {
   /**
@@ -15,25 +15,25 @@ export interface Table_Headers<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getheadergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getHeaderGroups: () => HeaderGroup<TData>[]
+  getHeaderGroups: () => Array<HeaderGroup<TData>>
   /**
    * Returns the footer groups for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getFooterGroups: () => HeaderGroup<TData>[]
+  getFooterGroups: () => Array<HeaderGroup<TData>>
   /**
    * Returns headers for all columns in the table, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getflatheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getFlatHeaders: () => Header<TData, unknown>[]
+  getFlatHeaders: () => Array<Header<TData, unknown>>
   /**
    * Returns headers for all leaf columns in the table, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeafHeaders: () => Header<TData, unknown>[]
+  getLeafHeaders: () => Array<Header<TData, unknown>>
 }
 
 export interface HeaderContext<TData, TValue> {
@@ -75,7 +75,7 @@ export interface Header_CoreProperties<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#headergroup)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  headerGroup: HeaderGroup<TData>
+  headerGroup: HeaderGroup<TData> | null
   /**
    * The unique identifier for the header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#id)
@@ -111,7 +111,7 @@ export interface Header_CoreProperties<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#subheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  subHeaders: Header<TData, TValue>[]
+  subHeaders: Array<Header<TData, TValue>>
 }
 
 export interface Header_Core<TData extends RowData, TValue>
@@ -127,11 +127,11 @@ export interface Header_Core<TData extends RowData, TValue>
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeafHeaders: () => Header<TData, unknown>[]
+  getLeafHeaders: () => Array<Header<TData, unknown>>
 }
 
 export interface HeaderGroup_Core<TData extends RowData> {
   depth: number
-  headers: Header<TData, unknown>[]
+  headers: Array<Header<TData, unknown>>
   id: string
 }

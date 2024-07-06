@@ -4,5 +4,5 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@builder.io/qwik"
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "eslint.config.js", "vite.config.ts"]
 }

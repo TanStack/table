@@ -1,5 +1,5 @@
-import { Column, Header, RowData, Table, Updater } from '../../types'
-import { ColumnSizingState } from './ColumnSizing.types'
+import type { Column, Header, RowData, Table, Updater } from '../../types'
+import type { ColumnSizingState } from './ColumnSizing.types'
 
 export function column_getSize<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
@@ -17,23 +17,23 @@ export function column_getSize<TData extends RowData, TValue>(
 }
 
 export function column_getStart<TData extends RowData, TValue>(
-  columns: Column<TData, unknown>[],
+  columns: Array<Column<TData, unknown>>,
   column: Column<TData, TValue>,
   position?: false | 'left' | 'right' | 'center',
 ) {
   return columns
     .slice(0, column.getIndex(position))
-    .reduce((sum, column) => sum + column.getSize(), 0)
+    .reduce((sum, c) => sum + c.getSize(), 0)
 }
 
 export function column_getAfter<TData extends RowData, TValue>(
-  columns: Column<TData, unknown>[],
+  columns: Array<Column<TData, unknown>>,
   column: Column<TData, TValue>,
   position?: false | 'left' | 'right' | 'center',
 ) {
   return columns
     .slice(column.getIndex(position) + 1)
-    .reduce((sum, column) => sum + column.getSize(), 0)
+    .reduce((sum, c) => sum + c.getSize(), 0)
 }
 
 export function column_resetSize<TData extends RowData, TValue>(
@@ -50,11 +50,11 @@ export function header_getSize<TData extends RowData, TValue>(
 ) {
   let sum = 0
 
-  const recurse = (header: Header<TData, TValue>) => {
-    if (header.subHeaders.length) {
-      header.subHeaders.forEach(recurse)
+  const recurse = (h: Header<TData, TValue>) => {
+    if (h.subHeaders.length) {
+      h.subHeaders.forEach(recurse)
     } else {
-      sum += header.column.getSize() ?? 0
+      sum += h.column.getSize()
     }
   }
 
@@ -67,8 +67,10 @@ export function header_getStart<TData extends RowData, TValue>(
   header: Header<TData, TValue>,
 ) {
   if (header.index > 0) {
-    const prevSiblingHeader = header.headerGroup.headers[header.index - 1]!
-    return prevSiblingHeader.getStart() + prevSiblingHeader.getSize()
+    const prevSiblingHeader = header.headerGroup?.headers[header.index - 1]
+    if (prevSiblingHeader) {
+      return prevSiblingHeader.getStart() + prevSiblingHeader.getSize()
+    }
   }
 
   return 0
@@ -85,9 +87,7 @@ export function table_resetColumnSizing<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setColumnSizing(
-    defaultState ? {} : table.initialState.columnSizing ?? {},
-  )
+  table.setColumnSizing(defaultState ? {} : table.initialState.columnSizing)
 }
 
 export function table_getTotalSize<TData extends RowData>(table: Table<TData>) {

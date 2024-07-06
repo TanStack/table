@@ -1,5 +1,5 @@
-import { OnChangeFn, Updater } from '../../types'
-import { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
+import type { OnChangeFn, Updater } from '../../types'
+import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 
 export interface TableState_ColumnSizing {
   columnSizing: ColumnSizingState

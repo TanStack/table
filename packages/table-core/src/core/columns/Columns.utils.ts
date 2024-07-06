@@ -1,4 +1,5 @@
-import {
+import { _createColumn } from './_createColumn'
+import type {
   CellData,
   Column,
   ColumnDef,
@@ -7,15 +8,14 @@ import {
   RowData,
   Table,
 } from '../../types'
-import { _createColumn } from './_createColumn'
 
 export function column_getFlatColumns<
   TData extends RowData,
   TValue extends CellData,
->(column: Column<TData, TValue>): Column<TData, TValue>[] {
+>(column: Column<TData, TValue>): Array<Column<TData, TValue>> {
   return [
-    column as Column<TData, TValue>,
-    ...column.columns?.flatMap((col) => column_getFlatColumns(col)),
+    column,
+    ...column.columns.flatMap((col) => column_getFlatColumns(col)),
   ]
 }
 
@@ -24,17 +24,17 @@ export function column_getLeafColumns<
   TValue extends CellData,
 >(
   column: Column<TData, TValue>,
-  orderColumns: (cols: Column<TData, TValue>[]) => Column<TData, TValue>[],
-): Column<TData, TValue>[] {
-  if (column.columns?.length) {
-    let leafColumns = column.columns.flatMap((column) =>
-      column.getLeafColumns(),
-    )
+  orderColumns: (
+    cols: Array<Column<TData, TValue>>,
+  ) => Array<Column<TData, TValue>>,
+): Array<Column<TData, TValue>> {
+  if (column.columns.length) {
+    const leafColumns = column.columns.flatMap((c) => c.getLeafColumns())
 
     return orderColumns(leafColumns)
   }
 
-  return [column as Column<TData, TValue>]
+  return [column]
 }
 
 export function table_getDefaultColumnDef<TData extends RowData>(
@@ -66,14 +66,14 @@ export function table_getDefaultColumnDef<TData extends RowData>(
 
 export function table_getAllColumns<TData extends RowData>(
   table: Table<TData>,
-  columnDefs: ColumnDef<TData, unknown>[],
-): Column<TData, unknown>[] {
+  columnDefs: Array<ColumnDef<TData, unknown>>,
+): Array<Column<TData, unknown>> {
   const recurseColumns = (
-    columnDefs: ColumnDef<TData, unknown>[],
+    colDefs: Array<ColumnDef<TData, unknown>>,
     parent?: Column<TData, unknown>,
     depth = 0,
-  ): Column<TData, unknown>[] => {
-    return columnDefs.map((columnDef) => {
+  ): Array<Column<TData, unknown>> => {
+    return colDefs.map((columnDef) => {
       const column = _createColumn(table, columnDef, depth, parent)
 
       const groupingColumnDef = columnDef as GroupColumnDef<TData, unknown>
@@ -90,13 +90,13 @@ export function table_getAllColumns<TData extends RowData>(
 }
 
 export function table_getAllFlatColumns<TData extends RowData>(
-  allColumns: Column<TData, unknown>[],
-): Column<TData, unknown>[] {
+  allColumns: Array<Column<TData, unknown>>,
+): Array<Column<TData, unknown>> {
   return allColumns.flatMap((column) => column_getFlatColumns(column))
 }
 
 export function table_getAllFlatColumnsById<TData extends RowData>(
-  flatColumns: Column<TData, unknown>[],
+  flatColumns: Array<Column<TData, unknown>>,
 ): Record<string, Column<TData, unknown>> {
   return flatColumns.reduce(
     (acc, column) => {
@@ -108,10 +108,12 @@ export function table_getAllFlatColumnsById<TData extends RowData>(
 }
 
 export function table_getAllLeafColumns<TData extends RowData>(
-  allColumns: Column<TData, unknown>[],
-  orderColumns: (cols: Column<TData, unknown>[]) => Column<TData, unknown>[],
-): Column<TData, unknown>[] {
-  let leafColumns = allColumns.flatMap((column) => column.getLeafColumns())
+  allColumns: Array<Column<TData, unknown>>,
+  orderColumns: (
+    cols: Array<Column<TData, unknown>>,
+  ) => Array<Column<TData, unknown>>,
+): Array<Column<TData, unknown>> {
+  const leafColumns = allColumns.flatMap((column) => column.getLeafColumns())
   return orderColumns(leafColumns)
 }
 

@@ -1,5 +1,5 @@
-import { Table, Row, RowModel, RowData } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
+import type { Row, RowData, RowModel, Table } from '../../types'
 
 export function getExpandedRowModel<TData extends RowData>(): (
   table: Table<TData>,
@@ -14,7 +14,7 @@ export function getExpandedRowModel<TData extends RowData>(): (
       (expanded, rowModel, paginateExpandedRows) => {
         if (
           !rowModel.rows.length ||
-          (expanded !== true && !Object.keys(expanded ?? {}).length)
+          (expanded !== true && !Object.keys(expanded).length)
         ) {
           return rowModel
         }
@@ -31,12 +31,12 @@ export function getExpandedRowModel<TData extends RowData>(): (
 }
 
 export function expandRows<TData extends RowData>(rowModel: RowModel<TData>) {
-  const expandedRows: Row<TData>[] = []
+  const expandedRows: Array<Row<TData>> = []
 
   const handleRow = (row: Row<TData>) => {
     expandedRows.push(row)
 
-    if (row.subRows?.length && row.getIsExpanded()) {
+    if (row.subRows.length && row.getIsExpanded()) {
       row.subRows.forEach(handleRow)
     }
   }

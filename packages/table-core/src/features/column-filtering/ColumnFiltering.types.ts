@@ -1,5 +1,5 @@
-import { BuiltInFilterFn } from '../../fns/filterFns'
-import {
+import type { BuiltInFilterFn } from '../../fns/filterFns'
+import type {
   Column,
   FilterFns,
   FilterMeta,
@@ -15,7 +15,7 @@ export interface TableState_ColumnFiltering {
   columnFilters: ColumnFiltersState
 }
 
-export type ColumnFiltersState = ColumnFilter[]
+export type ColumnFiltersState = Array<ColumnFilter>
 
 export interface ColumnFilter {
   id: string

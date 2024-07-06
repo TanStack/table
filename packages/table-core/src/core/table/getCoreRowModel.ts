@@ -1,18 +1,19 @@
 import { _createRow } from '../rows/_createRow'
-import { Table, Row, RowModel, RowData } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
+import { table_getRowId } from '../rows/Rows.utils'
+import type { Row, RowData, RowModel, Table } from '../../types'
 
 export function getCoreRowModel<TData extends RowData>(): (
   table: Table<TData>,
 ) => () => RowModel<TData> {
-  return (table) =>
+  return (table: Table<TData>) =>
     memo(
       () => [table.options.data],
       (
         data,
       ): {
-        rows: Row<TData>[]
-        flatRows: Row<TData>[]
+        rows: Array<Row<TData>>
+        flatRows: Array<Row<TData>>
         rowsById: Record<string, Row<TData>>
       } => {
         const rowModel: RowModel<TData> = {
@@ -22,25 +23,19 @@ export function getCoreRowModel<TData extends RowData>(): (
         }
 
         const accessRows = (
-          originalRows: TData[],
+          originalRows: Array<TData>,
           depth = 0,
           parentRow?: Row<TData>,
-        ): Row<TData>[] => {
-          const rows = [] as Row<TData>[]
+        ): Array<Row<TData>> => {
+          const rows = [] as Array<Row<TData>>
 
           for (let i = 0; i < originalRows.length; i++) {
-            // This could be an expensive check at scale, so we should move it somewhere else, but where?
-            // if (!id) {
-            //   if (process.env.NODE_ENV !== 'production') {
-            //     throw new Error(`getRowId expected an ID, but got ${id}`)
-            //   }
-            // }
-
+            const originalRow = originalRows[i]!
             // Make the row
             const row = _createRow(
               table,
-              table._getRowId(originalRows[i]!, i, parentRow),
-              originalRows[i]!,
+              table_getRowId(originalRow, table, i, parentRow),
+              originalRow,
               i,
               depth,
               undefined,
@@ -56,10 +51,7 @@ export function getCoreRowModel<TData extends RowData>(): (
 
             // Get the original subrows
             if (table.options.getSubRows) {
-              row.originalSubRows = table.options.getSubRows(
-                originalRows[i]!,
-                i,
-              )
+              row.originalSubRows = table.options.getSubRows(originalRow, i)
 
               // Then recursively access them
               if (row.originalSubRows?.length) {

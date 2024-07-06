@@ -1,4 +1,4 @@
-import { FilterFn } from '../features/column-filtering/ColumnFiltering.types'
+import type { FilterFn } from '../features/column-filtering/ColumnFiltering.types'
 
 const includesString: FilterFn<any> = (
   row,
@@ -10,8 +10,8 @@ const includesString: FilterFn<any> = (
     row
       .getValue<string | null>(columnId)
       ?.toString()
-      ?.toLowerCase()
-      ?.includes(search),
+      .toLowerCase()
+      .includes(search),
   )
 }
 
@@ -23,7 +23,7 @@ const includesStringSensitive: FilterFn<any> = (
   filterValue: string,
 ) => {
   return Boolean(
-    row.getValue<string | null>(columnId)?.toString()?.includes(filterValue),
+    row.getValue<string | null>(columnId)?.toString().includes(filterValue),
   )
 }
 
@@ -35,8 +35,8 @@ const equalsString: FilterFn<any> = (
   filterValue: string,
 ) => {
   return (
-    row.getValue<string | null>(columnId)?.toString()?.toLowerCase() ===
-    filterValue?.toLowerCase()
+    row.getValue<string | null>(columnId)?.toString().toLowerCase() ===
+    filterValue.toLowerCase()
   )
 }
 
@@ -47,7 +47,7 @@ const arrIncludes: FilterFn<any> = (
   columnId: string,
   filterValue: unknown,
 ) => {
-  return row.getValue<unknown[]>(columnId)?.includes(filterValue)
+  return row.getValue<Array<unknown>>(columnId).includes(filterValue)
 }
 
 arrIncludes.autoRemove = (val: any) => testFalsey(val) || !val?.length
@@ -55,10 +55,10 @@ arrIncludes.autoRemove = (val: any) => testFalsey(val) || !val?.length
 const arrIncludesAll: FilterFn<any> = (
   row,
   columnId: string,
-  filterValue: unknown[],
+  filterValue: Array<unknown>,
 ) => {
   return !filterValue.some(
-    (val) => !row.getValue<unknown[]>(columnId)?.includes(val),
+    (val) => !row.getValue<Array<unknown>>(columnId).includes(val),
   )
 }
 
@@ -67,10 +67,10 @@ arrIncludesAll.autoRemove = (val: any) => testFalsey(val) || !val?.length
 const arrIncludesSome: FilterFn<any> = (
   row,
   columnId: string,
-  filterValue: unknown[],
+  filterValue: Array<unknown>,
 ) => {
   return filterValue.some((val) =>
-    row.getValue<unknown[]>(columnId)?.includes(val),
+    row.getValue<Array<unknown>>(columnId).includes(val),
   )
 }
 
@@ -97,18 +97,18 @@ const inNumberRange: FilterFn<any> = (
   columnId: string,
   filterValue: [number, number],
 ) => {
-  let [min, max] = filterValue
+  const [min, max] = filterValue
 
   const rowValue = row.getValue<number>(columnId)
   return rowValue >= min && rowValue <= max
 }
 
 inNumberRange.resolveFilterValue = (val: [any, any]) => {
-  let [unsafeMin, unsafeMax] = val
+  const [unsafeMin, unsafeMax] = val
 
-  let parsedMin =
+  const parsedMin =
     typeof unsafeMin !== 'number' ? parseFloat(unsafeMin as string) : unsafeMin
-  let parsedMax =
+  const parsedMax =
     typeof unsafeMax !== 'number' ? parseFloat(unsafeMax as string) : unsafeMax
 
   let min =

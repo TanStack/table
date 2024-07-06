@@ -1,11 +1,16 @@
-import { RowData, Table, Updater } from '../../types'
 import { functionalUpdate } from '../../utils'
-import {
-  PaginationState,
-  defaultPageIndex,
-  defaultPageSize,
-  getDefaultPaginationState,
-} from './RowPagination.types'
+import type { RowData, Table, Updater } from '../../types'
+import type { PaginationState } from './RowPagination.types'
+
+const defaultPageIndex = 0
+const defaultPageSize = 10
+
+export function getDefaultPaginationState(): PaginationState {
+  return structuredClone({
+    pageIndex: defaultPageIndex,
+    pageSize: defaultPageSize,
+  })
+}
 
 export function table_autoResetPageIndex<TData extends RowData>(
   table: Table<TData>,
@@ -38,7 +43,7 @@ export function table_setPagination<TData extends RowData>(
   updater: Updater<PaginationState>,
 ) {
   const safeUpdater: Updater<PaginationState> = (old) => {
-    let newState = functionalUpdate(updater, old)
+    const newState = functionalUpdate(updater, old)
 
     return newState
   }
@@ -51,9 +56,7 @@ export function table_resetPagination<TData extends RowData>(
   defaultState?: boolean,
 ) {
   table.setPagination(
-    defaultState
-      ? getDefaultPaginationState()
-      : table.initialState.pagination ?? getDefaultPaginationState(),
+    defaultState ? getDefaultPaginationState() : table.initialState.pagination,
   )
 }
 
@@ -84,9 +87,7 @@ export function table_resetPageIndex<TData extends RowData>(
   defaultState?: boolean,
 ) {
   table.setPageIndex(
-    defaultState
-      ? defaultPageIndex
-      : table.initialState?.pagination?.pageIndex ?? defaultPageIndex,
+    defaultState ? defaultPageIndex : table.initialState.pagination.pageIndex,
   )
 }
 
@@ -95,9 +96,7 @@ export function table_resetPageSize<TData extends RowData>(
   defaultState?: boolean,
 ) {
   table.setPageSize(
-    defaultState
-      ? defaultPageSize
-      : table.initialState?.pagination?.pageSize ?? defaultPageSize,
+    defaultState ? defaultPageSize : table.initialState.pagination.pageSize,
   )
 }
 
@@ -107,7 +106,7 @@ export function table_setPageSize<TData extends RowData>(
 ) {
   table.setPagination((old) => {
     const pageSize = Math.max(1, functionalUpdate(updater, old.pageSize))
-    const topRowIndex = old.pageSize * old.pageIndex!
+    const topRowIndex = old.pageSize * old.pageIndex
     const pageIndex = Math.floor(topRowIndex / pageSize)
 
     return {
@@ -140,7 +139,7 @@ export function table_setPageCount<TData extends RowData>(
 }
 
 export function table_getPageOptions(pageCount: number) {
-  let pageOptions: number[] = []
+  let pageOptions: Array<number> = []
   if (pageCount && pageCount > 0) {
     pageOptions = [...new Array(pageCount)].fill(null).map((_, i) => i)
   }

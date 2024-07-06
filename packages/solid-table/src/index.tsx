@@ -1,17 +1,18 @@
-import {
-  TableOptions,
-  _createTable,
-  TableOptionsResolved,
-  RowData,
-} from '@tanstack/table-core'
-import { createComputed, mergeProps, createComponent } from 'solid-js'
+import { _createTable } from '@tanstack/table-core'
+import { createComponent, createComputed, mergeProps } from 'solid-js'
 import { createStore } from 'solid-js/store'
+import type {
+  RowData,
+  TableOptions,
+  TableOptionsResolved,
+} from '@tanstack/table-core'
 
 import type { JSX } from 'solid-js'
+
 export * from '@tanstack/table-core'
 
 export function flexRender<TProps>(
-  Comp: ((props: TProps) => JSX.Element) | JSX.Element | undefined,
+  Comp: ((_props: TProps) => JSX.Element) | JSX.Element | undefined,
   props: TProps,
 ): JSX.Element {
   if (!Comp) return null
@@ -33,9 +34,9 @@ export function createTable<TData extends RowData>(
       renderFallbackValue: null,
       mergeOptions: (
         defaultOptions: TableOptions<TData>,
-        options: Partial<TableOptions<TData>>,
+        newOptions: Partial<TableOptions<TData>>,
       ) => {
-        return mergeProps(defaultOptions, options) as TableOptions<TData>
+        return mergeProps(defaultOptions, newOptions) as TableOptions<TData>
       },
     },
     options,

@@ -1,4 +1,4 @@
-import { computed, type Signal, untracked } from '@angular/core'
+import { type Signal, computed, untracked } from '@angular/core'
 import { type Table } from '@tanstack/table-core'
 
 type TableSignal<T> = Table<T> & Signal<Table<T>>
@@ -76,7 +76,7 @@ function toComputed<T>(signal: Signal<Table<T>>, fn: Function) {
 
   const computedCache: Record<string, Signal<unknown>> = {}
 
-  return (...argsArray: any[]) => {
+  return (...argsArray: Array<any>) => {
     const serializedArgs = serializeArgs(...argsArray)
     if (computedCache.hasOwnProperty(serializedArgs)) {
       return computedCache[serializedArgs]?.()
@@ -92,6 +92,6 @@ function toComputed<T>(signal: Signal<Table<T>>, fn: Function) {
   }
 }
 
-function serializeArgs(...args: any[]) {
+function serializeArgs(...args: Array<any>) {
   return JSON.stringify(args)
 }

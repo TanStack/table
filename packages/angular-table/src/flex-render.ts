@@ -4,16 +4,16 @@ import {
   Directive,
   EmbeddedViewRef,
   Inject,
-  inject,
   InjectionToken,
   Injector,
   Input,
-  isSignal,
   type OnChanges,
   type SimpleChanges,
   TemplateRef,
   Type,
   ViewContainerRef,
+  inject,
+  isSignal,
 } from '@angular/core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
@@ -119,7 +119,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     const getContext = () => this.props
 
     const proxy = new Proxy(this.props, {
-      get: (_, key) => getContext()?.[key as keyof typeof _],
+      get: (_, key) => getContext()[key as keyof typeof _],
     })
 
     const componentInjector = Injector.create({
@@ -148,7 +148,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       // Only signal based input can be added here
       if (
         componentRef.instance?.hasOwnProperty(prop) &&
-        // @ts-ignore
+        // @ts-ignore - unknown error
         isSignal(componentRef.instance[prop])
       ) {
         componentRef.setInput(prop, this.props[prop])

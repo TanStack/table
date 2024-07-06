@@ -1,119 +1,123 @@
-import { TableOptions_Core, Table_Core } from './core/table/Tables.types'
-import {
-  Table_ColumnVisibility,
-  TableState_ColumnVisibility,
-  Column_ColumnVisibility,
-  TableOptions_ColumnVisibility,
+import type { TableOptions_Core, Table_Core } from './core/table/Tables.types'
+import type {
   ColumnDef_ColumnVisibility,
+  Column_ColumnVisibility,
   Row_ColumnVisibility,
+  TableOptions_ColumnVisibility,
+  TableState_ColumnVisibility,
+  Table_ColumnVisibility,
 } from './features/column-visibility/ColumnVisibility.types'
-import {
+import type {
   Column_ColumnOrdering,
-  Table_ColumnOrdering,
   TableOptions_ColumnOrdering,
   TableState_ColumnOrdering,
+  Table_ColumnOrdering,
 } from './features/column-ordering/ColumnOrdering.types'
-import {
-  Column_ColumnPinning,
+import type {
   ColumnDef_ColumnPinning,
-  Table_ColumnPinning,
-  TableOptions_ColumnPinning,
+  Column_ColumnPinning,
   Row_ColumnPinning,
+  TableOptions_ColumnPinning,
   TableState_ColumnPinning,
+  Table_ColumnPinning,
 } from './features/column-pinning/ColumnPinning.types'
-import {
-  Table_RowPinning,
-  TableOptions_RowPinning,
+import type {
   Row_RowPinning,
+  TableOptions_RowPinning,
   TableState_RowPinning,
+  Table_RowPinning,
 } from './features/row-pinning/RowPinning.types'
-import {
-  Header_Core,
-  HeaderGroup_Core,
+import type {
   HeaderContext,
-  Table_Headers,
+  HeaderGroup_Core,
+  Header_Core,
   TableOptions_Headers,
+  Table_Headers,
 } from './core/headers/Headers.types'
-import {
+import type {
   Column_ColumnFaceting,
   TableOptions_ColumnFaceting,
 } from './features/column-faceting/ColumnFaceting.types'
-import { Table_GlobalFaceting } from './features/global-faceting/GlobalFaceting.types'
-import {
-  Column_ColumnFiltering,
+import type { Table_GlobalFaceting } from './features/global-faceting/GlobalFaceting.types'
+import type {
   ColumnDef_ColumnFiltering,
-  Table_ColumnFiltering,
-  TableOptions_ColumnFiltering,
+  Column_ColumnFiltering,
   Row_ColumnFiltering,
+  TableOptions_ColumnFiltering,
   TableState_ColumnFiltering,
+  Table_ColumnFiltering,
 } from './features/column-filtering/ColumnFiltering.types'
-import {
-  Column_GlobalFiltering,
+import type {
   ColumnDef_GlobalFiltering,
-  Table_GlobalFiltering,
+  Column_GlobalFiltering,
   TableOptions_GlobalFiltering,
   TableState_GlobalFiltering,
+  Table_GlobalFiltering,
 } from './features/global-filtering/GlobalFiltering.types'
-import {
-  Column_RowSorting,
+import type {
   ColumnDef_RowSorting,
-  Table_RowSorting,
+  Column_RowSorting,
   TableOptions_RowSorting,
   TableState_RowSorting,
+  Table_RowSorting,
 } from './features/row-sorting/RowSorting.types'
-import {
+import type {
   Cell_ColumnGrouping,
-  Column_ColumnGrouping,
   ColumnDef_ColumnGrouping,
-  Table_ColumnGrouping,
-  TableOptions_ColumnGrouping,
+  Column_ColumnGrouping,
   Row_ColumnGrouping,
+  TableOptions_ColumnGrouping,
   TableState_ColumnGrouping,
+  Table_ColumnGrouping,
 } from './features/column-grouping/ColumnGrouping.types'
-import {
-  Table_RowExpanding,
+import type {
+  Row_RowExpanding,
   TableOptions_RowExpanding,
   TableState_RowExpanding,
-  Row_RowExpanding,
+  Table_RowExpanding,
 } from './features/row-expanding/RowExpanding.types'
-import {
-  Column_ColumnSizing as Column_ColumnSizing,
+import type {
   ColumnDef_ColumnSizing,
+  Column_ColumnSizing as Column_ColumnSizing,
   Header_ColumnSizing,
-  Table_ColumnSizing,
   TableOptions_ColumnSizing,
   TableState_ColumnSizing,
+  Table_ColumnSizing,
 } from './features/column-sizing/ColumnSizing.types'
-import {
-  Column_ColumnResizing,
+import type {
   ColumnDef_ColumnResizing,
+  Column_ColumnResizing,
   Header_ColumnResizing,
-  Table_ColumnResizing,
   TableOptions_ColumnResizing,
   TableState_ColumnResizing,
+  Table_ColumnResizing,
 } from './features/column-resizing/ColumnResizing.types'
-import {
-  Table_RowPagination,
+import type {
   TableOptions_RowPagination,
   TableState_RowPagination,
+  Table_RowPagination,
 } from './features/row-pagination/RowPagination.types'
-import {
+import type {
   Row_RowSelection,
   TableOptions_RowSelection,
   TableState_RowSelection,
   Table_RowSelection,
 } from './features/row-selection/RowSelection.types'
-import { Row_Core, Table_Rows, TableOptions_Rows } from './core/rows/Rows.types'
-import { PartialKeys, UnionToIntersection } from './utils.types'
-import {
+import type {
+  Row_Core,
+  TableOptions_Rows,
+  Table_Rows,
+} from './core/rows/Rows.types'
+import type { PartialKeys, UnionToIntersection } from './utils.types'
+import type {
   CellContext,
   Cell_Core,
   TableOptions_Cell,
 } from './core/cells/Cells.types'
-import {
+import type {
   Column_Core,
-  Table_Columns,
   TableOptions_Columns,
+  Table_Columns,
 } from './core/columns/Columns.types'
 
 export interface TableFeature<TData extends RowData = any> {
@@ -144,7 +148,7 @@ export interface AggregationFns {}
 export type Updater<T> = T | ((old: T) => T)
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
-export type RowData = unknown | object | any[]
+export type RowData = unknown | object | Array<any>
 
 export type CellData = unknown
 
@@ -220,8 +224,8 @@ export interface Row<TData extends RowData>
     Row_RowSelection {}
 
 export interface RowModel<TData extends RowData> {
-  rows: Row<TData>[]
-  flatRows: Row<TData>[]
+  rows: Array<Row<TData>>
+  flatRows: Array<Row<TData>>
   rowsById: Record<string, Row<TData>>
 }
 
@@ -261,7 +265,7 @@ export interface ColumnDefBase<TData extends RowData, TValue = unknown>
     ColumnDef_ColumnGrouping<TData, TValue>,
     ColumnDef_ColumnSizing,
     ColumnDef_ColumnResizing {
-  getUniqueValues?: AccessorFn<TData, unknown[]>
+  getUniqueValues?: AccessorFn<TData, Array<unknown>>
   footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
   cell?: ColumnDefTemplate<CellContext<TData, TValue>>
   meta?: ColumnMeta<TData, TValue>
@@ -280,7 +284,7 @@ export type DisplayColumnDef<
 
 interface GroupColumnDefBase<TData extends RowData, TValue = unknown>
   extends ColumnDefBase<TData, TValue> {
-  columns?: ColumnDef<TData, any>[]
+  columns?: Array<ColumnDef<TData, any>>
 }
 
 export type GroupColumnDef<

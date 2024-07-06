@@ -1,4 +1,4 @@
-import { RowData, RowModel, Table } from '../../types'
+import type { RowData, RowModel, Table } from '../../types'
 
 export interface TableOptions_ColumnFaceting<TData extends RowData> {
   getFacetedMinMaxValues?: (

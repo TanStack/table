@@ -1,5 +1,5 @@
-import { BuiltInSortingFn } from '../../fns/sortingFns'
-import {
+import type { BuiltInSortingFn } from '../../fns/sortingFns'
+import type {
   OnChangeFn,
   Row,
   RowData,
@@ -16,7 +16,7 @@ export interface ColumnSort {
   id: string
 }
 
-export type SortingState = ColumnSort[]
+export type SortingState = Array<ColumnSort>
 
 export interface TableState_RowSorting {
   sorting: SortingState

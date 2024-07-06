@@ -1,4 +1,4 @@
-import { RowData, RowModel, Table } from '../../types'
+import type { RowData, RowModel, Table } from '../../types'
 
 export function table_getGlobalFacetedMinMaxValues<TData extends RowData>(
   table: Table<TData>,

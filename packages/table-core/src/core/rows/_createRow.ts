@@ -1,6 +1,5 @@
-import { RowData, Row, Table } from '../../types'
-import { _createCell } from '../cells/_createCell'
-import { Row_CoreProperties } from './Rows.types'
+import type { Row, RowData, Table } from '../../types'
+import type { Row_CoreProperties } from './Rows.types'
 
 export const _createRow = <TData extends RowData>(
   table: Table<TData>,
@@ -8,7 +7,7 @@ export const _createRow = <TData extends RowData>(
   original: TData,
   rowIndex: number,
   depth: number,
-  subRows?: Row<TData>[],
+  subRows?: Array<Row<TData>>,
   parentId?: string,
 ): Row<TData> => {
   const row: Row_CoreProperties<TData> = {
@@ -22,9 +21,8 @@ export const _createRow = <TData extends RowData>(
     subRows: subRows ?? [],
   }
 
-  for (let i = 0; i < table._features.length; i++) {
-    const feature = table._features[i]
-    feature?._createRow?.(row as Row<TData>, table)
+  for (const feature of table._features) {
+    feature._createRow?.(row as Row<TData>, table)
   }
 
   return row as Row<TData>

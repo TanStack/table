@@ -1,12 +1,12 @@
-import { Column, HeaderGroup, RowData, Table } from '../../types'
 import { buildHeaderGroups } from './buildHeaderGroups'
+import type { Column, HeaderGroup, RowData, Table } from '../../types'
 
 export function table_getHeaderGroups<TData extends RowData>(
   table: Table<TData>,
-  allColumns: Column<TData, unknown>[],
-  leafColumns: Column<TData, unknown>[],
-  left?: string[],
-  right?: string[],
+  allColumns: Array<Column<TData, unknown>>,
+  leafColumns: Array<Column<TData, unknown>>,
+  left?: Array<string>,
+  right?: Array<string>,
 ) {
   const leftColumns =
     left
@@ -32,13 +32,13 @@ export function table_getHeaderGroups<TData extends RowData>(
 }
 
 export function table_getFooterGroups<TData extends RowData>(
-  headerGroups: HeaderGroup<TData>[],
+  headerGroups: Array<HeaderGroup<TData>>,
 ) {
   return [...headerGroups].reverse()
 }
 
 export function table_getFlatHeaders<TData extends RowData>(
-  headerGroups: HeaderGroup<TData>[],
+  headerGroups: Array<HeaderGroup<TData>>,
 ) {
   return headerGroups
     .map((headerGroup) => {
@@ -48,9 +48,9 @@ export function table_getFlatHeaders<TData extends RowData>(
 }
 
 export function table_getLeafHeaders<TData extends RowData>(
-  left: HeaderGroup<TData>[],
-  center: HeaderGroup<TData>[],
-  right: HeaderGroup<TData>[],
+  left: Array<HeaderGroup<TData>>,
+  center: Array<HeaderGroup<TData>>,
+  right: Array<HeaderGroup<TData>>,
 ) {
   return [
     ...(left[0]?.headers ?? []),

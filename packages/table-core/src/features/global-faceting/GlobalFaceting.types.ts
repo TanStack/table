@@ -1,4 +1,4 @@
-import { RowData, RowModel } from '../../types'
+import type { RowData, RowModel } from '../../types'
 
 export interface Table_GlobalFaceting<TData extends RowData> {
   /**

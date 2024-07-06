@@ -1,9 +1,4 @@
-import { Table, Row, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
-import {
-  RowPinningDefaultOptions,
-  TableState_RowPinning,
-} from './RowPinning.types'
 import {
   getDefaultRowPinningState,
   row_getCanPin,
@@ -16,6 +11,11 @@ import {
   table_getTopRows,
   table_resetRowPinning,
 } from './RowPinning.utils'
+import type { Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  RowPinningDefaultOptions,
+  TableState_RowPinning,
+} from './RowPinning.types'
 
 export const RowPinning: TableFeature = {
   _getInitialState: (state): TableState_RowPinning => {

@@ -1,5 +1,5 @@
-import { Column, OnChangeFn, RowData, Updater } from '../../types'
-import {
+import type { Column, OnChangeFn, RowData, Updater } from '../../types'
+import type {
   FilterFn,
   FilterFnOption,
 } from '../column-filtering/ColumnFiltering.types'

@@ -1,4 +1,3 @@
-import { Row, RowData, Table, TableFeature } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
 import {
   row_getAllCells,
@@ -6,12 +5,13 @@ import {
   row_getLeafRows,
   row_getParentRow,
   row_getParentRows,
-  table_getRow,
   row_getUniqueValues,
   row_getValue,
   row_renderValue,
+  table_getRow,
   table_getRowId,
 } from './Rows.utils'
+import type { Row, RowData, Table, TableFeature } from '../../types'
 
 export const Rows: TableFeature = {
   _createRow: <TData extends RowData>(

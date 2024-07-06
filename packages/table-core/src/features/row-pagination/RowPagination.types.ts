@@ -1,4 +1,4 @@
-import { OnChangeFn, RowData, RowModel, Table, Updater } from '../../types'
+import type { OnChangeFn, RowData, RowModel, Table, Updater } from '../../types'
 
 export interface PaginationState {
   pageIndex: number
@@ -86,7 +86,7 @@ export interface Table_RowPagination<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getpageoptions)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
-  getPageOptions: () => number[]
+  getPageOptions: () => Array<number>
   /**
    * Returns the row model for the table after pagination has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getpaginationrowmodel)
@@ -164,11 +164,3 @@ export interface Table_RowPagination<TData extends RowData> {
    */
   setPagination: (updater: Updater<PaginationState>) => void
 }
-
-export const defaultPageIndex = 0
-export const defaultPageSize = 10
-
-export const getDefaultPaginationState = (): PaginationState => ({
-  pageIndex: defaultPageIndex,
-  pageSize: defaultPageSize,
-})

@@ -1,5 +1,5 @@
-import { TableOptions_ColumnFaceting } from './ColumnFaceting.types'
-import { CellData, Column, RowData, RowModel, Table } from '../../types'
+import type { CellData, Column, RowData, RowModel, Table } from '../../types'
+import type { TableOptions_ColumnFaceting } from './ColumnFaceting.types'
 
 export function column_getFacetedMinMaxValues<
   TData extends RowData,

@@ -1,5 +1,6 @@
 import { table_getPaginationRowModel } from '../../features/row-pagination/RowPagination.utils'
-import {
+import { functionalUpdate } from '../../utils'
+import type {
   RowData,
   RowModel,
   Table,
@@ -7,8 +8,7 @@ import {
   TableState,
   Updater,
 } from '../../types'
-import { functionalUpdate } from '../../utils'
-import { RequiredKeys } from '../../utils.types'
+import type { RequiredKeys } from '../../utils.types'
 
 export function table_reset<TData extends RowData>(table: Table<TData>): void {
   table_setState(table, table.initialState)
@@ -49,7 +49,7 @@ export function table_setState<TData extends RowData>(
   table: Table<TData>,
   updater: Updater<TableState>,
 ): void {
-  table.options.onStateChange?.(updater)
+  table.options.onStateChange(updater)
 }
 
 export function table_getCoreRowModel<TData extends RowData>(
@@ -59,7 +59,7 @@ export function table_getCoreRowModel<TData extends RowData>(
     table._getCoreRowModel = table.options.getCoreRowModel(table)
   }
 
-  return table._getCoreRowModel!()
+  return table._getCoreRowModel()
 }
 
 export function table_getRowModel<TData extends RowData>(

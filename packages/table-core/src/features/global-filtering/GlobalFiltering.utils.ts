@@ -1,7 +1,7 @@
-import { BuiltInFilterFn, filterFns } from '../../fns/filterFns'
-import { Column, RowData, Table } from '../../types'
-import { isFunction, makeStateUpdater } from '../../utils'
-import { TableOptions_GlobalFiltering } from './GlobalFiltering.types'
+import { filterFns } from '../../fns/filterFns'
+import { isFunction } from '../../utils'
+import type { Column, RowData, Table } from '../../types'
+import type { BuiltInFilterFn } from '../../fns/filterFns'
 
 export function column_getCanGlobalFilter<TData extends RowData>(
   column: Column<TData, unknown>,

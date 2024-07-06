@@ -1,6 +1,6 @@
-import { Cell, Column, Row, RowData, Table } from '../../types'
 import { flattenBy } from '../../utils'
 import { _createCell } from '../cells/_createCell'
+import type { Cell, Column, Row, RowData, Table } from '../../types'
 
 export function row_getValue<TData extends RowData>(
   row: Row<TData>,
@@ -17,10 +17,7 @@ export function row_getValue<TData extends RowData>(
     return undefined
   }
 
-  row._valuesCache[columnId] = column.accessorFn(
-    row.original as TData,
-    row.index,
-  )
+  row._valuesCache[columnId] = column.accessorFn(row.original, row.index)
 
   return row._valuesCache[columnId] as any
 }
@@ -46,7 +43,7 @@ export function row_getUniqueValues<TData extends RowData>(
   }
 
   row._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
-    row.original as TData,
+    row.original,
     row.index,
   )
 
@@ -63,7 +60,7 @@ export function row_renderValue<TData extends RowData>(
 
 export function row_getLeafRows<TData extends RowData>(
   row: Row<TData>,
-): Row<TData>[] {
+): Array<Row<TData>> {
   return flattenBy(row.subRows, (d) => d.subRows)
 }
 
@@ -78,8 +75,9 @@ export function row_getParentRows<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
 ) {
-  let parentRows: Row<TData>[] = []
+  const parentRows: Array<Row<TData>> = []
   let currentRow = row
+  // eslint-disable-next-line ts/no-unnecessary-condition
   while (true) {
     const parentRow = row_getParentRow(currentRow, table)
     if (!parentRow) break
@@ -92,15 +90,15 @@ export function row_getParentRows<TData extends RowData>(
 export function row_getAllCells<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
-  leafColumns: Column<TData, unknown>[],
-): Cell<TData, unknown>[] {
+  leafColumns: Array<Column<TData, unknown>>,
+): Array<Cell<TData, unknown>> {
   return leafColumns.map((column) => {
     return _createCell(column, row, table)
   })
 }
 
 export function row_getAllCellsByColumnId<TData extends RowData>(
-  allCells: Cell<TData, unknown>[],
+  allCells: Array<Cell<TData, unknown>>,
 ) {
   return allCells.reduce(
     (acc, cell) => {
@@ -112,13 +110,13 @@ export function row_getAllCellsByColumnId<TData extends RowData>(
 }
 
 export function table_getRowId<TData extends RowData>(
-  row: TData,
+  originalRow: TData,
   table: Table<TData>,
   index: number,
   parent?: Row<TData>,
 ) {
   return (
-    table.options.getRowId?.(row, index, parent) ??
+    table.options.getRowId?.(originalRow, index, parent) ??
     `${parent ? [parent.id, index].join('.') : index}`
   )
 }

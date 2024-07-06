@@ -1,7 +1,7 @@
-import { Column, OnChangeFn, RowData, Updater } from '../../types'
-import { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
+import type { Column, OnChangeFn, RowData, Updater } from '../../types'
+import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 
-export type ColumnOrderState = string[]
+export type ColumnOrderState = Array<string>
 
 export interface TableState_ColumnOrdering {
   columnOrder: ColumnOrderState
@@ -43,8 +43,8 @@ export interface ColumnOrderDefaultOptions {
 
 export interface Table_ColumnOrdering<TData extends RowData> {
   _getOrderColumnsFn: () => (
-    columns: Column<TData, unknown>[],
-  ) => Column<TData, unknown>[]
+    columns: Array<Column<TData, unknown>>,
+  ) => Array<Column<TData, unknown>>
   /**
    * Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be passed to force a default blank state reset to `[]`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering#resetcolumnorder)

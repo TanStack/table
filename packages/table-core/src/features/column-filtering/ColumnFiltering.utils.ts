@@ -1,7 +1,8 @@
-import { BuiltInFilterFn, filterFns } from '../../fns/filterFns'
-import { Column, RowData, Table, Updater } from '../../types'
+import { filterFns } from '../../fns/filterFns'
 import { functionalUpdate, isFunction } from '../../utils'
-import { ColumnFiltersState, FilterFn } from './ColumnFiltering.types'
+import type { BuiltInFilterFn } from '../../fns/filterFns'
+import type { Column, RowData, Table, Updater } from '../../types'
+import type { ColumnFiltersState, FilterFn } from './ColumnFiltering.types'
 
 export function column_getAutoFilterFn<TData extends RowData>(
   column: Column<TData, unknown>,
@@ -68,16 +69,14 @@ export function column_getFilterValue<TData extends RowData>(
   column: Column<TData, unknown>,
   table: Table<TData>,
 ) {
-  return table.getState().columnFilters?.find((d) => d.id === column.id)?.value
+  return table.getState().columnFilters.find((d) => d.id === column.id)?.value
 }
 
 export function column_getFilterIndex<TData extends RowData>(
   column: Column<TData, unknown>,
   table: Table<TData>,
 ) {
-  return (
-    table.getState().columnFilters?.findIndex((d) => d.id === column.id) ?? -1
-  )
+  return table.getState().columnFilters.findIndex((d) => d.id === column.id)
 }
 
 export function column_setFilterValue<TData extends RowData>(
@@ -87,7 +86,7 @@ export function column_setFilterValue<TData extends RowData>(
 ) {
   table.setColumnFilters((old) => {
     const filterFn = column.getFilterFn()
-    const previousFilter = old?.find((d) => d.id === column.id)
+    const previousFilter = old.find((d) => d.id === column.id)
 
     const newFilter = functionalUpdate(
       value,
@@ -97,23 +96,21 @@ export function column_setFilterValue<TData extends RowData>(
     if (
       shouldAutoRemoveFilter(filterFn as FilterFn<TData>, newFilter, column)
     ) {
-      return old?.filter((d) => d.id !== column.id) ?? []
+      return old.filter((d) => d.id !== column.id)
     }
 
     const newFilterObj = { id: column.id, value: newFilter }
 
     if (previousFilter) {
-      return (
-        old?.map((d) => {
-          if (d.id === column.id) {
-            return newFilterObj
-          }
-          return d
-        }) ?? []
-      )
+      return old.map((d) => {
+        if (d.id === column.id) {
+          return newFilterObj
+        }
+        return d
+      })
     }
 
-    if (old?.length) {
+    if (old.length) {
       return [...old, newFilterObj]
     }
 
@@ -128,7 +125,7 @@ export function table_setColumnFilters<TData extends RowData>(
   const leafColumns = table.getAllLeafColumns()
 
   const updateFn = (old: ColumnFiltersState) => {
-    return functionalUpdate(updater, old)?.filter((filter) => {
+    return functionalUpdate(updater, old).filter((filter) => {
       const column = leafColumns.find((d) => d.id === filter.id)
 
       if (column) {
@@ -150,9 +147,7 @@ export function table_resetColumnFilters<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setColumnFilters(
-    defaultState ? [] : table.initialState?.columnFilters ?? [],
-  )
+  table.setColumnFilters(defaultState ? [] : table.initialState.columnFilters)
 }
 
 export function table_getPreFilteredRowModel<TData extends RowData>(

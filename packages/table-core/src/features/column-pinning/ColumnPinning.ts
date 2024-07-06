@@ -1,10 +1,5 @@
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
-import { Table, Column, Row, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
-import {
-  ColumnPinningDefaultOptions,
-  TableState_ColumnPinning,
-} from './ColumnPinning.types'
 import {
   column_getCanPin,
   column_getPinnedIndex,
@@ -20,6 +15,11 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from './ColumnPinning.utils'
+import type { Column, Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  ColumnPinningDefaultOptions,
+  TableState_ColumnPinning,
+} from './ColumnPinning.types'
 
 const debug = 'debugHeaders'
 
@@ -220,7 +220,7 @@ export const ColumnPinning: TableFeature = {
     table.getCenterLeafHeaders = memo(
       () => [table.getCenterFlatHeaders()],
       (flatHeaders) => {
-        return flatHeaders.filter((header) => !header.subHeaders?.length)
+        return flatHeaders.filter((header) => !header.subHeaders.length)
       },
       getMemoOptions(table.options, debug, 'getCenterLeafHeaders'),
     )
@@ -228,7 +228,7 @@ export const ColumnPinning: TableFeature = {
     table.getLeftLeafHeaders = memo(
       () => [table.getLeftFlatHeaders()],
       (flatHeaders) => {
-        return flatHeaders.filter((header) => !header.subHeaders?.length)
+        return flatHeaders.filter((header) => !header.subHeaders.length)
       },
       getMemoOptions(table.options, debug, 'getLeftLeafHeaders'),
     )
@@ -236,7 +236,7 @@ export const ColumnPinning: TableFeature = {
     table.getRightLeafHeaders = memo(
       () => [table.getRightFlatHeaders()],
       (flatHeaders) => {
-        return flatHeaders.filter((header) => !header.subHeaders?.length)
+        return flatHeaders.filter((header) => !header.subHeaders.length)
       },
       getMemoOptions(table.options, debug, 'getRightLeafHeaders'),
     )

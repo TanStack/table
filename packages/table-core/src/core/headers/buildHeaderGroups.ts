@@ -1,9 +1,9 @@
-import { Column, Header, HeaderGroup, RowData, Table } from '../../types'
 import { _createHeader } from './_createHeader'
+import type { Column, Header, HeaderGroup, RowData, Table } from '../../types'
 
 export function buildHeaderGroups<TData extends RowData>(
-  allColumns: Column<TData, unknown>[],
-  columnsToGroup: Column<TData, unknown>[],
+  allColumns: Array<Column<TData, unknown>>,
+  columnsToGroup: Array<Column<TData, unknown>>,
   table: Table<TData>,
   headerFamily?: 'center' | 'left' | 'right',
 ) {
@@ -15,13 +15,13 @@ export function buildHeaderGroups<TData extends RowData>(
 
   let maxDepth = 0
 
-  const findMaxDepth = (columns: Column<TData, unknown>[], depth = 1) => {
+  const findMaxDepth = (columns: Array<Column<TData, unknown>>, depth = 1) => {
     maxDepth = Math.max(maxDepth, depth)
 
     columns
       .filter((column) => column.getIsVisible())
       .forEach((column) => {
-        if (column.columns?.length) {
+        if (column.columns.length) {
           findMaxDepth(column.columns, depth + 1)
         }
       }, 0)
@@ -29,10 +29,10 @@ export function buildHeaderGroups<TData extends RowData>(
 
   findMaxDepth(allColumns)
 
-  let headerGroups: HeaderGroup<TData>[] = []
+  const headerGroups: Array<HeaderGroup<TData>> = []
 
   const createHeaderGroup = (
-    headersToGroup: Header<TData, unknown>[],
+    headersToGroup: Array<Header<TData, unknown>>,
     depth: number,
   ) => {
     // The header group we are creating
@@ -43,7 +43,7 @@ export function buildHeaderGroups<TData extends RowData>(
     }
 
     // The parent columns we're going to scan next
-    const pendingParentHeaders: Header<TData, unknown>[] = []
+    const pendingParentHeaders: Array<Header<TData, unknown>> = []
 
     // Scan each column for parents
     headersToGroup.forEach((headerToGroup) => {
@@ -67,14 +67,14 @@ export function buildHeaderGroups<TData extends RowData>(
 
       if (
         latestPendingParentHeader &&
-        latestPendingParentHeader?.column === column
+        latestPendingParentHeader.column === column
       ) {
         // This column is repeated. Add it as a sub header to the next batch
         latestPendingParentHeader.subHeaders.push(headerToGroup)
       } else {
         // This is a new header. Let's create it
         const header = _createHeader(table, column, {
-          id: [headerFamily, depth, column.id, headerToGroup?.id]
+          id: [headerFamily, depth, column.id, headerToGroup.id]
             .filter(Boolean)
             .join('_'),
           isPlaceholder,
@@ -119,8 +119,8 @@ export function buildHeaderGroups<TData extends RowData>(
   // })
 
   const recurseHeadersForSpans = (
-    headers: Header<TData, unknown>[],
-  ): { colSpan: number; rowSpan: number }[] => {
+    headers: Array<Header<TData, unknown>>,
+  ): Array<{ colSpan: number; rowSpan: number }> => {
     const filteredHeaders = headers.filter((header) =>
       header.column.getIsVisible(),
     )
@@ -130,7 +130,7 @@ export function buildHeaderGroups<TData extends RowData>(
       let rowSpan = 0
       let childRowSpans = [0]
 
-      if (header.subHeaders && header.subHeaders.length) {
+      if (header.subHeaders.length) {
         childRowSpans = []
 
         recurseHeadersForSpans(header.subHeaders).forEach(

@@ -1,11 +1,11 @@
-import {
-  TableOptions,
-  _createTable,
-  TableOptionsResolved,
-  RowData,
-} from '@tanstack/table-core'
-import { h, watchEffect, ref, defineComponent } from 'vue'
+import { _createTable } from '@tanstack/table-core'
+import { defineComponent, h, ref, watchEffect } from 'vue'
 import { mergeProxy } from './merge-proxy'
+import type {
+  RowData,
+  TableOptions,
+  TableOptionsResolved,
+} from '@tanstack/table-core'
 
 export * from '@tanstack/table-core'
 
@@ -33,9 +33,9 @@ export function useTable<TData extends RowData>(options: TableOptions<TData>) {
       renderFallbackValue: null,
       mergeOptions(
         defaultOptions: TableOptions<TData>,
-        options: TableOptions<TData>,
+        newOptions: TableOptions<TData>,
       ) {
-        return mergeProxy(defaultOptions, options)
+        return mergeProxy(defaultOptions, newOptions)
       },
     },
     options,

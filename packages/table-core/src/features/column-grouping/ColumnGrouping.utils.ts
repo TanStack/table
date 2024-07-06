@@ -1,7 +1,8 @@
-import { BuiltInAggregationFn, aggregationFns } from '../../fns/aggregationFns'
-import { Cell, Column, Row, RowData, Table, Updater } from '../../types'
+import { aggregationFns } from '../../fns/aggregationFns'
 import { isFunction } from '../../utils'
-import { GroupingState } from './ColumnGrouping.types'
+import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
+import type { Cell, Column, Row, RowData, Table, Updater } from '../../types'
+import type { GroupingState } from './ColumnGrouping.types'
 
 export function column_toggleGrouping<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
@@ -9,11 +10,11 @@ export function column_toggleGrouping<TData extends RowData, TValue>(
 ) {
   table.setGrouping((old) => {
     // Find any existing grouping for this column
-    if (old?.includes(column.id)) {
+    if (old.includes(column.id)) {
       return old.filter((d) => d !== column.id)
     }
 
-    return [...(old ?? []), column.id]
+    return [...old, column.id]
   })
 }
 
@@ -32,14 +33,14 @@ export function column_getIsGrouped<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
 ) {
-  return table.getState().grouping?.includes(column.id)
+  return table.getState().grouping.includes(column.id)
 }
 
 export function column_getGroupedIndex<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
 ) {
-  return table.getState().grouping?.indexOf(column.id)
+  return table.getState().grouping.indexOf(column.id)
 }
 
 export function column_getToggleGroupingHandler<TData extends RowData, TValue>(
@@ -74,10 +75,6 @@ export function column_getAggregationFn<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
 ) {
-  if (!column) {
-    throw new Error()
-  }
-
   return isFunction(column.columnDef.aggregationFn)
     ? column.columnDef.aggregationFn
     : column.columnDef.aggregationFn === 'auto'
@@ -99,7 +96,7 @@ export function table_resetGrouping<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setGrouping(defaultState ? [] : table.initialState?.grouping ?? [])
+  table.setGrouping(defaultState ? [] : table.initialState.grouping)
 }
 
 export function table_getPreGroupedRowModel<TData extends RowData>(
@@ -167,6 +164,6 @@ export function cell_getIsAggregated<TData extends RowData, TValue>(
   row: Row<TData>,
 ) {
   return (
-    !cell.getIsGrouped() && !cell.getIsPlaceholder() && !!row.subRows?.length
+    !cell.getIsGrouped() && !cell.getIsPlaceholder() && !!row.subRows.length
   )
 }

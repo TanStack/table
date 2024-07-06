@@ -1,4 +1,4 @@
-import { Column, AccessorFn, ColumnDef, RowData } from '../../types'
+import type { AccessorFn, Column, ColumnDef, RowData } from '../../types'
 
 export interface Column_CoreProperties<TData extends RowData, TValue> {
   /**
@@ -18,7 +18,7 @@ export interface Column_CoreProperties<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#columns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-defs)
    */
-  columns: Column<TData, TValue>[]
+  columns: Array<Column<TData, TValue>>
   /**
    * The depth of the column (if grouped) relative to the root column def array.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#depth)
@@ -49,13 +49,13 @@ export interface Column_Core<TData extends RowData, TValue>
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#getflatcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-defs)
    */
-  getFlatColumns: () => Column<TData, TValue>[]
+  getFlatColumns: () => Array<Column<TData, TValue>>
   /**
    * Returns an array of all leaf-node columns for this column. If a column has no children, it is considered the only leaf-node column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#getleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-defs)
    */
-  getLeafColumns: () => Column<TData, TValue>[]
+  getLeafColumns: () => Array<Column<TData, TValue>>
 }
 
 export interface TableOptions_Columns<TData extends RowData> {
@@ -64,7 +64,7 @@ export interface TableOptions_Columns<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#columns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  columns: ColumnDef<TData, any>[]
+  columns: Array<ColumnDef<TData, any>>
   /**
    * Set this option to `true` to output column debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcolumns)
@@ -87,19 +87,19 @@ export interface Table_Columns<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getAllColumns: () => Column<TData, unknown>[]
+  getAllColumns: () => Array<Column<TData, unknown>>
   /**
    * Returns all columns in the table flattened to a single level.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallflatcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getAllFlatColumns: () => Column<TData, unknown>[]
+  getAllFlatColumns: () => Array<Column<TData, unknown>>
   /**
    * Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getAllLeafColumns: () => Column<TData, unknown>[]
+  getAllLeafColumns: () => Array<Column<TData, unknown>>
   /**
    * Returns a single column by its ID.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcolumn)

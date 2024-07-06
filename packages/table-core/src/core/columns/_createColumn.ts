@@ -1,12 +1,12 @@
-import {
-  Column,
-  Table,
+import type {
   AccessorFn,
+  Column,
   ColumnDef,
-  RowData,
   ColumnDefResolved,
+  RowData,
+  Table,
 } from '../../types'
-import { Column_CoreProperties } from './Columns.types'
+import type { Column_CoreProperties } from './Columns.types'
 
 export function _createColumn<TData extends RowData, TValue>(
   table: Table<TData>,
@@ -23,7 +23,7 @@ export function _createColumn<TData extends RowData, TValue>(
 
   const accessorKey = resolvedColumnDef.accessorKey
 
-  let id =
+  const id =
     resolvedColumnDef.id ??
     (accessorKey ? accessorKey.replace('.', '_') : undefined) ??
     (typeof resolvedColumnDef.header === 'string'
@@ -38,7 +38,7 @@ export function _createColumn<TData extends RowData, TValue>(
     // Support deep accessor keys
     if (accessorKey.includes('.')) {
       accessorFn = (originalRow: TData) => {
-        let result = originalRow as Record<string, any>
+        let result = originalRow as Record<string, any> | undefined
 
         for (const key of accessorKey.split('.')) {
           result = result?.[key]
@@ -68,7 +68,7 @@ export function _createColumn<TData extends RowData, TValue>(
     throw new Error()
   }
 
-  let column: Column_CoreProperties<TData, any> = {
+  const column: Column_CoreProperties<TData, any> = {
     id: `${String(id)}`,
     accessorFn,
     parent: parent as any,
@@ -81,6 +81,5 @@ export function _createColumn<TData extends RowData, TValue>(
     feature._createColumn?.(column as Column<TData, TValue>, table)
   }
 
-  // Yes, we have to convert table to unknown, because we know more than the compiler here.
   return column as Column<TData, TValue>
 }

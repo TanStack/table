@@ -1,5 +1,5 @@
-import { Row, RowData, RowModel, Table, Updater } from '../../types'
-import { RowSelectionState } from './RowSelection.types'
+import type { Row, RowData, RowModel, Table, Updater } from '../../types'
+import type { RowSelectionState } from './RowSelection.types'
 
 export function table_setRowSelection<TData extends RowData>(
   table: Table<TData>,
@@ -12,9 +12,7 @@ export function table_resetRowSelection<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setRowSelection(
-    defaultState ? {} : table.initialState.rowSelection ?? {},
-  )
+  table.setRowSelection(defaultState ? {} : table.initialState.rowSelection)
 }
 
 export function table_toggleAllRowsSelected<TData extends RowData>(
@@ -166,7 +164,7 @@ export function table_getIsAllPageRowsSelected<TData extends RowData>(
 export function table_getIsSomeRowsSelected<TData extends RowData>(
   table: Table<TData>,
 ) {
-  const totalSelected = Object.keys(table.getState().rowSelection ?? {}).length
+  const totalSelected = Object.keys(table.getState().rowSelection).length
   return (
     totalSelected > 0 &&
     totalSelected < table.getFilteredRowModel().flatRows.length
@@ -299,7 +297,7 @@ export function row_getToggleSelectedHandler<TData extends RowData>(
 
   return (e: unknown) => {
     if (!canSelect) return
-    row.toggleSelected(((e as MouseEvent).target as HTMLInputElement)?.checked)
+    row.toggleSelected(((e as MouseEvent).target as HTMLInputElement).checked)
   }
 }
 
@@ -330,15 +328,9 @@ const mutateRowIsSelected = <TData extends RowData>(
   }
   // }
 
-  if (includeChildren && row.subRows?.length && row.getCanSelectSubRows()) {
-    row.subRows.forEach((row) =>
-      mutateRowIsSelected(
-        selectedRowIds,
-        row.id,
-        value,
-        includeChildren,
-        table,
-      ),
+  if (includeChildren && row.subRows.length && row.getCanSelectSubRows()) {
+    row.subRows.forEach((r) =>
+      mutateRowIsSelected(selectedRowIds, r.id, value, includeChildren, table),
     )
   }
 }
@@ -349,11 +341,14 @@ export function selectRowsFn<TData extends RowData>(
 ): RowModel<TData> {
   const rowSelection = table.getState().rowSelection
 
-  const newSelectedFlatRows: Row<TData>[] = []
+  const newSelectedFlatRows: Array<Row<TData>> = []
   const newSelectedRowsById: Record<string, Row<TData>> = {}
 
   // Filters top level and nested rows
-  const recurseRows = (rows: Row<TData>[], depth = 0): Row<TData>[] => {
+  const recurseRows = (
+    rows: Array<Row<TData>>,
+    depth = 0,
+  ): Array<Row<TData>> => {
     return rows
       .map((row) => {
         const isSelected = isRowSelected(row, rowSelection)
@@ -363,7 +358,7 @@ export function selectRowsFn<TData extends RowData>(
           newSelectedRowsById[row.id] = row
         }
 
-        if (row.subRows?.length) {
+        if (row.subRows.length) {
           row = {
             ...row,
             subRows: recurseRows(row.subRows, depth + 1),
@@ -374,7 +369,7 @@ export function selectRowsFn<TData extends RowData>(
           return row
         }
       })
-      .filter(Boolean) as Row<TData>[]
+      .filter(Boolean) as Array<Row<TData>>
   }
 
   return {
@@ -396,7 +391,7 @@ export function isSubRowSelected<TData extends RowData>(
   selection: Record<string, boolean>,
   table: Table<TData>,
 ): boolean | 'some' | 'all' {
-  if (!row.subRows?.length) return false
+  if (!row.subRows.length) return false
 
   let allChildrenSelected = true
   let someSelected = false
@@ -416,7 +411,7 @@ export function isSubRowSelected<TData extends RowData>(
     }
 
     // Check row selection of nested subrows
-    if (subRow.subRows && subRow.subRows.length) {
+    if (subRow.subRows.length) {
       const subRowChildrenSelected = isSubRowSelected(subRow, selection, table)
       if (subRowChildrenSelected === 'all') {
         someSelected = true
@@ -429,5 +424,6 @@ export function isSubRowSelected<TData extends RowData>(
     }
   })
 
+  // eslint-disable-next-line ts/no-unnecessary-condition
   return allChildrenSelected ? 'all' : someSelected ? 'some' : false
 }

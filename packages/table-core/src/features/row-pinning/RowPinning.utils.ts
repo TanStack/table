@@ -1,8 +1,8 @@
-import { Row, RowData, Table, Updater } from '../../types'
-import {
-  TableOptions_RowPinning,
+import type { Row, RowData, Table, Updater } from '../../types'
+import type {
   RowPinningPosition,
   RowPinningState,
+  TableOptions_RowPinning,
 } from './RowPinning.types'
 
 /**
@@ -31,9 +31,7 @@ export function table_resetRowPinning<TData extends RowData>(
 ): void {
   table_setRowPinning(
     table,
-    defaultState
-      ? getDefaultRowPinningState()
-      : table.initialState?.rowPinning ?? getDefaultRowPinningState(),
+    defaultState ? getDefaultRowPinningState() : table.initialState.rowPinning,
   )
 }
 
@@ -48,17 +46,17 @@ export function table_getIsSomeRowsPinned<TData extends RowData>(
   const rowPinning = table.getState().rowPinning
 
   if (!position) {
-    return Boolean(rowPinning.top?.length || rowPinning.bottom?.length)
+    return Boolean(rowPinning.top.length || rowPinning.bottom.length)
   }
-  return Boolean(rowPinning[position]?.length)
+  return Boolean(rowPinning[position].length)
 }
 
 function table_getPinnedRows<TData extends RowData>(
   table: Table<TData>,
-  visibleRows: Row<TData>[],
-  pinnedRowIds: string[],
+  visibleRows: Array<Row<TData>>,
+  pinnedRowIds: Array<string>,
   position: 'top' | 'bottom',
-): Row<TData>[] {
+): Array<Row<TData>> {
   const rows =
     table.options.keepPinnedRows ?? true
       ? //get all rows that are pinned even if they would not be otherwise visible
@@ -72,29 +70,31 @@ function table_getPinnedRows<TData extends RowData>(
           (rowId) => visibleRows.find((row) => row.id === rowId)!,
         )
 
-  return rows.filter(Boolean).map((d) => ({ ...d, position })) as Row<TData>[]
+  return rows.filter(Boolean).map((d) => ({ ...d, position })) as Array<
+    Row<TData>
+  >
 }
 
 export function table_getTopRows<TData extends RowData>(
   table: Table<TData>,
-  allRows: Row<TData>[],
-  topPinnedRowIds: string[],
-): Row<TData>[] {
+  allRows: Array<Row<TData>>,
+  topPinnedRowIds: Array<string>,
+): Array<Row<TData>> {
   return table_getPinnedRows(table, allRows, topPinnedRowIds, 'top')
 }
 
 export function table_getBottomRows<TData extends RowData>(
   table: Table<TData>,
-  allRows: Row<TData>[],
-  bottomPinnedRowIds: string[],
-): Row<TData>[] {
+  allRows: Array<Row<TData>>,
+  bottomPinnedRowIds: Array<string>,
+): Array<Row<TData>> {
   return table_getPinnedRows(table, allRows, bottomPinnedRowIds, 'bottom')
 }
 
 export function table_getCenterRows<TData extends RowData>(
-  allRows: Row<TData>[],
+  allRows: Array<Row<TData>>,
   rowPinning: RowPinningState,
-): Row<TData>[] {
+): Array<Row<TData>> {
   const { top, bottom } = rowPinning
   const topAndBottom = new Set([...top, ...bottom])
   return allRows.filter((d) => !topAndBottom.has(d.id))
@@ -121,9 +121,9 @@ export function row_getIsPinned<TData extends RowData>(
 ): RowPinningPosition {
   const { top, bottom } = table.getState().rowPinning
 
-  return top?.includes(row.id)
+  return top.includes(row.id)
     ? 'top'
-    : bottom?.includes(row.id)
+    : bottom.includes(row.id)
       ? 'bottom'
       : false
 }
@@ -137,9 +137,9 @@ export function row_getPinnedIndex<TData extends RowData>(
 
   const visiblePinnedRowIds = (
     position === 'top' ? table.getTopRows() : table.getBottomRows()
-  )?.map(({ id }) => id)
+  ).map(({ id }) => id)
 
-  return visiblePinnedRowIds?.indexOf(row.id) ?? -1
+  return visiblePinnedRowIds.indexOf(row.id)
 }
 
 export function row_pin<TData extends RowData>(
@@ -160,9 +160,9 @@ export function row_pin<TData extends RowData>(
   table_setRowPinning(table, (old) => {
     if (position === 'bottom') {
       return {
-        top: (old?.top ?? []).filter((d) => !rowIds?.has(d)),
+        top: old.top.filter((d) => !rowIds.has(d)),
         bottom: [
-          ...(old?.bottom ?? []).filter((d) => !rowIds?.has(d)),
+          ...old.bottom.filter((d) => !rowIds.has(d)),
           ...Array.from(rowIds),
         ],
       }
@@ -170,14 +170,14 @@ export function row_pin<TData extends RowData>(
 
     if (position === 'top') {
       return {
-        top: [...old.top.filter((d) => !rowIds?.has(d)), ...Array.from(rowIds)],
-        bottom: old.bottom.filter((d) => !rowIds?.has(d)),
+        top: [...old.top.filter((d) => !rowIds.has(d)), ...Array.from(rowIds)],
+        bottom: old.bottom.filter((d) => !rowIds.has(d)),
       }
     }
 
     return {
-      top: old.top.filter((d) => !rowIds?.has(d)),
-      bottom: old.bottom.filter((d) => !rowIds?.has(d)),
+      top: old.top.filter((d) => !rowIds.has(d)),
+      bottom: old.bottom.filter((d) => !rowIds.has(d)),
     }
   })
 }

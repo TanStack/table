@@ -1,9 +1,9 @@
 import {
-  _createTable,
   type RowData,
   type TableOptions,
   type TableOptionsResolved,
   type TableState,
+  _createTable,
 } from '@tanstack/table-core'
 
 /**
@@ -42,9 +42,9 @@ export function createTable<TData extends RowData>(
       renderFallbackValue: null,
       mergeOptions: (
         defaultOptions: TableOptions<TData>,
-        options: Partial<TableOptions<TData>>,
+        newOptions: Partial<TableOptions<TData>>,
       ) => {
-        return mergeObjects(defaultOptions, options)
+        return mergeObjects(defaultOptions, newOptions)
       },
     },
     options,
@@ -91,8 +91,7 @@ function mergeObjects<T, U, V, W>(
 ): T & U & V & W
 function mergeObjects(...sources: any): any {
   const target = {}
-  for (let i = 0; i < sources.length; i++) {
-    let source = sources[i]
+  for (let source of sources) {
     if (typeof source === 'function') source = source()
     if (source) {
       const descriptors = Object.getOwnPropertyDescriptors(source)
@@ -105,6 +104,7 @@ function mergeObjects(...sources: any): any {
               let v,
                 s = sources[i]
               if (typeof s === 'function') s = s()
+              // eslint-disable-next-line prefer-const
               v = (s || {})[key]
               if (v !== undefined) return v
             }

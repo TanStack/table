@@ -1,11 +1,4 @@
-import { Column, Row, RowData, Table, TableFeature, Updater } from '../../types'
 import { makeStateUpdater } from '../../utils'
-import {
-  ColumnDef_ColumnFiltering,
-  TableOptions_ColumnFiltering,
-  ColumnFiltersState,
-  TableState_ColumnFiltering,
-} from './ColumnFiltering.types'
 import {
   column_getAutoFilterFn,
   column_getCanFilter,
@@ -19,6 +12,20 @@ import {
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './ColumnFiltering.utils'
+import type {
+  Column,
+  Row,
+  RowData,
+  Table,
+  TableFeature,
+  Updater,
+} from '../../types'
+import type {
+  ColumnDef_ColumnFiltering,
+  ColumnFiltersState,
+  TableOptions_ColumnFiltering,
+  TableState_ColumnFiltering,
+} from './ColumnFiltering.types'
 
 export const ColumnFiltering: TableFeature = {
   _getDefaultColumnDef: <

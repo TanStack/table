@@ -1,11 +1,5 @@
-import { RowData, Column, Header, Table, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
-import {
-  ColumnDef_ColumnSizing,
-  ColumnSizingDefaultOptions,
-  TableState_ColumnSizing,
-} from './ColumnSizing.types'
 import {
   column_getAfter,
   column_getSize,
@@ -21,6 +15,12 @@ import {
   table_resetColumnSizing,
   table_setColumnSizing,
 } from './ColumnSizing.utils'
+import type {
+  ColumnDef_ColumnSizing,
+  ColumnSizingDefaultOptions,
+  TableState_ColumnSizing,
+} from './ColumnSizing.types'
+import type { Column, Header, RowData, Table, TableFeature } from '../../types'
 
 export const ColumnSizing: TableFeature = {
   _getDefaultColumnDef: (): ColumnDef_ColumnSizing => {

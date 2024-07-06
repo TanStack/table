@@ -1,5 +1,5 @@
-import { Row, RowData, Table, Updater } from '../../types'
-import { ExpandedState, ExpandedStateList } from './RowExpanding.types'
+import type { Row, RowData, Table, Updater } from '../../types'
+import type { ExpandedState, ExpandedStateList } from './RowExpanding.types'
 
 export function table_autoResetExpanded<TData extends RowData>(
   table: Table<TData>,
@@ -49,7 +49,7 @@ export function table_resetExpanded<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setExpanded(defaultState ? {} : table.initialState?.expanded ?? {})
+  table.setExpanded(defaultState ? {} : table.initialState.expanded)
 }
 
 export function table_getCanSomeRowsExpand<TData extends RowData>(
@@ -82,8 +82,8 @@ export function table_getIsAllRowsExpanded<TData extends RowData>(
   const expanded = table.getState().expanded
 
   // If expanded is true, save some cycles and return true
-  if (typeof expanded === 'boolean') {
-    return expanded === true
+  if (expanded === true) {
+    return true
   }
 
   if (!Object.keys(expanded).length) {
@@ -143,7 +143,7 @@ export function row_toggleExpanded<TData extends RowData>(
   expanded?: boolean,
 ) {
   table.setExpanded((old) => {
-    const exists = old === true ? true : !!old?.[row.id]
+    const exists = old === true ? true : !!old[row.id]
 
     let oldExpanded: ExpandedStateList = {}
 
@@ -181,7 +181,7 @@ export function row_getIsExpanded<TData extends RowData>(
 
   return !!(
     table.options.getIsRowExpanded?.(row) ??
-    (expanded === true || expanded?.[row.id])
+    (expanded === true || expanded[row.id])
   )
 }
 
@@ -191,7 +191,7 @@ export function row_getCanExpand<TData extends RowData>(
 ) {
   return (
     table.options.getRowCanExpand?.(row) ??
-    ((table.options.enableExpanding ?? true) && !!row.subRows?.length)
+    ((table.options.enableExpanding ?? true) && !!row.subRows.length)
   )
 }
 

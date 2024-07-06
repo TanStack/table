@@ -2,12 +2,12 @@
   lang="ts"
   generics="TData, TValue, TContext extends HeaderContext<TData, TValue> | CellContext<TData, TValue>"
 >
+  import { RenderComponentConfig } from './render-component'
   import type {
     CellContext,
     ColumnDefTemplate,
     HeaderContext,
   } from '@tanstack/table-core'
-  import { RenderComponentConfig } from './render-component'
 
   type Props = {
     /** The cell or header field of the current cell's column definition. */
@@ -20,7 +20,7 @@
     context: TContext
   }
 
-  let { content, context }: Props = $props()
+  const { content, context }: Props = $props()
 </script>
 
 {#if typeof content === 'string'}

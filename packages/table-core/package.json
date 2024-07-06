@@ -49,6 +49,7 @@
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc",

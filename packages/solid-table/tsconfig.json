@@ -4,5 +4,5 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js"
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "eslint.config.js", "vite.config.ts"]
 }

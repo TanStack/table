@@ -1,3 +1,4 @@
+import { makeStateUpdater } from '../../utils'
 import {
   column_clearSorting,
   column_getAutoSortDir,
@@ -16,13 +17,12 @@ import {
   table_resetSorting,
   table_setSorting,
 } from './RowSorting.utils'
-import {
+import type {
   ColumnDef_RowSorting,
   TableOptions_RowSorting,
   TableState_RowSorting,
 } from './RowSorting.types'
-import { Column, Table, RowData, TableFeature } from '../../types'
-import { makeStateUpdater } from '../../utils'
+import type { Column, RowData, Table, TableFeature } from '../../types'
 
 export const RowSorting: TableFeature = {
   _getInitialState: (state): TableState_RowSorting => {

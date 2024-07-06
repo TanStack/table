@@ -1,5 +1,5 @@
-import { Table, RowData } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
+import type { RowData, Table } from '../../types'
 
 export function getFacetedMinMaxValues<TData extends RowData>(): (
   table: Table<TData>,
@@ -18,15 +18,12 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
           return undefined
         }
 
-        let facetedMinMaxValues: [any, any] = [firstValue, firstValue]
+        const facetedMinMaxValues: [any, any] = [firstValue, firstValue]
 
-        for (let i = 0; i < facetedRowModel.flatRows.length; i++) {
-          const values =
-            facetedRowModel.flatRows[i]!.getUniqueValues<number>(columnId)
+        for (const row of facetedRowModel.flatRows) {
+          const values = row.getUniqueValues<number>(columnId)
 
-          for (let j = 0; j < values.length; j++) {
-            const value = values[j]!
-
+          for (const value of values) {
             if (value < facetedMinMaxValues[0]) {
               facetedMinMaxValues[0] = value
             } else if (value > facetedMinMaxValues[1]) {

@@ -1,6 +1,6 @@
 import { _createRow } from '../../core/rows/_createRow'
-import { Table, Row, RowModel, RowData } from '../../types'
 import { flattenBy, getMemoOptions, memo } from '../../utils'
+import type { Row, RowData, RowModel, Table } from '../../types'
 
 export function getGroupedRowModel<TData extends RowData>(): (
   table: Table<TData>,
@@ -18,7 +18,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
           table.getColumn(columnId),
         )
 
-        const groupedFlatRows: Row<TData>[] = []
+        const groupedFlatRows: Array<Row<TData>> = []
         const groupedRowsById: Record<string, Row<TData>> = {}
         // const onlyGroupedFlatRows: Row[] = [];
         // const onlyGroupedRowsById: Record<RowId, Row> = {};
@@ -27,7 +27,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
 
         // Recursively group the data
         const groupUpRecursively = (
-          rows: Row<TData>[],
+          rows: Array<Row<TData>>,
           depth = 0,
           parentId?: string,
         ) => {
@@ -40,6 +40,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
               groupedFlatRows.push(row)
               groupedRowsById[row.id] = row
 
+              // eslint-disable-next-line ts/no-unnecessary-condition
               if (row.subRows) {
                 row.subRows = groupUpRecursively(row.subRows, depth + 1, row.id)
               }
@@ -82,37 +83,37 @@ export function getGroupedRowModel<TData extends RowData>(): (
                 groupingValue,
                 subRows,
                 leafRows,
-                getValue: (columnId: string) => {
+                getValue: (colId: string) => {
                   // Don't aggregate columns that are in the grouping
-                  if (existingGrouping.includes(columnId)) {
-                    if (row._valuesCache.hasOwnProperty(columnId)) {
-                      return row._valuesCache[columnId]
+                  if (existingGrouping.includes(colId)) {
+                    if (row._valuesCache.hasOwnProperty(colId)) {
+                      return row._valuesCache[colId]
                     }
 
                     if (groupedRows[0]) {
-                      row._valuesCache[columnId] =
-                        groupedRows[0].getValue(columnId) ?? undefined
+                      row._valuesCache[colId] =
+                        groupedRows[0].getValue(colId) ?? undefined
                     }
 
-                    return row._valuesCache[columnId]
+                    return row._valuesCache[colId]
                   }
 
-                  if (row._groupingValuesCache.hasOwnProperty(columnId)) {
-                    return row._groupingValuesCache[columnId]
+                  if (row._groupingValuesCache.hasOwnProperty(colId)) {
+                    return row._groupingValuesCache[colId]
                   }
 
                   // Aggregate the values
-                  const column = table.getColumn(columnId)
+                  const column = table.getColumn(colId)
                   const aggregateFn = column?.getAggregationFn()
 
                   if (aggregateFn) {
-                    row._groupingValuesCache[columnId] = aggregateFn(
-                      columnId,
+                    row._groupingValuesCache[colId] = aggregateFn(
+                      colId,
                       leafRows,
                       groupedRows,
                     )
 
-                    return row._groupingValuesCache[columnId]
+                    return row._groupingValuesCache[colId]
                   }
                 },
               })
@@ -165,8 +166,11 @@ export function getGroupedRowModel<TData extends RowData>(): (
     )
 }
 
-function groupBy<TData extends RowData>(rows: Row<TData>[], columnId: string) {
-  const groupMap = new Map<any, Row<TData>[]>()
+function groupBy<TData extends RowData>(
+  rows: Array<Row<TData>>,
+  columnId: string,
+) {
+  const groupMap = new Map<any, Array<Row<TData>>>()
 
   return rows.reduce((map, row) => {
     const resKey = `${row.getGroupingValue(columnId)}`

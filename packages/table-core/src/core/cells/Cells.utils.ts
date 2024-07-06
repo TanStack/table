@@ -1,5 +1,5 @@
-import { Cell, CellData, RowData, Table } from '../../types'
 import { row_getValue } from '../rows/Rows.utils'
+import type { Cell, CellData, RowData, Table } from '../../types'
 
 export function cell_getValue<TData extends RowData, TValue extends CellData>(
   cell: Cell<TData, TValue>,
@@ -23,7 +23,7 @@ export function cell_getContext<TData extends RowData, TValue extends CellData>(
     table,
     column: cell.column,
     row: cell.row,
-    cell: cell as Cell<TData, TValue>,
+    cell: cell,
     getValue: cell.getValue,
     renderValue: cell.renderValue,
   }

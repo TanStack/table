@@ -1,5 +1,3 @@
-import { TableOptionsResolved, TableState, Table, RowData } from '../../types'
-
 import { Headers } from '../headers/Headers'
 import { Rows } from '../rows/Rows'
 import { Cells } from '../cells/Cells'
@@ -20,8 +18,14 @@ import { RowPagination } from '../../features/row-pagination/RowPagination'
 import { RowPinning } from '../../features/row-pinning/RowPinning'
 import { RowSelection } from '../../features/row-selection/RowSelection'
 import { RowSorting } from '../../features/row-sorting/RowSorting'
-import { Table_CoreProperties } from './Tables.types'
 import { Tables } from './Tables'
+import type { Table_CoreProperties } from './Tables.types'
+import type {
+  RowData,
+  Table,
+  TableOptionsResolved,
+  TableState,
+} from '../../types'
 
 const coreFeatures = [Tables, Rows, Headers, Columns, Cells]
 
@@ -68,7 +72,7 @@ export function _createTable<TData extends RowData>(
     ...(options._features ?? []),
   ]
 
-  let table = { _features } as unknown as Table<TData>
+  const table = { _features } as unknown as Table<TData>
 
   const defaultOptions = _features.reduce((obj, feature) => {
     return Object.assign(obj, feature._getDefaultOptions?.(table))
@@ -87,7 +91,7 @@ export function _createTable<TData extends RowData>(
 
   Object.assign(table, coreInstance)
 
-  const queued: (() => void)[] = []
+  const queued: Array<() => void> = []
   let queuedTimeout = false
 
   table._queue = (cb) => {
@@ -113,9 +117,8 @@ export function _createTable<TData extends RowData>(
     }
   }
 
-  for (let index = 0; index < table._features.length; index++) {
-    const feature = table._features[index]
-    feature?._createTable?.(table)
+  for (const feature of table._features) {
+    feature._createTable?.(table)
   }
 
   return table

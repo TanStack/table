@@ -1,6 +1,6 @@
-import { Cell, CellData, RowData, Table, TableFeature } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
 import { cell_getContext, cell_getValue, cell_renderValue } from './Cells.utils'
+import type { Cell, CellData, RowData, Table, TableFeature } from '../../types'
 
 export const Cells: TableFeature = {
   _createCell: <TData extends RowData, TValue extends CellData>(
@@ -12,8 +12,8 @@ export const Cells: TableFeature = {
     cell.renderValue = () => cell_renderValue(cell, table)
 
     cell.getContext = memo(
-      () => [table, cell],
-      (table, cell) => cell_getContext(cell, table),
+      () => [cell, table],
+      (c, t) => cell_getContext(c, t),
       getMemoOptions(table.options, 'debugCells', 'cell.getContext'),
     )
   },

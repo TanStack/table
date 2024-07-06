@@ -1,7 +1,8 @@
-import { Cell, Column, Row, RowData, Table, Updater } from '../../types'
+import { Row } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
-import { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
-import { ColumnVisibilityState } from './ColumnVisibility.types'
+import type { Cell, Column, RowData, Table, Updater } from '../../types'
+import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
+import type { ColumnVisibilityState } from './ColumnVisibility.types'
 
 export function column_toggleVisibility<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
@@ -24,7 +25,7 @@ export function column_getIsVisible<TData extends RowData, TValue>(
   return (
     (childColumns.length
       ? childColumns.some((c) => c.getIsVisible())
-      : table.getState().columnVisibility?.[column.id]) ?? true
+      : table.getState().columnVisibility[column.id]) ?? true
   )
 }
 
@@ -43,7 +44,7 @@ export function column_getToggleVisibilityHandler<
   TValue,
 >(column: Column<TData, TValue>) {
   return (e: unknown) => {
-    column.toggleVisibility?.(
+    column.toggleVisibility(
       ((e as MouseEvent).target as HTMLInputElement).checked,
     )
   }
@@ -63,15 +64,15 @@ export function column_getVisibleLeafColumns<TData extends RowData>(
 }
 
 export function row_getAllVisibleCells<TData extends RowData>(
-  cells: Cell<TData, unknown>[],
+  cells: Array<Cell<TData, unknown>>,
 ) {
   return cells.filter((cell) => cell.column.getIsVisible())
 }
 
 export function row_getVisibleCells<TData extends RowData>(
-  left: Cell<TData, unknown>[],
-  center: Cell<TData, unknown>[],
-  right: Cell<TData, unknown>[],
+  left: Array<Cell<TData, unknown>>,
+  center: Array<Cell<TData, unknown>>,
+  right: Array<Cell<TData, unknown>>,
 ) {
   return [...left, ...center, ...right]
 }
@@ -79,8 +80,8 @@ export function row_getVisibleCells<TData extends RowData>(
 export function table_makeVisibleColumnsMethod<TData extends RowData>(
   table: Table<TData>,
   key: string,
-  getColumns: () => Column<TData, unknown>[],
-): () => Column<TData, unknown>[] {
+  getColumns: () => Array<Column<TData, unknown>>,
+): () => Array<Column<TData, unknown>> {
   return memo(
     () => [
       getColumns(),
@@ -90,7 +91,7 @@ export function table_makeVisibleColumnsMethod<TData extends RowData>(
         .join('_'),
     ],
     (columns) => {
-      return columns.filter((d) => d.getIsVisible?.())
+      return columns.filter((d) => d.getIsVisible())
     },
     getMemoOptions(table.options, 'debugColumns', key),
   )
@@ -108,7 +109,7 @@ export function table_resetColumnVisibility<TData extends RowData>(
   defaultState?: boolean,
 ) {
   table.setColumnVisibility(
-    defaultState ? {} : table.initialState.columnVisibility ?? {},
+    defaultState ? {} : table.initialState.columnVisibility,
   )
 }
 
@@ -122,7 +123,7 @@ export function table_toggleAllColumnsVisible<TData extends RowData>(
     table.getAllLeafColumns().reduce(
       (obj, column) => ({
         ...obj,
-        [column.id]: !value ? !column.getCanHide?.() : value,
+        [column.id]: !value ? !column.getCanHide() : value,
       }),
       {},
     ),
@@ -132,13 +133,13 @@ export function table_toggleAllColumnsVisible<TData extends RowData>(
 export function table_getIsAllColumnsVisible<TData extends RowData>(
   table: Table<TData>,
 ) {
-  return !table.getAllLeafColumns().some((column) => !column.getIsVisible?.())
+  return !table.getAllLeafColumns().some((column) => !column.getIsVisible())
 }
 
 export function table_getIsSomeColumnsVisible<TData extends RowData>(
   table: Table<TData>,
 ) {
-  return table.getAllLeafColumns().some((column) => column.getIsVisible?.())
+  return table.getAllLeafColumns().some((column) => column.getIsVisible())
 }
 
 export function table_getToggleAllColumnsVisibilityHandler<
@@ -146,7 +147,7 @@ export function table_getToggleAllColumnsVisibilityHandler<
 >(table: Table<TData>) {
   return (e: unknown) => {
     table.toggleAllColumnsVisible(
-      ((e as MouseEvent).target as HTMLInputElement)?.checked,
+      ((e as MouseEvent).target as HTMLInputElement).checked,
     )
   }
 }

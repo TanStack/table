@@ -1,79 +1,79 @@
-import { AggregationFn } from '../features/column-grouping/ColumnGrouping.types'
 import { isNumberArray } from '../utils'
+import type { AggregationFn } from '../features/column-grouping/ColumnGrouping.types'
 
 const sum: AggregationFn<any> = (columnId, _leafRows, childRows) => {
   // It's faster to just add the aggregations together instead of
   // process leaf nodes individually
-  return childRows.reduce((sum, next) => {
+  return childRows.reduce((sumValue, next) => {
     const nextValue = next.getValue(columnId)
-    return sum + (typeof nextValue === 'number' ? nextValue : 0)
+    return sumValue + (typeof nextValue === 'number' ? nextValue : 0)
   }, 0)
 }
 
 const min: AggregationFn<any> = (columnId, _leafRows, childRows) => {
-  let min: number | undefined
+  let minValue: number | undefined
 
   childRows.forEach((row) => {
-    const value = row.getValue<number>(columnId)
+    const value = row.getValue<number | null>(columnId)
 
     if (
       value != null &&
-      (min! > value || (min === undefined && value >= value))
+      (minValue! > value || (minValue === undefined && value >= value))
     ) {
-      min = value
+      minValue = value
     }
   })
 
-  return min
+  return minValue
 }
 
 const max: AggregationFn<any> = (columnId, _leafRows, childRows) => {
-  let max: number | undefined
+  let maxValue: number | undefined
 
   childRows.forEach((row) => {
-    const value = row.getValue<number>(columnId)
+    const value = row.getValue<number | null>(columnId)
     if (
       value != null &&
-      (max! < value || (max === undefined && value >= value))
+      (maxValue! < value || (maxValue === undefined && value >= value))
     ) {
-      max = value
+      maxValue = value
     }
   })
 
-  return max
+  return maxValue
 }
 
 const extent: AggregationFn<any> = (columnId, _leafRows, childRows) => {
-  let min: number | undefined
-  let max: number | undefined
+  let minValue: number | undefined
+  let maxValue: number | undefined
 
   childRows.forEach((row) => {
-    const value = row.getValue<number>(columnId)
+    const value = row.getValue<number | null>(columnId)
     if (value != null) {
-      if (min === undefined) {
-        if (value >= value) min = max = value
+      if (minValue === undefined) {
+        if (value >= value) minValue = maxValue = value
       } else {
-        if (min > value) min = value
-        if (max! < value) max = value
+        if (minValue > value) minValue = value
+        if (maxValue! < value) maxValue = value
       }
     }
   })
 
-  return [min, max]
+  return [minValue, maxValue]
 }
 
 const mean: AggregationFn<any> = (columnId, leafRows) => {
   let count = 0
-  let sum = 0
+  let sumValue = 0
 
   leafRows.forEach((row) => {
-    let value = row.getValue<number>(columnId)
+    let value = row.getValue<number | null>(columnId)
     if (value != null && (value = +value) >= value) {
-      ++count, (sum += value)
+      ++count, (sumValue += value)
     }
   })
 
-  if (count) return sum / count
+  if (count) return sumValue / count
 
   return
 }

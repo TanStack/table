@@ -1,9 +1,5 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
-import { Column, RowData, Table, TableFeature } from '../../types'
-import {
-  ColumnOrderDefaultOptions,
-  TableState_ColumnOrdering,
-} from './ColumnOrdering.types'
+import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import {
   column_getIndex,
   column_getIsFirstColumn,
@@ -12,7 +8,11 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './ColumnOrdering.utils'
-import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
+import type {
+  ColumnOrderDefaultOptions,
+  TableState_ColumnOrdering,
+} from './ColumnOrdering.types'
+import type { Column, RowData, Table, TableFeature } from '../../types'
 
 export const ColumnOrdering: TableFeature = {
   _getInitialState: (state): TableState_ColumnOrdering => {

@@ -46,6 +46,7 @@
     "build:types": "tsc --emitDeclarationOnly",
     "clean": "rimraf ./build && rimraf ./dist",
     "test:build": "publint --strict",
+    "test:eslint": "eslint ./src",
     "test:lib": "vitest",
     "test:lib:dev": "vitest --watch",
     "test:types": "tsc"

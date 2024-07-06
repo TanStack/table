@@ -1,9 +1,15 @@
 import {
-  column_getFacetedRowModel,
   column_getFacetedMinMaxValues,
+  column_getFacetedRowModel,
   column_getFacetedUniqueValues,
 } from './ColumnFaceting.utils'
-import { CellData, Column, RowData, Table, TableFeature } from '../../types'
+import type {
+  CellData,
+  Column,
+  RowData,
+  Table,
+  TableFeature,
+} from '../../types'
 
 export const ColumnFaceting: TableFeature = {
   _createColumn: <TData extends RowData, TValue extends CellData>(

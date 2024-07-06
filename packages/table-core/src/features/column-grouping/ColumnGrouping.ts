@@ -1,10 +1,4 @@
-import { Cell, Column, Row, RowData, Table, TableFeature } from '../../types'
 import { makeStateUpdater } from '../../utils'
-import {
-  ColumnDef_ColumnGrouping,
-  TableOptions_ColumnGrouping,
-  TableState_ColumnGrouping,
-} from './ColumnGrouping.types'
 import {
   cell_getIsAggregated,
   cell_getIsGrouped,
@@ -23,6 +17,19 @@ import {
   table_resetGrouping,
   table_setGrouping,
 } from './ColumnGrouping.utils'
+import type {
+  Cell,
+  Column,
+  Row,
+  RowData,
+  Table,
+  TableFeature,
+} from '../../types'
+import type {
+  ColumnDef_ColumnGrouping,
+  TableOptions_ColumnGrouping,
+  TableState_ColumnGrouping,
+} from './ColumnGrouping.types'
 
 export const ColumnGrouping: TableFeature = {
   _getDefaultColumnDef: <TData extends RowData>(): ColumnDef_ColumnGrouping<

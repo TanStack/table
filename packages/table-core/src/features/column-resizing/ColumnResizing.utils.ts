@@ -1,6 +1,17 @@
-import { Column, Header, RowData, Table, Updater } from '../../types'
-import { ColumnSizingState } from '../column-sizing/ColumnSizing.types'
-import { ColumnResizingInfoState } from './ColumnResizing.types'
+import type { Column, Header, RowData, Table, Updater } from '../../types'
+import type { ColumnSizingState } from '../column-sizing/ColumnSizing.types'
+import type { ColumnResizingInfoState } from './ColumnResizing.types'
+
+export function getDefaultColumnSizingInfoState(): ColumnResizingInfoState {
+  return structuredClone({
+    startOffset: null,
+    startSize: null,
+    deltaOffset: null,
+    deltaPercentage: null,
+    isResizingColumn: false,
+    columnSizingStart: [],
+  })
+}
 
 export function column_getCanResize<TData extends RowData, TValue>(
   table: Table<TData>,
@@ -27,29 +38,29 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
   const column = table.getColumn(header.column.id)
   const canResize = column?.getCanResize()
 
-  return (e: unknown) => {
+  return (event: unknown) => {
     if (!column || !canResize) {
       return
     }
 
-    ;(e as any).persist?.()
+    ;(event as any).persist?.()
 
-    if (isTouchStartEvent(e)) {
+    if (isTouchStartEvent(event)) {
       // lets not respond to multiple touches (e.g. 2 or 3 fingers)
-      if (e.touches && e.touches.length > 1) {
+      if (event.touches.length > 1) {
         return
       }
     }
 
     const startSize = header.getSize()
 
-    const columnSizingStart: [string, number][] = header
-      ? header.getLeafHeaders().map((d) => [d.column.id, d.column.getSize()])
-      : [[column.id, column.getSize()]]
+    const columnSizingStart: Array<[string, number]> = header
+      .getLeafHeaders()
+      .map((d) => [d.column.id, d.column.getSize()])
 
-    const clientX = isTouchStartEvent(e)
-      ? Math.round(e.touches[0]!.clientX)
-      : (e as MouseEvent).clientX
+    const clientX = isTouchStartEvent(event)
+      ? Math.round(event.touches[0]!.clientX)
+      : (event as MouseEvent).clientX
 
     const newColumnSizing: ColumnSizingState = {}
 
@@ -62,9 +73,9 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
         const deltaDirection =
           table.options.columnResizeDirection === 'rtl' ? -1 : 1
         const deltaOffset =
-          (clientXPos - (old?.startOffset ?? 0)) * deltaDirection
+          (clientXPos - (old.startOffset ?? 0)) * deltaDirection
         const deltaPercentage = Math.max(
-          deltaOffset / (old?.startSize ?? 0),
+          deltaOffset / (old.startSize ?? 0),
           -0.999999,
         )
 
@@ -125,12 +136,12 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
     }
 
     const touchEvents = {
-      moveHandler: (e: TouchEvent) => {
-        if (e.cancelable) {
-          e.preventDefault()
-          e.stopPropagation()
+      moveHandler: (touchEvent: TouchEvent) => {
+        if (touchEvent.cancelable) {
+          touchEvent.preventDefault()
+          touchEvent.stopPropagation()
         }
-        onMove(e.touches[0]!.clientX)
+        onMove(touchEvent.touches[0]!.clientX)
         return false
       },
       upHandler: (e: TouchEvent) => {
@@ -151,7 +162,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
       ? { passive: false }
       : false
 
-    if (isTouchStartEvent(e)) {
+    if (isTouchStartEvent(event)) {
       contextDocument?.addEventListener(
         'touchmove',
         touchEvents.moveHandler,
@@ -201,19 +212,9 @@ export function table_resetHeaderSizeInfo<TData extends RowData>(
   table.setColumnSizingInfo(
     defaultState
       ? getDefaultColumnSizingInfoState()
-      : table.initialState.columnSizingInfo ??
-          getDefaultColumnSizingInfoState(),
+      : table.initialState.columnSizingInfo,
   )
 }
-
-export const getDefaultColumnSizingInfoState = (): ColumnResizingInfoState => ({
-  startOffset: null,
-  startSize: null,
-  deltaOffset: null,
-  deltaPercentage: null,
-  isResizingColumn: false,
-  columnSizingStart: [],
-})
 
 export function passiveEventSupported() {
   let passiveSupported: boolean | null = null

@@ -1,5 +1,5 @@
-import { BuiltInAggregationFn } from '../../fns/aggregationFns'
-import {
+import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
+import type {
   AggregationFns,
   Cell,
   ColumnDefTemplate,
@@ -11,7 +11,7 @@ import {
   Updater,
 } from '../../types'
 
-export type GroupingState = string[]
+export type GroupingState = Array<string>
 
 export interface TableState_ColumnGrouping {
   grouping: GroupingState
@@ -19,8 +19,8 @@ export interface TableState_ColumnGrouping {
 
 export type AggregationFn<TData extends RowData> = (
   columnId: string,
-  leafRows: Row<TData>[],
-  childRows: Row<TData>[],
+  leafRows: Array<Row<TData>>,
+  childRows: Array<Row<TData>>,
 ) => any
 
 export type CustomAggregationFns = Record<string, AggregationFn<any>>

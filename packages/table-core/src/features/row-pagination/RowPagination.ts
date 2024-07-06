@@ -1,11 +1,6 @@
-import { Table, RowData, TableFeature } from '../../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
-  PaginationDefaultOptions,
-  TableState_RowPagination,
   getDefaultPaginationState,
-} from './RowPagination.types'
-import {
   table_autoResetPageIndex,
   table_firstPage,
   table_getCanNextPage,
@@ -26,6 +21,11 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './RowPagination.utils'
+import type {
+  PaginationDefaultOptions,
+  TableState_RowPagination,
+} from './RowPagination.types'
+import type { RowData, Table, TableFeature } from '../../types'
 
 export const RowPagination: TableFeature = {
   _getInitialState: (state): TableState_RowPagination => {
@@ -47,8 +47,8 @@ export const RowPagination: TableFeature = {
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    let registered = false
-    let queued = false
+    const registered = false
+    const queued = false
 
     table._autoResetPageIndex = () =>
       table_autoResetPageIndex(table, registered, queued)

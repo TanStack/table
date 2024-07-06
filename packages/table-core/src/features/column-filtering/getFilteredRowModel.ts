@@ -1,7 +1,7 @@
-import { ResolvedColumnFilter } from './ColumnFiltering.types'
-import { Table, RowModel, Row, RowData } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
 import { filterRows } from './filterRowsUtils'
+import type { Row, RowData, RowModel, Table } from '../../types'
+import type { ResolvedColumnFilter } from './ColumnFiltering.types'
 
 export function getFilteredRowModel<TData extends RowData>(): (
   table: Table<TData>,
@@ -14,21 +14,18 @@ export function getFilteredRowModel<TData extends RowData>(): (
         table.getState().globalFilter,
       ],
       (rowModel, columnFilters, globalFilter) => {
-        if (
-          !rowModel.rows.length ||
-          (!columnFilters?.length && !globalFilter)
-        ) {
-          for (let i = 0; i < rowModel.flatRows.length; i++) {
-            rowModel.flatRows[i]!.columnFilters = {}
-            rowModel.flatRows[i]!.columnFiltersMeta = {}
+        if (!rowModel.rows.length || (!columnFilters.length && !globalFilter)) {
+          for (const row of rowModel.flatRows) {
+            row.columnFilters = {}
+            row.columnFiltersMeta = {}
           }
           return rowModel
         }
 
-        const resolvedColumnFilters: ResolvedColumnFilter<TData>[] = []
-        const resolvedGlobalFilters: ResolvedColumnFilter<TData>[] = []
+        const resolvedColumnFilters: Array<ResolvedColumnFilter<TData>> = []
+        const resolvedGlobalFilters: Array<ResolvedColumnFilter<TData>> = []
 
-        ;(columnFilters ?? []).forEach((d) => {
+        columnFilters.forEach((d) => {
           const column = table.getColumn(d.id)
 
           if (!column) {
@@ -53,7 +50,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
           })
         })
 
-        const filterableIds = (columnFilters ?? []).map((d) => d.id)
+        const filterableIds = columnFilters.map((d) => d.id)
 
         const globalFilterFn = table.getGlobalFilterFn()
 
@@ -79,18 +76,12 @@ export function getFilteredRowModel<TData extends RowData>(): (
           })
         }
 
-        let currentColumnFilter
-        let currentGlobalFilter
-
         // Flag the prefiltered row model with each filter state
-        for (let j = 0; j < rowModel.flatRows.length; j++) {
-          const row = rowModel.flatRows[j]!
-
+        for (const row of rowModel.flatRows) {
           row.columnFilters = {}
 
           if (resolvedColumnFilters.length) {
-            for (let i = 0; i < resolvedColumnFilters.length; i++) {
-              currentColumnFilter = resolvedColumnFilters[i]!
+            for (const currentColumnFilter of resolvedColumnFilters) {
               const id = currentColumnFilter.id
 
               // Tag the row with the column filter state
@@ -106,8 +97,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
           }
 
           if (resolvedGlobalFilters.length) {
-            for (let i = 0; i < resolvedGlobalFilters.length; i++) {
-              currentGlobalFilter = resolvedGlobalFilters[i]!
+            for (const currentGlobalFilter of resolvedGlobalFilters) {
               const id = currentGlobalFilter.id
               // Tag the row with the first truthy global filter state
               if (
@@ -133,8 +123,8 @@ export function getFilteredRowModel<TData extends RowData>(): (
 
         const filterRowsImpl = (row: Row<TData>) => {
           // Horizontally filter rows through each column
-          for (let i = 0; i < filterableIds.length; i++) {
-            if (row.columnFilters[filterableIds[i]!] === false) {
+          for (const columnId of filterableIds) {
+            if (row.columnFilters[columnId] === false) {
               return false
             }
           }

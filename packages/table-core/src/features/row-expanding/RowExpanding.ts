@@ -1,9 +1,4 @@
-import { Table, Row, RowData, TableFeature } from '../../types'
 import { makeStateUpdater } from '../../utils'
-import {
-  TableOptions_RowExpanding,
-  TableState_RowExpanding,
-} from './RowExpanding.types'
 import {
   row_getCanExpand,
   row_getIsAllParentsExpanded,
@@ -22,6 +17,11 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './RowExpanding.utils'
+import type { Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  TableOptions_RowExpanding,
+  TableState_RowExpanding,
+} from './RowExpanding.types'
 
 export const RowExpanding: TableFeature = {
   _getInitialState: (state): TableState_RowExpanding => {
@@ -41,8 +41,8 @@ export const RowExpanding: TableFeature = {
   },
 
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    let registered = false
-    let queued = false
+    const registered = false
+    const queued = false
 
     table._autoResetExpanded = () =>
       table_autoResetExpanded(table, registered, queued)

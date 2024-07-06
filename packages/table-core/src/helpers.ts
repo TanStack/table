@@ -1,4 +1,4 @@
-import {
+import type {
   AccessorFn,
   AccessorFnColumnDef,
   AccessorKeyColumnDef,
@@ -8,7 +8,7 @@ import {
   RowData,
   TableOptions,
 } from './types'
-import { DeepKeys, DeepValue } from './utils.types'
+import type { DeepKeys, DeepValue } from './utils.types'
 
 // type Person = {
 //   firstName: string

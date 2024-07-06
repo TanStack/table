@@ -1,4 +1,4 @@
-import {
+import type {
   RowData,
   RowModel,
   Table,
@@ -9,7 +9,7 @@ import {
   TableState,
   Updater,
 } from '../../types'
-import { RequiredKeys } from '../../utils.types'
+import type { RequiredKeys } from '../../utils.types'
 
 export interface TableOptions_Core<TData extends RowData> {
   /**
@@ -17,7 +17,7 @@ export interface TableOptions_Core<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _features?: TableFeature[]
+  _features?: Array<TableFeature>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -29,7 +29,7 @@ export interface TableOptions_Core<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#data)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  data: TData[]
+  data: Array<TData>
   /**
    * Set this option to `true` to output all debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugall)
@@ -88,7 +88,7 @@ export interface TableOptions_Core<TData extends RowData> {
 }
 
 export interface Table_CoreProperties<TData extends RowData> {
-  _features: readonly TableFeature[]
+  _features: ReadonlyArray<TableFeature>
   /**
    * This is the resolved initial state of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)

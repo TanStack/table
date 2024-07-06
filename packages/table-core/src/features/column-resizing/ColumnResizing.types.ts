@@ -1,11 +1,11 @@
-import { OnChangeFn, Updater } from '../../types'
+import type { OnChangeFn, Updater } from '../../types'
 
 export interface TableState_ColumnResizing {
   columnSizingInfo: ColumnResizingInfoState
 }
 
 export interface ColumnResizingInfoState {
-  columnSizingStart: [string, number][]
+  columnSizingStart: Array<[string, number]>
   deltaOffset: null | number
   deltaPercentage: null | number
   isResizingColumn: false | string

@@ -1,4 +1,11 @@
-import { OnChangeFn, Row, RowData, RowModel, Table, Updater } from '../../types'
+import type {
+  OnChangeFn,
+  Row,
+  RowData,
+  RowModel,
+  Table,
+  Updater,
+} from '../../types'
 
 export type ExpandedStateList = Record<string, boolean>
 export type ExpandedState = true | Record<string, boolean>
