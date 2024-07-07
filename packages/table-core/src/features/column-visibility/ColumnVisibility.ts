@@ -48,7 +48,7 @@ export const ColumnVisibility: TableFeature = {
     column.getCanHide = () => column_getCanHide(column, table)
 
     column.getToggleVisibilityHandler = () =>
-      column_getToggleVisibilityHandler(column)
+      column_getToggleVisibilityHandler(column, table)
   },
 
   _createRow: <TData extends RowData>(
@@ -57,7 +57,7 @@ export const ColumnVisibility: TableFeature = {
   ): void => {
     row._getAllVisibleCells = memo(
       () => [row.getAllCells(), table.getState().columnVisibility],
-      (cells) => row_getAllVisibleCells(cells),
+      (cells) => row_getAllVisibleCells(cells, table),
       getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells'),
     )
 

@@ -9,10 +9,10 @@ export function column_toggleVisibility<TData extends RowData, TValue>(
   table: Table<TData>,
   value?: boolean,
 ): void {
-  if (column.getCanHide()) {
+  if (column_getCanHide(column, table)) {
     table_setColumnVisibility(table, (old) => ({
       ...old,
-      [column.id]: value ?? !column.getIsVisible(),
+      [column.id]: value ?? !column_getIsVisible(column, table),
     }))
   }
 }
@@ -42,9 +42,11 @@ export function column_getCanHide<TData extends RowData, TValue>(
 export function column_getToggleVisibilityHandler<
   TData extends RowData,
   TValue,
->(column: Column<TData, TValue>) {
+>(column: Column<TData, TValue>, table: Table<TData>) {
   return (e: unknown) => {
-    column.toggleVisibility(
+    column_toggleVisibility(
+      column,
+      table,
       ((e as MouseEvent).target as HTMLInputElement).checked,
     )
   }
@@ -65,8 +67,9 @@ export function column_getVisibleLeafColumns<TData extends RowData>(
 
 export function row_getAllVisibleCells<TData extends RowData>(
   cells: Array<Cell<TData, unknown>>,
+  table: Table<TData>,
 ) {
-  return cells.filter((cell) => cell.column.getIsVisible())
+  return cells.filter((cell) => column_getIsVisible(cell.column, table))
 }
 
 export function row_getVisibleCells<TData extends RowData>(
@@ -86,12 +89,12 @@ export function table_makeVisibleColumnsMethod<TData extends RowData>(
     () => [
       getColumns(),
       getColumns()
-        .filter((d) => d.getIsVisible())
+        .filter((column) => column_getIsVisible(column, table))
         .map((d) => d.id)
         .join('_'),
     ],
     (columns) => {
-      return columns.filter((d) => d.getIsVisible())
+      return columns.filter((column) => column_getIsVisible(column, table))
     },
     getMemoOptions(table.options, 'debugColumns', key),
   )

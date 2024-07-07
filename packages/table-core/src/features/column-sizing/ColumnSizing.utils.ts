@@ -4,7 +4,7 @@ import type { ColumnSizingState } from './ColumnSizing.types'
 export function column_getSize<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
-) {
+): number {
   const columnSize = table.getState().columnSizing[column.id]
 
   return Math.min(
@@ -19,21 +19,23 @@ export function column_getSize<TData extends RowData, TValue>(
 export function column_getStart<TData extends RowData, TValue>(
   columns: Array<Column<TData, unknown>>,
   column: Column<TData, TValue>,
+  table: Table<TData>,
   position?: false | 'left' | 'right' | 'center',
-) {
+): number {
   return columns
     .slice(0, column.getIndex(position))
-    .reduce((sum, c) => sum + c.getSize(), 0)
+    .reduce((sum, c) => sum + column_getSize(c, table), 0)
 }
 
 export function column_getAfter<TData extends RowData, TValue>(
   columns: Array<Column<TData, unknown>>,
   column: Column<TData, TValue>,
+  table: Table<TData>,
   position?: false | 'left' | 'right' | 'center',
-) {
+): number {
   return columns
     .slice(column.getIndex(position) + 1)
-    .reduce((sum, c) => sum + c.getSize(), 0)
+    .reduce((sum, c) => sum + column_getSize(c, table), 0)
 }
 
 export function column_resetSize<TData extends RowData, TValue>(
@@ -47,6 +49,7 @@ export function column_resetSize<TData extends RowData, TValue>(
 
 export function header_getSize<TData extends RowData, TValue>(
   header: Header<TData, TValue>,
+  table: Table<TData>,
 ) {
   let sum = 0
 
@@ -54,7 +57,7 @@ export function header_getSize<TData extends RowData, TValue>(
     if (h.subHeaders.length) {
       h.subHeaders.forEach(recurse)
     } else {
-      sum += h.column.getSize()
+      sum += column_getSize(h.column, table)
     }
   }
 

@@ -53,7 +53,7 @@ export const ColumnSizing: TableFeature = {
         column_getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
-      (position, columns) => column_getStart(columns, column, position),
+      (position, columns) => column_getStart(columns, column, table, position),
       getMemoOptions(table.options, 'debugColumns', 'getStart'),
     )
 
@@ -63,7 +63,7 @@ export const ColumnSizing: TableFeature = {
         column_getVisibleLeafColumns(table, position),
         table.getState().columnSizing,
       ],
-      (position, columns) => column_getAfter(columns, column, position),
+      (position, columns) => column_getAfter(columns, column, table, position),
       getMemoOptions(table.options, 'debugColumns', 'getAfter'),
     )
 
@@ -74,7 +74,7 @@ export const ColumnSizing: TableFeature = {
     header: Header<TData, TValue>,
     table: Table<TData>,
   ): void => {
-    header.getSize = () => header_getSize(header)
+    header.getSize = () => header_getSize(header, table)
 
     header.getStart = () => header_getStart(header)
   },

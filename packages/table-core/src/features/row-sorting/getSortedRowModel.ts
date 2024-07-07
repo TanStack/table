@@ -1,6 +1,9 @@
 import { getMemoOptions, memo } from '../../utils'
-import type { SortingFn } from './RowSorting.types'
+import { row_getValue } from '../../core/rows/Rows.utils'
+import { table_getColumn } from '../../core/columns/Columns.utils'
+import { column_getCanSort, column_getSortingFn } from './RowSorting.utils'
 import type { Row, RowData, RowModel, Table } from '../../types'
+import type { SortingFn } from './RowSorting.types'
 
 export function getSortedRowModel<TData extends RowData>(): (
   table: Table<TData>,
@@ -19,7 +22,7 @@ export function getSortedRowModel<TData extends RowData>(): (
 
         // Filter out sortings that correspond to non existing columns
         const availableSorting = sortingState.filter((sort) =>
-          table.getColumn(sort.id)?.getCanSort(),
+          column_getCanSort(table_getColumn(table, sort.id)!, table),
         )
 
         const columnInfoById: Record<
@@ -32,13 +35,13 @@ export function getSortedRowModel<TData extends RowData>(): (
         > = {}
 
         availableSorting.forEach((sortEntry) => {
-          const column = table.getColumn(sortEntry.id)
+          const column = table_getColumn(table, sortEntry.id)
           if (!column) return
 
           columnInfoById[sortEntry.id] = {
             sortUndefined: column.columnDef.sortUndefined,
             invertSorting: column.columnDef.invertSorting,
-            sortingFn: column.getSortingFn(),
+            sortingFn: column_getSortingFn(column, table),
           }
         })
 
@@ -57,8 +60,8 @@ export function getSortedRowModel<TData extends RowData>(): (
 
               // All sorting ints should always return in ascending order
               if (sortUndefined) {
-                const aValue = rowA.getValue(sortEntry.id)
-                const bValue = rowB.getValue(sortEntry.id)
+                const aValue = row_getValue(rowA, table, sortEntry.id)
+                const bValue = row_getValue(rowB, table, sortEntry.id)
 
                 const aUndefined = aValue === undefined
                 const bUndefined = bValue === undefined

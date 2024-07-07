@@ -2,6 +2,7 @@ import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
   column_getCanPin,
+  column_getIsPinned,
   column_getPinnedIndex,
   column_pin,
   getDefaultColumnPinningState,
@@ -48,6 +49,8 @@ export const ColumnPinning: TableFeature = {
     column.getCanPin = () => column_getCanPin(column, table)
 
     column.getPinnedIndex = () => column_getPinnedIndex(column, table)
+
+    column.getIsPinned = () => column_getIsPinned(column, table)
   },
 
   _createRow: <TData extends RowData>(

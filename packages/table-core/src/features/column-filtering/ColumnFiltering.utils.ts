@@ -1,6 +1,7 @@
 import { filterFns } from '../../fns/filterFns'
 import { functionalUpdate, isFunction } from '../../utils'
 import { table_getCoreRowModel } from '../../core/row-models/RowModels.utils'
+import { row_getValue } from '../../core/rows/Rows.utils'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 import type { Column, RowData, RowModel, Table, Updater } from '../../types'
 import type { ColumnFiltersState, FilterFn } from './ColumnFiltering.types'
@@ -11,7 +12,7 @@ export function column_getAutoFilterFn<TData extends RowData>(
 ) {
   const firstRow = table_getCoreRowModel(table).flatRows[0]
 
-  const value = firstRow?.getValue(column.id)
+  const value = firstRow ? row_getValue(firstRow, table, column.id) : undefined
 
   if (typeof value === 'string') {
     return filterFns.includesString

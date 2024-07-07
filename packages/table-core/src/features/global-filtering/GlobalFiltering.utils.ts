@@ -1,5 +1,6 @@
 import { filterFns } from '../../fns/filterFns'
 import { isFunction } from '../../utils'
+import type { FilterFn } from '../column-filtering/ColumnFiltering.types'
 import type { Column, RowData, Table } from '../../types'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 
@@ -22,7 +23,7 @@ export function table_getGlobalAutoFilterFn() {
 
 export function table_getGlobalFilterFn<TData extends RowData>(
   table: Table<TData>,
-) {
+): FilterFn<any> | FilterFn<TData> | undefined {
   const { globalFilterFn: globalFilterFn } = table.options
 
   return isFunction(globalFilterFn)

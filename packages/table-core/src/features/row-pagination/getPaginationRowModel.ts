@@ -29,11 +29,14 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
         let paginatedRowModel: RowModel<TData>
 
         if (!table.options.paginateExpandedRows) {
-          paginatedRowModel = expandRows({
-            rows: paginatedRows,
-            flatRows,
-            rowsById,
-          })
+          paginatedRowModel = expandRows(
+            {
+              rows: paginatedRows,
+              flatRows,
+              rowsById,
+            },
+            table,
+          )
         } else {
           paginatedRowModel = {
             rows: paginatedRows,

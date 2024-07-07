@@ -4,8 +4,9 @@ import {
   computed,
   signal,
 } from '@angular/core'
-import type { Column, ColumnDef } from '@tanstack/angular-table'
 import {
+  type Column,
+  type ColumnDef,
   type ColumnOrderState,
   type ColumnPinningState,
   type ColumnVisibilityState,

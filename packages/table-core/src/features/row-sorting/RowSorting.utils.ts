@@ -60,7 +60,7 @@ export function column_getSortingFn<TData extends RowData, TValue>(
   return isFunction(column.columnDef.sortingFn)
     ? column.columnDef.sortingFn
     : column.columnDef.sortingFn === 'auto'
-      ? column.getAutoSortingFn()
+      ? column_getAutoSortingFn(column, table)
       : table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
         sortingFns[column.columnDef.sortingFn as BuiltInSortingFn]
 }
@@ -81,7 +81,7 @@ export function column_toggleSorting<TData extends RowData, TValue>(
   // }
 
   // this needs to be outside of table.setSorting to be in sync with rerender
-  const nextSortingOrder = column.getNextSortingOrder()
+  const nextSortingOrder = column_getNextSortingOrder(column, table)
   const hasManualValue = typeof desc !== 'undefined'
 
   table_setSorting(table, (old) => {
@@ -96,7 +96,7 @@ export function column_toggleSorting<TData extends RowData, TValue>(
     const nextDesc = hasManualValue ? desc : nextSortingOrder === 'desc'
 
     // Multi-mode
-    if (old.length && column.getCanMultiSort() && multi) {
+    if (old.length && column_getCanMultiSort(column, table) && multi) {
       if (existingSorting) {
         sortAction = 'toggle'
       } else {
@@ -171,7 +171,7 @@ export function column_getFirstSortDir<TData extends RowData, TValue>(
   const sortDescFirst =
     column.columnDef.sortDescFirst ??
     table.options.sortDescFirst ??
-    column.getAutoSortDir() === 'desc'
+    column_getAutoSortDir(column, table) === 'desc'
   return sortDescFirst ? 'desc' : 'asc'
 }
 
@@ -180,8 +180,8 @@ export function column_getNextSortingOrder<TData extends RowData, TValue>(
   table: Table<TData>,
   multi?: boolean,
 ) {
-  const firstSortDirection = column.getFirstSortDir()
-  const isSorted = column.getIsSorted()
+  const firstSortDirection = column_getFirstSortDir(column, table)
+  const isSorted = column_getIsSorted(column, table)
 
   if (!isSorted) {
     return firstSortDirection
@@ -248,14 +248,18 @@ export function column_getToggleSortingHandler<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
 ) {
-  const canSort = column.getCanSort()
+  const canSort = column_getCanSort(column, table)
 
   return (e: unknown) => {
     if (!canSort) return
     ;(e as any).persist?.()
-    column.toggleSorting(
+    column_toggleSorting(
+      column,
+      table,
       undefined,
-      column.getCanMultiSort() ? table.options.isMultiSortEvent?.(e) : false,
+      column_getCanMultiSort(column, table)
+        ? table.options.isMultiSortEvent?.(e)
+        : false,
     )
   }
 }

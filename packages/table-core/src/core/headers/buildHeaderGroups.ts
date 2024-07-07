@@ -1,3 +1,4 @@
+import { column_getIsVisible } from '../../features/column-visibility/ColumnVisibility.utils'
 import { _createHeader } from './_createHeader'
 import type { Column, Header, HeaderGroup, RowData, Table } from '../../types'
 
@@ -122,7 +123,7 @@ export function buildHeaderGroups<TData extends RowData>(
     headers: Array<Header<TData, unknown>>,
   ): Array<{ colSpan: number; rowSpan: number }> => {
     const filteredHeaders = headers.filter((header) =>
-      header.column.getIsVisible(),
+      column_getIsVisible(header.column, table),
     )
 
     return filteredHeaders.map((header) => {

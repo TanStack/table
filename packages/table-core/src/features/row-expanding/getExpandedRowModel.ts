@@ -1,4 +1,5 @@
 import { getMemoOptions, memo } from '../../utils'
+import { row_getIsExpanded } from './RowExpanding.utils'
 import type { Row, RowData, RowModel, Table } from '../../types'
 
 export function getExpandedRowModel<TData extends RowData>(): (
@@ -24,19 +25,22 @@ export function getExpandedRowModel<TData extends RowData>(): (
           return rowModel
         }
 
-        return expandRows(rowModel)
+        return expandRows(rowModel, table)
       },
       getMemoOptions(table.options, 'debugTable', 'getExpandedRowModel'),
     )
 }
 
-export function expandRows<TData extends RowData>(rowModel: RowModel<TData>) {
+export function expandRows<TData extends RowData>(
+  rowModel: RowModel<TData>,
+  table: Table<TData>,
+) {
   const expandedRows: Array<Row<TData>> = []
 
   const handleRow = (row: Row<TData>) => {
     expandedRows.push(row)
 
-    if (row.subRows.length && row.getIsExpanded()) {
+    if (row.subRows.length && row_getIsExpanded(row, table)) {
       row.subRows.forEach(handleRow)
     }
   }

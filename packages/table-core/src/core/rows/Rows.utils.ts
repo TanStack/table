@@ -1,6 +1,11 @@
 import { flattenBy } from '../../utils'
 import { _createCell } from '../cells/_createCell'
 import { table_getColumn } from '../columns/Columns.utils'
+import { table_getPrePaginationRowModel } from '../../features/row-pagination/RowPagination.utils'
+import {
+  table_getCoreRowModel,
+  table_getRowModel,
+} from '../row-models/RowModels.utils'
 import type { Cell, Column, Row, RowData, Table } from '../../types'
 
 export function row_getValue<TData extends RowData>(
@@ -39,7 +44,7 @@ export function row_getUniqueValues<TData extends RowData>(
   }
 
   if (!column.columnDef.getUniqueValues) {
-    row._uniqueValuesCache[columnId] = [row.getValue(columnId)]
+    row._uniqueValuesCache[columnId] = [row_getValue(row, table, columnId)]
     return row._uniqueValuesCache[columnId]
   }
 
@@ -69,7 +74,7 @@ export function row_getParentRow<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
 ) {
-  return row.parentId ? table.getRow(row.parentId, true) : undefined
+  return row.parentId ? table_getRow(table, row.parentId, true) : undefined
 }
 
 export function row_getParentRows<TData extends RowData>(
@@ -126,12 +131,13 @@ export function table_getRow<TData extends RowData>(
   table: Table<TData>,
   rowId: string,
   searchAll?: boolean,
-) {
-  let row = (searchAll ? table.getPrePaginationRowModel() : table.getRowModel())
-    .rowsById[rowId]
+): Row<TData> {
+  let row = (
+    searchAll ? table_getPrePaginationRowModel(table) : table_getRowModel(table)
+  ).rowsById[rowId]
 
   if (!row) {
-    row = table.getCoreRowModel().rowsById[rowId]
+    row = table_getCoreRowModel(table).rowsById[rowId]
     if (!row) {
       if (process.env.NODE_ENV !== 'production') {
         throw new Error(`getRow could not find row with ID: ${rowId}`)

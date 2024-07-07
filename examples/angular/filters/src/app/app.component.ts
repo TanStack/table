@@ -4,8 +4,8 @@ import {
   computed,
   signal,
 } from '@angular/core'
-import type { ColumnDef } from '@tanstack/angular-table'
 import {
+  type ColumnDef,
   type ColumnFiltersState,
   FlexRenderDirective,
   getCoreRowModel,

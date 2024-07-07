@@ -1,9 +1,12 @@
+import {
+  row_getLeafRows,
+  row_getParentRows,
+  table_getRow,
+} from '../../core/rows/Rows.utils'
+import { row_getIsAllParentsExpanded } from '../row-expanding/RowExpanding.utils'
+import { table_getRowModel } from '../../core/row-models/RowModels.utils'
 import type { Row, RowData, Table, Updater } from '../../types'
-import type {
-  RowPinningPosition,
-  RowPinningState,
-  TableOptions_RowPinning,
-} from './RowPinning.types'
+import type { RowPinningPosition, RowPinningState } from './RowPinning.types'
 
 /**
  * State Utils
@@ -17,9 +20,7 @@ export function getDefaultRowPinningState(): RowPinningState {
 }
 
 export function table_setRowPinning<TData extends RowData>(
-  table: Table<TData> & {
-    options: TableOptions_RowPinning<TData>
-  },
+  table: Table<TData>,
   updater: Updater<RowPinningState>,
 ): void {
   table.options.onRowPinningChange?.(updater)
@@ -62,8 +63,8 @@ function table_getPinnedRows<TData extends RowData>(
       ? //get all rows that are pinned even if they would not be otherwise visible
         //account for expanded parent rows, but not pagination or filtering
         pinnedRowIds.map((rowId) => {
-          const row = table.getRow(rowId, true)
-          return row.getIsAllParentsExpanded() ? row : null
+          const row = table_getRow(table, rowId, true)
+          return row_getIsAllParentsExpanded(row, table) ? row : null
         })
       : //else get only visible rows that are pinned
         pinnedRowIds.map(
@@ -131,7 +132,7 @@ export function row_getIsPinned<TData extends RowData>(
 export function row_getPinnedIndex<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
-  allRows: Array<Row<TData>> = table.getRowModel().rows,
+  allRows: Array<Row<TData>> = table_getRowModel(table).rows,
   rowPinning = table.getState().rowPinning,
 ): number {
   const position = row_getIsPinned(row, table)
@@ -156,10 +157,10 @@ export function row_pin<TData extends RowData>(
   includeParentRows?: boolean,
 ): void {
   const leafRowIds = includeLeafRows
-    ? row.getLeafRows().map(({ id }) => id)
+    ? row_getLeafRows(row).map(({ id }) => id)
     : []
   const parentRowIds = includeParentRows
-    ? row.getParentRows().map(({ id }) => id)
+    ? row_getParentRows(row, table).map(({ id }) => id)
     : []
   const rowIds = new Set([...parentRowIds, row.id, ...leafRowIds])
 

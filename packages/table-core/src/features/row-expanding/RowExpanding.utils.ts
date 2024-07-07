@@ -1,5 +1,7 @@
 import { table_getPrePaginationRowModel } from '../row-pagination/RowPagination.utils'
 import { table_getSortedRowModel } from '../row-sorting/RowSorting.utils'
+import { table_getRowModel } from '../../core/row-models/RowModels.utils'
+import { table_getRow } from '../../core/rows/Rows.utils'
 import type { Row, RowData, RowModel, Table, Updater } from '../../types'
 import type { ExpandedState, ExpandedStateList } from './RowExpanding.types'
 
@@ -58,7 +60,7 @@ export function table_getCanSomeRowsExpand<TData extends RowData>(
   table: Table<TData>,
 ) {
   return table_getPrePaginationRowModel(table).flatRows.some((row) =>
-    row.getCanExpand(),
+    row_getCanExpand(row, table),
   )
 }
 
@@ -93,7 +95,11 @@ export function table_getIsAllRowsExpanded<TData extends RowData>(
   }
 
   // If any row is not expanded, return false
-  if (table.getRowModel().flatRows.some((row) => !row.getIsExpanded())) {
+  if (
+    table_getRowModel(table).flatRows.some(
+      (row) => !row_getIsExpanded(row, table),
+    )
+  ) {
     return false
   }
 
@@ -108,7 +114,7 @@ export function table_getExpandedDepth<TData extends RowData>(
 
   const rowIds =
     table.getState().expanded === true
-      ? Object.keys(table.getRowModel().rowsById)
+      ? Object.keys(table_getRowModel(table).rowsById)
       : Object.keys(table.getState().expanded)
 
   rowIds.forEach((id) => {
@@ -150,7 +156,7 @@ export function row_toggleExpanded<TData extends RowData>(
     let oldExpanded: ExpandedStateList = {}
 
     if (old === true) {
-      Object.keys(table.getRowModel().rowsById).forEach((rowId) => {
+      Object.keys(table_getRowModel(table).rowsById).forEach((rowId) => {
         oldExpanded[rowId] = true
       })
     } else {
@@ -205,8 +211,8 @@ export function row_getIsAllParentsExpanded<TData extends RowData>(
   let currentRow = row
 
   while (isFullyExpanded && currentRow.parentId) {
-    currentRow = table.getRow(currentRow.parentId, true)
-    isFullyExpanded = currentRow.getIsExpanded()
+    currentRow = table_getRow(table, currentRow.parentId, true)
+    isFullyExpanded = row_getIsExpanded(row, table)
   }
 
   return isFullyExpanded
@@ -214,11 +220,12 @@ export function row_getIsAllParentsExpanded<TData extends RowData>(
 
 export function row_getToggleExpandedHandler<TData extends RowData>(
   row: Row<TData>,
+  table: Table<TData>,
 ) {
-  const canExpand = row.getCanExpand()
+  const canExpand = row_getCanExpand(row, table)
 
   return () => {
     if (!canExpand) return
-    row.toggleExpanded()
+    row_toggleExpanded(row, table)
   }
 }

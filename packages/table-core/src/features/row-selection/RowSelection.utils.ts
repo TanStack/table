@@ -1,6 +1,11 @@
 import { table_getPreGroupedRowModel } from '../column-grouping/ColumnGrouping.utils'
 import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import { table_getPaginationRowModel } from '../row-pagination/RowPagination.utils'
+import {
+  table_getCoreRowModel,
+  table_getRowModel,
+} from '../../core/row-models/RowModels.utils'
+import { table_getRow } from '../../core/rows/Rows.utils'
 import type { Row, RowData, RowModel, Table, Updater } from '../../types'
 import type { RowSelectionState } from './RowSelection.types'
 
@@ -37,7 +42,7 @@ export function table_toggleAllRowsSelected<TData extends RowData>(
     // All of the rows are flat already, so it wouldn't be worth it
     if (value) {
       preGroupedFlatRows.forEach((row) => {
-        if (!row.getCanSelect()) {
+        if (!row_getCanSelect(row, table)) {
           return
         }
         rowSelection[row.id] = true
@@ -64,7 +69,7 @@ export function table_toggleAllPageRowsSelected<TData extends RowData>(
 
     const rowSelection: RowSelectionState = { ...old }
 
-    table.getRowModel().rows.forEach((row) => {
+    table_getRowModel(table).rows.forEach((row) => {
       mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
     })
 
@@ -74,8 +79,8 @@ export function table_toggleAllPageRowsSelected<TData extends RowData>(
 
 export function table_getPreSelectedRowModel<TData extends RowData>(
   table: Table<TData>,
-) {
-  return table.getCoreRowModel()
+): RowModel<TData> {
+  return table_getCoreRowModel(table)
 }
 
 export function table_getSelectedRowModel<TData extends RowData>(
@@ -139,7 +144,7 @@ export function table_getIsAllRowsSelected<TData extends RowData>(
   if (isAllRowsSelected) {
     if (
       preGroupedFlatRows.some(
-        (row) => row.getCanSelect() && !rowSelection[row.id],
+        (row) => row_getCanSelect(row, table) && !rowSelection[row.id],
       )
     ) {
       isAllRowsSelected = false
@@ -153,7 +158,7 @@ export function table_getIsAllPageRowsSelected<TData extends RowData>(
   table: Table<TData>,
 ) {
   const paginationFlatRows = table_getPaginationRowModel(table).flatRows.filter(
-    (row) => row.getCanSelect(),
+    (row) => row_getCanSelect(row, table),
   )
   const { rowSelection } = table.getState()
 
@@ -186,8 +191,11 @@ export function table_getIsSomePageRowsSelected<TData extends RowData>(
   return table_getIsAllPageRowsSelected(table)
     ? false
     : paginationFlatRows
-        .filter((row) => row.getCanSelect())
-        .some((d) => d.getIsSelected() || d.getIsSomeSelected())
+        .filter((row) => row_getCanSelect(row, table))
+        .some(
+          (row) =>
+            row_getIsSelected(row, table) || row_getIsSomeSelected(row, table),
+        )
 }
 
 export function table_getToggleAllRowsSelectedHandler<TData extends RowData>(
@@ -225,7 +233,7 @@ export function row_toggleSelected<TData extends RowData>(
   table_setRowSelection(table, (old) => {
     value = typeof value !== 'undefined' ? value : !isSelected
 
-    if (row.getCanSelect() && isSelected === value) {
+    if (row_getCanSelect(row, table) && isSelected === value) {
       return old
     }
 
@@ -304,7 +312,7 @@ export function row_getToggleSelectedHandler<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
 ) {
-  const canSelect = row.getCanSelect()
+  const canSelect = row_getCanSelect(row, table)
 
   return (e: unknown) => {
     if (!canSelect) return
@@ -318,12 +326,12 @@ export function row_getToggleSelectedHandler<TData extends RowData>(
 
 const mutateRowIsSelected = <TData extends RowData>(
   selectedRowIds: Record<string, boolean>,
-  id: string,
+  rowId: string,
   value: boolean,
   includeChildren: boolean,
   table: Table<TData>,
 ) => {
-  const row = table.getRow(id, true)
+  const row = table_getRow(table, rowId, true)
 
   // const isGrouped = row.getIsGrouped()
 
@@ -332,18 +340,22 @@ const mutateRowIsSelected = <TData extends RowData>(
   //   (isGrouped && table.options.enableGroupingRowSelection)
   // ) {
   if (value) {
-    if (!row.getCanMultiSelect()) {
+    if (!row_getCanMultiSelect(row, table)) {
       Object.keys(selectedRowIds).forEach((key) => delete selectedRowIds[key])
     }
-    if (row.getCanSelect()) {
-      selectedRowIds[id] = true
+    if (row_getCanSelect(row, table)) {
+      selectedRowIds[rowId] = true
     }
   } else {
-    delete selectedRowIds[id]
+    delete selectedRowIds[rowId]
   }
   // }
 
-  if (includeChildren && row.subRows.length && row.getCanSelectSubRows()) {
+  if (
+    includeChildren &&
+    row.subRows.length &&
+    row_getCanSelectSubRows(row, table)
+  ) {
     row.subRows.forEach((r) =>
       mutateRowIsSelected(selectedRowIds, r.id, value, includeChildren, table),
     )
@@ -417,7 +429,7 @@ export function isSubRowSelected<TData extends RowData>(
       return
     }
 
-    if (subRow.getCanSelect()) {
+    if (row_getCanSelect(subRow, table)) {
       if (isRowSelected(subRow, selection)) {
         someSelected = true
       } else {

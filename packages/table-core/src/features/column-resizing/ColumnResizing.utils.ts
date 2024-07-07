@@ -1,4 +1,5 @@
 import { table_setColumnSizing } from '../column-sizing/ColumnSizing.utils'
+import { table_getColumn } from '../../core/columns/Columns.utils'
 import type { Column, Header, RowData, Table, Updater } from '../../types'
 import type { ColumnSizingState } from '../column-sizing/ColumnSizing.types'
 import type { ColumnResizingInfoState } from './ColumnResizing.types'
@@ -36,7 +37,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
   table: Table<TData>,
   _contextDocument?: Document,
 ) {
-  const column = table.getColumn(header.column.id)!
+  const column = table_getColumn(table, header.column.id)!
   const canResize = column_getCanResize(table, column)
 
   return (event: unknown) => {

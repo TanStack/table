@@ -83,6 +83,7 @@ export const RowExpanding: TableFeature = {
 
     row.getIsAllParentsExpanded = () => row_getIsAllParentsExpanded(row, table)
 
-    row.getToggleExpandedHandler = () => row_getToggleExpandedHandler(row)
+    row.getToggleExpandedHandler = () =>
+      row_getToggleExpandedHandler(row, table)
   },
 }

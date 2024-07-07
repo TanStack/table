@@ -1,5 +1,8 @@
 import { getMemoOptions, memo } from '../../utils'
+import { table_getColumn } from '../../core/columns/Columns.utils'
+import { table_getGlobalFilterFn } from '../global-filtering/GlobalFiltering.utils'
 import { filterRows } from './filterRowsUtils'
+import { column_getFilterFn } from './ColumnFiltering.utils'
 import type { Row, RowData, RowModel, Table } from '../../types'
 import type { ResolvedColumnFilter } from './ColumnFiltering.types'
 
@@ -26,13 +29,13 @@ export function getFilteredRowModel<TData extends RowData>(): (
         const resolvedGlobalFilters: Array<ResolvedColumnFilter<TData>> = []
 
         columnFilters.forEach((d) => {
-          const column = table.getColumn(d.id)
+          const column = table_getColumn(table, d.id)
 
           if (!column) {
             return
           }
 
-          const filterFn = column.getFilterFn()
+          const filterFn = column_getFilterFn(column, table)
 
           if (!filterFn) {
             if (process.env.NODE_ENV !== 'production') {
@@ -52,7 +55,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
 
         const filterableIds = columnFilters.map((d) => d.id)
 
-        const globalFilterFn = table.getGlobalFilterFn()
+        const globalFilterFn = table_getGlobalFilterFn(table)
 
         const globallyFilterableColumns = table
           .getAllLeafColumns()

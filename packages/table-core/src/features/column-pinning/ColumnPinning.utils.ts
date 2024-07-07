@@ -60,24 +60,22 @@ export function column_getCanPin<TData extends RowData, TValue>(
 export function column_getIsPinned<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
-) {
-  column.getIsPinned = () => {
-    const leafColumnIds = column.getLeafColumns().map((d) => d.id)
+): ColumnPinningPosition | false {
+  const leafColumnIds = column.getLeafColumns().map((d) => d.id)
 
-    const { left, right } = table.getState().columnPinning
+  const { left, right } = table.getState().columnPinning
 
-    const isLeft = leafColumnIds.some((d) => left?.includes(d))
-    const isRight = leafColumnIds.some((d) => right?.includes(d))
+  const isLeft = leafColumnIds.some((d) => left?.includes(d))
+  const isRight = leafColumnIds.some((d) => right?.includes(d))
 
-    return isLeft ? 'left' : isRight ? 'right' : false
-  }
+  return isLeft ? 'left' : isRight ? 'right' : false
 }
 
 export function column_getPinnedIndex<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
 ) {
-  const position = column.getIsPinned()
+  const position = column_getIsPinned(column, table)
 
   return position
     ? table.getState().columnPinning[position]?.indexOf(column.id) ?? -1

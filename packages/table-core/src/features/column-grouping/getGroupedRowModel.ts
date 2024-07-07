@@ -1,5 +1,7 @@
 import { _createRow } from '../../core/rows/_createRow'
 import { flattenBy, getMemoOptions, memo } from '../../utils'
+import { table_getColumn } from '../../core/columns/Columns.utils'
+import { row_getGroupingValue } from './ColumnGrouping.utils'
 import type { Row, RowData, RowModel, Table } from '../../types'
 
 export function getGroupedRowModel<TData extends RowData>(): (
@@ -15,7 +17,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
 
         // Filter the grouping list down to columns that exist
         const existingGrouping = grouping.filter((columnId) =>
-          table.getColumn(columnId),
+          table_getColumn(table, columnId),
         )
 
         const groupedFlatRows: Array<Row<TData>> = []
@@ -52,7 +54,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
           const columnId: string = existingGrouping[depth]!
 
           // Group the rows together for this level
-          const rowGroupsMap = groupBy(rows, columnId)
+          const rowGroupsMap = groupBy(rows, columnId, table)
 
           // Peform aggregations for each group
           const aggregatedGroupedRows = Array.from(rowGroupsMap.entries()).map(
@@ -169,11 +171,12 @@ export function getGroupedRowModel<TData extends RowData>(): (
 function groupBy<TData extends RowData>(
   rows: Array<Row<TData>>,
   columnId: string,
+  table: Table<TData>,
 ) {
   const groupMap = new Map<any, Array<Row<TData>>>()
 
   return rows.reduce((map, row) => {
-    const resKey = `${row.getGroupingValue(columnId)}`
+    const resKey = `${row_getGroupingValue(row, table, columnId)}`
     const previous = map.get(resKey)
     if (!previous) {
       map.set(resKey, [row])

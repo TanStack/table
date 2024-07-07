@@ -1,5 +1,6 @@
 import { getMemoOptions, memo } from '../../utils'
-import type { RowData, Table } from '../../types'
+import { row_getUniqueValues } from '../../core/rows/Rows.utils'
+import type { Row, RowData, Table } from '../../types'
 
 export function getFacetedUniqueValues<TData extends RowData>(): (
   table: Table<TData>,
@@ -14,7 +15,7 @@ export function getFacetedUniqueValues<TData extends RowData>(): (
         const facetedUniqueValues = new Map<any, number>()
 
         for (const row of facetedRowModel.flatRows) {
-          const values = row.getUniqueValues<number>(columnId)
+          const values = row_getUniqueValues(row, table, columnId)
 
           for (const value of values) {
             if (facetedUniqueValues.has(value)) {
