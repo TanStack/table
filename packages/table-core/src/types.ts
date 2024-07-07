@@ -1,3 +1,7 @@
+import type {
+  TableOptions_RowModels,
+  Table_RowModels,
+} from './core/row-models/RowModels.types'
 import type { TableOptions_Core, Table_Core } from './core/table/Tables.types'
 import type {
   ColumnDef_ColumnVisibility,
@@ -157,6 +161,7 @@ export type AnyRender = (Comp: any, props: any) => any
 export interface Table<TData extends RowData>
   extends Table_Core<TData>,
     Table_Columns<TData>,
+    Table_RowModels<TData>,
     Table_Rows<TData>,
     Table_Headers<TData>,
     Table_ColumnFiltering<TData>,
@@ -178,6 +183,7 @@ export interface TableOptionsResolved<TData extends RowData>
   extends TableOptions_Core<TData>,
     TableOptions_Cell,
     TableOptions_Columns<TData>,
+    TableOptions_RowModels<TData>,
     TableOptions_Rows<TData>,
     TableOptions_Headers,
     TableOptions_ColumnFaceting<TData>,

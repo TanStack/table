@@ -2,10 +2,10 @@
  * Core
  */
 
-export * from './core/table/getCoreRowModel'
 export * from './helpers'
 export * from './types'
 export * from './utils'
+export * from './utils.types'
 
 //Cells
 export * from './core/cells/_createCell'
@@ -25,6 +25,12 @@ export * from './core/headers/_createHeader'
 export * from './core/headers/Headers'
 export * from './core/headers/Headers.types'
 export * from './core/headers/Headers.utils'
+
+//Row Models
+export * from './core/row-models/getCoreRowModel'
+export * from './core/row-models/RowModels'
+export * from './core/row-models/RowModels.types'
+export * from './core/row-models/RowModels.utils'
 
 //Rows
 export * from './core/rows/_createRow'

@@ -1,7 +1,5 @@
 import type {
   RowData,
-  RowModel,
-  Table,
   TableFeature,
   TableMeta,
   TableOptions,
@@ -42,12 +40,6 @@ export interface TableOptions_Core<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   debugTable?: boolean
-  /**
-   * This required option is a factory for a function that computes and returns the core row model for the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getCoreRowModel: (table: Table<any>) => () => RowModel<any>
   /**
    * Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPageIndex`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
    *
@@ -105,20 +97,7 @@ export interface Table_CoreProperties<TData extends RowData> {
 
 export interface Table_Core<TData extends RowData>
   extends Table_CoreProperties<TData> {
-  _getCoreRowModel?: () => RowModel<TData>
   _queue: (cb: () => void) => void
-  /**
-   * Returns the core row model before any processing has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getCoreRowModel: () => RowModel<TData>
-  /**
-   * Returns the final model after all processing from other used features has been applied. This is the row model that is most commonly used for rendering.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getRowModel: () => RowModel<TData>
   /**
    * Call this function to get the table's current state. It's recommended to use this function and its state, especially when managing the table state manually. It is the exact same state used internally by the table for every feature and function it provides.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getstate)

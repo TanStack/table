@@ -1,6 +1,4 @@
 import {
-  table_getCoreRowModel,
-  table_getRowModel,
   table_getState,
   table_reset,
   table_setOptions,
@@ -17,9 +15,5 @@ export const Tables: TableFeature = {
     table.getState = () => table_getState(table)
 
     table.setState = (updater) => table_setState(table, updater)
-
-    table.getCoreRowModel = () => table_getCoreRowModel(table)
-
-    table.getRowModel = () => table_getRowModel(table)
   },
 }
