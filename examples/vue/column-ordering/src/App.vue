@@ -6,6 +6,7 @@ import {
   useTable,
   type Column,
   createColumnHelper,
+  type ColumnVisibilityState,
 } from '@tanstack/vue-table'
 
 import { makeData, type Person } from './makeData'
@@ -61,7 +62,7 @@ const columns = ref([
   }),
 ])
 
-const columnVisibility = ref({})
+const columnVisibility = ref<ColumnVisibilityState>({})
 const columnOrder = ref<ColumnOrderState>([])
 
 const rerender = () => (data.value = makeData(20))
@@ -82,8 +83,11 @@ const table = useTable({
     },
   },
 
-  onColumnOrderChange: (order) => {
-    columnOrder.value = order
+  onColumnOrderChange: (updaterOrValue) => {
+    columnOrder.value =
+      updaterOrValue === 'function'
+        ? updaterOrValue(columnOrder.value)
+        : updaterOrValue
   },
   getCoreRowModel: getCoreRowModel(),
   debugTable: true,

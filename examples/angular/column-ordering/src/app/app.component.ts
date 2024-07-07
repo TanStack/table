@@ -4,18 +4,18 @@ import {
   computed,
   signal,
 } from '@angular/core'
+import type { ColumnDef } from '@tanstack/angular-table'
 import {
-  ColumnDef,
   type ColumnOrderState,
-  injectTable,
+  type ColumnVisibilityState,
   FlexRenderDirective,
   getCoreRowModel,
-  type ColumnVisibilityState,
+  injectTable,
 } from '@tanstack/angular-table'
-import { makeData, type Person } from './makeData'
 import { faker } from '@faker-js/faker'
+import { type Person, makeData } from './makeData'
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -75,7 +75,7 @@ const defaultColumns: ColumnDef<Person>[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  readonly data = signal<Person[]>(makeData(20))
+  readonly data = signal<Array<Person>>(makeData(20))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
 

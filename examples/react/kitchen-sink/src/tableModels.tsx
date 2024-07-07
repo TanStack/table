@@ -1,17 +1,10 @@
-import {
-  ColumnDef,
-  FilterFn,
-  SortingFn,
-  sortingFns,
-} from '@tanstack/react-table'
+import { sortingFns } from '@tanstack/react-table'
 import React from 'react'
-import { Person } from './makeData'
-import {
-  rankItem,
-  compareItems,
-  RankingInfo,
-} from '@tanstack/match-sorter-utils'
+import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import IndeterminateCheckbox from './components/InderterminateCheckbox'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
+import type { Person } from './makeData'
+import type { ColumnDef, FilterFn, SortingFn } from '@tanstack/react-table'
 
 export const fuzzyFilter: FilterFn<Person> = (
   row,
@@ -35,8 +28,8 @@ export const fuzzySort: SortingFn<Person> = (rowA, rowB, columnId) => {
   // Only sort by rank if the column has ranking information
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
-      rowA.columnFiltersMeta[columnId]! as RankingInfo,
-      rowB.columnFiltersMeta[columnId]! as RankingInfo,
+      rowA.columnFiltersMeta[columnId] as RankingInfo,
+      rowB.columnFiltersMeta[columnId] as RankingInfo,
     )
   }
 
@@ -75,7 +68,7 @@ export const defaultColumn: Partial<ColumnDef<Person>> = {
   },
 }
 
-export const columns: ColumnDef<Person>[] = [
+export const columns: Array<ColumnDef<Person>> = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -156,7 +149,7 @@ export const columns: ColumnDef<Person>[] = [
 ]
 
 export const getTableMeta = (
-  setData: React.Dispatch<React.SetStateAction<Person[]>>,
+  setData: React.Dispatch<React.SetStateAction<Array<Person>>>,
   skipAutoResetPageIndex: () => void,
 ) =>
   ({
@@ -168,7 +161,7 @@ export const getTableMeta = (
           if (index !== rowIndex) return row
 
           return {
-            ...old[rowIndex]!,
+            ...old[rowIndex],
             [columnId]: value,
           }
         }),

@@ -4,11 +4,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  Column,
-  ColumnDef,
-  ColumnFiltersState,
-  FilterFn,
-  SortingFn,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -17,15 +12,20 @@ import {
   sortingFns,
   useTable,
 } from '@tanstack/react-table'
+import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
+import { makeData } from './makeData'
+import type {
+  Column,
+  ColumnDef,
+  ColumnFiltersState,
+  FilterFn,
+  SortingFn,
+} from '@tanstack/react-table'
 
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from '@tanstack/match-sorter-utils'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-import { makeData, Person } from './makeData'
+import type { Person } from './makeData'
 
 declare module '@tanstack/react-table' {
   //add fuzzy filter to the filterFns
@@ -58,8 +58,8 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
   // Only sort by rank if the column has ranking information
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!,
+      rowA.columnFiltersMeta[columnId].itemRank,
+      rowB.columnFiltersMeta[columnId].itemRank,
     )
   }
 
@@ -75,7 +75,7 @@ function App() {
   )
   const [globalFilter, setGlobalFilter] = React.useState('')
 
-  const columns = React.useMemo<ColumnDef<Person, any>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person, any>>>(
     () => [
       {
         accessorKey: 'id',
@@ -106,7 +106,7 @@ function App() {
     [],
   )
 
-  const [data, setData] = React.useState<Person[]>(() => makeData(5_000))
+  const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData((_old) => makeData(50_000)) //stress test
 
   const table = useTable({

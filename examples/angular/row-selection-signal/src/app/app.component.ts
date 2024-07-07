@@ -3,24 +3,23 @@ import {
   Component,
   computed,
   signal,
-  TemplateRef,
   viewChild,
 } from '@angular/core'
 import {
-  ColumnDef,
-  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  RowSelectionState,
+  injectTable,
 } from '@tanstack/angular-table'
 import { FilterComponent } from './filter'
-import { makeData, type Person } from './makeData'
+import { type Person, makeData } from './makeData'
 import {
   TableHeadSelectionComponent,
   TableRowSelectionComponent,
 } from './selection-column.component'
+import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
+import type { TemplateRef } from '@angular/core'
 
 @Component({
   selector: 'app-root',
@@ -37,7 +36,7 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: ColumnDef<Person>[] = [
+  readonly columns: Array<ColumnDef<Person>> = [
     {
       id: 'select',
       header: () => TableHeadSelectionComponent<Person>,

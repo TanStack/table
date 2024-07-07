@@ -4,22 +4,22 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  Row,
   useTable,
 } from '@tanstack/react-table'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
 
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { ColumnDef, Row } from '@tanstack/react-table'
 
 //This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
 //See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
 function App() {
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         accessorKey: 'id',
@@ -88,7 +88,7 @@ function App() {
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? (element) => element?.getBoundingClientRect().height
+        ? (element) => element.getBoundingClientRect().height
         : undefined,
     overscan: 5,
   })
@@ -168,7 +168,7 @@ function App() {
             }}
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-              const row = rows[virtualRow.index] as Row<Person>
+              const row = rows[virtualRow.index]
               return (
                 <tr
                   data-index={virtualRow.index} //needed for dynamic row height measurement

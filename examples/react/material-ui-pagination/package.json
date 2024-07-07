@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "vite",
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",

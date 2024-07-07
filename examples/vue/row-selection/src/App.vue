@@ -14,18 +14,18 @@ import { makeData, Person } from './makeData'
 const columnHelper = createColumnHelper<Person>()
 
 const columns = [
-  {
+  columnHelper.display({
     id: 'select',
-    header: ({ table }: { table: any }) => {
+    header: ({ table }) => {
       return (
         <IndeterminateCheckbox
           checked={table.getIsAllRowsSelected()}
           indeterminate={table.getIsSomeRowsSelected()}
           onChange={table.getToggleAllRowsSelectedHandler()}
         ></IndeterminateCheckbox>
-      )
+      ) as any
     },
-    cell: ({ row }: { row: any }) => {
+    cell: ({ row }) => {
       return (
         <div className="px-1">
           <IndeterminateCheckbox
@@ -34,9 +34,9 @@ const columns = [
             onChange={row.getToggleSelectedHandler()}
           ></IndeterminateCheckbox>
         </div>
-      )
+      ) as any
     },
-  },
+  }),
   columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,

@@ -1,5 +1,5 @@
-import { ColumnPinningPosition } from '@tanstack/react-table'
 import React from 'react'
+import type { ColumnPinningPosition } from '@tanstack/react-table'
 
 type Props = {
   isPinned: ColumnPinningPosition

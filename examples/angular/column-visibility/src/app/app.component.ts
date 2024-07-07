@@ -1,17 +1,16 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   type OnInit,
+  computed,
   signal,
 } from '@angular/core'
 import {
-  ColumnDef,
-  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
-  type ColumnVisibilityState,
+  injectTable,
 } from '@tanstack/angular-table'
+import type { ColumnDef, ColumnVisibilityState } from '@tanstack/angular-table'
 
 type Person = {
   firstName: string
@@ -22,7 +21,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -49,7 +48,7 @@ const defaultData: Person[] = [
   },
 ]
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -109,7 +108,7 @@ const defaultColumns: ColumnDef<Person>[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
-  data = signal<Person[]>([])
+  data = signal<Array<Person>>([])
   readonly columnVisibility = signal<ColumnVisibilityState>({})
 
   table = injectTable(() => ({

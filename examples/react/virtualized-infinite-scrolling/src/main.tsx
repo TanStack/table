@@ -5,24 +5,27 @@ import './index.css'
 
 //3 TanStack Libraries!!!
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  OnChangeFn,
-  Row,
-  SortingState,
   useTable,
 } from '@tanstack/react-table'
 import {
-  keepPreviousData,
   QueryClient,
   QueryClientProvider,
+  keepPreviousData,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 import { useVirtualizer } from '@tanstack/react-virtual'
 
-import { fetchData, Person, PersonApiResponse } from './makeData'
+import { fetchData } from './makeData'
+import type { Person, PersonApiResponse } from './makeData'
+import type {
+  ColumnDef,
+  OnChangeFn,
+  Row,
+  SortingState,
+} from '@tanstack/react-table'
 
 const fetchSize = 50
 
@@ -32,7 +35,7 @@ function App() {
 
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         accessorKey: 'id',
@@ -98,10 +101,10 @@ function App() {
 
   //flatten the array of arrays from the useInfiniteQuery hook
   const flatData = React.useMemo(
-    () => data?.pages?.flatMap((page) => page.data) ?? [],
+    () => data?.pages.flatMap((page) => page.data) ?? [],
     [data],
   )
-  const totalDBRowCount = data?.pages?.[0]?.meta?.totalRowCount ?? 0
+  const totalDBRowCount = data?.pages[0]?.meta?.totalRowCount ?? 0
   const totalFetched = flatData.length
 
   //called on scroll and possibly on mount to fetch more data as the user scrolls and reaches bottom of table
@@ -142,8 +145,8 @@ function App() {
   //scroll to top of table when sorting changes
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
     setSorting(updater)
-    if (!!table.getRowModel().rows.length) {
-      rowVirtualizer.scrollToIndex?.(0)
+    if (table.getRowModel().rows.length) {
+      rowVirtualizer.scrollToIndex(0)
     }
   }
 
@@ -163,7 +166,7 @@ function App() {
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? (element) => element?.getBoundingClientRect().height
+        ? (element) => element.getBoundingClientRect().height
         : undefined,
     overscan: 5,
   })
@@ -247,7 +250,7 @@ function App() {
             }}
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-              const row = rows[virtualRow.index] as Row<Person>
+              const row = rows[virtualRow.index]
               return (
                 <tr
                   data-index={virtualRow.index} //needed for dynamic row height measurement

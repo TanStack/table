@@ -1,4 +1,4 @@
-import { ColumnDef } from '@tanstack/angular-table'
+import type { ColumnDef } from '@tanstack/angular-table'
 
 export type Person = {
   firstName: string
@@ -7,10 +7,10 @@ export type Person = {
   visits: number
   progress: number
   status: 'relationship' | 'complicated' | 'single'
-  subRows?: Person[]
+  subRows?: Array<Person>
 }
 
-export const columns: ColumnDef<Person>[] = [
+export const columns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     columns: [

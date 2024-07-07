@@ -1,18 +1,18 @@
-import React, { HTMLProps } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
+import type { HTMLProps } from 'react'
 
 import './index.css'
 
-import { makeData, Person } from './makeData'
+import type { Person } from './makeData'
+import { makeData } from './makeData'
 
+import type { Column, ColumnDef, Table } from '@tanstack/react-table'
 import {
-  Column,
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  Table,
   useTable,
 } from '@tanstack/react-table'
 
@@ -22,7 +22,7 @@ function App() {
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState('')
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         id: 'select',

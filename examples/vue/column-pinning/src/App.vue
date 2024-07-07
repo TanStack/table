@@ -93,11 +93,17 @@ const table = useTable({
     },
   },
 
-  onColumnOrderChange: (order) => {
-    columnOrder.value = order
+  onColumnOrderChange: (updaterOrValue) => {
+    columnOrder.value =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(columnOrder.value)
+        : updaterOrValue
   },
-  onColumnPinningChange: (pinning) => {
-    columnPinning.value = pinning()
+  onColumnPinningChange: (updaterOrValue) => {
+    columnPinning.value =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(columnPinning.value)
+        : updaterOrValue
   },
   getCoreRowModel: getCoreRowModel(),
   debugTable: true,

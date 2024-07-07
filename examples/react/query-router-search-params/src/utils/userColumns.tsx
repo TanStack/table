@@ -1,5 +1,5 @@
-import { ColumnDef, RowData } from '@tanstack/react-table'
-import { User } from '../api/user'
+import type { ColumnDef, RowData } from '@tanstack/react-table'
+import type { User } from '../api/user'
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -9,7 +9,7 @@ declare module '@tanstack/react-table' {
   }
 }
 
-export const USER_COLUMNS: ColumnDef<User>[] = [
+export const USER_COLUMNS: Array<ColumnDef<User>> = [
   {
     accessorKey: 'id',
     header: () => <span>ID</span>,

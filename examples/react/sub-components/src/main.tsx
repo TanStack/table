@@ -4,16 +4,16 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  useTable,
+  flexRender,
   getCoreRowModel,
   getExpandedRowModel,
-  ColumnDef,
-  flexRender,
-  Row,
+  useTable,
 } from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { ColumnDef, Row } from '@tanstack/react-table'
+import type { Person } from './makeData'
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -97,8 +97,8 @@ const columns: ColumnDef<Person>[] = [
 ]
 
 type TableProps<TData> = {
-  data: TData[]
-  columns: ColumnDef<TData>[]
+  data: Array<TData>
+  columns: Array<ColumnDef<TData>>
   renderSubComponent: (props: { row: Row<TData> }) => React.ReactElement
   getRowCanExpand: (row: Row<TData>) => boolean
 }

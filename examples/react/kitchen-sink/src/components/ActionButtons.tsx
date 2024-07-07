@@ -1,5 +1,5 @@
-import { RowData, RowModel } from '@tanstack/react-table'
 import React from 'react'
+import type { RowData, RowModel } from '@tanstack/react-table'
 
 type Props<T extends RowData> = {
   getSelectedRowModel: () => RowModel<T>

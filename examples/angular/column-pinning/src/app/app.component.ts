@@ -5,17 +5,19 @@ import {
   signal,
 } from '@angular/core'
 import {
-  ColumnDef,
-  type ColumnOrderState,
-  type ColumnPinningState,
-  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
-  type ColumnVisibilityState,
+  injectTable,
 } from '@tanstack/angular-table'
-import { makeData } from './makeData'
 import { faker } from '@faker-js/faker'
 import { NgTemplateOutlet, SlicePipe } from '@angular/common'
+import { makeData } from './makeData'
+import type {
+  ColumnDef,
+  ColumnOrderState,
+  ColumnPinningState,
+  ColumnVisibilityState,
+} from '@tanstack/angular-table'
 
 type Person = {
   firstName: string
@@ -26,7 +28,7 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -86,7 +88,7 @@ const defaultColumns: ColumnDef<Person>[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  readonly data = signal<Person[]>(makeData(5000))
+  readonly data = signal<Array<Person>>(makeData(5000))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
   readonly columnPinning = signal<ColumnPinningState>({})

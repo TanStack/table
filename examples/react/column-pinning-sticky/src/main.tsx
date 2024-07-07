@@ -1,17 +1,14 @@
-import React, { CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import {
-  Column,
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useTable,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
 import { faker } from '@faker-js/faker'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { Column, ColumnDef } from '@tanstack/react-table'
 
 //These are the important styles to make sticky column pinning work!
 //Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
@@ -38,7 +35,7 @@ const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
   }
 }
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     accessorKey: 'firstName',
     id: 'firstName',

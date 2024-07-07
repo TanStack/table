@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
-import { Component, computed, input, OnInit } from '@angular/core'
-import type { Column, RowData, Table } from '@tanstack/angular-table'
+import { Component, OnInit, computed, input } from '@angular/core'
 import { DebouncedInputDirective } from './debounced-input.directive'
+import type { Column, RowData, Table } from '@tanstack/angular-table'
 
 declare module '@tanstack/angular-table' {
   //allows us to define custom properties for our columns
@@ -123,14 +123,14 @@ export class FilterComponent<T> {
   readonly changeMinRangeValue = (event: Event) => {
     const value = (event.target as HTMLInputElement).value
     this.column().setFilterValue((old: [number, number]) => {
-      return [value, old?.[1]]
+      return [value, old[1]]
     })
   }
 
   readonly changeMaxRangeValue = (event: Event) => {
     const value = (event.target as HTMLInputElement).value
     this.column().setFilterValue((old: [number, number]) => {
-      return [old?.[0], value]
+      return [old[0], value]
     })
   }
 }

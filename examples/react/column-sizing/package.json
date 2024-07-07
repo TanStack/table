@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview --port 3001",
-    "start": "vite"
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "@tanstack/react-table": "^9.0.0-alpha.10",

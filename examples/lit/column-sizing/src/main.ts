@@ -1,17 +1,17 @@
 import { customElement } from 'lit/decorators.js'
-import { html, LitElement } from 'lit'
+import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { state } from 'lit/decorators/state.js'
 import {
   ColumnDef,
+  TableController,
   flexRender,
   getCoreRowModel,
-  TableController,
 } from '@tanstack/lit-table'
 
-import { makeData, Person } from './makeData'
+import { Person, makeData } from './makeData'
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -49,7 +49,7 @@ const columns: ColumnDef<Person>[] = [
   },
 ]
 
-const data: Person[] = makeData(1000)
+const data: Array<Person> = makeData(1000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {

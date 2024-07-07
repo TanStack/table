@@ -4,13 +4,13 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
+import type { ColumnDef } from '@tanstack/react-table'
 
 type Person = {
   firstName: string
@@ -21,7 +21,7 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

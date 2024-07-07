@@ -1,18 +1,18 @@
 import { customElement } from 'lit/decorators.js'
-import { html, LitElement } from 'lit'
+import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { state } from 'lit/decorators/state.js'
 import {
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
   SortingFn,
   type SortingState,
   TableController,
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
 } from '@tanstack/lit-table'
 
-import { makeData, Person } from './makeData'
+import { Person, makeData } from './makeData'
 
 const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
@@ -21,7 +21,7 @@ const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -67,7 +67,7 @@ const columns: ColumnDef<Person>[] = [
   },
 ]
 
-const data: Person[] = makeData(1000)
+const data: Array<Person> = makeData(1000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {

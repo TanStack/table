@@ -4,10 +4,9 @@ import {
   computed,
   signal,
 } from '@angular/core'
+import type { ColumnDef } from '@tanstack/angular-table'
 import {
-  ColumnDef,
   type ColumnFiltersState,
-  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
   getFacetedMinMaxValues,
@@ -16,11 +15,12 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  injectTable,
 } from '@tanstack/angular-table'
-import { FilterComponent } from './table-filter.component'
-import { makeData, type Person } from './makeData'
 import { FormsModule } from '@angular/forms'
 import { NgClass } from '@angular/common'
+import { FilterComponent } from './table-filter.component'
+import { type Person, makeData } from './makeData'
 
 @Component({
   selector: 'app-root',
@@ -33,7 +33,7 @@ export class AppComponent {
   readonly columnFilters = signal<ColumnFiltersState>([])
   readonly data = signal(makeData(5000))
 
-  readonly columns: ColumnDef<Person>[] = [
+  readonly columns: Array<ColumnDef<Person>> = [
     {
       accessorKey: 'firstName',
       cell: (info) => info.getValue(),

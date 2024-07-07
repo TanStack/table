@@ -6,6 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "lint": "eslint ./src",
     "test:types": "vue-tsc"
   },
   "dependencies": {

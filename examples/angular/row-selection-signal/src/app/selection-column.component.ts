@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core'
-import { Row, Table } from '@tanstack/angular-table'
+import type { Row, Table } from '@tanstack/angular-table'
 
 @Component({
   template: `

@@ -6,17 +6,15 @@ import './index.css'
 
 //
 import {
-  Column,
-  Table,
-  ColumnDef,
-  useTable,
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  flexRender,
-  RowData,
+  useTable,
 } from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { Column, ColumnDef, RowData, Table } from '@tanstack/react-table'
+import type { Person } from './makeData'
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
@@ -70,7 +68,7 @@ function useSkipper() {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         header: 'Name',
@@ -145,7 +143,7 @@ function App() {
           old.map((row, index) => {
             if (index === rowIndex) {
               return {
-                ...old[rowIndex]!,
+                ...old[rowIndex],
                 [columnId]: value,
               }
             }
@@ -294,11 +292,11 @@ function Filter({
     <div className="flex space-x-2">
       <input
         type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ''}
+        value={(columnFilterValue as [number, number])[0] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
-            old?.[1],
+            old[1],
           ])
         }
         placeholder={`Min`}
@@ -306,10 +304,10 @@ function Filter({
       />
       <input
         type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ''}
+        value={(columnFilterValue as [number, number])[1] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
-            old?.[0],
+            old[0],
             e.target.value,
           ])
         }

@@ -4,10 +4,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  Column,
-  ColumnDef,
-  ColumnFiltersState,
-  RowData,
   flexRender,
   getCoreRowModel,
   getFacetedMinMaxValues,
@@ -18,8 +14,15 @@ import {
   getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type {
+  Column,
+  ColumnDef,
+  ColumnFiltersState,
+  RowData,
+} from '@tanstack/react-table'
 
-import { makeData, Person } from './makeData'
+import type { Person } from './makeData'
 
 declare module '@tanstack/react-table' {
   //allows us to define custom properties for our columns
@@ -33,7 +36,7 @@ function App() {
     [],
   )
 
-  const columns = React.useMemo<ColumnDef<Person, any>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person, any>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -77,7 +80,7 @@ function App() {
     [],
   )
 
-  const [data, setData] = React.useState<Person[]>(() => makeData(5_000))
+  const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData((_old) => makeData(100_000)) //stress test
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -264,12 +267,12 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           type="number"
           min={Number(minMaxValues?.[0] ?? '')}
           max={Number(minMaxValues?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])?.[0] ?? ''}
+          value={(columnFilterValue as [number, number])[0] ?? ''}
           onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [value, old?.[1]])
+            column.setFilterValue((old: [number, number]) => [value, old[1]])
           }
           placeholder={`Min ${
-            minMaxValues?.[0] !== undefined ? `(${minMaxValues?.[0]})` : ''
+            minMaxValues?.[0] !== undefined ? `(${minMaxValues[0]})` : ''
           }`}
           className="w-24 border shadow rounded"
         />
@@ -277,13 +280,11 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           type="number"
           min={Number(minMaxValues?.[0] ?? '')}
           max={Number(minMaxValues?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])?.[1] ?? ''}
+          value={(columnFilterValue as [number, number])[1] ?? ''}
           onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [old?.[0], value])
+            column.setFilterValue((old: [number, number]) => [old[0], value])
           }
-          placeholder={`Max ${
-            minMaxValues?.[1] ? `(${minMaxValues?.[1]})` : ''
-          }`}
+          placeholder={`Max ${minMaxValues?.[1] ? `(${minMaxValues[1]})` : ''}`}
           className="w-24 border shadow rounded"
         />
       </div>

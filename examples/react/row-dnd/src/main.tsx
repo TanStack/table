@@ -1,39 +1,36 @@
-import React, { CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import {
-  ColumnDef,
-  Row,
-  flexRender,
-  getCoreRowModel,
-  useTable,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
 
 // needed for table body level scope DnD setup
 import {
   DndContext,
+  type DragEndEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
-  closestCenter,
-  type DragEndEvent,
   type UniqueIdentifier,
+  closestCenter,
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import {
-  arrayMove,
   SortableContext,
+  arrayMove,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 
 // needed for row & cell level scope DnD setup
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { ColumnDef, Row } from '@tanstack/react-table'
 
 // Cell Component
 const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
@@ -75,7 +72,7 @@ const DraggableRow = ({ row }: { row: Row<Person> }) => {
 
 // Table Component
 function App() {
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       // Create a dedicated drag handle column. Alternatively, you could just set up dnd events on the rows themselves.
       {
@@ -115,8 +112,8 @@ function App() {
   )
   const [data, setData] = React.useState(() => makeData(20))
 
-  const dataIds = React.useMemo<UniqueIdentifier[]>(
-    () => data?.map(({ userId }) => userId),
+  const dataIds = React.useMemo<Array<UniqueIdentifier>>(
+    () => data.map(({ userId }) => userId),
     [data],
   )
 

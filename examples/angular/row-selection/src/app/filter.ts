@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
-import { Component, input, OnInit } from '@angular/core'
-import { Column } from '@tanstack/angular-table'
-import type { Table } from '@tanstack/angular-table'
+import { Component, input } from '@angular/core'
+import type { OnInit } from '@angular/core'
+import type { Column, Table } from '@tanstack/angular-table'
 
 @Component({
   selector: 'app-table-filter',

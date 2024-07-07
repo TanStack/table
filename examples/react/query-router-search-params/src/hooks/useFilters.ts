@@ -1,10 +1,6 @@
-import {
-  getRouteApi,
-  RegisteredRouter,
-  RouteIds,
-  useNavigate,
-} from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { cleanEmptyParams } from '../utils/cleanEmptyParams'
+import type { RegisteredRouter, RouteIds } from '@tanstack/react-router'
 
 export function useFilters<T extends RouteIds<RegisteredRouter['routeTree']>>(
   routeId: T,

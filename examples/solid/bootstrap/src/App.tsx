@@ -1,16 +1,13 @@
-import {
-  flexRender,
-  getCoreRowModel,
-  ColumnDef,
-  createTable,
-} from '@tanstack/solid-table'
-import { createSignal, For } from 'solid-js'
-import { makeData, Person } from './makeData'
+import { createTable, flexRender, getCoreRowModel } from '@tanstack/solid-table'
+import { For, createSignal } from 'solid-js'
 import { Table as BTable } from 'solid-bootstrap'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { ColumnDef } from '@tanstack/solid-table'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

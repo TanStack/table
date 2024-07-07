@@ -1,5 +1,5 @@
-import { SortingState } from '@tanstack/react-table'
-import { SortParams } from '../api/types'
+import type { SortingState } from '@tanstack/react-table'
+import type { SortParams } from '../api/types'
 
 export const stateToSortBy = (sorting: SortingState | undefined) => {
   if (!sorting || sorting.length == 0) return undefined

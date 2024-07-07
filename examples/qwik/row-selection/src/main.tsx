@@ -1,19 +1,17 @@
 import '@builder.io/qwik/qwikloader.js'
 
-import { $, render, useSignal } from '@builder.io/qwik'
+import { $, component$, render, useSignal } from '@builder.io/qwik'
 import './index.css'
 
 import {
   createColumnHelper,
-  getCoreRowModel,
-  getSortedRowModel,
   flexRender,
-  useTable,
+  getCoreRowModel,
   getFilteredRowModel,
-  ColumnDef,
+  getSortedRowModel,
+  useTable,
 } from '@tanstack/qwik-table'
-
-import { component$ } from '@builder.io/qwik'
+import type { ColumnDef } from '@tanstack/qwik-table'
 
 type Person = {
   firstName: string
@@ -24,7 +22,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -60,7 +58,7 @@ const defaultData: Person[] = [
 ]
 
 const columnHelper = createColumnHelper<Person>()
-const columns: ColumnDef<Person, any>[] = [
+const columns: Array<ColumnDef<Person, any>> = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -88,7 +86,7 @@ const columns: ColumnDef<Person, any>[] = [
               onChange$: $(() => {
                 // TODO: getting row instance from table works, but how can we call getToggleSelectedHandler() withour getting qwik qrl error?
                 const row = table.getRow(id)
-                row?.toggleSelected()
+                row.toggleSelected()
               }),
             }}
           />

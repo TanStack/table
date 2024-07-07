@@ -3,14 +3,9 @@ import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import {
-  useTable,
-  getCoreRowModel,
-  ColumnDef,
-  flexRender,
-  Table,
-} from '@tanstack/react-table'
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
 import { makeData } from './makeData'
+import type { ColumnDef, Table } from '@tanstack/react-table'
 
 type Person = {
   firstName: string
@@ -21,7 +16,7 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -100,7 +95,7 @@ function App() {
     const headers = table.getFlatHeaders()
     const colSizes: { [key: string]: number } = {}
     for (let i = 0; i < headers.length; i++) {
-      const header = headers[i]!
+      const header = headers[i]
       colSizes[`--header-${header.id}-size`] = header.getSize()
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
@@ -164,7 +159,7 @@ function App() {
                       key: header.id,
                       className: 'th',
                       style: {
-                        width: `calc(var(--header-${header?.id}-size) * 1px)`,
+                        width: `calc(var(--header-${header.id}-size) * 1px)`,
                       },
                     }}
                   >

@@ -2,32 +2,28 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import {
-  keepPreviousData,
   QueryClient,
   QueryClientProvider,
+  keepPreviousData,
   useQuery,
 } from '@tanstack/react-query'
 
 import './index.css'
 
-import {
-  PaginationState,
-  useTable,
-  getCoreRowModel,
-  ColumnDef,
-  flexRender,
-} from '@tanstack/react-table'
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { fetchData } from './fetchData'
+import type { ColumnDef, PaginationState } from '@tanstack/react-table'
 
 //
 
-import { fetchData, Person } from './fetchData'
+import type { Person } from './fetchData'
 
 const queryClient = new QueryClient()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         header: 'Name',

@@ -1,16 +1,15 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core'
-import type { Person } from '../makeData'
 import {
-  ColumnDef,
-  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
   getGroupedRowModel,
   getPaginationRowModel,
-  PaginationState,
+  injectTable,
 } from '@tanstack/angular-table'
+import type { ColumnDef, PaginationState } from '@tanstack/angular-table'
+import type { Person } from '../makeData'
 
 @Component({
   selector: 'app-person-table',
@@ -20,11 +19,11 @@ import {
   imports: [FlexRenderDirective],
 })
 export class PersonTableComponent {
-  readonly data = input.required<Person[]>()
+  readonly data = input.required<Array<Person>>()
 
   readonly pagination = model.required<PaginationState>()
 
-  readonly columns: ColumnDef<Person>[] = [
+  readonly columns: Array<ColumnDef<Person>> = [
     {
       accessorKey: 'firstName',
       header: 'First Name',

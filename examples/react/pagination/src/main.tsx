@@ -4,10 +4,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  Column,
-  ColumnDef,
-  PaginationState,
-  Table,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -15,13 +11,20 @@ import {
   getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type {
+  Column,
+  ColumnDef,
+  PaginationState,
+  Table,
+} from '@tanstack/react-table'
 
-import { makeData, Person } from './makeData'
+import type { Person } from './makeData'
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -85,8 +88,8 @@ function MyTable({
   data,
   columns,
 }: {
-  data: Person[]
-  columns: ColumnDef<Person>[]
+  data: Array<Person>
+  columns: Array<ColumnDef<Person>>
 }) {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -254,11 +257,11 @@ function Filter({
     <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
       <input
         type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ''}
+        value={(columnFilterValue as [number, number])[0] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
-            old?.[1],
+            old[1],
           ])
         }
         placeholder={`Min`}
@@ -266,10 +269,10 @@ function Filter({
       />
       <input
         type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ''}
+        value={(columnFilterValue as [number, number])[1] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
-            old?.[0],
+            old[0],
             e.target.value,
           ])
         }

@@ -1,5 +1,4 @@
 import {
-  ColumnFiltersState,
   getCoreRowModel,
   getFacetedMinMaxValues,
   getFacetedRowModel,
@@ -8,13 +7,13 @@ import {
   getGroupedRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  GroupingState,
   useTable,
 } from '@tanstack/react-table'
 import React from 'react'
+import styled from '@emotion/styled'
+import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
 
-import styled from '@emotion/styled'
 import { useSkipper } from './hooks'
 import {
   columns,
@@ -24,8 +23,8 @@ import {
 } from './tableModels'
 import DebouncedInput from './components/DebouncedInput'
 import ActionButtons from './components/ActionButtons'
-import { faker } from '@faker-js/faker'
 import CustomTable from './components/CustomTable'
+import type { ColumnFiltersState, GroupingState } from '@tanstack/react-table'
 
 const Styles = styled.div`
   padding: 1rem;

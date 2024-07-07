@@ -1,22 +1,20 @@
-import {
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { DebouncedInput } from './debouncedInput'
+import type {
   ColumnDef,
-  flexRender,
-  getCoreRowModel,
   OnChangeFn,
   PaginationOptions,
   PaginationState,
   SortingState,
-  useTable,
 } from '@tanstack/react-table'
-import { Filters } from '../api/types'
-import { DebouncedInput } from './debouncedInput'
+import type { Filters } from '../api/types'
 
 export const DEFAULT_PAGE_INDEX = 0
 export const DEFAULT_PAGE_SIZE = 10
 
 type Props<T extends Record<string, string | number>> = {
-  data: T[]
-  columns: ColumnDef<T>[]
+  data: Array<T>
+  columns: Array<ColumnDef<T>>
   pagination: PaginationState
   paginationOptions: Pick<PaginationOptions, 'onPaginationChange' | 'rowCount'>
   filters: Filters<T>

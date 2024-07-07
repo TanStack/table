@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "vite",
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.49.0",

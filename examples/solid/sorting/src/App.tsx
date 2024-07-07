@@ -1,20 +1,20 @@
 import {
+  createTable,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  SortingState,
-  ColumnDef,
-  createTable,
 } from '@tanstack/solid-table'
-import { makeData, Person } from './makeData'
-import { createSignal, For, Show } from 'solid-js'
+import { For, Show, createSignal } from 'solid-js'
+import { makeData } from './makeData'
+import type { ColumnDef, SortingState } from '@tanstack/solid-table'
+import type { Person } from './makeData'
 
 function App() {
   const [data, setData] = createSignal(makeData(100_000))
   const [sorting, setSorting] = createSignal<SortingState>([])
   const refreshData = () => setData(makeData(100_000))
 
-  const columns: ColumnDef<Person>[] = [
+  const columns: Array<ColumnDef<Person>> = [
     {
       header: 'Name',
       footer: (props) => props.column.id,

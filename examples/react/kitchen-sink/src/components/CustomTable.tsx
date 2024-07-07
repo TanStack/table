@@ -1,20 +1,15 @@
-import {
-  flexRender,
-  HeaderGroup,
-  Row,
-  RowData,
-  Table,
-} from '@tanstack/react-table'
+import { flexRender } from '@tanstack/react-table'
 import React from 'react'
 import Filter from './Filter'
 import TablePins from './TablePins'
+import type { HeaderGroup, Row, RowData, Table } from '@tanstack/react-table'
 
 type TableGroup = 'center' | 'left' | 'right'
 
 function getTableHeaderGroups<T extends RowData>(
   table: Table<T>,
   tg?: TableGroup,
-): [HeaderGroup<T>[], HeaderGroup<T>[]] {
+): [Array<HeaderGroup<T>>, Array<HeaderGroup<T>>] {
   if (tg === 'left') {
     return [table.getLeftHeaderGroups(), table.getLeftFooterGroups()]
   }

@@ -4,16 +4,12 @@ import { faker } from '@faker-js/faker'
 
 import './index.css'
 
-import {
-  ColumnDef,
-  ColumnOrderState,
-  flexRender,
-  getCoreRowModel,
-  useTable,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type { ColumnDef, ColumnOrderState } from '@tanstack/react-table'
+import type { Person } from './makeData'
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

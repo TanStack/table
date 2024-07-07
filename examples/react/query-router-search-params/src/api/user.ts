@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { Filters, PaginatedData } from './types'
+import type { Filters, PaginatedData } from './types'
 
 const DEFAULT_PAGE = 0
 const DEFAULT_PAGE_SIZE = 10
@@ -13,7 +13,7 @@ export type User = {
 
 export type UserFilters = Filters<User>
 
-function makeData(amount: number): User[] {
+function makeData(amount: number): Array<User> {
   return Array(amount)
     .fill(0)
     .map((_, index) => {

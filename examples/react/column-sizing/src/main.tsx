@@ -3,13 +3,11 @@ import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import {
-  useTable,
-  ColumnResizeMode,
-  getCoreRowModel,
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import type {
   ColumnDef,
-  flexRender,
   ColumnResizeDirection,
+  ColumnResizeMode,
 } from '@tanstack/react-table'
 
 type Person = {
@@ -21,7 +19,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -48,7 +46,7 @@ const defaultData: Person[] = [
   },
 ]
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

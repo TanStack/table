@@ -14,23 +14,26 @@ import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
 
 import {
-  Column,
-  Table as ReactTable,
-  useTable,
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  ColumnDef,
-  flexRender,
+  useTable,
 } from '@tanstack/react-table'
 
 import TablePaginationActions from './actions'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type {
+  Column,
+  ColumnDef,
+  Table as ReactTable,
+} from '@tanstack/react-table'
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         header: 'Name',
@@ -106,8 +109,8 @@ function LocalTable({
   data,
   columns,
 }: {
-  data: Person[]
-  columns: ColumnDef<Person>[]
+  data: Array<Person>
+  columns: Array<ColumnDef<Person>>
 }) {
   const table = useTable({
     data,
@@ -213,11 +216,11 @@ function Filter({
     <div className="flex space-x-2">
       <InputBase
         type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ''}
+        value={(columnFilterValue as [number, number])[0] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
-            old?.[1],
+            old[1],
           ])
         }
         placeholder={`Min`}
@@ -225,10 +228,10 @@ function Filter({
       />
       <InputBase
         type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ''}
+        value={(columnFilterValue as [number, number])[1] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
-            old?.[0],
+            old[0],
             e.target.value,
           ])
         }

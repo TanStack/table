@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 import {
-  ColumnDef,
-  injectTable,
   FlexRenderDirective,
   getCoreRowModel,
+  injectTable,
 } from '@tanstack/angular-table'
+import type { ColumnDef } from '@tanstack/angular-table'
 
 type Person = {
   firstName: string
@@ -16,7 +16,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -43,7 +43,7 @@ const defaultData: Person[] = [
   },
 ]
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -86,7 +86,7 @@ const defaultColumns: ColumnDef<Person>[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  data = signal<Person[]>(defaultData)
+  data = signal<Array<Person>>(defaultData)
 
   table = injectTable(() => ({
     data: this.data(),

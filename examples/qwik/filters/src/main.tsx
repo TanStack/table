@@ -1,34 +1,31 @@
 import '@builder.io/qwik/qwikloader.js'
 
-import { $, render, useSignal } from '@builder.io/qwik'
+import { $, component$, render, useSignal } from '@builder.io/qwik'
 import './index.css'
 
 import {
   createColumnHelper,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   flexRender,
-  useTable,
-  ColumnFiltersState,
-  SortingFn,
-  FilterFn,
-  getFilteredRowModel,
+  getCoreRowModel,
+  getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
-  getFacetedMinMaxValues,
-  Column,
-  Table,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
   sortingFns,
+  useTable,
 } from '@tanstack/qwik-table'
 
-import { component$ } from '@builder.io/qwik'
-
-import {
-  rankItem,
-  compareItems,
-  RankingInfo,
-} from '@tanstack/match-sorter-utils'
+import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
+import type {
+  Column,
+  ColumnFiltersState,
+  FilterFn,
+  SortingFn,
+  Table,
+} from '@tanstack/qwik-table'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 declare module '@tanstack/qwik-table' {
   interface FilterFns {
@@ -58,8 +55,8 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
   // Only sort by rank if the column has ranking information
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!,
+      rowA.columnFiltersMeta[columnId].itemRank,
+      rowB.columnFiltersMeta[columnId].itemRank,
     )
   }
 
@@ -76,7 +73,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -169,7 +166,7 @@ const columns = [
 
 const App = component$(() => {
   const columnFilters = useSignal<ColumnFiltersState>([])
-  const globalFilter = useSignal('')
+  const globalFilter = useSignal<string | null>('')
 
   const table = useTable({
     data: defaultData,
@@ -301,11 +298,11 @@ function Filter({
           type="number"
           min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
           max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])?.[0] ?? ''}
+          value={(columnFilterValue as [number, number])[0] ?? ''}
           onInput$={$((e: InputEvent) => {
             const value = Number((e.target as HTMLInputElement).value)
             const myCol = table.getColumn(id)
-            myCol?.setFilterValue((old: [number, number]) => [value, old?.[1]])
+            myCol?.setFilterValue((old: [number, number]) => [value, old[1]])
           })}
           placeholder={`Min ${
             column.getFacetedMinMaxValues()?.[0]
@@ -318,11 +315,11 @@ function Filter({
           type="number"
           min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
           max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])?.[1] ?? ''}
+          value={(columnFilterValue as [number, number])[1] ?? ''}
           onInput$={$((e: InputEvent) => {
             const value = Number((e.target as HTMLInputElement).value)
             const myCol = table.getColumn(id)
-            myCol?.setFilterValue((old: [number, number]) => [old?.[0], value])
+            myCol?.setFilterValue((old: [number, number]) => [old[0], value])
           })}
           placeholder={`Max ${
             column.getFacetedMinMaxValues()?.[1]

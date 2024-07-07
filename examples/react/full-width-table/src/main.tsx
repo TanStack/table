@@ -3,19 +3,19 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  PaginationState,
-  useTable,
+  flexRender,
   getCoreRowModel,
   getPaginationRowModel,
-  ColumnDef,
-  flexRender,
+  useTable,
 } from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { ColumnDef, PaginationState } from '@tanstack/react-table'
+import type { Person } from './makeData'
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         header: 'Name',

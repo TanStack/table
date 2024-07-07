@@ -2,15 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-import {
-  getCoreRowModel,
-  ColumnDef,
-  flexRender,
-  useTable,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type { ColumnDef } from '@tanstack/react-table'
+import type { Person } from './makeData'
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

@@ -26,6 +26,7 @@
     "prettier": "prettier --ignore-unknown '**/*'",
     "prettier:write": "pnpm run prettier --write",
     "format": "pnpm run prettier:write",
+    "lint:fix": "pnpm run format && nx run-many --targets=lint --fix",
     "cipublish": "node scripts/publish.js"
   },
   "nx": {

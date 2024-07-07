@@ -1,17 +1,15 @@
 import '@builder.io/qwik/qwikloader.js'
-import { render, component$, useSignal, $ } from '@builder.io/qwik'
+import { $, component$, render, useSignal } from '@builder.io/qwik'
 
 import './index.css'
-import { makeData } from './makeData'
-
 import {
-  getCoreRowModel,
   flexRender,
-  useTable,
-  SortingState,
-  ColumnDef,
+  getCoreRowModel,
   getSortedRowModel,
+  useTable,
 } from '@tanstack/qwik-table'
+import { makeData } from './makeData'
+import type { ColumnDef, SortingState } from '@tanstack/qwik-table'
 
 type Person = {
   firstName: string
@@ -22,7 +20,7 @@ type Person = {
   progress: number
 }
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),

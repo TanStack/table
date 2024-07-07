@@ -1,6 +1,6 @@
 // @ts-ignore
-import App from './App.svelte'
 import { mount } from 'svelte'
+import App from './App.svelte'
 
 import type { FilterFn } from '@tanstack/svelte-table'
 

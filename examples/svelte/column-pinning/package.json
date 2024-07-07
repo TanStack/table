@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "test:types": "svelte-check --tsconfig ./tsconfig.json"
+    "test:types": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint ./src"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

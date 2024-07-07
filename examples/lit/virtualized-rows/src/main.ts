@@ -1,19 +1,19 @@
 import { customElement } from 'lit/decorators.js'
-import { html, LitElement } from 'lit'
+import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
   ColumnDef,
+  TableController,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  TableController,
 } from '@tanstack/lit-table'
-import config from '../twind.config'
 import { styleMap } from 'lit/directives/style-map.js'
 import { virtualize, virtualizerRef } from '@lit-labs/virtualizer/virtualize.js'
-import { makeData, Person } from './makeData.ts'
+import config from '../twind.config'
+import { Person, makeData } from './makeData.ts'
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<Person>> = [
   {
     accessorKey: 'id',
     header: 'ID',

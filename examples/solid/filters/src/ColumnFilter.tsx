@@ -1,6 +1,6 @@
-import { Column, Table } from '@tanstack/solid-table'
 import { debounce } from '@solid-primitives/scheduled'
-import { createMemo, For, Show } from 'solid-js'
+import { For, Show, createMemo } from 'solid-js'
+import type { Column, Table } from '@tanstack/solid-table'
 
 function ColumnFilter(props: {
   column: Column<any, unknown>
@@ -48,12 +48,12 @@ function ColumnFilter(props: {
             type="number"
             min={Number(props.column.getFacetedMinMaxValues()?.[0] ?? '')}
             max={Number(props.column.getFacetedMinMaxValues()?.[1] ?? '')}
-            value={(columnFilterValue() as [number, number])?.[0] ?? ''}
+            value={(columnFilterValue() as [number, number])[0] ?? ''}
             onInput={debounce(
               (e) =>
                 props.column.setFilterValue((old: [number, number]) => [
                   e.target.value,
-                  old?.[1],
+                  old[1],
                 ]),
               500,
             )}
@@ -68,11 +68,11 @@ function ColumnFilter(props: {
             type="number"
             min={Number(props.column.getFacetedMinMaxValues()?.[0] ?? '')}
             max={Number(props.column.getFacetedMinMaxValues()?.[1] ?? '')}
-            value={(columnFilterValue() as [number, number])?.[1] ?? ''}
+            value={(columnFilterValue() as [number, number])[1] ?? ''}
             onInput={debounce(
               (e) =>
                 props.column.setFilterValue((old: [number, number]) => [
-                  old?.[0],
+                  old[0],
                   e.target.value,
                 ]),
               500,

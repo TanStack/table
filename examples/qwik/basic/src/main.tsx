@@ -1,12 +1,12 @@
 import '@builder.io/qwik/qwikloader.js'
-import { render, component$ } from '@builder.io/qwik'
+import { component$, render } from '@builder.io/qwik'
 
 import './index.css'
 
 import {
   createColumnHelper,
-  getCoreRowModel,
   flexRender,
+  getCoreRowModel,
   useTable,
 } from '@tanstack/qwik-table'
 
@@ -19,7 +19,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',

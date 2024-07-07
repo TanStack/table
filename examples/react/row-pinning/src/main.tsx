@@ -3,21 +3,24 @@ import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import { makeData, Person } from './makeData'
-
 import {
-  Column,
-  ColumnDef,
-  ExpandedState,
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  useTable,
+} from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+
+import type {
+  Column,
+  ColumnDef,
+  ExpandedState,
   Row,
   RowPinningState,
   Table,
-  useTable,
 } from '@tanstack/react-table'
 
 function App() {
@@ -36,7 +39,7 @@ function App() {
   const [includeParentRows, setIncludeParentRows] = React.useState(false)
   const [copyPinnedRows, setCopyPinnedRows] = React.useState(false)
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         id: 'pin',

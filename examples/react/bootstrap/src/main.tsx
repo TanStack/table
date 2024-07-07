@@ -5,15 +5,12 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { Table as BTable } from 'react-bootstrap'
 
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useTable,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type { ColumnDef } from '@tanstack/react-table'
+import type { Person } from './makeData'
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

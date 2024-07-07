@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { useMemo } from 'react'
-import { fetchUsers, UserFilters } from '../api/user'
+import { fetchUsers } from '../api/user'
 import Table, {
   DEFAULT_PAGE_INDEX,
   DEFAULT_PAGE_SIZE,
@@ -9,6 +9,7 @@ import Table, {
 import { useFilters } from '../hooks/useFilters'
 import { sortByToState, stateToSortBy } from '../utils/tableSortMapper'
 import { USER_COLUMNS } from '../utils/userColumns'
+import type { UserFilters } from '../api/user'
 
 export const Route = createFileRoute('/')({
   component: UsersPage,

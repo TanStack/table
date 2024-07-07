@@ -1,10 +1,6 @@
-import {
-  flexRender,
-  getCoreRowModel,
-  ColumnDef,
-  createTable,
-} from '@tanstack/solid-table'
-import { createSignal, For } from 'solid-js'
+import { createTable, flexRender, getCoreRowModel } from '@tanstack/solid-table'
+import { For, createSignal } from 'solid-js'
+import type { ColumnDef } from '@tanstack/solid-table'
 
 type Person = {
   firstName: string
@@ -15,7 +11,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -42,7 +38,7 @@ const defaultData: Person[] = [
   },
 ]
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

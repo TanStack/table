@@ -1,16 +1,15 @@
-import { createSignal, For, Show } from 'solid-js'
-import { makeData, Person } from './makeData'
+import { For, Show, createSignal } from 'solid-js'
 import { faker } from '@faker-js/faker'
-import {
-  flexRender,
-  getCoreRowModel,
+import { createTable, flexRender, getCoreRowModel } from '@tanstack/solid-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type {
+  ColumnDef,
   ColumnOrderState,
   ColumnVisibilityState,
-  ColumnDef,
-  createTable,
 } from '@tanstack/solid-table'
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

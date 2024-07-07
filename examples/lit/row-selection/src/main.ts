@@ -1,17 +1,18 @@
 import { customElement, property, state } from 'lit/decorators.js'
-import { html, LitElement } from 'lit'
+import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
-  ColumnDef,
+  TableController,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  TableController,
 } from '@tanstack/lit-table'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { ColumnDef } from '@tanstack/lit-table'
+import type { Person } from './makeData'
 
-const columns: ColumnDef<Person, any>[] = [
+const columns: Array<ColumnDef<Person, any>> = [
   {
     id: 'select',
     header: ({ table }) => html`

@@ -1,21 +1,24 @@
 import { customElement, property, state } from 'lit/decorators.js'
-import { html, LitElement } from 'lit'
+import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
-  Column,
-  ColumnDef,
-  ColumnFiltersState,
+  TableController,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  RowData,
-  TableController,
 } from '@tanstack/lit-table'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type {
+  Column,
+  ColumnDef,
+  ColumnFiltersState,
+  RowData,
+} from '@tanstack/lit-table'
+import type { Person } from './makeData'
 
-const columns: ColumnDef<Person, any>[] = [
+const columns: Array<ColumnDef<Person, any>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -77,7 +80,7 @@ class ColumnFilter extends LitElement {
   private column!: Column<any, {}>
 
   private onChange(evt: InputEvent) {
-    this.column?.setFilterValue((evt.target as HTMLInputElement).value)
+    this.column.setFilterValue((evt.target as HTMLInputElement).value)
   }
 
   render() {
@@ -104,9 +107,9 @@ class ColumnFilter extends LitElement {
               @change="${(e: Event) =>
                 this.column.setFilterValue((old: [number, number]) => [
                   parseInt((e.target as HTMLInputElement).value, 10),
-                  old?.[1],
+                  old[1],
                 ])}"
-              value=${(columnFilterValue as [number, number])?.[0] ?? ''}
+              value=${(columnFilterValue as [number, number])[0] ?? ''}
             />
             <input
               type="number"
@@ -114,9 +117,9 @@ class ColumnFilter extends LitElement {
               @change="${(e: Event) =>
                 this.column.setFilterValue((old: [number, number]) => [
                   parseInt((e.target as HTMLInputElement).value, 10),
-                  old?.[0],
+                  old[0],
                 ])}"
-              value=${(columnFilterValue as [number, number])?.[1] ?? ''}
+              value=${(columnFilterValue as [number, number])[1] ?? ''}
             />
           </div>
         `

@@ -1,6 +1,6 @@
-import { Column, RowData, Table } from '@tanstack/react-table'
 import React from 'react'
 import DebouncedInput from './DebouncedInput'
+import type { Column, RowData, Table } from '@tanstack/react-table'
 
 type NumberInputProps = {
   columnFilterValue: [number, number]
@@ -26,9 +26,9 @@ const NumberInput: React.FC<NumberInputProps> = ({
           type="number"
           min={min}
           max={max}
-          value={columnFilterValue?.[0] ?? ''}
+          value={columnFilterValue[0] ?? ''}
           onChange={(value) =>
-            setFilterValue((old: [number, number]) => [value, old?.[1]])
+            setFilterValue((old: [number, number]) => [value, old[1]])
           }
           placeholder={`Min ${minOpt ? `(${min})` : ''}`}
           className="w-24 border shadow rounded"
@@ -37,9 +37,9 @@ const NumberInput: React.FC<NumberInputProps> = ({
           type="number"
           min={min}
           max={max}
-          value={columnFilterValue?.[1] ?? ''}
+          value={columnFilterValue[1] ?? ''}
           onChange={(value) =>
-            setFilterValue((old: [number, number]) => [old?.[0], value])
+            setFilterValue((old: [number, number]) => [old[0], value])
           }
           placeholder={`Max ${maxOpt ? `(${max})` : ''}`}
           className="w-24 border shadow rounded"
@@ -55,7 +55,7 @@ type TextInputProps = {
   columnFilterValue: string
   columnSize: number
   setFilterValue: (updater: any) => void
-  sortedUniqueValues: any[]
+  sortedUniqueValues: Array<any>
 }
 
 const TextInput: React.FC<TextInputProps> = ({

@@ -7,7 +7,7 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
 import LastPageIcon from '@mui/icons-material/LastPage'
 import { useTheme } from '@mui/material/styles'
-import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions'
+import type { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions'
 
 const TablePaginationActions = (props: TablePaginationActionsProps) => {
   const theme = useTheme()

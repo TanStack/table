@@ -1,39 +1,35 @@
-import React, { CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import {
-  Cell,
-  ColumnDef,
-  Header,
-  flexRender,
-  getCoreRowModel,
-  useTable,
-} from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
 
 // needed for table body level scope DnD setup
 import {
   DndContext,
+  type DragEndEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
   closestCenter,
-  type DragEndEvent,
   useSensor,
   useSensors,
 } from '@dnd-kit/core'
 import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
 import {
-  arrayMove,
   SortableContext,
+  arrayMove,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable'
 
 // needed for row & cell level scope DnD setup
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { Cell, ColumnDef, Header } from '@tanstack/react-table'
 
 const DraggableTableHeader = ({
   header,
@@ -89,7 +85,7 @@ const DragAlongCell = ({ cell }: { cell: Cell<Person, unknown> }) => {
 }
 
 function App() {
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -133,7 +129,7 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(20))
-  const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
+  const [columnOrder, setColumnOrder] = React.useState<Array<string>>(() =>
     columns.map((c) => c.id!),
   )
 

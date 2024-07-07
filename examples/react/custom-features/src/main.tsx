@@ -4,24 +4,27 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  useTable,
-  makeStateUpdater,
-  getSortedRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  getCoreRowModel,
   flexRender,
-  TableFeature,
-  Table,
-  RowData,
-  OnChangeFn,
-  ColumnDef,
-  Column,
-  Updater,
   functionalUpdate,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  makeStateUpdater,
+  useTable,
+} from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type {
+  Column,
+  ColumnDef,
+  OnChangeFn,
+  RowData,
+  Table,
+  TableFeature,
+  Updater,
 } from '@tanstack/react-table'
 
-import { makeData, Person } from './makeData'
+import type { Person } from './makeData'
 
 // TypeScript setup for our new feature with all of the same type-safety as stock TanStack Table features
 
@@ -95,7 +98,7 @@ export const DensityFeature: TableFeature<any> = {
   _createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setDensity = (updater) => {
       const safeUpdater: Updater<DensityState> = (old) => {
-        let newState = functionalUpdate(updater, old)
+        const newState = functionalUpdate(updater, old)
         return newState
       }
       return table.options.onDensityChange?.(safeUpdater)
@@ -121,7 +124,7 @@ export const DensityFeature: TableFeature<any> = {
 
 //app code
 function App() {
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -353,11 +356,11 @@ function Filter({
     <div className="flex space-x-2">
       <input
         type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ''}
+        value={(columnFilterValue as [number, number])[0] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
-            old?.[1],
+            old[1],
           ])
         }
         placeholder={`Min`}
@@ -365,10 +368,10 @@ function Filter({
       />
       <input
         type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ''}
+        value={(columnFilterValue as [number, number])[1] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
-            old?.[0],
+            old[0],
             e.target.value,
           ])
         }

@@ -1,20 +1,20 @@
 import {
+  createTable,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
+  getFacetedMinMaxValues,
   getFacetedRowModel,
   getFacetedUniqueValues,
-  getFacetedMinMaxValues,
-  ColumnDef,
-  ColumnFiltersState,
-  createTable,
+  getFilteredRowModel,
 } from '@tanstack/solid-table'
 import { debounce } from '@solid-primitives/scheduled'
-import { makeData, Person } from './makeData'
+import { For, createSignal } from 'solid-js'
+import { makeData } from './makeData'
 import ColumnFilter from './ColumnFilter'
-import { createSignal, For } from 'solid-js'
+import type { Person } from './makeData'
+import type { ColumnDef, ColumnFiltersState } from '@tanstack/solid-table'
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

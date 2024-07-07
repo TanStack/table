@@ -4,20 +4,20 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  Row,
   useTable,
 } from '@tanstack/react-table'
 
 import { useVirtualizer } from '@tanstack/react-virtual'
 
-import { makeColumns, makeData, Person } from './makeData'
+import { makeColumns, makeData } from './makeData'
+import type { Person } from './makeData'
+import type { ColumnDef, Row } from '@tanstack/react-table'
 
 function App() {
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => makeColumns(1_000),
     [],
   )
@@ -57,7 +57,7 @@ function App() {
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? (element) => element?.getBoundingClientRect().height
+        ? (element) => element.getBoundingClientRect().height
         : undefined,
     overscan: 5,
   })
@@ -69,7 +69,7 @@ function App() {
   let virtualPaddingLeft: number | undefined
   let virtualPaddingRight: number | undefined
 
-  if (columnVirtualizer && virtualColumns?.length) {
+  if (columnVirtualizer && virtualColumns.length) {
     virtualPaddingLeft = virtualColumns[0]?.start ?? 0
     virtualPaddingRight =
       columnVirtualizer.getTotalSize() -
@@ -162,7 +162,7 @@ function App() {
             }}
           >
             {virtualRows.map((virtualRow) => {
-              const row = rows[virtualRow.index] as Row<Person>
+              const row = rows[virtualRow.index]
               const visibleCells = row.getVisibleCells()
 
               return (
