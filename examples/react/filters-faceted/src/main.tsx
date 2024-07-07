@@ -267,7 +267,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           type="number"
           min={Number(minMaxValues?.[0] ?? '')}
           max={Number(minMaxValues?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])[0] ?? ''}
+          value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
           onChange={(value) =>
             column.setFilterValue((old: [number, number]) => [value, old[1]])
           }
@@ -280,7 +280,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
           type="number"
           min={Number(minMaxValues?.[0] ?? '')}
           max={Number(minMaxValues?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])[1] ?? ''}
+          value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
           onChange={(value) =>
             column.setFilterValue((old: [number, number]) => [old[0], value])
           }

@@ -77,8 +77,8 @@ export function _createColumn<TData extends RowData, TValue>(
     columns: [],
   }
 
-  for (const feature of table._features) {
-    feature._createColumn?.(column as Column<TData, TValue>, table)
+  for (const feature of Object.values(table._features)) {
+    feature?._createColumn?.(column as Column<TData, TValue>, table)
   }
 
   return column as Column<TData, TValue>

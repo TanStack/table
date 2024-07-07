@@ -12,9 +12,9 @@ export function _createCell<TData extends RowData, TValue>(
     row,
   }
 
-  table._features.forEach((feature) => {
-    feature._createCell?.(cell as Cell<TData, TValue>, table)
-  })
+  for (const feature of Object.values(table._features)) {
+    feature?._createCell?.(cell as Cell<TData, TValue>, table)
+  }
 
   return cell as Cell<TData, TValue>
 }

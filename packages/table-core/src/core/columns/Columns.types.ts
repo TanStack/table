@@ -42,7 +42,7 @@ export interface Column_CoreProperties<TData extends RowData, TValue> {
   parent?: Column<TData, TValue>
 }
 
-export interface Column_Core<TData extends RowData, TValue>
+export interface Column_Column<TData extends RowData, TValue>
   extends Column_CoreProperties<TData, TValue> {
   /**
    * Returns the flattened array of this column and all child/grand-child columns for this column.

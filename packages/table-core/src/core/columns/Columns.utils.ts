@@ -57,8 +57,8 @@ export function table_getDefaultColumnDef<TData extends RowData>(
       return null
     },
     cell: (props) => props.renderValue<any>()?.toString?.() ?? null,
-    ...table._features.reduce((obj, feature) => {
-      return Object.assign(obj, feature._getDefaultColumnDef?.())
+    ...Object.values(table._features).reduce((obj, feature) => {
+      return Object.assign(obj ?? {}, feature?._getDefaultColumnDef?.())
     }, {}),
     ...defaultColumnDef,
   } as Partial<ColumnDef<TData, unknown>>

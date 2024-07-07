@@ -25,9 +25,9 @@ export function _createHeader<TData extends RowData, TValue>(
     subHeaders: [],
   }
 
-  table._features.forEach((feature) => {
-    feature._createHeader?.(header as Header<TData, TValue>, table)
-  })
+  for (const feature of Object.values(table._features)) {
+    feature?._createHeader?.(header as Header<TData, TValue>, table)
+  }
 
   return header as Header<TData, TValue>
 }

@@ -82,7 +82,7 @@ export const App = () => {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   )
-  const [globalFilter, setGlobalFilter] = React.useState('')
+  const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 

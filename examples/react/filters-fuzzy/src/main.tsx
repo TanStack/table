@@ -33,7 +33,7 @@ declare module '@tanstack/react-table' {
     fuzzy: FilterFn<unknown>
   }
   interface FilterMeta {
-    itemRank: RankingInfo
+    itemRank?: RankingInfo
   }
 }
 
@@ -56,10 +56,10 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
+  if (rowA.columnFiltersMeta?.[columnId]) {
     dir = compareItems(
-      rowA.columnFiltersMeta[columnId].itemRank,
-      rowB.columnFiltersMeta[columnId].itemRank,
+      rowA.columnFiltersMeta[columnId].itemRank!,
+      rowB.columnFiltersMeta[columnId].itemRank!,
     )
   }
 
@@ -73,7 +73,7 @@ function App() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   )
-  const [globalFilter, setGlobalFilter] = React.useState('')
+  const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
 
   const columns = React.useMemo<Array<ColumnDef<Person, any>>>(
     () => [

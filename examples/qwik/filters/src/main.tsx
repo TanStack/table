@@ -298,7 +298,7 @@ function Filter({
           type="number"
           min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
           max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])[0] ?? ''}
+          value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
           onInput$={$((e: InputEvent) => {
             const value = Number((e.target as HTMLInputElement).value)
             const myCol = table.getColumn(id)
@@ -315,7 +315,7 @@ function Filter({
           type="number"
           min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
           max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-          value={(columnFilterValue as [number, number])[1] ?? ''}
+          value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
           onInput$={$((e: InputEvent) => {
             const value = Number((e.target as HTMLInputElement).value)
             const myCol = table.getColumn(id)

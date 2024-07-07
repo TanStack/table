@@ -10,47 +10,6 @@ import type {
 } from './types'
 import type { DeepKeys, DeepValue } from './utils.types'
 
-// type Person = {
-//   firstName: string
-//   lastName: string
-//   age: number
-//   visits: number
-//   status: string
-//   progress: number
-//   createdAt: Date
-//   nested: {
-//     foo: [
-//       {
-//         bar: 'bar'
-//       }
-//     ]
-//     bar: { subBar: boolean }[]
-//     baz: {
-//       foo: 'foo'
-//       bar: {
-//         baz: 'baz'
-//       }
-//     }
-//   }
-// }
-
-// const test: DeepKeys<Person> = 'nested.foo.0.bar'
-// const test2: DeepKeys<Person> = 'nested.bar'
-
-// const helper = createColumnHelper<Person>()
-
-// helper.accessor('nested.foo', {
-//   cell: info => info.getValue(),
-// })
-
-// helper.accessor('nested.foo.0.bar', {
-//   cell: info => info.getValue(),
-// })
-
-// helper.accessor('nested.bar', {
-//   cell: info => info.getValue(),
-// })
-
 export type ColumnHelper<TData extends RowData> = {
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
@@ -71,6 +30,9 @@ export type ColumnHelper<TData extends RowData> = {
   group: (column: GroupColumnDef<TData>) => GroupColumnDef<TData, unknown>
 }
 
+/**
+ * Create a column helper to make it easier to define columns with better TValue type inference
+ */
 export function createColumnHelper<
   TData extends RowData,
 >(): ColumnHelper<TData> {
@@ -123,6 +85,50 @@ export function tableOptions<TData extends RowData = any>(
   options: TableOptions<TData>,
 ): TableOptions<TData>
 
+/**
+ * Helper function to help share table options with the same TData type across multiple components
+ */
 export function tableOptions(options: unknown) {
   return options
 }
+
+// type Person = {
+//   firstName: string
+//   lastName: string
+//   age: number
+//   visits: number
+//   status: string
+//   progress: number
+//   createdAt: Date
+//   nested: {
+//     foo: [
+//       {
+//         bar: 'bar'
+//       }
+//     ]
+//     bar: { subBar: boolean }[]
+//     baz: {
+//       foo: 'foo'
+//       bar: {
+//         baz: 'baz'
+//       }
+//     }
+//   }
+// }
+
+// const test: DeepKeys<Person> = 'nested.foo.0.bar'
+// const test2: DeepKeys<Person> = 'nested.bar'
+
+// const helper = createColumnHelper<Person>()
+
+// helper.accessor('nested.foo', {
+//   cell: info => info.getValue(),
+// })
+
+// helper.accessor('nested.foo.0.bar', {
+//   cell: info => info.getValue(),
+// })
+
+// helper.accessor('nested.bar', {
+//   cell: info => info.getValue(),
+// })

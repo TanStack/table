@@ -255,18 +255,24 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         {/* See faceted column filters example for min max values functionality */}
         <DebouncedInput
           type="number"
-          value={(columnFilterValue as [number, number])[0] ?? ''}
+          value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
           onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [value, old[1]])
+            column.setFilterValue((old: [number, number] | undefined) => [
+              value,
+              old?.[1],
+            ])
           }
           placeholder={`Min`}
           className="w-24 border shadow rounded"
         />
         <DebouncedInput
           type="number"
-          value={(columnFilterValue as [number, number])[1] ?? ''}
+          value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
           onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [old[0], value])
+            column.setFilterValue((old: [number, number] | undefined) => [
+              old?.[0],
+              value,
+            ])
           }
           placeholder={`Max`}
           className="w-24 border shadow rounded"

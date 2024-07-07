@@ -2,7 +2,7 @@ import type {
   TableOptions_RowModels,
   Table_RowModels,
 } from './core/row-models/RowModels.types'
-import type { TableOptions_Core, Table_Core } from './core/table/Tables.types'
+import type { TableOptions_Table, Table_Table } from './core/table/Tables.types'
 import type {
   ColumnDef_ColumnVisibility,
   Column_ColumnVisibility,
@@ -33,8 +33,8 @@ import type {
 } from './features/row-pinning/RowPinning.types'
 import type {
   HeaderContext,
-  HeaderGroup_Core,
-  Header_Core,
+  HeaderGroup_Header,
+  Header_Header,
   TableOptions_Headers,
   Table_Headers,
 } from './core/headers/Headers.types'
@@ -108,33 +108,75 @@ import type {
   Table_RowSelection,
 } from './features/row-selection/RowSelection.types'
 import type {
-  Row_Core,
+  Row_Row,
   TableOptions_Rows,
   Table_Rows,
 } from './core/rows/Rows.types'
 import type { PartialKeys, UnionToIntersection } from './utils.types'
 import type {
   CellContext,
-  Cell_Core,
+  Cell_Cell,
   TableOptions_Cell,
 } from './core/cells/Cells.types'
 import type {
-  Column_Core,
+  Column_Column,
   TableOptions_Columns,
   Table_Columns,
 } from './core/columns/Columns.types'
 
-export interface TableFeature<TData extends RowData = any> {
-  _createCell?: (cell: Cell<TData, unknown>, table: Table<TData>) => void
-  _createColumn?: (column: Column<TData, unknown>, table: Table<TData>) => void
-  _createHeader?: (header: Header<TData, unknown>, table: Table<TData>) => void
-  _createRow?: (row: Row<TData>, table: Table<TData>) => void
-  _createTable?: (table: Table<TData>) => void
-  _getDefaultColumnDef?: () => Partial<ColumnDef<TData, unknown>>
-  _getDefaultOptions?: (
+export interface TableFeature {
+  _createCell?: <TData extends RowData = any>(
+    cell: Cell<TData, unknown>,
+    table: Table<TData>,
+  ) => void
+  _createColumn?: <TData extends RowData = any>(
+    column: Column<TData, unknown>,
+    table: Table<TData>,
+  ) => void
+  _createHeader?: <TData extends RowData = any>(
+    header: Header<TData, unknown>,
+    table: Table<TData>,
+  ) => void
+  _createRow?: <TData extends RowData = any>(
+    row: Row<TData>,
+    table: Table<TData>,
+  ) => void
+  _createTable?: <TData extends RowData = any>(table: Table<TData>) => void
+  _getDefaultColumnDef?: <TData extends RowData = any>() => Partial<
+    ColumnDef<TData, unknown>
+  >
+  _getDefaultOptions?: <TData extends RowData = any>(
     table: Partial<Table<TData>>,
   ) => Partial<TableOptionsResolved<TData>>
   _getInitialState?: (initialState?: Partial<TableState>) => Partial<TableState>
+}
+
+export interface CoreTableFeatures {
+  Tables: TableFeature
+  RowModels: TableFeature
+  Rows: TableFeature
+  Headers: TableFeature
+  Columns: TableFeature
+  Cells: TableFeature
+}
+
+export interface TableFeatures {
+  ColumnFaceting: TableFeature
+  ColumnFiltering: TableFeature
+  ColumnGrouping: TableFeature
+  ColumnOrdering: TableFeature
+  ColumnPinning: TableFeature
+  ColumnResizing: TableFeature
+  ColumnSizing: TableFeature
+  ColumnVisibility: TableFeature
+  GlobalFaceting: TableFeature
+  GlobalFiltering: TableFeature
+  RowExpanding: TableFeature
+  RowPagination: TableFeature
+  RowPinning: TableFeature
+  RowSelection: TableFeature
+  RowSorting: TableFeature
+  [key: string]: TableFeature //allow custom features still? Or make new plugin system instead?
 }
 
 export interface TableMeta<TData extends RowData> {}
@@ -158,12 +200,15 @@ export type CellData = unknown
 
 export type AnyRender = (Comp: any, props: any) => any
 
-export interface Table<TData extends RowData>
-  extends Table_Core<TData>,
+export interface Table_Core<TData extends RowData>
+  extends Table_Table<TData>,
     Table_Columns<TData>,
     Table_RowModels<TData>,
     Table_Rows<TData>,
-    Table_Headers<TData>,
+    Table_Headers<TData> {}
+
+export interface Table<TData extends RowData>
+  extends Table_Core<TData>,
     Table_ColumnFiltering<TData>,
     Table_ColumnGrouping<TData>,
     Table_ColumnOrdering<TData>,
@@ -179,13 +224,16 @@ export interface Table<TData extends RowData>
     Table_RowSelection<TData>,
     Table_RowSorting<TData> {}
 
-export interface TableOptionsResolved<TData extends RowData>
-  extends TableOptions_Core<TData>,
+export interface TableOptions_Core<TData extends RowData>
+  extends TableOptions_Table<TData>,
     TableOptions_Cell,
     TableOptions_Columns<TData>,
     TableOptions_RowModels<TData>,
     TableOptions_Rows<TData>,
-    TableOptions_Headers,
+    TableOptions_Headers {}
+
+export interface TableOptionsResolved<TData extends RowData>
+  extends TableOptions_Core<TData>,
     TableOptions_ColumnFaceting<TData>,
     TableOptions_ColumnFiltering<TData>,
     TableOptions_ColumnGrouping,
@@ -220,7 +268,7 @@ export interface TableState
     TableState_RowSorting {}
 
 export interface Row<TData extends RowData>
-  extends Row_Core<TData>,
+  extends Row_Row<TData>,
     Row_ColumnFiltering<TData>,
     Row_ColumnGrouping,
     Row_ColumnPinning<TData>,
@@ -229,11 +277,17 @@ export interface Row<TData extends RowData>
     Row_RowPinning,
     Row_RowSelection {}
 
-export interface RowModel<TData extends RowData> {
-  rows: Array<Row<TData>>
-  flatRows: Array<Row<TData>>
-  rowsById: Record<string, Row<TData>>
-}
+export interface Cell<TData extends RowData, TValue>
+  extends Cell_Cell<TData, TValue>,
+    Cell_ColumnGrouping {}
+
+export interface Header<TData extends RowData, TValue>
+  extends Header_Header<TData, TValue>,
+    Header_ColumnSizing,
+    Header_ColumnResizing {}
+
+export interface HeaderGroup<TData extends RowData>
+  extends HeaderGroup_Header<TData> {}
 
 export type AccessorFn<TData extends RowData, TValue = unknown> = (
   originalRow: TData,
@@ -341,7 +395,7 @@ export type ColumnDefResolved<
 }
 
 export interface Column<TData extends RowData, TValue = unknown>
-  extends Column_Core<TData, TValue>,
+  extends Column_Column<TData, TValue>,
     Column_ColumnFaceting<TData>,
     Column_ColumnFiltering<TData>,
     Column_ColumnGrouping<TData>,
@@ -353,14 +407,8 @@ export interface Column<TData extends RowData, TValue = unknown>
     Column_GlobalFiltering,
     Column_RowSorting<TData> {}
 
-export interface Cell<TData extends RowData, TValue>
-  extends Cell_Core<TData, TValue>,
-    Cell_ColumnGrouping {}
-
-export interface Header<TData extends RowData, TValue>
-  extends Header_Core<TData, TValue>,
-    Header_ColumnSizing,
-    Header_ColumnResizing {}
-
-export interface HeaderGroup<TData extends RowData>
-  extends HeaderGroup_Core<TData> {}
+export interface RowModel<TData extends RowData> {
+  rows: Array<Row<TData>>
+  flatRows: Array<Row<TData>>
+  rowsById: Record<string, Row<TData>>
+}

@@ -1,13 +1,5 @@
-import React from 'react'
+import React, { type HTMLProps } from 'react'
 import ReactDOM from 'react-dom/client'
-import type { HTMLProps } from 'react'
-
-import './index.css'
-
-import type { Person } from './makeData'
-import { makeData } from './makeData'
-
-import type { Column, ColumnDef, Table } from '@tanstack/react-table'
 import {
   flexRender,
   getCoreRowModel,
@@ -15,12 +7,16 @@ import {
   getPaginationRowModel,
   useTable,
 } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { Column, ColumnDef, Table } from '@tanstack/react-table'
+import './index.css'
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const [rowSelection, setRowSelection] = React.useState({})
-  const [globalFilter, setGlobalFilter] = React.useState('')
+  const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
 
   const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [

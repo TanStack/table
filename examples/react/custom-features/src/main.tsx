@@ -71,7 +71,7 @@ declare module '@tanstack/react-table' {
 // end of TS setup!
 
 // Here is all of the actual javascript code for our new feature
-export const DensityFeature: TableFeature<any> = {
+export const DensityFeature: TableFeature = {
   // define the new feature's initial state
   _getInitialState: (state): DensityTableState => {
     return {
@@ -166,7 +166,7 @@ function App() {
   const [density, setDensity] = React.useState<DensityState>('md')
 
   const table = useTable({
-    _features: [DensityFeature], //pass our custom feature to the table to be instantiated upon creation
+    _features: { DensityFeature }, //pass our custom feature to the table to be instantiated upon creation
     columns,
     data,
     debugTable: true,
@@ -352,11 +352,13 @@ function Filter({
 
   const columnFilterValue = column.getFilterValue()
 
+  console.log('columnFilterValue', { columnFilterValue, table, column })
+
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
       <input
         type="number"
-        value={(columnFilterValue as [number, number])[0] ?? ''}
+        value={(columnFilterValue as [number, number] | undefined)?.[0]}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
@@ -368,7 +370,7 @@ function Filter({
       />
       <input
         type="number"
-        value={(columnFilterValue as [number, number])[1] ?? ''}
+        value={(columnFilterValue as [number, number] | undefined)?.[1]}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             old[0],

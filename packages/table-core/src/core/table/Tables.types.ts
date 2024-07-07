@@ -1,6 +1,7 @@
 import type {
+  CoreTableFeatures,
   RowData,
-  TableFeature,
+  TableFeatures,
   TableMeta,
   TableOptions,
   TableOptionsResolved,
@@ -9,13 +10,13 @@ import type {
 } from '../../types'
 import type { RequiredKeys } from '../../utils.types'
 
-export interface TableOptions_Core<TData extends RowData> {
+export interface TableOptions_Table<TData extends RowData> {
   /**
    * An array of extra features that you can add to the table instance.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _features?: Array<TableFeature>
+  _features?: Partial<TableFeatures>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -80,7 +81,7 @@ export interface TableOptions_Core<TData extends RowData> {
 }
 
 export interface Table_CoreProperties<TData extends RowData> {
-  _features: ReadonlyArray<TableFeature>
+  _features: CoreTableFeatures & Partial<TableFeatures>
   /**
    * This is the resolved initial state of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
@@ -95,7 +96,7 @@ export interface Table_CoreProperties<TData extends RowData> {
   options: RequiredKeys<TableOptionsResolved<TData>, 'state'>
 }
 
-export interface Table_Core<TData extends RowData>
+export interface Table_Table<TData extends RowData>
   extends Table_CoreProperties<TData> {
   _queue: (cb: () => void) => void
   /**

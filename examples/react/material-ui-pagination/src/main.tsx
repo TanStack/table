@@ -216,7 +216,7 @@ function Filter({
     <div className="flex space-x-2">
       <InputBase
         type="number"
-        value={(columnFilterValue as [number, number])[0] ?? ''}
+        value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
@@ -228,7 +228,7 @@ function Filter({
       />
       <InputBase
         type="number"
-        value={(columnFilterValue as [number, number])[1] ?? ''}
+        value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             old[0],

@@ -48,7 +48,9 @@ function ColumnFilter(props: {
             type="number"
             min={Number(props.column.getFacetedMinMaxValues()?.[0] ?? '')}
             max={Number(props.column.getFacetedMinMaxValues()?.[1] ?? '')}
-            value={(columnFilterValue() as [number, number])[0] ?? ''}
+            value={
+              (columnFilterValue() as [number, number] | undefined)?.[0] ?? ''
+            }
             onInput={debounce(
               (e) =>
                 props.column.setFilterValue((old: [number, number]) => [
@@ -68,7 +70,9 @@ function ColumnFilter(props: {
             type="number"
             min={Number(props.column.getFacetedMinMaxValues()?.[0] ?? '')}
             max={Number(props.column.getFacetedMinMaxValues()?.[1] ?? '')}
-            value={(columnFilterValue() as [number, number])[1] ?? ''}
+            value={
+              (columnFilterValue() as [number, number] | undefined)?.[1] ?? ''
+            }
             onInput={debounce(
               (e) =>
                 props.column.setFilterValue((old: [number, number]) => [

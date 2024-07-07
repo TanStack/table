@@ -48,7 +48,7 @@ export interface Row_CoreProperties<TData extends RowData> {
   subRows: Array<Row<TData>>
 }
 
-export interface Row_Core<TData extends RowData>
+export interface Row_Row<TData extends RowData>
   extends Row_CoreProperties<TData> {
   _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
   /**

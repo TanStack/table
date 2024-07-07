@@ -114,7 +114,7 @@ export interface Header_CoreProperties<TData extends RowData, TValue> {
   subHeaders: Array<Header<TData, TValue>>
 }
 
-export interface Header_Core<TData extends RowData, TValue>
+export interface Header_Header<TData extends RowData, TValue>
   extends Header_CoreProperties<TData, TValue> {
   /**
    * Returns the rendering context (or props) for column-based components like headers, footers and filters.
@@ -130,7 +130,7 @@ export interface Header_Core<TData extends RowData, TValue>
   getLeafHeaders: () => Array<Header<TData, unknown>>
 }
 
-export interface HeaderGroup_Core<TData extends RowData> {
+export interface HeaderGroup_Header<TData extends RowData> {
   depth: number
   headers: Array<Header<TData, unknown>>
   id: string

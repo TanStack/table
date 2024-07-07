@@ -109,7 +109,9 @@ class ColumnFilter extends LitElement {
                   parseInt((e.target as HTMLInputElement).value, 10),
                   old[1],
                 ])}"
-              value=${(columnFilterValue as [number, number])[0] ?? ''}
+              value=${(
+                columnFilterValue as [number, number] | undefined
+              )?.[0] ?? ''}
             />
             <input
               type="number"
@@ -119,7 +121,9 @@ class ColumnFilter extends LitElement {
                   parseInt((e.target as HTMLInputElement).value, 10),
                   old[0],
                 ])}"
-              value=${(columnFilterValue as [number, number])[1] ?? ''}
+              value=${(
+                columnFilterValue as [number, number] | undefined
+              )?.[1] ?? ''}
             />
           </div>
         `

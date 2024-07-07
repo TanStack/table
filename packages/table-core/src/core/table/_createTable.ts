@@ -23,13 +23,14 @@ import type { Table_CoreProperties } from './Tables.types'
 import type {
   RowData,
   Table,
+  TableFeature,
   TableOptionsResolved,
   TableState,
 } from '../../types'
 
-const coreFeatures = [Tables, RowModels, Rows, Headers, Columns, Cells]
+const coreFeatures = { Tables, RowModels, Rows, Headers, Columns, Cells }
 
-const builtInFeatures = [
+const builtInFeatures = {
   ColumnFaceting,
   ColumnFiltering,
   ColumnGrouping,
@@ -45,12 +46,13 @@ const builtInFeatures = [
   RowPinning,
   RowSelection,
   RowSorting,
-]
+}
 
 export function getInitialTableState(
+  features: Array<TableFeature>,
   initialState: Partial<TableState> | undefined = {},
 ): TableState {
-  builtInFeatures.forEach((feature) => {
+  features.forEach((feature) => {
     initialState = feature._getInitialState?.(initialState) ?? initialState
   })
   return initialState as TableState
@@ -66,19 +68,21 @@ export function _createTable<TData extends RowData>(
     console.info('Creating Table Instance...')
   }
 
-  const _features = [
+  const _features = {
     ...coreFeatures,
     ...builtInFeatures,
-    ...(options._features ?? []),
-  ]
+    ...(options._features ?? {}),
+  }
 
-  const table = { _features } as unknown as Table<TData>
+  const featuresList: Array<TableFeature> = Object.values(_features)
 
-  const defaultOptions = _features.reduce((obj, feature) => {
+  const table = {} as unknown as Table<TData>
+
+  const defaultOptions = featuresList.reduce((obj, feature) => {
     return Object.assign(obj, feature._getDefaultOptions?.(table))
   }, {}) as TableOptionsResolved<TData>
 
-  const initialState = getInitialTableState(options.initialState)
+  const initialState = getInitialTableState(featuresList, options.initialState)
 
   const coreInstance: Table_CoreProperties<TData> = {
     _features,
@@ -117,7 +121,7 @@ export function _createTable<TData extends RowData>(
     }
   }
 
-  for (const feature of table._features) {
+  for (const feature of featuresList) {
     feature._createTable?.(table)
   }
 

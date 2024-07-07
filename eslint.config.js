@@ -12,6 +12,7 @@ export default [
       'ts/no-empty-function': 'off',
       'no-case-declarations': 'off',
       'ts/naming-convention': 'off',
+      'ts/no-unnecessary-condition': 'warn',
     },
   },
 ]

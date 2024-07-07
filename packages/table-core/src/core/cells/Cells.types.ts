@@ -31,7 +31,7 @@ export interface Cell_CoreProperties<TData extends RowData, TValue> {
   row: Row<TData>
 }
 
-export interface Cell_Core<TData extends RowData, TValue extends CellData>
+export interface Cell_Cell<TData extends RowData, TValue extends CellData>
   extends Cell_CoreProperties<TData, TValue> {
   /**
    * Returns the rendering context (or props) for cell-based components like cells and aggregated cells. Use these props with your framework's `flexRender` utility to render these using the template of your choice:

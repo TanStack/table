@@ -6,7 +6,7 @@ import {
   table_getHeaderGroups,
   table_getLeafHeaders,
 } from './Headers.utils'
-import type { Header_Core } from './Headers.types'
+import type { Header_Header } from './Headers.types'
 import type { Header, RowData, Table, TableFeature } from '../../types'
 
 export const Headers: TableFeature = {
@@ -53,7 +53,7 @@ export const Headers: TableFeature = {
     header.getLeafHeaders = (): Array<Header<TData, unknown>> => {
       const leafHeaders: Array<Header<TData, unknown>> = []
 
-      const recurseHeader = (h: Header_Core<TData, any>) => {
+      const recurseHeader = (h: Header_Header<TData, any>) => {
         if (h.subHeaders.length) {
           h.subHeaders.map(recurseHeader)
         }

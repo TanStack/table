@@ -21,8 +21,8 @@ export const _createRow = <TData extends RowData>(
     subRows: subRows ?? [],
   }
 
-  for (const feature of table._features) {
-    feature._createRow?.(row as Row<TData>, table)
+  for (const feature of Object.values(table._features)) {
+    feature?._createRow?.(row as Row<TData>, table)
   }
 
   return row as Row<TData>
