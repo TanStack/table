@@ -1,19 +1,22 @@
 import { reSplitAlphaNumeric, sortingFns } from '../../fns/sortingFns'
 import { isFunction } from '../../utils'
+import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
+import { row_getValue } from '../../core/rows/Rows.utils'
+import { table_getGroupedRowModel } from '../column-grouping/ColumnGrouping.utils'
 import type { BuiltInSortingFn } from '../../fns/sortingFns'
-import type { Column, RowData, Table, Updater } from '../../types'
+import type { Column, RowData, RowModel, Table, Updater } from '../../types'
 import type { SortingState } from './RowSorting.types'
 
 export function column_getAutoSortingFn<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
 ) {
-  const firstRows = table.getFilteredRowModel().flatRows.slice(10)
+  const firstRows = table_getFilteredRowModel(table).flatRows.slice(10)
 
   let isString = false
 
   for (const row of firstRows) {
-    const value = row.getValue(column.id)
+    const value = row_getValue(row, table, column.id)
 
     if (Object.prototype.toString.call(value) === '[object Date]') {
       return sortingFns.datetime
@@ -39,9 +42,9 @@ export function column_getAutoSortDir<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
 ) {
-  const firstRow = table.getFilteredRowModel().flatRows[0]
+  const firstRow = table_getFilteredRowModel(table).flatRows[0]
 
-  const value = firstRow?.getValue(column.id)
+  const value = firstRow ? row_getValue(firstRow, table, column.id) : undefined
 
   if (typeof value === 'string') {
     return 'asc'
@@ -81,7 +84,7 @@ export function column_toggleSorting<TData extends RowData, TValue>(
   const nextSortingOrder = column.getNextSortingOrder()
   const hasManualValue = typeof desc !== 'undefined'
 
-  table.setSorting((old) => {
+  table_setSorting(table, (old) => {
     // Find any existing sorting for this column
     const existingSorting = old.find((d) => d.id === column.id)
     const existingIndex = old.findIndex((d) => d.id === column.id)
@@ -236,7 +239,7 @@ export function column_clearSorting<TData extends RowData, TValue>(
   table: Table<TData>,
 ) {
   //clear sorting for just 1 column
-  table.setSorting((old) =>
+  table_setSorting(table, (old) =>
     old.length ? old.filter((d) => d.id !== column.id) : [],
   )
 }
@@ -268,24 +271,24 @@ export function table_resetSorting<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setSorting(defaultState ? [] : table.initialState.sorting)
+  table_setSorting(table, defaultState ? [] : table.initialState.sorting)
 }
 
 export function table_getPreSortedRowModel<TData extends RowData>(
   table: Table<TData>,
-) {
-  return table.getGroupedRowModel()
+): RowModel<TData> {
+  return table_getGroupedRowModel(table)
 }
 
 export function table_getSortedRowModel<TData extends RowData>(
   table: Table<TData>,
-) {
+): RowModel<TData> {
   if (!table._getSortedRowModel && table.options.getSortedRowModel) {
     table._getSortedRowModel = table.options.getSortedRowModel(table)
   }
 
   if (table.options.manualSorting || !table._getSortedRowModel) {
-    return table.getPreSortedRowModel()
+    return table_getPreSortedRowModel(table)
   }
 
   return table._getSortedRowModel()

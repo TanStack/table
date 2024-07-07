@@ -1,3 +1,4 @@
+import { table_setColumnSizing } from '../column-sizing/ColumnSizing.utils'
 import type { Column, Header, RowData, Table, Updater } from '../../types'
 import type { ColumnSizingState } from '../column-sizing/ColumnSizing.types'
 import type { ColumnResizingInfoState } from './ColumnResizing.types'
@@ -35,11 +36,11 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
   table: Table<TData>,
   _contextDocument?: Document,
 ) {
-  const column = table.getColumn(header.column.id)
-  const canResize = column?.getCanResize()
+  const column = table.getColumn(header.column.id)!
+  const canResize = column_getCanResize(table, column)
 
   return (event: unknown) => {
-    if (!column || !canResize) {
+    if (!canResize) {
       return
     }
 
@@ -69,7 +70,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
         return
       }
 
-      table.setColumnSizingInfo((old) => {
+      table_setColumnSizingInfo(table, (old) => {
         const deltaDirection =
           table.options.columnResizeDirection === 'rtl' ? -1 : 1
         const deltaOffset =
@@ -97,7 +98,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
         table.options.columnResizeMode === 'onChange' ||
         eventType === 'end'
       ) {
-        table.setColumnSizing((old) => ({
+        table_setColumnSizing(table, (old) => ({
           ...old,
           ...newColumnSizing,
         }))
@@ -109,7 +110,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
     const onEnd = (clientXPos?: number) => {
       updateOffset('end', clientXPos)
 
-      table.setColumnSizingInfo((old) => ({
+      table_setColumnSizingInfo(table, (old) => ({
         ...old,
         isResizingColumn: false,
         startOffset: null,
@@ -186,7 +187,7 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
       )
     }
 
-    table.setColumnSizingInfo((old) => ({
+    table_setColumnSizingInfo(table, (old) => ({
       ...old,
       startOffset: clientX,
       startSize,
@@ -209,7 +210,8 @@ export function table_resetHeaderSizeInfo<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setColumnSizingInfo(
+  table_setColumnSizingInfo(
+    table,
     defaultState
       ? getDefaultColumnSizingInfoState()
       : table.initialState.columnSizingInfo,

@@ -16,7 +16,6 @@ import type {
 export const ColumnResizing: TableFeature = {
   _getInitialState: (state): TableState_ColumnResizing => {
     return {
-      columnSizing: {},
       columnSizingInfo: getDefaultColumnSizingInfoState(),
       ...state,
     }

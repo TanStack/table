@@ -40,7 +40,7 @@ export function column_resetSize<TData extends RowData, TValue>(
   table: Table<TData>,
   column: Column<TData, TValue>,
 ) {
-  table.setColumnSizing(({ [column.id]: _, ...rest }) => {
+  table_setColumnSizing(table, ({ [column.id]: _, ...rest }) => {
     return rest
   })
 }
@@ -87,7 +87,10 @@ export function table_resetColumnSizing<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setColumnSizing(defaultState ? {} : table.initialState.columnSizing)
+  table_setColumnSizing(
+    table,
+    defaultState ? {} : table.initialState.columnSizing,
+  )
 }
 
 export function table_getTotalSize<TData extends RowData>(table: Table<TData>) {

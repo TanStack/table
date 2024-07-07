@@ -16,7 +16,6 @@ import {
   table_resetPageIndex,
   table_resetPageSize,
   table_resetPagination,
-  table_setPageCount,
   table_setPageIndex,
   table_setPageSize,
   table_setPagination,
@@ -67,9 +66,6 @@ export const RowPagination: TableFeature = {
       table_resetPageSize(table, defaultState)
 
     table.setPageSize = (updater) => table_setPageSize(table, updater)
-
-    //deprecated
-    table.setPageCount = (updater) => table_setPageCount(table, updater)
 
     table.getPageOptions = memo(
       () => [table.getPageCount()],

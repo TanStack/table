@@ -28,7 +28,7 @@ export function table_getGlobalFilterFn<TData extends RowData>(
   return isFunction(globalFilterFn)
     ? globalFilterFn
     : globalFilterFn === 'auto'
-      ? table.getGlobalAutoFilterFn()
+      ? table_getGlobalAutoFilterFn()
       : table.options.filterFns?.[globalFilterFn as string] ??
         filterFns[globalFilterFn as BuiltInFilterFn]
 }
@@ -44,7 +44,8 @@ export function table_resetGlobalFilter<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setGlobalFilter(
+  table_setGlobalFilter(
+    table,
     defaultState ? undefined : table.initialState.globalFilter,
   )
 }

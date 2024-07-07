@@ -7,17 +7,17 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
-  GroupingState,
-  Updater,
-  injectTable,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
   getGroupedRowModel,
   getPaginationRowModel,
+  injectTable,
+  tableOptions,
 } from '@tanstack/angular-table'
 import { columns } from './columns'
 import { makeData } from './makeData'
+import type { GroupingState, Updater } from '@tanstack/angular-table'
 
 @Component({
   selector: 'app-root',
@@ -33,26 +33,28 @@ export class AppComponent {
 
   stringifiedGrouping = computed(() => JSON.stringify(this.grouping(), null, 2))
 
-  tableOptions = computed(() => ({
-    data: this.data(),
-    columns: columns,
-    state: {
-      grouping: this.grouping(),
-    },
-    onGroupingChange: (updaterOrValue: Updater<GroupingState>) => {
-      const groupingState =
-        typeof updaterOrValue === 'function'
-          ? updaterOrValue([...this.grouping()])
-          : updaterOrValue
-      this.grouping.set(groupingState)
-    },
-    getExpandedRowModel: getExpandedRowModel(),
-    getGroupedRowModel: getGroupedRowModel(),
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    debugTable: true,
-  }))
+  tableOptions = computed(() =>
+    tableOptions({
+      data: this.data(),
+      columns: columns,
+      state: {
+        grouping: this.grouping(),
+      },
+      onGroupingChange: (updaterOrValue: Updater<GroupingState>) => {
+        const groupingState =
+          typeof updaterOrValue === 'function'
+            ? updaterOrValue([...this.grouping()])
+            : updaterOrValue
+        this.grouping.set(groupingState)
+      },
+      getExpandedRowModel: getExpandedRowModel(),
+      getGroupedRowModel: getGroupedRowModel(),
+      getCoreRowModel: getCoreRowModel(),
+      getPaginationRowModel: getPaginationRowModel(),
+      getFilteredRowModel: getFilteredRowModel(),
+      debugTable: true,
+    }),
+  )
 
   table = injectTable(this.tableOptions)
 

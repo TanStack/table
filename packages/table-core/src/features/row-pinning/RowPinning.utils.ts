@@ -131,12 +131,18 @@ export function row_getIsPinned<TData extends RowData>(
 export function row_getPinnedIndex<TData extends RowData>(
   row: Row<TData>,
   table: Table<TData>,
+  allRows: Array<Row<TData>> = table.getRowModel().rows,
+  rowPinning = table.getState().rowPinning,
 ): number {
   const position = row_getIsPinned(row, table)
   if (!position) return -1
 
+  const { bottom, top } = rowPinning
+
   const visiblePinnedRowIds = (
-    position === 'top' ? table.getTopRows() : table.getBottomRows()
+    position === 'top'
+      ? table_getTopRows(table, allRows, top)
+      : table_getBottomRows(table, allRows, bottom)
   ).map(({ id }) => id)
 
   return visiblePinnedRowIds.indexOf(row.id)

@@ -1,26 +1,29 @@
-import React, { HTMLProps } from 'react'
+import React, { type HTMLProps } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
 import {
-  Column,
-  Table,
-  ExpandedState,
-  useTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getFilteredRowModel,
-  getExpandedRowModel,
-  ColumnDef,
   flexRender,
+  getCoreRowModel,
+  getExpandedRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useTable,
 } from '@tanstack/react-table'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type {
+  Column,
+  ColumnDef,
+  ExpandedState,
+  Table,
+} from '@tanstack/react-table'
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -274,11 +277,11 @@ function Filter({
     <div className="flex space-x-2">
       <input
         type="number"
-        value={(columnFilterValue as [number, number])?.[0] ?? ''}
+        value={(columnFilterValue as [number, number])[0]}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.target.value,
-            old?.[1],
+            old[1],
           ])
         }
         placeholder={`Min`}
@@ -286,10 +289,10 @@ function Filter({
       />
       <input
         type="number"
-        value={(columnFilterValue as [number, number])?.[1] ?? ''}
+        value={(columnFilterValue as [number, number])[1]}
         onChange={(e) =>
           column.setFilterValue((old: [number, number]) => [
-            old?.[0],
+            old[0],
             e.target.value,
           ])
         }

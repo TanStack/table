@@ -1,14 +1,23 @@
 import { aggregationFns } from '../../fns/aggregationFns'
 import { isFunction } from '../../utils'
+import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
-import type { Cell, Column, Row, RowData, Table, Updater } from '../../types'
+import type {
+  Cell,
+  Column,
+  Row,
+  RowData,
+  RowModel,
+  Table,
+  Updater,
+} from '../../types'
 import type { GroupingState } from './ColumnGrouping.types'
 
 export function column_toggleGrouping<TData extends RowData, TValue>(
   column: Column<TData, TValue>,
   table: Table<TData>,
 ) {
-  table.setGrouping((old) => {
+  table_setGrouping(table, (old) => {
     // Find any existing grouping for this column
     if (old.includes(column.id)) {
       return old.filter((d) => d !== column.id)
@@ -96,24 +105,24 @@ export function table_resetGrouping<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setGrouping(defaultState ? [] : table.initialState.grouping)
+  table_setGrouping(table, defaultState ? [] : table.initialState.grouping)
 }
 
 export function table_getPreGroupedRowModel<TData extends RowData>(
   table: Table<TData>,
-) {
-  return table.getFilteredRowModel()
+): RowModel<TData> {
+  return table_getFilteredRowModel(table)
 }
 
 export function table_getGroupedRowModel<TData extends RowData>(
   table: Table<TData>,
-) {
+): RowModel<TData> {
   if (!table._getGroupedRowModel && table.options.getGroupedRowModel) {
     table._getGroupedRowModel = table.options.getGroupedRowModel(table)
   }
 
   if (table.options.manualGrouping || !table._getGroupedRowModel) {
-    return table.getPreGroupedRowModel()
+    return table_getPreGroupedRowModel(table)
   }
 
   return table._getGroupedRowModel()

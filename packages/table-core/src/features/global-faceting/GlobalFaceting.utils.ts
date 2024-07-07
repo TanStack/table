@@ -1,3 +1,4 @@
+import { table_getPreFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import type { RowData, RowModel, Table } from '../../types'
 
 export function table_getGlobalFacetedMinMaxValues<TData extends RowData>(
@@ -14,7 +15,7 @@ export function table_getGlobalFacetedRowModel<TData extends RowData>(
 ): () => RowModel<TData> {
   return (
     table.options.getFacetedRowModel?.(table, '__global__') ??
-    (() => table.getPreFilteredRowModel())
+    (() => table_getPreFilteredRowModel(table))
   )
 }
 

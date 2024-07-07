@@ -1,3 +1,4 @@
+import { table_getPreFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import type { CellData, Column, RowData, RowModel, Table } from '../../types'
 import type { TableOptions_ColumnFaceting } from './ColumnFaceting.types'
 
@@ -27,7 +28,7 @@ export function column_getFacetedRowModel<
 ): () => RowModel<TData> {
   return (
     table.options.getFacetedRowModel?.(table, column.id) ??
-    (() => table.getPreFilteredRowModel()) // TODO - reference static function
+    (() => table_getPreFilteredRowModel(table))
   )
 }
 

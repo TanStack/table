@@ -1,14 +1,15 @@
 import { filterFns } from '../../fns/filterFns'
 import { functionalUpdate, isFunction } from '../../utils'
+import { table_getCoreRowModel } from '../../core/row-models/RowModels.utils'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
-import type { Column, RowData, Table, Updater } from '../../types'
+import type { Column, RowData, RowModel, Table, Updater } from '../../types'
 import type { ColumnFiltersState, FilterFn } from './ColumnFiltering.types'
 
 export function column_getAutoFilterFn<TData extends RowData>(
   column: Column<TData, unknown>,
   table: Table<TData>,
 ) {
-  const firstRow = table.getCoreRowModel().flatRows[0]
+  const firstRow = table_getCoreRowModel(table).flatRows[0]
 
   const value = firstRow?.getValue(column.id)
 
@@ -84,7 +85,7 @@ export function column_setFilterValue<TData extends RowData>(
   table: Table<TData>,
   value: any,
 ) {
-  table.setColumnFilters((old) => {
+  table_setColumnFilters(table, (old) => {
     const filterFn = column.getFilterFn()
     const previousFilter = old.find((d) => d.id === column.id)
 
@@ -147,24 +148,27 @@ export function table_resetColumnFilters<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setColumnFilters(defaultState ? [] : table.initialState.columnFilters)
+  table_setColumnFilters(
+    table,
+    defaultState ? [] : table.initialState.columnFilters,
+  )
 }
 
 export function table_getPreFilteredRowModel<TData extends RowData>(
   table: Table<TData>,
 ) {
-  return table.getCoreRowModel()
+  return table_getCoreRowModel(table)
 }
 
 export function table_getFilteredRowModel<TData extends RowData>(
   table: Table<TData>,
-) {
+): RowModel<TData> {
   if (!table._getFilteredRowModel && table.options.getFilteredRowModel) {
     table._getFilteredRowModel = table.options.getFilteredRowModel(table)
   }
 
   if (table.options.manualFiltering || !table._getFilteredRowModel) {
-    return table.getPreFilteredRowModel()
+    return table_getPreFilteredRowModel(table)
   }
 
   return table._getFilteredRowModel()

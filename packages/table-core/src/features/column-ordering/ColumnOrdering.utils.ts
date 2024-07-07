@@ -43,7 +43,10 @@ export function table_resetColumnOrder<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setColumnOrder(defaultState ? [] : table.initialState.columnOrder)
+  table_setColumnOrder(
+    table,
+    defaultState ? [] : table.initialState.columnOrder,
+  )
 }
 
 export function table_getOrderColumnsFn<TData extends RowData>(

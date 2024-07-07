@@ -199,6 +199,7 @@ export const RowSelection: TableFeature = {
 
     row.getCanMultiSelect = () => row_getCanMultiSelect(row, table)
 
-    row.getToggleSelectedHandler = () => row_getToggleSelectedHandler(row)
+    row.getToggleSelectedHandler = () =>
+      row_getToggleSelectedHandler(row, table)
   },
 }

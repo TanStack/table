@@ -1,5 +1,6 @@
 import { flattenBy } from '../../utils'
 import { _createCell } from '../cells/_createCell'
+import { table_getColumn } from '../columns/Columns.utils'
 import type { Cell, Column, Row, RowData, Table } from '../../types'
 
 export function row_getValue<TData extends RowData>(
@@ -11,7 +12,7 @@ export function row_getValue<TData extends RowData>(
     return row._valuesCache[columnId]
   }
 
-  const column = table.getColumn(columnId)
+  const column = table_getColumn(table, columnId)
 
   if (!column?.accessorFn) {
     return undefined
@@ -31,7 +32,7 @@ export function row_getUniqueValues<TData extends RowData>(
     return row._uniqueValuesCache[columnId]
   }
 
-  const column = table.getColumn(columnId)
+  const column = table_getColumn(table, columnId)
 
   if (!column?.accessorFn) {
     return undefined

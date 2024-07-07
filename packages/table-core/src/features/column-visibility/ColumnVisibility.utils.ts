@@ -10,7 +10,7 @@ export function column_toggleVisibility<TData extends RowData, TValue>(
   value?: boolean,
 ): void {
   if (column.getCanHide()) {
-    table.setColumnVisibility((old) => ({
+    table_setColumnVisibility(table, (old) => ({
       ...old,
       [column.id]: value ?? !column.getIsVisible(),
     }))
@@ -108,7 +108,8 @@ export function table_resetColumnVisibility<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setColumnVisibility(
+  table_setColumnVisibility(
+    table,
     defaultState ? {} : table.initialState.columnVisibility,
   )
 }
@@ -117,9 +118,10 @@ export function table_toggleAllColumnsVisible<TData extends RowData>(
   table: Table<TData>,
   value?: boolean,
 ) {
-  value = value ?? !table.getIsAllColumnsVisible()
+  value = value ?? !table_getIsAllColumnsVisible(table)
 
-  table.setColumnVisibility(
+  table_setColumnVisibility(
+    table,
     table.getAllLeafColumns().reduce(
       (obj, column) => ({
         ...obj,
@@ -146,7 +148,8 @@ export function table_getToggleAllColumnsVisibilityHandler<
   TData extends RowData,
 >(table: Table<TData>) {
   return (e: unknown) => {
-    table.toggleAllColumnsVisible(
+    table_toggleAllColumnsVisible(
+      table,
       ((e as MouseEvent).target as HTMLInputElement).checked,
     )
   }

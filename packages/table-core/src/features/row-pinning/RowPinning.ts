@@ -41,7 +41,12 @@ export const RowPinning: TableFeature = {
 
     row.getIsPinned = () => row_getIsPinned(row, table)
 
-    row.getPinnedIndex = () => row_getPinnedIndex(row, table)
+    row.getPinnedIndex = memo(
+      () => [table.getRowModel().rows, table.getState().rowPinning],
+      (allRows, rowPinning) =>
+        row_getPinnedIndex(row, table, allRows, rowPinning),
+      getMemoOptions(table.options, 'debugRows', 'getPinnedIndex'),
+    )
 
     row.pin = (position, includeLeafRows, includeParentRows) =>
       row_pin(row, table, position, includeLeafRows, includeParentRows)

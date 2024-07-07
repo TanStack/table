@@ -142,10 +142,6 @@ export interface Table_RowPagination<TData extends RowData> {
    */
   resetPagination: (defaultState?: boolean) => void
   /**
-   * @deprecated The page count no longer exists in the pagination state. Just pass as a table option instead.
-   */
-  setPageCount: (updater: Updater<number>) => void
-  /**
    * Updates the page index using the provided function or value in the `state.pagination.pageIndex` state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#setpageindex)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)

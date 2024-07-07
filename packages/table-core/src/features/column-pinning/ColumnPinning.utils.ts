@@ -14,7 +14,7 @@ export function column_pin<TData extends RowData, TValue>(
     .map((d) => d.id)
     .filter(Boolean)
 
-  table.setColumnPinning((old) => {
+  table_setColumnPinning(table, (old) => {
     if (position === 'right') {
       return {
         left: (old.left ?? []).filter((d) => !columnIds.includes(d)),
@@ -128,7 +128,8 @@ export function table_resetColumnPinning<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setColumnPinning(
+  table_setColumnPinning(
+    table,
     defaultState
       ? getDefaultColumnPinningState()
       : table.initialState.columnPinning,

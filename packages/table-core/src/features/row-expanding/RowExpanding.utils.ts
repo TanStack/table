@@ -1,4 +1,6 @@
-import type { Row, RowData, Table, Updater } from '../../types'
+import { table_getPrePaginationRowModel } from '../row-pagination/RowPagination.utils'
+import { table_getSortedRowModel } from '../row-sorting/RowSorting.utils'
+import type { Row, RowData, RowModel, Table, Updater } from '../../types'
 import type { ExpandedState, ExpandedStateList } from './RowExpanding.types'
 
 export function table_autoResetExpanded<TData extends RowData>(
@@ -21,7 +23,7 @@ export function table_autoResetExpanded<TData extends RowData>(
     if (queued) return
     queued = true
     table._queue(() => {
-      table.resetExpanded()
+      table_resetExpanded(table)
       queued = false
     })
   }
@@ -38,10 +40,10 @@ export function table_toggleAllRowsExpanded<TData extends RowData>(
   table: Table<TData>,
   expanded?: boolean,
 ) {
-  if (expanded ?? !table.getIsAllRowsExpanded()) {
-    table.setExpanded(true)
+  if (expanded ?? !table_getIsAllRowsExpanded(table)) {
+    table_setExpanded(table, true)
   } else {
-    table.setExpanded({})
+    table_setExpanded(table, {})
   }
 }
 
@@ -49,15 +51,15 @@ export function table_resetExpanded<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setExpanded(defaultState ? {} : table.initialState.expanded)
+  table_setExpanded(table, defaultState ? {} : table.initialState.expanded)
 }
 
 export function table_getCanSomeRowsExpand<TData extends RowData>(
   table: Table<TData>,
 ) {
-  return table
-    .getPrePaginationRowModel()
-    .flatRows.some((row) => row.getCanExpand())
+  return table_getPrePaginationRowModel(table).flatRows.some((row) =>
+    row.getCanExpand(),
+  )
 }
 
 export function table_getToggleAllRowsExpandedHandler<TData extends RowData>(
@@ -65,7 +67,7 @@ export function table_getToggleAllRowsExpandedHandler<TData extends RowData>(
 ) {
   return (e: unknown) => {
     ;(e as any).persist?.()
-    table.toggleAllRowsExpanded()
+    table_toggleAllRowsExpanded(table)
   }
 }
 
@@ -119,19 +121,19 @@ export function table_getExpandedDepth<TData extends RowData>(
 
 export function table_getPreExpandedRowModel<TData extends RowData>(
   table: Table<TData>,
-) {
-  return table.getSortedRowModel()
+): RowModel<TData> {
+  return table_getSortedRowModel(table)
 }
 
 export function table_getExpandedRowModel<TData extends RowData>(
   table: Table<TData>,
-) {
+): RowModel<TData> {
   if (!table._getExpandedRowModel && table.options.getExpandedRowModel) {
     table._getExpandedRowModel = table.options.getExpandedRowModel(table)
   }
 
   if (table.options.manualExpanding || !table._getExpandedRowModel) {
-    return table.getPreExpandedRowModel()
+    return table_getPreExpandedRowModel(table)
   }
 
   return table._getExpandedRowModel()
@@ -142,7 +144,7 @@ export function row_toggleExpanded<TData extends RowData>(
   table: Table<TData>,
   expanded?: boolean,
 ) {
-  table.setExpanded((old) => {
+  table_setExpanded(table, (old) => {
     const exists = old === true ? true : !!old[row.id]
 
     let oldExpanded: ExpandedStateList = {}

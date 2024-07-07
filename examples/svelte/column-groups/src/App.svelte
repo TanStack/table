@@ -4,6 +4,7 @@
     createTable,
     FlexRender,
     getCoreRowModel,
+    tableOptions,
   } from '@tanstack/svelte-table'
   import './index.css'
 
@@ -95,11 +96,11 @@
     },
   ]
 
-  const options = {
+  const options = tableOptions({
     data: defaultData,
     columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
-  }
+  })
 
   const table = createTable(options)
 </script>

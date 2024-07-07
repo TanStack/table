@@ -1,3 +1,6 @@
+import { table_getPreGroupedRowModel } from '../column-grouping/ColumnGrouping.utils'
+import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
+import { table_getPaginationRowModel } from '../row-pagination/RowPagination.utils'
 import type { Row, RowData, RowModel, Table, Updater } from '../../types'
 import type { RowSelectionState } from './RowSelection.types'
 
@@ -12,7 +15,10 @@ export function table_resetRowSelection<TData extends RowData>(
   table: Table<TData>,
   defaultState?: boolean,
 ) {
-  table.setRowSelection(defaultState ? {} : table.initialState.rowSelection)
+  table_setRowSelection(
+    table,
+    defaultState ? {} : table.initialState.rowSelection,
+  )
 }
 
 export function table_toggleAllRowsSelected<TData extends RowData>(
@@ -25,7 +31,7 @@ export function table_toggleAllRowsSelected<TData extends RowData>(
 
     const rowSelection = { ...old }
 
-    const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
+    const preGroupedFlatRows = table_getPreGroupedRowModel(table).flatRows
 
     // We don't use `mutateRowIsSelected` here for performance reasons.
     // All of the rows are flat already, so it wouldn't be worth it
@@ -50,9 +56,11 @@ export function table_toggleAllPageRowsSelected<TData extends RowData>(
   table: Table<TData>,
   value?: boolean,
 ) {
-  table.setRowSelection((old) => {
+  table_setRowSelection(table, (old) => {
     const resolvedValue =
-      typeof value !== 'undefined' ? value : !table.getIsAllPageRowsSelected()
+      typeof value !== 'undefined'
+        ? value
+        : !table_getIsAllPageRowsSelected(table)
 
     const rowSelection: RowSelectionState = { ...old }
 
@@ -121,7 +129,7 @@ export function table_getGroupedSelectedRowModel<TData extends RowData>(
 export function table_getIsAllRowsSelected<TData extends RowData>(
   table: Table<TData>,
 ) {
-  const preGroupedFlatRows = table.getFilteredRowModel().flatRows
+  const preGroupedFlatRows = table_getFilteredRowModel(table).flatRows
   const { rowSelection } = table.getState()
 
   let isAllRowsSelected = Boolean(
@@ -144,9 +152,9 @@ export function table_getIsAllRowsSelected<TData extends RowData>(
 export function table_getIsAllPageRowsSelected<TData extends RowData>(
   table: Table<TData>,
 ) {
-  const paginationFlatRows = table
-    .getPaginationRowModel()
-    .flatRows.filter((row) => row.getCanSelect())
+  const paginationFlatRows = table_getPaginationRowModel(table).flatRows.filter(
+    (row) => row.getCanSelect(),
+  )
   const { rowSelection } = table.getState()
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
@@ -167,15 +175,15 @@ export function table_getIsSomeRowsSelected<TData extends RowData>(
   const totalSelected = Object.keys(table.getState().rowSelection).length
   return (
     totalSelected > 0 &&
-    totalSelected < table.getFilteredRowModel().flatRows.length
+    totalSelected < table_getFilteredRowModel(table).flatRows.length
   )
 }
 
 export function table_getIsSomePageRowsSelected<TData extends RowData>(
   table: Table<TData>,
 ) {
-  const paginationFlatRows = table.getPaginationRowModel().flatRows
-  return table.getIsAllPageRowsSelected()
+  const paginationFlatRows = table_getPaginationRowModel(table).flatRows
+  return table_getIsAllPageRowsSelected(table)
     ? false
     : paginationFlatRows
         .filter((row) => row.getCanSelect())
@@ -186,7 +194,8 @@ export function table_getToggleAllRowsSelectedHandler<TData extends RowData>(
   table: Table<TData>,
 ) {
   return (e: unknown) => {
-    table.toggleAllRowsSelected(
+    table_toggleAllRowsSelected(
+      table,
       ((e as MouseEvent).target as HTMLInputElement).checked,
     )
   }
@@ -196,7 +205,8 @@ export function table_getToggleAllPageRowsSelectedHandler<
   TData extends RowData,
 >(table: Table<TData>) {
   return (e: unknown) => {
-    table.toggleAllPageRowsSelected(
+    table_toggleAllPageRowsSelected(
+      table,
       ((e as MouseEvent).target as HTMLInputElement).checked,
     )
   }
@@ -210,7 +220,7 @@ export function row_toggleSelected<TData extends RowData>(
     selectChildren?: boolean
   },
 ) {
-  const isSelected = row.getIsSelected()
+  const isSelected = row_getIsSelected(row, table)
 
   table_setRowSelection(table, (old) => {
     value = typeof value !== 'undefined' ? value : !isSelected
@@ -292,12 +302,17 @@ export function row_getCanMultiSelect<TData extends RowData>(
 
 export function row_getToggleSelectedHandler<TData extends RowData>(
   row: Row<TData>,
+  table: Table<TData>,
 ) {
   const canSelect = row.getCanSelect()
 
   return (e: unknown) => {
     if (!canSelect) return
-    row.toggleSelected(((e as MouseEvent).target as HTMLInputElement).checked)
+    row_toggleSelected(
+      row,
+      table,
+      ((e as MouseEvent).target as HTMLInputElement).checked,
+    )
   }
 }
 
