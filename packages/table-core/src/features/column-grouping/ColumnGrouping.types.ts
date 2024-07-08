@@ -7,7 +7,6 @@ import type {
   Row,
   RowData,
   RowModel,
-  Table,
   Updater,
 } from '../../types'
 
@@ -167,12 +166,6 @@ interface GroupingOptionsBase {
    */
   enableGrouping?: boolean
   /**
-   * Returns the row model after grouping has taken place, but no further.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getgroupedrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
-   */
-  getGroupedRowModel?: (table: Table<any>) => () => RowModel<any>
-  /**
    * Grouping columns are automatically reordered by default to the start of the columns list. If you would rather remove them or leave them as-is, set the appropriate mode here.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#groupedcolumnmode)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
@@ -207,7 +200,6 @@ export interface TableOptions_ColumnGrouping
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export interface Table_ColumnGrouping<TData extends RowData> {
-  _getGroupedRowModel?: () => RowModel<TData>
   /**
    * Returns the row model for the table after grouping has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getgroupedrowmodel)

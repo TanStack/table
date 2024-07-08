@@ -134,15 +134,15 @@ export function table_getPreExpandedRowModel<TData extends RowData>(
 export function table_getExpandedRowModel<TData extends RowData>(
   table: Table<TData>,
 ): RowModel<TData> {
-  if (!table._getExpandedRowModel && table.options.getExpandedRowModel) {
-    table._getExpandedRowModel = table.options.getExpandedRowModel(table)
+  if (!table._rowModels.Expanded) {
+    table._rowModels.Expanded = table.options._rowModels?.Expanded?.(table)
   }
 
-  if (table.options.manualExpanding || !table._getExpandedRowModel) {
+  if (table.options.manualExpanding || !table._rowModels.Expanded) {
     return table_getPreExpandedRowModel(table)
   }
 
-  return table._getExpandedRowModel()
+  return table._rowModels.Expanded()
 }
 
 export function row_toggleExpanded<TData extends RowData>(

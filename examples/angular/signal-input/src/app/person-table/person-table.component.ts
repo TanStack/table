@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core'
 import {
   FlexRenderDirective,
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getGroupedRowModel,
-  getPaginationRowModel,
+  createCoreRowModel,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createGroupedRowModel,
+  createPaginatedRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import type { ColumnDef, PaginationState } from '@tanstack/angular-table'
@@ -49,11 +49,11 @@ export class PersonTableComponent {
           ? this.pagination.update(updaterOrValue)
           : this.pagination.set(updaterOrValue)
       },
-      getExpandedRowModel: getExpandedRowModel(),
-      getGroupedRowModel: getGroupedRowModel(),
-      getCoreRowModel: getCoreRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
+      getExpandedRowModel: createExpandedRowModel(),
+      getGroupedRowModel: createGroupedRowModel(),
+      getCoreRowModel: createCoreRowModel(),
+      getPaginatedRowModel: createPaginatedRowModel(),
+      getFilteredRowModel: createFilteredRowModel(),
       debugTable: true,
     }
   })

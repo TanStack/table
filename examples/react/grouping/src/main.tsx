@@ -9,7 +9,7 @@ import {
   getExpandedRowModel,
   getFilteredRowModel,
   getGroupedRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -94,11 +94,11 @@ function App() {
       grouping,
     },
     onGroupingChange: setGrouping,
-    getExpandedRowModel: getExpandedRowModel(),
-    getGroupedRowModel: getGroupedRowModel(),
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: createExpandedRowModel(),
+    getGroupedRowModel: createGroupedRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
+    getFilteredRowModel: createFilteredRowModel(),
     debugTable: true,
   })
 

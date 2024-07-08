@@ -53,8 +53,8 @@ No `getFilteredRowModel` table option is needed for manual server-side filtering
 const table = useTable({
   data,
   columns,
-  getCoreRowModel: getCoreRowModel(),
-  // getFilteredRowModel: getFilteredRowModel(), // not needed for manual server-side filtering
+  getCoreRowModel: createCoreRowModel(),
+  // getFilteredRowModel: createFilteredRowModel(), // not needed for manual server-side filtering
   manualFiltering: true,
 })
 ```
@@ -71,8 +71,8 @@ import { useTable, getFilteredRowModel } from '@tanstack/react-table'
 const table = useTable({
   data,
   columns,
-  getCoreRowModel: getCoreRowModel(),
-  getFilteredRowModel: getFilteredRowModel(), // needed for client-side filtering
+  getCoreRowModel: createCoreRowModel(),
+  getFilteredRowModel: createFilteredRowModel(), // needed for client-side filtering
 })
 ```
 
@@ -215,8 +215,8 @@ const columns = [
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getFilteredRowModel: getFilteredRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getFilteredRowModel: createFilteredRowModel(),
   filterFns: { // add a custom global filter function
     myCustomFilterFn: (row, columnId, filterValue) => { // defined inline here
       return // true or false based on your custom logic
@@ -295,9 +295,9 @@ However, if you want to allow sub-rows to be filtered and searched through, rega
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getFilteredRowModel: getFilteredRowModel(),
-  getExpandedRowModel: getExpandedRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getFilteredRowModel: createFilteredRowModel(),
+  getExpandedRowModel: createExpandedRowModel(),
   filterFromLeafRows: true, // filter and search through sub-rows
 })
 ```
@@ -312,9 +312,9 @@ Use `maxLeafRowFilterDepth: 0` if you want to preserve a parent row's sub-rows f
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getFilteredRowModel: getFilteredRowModel(),
-  getExpandedRowModel: getExpandedRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getFilteredRowModel: createFilteredRowModel(),
+  getExpandedRowModel: createExpandedRowModel(),
   maxLeafRowFilterDepth: 0, // only filter root level parent rows out
 })
 ```

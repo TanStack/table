@@ -90,8 +90,8 @@ class MyComponent extends LitElement {
           this._sorting = updaterOrValue
         }
       },
-      getSortedRowModel: getSortedRowModel(),
-      getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: createSortedRowModel(),
+      getCoreRowModel: createCoreRowModel(),
     })
 
     return html`...`
@@ -117,8 +117,8 @@ render() {
   const table = this.tableController.table({
     columns,
     data,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel()
+    getCoreRowModel: createCoreRowModel(),
+    getSortedRowModel: createSortedRowModel()
   })
   const state = { ...table.initialState, ...this._tableState };
   table.setOptions(prev => ({
@@ -160,8 +160,8 @@ render() {
         this._sorting = updaterOrValue
       }
     },
-    getSortedRowModel: getSortedRowModel(),
-    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: createSortedRowModel(),
+    getCoreRowModel: createCoreRowModel(),
   })
 
   return html`...`;

@@ -37,8 +37,8 @@ describe('#getGroupedRowModel', () => {
       data,
       state: { grouping },
       columns,
-      getCoreRowModel: getCoreRowModel(),
-      getGroupedRowModel: getGroupedRowModel(),
+      getCoreRowModel: createCoreRowModel(),
+      getGroupedRowModel: createGroupedRowModel(),
     })
     const groupedById = table.getGroupedRowModel().rowsById
     const end = new Date()

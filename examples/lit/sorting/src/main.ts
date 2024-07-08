@@ -90,8 +90,8 @@ class LitTableExample extends LitElement {
           this._sorting = updaterOrValue
         }
       },
-      getSortedRowModel: getSortedRowModel(),
-      getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: createSortedRowModel(),
+      getCoreRowModel: createCoreRowModel(),
     })
 
     return html`

@@ -117,7 +117,7 @@ function App() {
     columns,
     columnResizeMode,
     columnResizeDirection,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

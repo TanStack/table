@@ -79,7 +79,7 @@ function App() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

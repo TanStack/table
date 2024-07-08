@@ -7,7 +7,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
@@ -100,10 +100,10 @@ function MyTable({
     columns,
     data,
     debugTable: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getSortedRowModel: createSortedRowModel(),
+    getFilteredRowModel: createFilteredRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
     onPaginationChange: setPagination,
     //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
     state: {

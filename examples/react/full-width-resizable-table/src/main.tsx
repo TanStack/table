@@ -67,7 +67,7 @@ function App() {
     columns,
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

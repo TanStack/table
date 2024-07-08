@@ -89,7 +89,7 @@ const table = useTable({
         ? updaterOrValue(columnOrder.value)
         : updaterOrValue
   },
-  getCoreRowModel: getCoreRowModel(),
+  getCoreRowModel: createCoreRowModel(),
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,

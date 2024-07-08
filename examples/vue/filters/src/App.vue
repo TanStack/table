@@ -124,9 +124,9 @@ const table = useTable({
         ? updaterOrValue(globalFilter.value)
         : updaterOrValue
   },
-  getCoreRowModel: getCoreRowModel(),
-  getFilteredRowModel: getFilteredRowModel(),
-  getFacetedRowModel: getFacetedRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getFilteredRowModel: createFilteredRowModel(),
+  getFacetedRowModel: createFacetedRowModel(),
   getFacetedUniqueValues: getFacetedUniqueValues(),
   getFacetedMinMaxValues: getFacetedMinMaxValues(),
 })

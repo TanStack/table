@@ -1,6 +1,6 @@
 import { table_getPreGroupedRowModel } from '../column-grouping/ColumnGrouping.utils'
 import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
-import { table_getPaginationRowModel } from '../row-pagination/RowPagination.utils'
+import { table_getPaginatedRowModel } from '../row-pagination/RowPagination.utils'
 import {
   table_getCoreRowModel,
   table_getRowModel,
@@ -157,7 +157,7 @@ export function table_getIsAllRowsSelected<TData extends RowData>(
 export function table_getIsAllPageRowsSelected<TData extends RowData>(
   table: Table<TData>,
 ) {
-  const paginationFlatRows = table_getPaginationRowModel(table).flatRows.filter(
+  const paginationFlatRows = table_getPaginatedRowModel(table).flatRows.filter(
     (row) => row_getCanSelect(row, table),
   )
   const { rowSelection } = table.getState()
@@ -187,7 +187,7 @@ export function table_getIsSomeRowsSelected<TData extends RowData>(
 export function table_getIsSomePageRowsSelected<TData extends RowData>(
   table: Table<TData>,
 ) {
-  const paginationFlatRows = table_getPaginationRowModel(table).flatRows
+  const paginationFlatRows = table_getPaginatedRowModel(table).flatRows
   return table_getIsAllPageRowsSelected(table)
     ? false
     : paginationFlatRows

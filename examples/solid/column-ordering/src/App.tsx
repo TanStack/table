@@ -83,7 +83,7 @@ function App() {
     },
     onColumnOrderChange: setColumnOrder,
     onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
   })
 
   const randomizeColumns = () => {

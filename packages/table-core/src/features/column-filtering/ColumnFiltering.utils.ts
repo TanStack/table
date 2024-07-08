@@ -164,15 +164,15 @@ export function table_getPreFilteredRowModel<TData extends RowData>(
 export function table_getFilteredRowModel<TData extends RowData>(
   table: Table<TData>,
 ): RowModel<TData> {
-  if (!table._getFilteredRowModel && table.options.getFilteredRowModel) {
-    table._getFilteredRowModel = table.options.getFilteredRowModel(table)
+  if (!table._rowModels.Filtered) {
+    table._rowModels.Filtered = table.options._rowModels?.Filtered?.(table)
   }
 
-  if (table.options.manualFiltering || !table._getFilteredRowModel) {
+  if (table.options.manualFiltering || !table._rowModels.Filtered) {
     return table_getPreFilteredRowModel(table)
   }
 
-  return table._getFilteredRowModel()
+  return table._rowModels.Filtered()
 }
 
 export function shouldAutoRemoveFilter<TData extends RowData>(

@@ -136,8 +136,8 @@ function App() {
     state: {
       sorting,
     },
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getSortedRowModel: createSortedRowModel(),
     manualSorting: true,
     debugTable: true,
   })

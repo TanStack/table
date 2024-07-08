@@ -1,4 +1,4 @@
-import { table_getPaginationRowModel } from '../../features/row-pagination/RowPagination.utils'
+import { table_getPaginatedRowModel } from '../../features/row-pagination/RowPagination.utils'
 import { functionalUpdate } from '../../utils'
 import type {
   RowData,

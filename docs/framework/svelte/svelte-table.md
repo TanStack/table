@@ -66,7 +66,7 @@ Example:
   const table = createTable({
     data: peopleData,
     columns,
-    getCoreRowModel: getCoreRowModel()
+    getCoreRowModel: createCoreRowModel()
   })
 </script>
 

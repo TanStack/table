@@ -6,7 +6,7 @@ import { column_getFilterFn } from './ColumnFiltering.utils'
 import type { Row, RowData, RowModel, Table } from '../../types'
 import type { ResolvedColumnFilter } from './ColumnFiltering.types'
 
-export function getFilteredRowModel<TData extends RowData>(): (
+export function createFilteredRowModel<TData extends RowData>(): (
   table: Table<TData>,
 ) => () => RowModel<TData> {
   return (table) =>

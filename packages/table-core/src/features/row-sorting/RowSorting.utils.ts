@@ -287,13 +287,13 @@ export function table_getPreSortedRowModel<TData extends RowData>(
 export function table_getSortedRowModel<TData extends RowData>(
   table: Table<TData>,
 ): RowModel<TData> {
-  if (!table._getSortedRowModel && table.options.getSortedRowModel) {
-    table._getSortedRowModel = table.options.getSortedRowModel(table)
+  if (!table._rowModels.Sorted) {
+    table._rowModels.Sorted = table.options._rowModels?.Sorted?.(table)
   }
 
-  if (table.options.manualSorting || !table._getSortedRowModel) {
+  if (table.options.manualSorting || !table._rowModels.Sorted) {
     return table_getPreSortedRowModel(table)
   }
 
-  return table._getSortedRowModel()
+  return table._rowModels.Sorted()
 }

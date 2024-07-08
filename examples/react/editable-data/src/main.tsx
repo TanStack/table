@@ -9,7 +9,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -130,9 +130,9 @@ function App() {
     data,
     columns,
     defaultColumn,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getFilteredRowModel: createFilteredRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
     autoResetPageIndex,
     // Provide our updateData function to our table meta
     meta: {

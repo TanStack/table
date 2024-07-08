@@ -1,13 +1,6 @@
 import type { RowData, RowModel, Table } from '../../types'
 
-export interface TableOptions_RowModels<TData extends RowData> {
-  /**
-   * This required option is a factory for a function that computes and returns the core row model for the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getCoreRowModel: (table: Table<TData>) => () => RowModel<any>
-}
+export interface TableOptions_RowModels<TData extends RowData> {}
 
 export interface Table_RowModels<TData extends RowData> {
   _getCoreRowModel?: () => RowModel<TData>

@@ -117,7 +117,7 @@ export class AppComponent {
         ? this.columnPinning.update(updaterOrValue)
         : this.columnPinning.set(updaterOrValue)
     },
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

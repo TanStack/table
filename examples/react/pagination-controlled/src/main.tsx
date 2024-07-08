@@ -100,9 +100,9 @@ function App() {
       pagination,
     },
     onPaginationChange: setPagination,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     manualPagination: true, //we're doing manual "server-side" pagination
-    // getPaginationRowModel: getPaginationRowModel(), // If only doing manual pagination, you don't need this
+    // getPaginatedRowModel: createPaginatedRowModel(), // If only doing manual pagination, you don't need this
     debugTable: true,
   })
 

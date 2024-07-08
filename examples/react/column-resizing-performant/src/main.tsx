@@ -79,7 +79,7 @@ function App() {
       maxSize: 800,
     },
     columnResizeMode: 'onChange',
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

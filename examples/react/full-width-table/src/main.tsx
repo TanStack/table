@@ -5,7 +5,7 @@ import './index.css'
 import {
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -81,8 +81,8 @@ function App() {
     },
     onPaginationChange: setPagination,
     // Pipeline
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
     debugTable: true,
   })
 

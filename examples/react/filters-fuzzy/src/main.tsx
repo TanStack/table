@@ -7,7 +7,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   getSortedRowModel,
   sortingFns,
   useTable,
@@ -122,10 +122,10 @@ function App() {
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: 'fuzzy', //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), //client side filtering
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getFilteredRowModel: createFilteredRowModel(), //client side filtering
+    getSortedRowModel: createSortedRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,

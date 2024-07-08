@@ -8,7 +8,7 @@ import {
   functionalUpdate,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   getSortedRowModel,
   makeStateUpdater,
   useTable,
@@ -170,10 +170,10 @@ function App() {
     columns,
     data,
     debugTable: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getSortedRowModel: createSortedRowModel(),
+    getFilteredRowModel: createFilteredRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
     state: {
       density, //passing the density state to the table, TS is still happy :)
     },

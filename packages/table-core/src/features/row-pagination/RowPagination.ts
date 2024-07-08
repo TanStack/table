@@ -7,7 +7,7 @@ import {
   table_getCanPreviousPage,
   table_getPageCount,
   table_getPageOptions,
-  table_getPaginationRowModel,
+  table_getPaginatedRowModel,
   table_getPrePaginationRowModel,
   table_getRowCount,
   table_lastPage,
@@ -87,7 +87,7 @@ export const RowPagination: TableFeature = {
 
     table.getPrePaginationRowModel = () => table_getPrePaginationRowModel(table)
 
-    table.getPaginationRowModel = () => table_getPaginationRowModel(table)
+    table.getPaginatedRowModel = () => table_getPaginatedRowModel(table)
 
     table.getPageCount = () => table_getPageCount(table)
 

@@ -62,7 +62,7 @@ class LitTableExample extends LitElement {
       columns,
       columnResizeMode: 'onChange',
       columnResizeDirection: 'ltr',
-      getCoreRowModel: getCoreRowModel(),
+      getCoreRowModel: createCoreRowModel(),
       debugTable: true,
       debugHeaders: true,
       debugColumns: true,

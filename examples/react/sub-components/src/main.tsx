@@ -113,8 +113,8 @@ function Table({
     data,
     columns,
     getRowCanExpand,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getExpandedRowModel: createExpandedRowModel(),
   })
 
   return (

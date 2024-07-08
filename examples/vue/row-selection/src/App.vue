@@ -107,7 +107,7 @@ const table = useTable({
         ? updateOrValue(rowSelection.value)
         : updateOrValue
   },
-  getCoreRowModel: getCoreRowModel(),
+  getCoreRowModel: createCoreRowModel(),
 })
 </script>
 

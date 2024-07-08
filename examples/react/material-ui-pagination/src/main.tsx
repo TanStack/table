@@ -17,7 +17,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   useTable,
 } from '@tanstack/react-table'
 
@@ -116,9 +116,9 @@ function LocalTable({
     data,
     columns,
     // Pipeline
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getFilteredRowModel: createFilteredRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
     //
     debugTable: true,
   })

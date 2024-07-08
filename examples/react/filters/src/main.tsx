@@ -4,11 +4,14 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  ColumnFiltering,
+  RowPagination,
+  RowSorting,
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -89,6 +92,13 @@ function App() {
   const refreshData = () => setData((_old) => makeData(50_000)) //stress test
 
   const table = useTable({
+    _features: { ColumnFiltering, RowSorting, RowPagination },
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Filtered: createFilteredRowModel(), //client side filtering
+      Sorted: createSortedRowModel(),
+      Paginated: createPaginatedRowModel(),
+    },
     data,
     columns,
     filterFns: {},
@@ -96,10 +106,6 @@ function App() {
       columnFilters,
     },
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), //client side filtering
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,

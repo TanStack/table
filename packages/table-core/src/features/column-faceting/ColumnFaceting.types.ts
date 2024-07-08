@@ -1,19 +1,4 @@
-import type { RowData, RowModel, Table } from '../../types'
-
-export interface TableOptions_ColumnFaceting<TData extends RowData> {
-  getFacetedMinMaxValues?: (
-    table: Table<TData>,
-    columnId: string,
-  ) => () => undefined | [number, number]
-  getFacetedRowModel?: (
-    table: Table<TData>,
-    columnId: string,
-  ) => () => RowModel<TData>
-  getFacetedUniqueValues?: (
-    table: Table<TData>,
-    columnId: string,
-  ) => () => Map<any, number>
-}
+import type { RowData, RowModel } from '../../types'
 
 export interface Column_ColumnFaceting<TData extends RowData> {
   /**

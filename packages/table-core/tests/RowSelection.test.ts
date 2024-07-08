@@ -39,7 +39,7 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
       const rowModel = table.getCoreRowModel()
 
@@ -68,7 +68,7 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
       const rowModel = table.getCoreRowModel()
 
@@ -94,7 +94,7 @@ describe('RowSelection', () => {
           rowSelection: {},
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
       const rowModel = table.getCoreRowModel()
 
@@ -159,7 +159,7 @@ describe('RowSelection', () => {
         data,
         state: {},
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
@@ -187,7 +187,7 @@ describe('RowSelection', () => {
           rowSelection: {},
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
@@ -217,7 +217,7 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
@@ -248,7 +248,7 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
@@ -277,7 +277,7 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
@@ -306,7 +306,7 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]

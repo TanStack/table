@@ -70,8 +70,8 @@ const App = component$(() => {
   const table = useTable({
     columns,
     data: data.value,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getSortedRowModel: createSortedRowModel(),
     enableSorting: true,
     state: {
       sorting: sorting.value,

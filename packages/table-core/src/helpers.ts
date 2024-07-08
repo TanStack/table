@@ -62,24 +62,8 @@ export function tableOptions<TData extends RowData = any>(
 ): Omit<TableOptions<TData>, 'data'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'getCoreRowModel'>,
-): Omit<TableOptions<TData>, 'getCoreRowModel'>
-
-export function tableOptions<TData extends RowData = any>(
   options: Omit<TableOptions<TData>, 'data' | 'columns'>,
 ): Omit<TableOptions<TData>, 'data' | 'columns'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>,
-): Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>,
-): Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>
-
-export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>,
-): Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>
 
 export function tableOptions<TData extends RowData = any>(
   options: TableOptions<TData>,

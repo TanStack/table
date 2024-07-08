@@ -86,6 +86,7 @@ export function _createTable<TData extends RowData>(
 
   const coreInstance: Table_CoreProperties<TData> = {
     _features,
+    _rowModels: {},
     options: {
       ...defaultOptions,
       ...options,

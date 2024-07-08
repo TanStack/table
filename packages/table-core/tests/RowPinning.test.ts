@@ -4,7 +4,7 @@ import {
   createColumnHelper,
   _createTable,
   getCoreRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
 } from '../src'
 import { makeData, Person } from './makeTestData'
 
@@ -44,8 +44,8 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
+          getPaginatedRowModel: createPaginatedRowModel(),
+          getCoreRowModel: createCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -75,8 +75,8 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
+          getPaginatedRowModel: createPaginatedRowModel(),
+          getCoreRowModel: createCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -106,8 +106,8 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
+          getPaginatedRowModel: createPaginatedRowModel(),
+          getCoreRowModel: createCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -137,8 +137,8 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
+          getPaginatedRowModel: createPaginatedRowModel(),
+          getCoreRowModel: createCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -167,8 +167,8 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
+          getPaginatedRowModel: createPaginatedRowModel(),
+          getCoreRowModel: createCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -198,8 +198,8 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
+          getPaginatedRowModel: createPaginatedRowModel(),
+          getCoreRowModel: createCoreRowModel(),
         })
 
         const result = table.getBottomRows()
@@ -231,8 +231,8 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
+          getPaginatedRowModel: createPaginatedRowModel(),
+          getCoreRowModel: createCoreRowModel(),
         })
 
         const result = table.getCenterRows()

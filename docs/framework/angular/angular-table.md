@@ -22,7 +22,7 @@ export class AppComponent {
   table = injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
   }))
 }
 

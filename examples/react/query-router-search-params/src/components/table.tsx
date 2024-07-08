@@ -42,7 +42,7 @@ export default function Table<T extends Record<string, string | number>>({
     manualFiltering: true,
     manualSorting: true,
     manualPagination: true,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
   })
 
   return (

@@ -8,7 +8,7 @@ import {
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -156,10 +156,10 @@ function App() {
     onExpandedChange: setExpanded,
     onRowPinningChange: setRowPinning,
     getSubRows: (row) => row.subRows,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getFilteredRowModel: createFilteredRowModel(),
+    getExpandedRowModel: createExpandedRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
     keepPinnedRows,
     debugRows: true,
   })

@@ -13,7 +13,7 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   getSortedRowModel,
   injectTable,
 } from '@tanstack/angular-table'
@@ -85,11 +85,11 @@ export class AppComponent {
         ? this.columnFilters.update(updater)
         : this.columnFilters.set(updater)
     },
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), //client-side filtering
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(), // client-side faceting
+    getCoreRowModel: createCoreRowModel(),
+    getFilteredRowModel: createFilteredRowModel(), //client-side filtering
+    getSortedRowModel: createSortedRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
+    getFacetedRowModel: createFacetedRowModel(), // client-side faceting
     getFacetedUniqueValues: getFacetedUniqueValues(), // generate unique values for select filter/autocomplete
     getFacetedMinMaxValues: getFacetedMinMaxValues(), // generate min/max values for range filter
     debugTable: true,

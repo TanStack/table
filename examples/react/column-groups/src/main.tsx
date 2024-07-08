@@ -102,7 +102,7 @@ function App() {
   const table = useTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
   })
 
   return (

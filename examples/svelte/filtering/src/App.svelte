@@ -10,7 +10,7 @@
     createTable,
     getCoreRowModel,
     getFilteredRowModel,
-    getPaginationRowModel,
+    getPaginatedRowModel,
   } from '@tanstack/svelte-table'
   import { type Updater } from 'svelte/store'
   import './index.css'
@@ -58,10 +58,10 @@
       fuzzy: fuzzyFilter,
     },
     onGlobalFilterChange: setGlobalFilter,
-    getPaginationRowModel: getPaginationRowModel(),
-    getCoreRowModel: getCoreRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     globalFilterFn: fuzzyFilter,
-    getFilteredRowModel: getFilteredRowModel(),
+    getFilteredRowModel: createFilteredRowModel(),
     enableMultiRowSelection: true,
   }
 

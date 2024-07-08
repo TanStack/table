@@ -86,7 +86,7 @@ export class AppComponent {
       columnOrder: this.columnOrder(),
       columnVisibility: this.columnVisibility(),
     },
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     onColumnVisibilityChange: (updaterOrValue) => {
       typeof updaterOrValue === 'function'
         ? this.columnVisibility.update(updaterOrValue)

@@ -2,7 +2,7 @@ import { getMemoOptions, memo } from '../../utils'
 import { row_getIsExpanded } from './RowExpanding.utils'
 import type { Row, RowData, RowModel, Table } from '../../types'
 
-export function getExpandedRowModel<TData extends RowData>(): (
+export function createExpandedRowModel<TData extends RowData>(): (
   table: Table<TData>,
 ) => () => RowModel<TData> {
   return (table) =>

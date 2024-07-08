@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { RouterOutlet } from '@angular/router'
 import {
   FlexRenderDirective,
-  getCoreRowModel,
+  createCoreRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import type { ColumnDef } from '@tanstack/angular-table'
@@ -91,7 +91,7 @@ export class AppComponent {
   table = injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
   }))
 

@@ -122,7 +122,7 @@ function App() {
   const table = useTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     getRowId: (row) => row.userId, //required because row indexes will change
     debugTable: true,
     debugHeaders: true,

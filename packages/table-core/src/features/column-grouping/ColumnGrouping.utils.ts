@@ -117,15 +117,15 @@ export function table_getPreGroupedRowModel<TData extends RowData>(
 export function table_getGroupedRowModel<TData extends RowData>(
   table: Table<TData>,
 ): RowModel<TData> {
-  if (!table._getGroupedRowModel && table.options.getGroupedRowModel) {
-    table._getGroupedRowModel = table.options.getGroupedRowModel(table)
+  if (!table._rowModels.Grouped) {
+    table._rowModels.Grouped = table.options._rowModels?.Grouped?.(table)
   }
 
-  if (table.options.manualGrouping || !table._getGroupedRowModel) {
+  if (table.options.manualGrouping || !table._rowModels.Grouped) {
     return table_getPreGroupedRowModel(table)
   }
 
-  return table._getGroupedRowModel()
+  return table._rowModels.Grouped()
 }
 
 export function row_getIsGrouped<TData extends RowData>(row: Row<TData>) {

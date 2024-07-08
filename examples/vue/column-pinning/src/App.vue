@@ -105,7 +105,7 @@ const table = useTable({
         ? updaterOrValue(columnPinning.value)
         : updaterOrValue
   },
-  getCoreRowModel: getCoreRowModel(),
+  getCoreRowModel: createCoreRowModel(),
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,

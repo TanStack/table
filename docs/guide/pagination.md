@@ -49,13 +49,13 @@ Alternatively, instead of paginating the data, you can render all rows of a larg
 If you want to take advantage of the built-in client-side pagination in TanStack Table, you first need to pass in the pagination row model.
 
 ```jsx
-import { useTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
+import { useTable, getCoreRowModel, getPaginatedRowModel } from '@tanstack/react-table';
 //...
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(), //load client-side pagination code
+  getCoreRowModel: createCoreRowModel(),
+  getPaginatedRowModel: createPaginatedRowModel(), //load client-side pagination code
 });
 ```
 
@@ -70,13 +70,13 @@ No pagination row model is needed for server-side pagination, but if you have pr
 The table instance will have no way of knowing how many rows/pages there are in total in your back-end unless you tell it. Provide either the `rowCount` or `pageCount` table option to let the table instance know how many pages there are in total. If you provide a `rowCount`, the table instance will calculate the `pageCount` internally from `rowCount` and `pageSize`. Otherwise, you can directly provide the `pageCount` if you already have it. If you don't know the page count, you can just pass in `-1` for the `pageCount`, but the `getCanNextPage` and `getCanPreviousPage` row model functions will always return `true` in this case.
 
 ```jsx
-import { useTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
+import { useTable, getCoreRowModel, getPaginatedRowModel } from '@tanstack/react-table';
 //...
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  // getPaginationRowModel: getPaginationRowModel(), //not needed for server-side pagination
+  getCoreRowModel: createCoreRowModel(),
+  // getPaginatedRowModel: createPaginatedRowModel(), //not needed for server-side pagination
   manualPagination: true, //turn off client-side pagination
   rowCount: dataQuery.data?.rowCount, //pass in the total row count so the table knows how many pages there are (pageCount calculated internally if not provided)
   // pageCount: dataQuery.data?.pageCount, //alternatively directly pass in pageCount instead of rowCount
@@ -97,7 +97,7 @@ The `pagination` state is an object that contains the following properties:
 You can manage the `pagination` state just like any other state in the table instance.
 
 ```jsx
-import { useTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table';
+import { useTable, getCoreRowModel, getPaginatedRowModel } from '@tanstack/react-table';
 //...
 const [pagination, setPagination] = useState({
   pageIndex: 0, //initial page index
@@ -107,8 +107,8 @@ const [pagination, setPagination] = useState({
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getPaginatedRowModel: createPaginatedRowModel(),
   onPaginationChange: setPagination, //update the pagination state when internal APIs mutate the pagination state
   state: {
     //...
@@ -123,8 +123,8 @@ Alternatively, if you have no need for managing the `pagination` state in your o
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getPaginatedRowModel: createPaginatedRowModel(),
   initialState: {
     pagination: {
       pageIndex: 2, //custom initial page index
@@ -148,8 +148,8 @@ By default, `pageIndex` is reset to `0` when page-altering state changes occur, 
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getPaginatedRowModel: createPaginatedRowModel(),
   autoResetPageIndex: false, //turn off auto reset of pageIndex
 });
 ```

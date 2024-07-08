@@ -10,7 +10,7 @@ import {
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
@@ -91,11 +91,11 @@ function App() {
       columnFilters,
     },
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), //client-side filtering
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(), // client-side faceting
+    getCoreRowModel: createCoreRowModel(),
+    getFilteredRowModel: createFilteredRowModel(), //client-side filtering
+    getSortedRowModel: createSortedRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
+    getFacetedRowModel: createFacetedRowModel(), // client-side faceting
     getFacetedUniqueValues: getFacetedUniqueValues(), // generate unique values for select filter/autocomplete
     getFacetedMinMaxValues: getFacetedMinMaxValues(), // generate min/max values for range filter
     debugTable: true,

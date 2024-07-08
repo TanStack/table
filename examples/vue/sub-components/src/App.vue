@@ -122,8 +122,8 @@ const table = useTable({
   },
   columns,
   getRowCanExpand: () => true,
-  getCoreRowModel: getCoreRowModel(),
-  getExpandedRowModel: getExpandedRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getExpandedRowModel: createExpandedRowModel(),
   onExpandedChange: (updaterOrValue) => {
     expanded.value =
       typeof updaterOrValue === 'function'

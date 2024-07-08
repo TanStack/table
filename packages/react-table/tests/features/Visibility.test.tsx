@@ -110,7 +110,7 @@ describe('useTable', () => {
         state: {
           columnVisibility,
         },
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
         // debug: true,
       })
 

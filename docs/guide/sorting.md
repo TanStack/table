@@ -103,8 +103,8 @@ const [sorting, setSorting] = useState<SortingState>([])
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  //getSortedRowModel: getSortedRowModel(), //not needed for manual sorting
+  getCoreRowModel: createCoreRowModel(),
+  //getSortedRowModel: createSortedRowModel(), //not needed for manual sorting
   manualSorting: true, //use pre-sorted row model instead of sorted row model
   state: {
     sorting,
@@ -125,8 +125,8 @@ import { useTable } from '@tanstack/react-table'
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(), //provide a sorting row model
+  getCoreRowModel: createCoreRowModel(),
+  getSortedRowModel: createSortedRowModel(), //provide a sorting row model
 })
 ```
 
@@ -198,8 +198,8 @@ const columns = [
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getSortedRowModel: createSortedRowModel(),
   sortingFns: { //add a custom sorting function
     myCustomSortingFn: (rowA, rowB, columnId) => {
       return rowA.original[columnId] > rowB.original[columnId] ? 1 : rowA.original[columnId] < rowB.original[columnId] ? -1 : 0 

@@ -82,8 +82,8 @@ function App() {
     columns,
     data,
     debugTable: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(), //client-side sorting
+    getCoreRowModel: createCoreRowModel(),
+    getSortedRowModel: createSortedRowModel(), //client-side sorting
     onSortingChange: setSorting, //optionally control sorting state in your own scope for easy access
     // sortingFns: {
     //   sortStatusFn, //or provide our custom sorting function globally for all columns to be able to use

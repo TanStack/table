@@ -99,7 +99,7 @@ function App() {
       return data()
     },
     columns: defaultColumns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
   })
 
   return (
