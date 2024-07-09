@@ -128,8 +128,8 @@ const App = component$(() => {
   const table = useTable({
     columns,
     data: defaultData,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getSortedRowModel: createSortedRowModel(),
     enableSorting: true,
     onRowSelectionChange: (updater) => {
       rowSelection.value =
@@ -138,7 +138,7 @@ const App = component$(() => {
     state: {
       rowSelection: rowSelection.value,
     },
-    getFilteredRowModel: getFilteredRowModel(),
+    getFilteredRowModel: createFilteredRowModel(),
     enableRowSelection: true,
   })
 

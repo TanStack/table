@@ -110,7 +110,7 @@ describe('core', () => {
         state: {
           columnVisibility,
         },
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
         // debug: true,
       })
 
@@ -216,7 +216,7 @@ describe('core', () => {
       const table = useTable({
         data: defaultData,
         columns: defaultColumns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
 
       return {
@@ -243,7 +243,7 @@ describe('core', () => {
       const table = useTable({
         data: defaultData,
         columns: defaultColumns,
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       })
 
       return {

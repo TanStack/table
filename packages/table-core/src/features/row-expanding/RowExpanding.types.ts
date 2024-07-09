@@ -60,12 +60,8 @@ export interface TableOptions_RowExpanding<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
    */
   enableExpanding?: boolean
-  /**
-   * This function is responsible for returning the expanded row model. If this function is not provided, the table will not expand rows. You can use the default exported `getExpandedRowModel` function to get the expanded row model or implement your own.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getexpandedrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
-   */
-  getExpandedRowModel?: (table: Table<any>) => () => RowModel<any>
+
+
   /**
    * If provided, allows you to override the default behavior of determining whether a row is currently expanded.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getisrowexpanded)
@@ -100,7 +96,6 @@ export interface TableOptions_RowExpanding<TData extends RowData> {
 
 export interface Table_RowExpanding<TData extends RowData> {
   _autoResetExpanded: () => void
-  _getExpandedRowModel?: () => RowModel<TData>
   /**
    * Returns whether there are any rows that can be expanded.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getcansomerowsexpand)

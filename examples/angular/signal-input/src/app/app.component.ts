@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   signal,
 } from '@angular/core'
 import { type PaginationState } from '@tanstack/angular-table'

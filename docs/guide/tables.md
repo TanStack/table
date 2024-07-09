@@ -39,7 +39,7 @@ This is explained in much more detail in the [Row Models Guide](../row-models), 
 ```ts
 import { getCoreRowModel } from '@tanstack/[framework]-table'
 
-const table = _createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = _createTable({ columns, data, getCoreRowModel: createCoreRowModel() })
 ```
 
 #### Initializing the Table Instance
@@ -48,28 +48,28 @@ With our `columns`, `data`, and `getCoreRowModel` defined, we can now create our
 
 ```ts
 //vanilla js
-const table = _createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = _createTable({ columns, data, getCoreRowModel: createCoreRowModel() })
 
 //angular
-this.table = injectTable({ columns: this.columns, data: this.data(), getCoreRowModel: getCoreRowModel() })
+this.table = injectTable({ columns: this.columns, data: this.data(), getCoreRowModel: createCoreRowModel() })
 
 //lit
-const table = this.tableController.table({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = this.tableController.table({ columns, data, getCoreRowModel: createCoreRowModel() })
 
 //qwik
-const table = useTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = useTable({ columns, data, getCoreRowModel: createCoreRowModel() })
 
 //react
-const table = useTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = useTable({ columns, data, getCoreRowModel: createCoreRowModel() })
 
 //solid
-const table = createTable({ columns, get data() { return data() }, getCoreRowModel: getCoreRowModel() })
+const table = createTable({ columns, get data() { return data() }, getCoreRowModel: createCoreRowModel() })
 
 //svelte
-const table = createTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = createTable({ columns, data, getCoreRowModel: createCoreRowModel() })
 
 //vue
-const table = useTable({ columns, data, getCoreRowModel: getCoreRowModel() })
+const table = useTable({ columns, data, getCoreRowModel: createCoreRowModel() })
 ```
 
 So what's in the `table` instance? Let's take a look at what interactions we can have with the table instance.

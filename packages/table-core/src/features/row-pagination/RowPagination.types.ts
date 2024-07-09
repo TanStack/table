@@ -17,15 +17,7 @@ export interface TableOptions_RowPagination {
    */
   autoResetPageIndex?: boolean
   /**
-   * Returns the row model after pagination has taken place, but no further.
-   *
-   * Pagination columns are automatically reordered by default to the start of the columns list. If you would rather remove them or leave them as-is, set the appropriate mode here.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getpaginationrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
-   */
-  getPaginationRowModel?: (table: Table<any>) => () => RowModel<any>
-  /**
-   * Enables manual pagination. If this option is set to `true`, the table will not automatically paginate rows using `getPaginationRowModel()` and instead will expect you to manually paginate the rows before passing them to the table. This is useful if you are doing server-side pagination and aggregation.
+   * Enables manual pagination. If this option is set to `true`, the table will not automatically paginate rows using `getPaginatedRowModel()` and instead will expect you to manually paginate the rows before passing them to the table. This is useful if you are doing server-side pagination and aggregation.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#manualpagination)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
@@ -56,7 +48,7 @@ export interface PaginationDefaultOptions {
 
 export interface Table_RowPagination<TData extends RowData> {
   _autoResetPageIndex: () => void
-  _getPaginationRowModel?: () => RowModel<TData>
+  _getPaginatedRowModel?: () => RowModel<TData>
   /**
    * Returns whether the table can go to the next page.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getcannextpage)
@@ -89,10 +81,10 @@ export interface Table_RowPagination<TData extends RowData> {
   getPageOptions: () => Array<number>
   /**
    * Returns the row model for the table after pagination has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getpaginationrowmodel)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getPaginatedRowModel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
-  getPaginationRowModel: () => RowModel<TData>
+  getPaginatedRowModel: () => RowModel<TData>
   /**
    * Returns the row model for the table before any pagination has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getprepaginationrowmodel)

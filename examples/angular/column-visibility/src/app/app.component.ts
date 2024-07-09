@@ -117,7 +117,7 @@ export class AppComponent implements OnInit {
     state: {
       columnVisibility: this.columnVisibility(),
     },
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     onColumnVisibilityChange: (updaterOrValue) => {
       const visibilityState =
         typeof updaterOrValue === 'function'

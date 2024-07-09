@@ -106,7 +106,7 @@ const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({
   const table = useTable({
     data: defaultData,
     columns: defaultColumns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     ...options,
   })
 

@@ -22,7 +22,7 @@ describe('injectTable', () => {
       table = injectTable(() => ({
         data: this.data(),
         columns: [],
-        getCoreRowModel: getCoreRowModel(),
+        getCoreRowModel: createCoreRowModel(),
       }))
     }
 
@@ -44,7 +44,7 @@ describe('injectTable', () => {
     const table = injectTable(() => ({
       data: data(),
       columns: columns,
-      getCoreRowModel: getCoreRowModel(),
+      getCoreRowModel: createCoreRowModel(),
       getRowId: (row) => row.id,
     }))
     const tablePropertyKeys = Object.keys(table())

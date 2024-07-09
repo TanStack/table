@@ -91,7 +91,7 @@ export class AppComponent {
   table = injectTable(() => ({
     data: this.data(),
     columns: this.columns(),
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -97,13 +97,15 @@ function MyTable({
   })
 
   const table = useTable({
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Sorted: createSortedRowModel(),
+      Filtered: createFilteredRowModel(),
+      Paginated: createPaginatedRowModel(),
+    },
     columns,
     data,
     debugTable: true,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
     //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
     state: {

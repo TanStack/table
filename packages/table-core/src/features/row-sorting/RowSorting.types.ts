@@ -187,12 +187,6 @@ interface SortingOptionsBase {
    */
   enableSortingRemoval?: boolean
   /**
-   * This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table or implement your own.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#getsortedrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
-   */
-  getSortedRowModel?: (table: Table<any>) => () => RowModel<any>
-  /**
    * Pass a custom function that will be used to determine if a multi-sort event should be triggered. It is passed the event from the sort toggle handler and should return `true` if the event should trigger a multi-sort.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#ismultisortevent)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
@@ -237,7 +231,6 @@ export interface TableOptions_RowSorting<TData extends RowData>
     ResolvedSortingFns {}
 
 export interface Table_RowSorting<TData extends RowData> {
-  _getSortedRowModel?: () => RowModel<TData>
   /**
    * Returns the row model for the table before any sorting has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#getpresortedrowmodel)

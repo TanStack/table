@@ -1,11 +1,8 @@
 import { flattenBy } from '../../utils'
-import { _createCell } from '../cells/_createCell'
+import { _createCell } from '../cells/createCell'
 import { table_getColumn } from '../columns/Columns.utils'
 import { table_getPrePaginationRowModel } from '../../features/row-pagination/RowPagination.utils'
-import {
-  table_getCoreRowModel,
-  table_getRowModel,
-} from '../row-models/RowModels.utils'
+import { table_getCoreRowModel, table_getRowModel } from '../table/Tables.utils'
 import type { Cell, Column, Row, RowData, Table } from '../../types'
 
 export function row_getValue<TData extends RowData>(

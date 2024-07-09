@@ -2,7 +2,7 @@ import { getMemoOptions, memo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
 import type { Row, RowData, RowModel, Table } from '../../types'
 
-export function getFacetedRowModel<TData extends RowData>(): (
+export function createFacetedRowModel<TData extends RowData>(): (
   table: Table<TData>,
   columnId: string,
 ) => () => RowModel<TData> {

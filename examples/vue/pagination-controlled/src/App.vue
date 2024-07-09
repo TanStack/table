@@ -63,7 +63,7 @@ const table = useTable({
       setPagination(updater)
     }
   },
-  getCoreRowModel: getCoreRowModel(),
+  getCoreRowModel: createCoreRowModel(),
   debugTable: true,
 })
 

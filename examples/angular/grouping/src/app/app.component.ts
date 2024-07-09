@@ -11,7 +11,7 @@ import {
   getExpandedRowModel,
   getFilteredRowModel,
   getGroupedRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   injectTable,
   tableOptions,
 } from '@tanstack/angular-table'
@@ -47,11 +47,11 @@ export class AppComponent {
             : updaterOrValue
         this.grouping.set(groupingState)
       },
-      getExpandedRowModel: getExpandedRowModel(),
-      getGroupedRowModel: getGroupedRowModel(),
-      getCoreRowModel: getCoreRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
+      getExpandedRowModel: createExpandedRowModel(),
+      getGroupedRowModel: createGroupedRowModel(),
+      getCoreRowModel: createCoreRowModel(),
+      getPaginatedRowModel: createPaginatedRowModel(),
+      getFilteredRowModel: createFilteredRowModel(),
       debugTable: true,
     }),
   )

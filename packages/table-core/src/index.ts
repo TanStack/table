@@ -8,38 +8,33 @@ export * from './utils'
 export * from './utils.types'
 
 //Cells
-export * from './core/cells/_createCell'
+export * from './core/cells/createCell'
 export * from './core/cells/Cells'
 export * from './core/cells/Cells.types'
 export * from './core/cells/Cells.utils'
 
 //Columns
-export * from './core/columns/_createColumn'
+export * from './core/columns/createColumn'
 export * from './core/columns/Columns'
 export * from './core/columns/Columns.types'
 export * from './core/columns/Columns.utils'
 
 //Headers
 export * from './core/headers/buildHeaderGroups'
-export * from './core/headers/_createHeader'
+export * from './core/headers/createHeader'
 export * from './core/headers/Headers'
 export * from './core/headers/Headers.types'
 export * from './core/headers/Headers.utils'
 
-//Row Models
-export * from './core/row-models/getCoreRowModel'
-export * from './core/row-models/RowModels'
-export * from './core/row-models/RowModels.types'
-export * from './core/row-models/RowModels.utils'
-
 //Rows
-export * from './core/rows/_createRow'
+export * from './core/rows/createRow'
 export * from './core/rows/Rows'
 export * from './core/rows/Rows.types'
 export * from './core/rows/Rows.utils'
 
 //Tables
-export * from './core/table/_createTable'
+export * from './core/table/createCoreRowModel'
+export * from './core/table/createTable'
 export * from './core/table/Tables'
 export * from './core/table/Tables.types'
 export * from './core/table/Tables.utils'
@@ -52,21 +47,21 @@ export * from './core/table/Tables.utils'
 export * from './features/column-faceting/ColumnFaceting'
 export * from './features/column-faceting/ColumnFaceting.types'
 export * from './features/column-faceting/ColumnFaceting.utils'
-export * from './features/column-faceting/getFacetedMinMaxValues'
-export * from './features/column-faceting/getFacetedRowModel'
-export * from './features/column-faceting/getFacetedUniqueValues'
+export * from './features/column-faceting/createFacetedMinMaxValues'
+export * from './features/column-faceting/createFacetedRowModel'
+export * from './features/column-faceting/createFacetedUniqueValues'
 
 //ColumnFiltering
 export * from './features/column-filtering/ColumnFiltering'
 export * from './features/column-filtering/ColumnFiltering.types'
 export * from './features/column-filtering/ColumnFiltering.utils'
-export * from './features/column-filtering/getFilteredRowModel'
+export * from './features/column-filtering/createFilteredRowModel'
 
 //ColumnGrouping
 export * from './features/column-grouping/ColumnGrouping'
 export * from './features/column-grouping/ColumnGrouping.types'
 export * from './features/column-grouping/ColumnGrouping.utils'
-export * from './features/column-grouping/getGroupedRowModel'
+export * from './features/column-grouping/createGroupedRowModel'
 
 //ColumnOrdering
 export * from './features/column-ordering/ColumnOrdering'
@@ -107,13 +102,13 @@ export * from './features/global-filtering/GlobalFiltering.utils'
 export * from './features/row-expanding/RowExpanding'
 export * from './features/row-expanding/RowExpanding.types'
 export * from './features/row-expanding/RowExpanding.utils'
-export * from './features/row-expanding/getExpandedRowModel'
+export * from './features/row-expanding/createExpandedRowModel'
 
 //RowPagination
 export * from './features/row-pagination/RowPagination'
 export * from './features/row-pagination/RowPagination.types'
 export * from './features/row-pagination/RowPagination.utils'
-export * from './features/row-pagination/getPaginationRowModel'
+export * from './features/row-pagination/createPaginatedRowModel'
 
 //RowPinning
 export * from './features/row-pinning/RowPinning'
@@ -129,7 +124,7 @@ export * from './features/row-selection/RowSelection.utils'
 export * from './features/row-sorting/RowSorting'
 export * from './features/row-sorting/RowSorting.types'
 export * from './features/row-sorting/RowSorting.utils'
-export * from './features/row-sorting/getSortedRowModel'
+export * from './features/row-sorting/createSortedRowModel'
 
 /**
  * Fns

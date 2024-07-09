@@ -3,8 +3,10 @@ import {
   ColumnDef,
   createColumnHelper,
   _createTable,
-  getCoreRowModel,
-  getPaginationRowModel,
+  createCoreRowModel,
+  createPaginatedRowModel,
+  RowPinning,
+  RowPagination,
 } from '../src'
 import { makeData, Person } from './makeTestData'
 
@@ -28,6 +30,11 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = _createTable<Person>({
+          _features: { RowPinning, RowPagination },
+          _rowModels: {
+            Core: createCoreRowModel(),
+            Paginated: createPaginatedRowModel(),
+          },
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},
@@ -44,8 +51,6 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -59,6 +64,11 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = _createTable<Person>({
+          _features: { RowPinning, RowPagination },
+          _rowModels: {
+            Core: createCoreRowModel(),
+            Paginated: createPaginatedRowModel(),
+          },
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},
@@ -75,8 +85,6 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -90,6 +98,11 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = _createTable<Person>({
+          _features: { RowPinning, RowPagination },
+          _rowModels: {
+            Core: createCoreRowModel(),
+            Paginated: createPaginatedRowModel(),
+          },
           enableRowPinning: true,
           keepPinnedRows: false,
           onStateChange() {},
@@ -106,8 +119,6 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -121,6 +132,11 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = _createTable<Person>({
+          _features: { RowPinning, RowPagination },
+          _rowModels: {
+            Core: createCoreRowModel(),
+            Paginated: createPaginatedRowModel(),
+          },
           enableRowPinning: true,
           keepPinnedRows: false,
           onStateChange() {},
@@ -137,8 +153,6 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -151,6 +165,11 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = _createTable<Person>({
+          _features: { RowPinning, RowPagination },
+          _rowModels: {
+            Core: createCoreRowModel(),
+            Paginated: createPaginatedRowModel(),
+          },
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},
@@ -167,8 +186,6 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
         })
 
         const result = table.getTopRows()
@@ -182,6 +199,11 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = _createTable<Person>({
+          _features: { RowPinning, RowPagination },
+          _rowModels: {
+            Core: createCoreRowModel(),
+            Paginated: createPaginatedRowModel(),
+          },
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},
@@ -198,8 +220,6 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
         })
 
         const result = table.getBottomRows()
@@ -215,6 +235,11 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = _createTable<Person>({
+          _features: { RowPinning, RowPagination },
+          _rowModels: {
+            Core: createCoreRowModel(),
+            Paginated: createPaginatedRowModel(),
+          },
           enableRowPinning: true,
           keepPinnedRows: true,
           onStateChange() {},
@@ -231,8 +256,6 @@ describe('RowPinning', () => {
             },
           },
           columns,
-          getPaginationRowModel: getPaginationRowModel(),
-          getCoreRowModel: getCoreRowModel(),
         })
 
         const result = table.getCenterRows()

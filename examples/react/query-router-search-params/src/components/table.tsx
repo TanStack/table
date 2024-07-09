@@ -1,11 +1,11 @@
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 import { DebouncedInput } from './debouncedInput'
 import type {
   ColumnDef,
   OnChangeFn,
-  PaginationOptions,
   PaginationState,
   SortingState,
+  TableOptions_RowPagination,
 } from '@tanstack/react-table'
 import type { Filters } from '../api/types'
 
@@ -16,7 +16,10 @@ type Props<T extends Record<string, string | number>> = {
   data: Array<T>
   columns: Array<ColumnDef<T>>
   pagination: PaginationState
-  paginationOptions: Pick<PaginationOptions, 'onPaginationChange' | 'rowCount'>
+  paginationOptions: Pick<
+    TableOptions_RowPagination,
+    'onPaginationChange' | 'rowCount'
+  >
   filters: Filters<T>
   onFilterChange: (dataFilters: Partial<T>) => void
   sorting: SortingState
@@ -24,25 +27,25 @@ type Props<T extends Record<string, string | number>> = {
 }
 
 export default function Table<T extends Record<string, string | number>>({
-  data,
   columns,
-  pagination,
-  paginationOptions,
+  data,
   filters,
   onFilterChange,
-  sorting,
   onSortingChange,
+  pagination,
+  paginationOptions,
+  sorting,
 }: Props<T>) {
   const table = useTable({
-    data,
+    _rowModels: { Core: createCoreRowModel() },
     columns,
-    state: { pagination, sorting },
-    onSortingChange,
-    ...paginationOptions,
+    data,
     manualFiltering: true,
-    manualSorting: true,
     manualPagination: true,
-    getCoreRowModel: getCoreRowModel(),
+    manualSorting: true,
+    onSortingChange,
+    state: { pagination, sorting },
+    ...paginationOptions,
   })
 
   return (

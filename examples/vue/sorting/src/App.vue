@@ -92,8 +92,8 @@ const table = useTable({
         ? updaterOrValue(sorting.value)
         : updaterOrValue
   },
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getSortedRowModel: createSortedRowModel(),
   debugTable: true,
 })
 </script>

@@ -1,4 +1,4 @@
-import { _createCell } from '../cells/_createCell'
+import { _createCell } from '../cells/createCell'
 import type { Cell, Row, RowData } from '../../types'
 
 export interface Row_CoreProperties<TData extends RowData> {

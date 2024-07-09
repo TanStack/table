@@ -1,10 +1,9 @@
-import type { CSSProperties } from 'react'
-import React from 'react'
+import React, { type CSSProperties } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 
 // needed for table body level scope DnD setup
 import {
@@ -19,14 +18,14 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
+
+// needed for row & cell level scope DnD setup
 import {
   SortableContext,
   arrayMove,
+  useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-
-// needed for row & cell level scope DnD setup
-import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
@@ -120,9 +119,12 @@ function App() {
   const rerender = () => setData(() => makeData(20))
 
   const table = useTable({
-    data,
+    _features: {},
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    data,
     getRowId: (row) => row.userId, //required because row indexes will change
     debugTable: true,
     debugHeaders: true,

@@ -6,7 +6,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   getSortedRowModel,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
@@ -156,10 +156,10 @@ class LitTableExample extends LitElement {
           this._columnFilters = updater
         }
       },
-      getCoreRowModel: getCoreRowModel(),
-      getFilteredRowModel: getFilteredRowModel(), //client side filtering
-      getSortedRowModel: getSortedRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
+      getCoreRowModel: createCoreRowModel(),
+      getFilteredRowModel: createFilteredRowModel(), //client side filtering
+      getSortedRowModel: createSortedRowModel(),
+      getPaginatedRowModel: createPaginatedRowModel(),
       debugTable: true,
       debugHeaders: true,
       debugColumns: false,

@@ -357,7 +357,7 @@ Example:
 import { getFilteredRowModel } from '@tanstack/[adapter]-table'
 
 
-  getFilteredRowModel: getFilteredRowModel(),
+  getFilteredRowModel: createFilteredRowModel(),
 })
 ```
 

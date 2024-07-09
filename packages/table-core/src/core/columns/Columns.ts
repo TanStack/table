@@ -1,5 +1,5 @@
 import { getMemoOptions, memo } from '../../utils'
-import { _createColumn } from './_createColumn'
+import { _createColumn } from './createColumn'
 import {
   column_getFlatColumns,
   column_getLeafColumns,

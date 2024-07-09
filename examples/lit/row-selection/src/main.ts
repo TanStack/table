@@ -6,7 +6,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/lit-table'
@@ -92,9 +92,9 @@ class LitTableExample extends LitElement {
           this._rowSelection = updaterOrValue
         }
       },
-      getCoreRowModel: getCoreRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
+      getCoreRowModel: createCoreRowModel(),
+      getFilteredRowModel: createFilteredRowModel(),
+      getPaginatedRowModel: createPaginatedRowModel(),
       debugTable: true,
     })
 

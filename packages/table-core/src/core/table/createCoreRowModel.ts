@@ -1,11 +1,12 @@
-import { _createRow } from '../rows/_createRow'
+import { _createRow } from '../rows/createRow'
 import { getMemoOptions, memo } from '../../utils'
 import { table_getRowId } from '../rows/Rows.utils'
 import type { Row, RowData, RowModel, Table } from '../../types'
 
-export function getCoreRowModel<TData extends RowData>(): (
+export function createCoreRowModel<TData extends RowData>(): (
   table: Table<TData>,
 ) => () => RowModel<TData> {
+  console.log('call create row model')
   return (table: Table<TData>) =>
     memo(
       () => [table.options.data],
@@ -16,6 +17,7 @@ export function getCoreRowModel<TData extends RowData>(): (
         flatRows: Array<Row<TData>>
         rowsById: Record<string, Row<TData>>
       } => {
+        console.log('run row model')
         const rowModel: RowModel<TData> = {
           rows: [],
           flatRows: [],

@@ -3,9 +3,10 @@ import {
   ColumnDef,
   createColumnHelper,
   _createTable,
-  getCoreRowModel,
+  createCoreRowModel,
+  RowSelection,
 } from '../src'
-import * as RowSelection from '../src/features/row-selection/RowSelection.utils'
+import * as RowSelectionUtils from '../src/features/row-selection/RowSelection.utils'
 import { makeData, Person } from './makeTestData'
 
 type personKeys = keyof Person
@@ -27,6 +28,8 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = _createTable<Person>({
+        _features: { RowSelection },
+        _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -39,11 +42,10 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelection.selectRowsFn(table, rowModel)
+      const result = RowSelectionUtils.selectRowsFn(table, rowModel)
 
       expect(result.rows.length).toBe(2)
       expect(result.flatRows.length).toBe(2)
@@ -56,6 +58,8 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = _createTable<Person>({
+        _features: { RowSelection },
+        _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -68,11 +72,10 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelection.selectRowsFn(table, rowModel)
+      const result = RowSelectionUtils.selectRowsFn(table, rowModel)
 
       expect(result.rows[0].subRows.length).toBe(1)
       expect(result.flatRows.length).toBe(2)
@@ -85,6 +88,8 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = _createTable<Person>({
+        _features: { RowSelection },
+        _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -94,11 +99,10 @@ describe('RowSelection', () => {
           rowSelection: {},
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelection.selectRowsFn(table, rowModel)
+      const result = RowSelectionUtils.selectRowsFn(table, rowModel)
 
       expect(result.rows.length).toBe(0)
       expect(result.flatRows.length).toBe(0)
@@ -113,7 +117,7 @@ describe('RowSelection', () => {
         '456': false,
       }
 
-      const result = RowSelection.isRowSelected(row, selection)
+      const result = RowSelectionUtils.isRowSelected(row, selection)
       expect(result).toEqual(true)
     })
 
@@ -124,7 +128,7 @@ describe('RowSelection', () => {
         '456': false,
       }
 
-      const result = RowSelection.isRowSelected(row, selection)
+      const result = RowSelectionUtils.isRowSelected(row, selection)
       expect(result).toEqual(false)
     })
 
@@ -135,7 +139,7 @@ describe('RowSelection', () => {
         '456': false,
       }
 
-      const result = RowSelection.isRowSelected(row, selection)
+      const result = RowSelectionUtils.isRowSelected(row, selection)
       expect(result).toEqual(false)
     })
 
@@ -143,7 +147,7 @@ describe('RowSelection', () => {
       const row = { id: '789', data: {} } as any
       const selection: Record<string, boolean> = {}
 
-      const result = RowSelection.isRowSelected(row, selection)
+      const result = RowSelectionUtils.isRowSelected(row, selection)
       expect(result).toEqual(false)
     })
   })
@@ -153,18 +157,19 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = _createTable<Person>({
+        _features: { RowSelection },
+        _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
         data,
         state: {},
         columns,
-        getCoreRowModel: getCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
 
-      const result = RowSelection.isSubRowSelected(
+      const result = RowSelectionUtils.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
         table,
@@ -178,6 +183,8 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = _createTable<Person>({
+        _features: { RowSelection },
+        _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -187,12 +194,11 @@ describe('RowSelection', () => {
           rowSelection: {},
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
 
-      const result = RowSelection.isSubRowSelected(
+      const result = RowSelectionUtils.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
         table,
@@ -206,6 +212,8 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = _createTable<Person>({
+        _features: { RowSelection },
+        _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -217,12 +225,11 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
 
-      const result = RowSelection.isSubRowSelected(
+      const result = RowSelectionUtils.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
         table,
@@ -236,6 +243,8 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = _createTable<Person>({
+        _features: { RowSelection },
+        _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -248,12 +257,11 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
 
-      const result = RowSelection.isSubRowSelected(
+      const result = RowSelectionUtils.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
         table,
@@ -266,6 +274,8 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = _createTable<Person>({
+        _features: { RowSelection },
+        _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: (row) => row.index === 0, // only first row is selectable (of 2 sub-rows)
         onStateChange() {},
         renderFallbackValue: '',
@@ -277,12 +287,11 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
 
-      const result = RowSelection.isSubRowSelected(
+      const result = RowSelectionUtils.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
         table,
@@ -295,6 +304,8 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = _createTable<Person>({
+        _features: { RowSelection },
+        _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -306,12 +317,11 @@ describe('RowSelection', () => {
           },
         },
         columns,
-        getCoreRowModel: getCoreRowModel(),
       })
 
       const firstRow = table.getCoreRowModel().rows[0]
 
-      const result = RowSelection.isSubRowSelected(
+      const result = RowSelectionUtils.isSubRowSelected(
         firstRow,
         table.getState().rowSelection,
         table,

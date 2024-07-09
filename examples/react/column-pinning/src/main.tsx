@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker'
 
 import './index.css'
 
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type {
   ColumnDef,
@@ -78,8 +78,11 @@ function App() {
   const rerender = () => setData(() => makeData(5000))
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
+    data,
     state: {
       columnVisibility,
       columnOrder,
@@ -88,7 +91,6 @@ function App() {
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
     onColumnPinningChange: setColumnPinning,
-    getCoreRowModel: getCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

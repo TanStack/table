@@ -1,6 +1,9 @@
 import type {
+  CachedRowModels,
   CoreTableFeatures,
   RowData,
+  RowModel,
+  RowModelOptions,
   TableFeatures,
   TableMeta,
   TableOptions,
@@ -12,11 +15,17 @@ import type { RequiredKeys } from '../../utils.types'
 
 export interface TableOptions_Table<TData extends RowData> {
   /**
-   * An array of extra features that you can add to the table instance.
+   * The features that you want to enable for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   _features?: Partial<TableFeatures>
+  /**
+   * The row model options that you want to enable for the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  _rowModels?: RowModelOptions<TData>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -82,6 +91,7 @@ export interface TableOptions_Table<TData extends RowData> {
 
 export interface Table_CoreProperties<TData extends RowData> {
   _features: CoreTableFeatures & Partial<TableFeatures>
+  _rowModels: CachedRowModels<TData>
   /**
    * This is the resolved initial state of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
@@ -99,6 +109,18 @@ export interface Table_CoreProperties<TData extends RowData> {
 export interface Table_Table<TData extends RowData>
   extends Table_CoreProperties<TData> {
   _queue: (cb: () => void) => void
+  /**
+   * Returns the core row model before any processing has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  getCoreRowModel: () => RowModel<TData>
+  /**
+   * Returns the final model after all processing from other used features has been applied. This is the row model that is most commonly used for rendering.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  getRowModel: () => RowModel<TData>
   /**
    * Call this function to get the table's current state. It's recommended to use this function and its state, especially when managing the table state manually. It is the exact same state used internally by the table for every feature and function it provides.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getstate)

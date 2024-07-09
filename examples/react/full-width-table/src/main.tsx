@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  createCoreRowModel,
+  createPaginatedRowModel,
   flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -74,15 +74,16 @@ function App() {
   })
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Paginated: createPaginatedRowModel(),
+    },
     columns,
+    data,
     state: {
       pagination,
     },
     onPaginationChange: setPagination,
-    // Pipeline
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
   })
 

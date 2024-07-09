@@ -2,7 +2,7 @@
 import {
   FlexRender,
   getCoreRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   useTable,
   createColumnHelper,
 } from '@tanstack/vue-table'
@@ -68,8 +68,8 @@ const table = useTable({
     return data.value
   },
   columns,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getPaginatedRowModel: createPaginatedRowModel(),
 })
 
 function rerender() {

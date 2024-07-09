@@ -1,4 +1,4 @@
-import { _createColumn } from './_createColumn'
+import { _createColumn } from './createColumn'
 import type {
   CellData,
   Column,

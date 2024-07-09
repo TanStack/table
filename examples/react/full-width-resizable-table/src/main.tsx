@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/react-table'
 import type { Person } from './makeData'
@@ -63,11 +63,13 @@ function App() {
   const data = React.useMemo(() => makeData(20), [])
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
+    data,
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
-    getCoreRowModel: getCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

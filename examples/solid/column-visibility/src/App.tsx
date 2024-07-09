@@ -107,7 +107,7 @@ function App() {
       },
     },
     onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
   })
 
   return (

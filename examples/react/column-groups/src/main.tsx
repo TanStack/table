@@ -5,8 +5,8 @@ import './index.css'
 
 import {
   createColumnHelper,
+  createCoreRowModel,
   flexRender,
-  getCoreRowModel,
   useTable,
 } from '@tanstack/react-table'
 
@@ -100,9 +100,11 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    data,
   })
 
   return (

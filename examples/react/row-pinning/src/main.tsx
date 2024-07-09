@@ -4,11 +4,15 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  ColumnFiltering,
+  RowExpanding,
+  RowPagination,
+  RowPinning,
+  createCoreRowModel,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
   flexRender,
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -146,8 +150,15 @@ function App() {
   const refreshData = () => setData(() => makeData(1000, 2, 2))
 
   const table = useTable({
-    data,
+    _features: { RowPinning, RowExpanding, ColumnFiltering, RowPagination },
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Filtered: createFilteredRowModel(),
+      Expanded: createExpandedRowModel(),
+      Paginated: createPaginatedRowModel(),
+    },
     columns,
+    data,
     initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
     state: {
       expanded,
@@ -156,10 +167,6 @@ function App() {
     onExpandedChange: setExpanded,
     onRowPinningChange: setRowPinning,
     getSubRows: (row) => row.subRows,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     keepPinnedRows,
     debugRows: true,
   })

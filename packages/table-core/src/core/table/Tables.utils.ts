@@ -1,5 +1,6 @@
-import { table_getPaginationRowModel } from '../../features/row-pagination/RowPagination.utils'
+import { table_getPaginatedRowModel } from '../../features/row-pagination/RowPagination.utils'
 import { functionalUpdate } from '../../utils'
+import { createCoreRowModel } from './createCoreRowModel'
 import type {
   RowData,
   RowModel,
@@ -50,4 +51,23 @@ export function table_setState<TData extends RowData>(
   updater: Updater<TableState>,
 ): void {
   table.options.onStateChange(updater)
+}
+
+export function table_getCoreRowModel<TData extends RowData>(
+  table: Table<TData>,
+): RowModel<TData> {
+  if (!table._rowModels.Core) {
+    table._rowModels.Core =
+      // eslint-disable-next-line ts/no-unnecessary-condition
+      table.options._rowModels?.Core?.(table) ??
+      createCoreRowModel<TData>()(table)
+  }
+
+  return table._rowModels.Core()
+}
+
+export function table_getRowModel<TData extends RowData>(
+  table: Table<TData>,
+): RowModel<TData> {
+  return table_getPaginatedRowModel(table)
 }

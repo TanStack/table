@@ -62,32 +62,64 @@ export function tableOptions<TData extends RowData = any>(
 ): Omit<TableOptions<TData>, 'data'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'getCoreRowModel'>,
-): Omit<TableOptions<TData>, 'getCoreRowModel'>
+  options: Omit<TableOptions<TData>, '_features'>,
+): Omit<TableOptions<TData>, '_features'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, '_rowModels'>,
+): Omit<TableOptions<TData>, '_rowModels'>
 
 export function tableOptions<TData extends RowData = any>(
   options: Omit<TableOptions<TData>, 'data' | 'columns'>,
 ): Omit<TableOptions<TData>, 'data' | 'columns'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>,
-): Omit<TableOptions<TData>, 'getCoreRowModel' | 'columns'>
+  options: Omit<TableOptions<TData>, 'data' | '_features'>,
+): Omit<TableOptions<TData>, 'data' | '_features'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>,
-): Omit<TableOptions<TData>, 'data' | 'getCoreRowModel'>
+  options: Omit<TableOptions<TData>, 'data' | '_rowModels'>,
+): Omit<TableOptions<TData>, 'data' | '_rowModels'>
 
 export function tableOptions<TData extends RowData = any>(
-  options: Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>,
-): Omit<TableOptions<TData>, 'data' | 'columns' | 'getCoreRowModel'>
+  options: Omit<TableOptions<TData>, 'columns' | '_features'>,
+): Omit<TableOptions<TData>, 'columns' | '_features'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'columns' | '_rowModels'>,
+): Omit<TableOptions<TData>, 'columns' | '_rowModels'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, '_features' | '_rowModels'>,
+): Omit<TableOptions<TData>, '_features' | '_rowModels'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'data' | 'columns' | '_features'>,
+): Omit<TableOptions<TData>, 'data' | 'columns' | '_features'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'data' | 'columns' | '_rowModels'>,
+): Omit<TableOptions<TData>, 'data' | 'columns' | '_rowModels'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'data' | '_features' | '_rowModels'>,
+): Omit<TableOptions<TData>, 'data' | '_features' | '_rowModels'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<TableOptions<TData>, 'columns' | '_features' | '_rowModels'>,
+): Omit<TableOptions<TData>, 'columns' | '_features' | '_rowModels'>
+
+export function tableOptions<TData extends RowData = any>(
+  options: Omit<
+    TableOptions<TData>,
+    'data' | 'columns' | '_features' | '_rowModels'
+  >,
+): Omit<TableOptions<TData>, 'data' | 'columns' | '_features' | '_rowModels'>
 
 export function tableOptions<TData extends RowData = any>(
   options: TableOptions<TData>,
 ): TableOptions<TData>
 
-/**
- * Helper function to help share table options with the same TData type across multiple components
- */
 export function tableOptions(options: unknown) {
   return options
 }

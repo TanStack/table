@@ -9,7 +9,7 @@ import {
   FlexRenderDirective,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import { FilterComponent } from './filter'
@@ -109,9 +109,9 @@ export class AppComponent {
           : updaterOrValue,
       )
     },
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getCoreRowModel: createCoreRowModel(),
+    getFilteredRowModel: createFilteredRowModel(),
+    getPaginatedRowModel: createPaginatedRowModel(),
     debugTable: true,
   }))
 

@@ -1,5 +1,5 @@
 import { makeStateUpdater } from '../../utils'
-import { table_getCoreRowModel } from '../../core/row-models/RowModels.utils'
+import { table_getCoreRowModel } from '../../core/table/Tables.utils'
 import {
   column_getCanGlobalFilter,
   table_getGlobalAutoFilterFn,

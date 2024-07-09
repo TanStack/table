@@ -4,9 +4,11 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  ColumnSizing,
+  RowSorting,
+  createCoreRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
 
@@ -14,7 +16,7 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { makeData } from './makeData'
 import type { Person } from './makeData'
-import type { ColumnDef, Row } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 
 //This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
 //See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
@@ -68,10 +70,10 @@ function App() {
   const [data, _setData] = React.useState(() => makeData(50_000))
 
   const table = useTable({
-    data,
+    _features: { ColumnSizing, RowSorting },
+    _rowModels: { Core: createCoreRowModel(), Sorted: createSortedRowModel() },
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    data,
     debugTable: true,
   })
 

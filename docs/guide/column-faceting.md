@@ -32,8 +32,8 @@ import {
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getFacetedRowModel: getFacetedRowModel(), //if you need a list of values for a column (other faceted row models depend on this one)
+  getCoreRowModel: createCoreRowModel(),
+  getFacetedRowModel: createFacetedRowModel(), //if you need a list of values for a column (other faceted row models depend on this one)
   getFacetedMinMaxValues: getFacetedMinMaxValues(), //if you need min/max values
   getFacetedUniqueValues: getFacetedUniqueValues(), //if you need a list of unique values
   //...
@@ -71,8 +71,8 @@ const facetingQuery = useQuery(
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getFacetedRowModel: getFacetedRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getFacetedRowModel: createFacetedRowModel(),
   getFacetedUniqueValues: (table, columnId) => {
     const uniqueValueMap = new Map<string, number>();
     //...

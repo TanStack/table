@@ -1,10 +1,10 @@
-import { _createRow } from '../../core/rows/_createRow'
+import { _createRow } from '../../core/rows/createRow'
 import { flattenBy, getMemoOptions, memo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { row_getGroupingValue } from './ColumnGrouping.utils'
 import type { Row, RowData, RowModel, Table } from '../../types'
 
-export function getGroupedRowModel<TData extends RowData>(): (
+export function createGroupedRowModel<TData extends RowData>(): (
   table: Table<TData>,
 ) => () => RowModel<TData> {
   return (table) =>

@@ -90,7 +90,7 @@ const App = component$(() => {
   const table = useTable({
     columns,
     data: defaultData,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
     enableSorting: true,
   })
 

@@ -30,7 +30,7 @@ export type PaginationInitialTableState = {
 manualPagination?: boolean
 ```
 
-Enables manual pagination. If this option is set to `true`, the table will not automatically paginate rows using `getPaginationRowModel()` and instead will expect you to manually paginate the rows before passing them to the table. This is useful if you are doing server-side pagination and aggregation.
+Enables manual pagination. If this option is set to `true`, the table will not automatically paginate rows using `getPaginatedRowModel()` and instead will expect you to manually paginate the rows before passing them to the table. This is useful if you are doing server-side pagination and aggregation.
 
 ### `pageCount`
 
@@ -66,10 +66,10 @@ onPaginationChange?: OnChangeFn<PaginationState>
 
 If this function is provided, it will be called when the pagination state changes and you will be expected to manage the state yourself. You can pass the managed state back to the table via the `tableOptions.state.pagination` option.
 
-### `getPaginationRowModel`
+### `getPaginatedRowModel`
 
 ```tsx
-getPaginationRowModel?: (table: Table<TData>) => () => RowModel<TData>
+getPaginatedRowModel?: (table: Table<TData>) => () => RowModel<TData>
 ```
 
 Returns the row model after pagination has taken place, but no further.
@@ -198,10 +198,10 @@ getPrePaginationRowModel: () => RowModel<TData>
 
 Returns the row model for the table before any pagination has been applied.
 
-### `getPaginationRowModel`
+### `getPaginatedRowModel`
 
 ```tsx
-getPaginationRowModel: () => RowModel<TData>
+getPaginatedRowModel: () => RowModel<TData>
 ```
 
 Returns the row model for the table after pagination has been applied.

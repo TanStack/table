@@ -177,18 +177,18 @@ export function table_getPrePaginationRowModel<TData extends RowData>(
   return table_getExpandedRowModel(table)
 }
 
-export function table_getPaginationRowModel<TData extends RowData>(
+export function table_getPaginatedRowModel<TData extends RowData>(
   table: Table<TData>,
 ): RowModel<TData> {
-  if (!table._getPaginationRowModel && table.options.getPaginationRowModel) {
-    table._getPaginationRowModel = table.options.getPaginationRowModel(table)
+  if (!table._getPaginatedRowModel) {
+    table._getPaginatedRowModel = table.options._rowModels?.Paginated?.(table)
   }
 
-  if (table.options.manualPagination || !table._getPaginationRowModel) {
+  if (table.options.manualPagination || !table._getPaginatedRowModel) {
     return table_getPrePaginationRowModel(table)
   }
 
-  return table._getPaginationRowModel()
+  return table._getPaginatedRowModel()
 }
 
 export function table_getPageCount<TData extends RowData>(table: Table<TData>) {

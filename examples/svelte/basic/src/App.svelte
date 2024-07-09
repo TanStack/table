@@ -81,7 +81,7 @@
   let options: TableOptions<Person> = {
     data: defaultData,
     columns: defaultColumns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
   }
 
   const table = createTable(options)

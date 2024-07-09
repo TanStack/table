@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 import { Table as BTable } from 'react-bootstrap'
 
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/react-table'
 import type { Person } from './makeData'
@@ -67,9 +67,11 @@ function App() {
   const rerender = () => setData(makeData(10))
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    data,
   })
 
   return (

@@ -155,14 +155,6 @@ interface ColumnFiltersOptionsBase<TData extends RowData> {
    */
   filterFromLeafRows?: boolean
   /**
-   * If provided, this function is called **once** per table and should return a **new function** which will calculate and return the row model for the table when it's filtered.
-   * - For server-side filtering, this function is unnecessary and can be ignored since the server should already return the filtered row model.
-   * - For client-side filtering, this function is required. A default implementation is provided via any table adapter's `{ getFilteredRowModel }` export.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getfilteredrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
-   */
-  getFilteredRowModel?: (table: Table<any>) => () => RowModel<any>
-  /**
    * Disables the `getFilteredRowModel` from being used to filter data. This may be useful if your table needs to dynamically support both client-side and server-side filtering.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#manualfiltering)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
@@ -197,7 +189,6 @@ export interface TableOptions_ColumnFiltering<TData extends RowData>
     ResolvedFilterFns {}
 
 export interface Table_ColumnFiltering<TData extends RowData> {
-  _getFilteredRowModel?: () => RowModel<TData>
   /**
    * Returns the row model for the table after **column** filtering has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getfilteredrowmodel)

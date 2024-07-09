@@ -68,7 +68,7 @@ function App() {
       return data()
     },
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: createCoreRowModel(),
   })
 
   return (

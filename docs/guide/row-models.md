@@ -11,9 +11,9 @@ import { getCoreRowModel, useTable } from '@tanstack/react-table'
 
 function Component() {
   const table = useTable({
-    data,
     columns,
-    getCoreRowModel: getCoreRowModel(), //row model
+    data,
+    getCoreRowModel: createCoreRowModel(), //row model
   })
 }
 ```
@@ -40,22 +40,22 @@ import {
   getFacetedUniqueValues,
   getFilteredRowModel,
   getGroupedRowModel,
-  getPaginationRowModel,
+  getPaginatedRowModel,
   getSortedRowModel,
 }
 //...
 const table = useTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getExpandedRowModel: getExpandedRowModel(),
+  getCoreRowModel: createCoreRowModel(),
+  getExpandedRowModel: createExpandedRowModel(),
   getFacetedMinMaxValues: getFacetedMinMaxValues(),
-  getFacetedRowModel: getFacetedRowModel(),
+  getFacetedRowModel: createFacetedRowModel(),
   getFacetedUniqueValues: getFacetedUniqueValues(),
-  getFilteredRowModel: getFilteredRowModel(),
-  getGroupedRowModel: getGroupedRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
-  getSortedRowModel: getSortedRowModel(),
+  getFilteredRowModel: createFilteredRowModel(),
+  getGroupedRowModel: createGroupedRowModel(),
+  getPaginatedRowModel: createPaginatedRowModel(),
+  getSortedRowModel: createSortedRowModel(),
 })
 ```
 
@@ -87,7 +87,7 @@ For normal rendering use cases, you will probably only need to use the `table.ge
 - `getExpandedRowModel` - returns a row model that accounts for expanded/hidden sub-rows.
 - `getPreExpandedRowModel` - returns a row model that only includes root level rows with no expanded sub-rows included. Still includes sorting.
 
-- `getPaginationRowModel` - returns a row model that only includes the rows that should be displayed on the current page based on the pagination state.
+- `getPaginatedRowModel` - returns a row model that only includes the rows that should be displayed on the current page based on the pagination state.
 - `getPrePaginationRowModel` - returns a row model without pagination applied (includes all rows).
 
 - `getSelectedRowModel` - returns a row model of all selected rows (but only based on the data that was passed to the table). Runs after getCoreRowModel.
@@ -101,7 +101,7 @@ Knowing how TanStack Table processes rows internally can help you gain a better 
 
 Internally, this is the order in which each of the row models are applied to the data, if their respective features are enabled:
 
-`getCoreRowModel` -> `getFilteredRowModel` -> `getGroupedRowModel` -> `getSortedRowModel` -> `getExpandedRowModel` -> `getPaginationRowModel` -> `getRowModel`
+`getCoreRowModel` -> `getFilteredRowModel` -> `getGroupedRowModel` -> `getSortedRowModel` -> `getExpandedRowModel` -> `getPaginatedRowModel` -> `getRowModel`
 
 If in any case the respective feature is disabled or turned off with a `"manual*"` table option, the `getPre*RowModel` will be used instead in that step of the process.
 

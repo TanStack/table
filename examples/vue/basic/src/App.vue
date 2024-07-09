@@ -102,7 +102,7 @@ const table = useTable({
     return data.value
   },
   columns,
-  getCoreRowModel: getCoreRowModel(),
+  getCoreRowModel: createCoreRowModel(),
 })
 </script>
 

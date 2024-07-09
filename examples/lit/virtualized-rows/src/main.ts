@@ -65,8 +65,8 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table({
       columns,
       data,
-      getSortedRowModel: getSortedRowModel(),
-      getCoreRowModel: getCoreRowModel(),
+      getSortedRowModel: createSortedRowModel(),
+      getCoreRowModel: createCoreRowModel(),
     })
     const { rows } = table.getRowModel()
     return html`

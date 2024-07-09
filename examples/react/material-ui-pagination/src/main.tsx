@@ -14,10 +14,10 @@ import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
 
 import {
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
   useTable,
 } from '@tanstack/react-table'
 
@@ -113,13 +113,13 @@ function LocalTable({
   columns: Array<ColumnDef<Person>>
 }) {
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Filtered: createFilteredRowModel(),
+      Paginated: createPaginatedRowModel(),
+    },
     columns,
-    // Pipeline
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    //
+    data,
     debugTable: true,
   })
 

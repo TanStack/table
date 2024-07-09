@@ -5,7 +5,7 @@ import { column_getCanSort, column_getSortingFn } from './RowSorting.utils'
 import type { Row, RowData, RowModel, Table } from '../../types'
 import type { SortingFn } from './RowSorting.types'
 
-export function getSortedRowModel<TData extends RowData>(): (
+export function createSortedRowModel<TData extends RowData>(): (
   table: Table<TData>,
 ) => () => RowModel<TData> {
   return (table) =>
