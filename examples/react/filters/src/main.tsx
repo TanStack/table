@@ -99,8 +99,8 @@ function App() {
       Sorted: createSortedRowModel(),
       Paginated: createPaginatedRowModel(),
     },
-    data,
     columns,
+    data,
     filterFns: {},
     state: {
       columnFilters,

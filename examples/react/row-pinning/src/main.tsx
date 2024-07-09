@@ -157,8 +157,8 @@ function App() {
       Expanded: createExpandedRowModel(),
       Paginated: createPaginatedRowModel(),
     },
-    data,
     columns,
+    data,
     initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
     state: {
       expanded,

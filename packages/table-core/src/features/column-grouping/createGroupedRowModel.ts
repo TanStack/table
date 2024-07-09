@@ -1,4 +1,4 @@
-import { _createRow } from '../../core/rows/_createRow'
+import { _createRow } from '../../core/rows/createRow'
 import { flattenBy, getMemoOptions, memo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { row_getGroupingValue } from './ColumnGrouping.utils'

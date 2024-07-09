@@ -1,10 +1,9 @@
-import type { CSSProperties } from 'react'
-import React from 'react'
+import React, { type CSSProperties } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 
 // needed for table body level scope DnD setup
 import {
@@ -22,10 +21,10 @@ import {
   SortableContext,
   arrayMove,
   horizontalListSortingStrategy,
+  useSortable,
 } from '@dnd-kit/sortable'
 
 // needed for row & cell level scope DnD setup
-import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
@@ -136,9 +135,11 @@ function App() {
   const rerender = () => setData(() => makeData(20))
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
-    getCoreRowModel: createCoreRowModel(),
+    data,
     state: {
       columnOrder,
     },
@@ -152,10 +153,10 @@ function App() {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (active && over && active.id !== over.id) {
-      setColumnOrder((columnOrder) => {
-        const oldIndex = columnOrder.indexOf(active.id as string)
-        const newIndex = columnOrder.indexOf(over.id as string)
-        return arrayMove(columnOrder, oldIndex, newIndex) //this is just a splice util
+      setColumnOrder((prevColumnOrder) => {
+        const oldIndex = prevColumnOrder.indexOf(active.id as string)
+        const newIndex = prevColumnOrder.indexOf(over.id as string)
+        return arrayMove(prevColumnOrder, oldIndex, newIndex) //this is just a splice util
       })
     }
   }

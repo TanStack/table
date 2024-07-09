@@ -4,12 +4,12 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
   flexRender,
   functionalUpdate,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginatedRowModel,
-  getSortedRowModel,
   makeStateUpdater,
   useTable,
 } from '@tanstack/react-table'
@@ -167,13 +167,15 @@ function App() {
 
   const table = useTable({
     _features: { DensityFeature }, //pass our custom feature to the table to be instantiated upon creation
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Filtered: createFilteredRowModel(),
+      Paginated: createPaginatedRowModel(),
+      Sorted: createSortedRowModel(),
+    },
     columns,
     data,
     debugTable: true,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
-    getFilteredRowModel: createFilteredRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
     state: {
       density, //passing the density state to the table, TS is still happy :)
     },

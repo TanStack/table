@@ -123,8 +123,8 @@ function App() {
     _rowModels: {
       Core: createCoreRowModel(),
     },
-    data,
     columns,
+    data,
     getRowId: (row) => row.userId, //required because row indexes will change
     debugTable: true,
     debugHeaders: true,

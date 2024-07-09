@@ -4,9 +4,9 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  createCoreRowModel,
+  createPaginatedRowModel,
   flexRender,
-  getCoreRowModel,
-  getPaginatedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -83,10 +83,12 @@ function App() {
 
   // Create the table and pass your options
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Paginated: createPaginatedRowModel(),
+    },
     columns,
-    getCoreRowModel: createCoreRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
+    data,
   })
 
   // Manage your own state

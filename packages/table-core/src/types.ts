@@ -1,7 +1,3 @@
-import type {
-  TableOptions_RowModels,
-  Table_RowModels,
-} from './core/row-models/RowModels.types'
 import type { TableOptions_Table, Table_Table } from './core/table/Tables.types'
 import type {
   ColumnDef_ColumnVisibility,
@@ -150,7 +146,6 @@ export interface TableFeature {
 
 export interface CoreTableFeatures {
   Tables: TableFeature
-  RowModels: TableFeature
   Rows: TableFeature
   Headers: TableFeature
   Columns: TableFeature
@@ -231,7 +226,7 @@ export interface RowModelOptions<TData extends RowData> {
   FacetedMinMax?: (
     table: Table<TData>,
     columnId: string,
-  ) => () => [number, number]
+  ) => () => [number, number] | undefined
   /**
    * This function is used to retrieve the faceted row model. If using server-side faceting, this function is not required. To use client-side faceting, pass the exported `getFacetedRowModel()` from your adapter to your table or implement your own.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-faceting#getfacetedrowmodel)
@@ -285,7 +280,6 @@ export type AnyRender = (Comp: any, props: any) => any
 export interface Table_Core<TData extends RowData>
   extends Table_Table<TData>,
     Table_Columns<TData>,
-    Table_RowModels<TData>,
     Table_Rows<TData>,
     Table_Headers<TData> {}
 
@@ -310,7 +304,6 @@ export interface TableOptions_Core<TData extends RowData>
   extends TableOptions_Table<TData>,
     TableOptions_Cell,
     TableOptions_Columns<TData>,
-    TableOptions_RowModels<TData>,
     TableOptions_Rows<TData>,
     TableOptions_Headers {}
 

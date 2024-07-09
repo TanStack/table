@@ -1,7 +1,7 @@
 import { filterFns } from '../../fns/filterFns'
 import { functionalUpdate, isFunction } from '../../utils'
-import { table_getCoreRowModel } from '../../core/row-models/RowModels.utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
+import { table_getCoreRowModel } from '../../core/table/Tables.utils'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 import type { Column, RowData, RowModel, Table, Updater } from '../../types'
 import type { ColumnFiltersState, FilterFn } from './ColumnFiltering.types'
@@ -165,7 +165,7 @@ export function table_getFilteredRowModel<TData extends RowData>(
   table: Table<TData>,
 ): RowModel<TData> {
   if (!table._rowModels.Filtered) {
-    table._rowModels.Filtered = table.options._rowModels?.Filtered?.(table)
+    table._rowModels.Filtered = table.options._rowModels.Filtered?.(table)
   }
 
   if (table.options.manualFiltering || !table._rowModels.Filtered) {

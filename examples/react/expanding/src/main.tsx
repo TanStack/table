@@ -4,11 +4,11 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getPaginatedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -119,17 +119,19 @@ function App() {
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Filtered: createFilteredRowModel(),
+      Paginated: createPaginatedRowModel(),
+      Sorted: createSortedRowModel(),
+    },
     columns,
+    data,
     state: {
       expanded,
     },
     onExpandedChange: setExpanded,
     getSubRows: (row) => row.subRows,
-    getCoreRowModel: createCoreRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
-    getFilteredRowModel: createFilteredRowModel(),
-    getExpandedRowModel: createExpandedRowModel(),
     // filterFromLeafRows: true,
     // maxLeafRowFilterDepth: 0,
     debugTable: true,

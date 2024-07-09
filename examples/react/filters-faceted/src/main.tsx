@@ -4,14 +4,14 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  createCoreRowModel,
+  createFacetedMinMaxValues,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginatedRowModel,
-  getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -85,19 +85,21 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Filtered: createFilteredRowModel(), //client-side filtering
+      Paginated: createPaginatedRowModel(),
+      Sorted: createSortedRowModel(),
+      Faceted: createFacetedRowModel(), //client-side faceting
+      FacetedMinMax: createFacetedMinMaxValues(), //generate min/max values for range filter
+      FacetedUnique: createFacetedUniqueValues(), //generate unique values for select filter/autocomplete
+    },
     columns,
+    data,
     state: {
       columnFilters,
     },
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: createCoreRowModel(),
-    getFilteredRowModel: createFilteredRowModel(), //client-side filtering
-    getSortedRowModel: createSortedRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
-    getFacetedRowModel: createFacetedRowModel(), // client-side faceting
-    getFacetedUniqueValues: getFacetedUniqueValues(), // generate unique values for select filter/autocomplete
-    getFacetedMinMaxValues: getFacetedMinMaxValues(), // generate min/max values for range filter
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,

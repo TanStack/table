@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 import type { ColumnDef } from '@tanstack/react-table'
 
 type Person = {
@@ -104,13 +104,15 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
+    data,
     state: {
       columnVisibility,
     },
     onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

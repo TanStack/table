@@ -1,5 +1,5 @@
 import { column_getIsVisible } from '../../features/column-visibility/ColumnVisibility.utils'
-import { _createHeader } from './_createHeader'
+import { _createHeader } from './createHeader'
 import type { Column, Header, HeaderGroup, RowData, Table } from '../../types'
 
 export function buildHeaderGroups<TData extends RowData>(

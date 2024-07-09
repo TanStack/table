@@ -4,7 +4,7 @@ import {
   table_getRow,
 } from '../../core/rows/Rows.utils'
 import { row_getIsAllParentsExpanded } from '../row-expanding/RowExpanding.utils'
-import { table_getRowModel } from '../../core/row-models/RowModels.utils'
+import { table_getRowModel } from '../../core/table/Tables.utils'
 import type { Row, RowData, Table, Updater } from '../../types'
 import type { RowPinningPosition, RowPinningState } from './RowPinning.types'
 

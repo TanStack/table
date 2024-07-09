@@ -1,7 +1,7 @@
 import { table_getPrePaginationRowModel } from '../row-pagination/RowPagination.utils'
 import { table_getSortedRowModel } from '../row-sorting/RowSorting.utils'
-import { table_getRowModel } from '../../core/row-models/RowModels.utils'
 import { table_getRow } from '../../core/rows/Rows.utils'
+import { table_getRowModel } from '../../core/table/Tables.utils'
 import type { Row, RowData, RowModel, Table, Updater } from '../../types'
 import type { ExpandedState, ExpandedStateList } from './RowExpanding.types'
 
@@ -135,7 +135,7 @@ export function table_getExpandedRowModel<TData extends RowData>(
   table: Table<TData>,
 ): RowModel<TData> {
   if (!table._rowModels.Expanded) {
-    table._rowModels.Expanded = table.options._rowModels?.Expanded?.(table)
+    table._rowModels.Expanded = table.options._rowModels.Expanded?.(table)
   }
 
   if (table.options.manualExpanding || !table._rowModels.Expanded) {

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef, Table } from '@tanstack/react-table'
 
@@ -72,14 +72,16 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
+    data,
     defaultColumn: {
       minSize: 60,
       maxSize: 800,
     },
     columnResizeMode: 'onChange',
-    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

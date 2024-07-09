@@ -6,10 +6,10 @@ import './index.css'
 
 //
 import {
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginatedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -127,12 +127,14 @@ function App() {
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Filtered: createFilteredRowModel(),
+      Paginated: createPaginatedRowModel(),
+    },
     columns,
+    data,
     defaultColumn,
-    getCoreRowModel: createCoreRowModel(),
-    getFilteredRowModel: createFilteredRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
     autoResetPageIndex,
     // Provide our updateData function to our table meta
     meta: {

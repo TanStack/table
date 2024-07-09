@@ -1,5 +1,5 @@
 import { getMemoOptions, memo } from '../../utils'
-import { _createHeader } from './_createHeader'
+import { _createHeader } from './createHeader'
 import {
   table_getFlatHeaders,
   table_getFooterGroups,

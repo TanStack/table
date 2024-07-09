@@ -17,7 +17,6 @@ import { RowPagination } from '../../features/row-pagination/RowPagination'
 import { RowPinning } from '../../features/row-pinning/RowPinning'
 import { RowSelection } from '../../features/row-selection/RowSelection'
 import { RowSorting } from '../../features/row-sorting/RowSorting'
-import { RowModels } from '../row-models/RowModels'
 import { Tables } from './Tables'
 import type { Table_CoreProperties } from './Tables.types'
 import type {
@@ -28,7 +27,7 @@ import type {
   TableState,
 } from '../../types'
 
-const coreFeatures = { Tables, RowModels, Rows, Headers, Columns, Cells }
+const coreFeatures = { Tables, Rows, Headers, Columns, Cells }
 
 const builtInFeatures = {
   ColumnFaceting,
@@ -86,7 +85,7 @@ export function _createTable<TData extends RowData>(
 
   const coreInstance: Table_CoreProperties<TData> = {
     _features,
-    _rowModels: {},
+    _rowModels: {}, //row models get cached here later
     options: {
       ...defaultOptions,
       ...options,

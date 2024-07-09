@@ -10,7 +10,7 @@ import {
 
 import './index.css'
 
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 import { fetchData } from './fetchData'
 import type { ColumnDef, PaginationState } from '@tanstack/react-table'
 
@@ -92,15 +92,18 @@ function App() {
   const defaultData = React.useMemo(() => [], [])
 
   const table = useTable({
-    data: dataQuery.data?.rows ?? defaultData,
+    _features: {},
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
-    // pageCount: dataQuery.data?.pageCount ?? -1, //you can now pass in `rowCount` instead of pageCount and `pageCount` will be calculated internally (new in v8.13.0)
-    rowCount: dataQuery.data?.rowCount, // new in v8.13.0 - alternatively, just pass in `pageCount` directly
+    data: dataQuery.data?.rows ?? defaultData,
+    rowCount: dataQuery.data?.rowCount, //alternatively, just pass in `pageCount` directly
+    // pageCount: dataQuery.data?.pageCount, //recommended to use `rowCount` instead like just above
     state: {
       pagination,
     },
     onPaginationChange: setPagination,
-    getCoreRowModel: createCoreRowModel(),
     manualPagination: true, //we're doing manual "server-side" pagination
     // getPaginatedRowModel: createPaginatedRowModel(), // If only doing manual pagination, you don't need this
     debugTable: true,

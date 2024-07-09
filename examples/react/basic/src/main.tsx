@@ -87,8 +87,8 @@ function App() {
     _rowModels: {
       Core: createCoreRowModel(),
     },
-    data,
     columns,
+    data,
   })
 
   return (

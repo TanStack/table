@@ -1,10 +1,9 @@
-import type { CSSProperties } from 'react'
-import React from 'react'
+import React, { type CSSProperties } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import { flexRender, getCoreRowModel, useTable } from '@tanstack/react-table'
+import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
 import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
@@ -89,9 +88,11 @@ function App() {
   const rerender = () => setData(() => makeData(30))
 
   const table = useTable({
-    data,
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     columns,
-    getCoreRowModel: createCoreRowModel(),
+    data,
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

@@ -11,8 +11,8 @@ import { getCoreRowModel, useTable } from '@tanstack/react-table'
 
 function Component() {
   const table = useTable({
-    data,
     columns,
+    data,
     getCoreRowModel: createCoreRowModel(), //row model
   })
 }

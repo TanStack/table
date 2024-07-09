@@ -1,11 +1,11 @@
-import { table_getPreGroupedRowModel } from '../column-grouping/ColumnGrouping.utils'
+import { table_getPreGroupedRowModel as RowSelectionUtils } from '../column-grouping/ColumnGrouping.utils'
 import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import { table_getPaginatedRowModel } from '../row-pagination/RowPagination.utils'
+import { table_getRow } from '../../core/rows/Rows.utils'
 import {
   table_getCoreRowModel,
   table_getRowModel,
-} from '../../core/row-models/RowModels.utils'
-import { table_getRow } from '../../core/rows/Rows.utils'
+} from '../../core/table/Tables.utils'
 import type { Row, RowData, RowModel, Table, Updater } from '../../types'
 import type { RowSelectionState } from './RowSelection.types'
 
@@ -36,7 +36,7 @@ export function table_toggleAllRowsSelected<TData extends RowData>(
 
     const rowSelection = { ...old }
 
-    const preGroupedFlatRows = table_getPreGroupedRowModel(table).flatRows
+    const preGroupedFlatRows = RowSelectionUtils(table).flatRows
 
     // We don't use `mutateRowIsSelected` here for performance reasons.
     // All of the rows are flat already, so it wouldn't be worth it

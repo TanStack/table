@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest'
 import {
   _createTable,
   ColumnDef,
-  getCoreRowModel,
-  getGroupedRowModel,
+  createCoreRowModel,
+  createGroupedRowModel,
+  ColumnGrouping,
 } from '../src'
 import { createColumnHelper } from '../src/helpers'
 import { makeData, Person } from './makeTestData'
@@ -32,13 +33,13 @@ describe('#getGroupedRowModel', () => {
     data.forEach((p) => (p.age = 123))
 
     const table = _createTable<Person>({
+      _features: { ColumnGrouping },
+      _rowModels: { Core: createCoreRowModel(), Grouped: createGroupedRowModel()},
       onStateChange() {},
       renderFallbackValue: '',
       data,
       state: { grouping },
       columns,
-      getCoreRowModel: createCoreRowModel(),
-      getGroupedRowModel: createGroupedRowModel(),
     })
     const groupedById = table.getGroupedRowModel().rowsById
     const end = new Date()
