@@ -1,8 +1,10 @@
 {
-  "name": "table",
-  "namespace": "@tanstack",
+  "name": "root",
   "private": true,
-  "repository": "https://github.com/tanstack/table.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tanstack/table.git"
+  },
   "packageManager": "pnpm@9.3.0",
   "type": "module",
   "scripts": {
