@@ -18,13 +18,13 @@ export interface TableOptions_Table<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _features?: Partial<TableFeatures>
+  _features: Partial<TableFeatures>
   /**
    * The row model options that you want to enable for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _rowModels?: RowModelOptions<TData>
+  _rowModels: RowModelOptions<TData>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)

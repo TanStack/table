@@ -1,10 +1,13 @@
 import React, { type HTMLProps } from 'react'
 import ReactDOM from 'react-dom/client'
 import {
+  ColumnFiltering,
+  RowPagination,
+  RowSelection,
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginatedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -101,17 +104,20 @@ function App() {
   const refreshData = () => setData(() => makeData(100000))
 
   const table = useTable({
-    data,
+    _features: { RowPagination, RowSelection, ColumnFiltering },
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Filtered: createFilteredRowModel(),
+      Paginated: createPaginatedRowModel(),
+    },
     columns,
+    data,
     state: {
       rowSelection,
     },
     enableRowSelection: true, //enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: setRowSelection,
-    getCoreRowModel: createCoreRowModel(),
-    getFilteredRowModel: createFilteredRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
     debugTable: true,
   })
 

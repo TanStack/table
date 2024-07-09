@@ -5,9 +5,11 @@ import './index.css'
 
 //3 TanStack Libraries!!!
 import {
+  ColumnSizing,
+  RowSorting,
+  createCoreRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import {
@@ -20,12 +22,7 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { fetchData } from './makeData'
 import type { Person, PersonApiResponse } from './makeData'
-import type {
-  ColumnDef,
-  OnChangeFn,
-  Row,
-  SortingState,
-} from '@tanstack/react-table'
+import type { ColumnDef, OnChangeFn, SortingState } from '@tanstack/react-table'
 
 const fetchSize = 50
 
@@ -131,13 +128,13 @@ function App() {
   }, [fetchMoreOnBottomReached])
 
   const table = useTable({
+    _features: { ColumnSizing, RowSorting },
+    _rowModels: { Core: createCoreRowModel(), Sorted: createSortedRowModel() },
     data: flatData,
     columns,
     state: {
       sorting,
     },
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
     manualSorting: true,
     debugTable: true,
   })

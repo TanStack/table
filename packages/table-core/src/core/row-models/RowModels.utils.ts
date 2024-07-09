@@ -7,6 +7,7 @@ export function table_getCoreRowModel<TData extends RowData>(
 ): RowModel<TData> {
   if (!table._rowModels.Core) {
     table._rowModels.Core =
+      // eslint-disable-next-line ts/no-unnecessary-condition
       table.options._rowModels?.Core?.(table) ??
       createCoreRowModel<TData>()(table)
   }

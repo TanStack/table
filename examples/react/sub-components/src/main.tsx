@@ -4,9 +4,10 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  RowExpanding,
+  createCoreRowModel,
+  createExpandedRowModel,
   flexRender,
-  getCoreRowModel,
-  getExpandedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -104,17 +105,20 @@ type TableProps<TData> = {
 }
 
 function Table({
-  data,
   columns,
-  renderSubComponent,
+  data,
   getRowCanExpand,
+  renderSubComponent,
 }: TableProps<Person>): JSX.Element {
   const table = useTable<Person>({
-    data,
+    _features: { RowExpanding },
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Expanded: createExpandedRowModel(),
+    },
     columns,
+    data,
     getRowCanExpand,
-    getCoreRowModel: createCoreRowModel(),
-    getExpandedRowModel: createExpandedRowModel(),
   })
 
   return (
@@ -190,8 +194,8 @@ function App() {
 
   return (
     <Table
-      data={data}
       columns={columns}
+      data={data}
       getRowCanExpand={() => true}
       renderSubComponent={renderSubComponent}
     />

@@ -4,9 +4,10 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  RowSorting,
+  createCoreRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -79,11 +80,14 @@ function App() {
   const refreshData = () => setData(() => makeData(100_000)) //stress test with 100k rows
 
   const table = useTable({
+    _features: { RowSorting },
+    _rowModels: {
+      Core: createCoreRowModel(),
+      Sorted: createSortedRowModel(), //client-side sorting
+    },
     columns,
     data,
     debugTable: true,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(), //client-side sorting
     onSortingChange: setSorting, //optionally control sorting state in your own scope for easy access
     // sortingFns: {
     //   sortStatusFn, //or provide our custom sorting function globally for all columns to be able to use

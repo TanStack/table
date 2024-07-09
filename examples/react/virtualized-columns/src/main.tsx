@@ -4,9 +4,11 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  ColumnSizing,
+  RowSorting,
+  createCoreRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
   useTable,
 } from '@tanstack/react-table'
 
@@ -14,7 +16,7 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 
 import { makeColumns, makeData } from './makeData'
 import type { Person } from './makeData'
-import type { ColumnDef, Row } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 
 function App() {
   const columns = React.useMemo<Array<ColumnDef<Person>>>(
@@ -25,10 +27,10 @@ function App() {
   const [data, _setData] = React.useState(() => makeData(1_000, columns))
 
   const table = useTable({
-    data,
+    _features: { ColumnSizing, RowSorting },
+    _rowModels: { Core: createCoreRowModel(), Sorted: createSortedRowModel() },
     columns,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
+    data,
     debugTable: true,
   })
 
@@ -69,7 +71,7 @@ function App() {
   let virtualPaddingLeft: number | undefined
   let virtualPaddingRight: number | undefined
 
-  if (columnVirtualizer && virtualColumns.length) {
+  if (virtualColumns.length) {
     virtualPaddingLeft = virtualColumns[0]?.start ?? 0
     virtualPaddingRight =
       columnVirtualizer.getTotalSize() -

@@ -5,8 +5,8 @@ import './index.css'
 
 import {
   createColumnHelper,
+  createCoreRowModel,
   flexRender,
-  getCoreRowModel,
   useTable,
 } from '@tanstack/react-table'
 
@@ -83,9 +83,12 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
+    _features: {},
+    _rowModels: {
+      Core: createCoreRowModel(),
+    },
     data,
     columns,
-    getCoreRowModel: createCoreRowModel(),
   })
 
   return (
@@ -110,7 +113,7 @@ function App() {
         <tbody>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
+              {row.getAllCells().map((cell) => (
                 <td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
