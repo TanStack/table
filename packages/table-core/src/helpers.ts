@@ -9,7 +9,7 @@ import type {
   TableFeatures,
   TableOptions,
 } from './types'
-import type { DeepKeys, DeepValue } from './utils.types'
+import type { DeepKeys, DeepValue, RequiredKeys } from './utils.types'
 
 export type ColumnHelper<
   TFeatures extends TableFeatures,

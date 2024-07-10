@@ -21,7 +21,7 @@ function App() {
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
 
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         id: 'select',
@@ -299,7 +299,7 @@ function Filter({
   table,
 }: {
   column: Column<any, any>
-  table: Table<any>
+  table: Table<any, any>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

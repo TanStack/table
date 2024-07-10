@@ -28,9 +28,9 @@ import type {
   TableState,
 } from '../../types'
 
-const coreFeatures = { Tables, Rows, Headers, Columns, Cells }
+export const coreFeatures = { Tables, Rows, Headers, Columns, Cells }
 
-const builtInFeatures = {
+export const builtInFeatures = {
   ColumnFaceting,
   ColumnFiltering,
   ColumnGrouping,
@@ -49,10 +49,10 @@ const builtInFeatures = {
 }
 
 export function getInitialTableState(
-  features: Array<TableFeature>,
+  features: TableFeatures,
   initialState: Partial<TableState> | undefined = {},
 ): TableState {
-  features.forEach((feature) => {
+  Object.values(features).forEach((feature) => {
     initialState = feature._getInitialState?.(initialState) ?? initialState
   })
   return initialState as TableState
@@ -83,7 +83,7 @@ export function _createTable<
     return Object.assign(obj, feature._getDefaultOptions?.(table))
   }, {}) as TableOptionsResolved<TFeatures, TData>
 
-  const initialState = getInitialTableState(featuresList, options.initialState)
+  const initialState = getInitialTableState(_features, options.initialState)
 
   const coreInstance: Table_CoreProperties<TFeatures, TData> = {
     _features,
