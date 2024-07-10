@@ -11,12 +11,18 @@ import {
   table_getRow,
   table_getRowId,
 } from './Rows.utils'
-import type { Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  Row,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 
 export const Rows: TableFeature = {
-  _createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>,
+  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ): void => {
     row._getAllCellsByColumnId = memo(
       () => [row.getAllCells()],
@@ -44,9 +50,14 @@ export const Rows: TableFeature = {
     row.renderValue = (columnId) => row_renderValue(row, table, columnId)
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table._getRowId = (row: TData, index: number, parent?: Row<TData>) =>
-      table_getRowId(row, table, index, parent)
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
+    table._getRowId = (
+      row: TData,
+      index: number,
+      parent?: Row<TFeatures, TData>,
+    ) => table_getRowId(row, table, index, parent)
 
     //in next version, we should just pass in the row model as the optional 2nd arg
     table.getRow = (id: string, searchAll?: boolean) =>

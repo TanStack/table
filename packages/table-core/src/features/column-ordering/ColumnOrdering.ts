@@ -12,7 +12,13 @@ import type {
   ColumnOrderDefaultOptions,
   TableState_ColumnOrdering,
 } from './ColumnOrdering.types'
-import type { Column, RowData, Table, TableFeature } from '../../types'
+import type {
+  Column,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 
 export const ColumnOrdering: TableFeature = {
   _getInitialState: (state): TableState_ColumnOrdering => {
@@ -22,17 +28,17 @@ export const ColumnOrdering: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
   ): ColumnOrderDefaultOptions => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', table),
     }
   },
 
-  _createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
-    table: Table<TData>,
+  _createColumn: <TFeatures extends TableFeatures, TData extends RowData>(
+    column: Column<TFeatures, TData, unknown>,
+    table: Table<TFeatures, TData>,
   ): void => {
     column.getIndex = memo(
       (position) => [column_getVisibleLeafColumns(table, position)],
@@ -47,7 +53,9 @@ export const ColumnOrdering: TableFeature = {
       column_getIsLastColumn(column, table, position)
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.setColumnOrder = (updater) => table_setColumnOrder(table, updater)
 
     table.resetColumnOrder = (defaultState) =>
@@ -60,7 +68,7 @@ export const ColumnOrdering: TableFeature = {
         table.options.groupedColumnMode,
       ],
       (columnOrder, grouping, groupedColumnMode) =>
-        table_getOrderColumnsFn<TData>(
+        table_getOrderColumnsFn<TFeatures, TData>(
           columnOrder,
           grouping,
           groupedColumnMode,

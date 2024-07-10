@@ -51,7 +51,7 @@ This is the type signature for every sorting function:
 
 ```tsx
 export type SortingFn<TData extends AnyData> = {
-  (rowA: Row<TData>, rowB: Row<TData>, columnId: string): number
+  (rowA: Row<TFeatures, TData>, rowB: Row<TFeatures, TData>, columnId: string): number
 }
 ```
 
@@ -70,7 +70,7 @@ export type SortingFnOption<TData extends AnyData> =
   | 'auto'
   | SortingFns
   | BuiltInSortingFns
-  | SortingFn<TData>
+  | SortingFn<TFeatures, TData>
 ```
 
 ## Column Def Options
@@ -144,7 +144,7 @@ sortUndefined?: 'first' | 'last' | false | -1 | 1 // defaults to 1
 ### `getAutoSortingFn`
 
 ```tsx
-getAutoSortingFn: () => SortingFn<TData>
+getAutoSortingFn: () => SortingFn<TFeatures, TData>
 ```
 
 Returns a sorting function automatically inferred based on the columns values.
@@ -160,7 +160,7 @@ Returns a sort direction automatically inferred based on the columns values.
 ### `getSortingFn`
 
 ```tsx
-getSortingFn: () => SortingFn<TData>
+getSortingFn: () => SortingFn<TFeatures, TData>
 ```
 
 Returns the resolved sorting function to be used for this column
@@ -329,7 +329,7 @@ If `true`, all sorts will default to descending as their first toggle state.
 ### `getSortedRowModel`
 
 ```tsx
-getSortedRowModel?: (table: Table<TData>) => () => RowModel<TData>
+getSortedRowModel?: (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData>
 ```
 
 This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table or implement your own.
@@ -371,7 +371,7 @@ Resets the **sorting** state to `initialState.sorting`, or `true` can be passed 
 ### `getPreSortedRowModel`
 
 ```tsx
-getPreSortedRowModel: () => RowModel<TData>
+getPreSortedRowModel: () => RowModel<TFeatures, TData>
 ```
 
 Returns the row model for the table before any sorting has been applied.
@@ -379,7 +379,7 @@ Returns the row model for the table before any sorting has been applied.
 ### `getSortedRowModel`
 
 ```tsx
-getSortedRowModel: () => RowModel<TData>
+getSortedRowModel: () => RowModel<TFeatures, TData>
 ```
 
 Returns the row model for the table after sorting has been applied.

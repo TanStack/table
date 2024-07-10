@@ -88,7 +88,7 @@ _Note: Does not account for column visibility_
 ### `getLeftHeaderGroups`
 
 ```tsx
-getLeftHeaderGroups: () => HeaderGroup<TData>[]
+getLeftHeaderGroups: () => HeaderGroup<TFeatures, TData>[]
 ```
 
 Returns the left pinned header groups for the table.
@@ -96,7 +96,7 @@ Returns the left pinned header groups for the table.
 ### `getCenterHeaderGroups`
 
 ```tsx
-getCenterHeaderGroups: () => HeaderGroup<TData>[]
+getCenterHeaderGroups: () => HeaderGroup<TFeatures, TData>[]
 ```
 
 Returns the unpinned/center header groups for the table.
@@ -104,7 +104,7 @@ Returns the unpinned/center header groups for the table.
 ### `getRightHeaderGroups`
 
 ```tsx
-getRightHeaderGroups: () => HeaderGroup<TData>[]
+getRightHeaderGroups: () => HeaderGroup<TFeatures, TData>[]
 ```
 
 Returns the right pinned header groups for the table.
@@ -112,7 +112,7 @@ Returns the right pinned header groups for the table.
 ### `getLeftFooterGroups`
 
 ```tsx
-getLeftFooterGroups: () => HeaderGroup<TData>[]
+getLeftFooterGroups: () => HeaderGroup<TFeatures, TData>[]
 ```
 
 Returns the left pinned footer groups for the table.
@@ -120,7 +120,7 @@ Returns the left pinned footer groups for the table.
 ### `getCenterFooterGroups`
 
 ```tsx
-getCenterFooterGroups: () => HeaderGroup<TData>[]
+getCenterFooterGroups: () => HeaderGroup<TFeatures, TData>[]
 ```
 
 Returns the unpinned/center footer groups for the table.
@@ -128,7 +128,7 @@ Returns the unpinned/center footer groups for the table.
 ### `getRightFooterGroups`
 
 ```tsx
-getRightFooterGroups: () => HeaderGroup<TData>[]
+getRightFooterGroups: () => HeaderGroup<TFeatures, TData>[]
 ```
 
 Returns the right pinned footer groups for the table.
@@ -136,7 +136,7 @@ Returns the right pinned footer groups for the table.
 ### `getLeftFlatHeaders`
 
 ```tsx
-getLeftFlatHeaders: () => Header<TData>[]
+getLeftFlatHeaders: () => Header<TFeatures, TData>[]
 ```
 
 Returns a flat array of left pinned headers for the table, including parent headers.
@@ -144,7 +144,7 @@ Returns a flat array of left pinned headers for the table, including parent head
 ### `getCenterFlatHeaders`
 
 ```tsx
-getCenterFlatHeaders: () => Header<TData>[]
+getCenterFlatHeaders: () => Header<TFeatures, TData>[]
 ```
 
 Returns a flat array of unpinned/center headers for the table, including parent headers.
@@ -152,7 +152,7 @@ Returns a flat array of unpinned/center headers for the table, including parent 
 ### `getRightFlatHeaders`
 
 ```tsx
-getRightFlatHeaders: () => Header<TData>[]
+getRightFlatHeaders: () => Header<TFeatures, TData>[]
 ```
 
 Returns a flat array of right pinned headers for the table, including parent headers.
@@ -160,7 +160,7 @@ Returns a flat array of right pinned headers for the table, including parent hea
 ### `getLeftLeafHeaders`
 
 ```tsx
-getLeftLeafHeaders: () => Header<TData>[]
+getLeftLeafHeaders: () => Header<TFeatures, TData>[]
 ```
 
 Returns a flat array of leaf-node left pinned headers for the table.
@@ -168,7 +168,7 @@ Returns a flat array of leaf-node left pinned headers for the table.
 ### `getCenterLeafHeaders`
 
 ```tsx
-getCenterLeafHeaders: () => Header<TData>[]
+getCenterLeafHeaders: () => Header<TFeatures, TData>[]
 ```
 
 Returns a flat array of leaf-node unpinned/center headers for the table.
@@ -176,7 +176,7 @@ Returns a flat array of leaf-node unpinned/center headers for the table.
 ### `getRightLeafHeaders`
 
 ```tsx
-getRightLeafHeaders: () => Header<TData>[]
+getRightLeafHeaders: () => Header<TFeatures, TData>[]
 ```
 
 Returns a flat array of leaf-node right pinned headers for the table.
@@ -184,7 +184,7 @@ Returns a flat array of leaf-node right pinned headers for the table.
 ### `getLeftLeafColumns`
 
 ```tsx
-getLeftLeafColumns: () => Column<TData>[]
+getLeftLeafColumns: () => Column<TFeatures, TData>[]
 ```
 
 Returns all left pinned leaf columns.
@@ -192,7 +192,7 @@ Returns all left pinned leaf columns.
 ### `getRightLeafColumns`
 
 ```tsx
-getRightLeafColumns: () => Column<TData>[]
+getRightLeafColumns: () => Column<TFeatures, TData>[]
 ```
 
 Returns all right pinned leaf columns.
@@ -200,7 +200,7 @@ Returns all right pinned leaf columns.
 ### `getCenterLeafColumns`
 
 ```tsx
-getCenterLeafColumns: () => Column<TData>[]
+getCenterLeafColumns: () => Column<TFeatures, TData>[]
 ```
 
 Returns all center pinned (unpinned) leaf columns.
@@ -244,7 +244,7 @@ Pins a column to the `'left'` or `'right'`, or unpins the column to the center i
 ### `getLeftVisibleCells`
 
 ```tsx
-getLeftVisibleCells: () => Cell<TData>[]
+getLeftVisibleCells: () => Cell<TFeatures, TData>[]
 ```
 
 Returns all left pinned leaf cells in the row.
@@ -252,7 +252,7 @@ Returns all left pinned leaf cells in the row.
 ### `getRightVisibleCells`
 
 ```tsx
-getRightVisibleCells: () => Cell<TData>[]
+getRightVisibleCells: () => Cell<TFeatures, TData>[]
 ```
 
 Returns all right pinned leaf cells in the row.
@@ -260,7 +260,7 @@ Returns all right pinned leaf cells in the row.
 ### `getCenterVisibleCells`
 
 ```tsx
-getCenterVisibleCells: () => Cell<TData>[]
+getCenterVisibleCells: () => Cell<TFeatures, TData>[]
 ```
 
 Returns all center pinned (unpinned) leaf cells in the row.

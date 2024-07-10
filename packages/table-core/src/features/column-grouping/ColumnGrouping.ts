@@ -19,11 +19,13 @@ import {
 } from './ColumnGrouping.utils'
 import type {
   Cell,
+  CellData,
   Column,
   Row,
   RowData,
   Table,
   TableFeature,
+  TableFeatures,
 } from '../../types'
 import type {
   ColumnDef_ColumnGrouping,
@@ -32,10 +34,10 @@ import type {
 } from './ColumnGrouping.types'
 
 export const ColumnGrouping: TableFeature = {
-  _getDefaultColumnDef: <TData extends RowData>(): ColumnDef_ColumnGrouping<
-    TData,
-    unknown
-  > => {
+  _getDefaultColumnDef: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(): ColumnDef_ColumnGrouping<TFeatures, TData, unknown> => {
     return {
       aggregatedCell: (props) =>
         (props.getValue() as any)?.toString?.() ?? null,
@@ -50,18 +52,22 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
-  ): TableOptions_ColumnGrouping => {
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
+  ): TableOptions_ColumnGrouping<TFeatures, TData> => {
     return {
       onGroupingChange: makeStateUpdater('grouping', table),
       groupedColumnMode: 'reorder',
     }
   },
 
-  _createColumn: <TData extends RowData, TValue>(
-    column: Column<TData, TValue>,
-    table: Table<TData>,
+  _createColumn: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ): void => {
     column.toggleGrouping = () => column_toggleGrouping(column, table)
 
@@ -80,7 +86,9 @@ export const ColumnGrouping: TableFeature = {
     column.getAggregationFn = () => column_getAggregationFn(column, table)
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.setGrouping = (updater) => table_setGrouping(table, updater)
 
     table.resetGrouping = (defaultState) =>
@@ -91,9 +99,9 @@ export const ColumnGrouping: TableFeature = {
     table.getGroupedRowModel = () => table_getGroupedRowModel(table)
   },
 
-  _createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>,
+  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ): void => {
     row.getIsGrouped = () => row_getIsGrouped(row)
 
@@ -103,9 +111,9 @@ export const ColumnGrouping: TableFeature = {
     row._groupingValuesCache = {}
   },
 
-  _createCell: <TData extends RowData, TValue>(
-    cell: Cell<TData, TValue>,
-    _table: Table<TData>,
+  _createCell: <TFeatures extends TableFeatures, TData extends RowData, TValue>(
+    cell: Cell<TFeatures, TData, TValue>,
+    _table: Table<TFeatures, TData>,
   ): void => {
     const { column, row } = cell
 

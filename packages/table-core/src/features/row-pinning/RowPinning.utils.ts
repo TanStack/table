@@ -5,7 +5,7 @@ import {
 } from '../../core/rows/Rows.utils'
 import { row_getIsAllParentsExpanded } from '../row-expanding/RowExpanding.utils'
 import { table_getRowModel } from '../../core/table/Tables.utils'
-import type { Row, RowData, Table, Updater } from '../../types'
+import type { Row, RowData, Table, TableFeatures, Updater } from '../../types'
 import type { RowPinningPosition, RowPinningState } from './RowPinning.types'
 
 /**
@@ -19,17 +19,17 @@ export function getDefaultRowPinningState(): RowPinningState {
   })
 }
 
-export function table_setRowPinning<TData extends RowData>(
-  table: Table<TData>,
-  updater: Updater<RowPinningState>,
-): void {
+export function table_setRowPinning<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, updater: Updater<RowPinningState>): void {
   table.options.onRowPinningChange?.(updater)
 }
 
-export function table_resetRowPinning<TData extends RowData>(
-  table: Table<TData>,
-  defaultState?: boolean,
-): void {
+export function table_resetRowPinning<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, defaultState?: boolean): void {
   table_setRowPinning(
     table,
     defaultState ? getDefaultRowPinningState() : table.initialState.rowPinning,
@@ -40,10 +40,10 @@ export function table_resetRowPinning<TData extends RowData>(
  * Table Utils
  */
 
-export function table_getIsSomeRowsPinned<TData extends RowData>(
-  table: Table<TData>,
-  position?: RowPinningPosition,
-): boolean {
+export function table_getIsSomeRowsPinned<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, position?: RowPinningPosition): boolean {
   const rowPinning = table.getState().rowPinning
 
   if (!position) {
@@ -52,12 +52,15 @@ export function table_getIsSomeRowsPinned<TData extends RowData>(
   return Boolean(rowPinning[position].length)
 }
 
-function table_getPinnedRows<TData extends RowData>(
-  table: Table<TData>,
-  visibleRows: Array<Row<TData>>,
+function table_getPinnedRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
+  visibleRows: Array<Row<TFeatures, TData>>,
   pinnedRowIds: Array<string>,
   position: 'top' | 'bottom',
-): Array<Row<TData>> {
+): Array<Row<TFeatures, TData>> {
   const rows =
     table.options.keepPinnedRows ?? true
       ? //get all rows that are pinned even if they would not be otherwise visible
@@ -72,30 +75,39 @@ function table_getPinnedRows<TData extends RowData>(
         )
 
   return rows.filter(Boolean).map((d) => ({ ...d, position })) as Array<
-    Row<TData>
+    Row<TFeatures, TData>
   >
 }
 
-export function table_getTopRows<TData extends RowData>(
-  table: Table<TData>,
-  allRows: Array<Row<TData>>,
+export function table_getTopRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
+  allRows: Array<Row<TFeatures, TData>>,
   topPinnedRowIds: Array<string>,
-): Array<Row<TData>> {
+): Array<Row<TFeatures, TData>> {
   return table_getPinnedRows(table, allRows, topPinnedRowIds, 'top')
 }
 
-export function table_getBottomRows<TData extends RowData>(
-  table: Table<TData>,
-  allRows: Array<Row<TData>>,
+export function table_getBottomRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
+  allRows: Array<Row<TFeatures, TData>>,
   bottomPinnedRowIds: Array<string>,
-): Array<Row<TData>> {
+): Array<Row<TFeatures, TData>> {
   return table_getPinnedRows(table, allRows, bottomPinnedRowIds, 'bottom')
 }
 
-export function table_getCenterRows<TData extends RowData>(
-  allRows: Array<Row<TData>>,
+export function table_getCenterRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  allRows: Array<Row<TFeatures, TData>>,
   rowPinning: RowPinningState,
-): Array<Row<TData>> {
+): Array<Row<TFeatures, TData>> {
   const { top, bottom } = rowPinning
   const topAndBottom = new Set([...top, ...bottom])
   return allRows.filter((d) => !topAndBottom.has(d.id))
@@ -105,10 +117,10 @@ export function table_getCenterRows<TData extends RowData>(
  * Row Utils
  */
 
-export function row_getCanPin<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-): boolean {
+export function row_getCanPin<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>): boolean {
   const { enableRowPinning } = table.options
   if (typeof enableRowPinning === 'function') {
     return enableRowPinning(row)
@@ -116,9 +128,12 @@ export function row_getCanPin<TData extends RowData>(
   return enableRowPinning ?? true
 }
 
-export function row_getIsPinned<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
+export function row_getIsPinned<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
 ): RowPinningPosition {
   const { top, bottom } = table.getState().rowPinning
 
@@ -129,10 +144,13 @@ export function row_getIsPinned<TData extends RowData>(
       : false
 }
 
-export function row_getPinnedIndex<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-  allRows: Array<Row<TData>> = table_getRowModel(table).rows,
+export function row_getPinnedIndex<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
+  allRows: Array<Row<TFeatures, TData>> = table_getRowModel(table).rows,
   rowPinning = table.getState().rowPinning,
 ): number {
   const position = row_getIsPinned(row, table)
@@ -149,9 +167,9 @@ export function row_getPinnedIndex<TData extends RowData>(
   return visiblePinnedRowIds.indexOf(row.id)
 }
 
-export function row_pin<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
+export function row_pin<TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   position: RowPinningPosition,
   includeLeafRows?: boolean,
   includeParentRows?: boolean,

@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { type PaginationState } from '@tanstack/angular-table'
 import { makeData } from './makeData'
 import { PersonTableComponent } from './person-table/person-table.component'

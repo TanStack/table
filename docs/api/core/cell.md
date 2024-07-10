@@ -35,7 +35,7 @@ Renders the value for a cell the same as `getValue`, but will return the `render
 ### `row`
 
 ```tsx
-row: Row<TData>
+row: Row<TFeatures, TData>
 ```
 
 The associated Row object for the cell.
@@ -43,7 +43,7 @@ The associated Row object for the cell.
 ### `column`
 
 ```tsx
-column: Column<TData>
+column: Column<TFeatures, TData>
 ```
 
 The associated Column object for the cell.
@@ -52,12 +52,12 @@ The associated Column object for the cell.
 
 ```tsx
 getContext: () => {
-  table: Table<TData>
-  column: Column<TData, TValue>
-  row: Row<TData>
-  cell: Cell<TData, TValue>
-  getValue: <TTValue = TValue,>() => TTValue
-  renderValue: <TTValue = TValue,>() => TTValue | null
+  table: Table<TFeatures, TData>
+  column: Column<TFeatures, TData, TValue>
+  row: Row<TFeatures, TData>
+  cell: Cell<TFeatures, TData, TValue>
+  getValue: <TTValue = TValue extends CellData = CellData>() => TTValue
+  renderValue: <TTValue = TValue extends CellData = CellData>() => TTValue | null
 }
 ```
 

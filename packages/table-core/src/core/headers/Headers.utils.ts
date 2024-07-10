@@ -1,10 +1,19 @@
 import { buildHeaderGroups } from './buildHeaderGroups'
-import type { Column, HeaderGroup, RowData, Table } from '../../types'
+import type {
+  Column,
+  HeaderGroup,
+  RowData,
+  Table,
+  TableFeatures,
+} from '../../types'
 
-export function table_getHeaderGroups<TData extends RowData>(
-  table: Table<TData>,
-  allColumns: Array<Column<TData, unknown>>,
-  leafColumns: Array<Column<TData, unknown>>,
+export function table_getHeaderGroups<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
+  allColumns: Array<Column<TFeatures, TData, unknown>>,
+  leafColumns: Array<Column<TFeatures, TData, unknown>>,
   left?: Array<string>,
   right?: Array<string>,
 ) {
@@ -31,15 +40,17 @@ export function table_getHeaderGroups<TData extends RowData>(
   return headerGroups
 }
 
-export function table_getFooterGroups<TData extends RowData>(
-  headerGroups: Array<HeaderGroup<TData>>,
-) {
+export function table_getFooterGroups<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(headerGroups: Array<HeaderGroup<TFeatures, TData>>) {
   return [...headerGroups].reverse()
 }
 
-export function table_getFlatHeaders<TData extends RowData>(
-  headerGroups: Array<HeaderGroup<TData>>,
-) {
+export function table_getFlatHeaders<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(headerGroups: Array<HeaderGroup<TFeatures, TData>>) {
   return headerGroups
     .map((headerGroup) => {
       return headerGroup.headers
@@ -47,10 +58,13 @@ export function table_getFlatHeaders<TData extends RowData>(
     .flat()
 }
 
-export function table_getLeafHeaders<TData extends RowData>(
-  left: Array<HeaderGroup<TData>>,
-  center: Array<HeaderGroup<TData>>,
-  right: Array<HeaderGroup<TData>>,
+export function table_getLeafHeaders<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  left: Array<HeaderGroup<TFeatures, TData>>,
+  center: Array<HeaderGroup<TFeatures, TData>>,
+  right: Array<HeaderGroup<TFeatures, TData>>,
 ) {
   return [
     ...(left[0]?.headers ?? []),

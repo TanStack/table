@@ -21,6 +21,7 @@ import type {
   RowData,
   Table,
   TableFeature,
+  TableFeatures,
   Updater,
 } from '@tanstack/react-table'
 
@@ -51,18 +52,21 @@ declare module '@tanstack/react-table' {
   //merge our new feature's state with the existing table state
   interface TableState extends DensityTableState {}
   //merge our new feature's options with the existing table options
-  interface TableOptionsResolved<TData extends RowData>
-    extends DensityOptions {}
+  interface TableOptionsResolved<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > extends DensityOptions {}
   //merge our new feature's instance APIs with the existing table instance APIs
-  interface Table<TData extends RowData> extends DensityInstance {}
+  interface Table<TFeatures extends TableFeatures, TData extends RowData>
+    extends DensityInstance {}
   // if you need to add cell instance APIs...
-  // interface Cell<TData extends RowData, TValue> extends DensityCell
+  // interface Cell<TFeatures extends TableFeatures, TData extends RowData, TValue> extends DensityCell
   // if you need to add row instance APIs...
-  // interface Row<TData extends RowData> extends DensityRow
+  // interface Row<TFeatures extends TableFeatures, TData extends RowData> extends DensityRow
   // if you need to add column instance APIs...
-  // interface Column<TData extends RowData, TValue> extends DensityColumn
+  // interface Column<TFeatures extends TableFeatures, TData extends RowData, TValue> extends DensityColumn
   // if you need to add header instance APIs...
-  // interface Header<TData extends RowData, TValue> extends DensityHeader
+  // interface Header<TFeatures extends TableFeatures, TData extends RowData, TValue> extends DensityHeader
 
   // Note: declaration merging on `ColumnDef` is not possible because it is a type, not an interface.
   // But you can still use declaration merging on `ColumnDef.meta`
@@ -81,8 +85,8 @@ export const DensityFeature: TableFeature = {
   },
 
   // define the new feature's default options
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
   ): DensityOptions => {
     return {
       enableDensity: true,
@@ -90,12 +94,14 @@ export const DensityFeature: TableFeature = {
     } as DensityOptions
   },
   // if you need to add a default column definition...
-  // _getDefaultColumnDef: <TData extends RowData>(): Partial<ColumnDef<TData>> => {
+  // _getDefaultColumnDef: <TFeatures extends TableFeatures, TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
   //   return { meta: {} } //use meta instead of directly adding to the columnDef to avoid typescript stuff that's hard to workaround
   // },
 
   // define the new feature's table instance methods
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.setDensity = (updater) => {
       const safeUpdater: Updater<DensityState> = (old) => {
         const newState = functionalUpdate(updater, old)
@@ -112,19 +118,19 @@ export const DensityFeature: TableFeature = {
   },
 
   // if you need to add row instance APIs...
-  // _createRow: <TData extends RowData>(row, table): void => {},
+  // _createRow: <TFeatures extends TableFeatures, TData extends RowData>(row, table): void => {},
   // if you need to add cell instance APIs...
-  // _createCell: <TData extends RowData>(cell, column, row, table): void => {},
+  // _createCell: <TFeatures extends TableFeatures, TData extends RowData>(cell, column, row, table): void => {},
   // if you need to add column instance APIs...
-  // _createColumn: <TData extends RowData>(column, table): void => {},
+  // _createColumn: <TFeatures extends TableFeatures, TData extends RowData>(column, table): void => {},
   // if you need to add header instance APIs...
-  // _createHeader: <TData extends RowData>(header, table): void => {},
+  // _createHeader: <TFeatures extends TableFeatures, TData extends RowData>(header, table): void => {},
 }
 //end of custom feature code
 
 //app code
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -346,7 +352,7 @@ function Filter({
   table,
 }: {
   column: Column<any, any>
-  table: Table<any>
+  table: Table<any, any>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

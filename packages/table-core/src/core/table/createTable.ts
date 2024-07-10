@@ -23,6 +23,7 @@ import type {
   RowData,
   Table,
   TableFeature,
+  TableFeatures,
   TableOptionsResolved,
   TableState,
 } from '../../types'
@@ -57,9 +58,10 @@ export function getInitialTableState(
   return initialState as TableState
 }
 
-export function _createTable<TData extends RowData>(
-  options: TableOptionsResolved<TData>,
-): Table<TData> {
+export function _createTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(options: TableOptionsResolved<TFeatures, TData>): Table<TFeatures, TData> {
   if (
     process.env.NODE_ENV !== 'production' &&
     (options.debugAll || options.debugTable)
@@ -75,15 +77,15 @@ export function _createTable<TData extends RowData>(
 
   const featuresList: Array<TableFeature> = Object.values(_features)
 
-  const table = {} as unknown as Table<TData>
+  const table = {} as unknown as Table<TFeatures, TData>
 
   const defaultOptions = featuresList.reduce((obj, feature) => {
     return Object.assign(obj, feature._getDefaultOptions?.(table))
-  }, {}) as TableOptionsResolved<TData>
+  }, {}) as TableOptionsResolved<TFeatures, TData>
 
   const initialState = getInitialTableState(featuresList, options.initialState)
 
-  const coreInstance: Table_CoreProperties<TData> = {
+  const coreInstance: Table_CoreProperties<TFeatures, TData> = {
     _features,
     _rowModels: {}, //row models get cached here later
     options: {

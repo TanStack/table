@@ -2,11 +2,13 @@ import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
 import type {
   AggregationFns,
   Cell,
+  CellData,
   ColumnDefTemplate,
   OnChangeFn,
   Row,
   RowData,
   RowModel,
+  TableFeatures,
   Updater,
 } from '../../types'
 
@@ -16,35 +18,48 @@ export interface TableState_ColumnGrouping {
   grouping: GroupingState
 }
 
-export type AggregationFn<TData extends RowData> = (
+export type AggregationFn<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = (
   columnId: string,
-  leafRows: Array<Row<TData>>,
-  childRows: Array<Row<TData>>,
+  leafRows: Array<Row<TFeatures, TData>>,
+  childRows: Array<Row<TFeatures, TData>>,
 ) => any
 
-export type CustomAggregationFns = Record<string, AggregationFn<any>>
+export type CustomAggregationFns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = Record<string, AggregationFn<TFeatures, TData>>
 
-export type AggregationFnOption<TData extends RowData> =
+export type AggregationFnOption<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> =
   | 'auto'
   | keyof AggregationFns
   | BuiltInAggregationFn
-  | AggregationFn<TData>
+  | AggregationFn<TFeatures, TData>
 
-export interface ColumnDef_ColumnGrouping<TData extends RowData, TValue> {
+export interface ColumnDef_ColumnGrouping<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {
   /**
    * The cell to display each row for the column if the cell is an aggregate. If a function is passed, it will be passed a props object with the context of the cell and should return the property type for your adapter (the exact type depends on the adapter being used).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#aggregatedcell)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
   aggregatedCell?: ColumnDefTemplate<
-    ReturnType<Cell<TData, TValue>['getContext']>
+    ReturnType<Cell<TFeatures, TData, TValue>['getContext']>
   >
   /**
    * The resolved aggregation function for the column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#aggregationfn)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
-  aggregationFn?: AggregationFnOption<TData>
+  aggregationFn?: AggregationFnOption<TFeatures, TData>
   /**
    * Enables/disables grouping for this column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#enablegrouping)
@@ -59,19 +74,22 @@ export interface ColumnDef_ColumnGrouping<TData extends RowData, TValue> {
   getGroupingValue?: (row: TData) => any
 }
 
-export interface Column_ColumnGrouping<TData extends RowData> {
+export interface Column_ColumnGrouping<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Returns the aggregation function for the column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getaggregationfn)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
-  getAggregationFn: () => AggregationFn<TData> | undefined
+  getAggregationFn: () => AggregationFn<TFeatures, TData> | undefined
   /**
    * Returns the automatically inferred aggregation function for the column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getautoaggregationfn)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
-  getAutoAggregationFn: () => AggregationFn<TData> | undefined
+  getAutoAggregationFn: () => AggregationFn<TFeatures, TData> | undefined
   /**
    * Returns whether or not the column can be grouped.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getcangroup)
@@ -185,33 +203,44 @@ interface GroupingOptionsBase {
   onGroupingChange?: OnChangeFn<GroupingState>
 }
 
-type ResolvedAggregationFns = keyof AggregationFns extends never
+type ResolvedAggregationFns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = keyof AggregationFns extends never
   ? {
-      aggregationFns?: Record<string, AggregationFn<any>>
+      aggregationFns?: Record<string, AggregationFn<TFeatures, TData>>
     }
   : {
-      aggregationFns: Record<keyof AggregationFns, AggregationFn<any>>
+      aggregationFns: Record<
+        keyof AggregationFns,
+        AggregationFn<TFeatures, TData>
+      >
     }
 
-export interface TableOptions_ColumnGrouping
-  extends GroupingOptionsBase,
-    ResolvedAggregationFns {}
+export interface TableOptions_ColumnGrouping<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> extends GroupingOptionsBase,
+    ResolvedAggregationFns<TFeatures, TData> {}
 
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
-export interface Table_ColumnGrouping<TData extends RowData> {
+export interface Table_ColumnGrouping<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Returns the row model for the table after grouping has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getgroupedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
-  getGroupedRowModel: () => RowModel<TData>
+  getGroupedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns the row model for the table before any grouping has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getpregroupedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
-  getPreGroupedRowModel: () => RowModel<TData>
+  getPreGroupedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Resets the **grouping** state to `initialState.grouping`, or `true` can be passed to force a default blank state reset to `[]`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#resetgrouping)

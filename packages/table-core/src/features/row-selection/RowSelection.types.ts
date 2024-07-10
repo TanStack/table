@@ -1,4 +1,11 @@
-import type { OnChangeFn, Row, RowData, RowModel, Updater } from '../../types'
+import type {
+  OnChangeFn,
+  Row,
+  RowData,
+  RowModel,
+  TableFeatures,
+  Updater,
+} from '../../types'
 
 export type RowSelectionState = Record<string, boolean>
 
@@ -6,28 +13,31 @@ export interface TableState_RowSelection {
   rowSelection: RowSelectionState
 }
 
-export interface TableOptions_RowSelection<TData extends RowData> {
+export interface TableOptions_RowSelection<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * - Enables/disables multiple row selection for all rows in the table OR
    * - A function that given a row, returns whether to enable/disable multiple row selection for that row's children/grandchildren
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#enablemultirowselection)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  enableMultiRowSelection?: boolean | ((row: Row<TData>) => boolean)
+  enableMultiRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
    * - Enables/disables row selection for all rows in the table OR
    * - A function that given a row, returns whether to enable/disable row selection for that row
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#enablerowselection)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  enableRowSelection?: boolean | ((row: Row<TData>) => boolean)
+  enableRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
    * Enables/disables automatic sub-row selection when a parent row is selected, or a function that enables/disables automatic sub-row selection for each row.
    * (Use in combination with expanding or grouping features)
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#enablesubrowselection)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  enableSubRowSelection?: boolean | ((row: Row<TData>) => boolean)
+  enableSubRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
    * If provided, this function will be called with an `updaterFn` when `state.rowSelection` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#onrowselectionchange)
@@ -37,14 +47,14 @@ export interface TableOptions_RowSelection<TData extends RowData> {
   // enableGroupingRowSelection?:
   //   | boolean
   //   | ((
-  //       row: Row<TData>
+  //       row: Row<TFeatures, TData>
   //     ) => boolean)
   // isAdditiveSelectEvent?: (e: unknown) => boolean
   // isInclusiveSelectEvent?: (e: unknown) => boolean
   // selectRowsFn?: (
-  //   table: Table<TData>,
-  //   rowModel: RowModel<TData>
-  // ) => RowModel<TData>
+  //   table: Table<TFeatures, TData>,
+  //   rowModel: RowModel<TFeatures, TData>
+  // ) => RowModel<TFeatures, TData>
 }
 
 export interface Row_RowSelection {
@@ -98,19 +108,22 @@ export interface Row_RowSelection {
   toggleSelected: (value?: boolean, opts?: { selectChildren?: boolean }) => void
 }
 
-export interface Table_RowSelection<TData extends RowData> {
+export interface Table_RowSelection<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Returns the row model of all rows that are selected after filtering has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getfilteredselectedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  getFilteredSelectedRowModel: () => RowModel<TData>
+  getFilteredSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns the row model of all rows that are selected after grouping has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getgroupedselectedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  getGroupedSelectedRowModel: () => RowModel<TData>
+  getGroupedSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns whether or not all rows on the current page are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisallpagerowsselected)
@@ -140,13 +153,13 @@ export interface Table_RowSelection<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getpreselectedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  getPreSelectedRowModel: () => RowModel<TData>
+  getPreSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns the row model of all rows that are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getselectedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
-  getSelectedRowModel: () => RowModel<TData>
+  getSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns a handler that can be used to toggle all rows on the current page.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#gettoggleallpagerowsselectedhandler)

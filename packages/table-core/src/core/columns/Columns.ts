@@ -16,12 +16,17 @@ import type {
   RowData,
   Table,
   TableFeature,
+  TableFeatures,
 } from '../../types'
 
 export const Columns: TableFeature = {
-  _createColumn: <TData extends RowData, TValue extends CellData>(
-    column: Column<TData, TValue>,
-    table: Table<TData>,
+  _createColumn: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ) => {
     column.getFlatColumns = memo(
       () => [true],
@@ -37,7 +42,9 @@ export const Columns: TableFeature = {
     )
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>) => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ) => {
     table._getDefaultColumnDef = memo(
       () => [table.options.defaultColumn],
       (defaultColumn) => table_getDefaultColumnDef(table, defaultColumn),

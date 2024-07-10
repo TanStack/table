@@ -208,9 +208,9 @@ value based on the props you pass to the `FlexRenderDirective`.
 })
 class CustomCellComponent {
   // context of a cell component
-  readonly context = injectFlexRenderContext<CellContext<TData, TValue>>();
+  readonly context = injectFlexRenderContext<CellContext<TFeatures, TData, TValue>>();
   // context of a header/footer component
-  readonly context = injectFlexRenderContext<HeaderContext<TData, TValue>>();
+  readonly context = injectFlexRenderContext<HeaderContext<TFeatures, TData, TValue>>();
 }
 ```
 

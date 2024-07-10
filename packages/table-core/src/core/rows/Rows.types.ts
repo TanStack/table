@@ -1,7 +1,10 @@
 import { _createCell } from '../cells/createCell'
-import type { Cell, Row, RowData } from '../../types'
+import type { Cell, Row, RowData, TableFeatures } from '../../types'
 
-export interface Row_CoreProperties<TData extends RowData> {
+export interface Row_CoreProperties<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   _uniqueValuesCache: Record<string, unknown>
   _valuesCache: Record<string, unknown>
   /**
@@ -45,36 +48,36 @@ export interface Row_CoreProperties<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#subrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  subRows: Array<Row<TData>>
+  subRows: Array<Row<TFeatures, TData>>
 }
 
-export interface Row_Row<TData extends RowData>
-  extends Row_CoreProperties<TData> {
-  _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
+export interface Row_Row<TFeatures extends TableFeatures, TData extends RowData>
+  extends Row_CoreProperties<TFeatures, TData> {
+  _getAllCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>
   /**
    * Returns all of the cells for the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getallcells)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  getAllCells: () => Array<Cell<TData, unknown>>
+  getAllCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
    * Returns the leaf rows for the row, not including any parent rows.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getleafrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  getLeafRows: () => Array<Row<TData>>
+  getLeafRows: () => Array<Row<TFeatures, TData>>
   /**
    * Returns the parent row for the row, if it exists.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getparentrow)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  getParentRow: () => Row<TData> | undefined
+  getParentRow: () => Row<TFeatures, TData> | undefined
   /**
    * Returns the parent rows for the row, all the way up to a root row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getparentrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
-  getParentRows: () => Array<Row<TData>>
+  getParentRows: () => Array<Row<TFeatures, TData>>
   /**
    * Returns a unique array of values from the row for a given columnId.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getuniquevalues)
@@ -95,7 +98,10 @@ export interface Row_Row<TData extends RowData>
   renderValue: <TValue>(columnId: string) => TValue
 }
 
-export interface TableOptions_Rows<TData extends RowData> {
+export interface TableOptions_Rows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Set this option to `true` to output row debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugrows)
@@ -108,7 +114,11 @@ export interface TableOptions_Rows<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowid)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string
+  getRowId?: (
+    originalRow: TData,
+    index: number,
+    parent?: Row<TFeatures, TData>,
+  ) => string
   /**
    * This optional function is used to access the sub rows for any given row. If you are using nested rows, you will need to use this function to return the sub rows object (or undefined) from the row.
    * @example getSubRows: row => row.subRows
@@ -118,12 +128,15 @@ export interface TableOptions_Rows<TData extends RowData> {
   getSubRows?: (originalRow: TData, index: number) => undefined | Array<TData>
 }
 
-export interface Table_Rows<TData extends RowData> {
-  _getRowId: (_: TData, index: number, parent?: Row<TData>) => string
+export interface Table_Rows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  _getRowId: (_: TData, index: number, parent?: Row<TFeatures, TData>) => string
   /**
    * Returns the row with the given ID.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrow)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getRow: (id: string, searchAll?: boolean) => Row<TData>
+  getRow: (id: string, searchAll?: boolean) => Row<TFeatures, TData>
 }

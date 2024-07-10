@@ -1,4 +1,12 @@
-import type { Column, Header, HeaderGroup, RowData, Table } from '../../types'
+import type {
+  CellData,
+  Column,
+  Header,
+  HeaderGroup,
+  RowData,
+  Table,
+  TableFeatures,
+} from '../../types'
 
 export interface TableOptions_Headers {
   /**
@@ -9,49 +17,60 @@ export interface TableOptions_Headers {
   debugHeaders?: boolean
 }
 
-export interface Table_Headers<TData extends RowData> {
+export interface Table_Headers<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Returns all header groups for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getheadergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getHeaderGroups: () => Array<HeaderGroup<TData>>
+  getHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
    * Returns the footer groups for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getFooterGroups: () => Array<HeaderGroup<TData>>
+  getFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
    * Returns headers for all columns in the table, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getflatheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getFlatHeaders: () => Array<Header<TData, unknown>>
+  getFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
    * Returns headers for all leaf columns in the table, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeafHeaders: () => Array<Header<TData, unknown>>
+  getLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
 }
 
-export interface HeaderContext<TData, TValue> {
+export interface HeaderContext<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {
   /**
    * An instance of a column.
    */
-  column: Column<TData, TValue>
+  column: Column<TFeatures, TData, TValue>
   /**
    * An instance of a header.
    */
-  header: Header<TData, TValue>
+  header: Header<TFeatures, TData, TValue>
   /**
    * The table instance.
    */
-  table: Table<TData>
+  table: Table<TFeatures, TData>
 }
 
-export interface Header_CoreProperties<TData extends RowData, TValue> {
+export interface Header_CoreProperties<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {
   /**
    * The col-span for the header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#colspan)
@@ -63,7 +82,7 @@ export interface Header_CoreProperties<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#column)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  column: Column<TData, TValue>
+  column: Column<TFeatures, TData, TValue>
   /**
    * The depth of the header, zero-indexed based.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#depth)
@@ -75,7 +94,7 @@ export interface Header_CoreProperties<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#headergroup)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  headerGroup: HeaderGroup<TData> | null
+  headerGroup: HeaderGroup<TFeatures, TData> | null
   /**
    * The unique identifier for the header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#id)
@@ -111,27 +130,34 @@ export interface Header_CoreProperties<TData extends RowData, TValue> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#subheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  subHeaders: Array<Header<TData, TValue>>
+  subHeaders: Array<Header<TFeatures, TData, TValue>>
 }
 
-export interface Header_Header<TData extends RowData, TValue>
-  extends Header_CoreProperties<TData, TValue> {
+export interface Header_Header<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> extends Header_CoreProperties<TFeatures, TData, TValue> {
   /**
    * Returns the rendering context (or props) for column-based components like headers, footers and filters.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getcontext)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getContext: () => HeaderContext<TData, TValue>
+  getContext: () => HeaderContext<TFeatures, TData, TValue>
   /**
    * Returns the leaf headers hierarchically nested under this header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#getleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeafHeaders: () => Array<Header<TData, unknown>>
+  getLeafHeaders: () => Array<Header<TFeatures, TData, TValue>>
 }
 
-export interface HeaderGroup_Header<TData extends RowData> {
+export interface HeaderGroup_Header<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {
   depth: number
-  headers: Array<Header<TData, unknown>>
+  headers: Array<Header<TFeatures, TData, TValue>>
   id: string
 }

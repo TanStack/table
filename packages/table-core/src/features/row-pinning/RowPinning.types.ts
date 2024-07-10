@@ -1,4 +1,10 @@
-import type { OnChangeFn, Row, RowData, Updater } from '../../types'
+import type {
+  OnChangeFn,
+  Row,
+  RowData,
+  TableFeatures,
+  Updater,
+} from '../../types'
 
 export type RowPinningPosition = false | 'top' | 'bottom'
 
@@ -11,13 +17,16 @@ export interface TableState_RowPinning {
   rowPinning: RowPinningState
 }
 
-export interface TableOptions_RowPinning<TData extends RowData> {
+export interface TableOptions_RowPinning<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Enables/disables row pinning for the table. Defaults to `true`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#enablerowpinning)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
    */
-  enableRowPinning?: boolean | ((row: Row<TData>) => boolean)
+  enableRowPinning?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
    * When `false`, pinned rows will not be visible if they are filtered or paginated out of the table. When `true`, pinned rows will always be visible regardless of filtering or pagination. Defaults to `true`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#keeppinnedrows)
@@ -67,19 +76,22 @@ export interface Row_RowPinning {
   ) => void
 }
 
-export interface Table_RowPinning<TData extends RowData> {
+export interface Table_RowPinning<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Returns all bottom pinned rows.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#getbottomrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
    */
-  getBottomRows: () => Array<Row<TData>>
+  getBottomRows: () => Array<Row<TFeatures, TData>>
   /**
    * Returns all rows that are not pinned to the top or bottom.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#getcenterrows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
    */
-  getCenterRows: () => Array<Row<TData>>
+  getCenterRows: () => Array<Row<TFeatures, TData>>
   /**
    * Returns whether or not any rows are pinned. Optionally specify to only check for pinned rows in either the `top` or `bottom` position.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#getissomerowspinned)
@@ -91,7 +103,7 @@ export interface Table_RowPinning<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#gettoprows)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
    */
-  getTopRows: () => Array<Row<TData>>
+  getTopRows: () => Array<Row<TFeatures, TData>>
   /**
    * Resets the **rowPinning** state to `initialState.rowPinning`, or `true` can be passed to force a default blank state reset to `{ top: [], bottom: [], }`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning#resetrowpinning)

@@ -9,12 +9,17 @@ import type {
   RowData,
   Table,
   TableFeature,
+  TableFeatures,
 } from '../../types'
 
 export const ColumnFaceting: TableFeature = {
-  _createColumn: <TData extends RowData, TValue extends CellData>(
-    column: Column<TData, TValue>,
-    table: Table<TData>,
+  _createColumn: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ): void => {
     column.getFacetedMinMaxValues = column_getFacetedMinMaxValues(column, table)
 

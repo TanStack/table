@@ -34,7 +34,10 @@ describe('#getGroupedRowModel', () => {
 
     const table = _createTable<Person>({
       _features: { ColumnGrouping },
-      _rowModels: { Core: createCoreRowModel(), Grouped: createGroupedRowModel()},
+      _rowModels: {
+        Core: createCoreRowModel(),
+        Grouped: createGroupedRowModel(),
+      },
       onStateChange() {},
       renderFallbackValue: '',
       data,

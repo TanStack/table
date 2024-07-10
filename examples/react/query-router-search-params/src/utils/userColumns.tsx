@@ -1,15 +1,23 @@
-import type { ColumnDef, RowData } from '@tanstack/react-table'
+import type {
+  CellData,
+  ColumnDef,
+  RowData,
+  TableFeatures,
+} from '@tanstack/react-table'
 import type { User } from '../api/user'
 
 declare module '@tanstack/react-table' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface ColumnMeta<TData extends RowData, TValue> {
+  interface ColumnMeta<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  > {
     filterKey?: keyof TData
     filterVariant?: 'text' | 'number'
   }
 }
 
-export const USER_COLUMNS: Array<ColumnDef<User>> = [
+export const USER_COLUMNS: Array<ColumnDef<any, User>> = [
   {
     accessorKey: 'id',
     header: () => <span>ID</span>,

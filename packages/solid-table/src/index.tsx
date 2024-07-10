@@ -3,6 +3,7 @@ import { createComponent, createComputed, mergeProps } from 'solid-js'
 import { createStore } from 'solid-js/store'
 import type {
   RowData,
+  TableFeatures,
   TableOptions,
   TableOptionsResolved,
 } from '@tanstack/table-core'
@@ -24,25 +25,29 @@ export function flexRender<TProps>(
   return Comp
 }
 
-export function createTable<TData extends RowData>(
-  options: TableOptions<TData>,
-) {
-  const resolvedOptions: TableOptionsResolved<TData> = mergeProps(
+export function createTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(options: TableOptions<TFeatures, TData>) {
+  const resolvedOptions: TableOptionsResolved<TFeatures, TData> = mergeProps(
     {
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
       renderFallbackValue: null,
       mergeOptions: (
-        defaultOptions: TableOptions<TData>,
-        newOptions: Partial<TableOptions<TData>>,
+        defaultOptions: TableOptions<TFeatures, TData>,
+        newOptions: Partial<TableOptions<TFeatures, TData>>,
       ) => {
-        return mergeProps(defaultOptions, newOptions) as TableOptions<TData>
+        return mergeProps(defaultOptions, newOptions) as TableOptions<
+          TFeatures,
+          TData
+        >
       },
     },
     options,
   )
 
-  const table = _createTable<TData>(resolvedOptions)
+  const table = _createTable<TFeatures, TData>(resolvedOptions)
   const [state, setState] = createStore(table.initialState)
 
   createComputed(() => {

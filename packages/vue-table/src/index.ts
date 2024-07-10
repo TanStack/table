@@ -3,6 +3,7 @@ import { defineComponent, h, ref, watchEffect } from 'vue'
 import { mergeProxy } from './merge-proxy'
 import type {
   RowData,
+  TableFeatures,
   TableOptions,
   TableOptionsResolved,
 } from '@tanstack/table-core'
@@ -25,15 +26,18 @@ export const FlexRender = defineComponent({
   },
 })
 
-export function useTable<TData extends RowData>(options: TableOptions<TData>) {
-  const resolvedOptions: TableOptionsResolved<TData> = mergeProxy(
+export function useTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(options: TableOptions<TFeatures, TData>) {
+  const resolvedOptions: TableOptionsResolved<TFeatures, TData> = mergeProxy(
     {
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
       renderFallbackValue: null,
       mergeOptions(
-        defaultOptions: TableOptions<TData>,
-        newOptions: TableOptions<TData>,
+        defaultOptions: TableOptions<TFeatures, TData>,
+        newOptions: TableOptions<TFeatures, TData>,
       ) {
         return mergeProxy(defaultOptions, newOptions)
       },
@@ -41,7 +45,7 @@ export function useTable<TData extends RowData>(options: TableOptions<TData>) {
     options,
   )
 
-  const table = _createTable<TData>(resolvedOptions)
+  const table = _createTable<TFeatures, TData>(resolvedOptions)
   // can't use `reactive` because update needs to be immutable
   const state = ref(table.initialState)
 

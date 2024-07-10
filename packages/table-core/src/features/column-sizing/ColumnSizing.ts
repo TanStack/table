@@ -20,7 +20,15 @@ import type {
   ColumnSizingDefaultOptions,
   TableState_ColumnSizing,
 } from './ColumnSizing.types'
-import type { Column, Header, RowData, Table, TableFeature } from '../../types'
+import type {
+  CellData,
+  Column,
+  Header,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 
 export const ColumnSizing: TableFeature = {
   _getDefaultColumnDef: (): ColumnDef_ColumnSizing => {
@@ -33,17 +41,21 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
   ): ColumnSizingDefaultOptions => {
     return {
       onColumnSizingChange: makeStateUpdater('columnSizing', table),
     }
   },
 
-  _createColumn: <TData extends RowData, TValue>(
-    column: Column<TData, TValue>,
-    table: Table<TData>,
+  _createColumn: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ): void => {
     column.getSize = () => column_getSize(column, table)
 
@@ -70,16 +82,22 @@ export const ColumnSizing: TableFeature = {
     column.resetSize = () => column_resetSize(table, column)
   },
 
-  _createHeader: <TData extends RowData, TValue>(
-    header: Header<TData, TValue>,
-    table: Table<TData>,
+  _createHeader: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    header: Header<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ): void => {
     header.getSize = () => header_getSize(header, table)
 
     header.getStart = () => header_getStart(header)
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.setColumnSizing = (updater) => table_setColumnSizing(table, updater)
 
     table.resetColumnSizing = (defaultState) =>

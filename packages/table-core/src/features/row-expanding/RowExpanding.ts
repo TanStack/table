@@ -17,7 +17,13 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './RowExpanding.utils'
-import type { Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  Row,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 import type {
   TableOptions_RowExpanding,
   TableState_RowExpanding,
@@ -31,16 +37,18 @@ export const RowExpanding: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
-  ): TableOptions_RowExpanding<TData> => {
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
+  ): TableOptions_RowExpanding<TFeatures, TData> => {
     return {
       onExpandedChange: makeStateUpdater('expanded', table),
       paginateExpandedRows: true,
     }
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     const registered = false
     const queued = false
 
@@ -71,9 +79,9 @@ export const RowExpanding: TableFeature = {
     table.getExpandedRowModel = () => table_getExpandedRowModel(table)
   },
 
-  _createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>,
+  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ): void => {
     row.toggleExpanded = (expanded) => row_toggleExpanded(row, table, expanded)
 

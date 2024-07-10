@@ -13,19 +13,22 @@ import type {
 } from '../../types'
 import type { RequiredKeys } from '../../utils.types'
 
-export interface TableOptions_Table<TData extends RowData> {
+export interface TableOptions_Table<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * The features that you want to enable for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _features?: Partial<TableFeatures>
+  _features?: TFeatures
   /**
    * The row model options that you want to enable for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _rowModels?: RowModelOptions<TData>
+  _rowModels?: RowModelOptions<TFeatures, TData>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -65,15 +68,15 @@ export interface TableOptions_Table<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   mergeOptions?: (
-    defaultOptions: TableOptions<TData>,
-    options: Partial<TableOptions<TData>>,
-  ) => TableOptions<TData>
+    defaultOptions: TableOptions<TFeatures, TData>,
+    options: Partial<TableOptions<TFeatures, TData>>,
+  ) => TableOptions<TFeatures, TData>
   /**
    * You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#meta)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  meta?: TableMeta<TData>
+  meta?: TableMeta<TFeatures, TData>
   /**
    * The `onStateChange` option can be used to optionally listen to state changes within the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#onstatechange)
@@ -89,9 +92,12 @@ export interface TableOptions_Table<TData extends RowData> {
   state: Partial<TableState>
 }
 
-export interface Table_CoreProperties<TData extends RowData> {
+export interface Table_CoreProperties<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   _features: CoreTableFeatures & Partial<TableFeatures>
-  _rowModels: CachedRowModels<TData>
+  _rowModels: CachedRowModels<TFeatures, TData>
   /**
    * This is the resolved initial state of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
@@ -103,24 +109,26 @@ export interface Table_CoreProperties<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#options)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  options: RequiredKeys<TableOptionsResolved<TData>, 'state'>
+  options: RequiredKeys<TableOptionsResolved<TFeatures, TData>, 'state'>
 }
 
-export interface Table_Table<TData extends RowData>
-  extends Table_CoreProperties<TData> {
+export interface Table_Table<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> extends Table_CoreProperties<TFeatures, TData> {
   _queue: (cb: () => void) => void
   /**
    * Returns the core row model before any processing has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getCoreRowModel: () => RowModel<TData>
+  getCoreRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns the final model after all processing from other used features has been applied. This is the row model that is most commonly used for rendering.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getRowModel: () => RowModel<TData>
+  getRowModel: () => RowModel<TFeatures, TData>
   /**
    * Call this function to get the table's current state. It's recommended to use this function and its state, especially when managing the table state manually. It is the exact same state used internally by the table for every feature and function it provides.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getstate)
@@ -138,7 +146,9 @@ export interface Table_Table<TData extends RowData>
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#setoptions)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  setOptions: (newOptions: Updater<TableOptionsResolved<TData>>) => void
+  setOptions: (
+    newOptions: Updater<TableOptionsResolved<TFeatures, TData>>,
+  ) => void
   /**
    * Call this function to update the table state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#setstate)

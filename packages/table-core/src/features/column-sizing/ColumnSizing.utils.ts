@@ -1,9 +1,21 @@
-import type { Column, Header, RowData, Table, Updater } from '../../types'
+import type {
+  CellData,
+  Column,
+  Header,
+  RowData,
+  Table,
+  TableFeatures,
+  Updater,
+} from '../../types'
 import type { ColumnSizingState } from './ColumnSizing.types'
 
-export function column_getSize<TData extends RowData, TValue>(
-  column: Column<TData, TValue>,
-  table: Table<TData>,
+export function column_getSize<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
 ): number {
   const columnSize = table.getState().columnSizing[column.id]
 
@@ -16,10 +28,14 @@ export function column_getSize<TData extends RowData, TValue>(
   )
 }
 
-export function column_getStart<TData extends RowData, TValue>(
-  columns: Array<Column<TData, unknown>>,
-  column: Column<TData, TValue>,
-  table: Table<TData>,
+export function column_getStart<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  columns: Array<Column<TFeatures, TData, unknown>>,
+  column: Column<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
   position?: false | 'left' | 'right' | 'center',
 ): number {
   return columns
@@ -27,10 +43,14 @@ export function column_getStart<TData extends RowData, TValue>(
     .reduce((sum, c) => sum + column_getSize(c, table), 0)
 }
 
-export function column_getAfter<TData extends RowData, TValue>(
-  columns: Array<Column<TData, unknown>>,
-  column: Column<TData, TValue>,
-  table: Table<TData>,
+export function column_getAfter<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  columns: Array<Column<TFeatures, TData, unknown>>,
+  column: Column<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
   position?: false | 'left' | 'right' | 'center',
 ): number {
   return columns
@@ -38,22 +58,24 @@ export function column_getAfter<TData extends RowData, TValue>(
     .reduce((sum, c) => sum + column_getSize(c, table), 0)
 }
 
-export function column_resetSize<TData extends RowData, TValue>(
-  table: Table<TData>,
-  column: Column<TData, TValue>,
-) {
+export function column_resetSize<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(table: Table<TFeatures, TData>, column: Column<TFeatures, TData, TValue>) {
   table_setColumnSizing(table, ({ [column.id]: _, ...rest }) => {
     return rest
   })
 }
 
-export function header_getSize<TData extends RowData, TValue>(
-  header: Header<TData, TValue>,
-  table: Table<TData>,
-) {
+export function header_getSize<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(header: Header<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
   let sum = 0
 
-  const recurse = (h: Header<TData, TValue>) => {
+  const recurse = (h: Header<TFeatures, TData, TValue>) => {
     if (h.subHeaders.length) {
       h.subHeaders.forEach(recurse)
     } else {
@@ -66,9 +88,11 @@ export function header_getSize<TData extends RowData, TValue>(
   return sum
 }
 
-export function header_getStart<TData extends RowData, TValue>(
-  header: Header<TData, TValue>,
-) {
+export function header_getStart<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(header: Header<TFeatures, TData, TValue>) {
   if (header.index > 0) {
     const prevSiblingHeader = header.headerGroup?.headers[header.index - 1]
     if (prevSiblingHeader) {
@@ -79,24 +103,27 @@ export function header_getStart<TData extends RowData, TValue>(
   return 0
 }
 
-export function table_setColumnSizing<TData extends RowData>(
-  table: Table<TData>,
-  updater: Updater<ColumnSizingState>,
-) {
+export function table_setColumnSizing<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, updater: Updater<ColumnSizingState>) {
   table.options.onColumnSizingChange?.(updater)
 }
 
-export function table_resetColumnSizing<TData extends RowData>(
-  table: Table<TData>,
-  defaultState?: boolean,
-) {
+export function table_resetColumnSizing<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
     defaultState ? {} : table.initialState.columnSizing,
   )
 }
 
-export function table_getTotalSize<TData extends RowData>(table: Table<TData>) {
+export function table_getTotalSize<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
   return (
     table.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
       return sum + header.getSize()
@@ -104,9 +131,10 @@ export function table_getTotalSize<TData extends RowData>(table: Table<TData>) {
   )
 }
 
-export function table_getLeftTotalSize<TData extends RowData>(
-  table: Table<TData>,
-) {
+export function table_getLeftTotalSize<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
   return (
     table.getLeftHeaderGroups()[0]?.headers.reduce((sum, header) => {
       return sum + header.getSize()
@@ -114,9 +142,10 @@ export function table_getLeftTotalSize<TData extends RowData>(
   )
 }
 
-export function table_getCenterTotalSize<TData extends RowData>(
-  table: Table<TData>,
-) {
+export function table_getCenterTotalSize<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
   return (
     table.getCenterHeaderGroups()[0]?.headers.reduce((sum, header) => {
       return sum + header.getSize()
@@ -124,9 +153,10 @@ export function table_getCenterTotalSize<TData extends RowData>(
   )
 }
 
-export function table_getRightTotalSize<TData extends RowData>(
-  table: Table<TData>,
-) {
+export function table_getRightTotalSize<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
   return (
     table.getRightHeaderGroups()[0]?.headers.reduce((sum, header) => {
       return sum + header.getSize()

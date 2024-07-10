@@ -1,9 +1,12 @@
 import { getMemoOptions, memo } from '../../utils'
 import { row_getUniqueValues } from '../../core/rows/Rows.utils'
-import type { RowData, Table } from '../../types'
+import type { RowData, Table, TableFeatures } from '../../types'
 
-export function createFacetedMinMaxValues<TData extends RowData>(): (
-  table: Table<TData>,
+export function createFacetedMinMaxValues<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): (
+  table: Table<TFeatures, TData>,
   columnId: string,
 ) => () => undefined | [number, number] {
   return (table, columnId) =>

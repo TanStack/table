@@ -1,25 +1,31 @@
 import type {
   AccessorFn,
+  CellData,
   Column,
   ColumnDef,
   ColumnDefResolved,
   RowData,
   Table,
+  TableFeatures,
 } from '../../types'
 import type { Column_CoreProperties } from './Columns.types'
 
-export function _createColumn<TData extends RowData, TValue>(
-  table: Table<TData>,
-  columnDef: ColumnDef<TData, TValue>,
+export function _createColumn<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  table: Table<TFeatures, TData>,
+  columnDef: ColumnDef<TFeatures, TData, TValue>,
   depth: number,
-  parent?: Column<TData, TValue>,
-): Column<TData, TValue> {
+  parent?: Column<TFeatures, TData, TValue>,
+): Column<TFeatures, TData, TValue> {
   const defaultColumn = table._getDefaultColumnDef()
 
   const resolvedColumnDef = {
     ...defaultColumn,
     ...columnDef,
-  } as ColumnDefResolved<TData>
+  } as ColumnDefResolved<TFeatures, TData, TValue>
 
   const accessorKey = resolvedColumnDef.accessorKey
 
@@ -30,7 +36,7 @@ export function _createColumn<TData extends RowData, TValue>(
       ? resolvedColumnDef.header
       : undefined)
 
-  let accessorFn: AccessorFn<TData> | undefined
+  let accessorFn: AccessorFn<TData, TValue> | undefined
 
   if (resolvedColumnDef.accessorFn) {
     accessorFn = resolvedColumnDef.accessorFn
@@ -49,7 +55,7 @@ export function _createColumn<TData extends RowData, TValue>(
           }
         }
 
-        return result
+        return result as TValue
       }
     } else {
       accessorFn = (originalRow: TData) =>
@@ -68,18 +74,18 @@ export function _createColumn<TData extends RowData, TValue>(
     throw new Error()
   }
 
-  const column: Column_CoreProperties<TData, any> = {
+  const column: Column_CoreProperties<TFeatures, TData, TValue> = {
     id: `${String(id)}`,
     accessorFn,
     parent: parent as any,
     depth,
-    columnDef: resolvedColumnDef as ColumnDef<TData, any>,
+    columnDef: resolvedColumnDef as ColumnDef<TFeatures, TData, TValue>,
     columns: [],
   }
 
   for (const feature of Object.values(table._features)) {
-    feature?._createColumn?.(column as Column<TData, TValue>, table)
+    feature?._createColumn?.(column as Column<TFeatures, TData, TValue>, table)
   }
 
-  return column as Column<TData, TValue>
+  return column as Column<TFeatures, TData, TValue>
 }

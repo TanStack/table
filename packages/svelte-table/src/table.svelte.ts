@@ -1,5 +1,6 @@
 import {
   type RowData,
+  type TableFeatures,
   type TableOptions,
   type TableOptionsResolved,
   type TableState,
@@ -32,17 +33,18 @@ import {
  * </table>
  * ```
  */
-export function createTable<TData extends RowData>(
-  options: TableOptions<TData>,
-) {
-  const resolvedOptions: TableOptionsResolved<TData> = mergeObjects(
+export function createTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(options: TableOptions<TFeatures, TData>) {
+  const resolvedOptions: TableOptionsResolved<TFeatures, TData> = mergeObjects(
     {
       state: {},
       onStateChange() {},
       renderFallbackValue: null,
       mergeOptions: (
-        defaultOptions: TableOptions<TData>,
-        newOptions: Partial<TableOptions<TData>>,
+        defaultOptions: TableOptions<TFeatures, TData>,
+        newOptions: Partial<TableOptions<TFeatures, TData>>,
       ) => {
         return mergeObjects(defaultOptions, newOptions)
       },

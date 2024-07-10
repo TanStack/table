@@ -22,7 +22,14 @@ import type {
   TableOptions_RowSorting,
   TableState_RowSorting,
 } from './RowSorting.types'
-import type { Column, RowData, Table, TableFeature } from '../../types'
+import type {
+  CellData,
+  Column,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 
 export const RowSorting: TableFeature = {
   _getInitialState: (state): TableState_RowSorting => {
@@ -33,17 +40,18 @@ export const RowSorting: TableFeature = {
   },
 
   _getDefaultColumnDef: <
+    TFeatures extends TableFeatures,
     TData extends RowData,
-  >(): ColumnDef_RowSorting<TData> => {
+  >(): ColumnDef_RowSorting<TFeatures, TData> => {
     return {
       sortingFn: 'auto',
       sortUndefined: 1,
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
-  ): TableOptions_RowSorting<TData> => {
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
+  ): TableOptions_RowSorting<TFeatures, TData> => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
       isMultiSortEvent: (e: unknown) => {
@@ -52,9 +60,13 @@ export const RowSorting: TableFeature = {
     }
   },
 
-  _createColumn: <TData extends RowData, TValue>(
-    column: Column<TData, TValue>,
-    table: Table<TData>,
+  _createColumn: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ): void => {
     column.getAutoSortingFn = () => column_getAutoSortingFn(column, table)
 
@@ -84,7 +96,9 @@ export const RowSorting: TableFeature = {
       column_getToggleSortingHandler(column, table)
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.setSorting = (updater) => table_setSorting(table, updater)
 
     table.resetSorting = (defaultState) =>

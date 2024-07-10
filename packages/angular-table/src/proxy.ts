@@ -1,18 +1,28 @@
 import { type Signal, computed, untracked } from '@angular/core'
-import { type Table } from '@tanstack/table-core'
+import {
+  type RowData,
+  type Table,
+  type TableFeatures,
+} from '@tanstack/table-core'
 
-type TableSignal<T> = Table<T> & Signal<Table<T>>
+type TableSignal<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = Table<TFeatures, TData> & Signal<Table<TFeatures, TData>>
 
-export function proxifyTable<T>(
-  tableSignal: Signal<Table<T>>,
-): Table<T> & Signal<Table<T>> {
-  const internalState = tableSignal as TableSignal<T>
+export function proxifyTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  tableSignal: Signal<Table<TFeatures, TData>>,
+): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
+  const internalState = tableSignal as TableSignal<TFeatures, TData>
 
   return new Proxy(internalState, {
     apply() {
       return tableSignal()
     },
-    get(target, property: keyof Table<T>): any {
+    get(target, property: keyof Table<TFeatures, TData>): any {
       if (target[property]) {
         return target[property]
       }
@@ -39,7 +49,7 @@ export function proxifyTable<T>(
       // @ts-expect-error
       return (target[property] = table[property])
     },
-    has(_, prop: keyof Table<T>) {
+    has(_, prop: keyof Table<TFeatures, TData>) {
       return !!untracked(tableSignal)[prop]
     },
     ownKeys() {
@@ -65,7 +75,10 @@ export function proxifyTable<T>(
  * we'll wrap all accessors into a cached function wrapping a computed
  * that return it's value based on the given parameters
  */
-function toComputed<T>(signal: Signal<Table<T>>, fn: Function) {
+function toComputed<TFeatures extends TableFeatures, TData extends RowData>(
+  signal: Signal<Table<TFeatures, TData>>,
+  fn: Function,
+) {
   const hasArgs = fn.length > 0
   if (!hasArgs) {
     return computed(() => {

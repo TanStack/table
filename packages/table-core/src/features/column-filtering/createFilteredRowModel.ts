@@ -3,12 +3,13 @@ import { table_getColumn } from '../../core/columns/Columns.utils'
 import { table_getGlobalFilterFn } from '../global-filtering/GlobalFiltering.utils'
 import { filterRows } from './filterRowsUtils'
 import { column_getFilterFn } from './ColumnFiltering.utils'
-import type { Row, RowData, RowModel, Table } from '../../types'
+import type { Row, RowData, RowModel, Table, TableFeatures } from '../../types'
 import type { ResolvedColumnFilter } from './ColumnFiltering.types'
 
-export function createFilteredRowModel<TData extends RowData>(): (
-  table: Table<TData>,
-) => () => RowModel<TData> {
+export function createFilteredRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) =>
     memo(
       () => [
@@ -25,8 +26,12 @@ export function createFilteredRowModel<TData extends RowData>(): (
           return rowModel
         }
 
-        const resolvedColumnFilters: Array<ResolvedColumnFilter<TData>> = []
-        const resolvedGlobalFilters: Array<ResolvedColumnFilter<TData>> = []
+        const resolvedColumnFilters: Array<
+          ResolvedColumnFilter<TFeatures, TData>
+        > = []
+        const resolvedGlobalFilters: Array<
+          ResolvedColumnFilter<TFeatures, TData>
+        > = []
 
         columnFilters.forEach((d) => {
           const column = table_getColumn(table, d.id)
@@ -124,7 +129,7 @@ export function createFilteredRowModel<TData extends RowData>(): (
           }
         }
 
-        const filterRowsImpl = (row: Row<TData>) => {
+        const filterRowsImpl = (row: Row<TFeatures, TData>) => {
           // Horizontally filter rows through each column
           for (const columnId of filterableIds) {
             if (row.columnFilters[columnId] === false) {

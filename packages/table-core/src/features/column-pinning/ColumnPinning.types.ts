@@ -5,6 +5,7 @@ import type {
   HeaderGroup,
   OnChangeFn,
   RowData,
+  TableFeatures,
   Updater,
 } from '../../types'
 
@@ -81,34 +82,40 @@ export interface Column_ColumnPinning {
   pin: (position: ColumnPinningPosition) => void
 }
 
-export interface Row_ColumnPinning<TData extends RowData> {
+export interface Row_ColumnPinning<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Returns all center pinned (unpinned) leaf cells in the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getcentervisiblecells)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
    */
-  getCenterVisibleCells: () => Array<Cell<TData, unknown>>
+  getCenterVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
    * Returns all left pinned leaf cells in the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getleftvisiblecells)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
    */
-  getLeftVisibleCells: () => Array<Cell<TData, unknown>>
+  getLeftVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
    * Returns all right pinned leaf cells in the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getrightvisiblecells)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
    */
-  getRightVisibleCells: () => Array<Cell<TData, unknown>>
+  getRightVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
 }
 
-export interface Table_ColumnPinning<TData extends RowData> {
+export interface Table_ColumnPinning<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Returns all center pinned (unpinned) leaf columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getcenterleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
    */
-  getCenterLeafColumns: () => Array<Column<TData, unknown>>
+  getCenterLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Returns whether or not any columns are pinned. Optionally specify to only check for pinned columns in either the `left` or `right` position.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getissomecolumnspinned)
@@ -120,13 +127,13 @@ export interface Table_ColumnPinning<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getleftleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
    */
-  getLeftLeafColumns: () => Array<Column<TData, unknown>>
+  getLeftLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Returns all right pinned leaf columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#getrightleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
    */
-  getRightLeafColumns: () => Array<Column<TData, unknown>>
+  getRightLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Resets the **columnPinning** state to `initialState.columnPinning`, or `true` can be passed to force a default blank state reset to `{ left: [], right: [], }`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#resetcolumnpinning)
@@ -144,71 +151,71 @@ export interface Table_ColumnPinning<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftheadergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeftHeaderGroups: () => Array<HeaderGroup<TData>>
+  getLeftHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
    * If pinning, returns the header groups for columns that are not pinned.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterheadergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getCenterHeaderGroups: () => Array<HeaderGroup<TData>>
+  getCenterHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
    * If pinning, returns the header groups for the right pinned columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightheadergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getRightHeaderGroups: () => Array<HeaderGroup<TData>>
+  getRightHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
    * If pinning, returns the footer groups for the left pinned columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeftFooterGroups: () => Array<HeaderGroup<TData>>
+  getLeftFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
    * If pinning, returns the footer groups for columns that are not pinned.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getCenterFooterGroups: () => Array<HeaderGroup<TData>>
+  getCenterFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
    * If pinning, returns the footer groups for the right pinned columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightfootergroups)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getRightFooterGroups: () => Array<HeaderGroup<TData>>
+  getRightFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
    * If pinning, returns headers for all left pinned columns in the table, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftflatheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeftFlatHeaders: () => Array<Header<TData, unknown>>
+  getLeftFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
    * If pinning, returns headers for all columns that are not pinned, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterflatheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getCenterFlatHeaders: () => Array<Header<TData, unknown>>
+  getCenterFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
    * If pinning, returns headers for all right pinned columns in the table, including parent headers.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightflatheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getRightFlatHeaders: () => Array<Header<TData, unknown>>
+  getRightFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
    * If pinning, returns headers for all left pinned leaf columns in the table, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getleftleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getLeftLeafHeaders: () => Array<Header<TData, unknown>>
+  getLeftLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
    * If pinning, returns headers for all columns that are not pinned, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getcenterleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getCenterLeafHeaders: () => Array<Header<TData, unknown>>
+  getCenterLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
    * If pinning, returns headers for all right pinned leaf columns in the table, (not including parent headers).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/headers#getrightleafheaders)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/headers)
    */
-  getRightLeafHeaders: () => Array<Header<TData, unknown>>
+  getRightLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
 }

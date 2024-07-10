@@ -1,14 +1,14 @@
 import React from 'react'
-import { Table } from '@tanstack/react-table'
 
 import useLocalStorage from './useLocalStorage'
 import { useIsMounted } from './utils'
 
-import { Panel, Button } from './styledComponents'
+import { Button, Panel } from './styledComponents'
 import { ThemeProvider, defaultTheme as theme } from './theme'
 // import { getQueryStatusLabel, getQueryStatusColor } from './utils'
 import Explorer from './Explorer'
 import Logo from './Logo'
+import type { Table } from '@tanstack/react-table'
 
 interface DevtoolsOptions {
   /**
@@ -152,7 +152,7 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
     setIsOpen,
     ...panelProps
   } = props as DevtoolsPanelOptions & {
-    table: Table<any>
+    table: Table<any, any>
   }
 
   // const [activeMatchId, setActiveRouteId] = useLocalStorage(

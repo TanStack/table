@@ -1,9 +1,12 @@
 import { getMemoOptions, memo } from '../../utils'
 import { row_getUniqueValues } from '../../core/rows/Rows.utils'
-import type { RowData, Table } from '../../types'
+import type { RowData, Table, TableFeatures } from '../../types'
 
-export function createFacetedUniqueValues<TData extends RowData>(): (
-  table: Table<TData>,
+export function createFacetedUniqueValues<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): (
+  table: Table<TFeatures, TData>,
   columnId: string,
 ) => () => Map<any, number> {
   return (table, columnId) =>

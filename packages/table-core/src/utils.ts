@@ -121,7 +121,7 @@ export function memo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
 }
 
 export function getMemoOptions(
-  tableOptions: Partial<TableOptionsResolved<any>>,
+  tableOptions: Partial<TableOptionsResolved<any, any>>,
   debugLevel:
     | 'debugAll'
     | 'debugCells'

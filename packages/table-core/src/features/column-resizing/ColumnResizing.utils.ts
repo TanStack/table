@@ -1,6 +1,14 @@
 import { table_setColumnSizing } from '../column-sizing/ColumnSizing.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
-import type { Column, Header, RowData, Table, Updater } from '../../types'
+import type {
+  CellData,
+  Column,
+  Header,
+  RowData,
+  Table,
+  TableFeatures,
+  Updater,
+} from '../../types'
 import type { ColumnSizingState } from '../column-sizing/ColumnSizing.types'
 import type { ColumnResizingInfoState } from './ColumnResizing.types'
 
@@ -15,26 +23,32 @@ export function getDefaultColumnSizingInfoState(): ColumnResizingInfoState {
   })
 }
 
-export function column_getCanResize<TData extends RowData, TValue>(
-  table: Table<TData>,
-  column: Column<TData, TValue>,
-) {
+export function column_getCanResize<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(table: Table<TFeatures, TData>, column: Column<TFeatures, TData, TValue>) {
   return (
     (column.columnDef.enableResizing ?? true) &&
     (table.options.enableColumnResizing ?? true)
   )
 }
 
-export function column_getIsResizing<TData extends RowData, TValue>(
-  table: Table<TData>,
-  column: Column<TData, TValue>,
-) {
+export function column_getIsResizing<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(table: Table<TFeatures, TData>, column: Column<TFeatures, TData, TValue>) {
   return table.getState().columnSizingInfo.isResizingColumn === column.id
 }
 
-export function header_getResizeHandler<TData extends RowData, TValue>(
-  header: Header<TData, TValue>,
-  table: Table<TData>,
+export function header_getResizeHandler<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  header: Header<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
   _contextDocument?: Document,
 ) {
   const column = table_getColumn(table, header.column.id)!
@@ -200,17 +214,17 @@ export function header_getResizeHandler<TData extends RowData, TValue>(
   }
 }
 
-export function table_setColumnSizingInfo<TData extends RowData>(
-  table: Table<TData>,
-  updater: Updater<ColumnResizingInfoState>,
-) {
+export function table_setColumnSizingInfo<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, updater: Updater<ColumnResizingInfoState>) {
   table.options.onColumnSizingInfoChange?.(updater)
 }
 
-export function table_resetHeaderSizeInfo<TData extends RowData>(
-  table: Table<TData>,
-  defaultState?: boolean,
-) {
+export function table_resetHeaderSizeInfo<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizingInfo(
     table,
     defaultState

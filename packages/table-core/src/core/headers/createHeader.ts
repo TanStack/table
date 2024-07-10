@@ -1,9 +1,20 @@
-import type { Column, Header, RowData, Table } from '../../types'
+import type {
+  CellData,
+  Column,
+  Header,
+  RowData,
+  Table,
+  TableFeatures,
+} from '../../types'
 import type { Header_CoreProperties } from './Headers.types'
 
-export function _createHeader<TData extends RowData, TValue>(
-  table: Table<TData>,
-  column: Column<TData, TValue>,
+export function _createHeader<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  table: Table<TFeatures, TData>,
+  column: Column<TFeatures, TData, TValue>,
   options: {
     id?: string
     isPlaceholder?: boolean
@@ -11,8 +22,8 @@ export function _createHeader<TData extends RowData, TValue>(
     index: number
     depth: number
   },
-): Header<TData, TValue> {
-  const header: Header_CoreProperties<TData, TValue> = {
+): Header<TFeatures, TData, TValue> {
+  const header: Header_CoreProperties<TFeatures, TData, TValue> = {
     colSpan: 0,
     column,
     depth: options.depth,
@@ -26,8 +37,8 @@ export function _createHeader<TData extends RowData, TValue>(
   }
 
   for (const feature of Object.values(table._features)) {
-    feature?._createHeader?.(header as Header<TData, TValue>, table)
+    feature?._createHeader?.(header as Header<TFeatures, TData, TValue>, table)
   }
 
-  return header as Header<TData, TValue>
+  return header as Header<TFeatures, TData, TValue>
 }

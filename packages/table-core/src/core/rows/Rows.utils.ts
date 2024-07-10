@@ -3,11 +3,21 @@ import { _createCell } from '../cells/createCell'
 import { table_getColumn } from '../columns/Columns.utils'
 import { table_getPrePaginationRowModel } from '../../features/row-pagination/RowPagination.utils'
 import { table_getCoreRowModel, table_getRowModel } from '../table/Tables.utils'
-import type { Cell, Column, Row, RowData, Table } from '../../types'
+import type {
+  Cell,
+  Column,
+  Row,
+  RowData,
+  Table,
+  TableFeatures,
+} from '../../types'
 
-export function row_getValue<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
+export function row_getValue<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
 ) {
   if (row._valuesCache.hasOwnProperty(columnId)) {
@@ -25,9 +35,12 @@ export function row_getValue<TData extends RowData>(
   return row._valuesCache[columnId] as any
 }
 
-export function row_getUniqueValues<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
+export function row_getUniqueValues<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
 ) {
   if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
@@ -53,32 +66,36 @@ export function row_getUniqueValues<TData extends RowData>(
   return row._uniqueValuesCache[columnId] as any
 }
 
-export function row_renderValue<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
+export function row_renderValue<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
 ) {
   return row_getValue(row, table, columnId) ?? table.options.renderFallbackValue
 }
 
-export function row_getLeafRows<TData extends RowData>(
-  row: Row<TData>,
-): Array<Row<TData>> {
+export function row_getLeafRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>): Array<Row<TFeatures, TData>> {
   return flattenBy(row.subRows, (d) => d.subRows)
 }
 
-export function row_getParentRow<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-) {
+export function row_getParentRow<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   return row.parentId ? table_getRow(table, row.parentId, true) : undefined
 }
 
-export function row_getParentRows<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-) {
-  const parentRows: Array<Row<TData>> = []
+export function row_getParentRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
+  const parentRows: Array<Row<TFeatures, TData>> = []
   let currentRow = row
   // eslint-disable-next-line ts/no-unnecessary-condition
   while (true) {
@@ -90,33 +107,40 @@ export function row_getParentRows<TData extends RowData>(
   return parentRows.reverse()
 }
 
-export function row_getAllCells<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-  leafColumns: Array<Column<TData, unknown>>,
-): Array<Cell<TData, unknown>> {
+export function row_getAllCells<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
+  leafColumns: Array<Column<TFeatures, TData, unknown>>,
+): Array<Cell<TFeatures, TData, unknown>> {
   return leafColumns.map((column) => {
     return _createCell(column, row, table)
   })
 }
 
-export function row_getAllCellsByColumnId<TData extends RowData>(
-  allCells: Array<Cell<TData, unknown>>,
-) {
+export function row_getAllCellsByColumnId<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(allCells: Array<Cell<TFeatures, TData, unknown>>) {
   return allCells.reduce(
     (acc, cell) => {
       acc[cell.column.id] = cell
       return acc
     },
-    {} as Record<string, Cell<TData, unknown>>,
+    {} as Record<string, Cell<TFeatures, TData, unknown>>,
   )
 }
 
-export function table_getRowId<TData extends RowData>(
+export function table_getRowId<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
   originalRow: TData,
-  table: Table<TData>,
+  table: Table<TFeatures, TData>,
   index: number,
-  parent?: Row<TData>,
+  parent?: Row<TFeatures, TData>,
 ) {
   return (
     table.options.getRowId?.(originalRow, index, parent) ??
@@ -124,11 +148,14 @@ export function table_getRowId<TData extends RowData>(
   )
 }
 
-export function table_getRow<TData extends RowData>(
-  table: Table<TData>,
+export function table_getRow<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
   rowId: string,
   searchAll?: boolean,
-): Row<TData> {
+): Row<TFeatures, TData> {
   let row = (
     searchAll ? table_getPrePaginationRowModel(table) : table_getRowModel(table)
   ).rowsById[rowId]

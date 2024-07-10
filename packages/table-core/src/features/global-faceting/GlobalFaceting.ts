@@ -3,10 +3,12 @@ import {
   table_getGlobalFacetedRowModel,
   table_getGlobalFacetedUniqueValues,
 } from './GlobalFaceting.utils'
-import type { RowData, Table, TableFeature } from '../../types'
+import type { RowData, Table, TableFeature, TableFeatures } from '../../types'
 
 export const GlobalFaceting: TableFeature = {
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.getGlobalFacetedMinMaxValues =
       table_getGlobalFacetedMinMaxValues(table)
 

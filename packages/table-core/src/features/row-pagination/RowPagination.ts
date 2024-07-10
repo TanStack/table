@@ -24,7 +24,7 @@ import type {
   PaginationDefaultOptions,
   TableState_RowPagination,
 } from './RowPagination.types'
-import type { RowData, Table, TableFeature } from '../../types'
+import type { RowData, Table, TableFeature, TableFeatures } from '../../types'
 
 export const RowPagination: TableFeature = {
   _getInitialState: (state): TableState_RowPagination => {
@@ -37,15 +37,17 @@ export const RowPagination: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
   ): PaginationDefaultOptions => {
     return {
       onPaginationChange: makeStateUpdater('pagination', table),
     }
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     const registered = false
     const queued = false
 

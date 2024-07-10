@@ -69,7 +69,7 @@ If this function is provided, it will be called when the pagination state change
 ### `getPaginatedRowModel`
 
 ```tsx
-getPaginatedRowModel?: (table: Table<TData>) => () => RowModel<TData>
+getPaginatedRowModel?: (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData>
 ```
 
 Returns the row model after pagination has taken place, but no further.
@@ -193,7 +193,7 @@ Returns the page count. If manually paginating or controlling the pagination sta
 ### `getPrePaginationRowModel`
 
 ```tsx
-getPrePaginationRowModel: () => RowModel<TData>
+getPrePaginationRowModel: () => RowModel<TFeatures, TData>
 ```
 
 Returns the row model for the table before any pagination has been applied.
@@ -201,7 +201,7 @@ Returns the row model for the table before any pagination has been applied.
 ### `getPaginatedRowModel`
 
 ```tsx
-getPaginatedRowModel: () => RowModel<TData>
+getPaginatedRowModel: () => RowModel<TFeatures, TData>
 ```
 
 Returns the row model for the table after pagination has been applied.

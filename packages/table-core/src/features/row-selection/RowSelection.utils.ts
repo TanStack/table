@@ -6,30 +6,37 @@ import {
   table_getCoreRowModel,
   table_getRowModel,
 } from '../../core/table/Tables.utils'
-import type { Row, RowData, RowModel, Table, Updater } from '../../types'
+import type {
+  Row,
+  RowData,
+  RowModel,
+  Table,
+  TableFeatures,
+  Updater,
+} from '../../types'
 import type { RowSelectionState } from './RowSelection.types'
 
-export function table_setRowSelection<TData extends RowData>(
-  table: Table<TData>,
-  updater: Updater<RowSelectionState>,
-) {
+export function table_setRowSelection<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, updater: Updater<RowSelectionState>) {
   table.options.onRowSelectionChange?.(updater)
 }
 
-export function table_resetRowSelection<TData extends RowData>(
-  table: Table<TData>,
-  defaultState?: boolean,
-) {
+export function table_resetRowSelection<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setRowSelection(
     table,
     defaultState ? {} : table.initialState.rowSelection,
   )
 }
 
-export function table_toggleAllRowsSelected<TData extends RowData>(
-  table: Table<TData>,
-  value?: boolean,
-) {
+export function table_toggleAllRowsSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, value?: boolean) {
   table_setRowSelection(table, (old) => {
     value =
       typeof value !== 'undefined' ? value : !table_getIsAllRowsSelected(table)
@@ -57,10 +64,10 @@ export function table_toggleAllRowsSelected<TData extends RowData>(
   })
 }
 
-export function table_toggleAllPageRowsSelected<TData extends RowData>(
-  table: Table<TData>,
-  value?: boolean,
-) {
+export function table_toggleAllPageRowsSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, value?: boolean) {
   table_setRowSelection(table, (old) => {
     const resolvedValue =
       typeof value !== 'undefined'
@@ -77,16 +84,20 @@ export function table_toggleAllPageRowsSelected<TData extends RowData>(
   })
 }
 
-export function table_getPreSelectedRowModel<TData extends RowData>(
-  table: Table<TData>,
-): RowModel<TData> {
+export function table_getPreSelectedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   return table_getCoreRowModel(table)
 }
 
-export function table_getSelectedRowModel<TData extends RowData>(
-  table: Table<TData>,
+export function table_getSelectedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
   rowSelection: RowSelectionState,
-  rowModel: RowModel<TData>,
+  rowModel: RowModel<TFeatures, TData>,
 ) {
   if (!Object.keys(rowSelection).length) {
     return {
@@ -99,10 +110,13 @@ export function table_getSelectedRowModel<TData extends RowData>(
   return selectRowsFn(table, rowModel)
 }
 
-export function table_getFilteredSelectedRowModel<TData extends RowData>(
-  table: Table<TData>,
+export function table_getFilteredSelectedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
   rowSelection: RowSelectionState,
-  rowModel: RowModel<TData>,
+  rowModel: RowModel<TFeatures, TData>,
 ) {
   if (!Object.keys(rowSelection).length) {
     return {
@@ -115,10 +129,13 @@ export function table_getFilteredSelectedRowModel<TData extends RowData>(
   return selectRowsFn(table, rowModel)
 }
 
-export function table_getGroupedSelectedRowModel<TData extends RowData>(
-  table: Table<TData>,
+export function table_getGroupedSelectedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
   rowSelection: RowSelectionState,
-  rowModel: RowModel<TData>,
+  rowModel: RowModel<TFeatures, TData>,
 ) {
   if (!Object.keys(rowSelection).length) {
     return {
@@ -131,9 +148,10 @@ export function table_getGroupedSelectedRowModel<TData extends RowData>(
   return selectRowsFn(table, rowModel)
 }
 
-export function table_getIsAllRowsSelected<TData extends RowData>(
-  table: Table<TData>,
-) {
+export function table_getIsAllRowsSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
   const preGroupedFlatRows = table_getFilteredRowModel(table).flatRows
   const { rowSelection } = table.getState()
 
@@ -154,9 +172,10 @@ export function table_getIsAllRowsSelected<TData extends RowData>(
   return isAllRowsSelected
 }
 
-export function table_getIsAllPageRowsSelected<TData extends RowData>(
-  table: Table<TData>,
-) {
+export function table_getIsAllPageRowsSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
   const paginationFlatRows = table_getPaginatedRowModel(table).flatRows.filter(
     (row) => row_getCanSelect(row, table),
   )
@@ -174,9 +193,10 @@ export function table_getIsAllPageRowsSelected<TData extends RowData>(
   return isAllPageRowsSelected
 }
 
-export function table_getIsSomeRowsSelected<TData extends RowData>(
-  table: Table<TData>,
-) {
+export function table_getIsSomeRowsSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
   const totalSelected = Object.keys(table.getState().rowSelection).length
   return (
     totalSelected > 0 &&
@@ -184,9 +204,10 @@ export function table_getIsSomeRowsSelected<TData extends RowData>(
   )
 }
 
-export function table_getIsSomePageRowsSelected<TData extends RowData>(
-  table: Table<TData>,
-) {
+export function table_getIsSomePageRowsSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
   const paginationFlatRows = table_getPaginatedRowModel(table).flatRows
   return table_getIsAllPageRowsSelected(table)
     ? false
@@ -198,9 +219,10 @@ export function table_getIsSomePageRowsSelected<TData extends RowData>(
         )
 }
 
-export function table_getToggleAllRowsSelectedHandler<TData extends RowData>(
-  table: Table<TData>,
-) {
+export function table_getToggleAllRowsSelectedHandler<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
   return (e: unknown) => {
     table_toggleAllRowsSelected(
       table,
@@ -210,8 +232,9 @@ export function table_getToggleAllRowsSelectedHandler<TData extends RowData>(
 }
 
 export function table_getToggleAllPageRowsSelectedHandler<
+  TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TData>) {
+>(table: Table<TFeatures, TData>) {
   return (e: unknown) => {
     table_toggleAllPageRowsSelected(
       table,
@@ -220,9 +243,12 @@ export function table_getToggleAllPageRowsSelectedHandler<
   }
 }
 
-export function row_toggleSelected<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
+export function row_toggleSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   value?: boolean,
   opts?: {
     selectChildren?: boolean
@@ -251,34 +277,34 @@ export function row_toggleSelected<TData extends RowData>(
   })
 }
 
-export function row_getIsSelected<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-) {
+export function row_getIsSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   const { rowSelection } = table.getState()
   return isRowSelected(row, rowSelection)
 }
 
-export function row_getIsSomeSelected<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-) {
+export function row_getIsSomeSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   const { rowSelection } = table.getState()
   return isSubRowSelected(row, rowSelection, table) === 'some'
 }
 
-export function row_getIsAllSubRowsSelected<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-) {
+export function row_getIsAllSubRowsSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   const { rowSelection } = table.getState()
   return isSubRowSelected(row, rowSelection, table) === 'all'
 }
 
-export function row_getCanSelect<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-) {
+export function row_getCanSelect<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   if (typeof table.options.enableRowSelection === 'function') {
     return table.options.enableRowSelection(row)
   }
@@ -286,10 +312,10 @@ export function row_getCanSelect<TData extends RowData>(
   return table.options.enableRowSelection ?? true
 }
 
-export function row_getCanSelectSubRows<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-) {
+export function row_getCanSelectSubRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   if (typeof table.options.enableSubRowSelection === 'function') {
     return table.options.enableSubRowSelection(row)
   }
@@ -297,10 +323,10 @@ export function row_getCanSelectSubRows<TData extends RowData>(
   return table.options.enableSubRowSelection ?? true
 }
 
-export function row_getCanMultiSelect<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-) {
+export function row_getCanMultiSelect<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   if (typeof table.options.enableMultiRowSelection === 'function') {
     return table.options.enableMultiRowSelection(row)
   }
@@ -308,10 +334,10 @@ export function row_getCanMultiSelect<TData extends RowData>(
   return table.options.enableMultiRowSelection ?? true
 }
 
-export function row_getToggleSelectedHandler<TData extends RowData>(
-  row: Row<TData>,
-  table: Table<TData>,
-) {
+export function row_getToggleSelectedHandler<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   const canSelect = row_getCanSelect(row, table)
 
   return (e: unknown) => {
@@ -324,12 +350,15 @@ export function row_getToggleSelectedHandler<TData extends RowData>(
   }
 }
 
-const mutateRowIsSelected = <TData extends RowData>(
+const mutateRowIsSelected = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
   selectedRowIds: Record<string, boolean>,
   rowId: string,
   value: boolean,
   includeChildren: boolean,
-  table: Table<TData>,
+  table: Table<TFeatures, TData>,
 ) => {
   const row = table_getRow(table, rowId, true)
 
@@ -362,20 +391,23 @@ const mutateRowIsSelected = <TData extends RowData>(
   }
 }
 
-export function selectRowsFn<TData extends RowData>(
-  table: Table<TData>,
-  rowModel: RowModel<TData>,
-): RowModel<TData> {
+export function selectRowsFn<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
+  rowModel: RowModel<TFeatures, TData>,
+): RowModel<TFeatures, TData> {
   const rowSelection = table.getState().rowSelection
 
-  const newSelectedFlatRows: Array<Row<TData>> = []
-  const newSelectedRowsById: Record<string, Row<TData>> = {}
+  const newSelectedFlatRows: Array<Row<TFeatures, TData>> = []
+  const newSelectedRowsById: Record<string, Row<TFeatures, TData>> = {}
 
   // Filters top level and nested rows
   const recurseRows = (
-    rows: Array<Row<TData>>,
+    rows: Array<Row<TFeatures, TData>>,
     depth = 0,
-  ): Array<Row<TData>> => {
+  ): Array<Row<TFeatures, TData>> => {
     return rows
       .map((row) => {
         const isSelected = isRowSelected(row, rowSelection)
@@ -396,7 +428,7 @@ export function selectRowsFn<TData extends RowData>(
           return row
         }
       })
-      .filter(Boolean) as Array<Row<TData>>
+      .filter(Boolean) as Array<Row<TFeatures, TData>>
   }
 
   return {
@@ -406,17 +438,20 @@ export function selectRowsFn<TData extends RowData>(
   }
 }
 
-export function isRowSelected<TData extends RowData>(
-  row: Row<TData>,
-  selection: Record<string, boolean>,
-): boolean {
+export function isRowSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, selection: Record<string, boolean>): boolean {
   return selection[row.id] ?? false
 }
 
-export function isSubRowSelected<TData extends RowData>(
-  row: Row<TData>,
+export function isSubRowSelected<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
   selection: Record<string, boolean>,
-  table: Table<TData>,
+  table: Table<TFeatures, TData>,
 ): boolean | 'some' | 'all' {
   if (!row.subRows.length) return false
 

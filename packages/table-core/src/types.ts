@@ -118,29 +118,45 @@ import type {
 } from './core/columns/Columns.types'
 
 export interface TableFeature {
-  _createCell?: <TData extends RowData = any>(
-    cell: Cell<TData, unknown>,
-    table: Table<TData>,
+  _createCell?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    cell: Cell<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ) => void
-  _createColumn?: <TData extends RowData = any>(
-    column: Column<TData, unknown>,
-    table: Table<TData>,
+  _createColumn?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ) => void
-  _createHeader?: <TData extends RowData = any>(
-    header: Header<TData, unknown>,
-    table: Table<TData>,
+  _createHeader?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    header: Header<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ) => void
-  _createRow?: <TData extends RowData = any>(
-    row: Row<TData>,
-    table: Table<TData>,
+  _createRow?: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ) => void
-  _createTable?: <TData extends RowData = any>(table: Table<TData>) => void
-  _getDefaultColumnDef?: <TData extends RowData = any>() => Partial<
-    ColumnDef<TData, unknown>
-  >
-  _getDefaultOptions?: <TData extends RowData = any>(
-    table: Partial<Table<TData>>,
-  ) => Partial<TableOptionsResolved<TData>>
+  _createTable?: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ) => void
+  _getDefaultColumnDef?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >() => Partial<ColumnDef<TFeatures, TData, TValue>>
+  _getDefaultOptions?: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
+  ) => Partial<TableOptionsResolved<TFeatures, TData>>
   _getInitialState?: (initialState?: Partial<TableState>) => Partial<TableState>
 }
 
@@ -153,43 +169,51 @@ export interface CoreTableFeatures {
 }
 
 export interface TableFeatures {
-  ColumnFaceting: TableFeature
-  ColumnFiltering: TableFeature
-  ColumnGrouping: TableFeature
-  ColumnOrdering: TableFeature
-  ColumnPinning: TableFeature
-  ColumnResizing: TableFeature
-  ColumnSizing: TableFeature
-  ColumnVisibility: TableFeature
-  GlobalFaceting: TableFeature
-  GlobalFiltering: TableFeature
-  RowExpanding: TableFeature
-  RowPagination: TableFeature
-  RowPinning: TableFeature
-  RowSelection: TableFeature
-  RowSorting: TableFeature
-  [key: string]: TableFeature //allow custom features still? Or make new plugin system instead?
+  ColumnFaceting?: TableFeature
+  ColumnFiltering?: TableFeature
+  ColumnGrouping?: TableFeature
+  ColumnOrdering?: TableFeature
+  ColumnPinning?: TableFeature
+  ColumnResizing?: TableFeature
+  ColumnSizing?: TableFeature
+  ColumnVisibility?: TableFeature
+  GlobalFaceting?: TableFeature
+  GlobalFiltering?: TableFeature
+  RowExpanding?: TableFeature
+  RowPagination?: TableFeature
+  RowPinning?: TableFeature
+  RowSelection?: TableFeature
+  RowSorting?: TableFeature
+  // [key: string]: TableFeature //allow custom features still? Or make new plugin system instead?
 }
 
-export interface RowModel<TData extends RowData> {
-  rows: Array<Row<TData>>
-  flatRows: Array<Row<TData>>
-  rowsById: Record<string, Row<TData>>
+export interface RowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  rows: Array<Row<TFeatures, TData>>
+  flatRows: Array<Row<TFeatures, TData>>
+  rowsById: Record<string, Row<TFeatures, TData>>
 }
 
-export interface RowModelOptions<TData extends RowData> {
+export interface RowModelOptions<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * This required option is a factory for a function that computes and returns the core row model for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  Core?: (table: Table<TData>) => () => RowModel<TData>
+  Core?: (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData>
   /**
    * This function is responsible for returning the expanded row model. If this function is not provided, the table will not expand rows. You can use the default exported `getExpandedRowModel` function to get the expanded row model or implement your own.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getexpandedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
    */
-  Expanded?: (table: Table<TData>) => () => RowModel<TData>
+  Expanded?: (
+    table: Table<TFeatures, TData>,
+  ) => () => RowModel<TFeatures, TData>
   /**
    * If provided, this function is called **once** per table and should return a **new function** which will calculate and return the row model for the table when it's filtered.
    * - For server-side filtering, this function is unnecessary and can be ignored since the server should already return the filtered row model.
@@ -197,13 +221,15 @@ export interface RowModelOptions<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getfilteredrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
    */
-  Filtered?: (table: Table<TData>) => () => RowModel<TData>
+  Filtered?: (
+    table: Table<TFeatures, TData>,
+  ) => () => RowModel<TFeatures, TData>
   /**
    * Returns the row model after grouping has taken place, but no further.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getgroupedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
-  Grouped?: (table: Table<TData>) => () => RowModel<TData>
+  Grouped?: (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData>
   /**
    * Returns the row model after pagination has taken place, but no further.
    *
@@ -211,20 +237,22 @@ export interface RowModelOptions<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getPaginatedRowModel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
-  Paginated?: (table: Table<TData>) => () => RowModel<TData>
+  Paginated?: (
+    table: Table<TFeatures, TData>,
+  ) => () => RowModel<TFeatures, TData>
   /**
    * This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table or implement your own.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#getsortedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
    */
-  Sorted?: (table: Table<TData>) => () => RowModel<TData>
+  Sorted?: (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData>
   /**
    * This function is used to retrieve the faceted min/max values. If using server-side faceting, this function is not required. To use client-side faceting, pass the exported `getFacetedMinMaxValues()` from your adapter to your table or implement your own.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-faceting#getfacetedminmaxvalues)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-faceting)
    */
   FacetedMinMax?: (
-    table: Table<TData>,
+    table: Table<TFeatures, TData>,
     columnId: string,
   ) => () => [number, number] | undefined
   /**
@@ -232,33 +260,46 @@ export interface RowModelOptions<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-faceting#getfacetedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-faceting)
    */
-  Faceted?: (table: Table<TData>, columnId: string) => () => RowModel<TData>
+  Faceted?: (
+    table: Table<TFeatures, TData>,
+    columnId: string,
+  ) => () => RowModel<TFeatures, TData>
   /**
    * This function is used to retrieve the faceted unique values. If using server-side faceting, this function is not required. To use client-side faceting, pass the exported `getFacetedUniqueValues()` from your adapter to your table or implement your own.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-faceting#getfaceteduniquevalues)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-faceting)
    */
   FacetedUnique?: (
-    table: Table<TData>,
+    table: Table<TFeatures, TData>,
     columnId: string,
   ) => () => Map<any, number>
 }
 
-export interface CachedRowModels<TData extends RowData> {
-  Core?: () => RowModel<TData>
-  Expanded?: () => RowModel<TData>
-  Filtered?: () => RowModel<TData>
-  Grouped?: () => RowModel<TData>
-  Paginated?: () => RowModel<TData>
-  Sorted?: () => RowModel<TData>
+export interface CachedRowModels<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  Core?: () => RowModel<TFeatures, TData>
+  Expanded?: () => RowModel<TFeatures, TData>
+  Filtered?: () => RowModel<TFeatures, TData>
+  Grouped?: () => RowModel<TFeatures, TData>
+  Paginated?: () => RowModel<TFeatures, TData>
+  Sorted?: () => RowModel<TFeatures, TData>
   FacetedMinMax?: (columnId: string) => [number, number]
-  Faceted?: (columnId: string) => RowModel<TData>
+  Faceted?: (columnId: string) => RowModel<TFeatures, TData>
   FacetedUnique?: (columnId: string) => Map<any, number>
 }
 
-export interface TableMeta<TData extends RowData> {}
+export interface TableMeta<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {}
 
-export interface ColumnMeta<TData extends RowData, TValue> {}
+export interface ColumnMeta<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {}
 
 export interface FilterMeta {}
 
@@ -277,54 +318,65 @@ export type CellData = unknown
 
 export type AnyRender = (Comp: any, props: any) => any
 
-export interface Table_Core<TData extends RowData>
-  extends Table_Table<TData>,
-    Table_Columns<TData>,
-    Table_Rows<TData>,
-    Table_Headers<TData> {}
+export interface Table_Core<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> extends Table_Table<TFeatures, TData>,
+    Table_Columns<TFeatures, TData>,
+    Table_Rows<TFeatures, TData>,
+    Table_Headers<TFeatures, TData> {}
 
-export interface Table<TData extends RowData>
-  extends Table_Core<TData>,
-    Table_ColumnFiltering<TData>,
-    Table_ColumnGrouping<TData>,
-    Table_ColumnOrdering<TData>,
-    Table_ColumnPinning<TData>,
+export interface Table<TFeatures extends TableFeatures, TData extends RowData>
+  extends Table_Core<TFeatures, TData>,
+    Table_ColumnFiltering<TFeatures, TData>,
+    Table_ColumnGrouping<TFeatures, TData>,
+    Table_ColumnOrdering<TFeatures, TData>,
+    Table_ColumnPinning<TFeatures, TData>,
     Table_ColumnResizing,
     Table_ColumnSizing,
-    Table_ColumnVisibility<TData>,
-    Table_GlobalFaceting<TData>,
-    Table_GlobalFiltering<TData>,
-    Table_RowExpanding<TData>,
-    Table_RowPagination<TData>,
-    Table_RowPinning<TData>,
-    Table_RowSelection<TData>,
-    Table_RowSorting<TData> {}
+    Table_ColumnVisibility<TFeatures, TData>,
+    Table_GlobalFaceting<TFeatures, TData>,
+    Table_GlobalFiltering<TFeatures, TData>,
+    Table_RowExpanding<TFeatures, TData>,
+    Table_RowPagination<TFeatures, TData>,
+    Table_RowPinning<TFeatures, TData>,
+    Table_RowSelection<TFeatures, TData>,
+    Table_RowSorting<TFeatures, TData> {}
 
-export interface TableOptions_Core<TData extends RowData>
-  extends TableOptions_Table<TData>,
+export interface TableOptions_Core<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> extends TableOptions_Table<TFeatures, TData>,
     TableOptions_Cell,
-    TableOptions_Columns<TData>,
-    TableOptions_Rows<TData>,
+    TableOptions_Columns<TFeatures, TData>,
+    TableOptions_Rows<TFeatures, TData>,
     TableOptions_Headers {}
 
-export interface TableOptionsResolved<TData extends RowData>
-  extends TableOptions_Core<TData>,
-    TableOptions_ColumnFiltering<TData>,
-    TableOptions_ColumnGrouping,
+export interface TableOptionsResolved<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> extends TableOptions_Core<TFeatures, TData>,
+    TableOptions_ColumnFiltering<TFeatures, TData>,
+    TableOptions_ColumnGrouping<TFeatures, TData>,
     TableOptions_ColumnOrdering,
     TableOptions_ColumnPinning,
     TableOptions_ColumnResizing,
     TableOptions_ColumnSizing,
     TableOptions_ColumnVisibility,
-    TableOptions_GlobalFiltering<TData>,
-    TableOptions_RowExpanding<TData>,
+    TableOptions_GlobalFiltering<TFeatures, TData>,
+    TableOptions_RowExpanding<TFeatures, TData>,
     TableOptions_RowPagination,
-    TableOptions_RowPinning<TData>,
-    TableOptions_RowSelection<TData>,
-    TableOptions_RowSorting<TData> {}
+    TableOptions_RowPinning<TFeatures, TData>,
+    TableOptions_RowSelection<TFeatures, TData>,
+    TableOptions_RowSorting<TFeatures, TData> {}
 
-export interface TableOptions<TData extends RowData>
-  extends PartialKeys<TableOptionsResolved<TData>, 'state' | 'onStateChange'> {}
+export interface TableOptions<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> extends PartialKeys<
+    TableOptionsResolved<TFeatures, TData>,
+    'state' | 'onStateChange'
+  > {}
 
 export interface TableState
   extends TableState_ColumnFiltering,
@@ -341,142 +393,188 @@ export interface TableState
     TableState_RowSelection,
     TableState_RowSorting {}
 
-export interface Row<TData extends RowData>
-  extends Row_Row<TData>,
-    Row_ColumnFiltering<TData>,
+export interface Row<TFeatures extends TableFeatures, TData extends RowData>
+  extends Row_Row<TFeatures, TData>,
+    Row_ColumnFiltering<TFeatures, TData>,
     Row_ColumnGrouping,
-    Row_ColumnPinning<TData>,
-    Row_ColumnVisibility<TData>,
+    Row_ColumnPinning<TFeatures, TData>,
+    Row_ColumnVisibility<TFeatures, TData>,
     Row_RowExpanding,
     Row_RowPinning,
     Row_RowSelection {}
 
-export interface Cell<TData extends RowData, TValue>
-  extends Cell_Cell<TData, TValue>,
+export interface Cell<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> extends Cell_Cell<TFeatures, TData, TValue>,
     Cell_ColumnGrouping {}
 
-export interface Header<TData extends RowData, TValue>
-  extends Header_Header<TData, TValue>,
+export interface Header<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> extends Header_Header<TFeatures, TData, TValue>,
     Header_ColumnSizing,
     Header_ColumnResizing {}
 
-export interface HeaderGroup<TData extends RowData>
-  extends HeaderGroup_Header<TData> {}
+export interface HeaderGroup<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> extends HeaderGroup_Header<TFeatures, TData> {}
 
-export type AccessorFn<TData extends RowData, TValue = unknown> = (
-  originalRow: TData,
-  index: number,
-) => TValue
+export type AccessorFn<
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = (originalRow: TData, index: number) => TValue
 
 export type ColumnDefTemplate<TProps extends object> =
   | string
   | ((props: TProps) => any)
 
-export type StringOrTemplateHeader<TData, TValue> =
-  | string
-  | ColumnDefTemplate<HeaderContext<TData, TValue>>
+export type StringOrTemplateHeader<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = string | ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
 
 export interface StringHeaderIdentifier {
   header: string
   id?: string
 }
 
-export interface IdIdentifier<TData extends RowData, TValue> {
+export interface IdIdentifier<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {
   id: string
-  header?: StringOrTemplateHeader<TData, TValue>
+  header?: StringOrTemplateHeader<TFeatures, TData, TValue>
 }
 
-type ColumnIdentifiers<TData extends RowData, TValue> =
-  | IdIdentifier<TData, TValue>
-  | StringHeaderIdentifier
+type ColumnIdentifiers<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = IdIdentifier<TFeatures, TData, TValue> | StringHeaderIdentifier
 
-export interface ColumnDefBase<TData extends RowData, TValue = unknown>
-  extends ColumnDef_ColumnVisibility,
+export interface ColumnDefBase<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue = unknown,
+> extends ColumnDef_ColumnVisibility,
     ColumnDef_ColumnPinning,
-    ColumnDef_ColumnFiltering<TData>,
+    ColumnDef_ColumnFiltering<TFeatures, TData>,
     ColumnDef_GlobalFiltering,
-    ColumnDef_RowSorting<TData>,
-    ColumnDef_ColumnGrouping<TData, TValue>,
+    ColumnDef_RowSorting<TFeatures, TData>,
+    ColumnDef_ColumnGrouping<TFeatures, TData, TValue>,
     ColumnDef_ColumnSizing,
     ColumnDef_ColumnResizing {
   getUniqueValues?: AccessorFn<TData, Array<unknown>>
-  footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
-  cell?: ColumnDefTemplate<CellContext<TData, TValue>>
-  meta?: ColumnMeta<TData, TValue>
+  footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
+  cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
+  meta?: ColumnMeta<TFeatures, TData, TValue>
 }
 
-export interface IdentifiedColumnDef<TData extends RowData, TValue = unknown>
-  extends ColumnDefBase<TData, TValue> {
+export interface IdentifiedColumnDef<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue = unknown,
+> extends ColumnDefBase<TFeatures, TData, TValue> {
   id?: string
-  header?: StringOrTemplateHeader<TData, TValue>
+  header?: StringOrTemplateHeader<TFeatures, TData, TValue>
 }
 
 export type DisplayColumnDef<
+  TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> = ColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
+> = ColumnDefBase<TFeatures, TData, TValue> &
+  ColumnIdentifiers<TFeatures, TData, TValue>
 
-interface GroupColumnDefBase<TData extends RowData, TValue = unknown>
-  extends ColumnDefBase<TData, TValue> {
-  columns?: Array<ColumnDef<TData, any>>
+interface GroupColumnDefBase<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue = unknown,
+> extends ColumnDefBase<TFeatures, TData, TValue> {
+  columns?: Array<ColumnDef<TFeatures, TData, unknown>>
 }
 
 export type GroupColumnDef<
+  TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> = GroupColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
+> = GroupColumnDefBase<TFeatures, TData, TValue> &
+  ColumnIdentifiers<TFeatures, TData, TValue>
 
 export interface AccessorFnColumnDefBase<
+  TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> extends ColumnDefBase<TData, TValue> {
+> extends ColumnDefBase<TFeatures, TData, TValue> {
   accessorFn: AccessorFn<TData, TValue>
 }
 
 export type AccessorFnColumnDef<
+  TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> = AccessorFnColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
+> = AccessorFnColumnDefBase<TFeatures, TData, TValue> &
+  ColumnIdentifiers<TFeatures, TData, TValue>
 
 export interface AccessorKeyColumnDefBase<
+  TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> extends ColumnDefBase<TData, TValue> {
+> extends ColumnDefBase<TFeatures, TData, TValue> {
   id?: string
   accessorKey: (string & {}) | keyof TData
 }
 
 export type AccessorKeyColumnDef<
+  TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> = AccessorKeyColumnDefBase<TData, TValue> &
-  Partial<ColumnIdentifiers<TData, TValue>>
+> = AccessorKeyColumnDefBase<TFeatures, TData, TValue> &
+  Partial<ColumnIdentifiers<TFeatures, TData, TValue>>
 
-export type AccessorColumnDef<TData extends RowData, TValue = unknown> =
-  | AccessorKeyColumnDef<TData, TValue>
-  | AccessorFnColumnDef<TData, TValue>
+export type AccessorColumnDef<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue = unknown,
+> =
+  | AccessorKeyColumnDef<TFeatures, TData, TValue>
+  | AccessorFnColumnDef<TFeatures, TData, TValue>
 
-export type ColumnDef<TData extends RowData, TValue = unknown> =
-  | DisplayColumnDef<TData, TValue>
-  | GroupColumnDef<TData, TValue>
-  | AccessorColumnDef<TData, TValue>
+export type ColumnDef<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue = unknown,
+> =
+  | DisplayColumnDef<TFeatures, TData, TValue>
+  | GroupColumnDef<TFeatures, TData, TValue>
+  | AccessorColumnDef<TFeatures, TData, TValue>
 
 export type ColumnDefResolved<
+  TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> = Partial<UnionToIntersection<ColumnDef<TData, TValue>>> & {
+> = Partial<UnionToIntersection<ColumnDef<TFeatures, TData, TValue>>> & {
   accessorKey?: string
 }
 
-export interface Column<TData extends RowData, TValue = unknown>
-  extends Column_Column<TData, TValue>,
-    Column_ColumnFaceting<TData>,
-    Column_ColumnFiltering<TData>,
-    Column_ColumnGrouping<TData>,
+export interface Column<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue = unknown,
+> extends Column_Column<TFeatures, TData, TValue>,
+    Column_ColumnFaceting<TFeatures, TData>,
+    Column_ColumnFiltering<TFeatures, TData>,
+    Column_ColumnGrouping<TFeatures, TData>,
     Column_ColumnOrdering,
     Column_ColumnPinning,
     Column_ColumnResizing,
     Column_ColumnSizing,
     Column_ColumnVisibility,
     Column_GlobalFiltering,
-    Column_RowSorting<TData> {}
+    Column_RowSorting<TFeatures, TData> {}

@@ -1,11 +1,21 @@
 import { CommonModule } from '@angular/common'
 import { Component, OnInit, computed, input } from '@angular/core'
 import { DebouncedInputDirective } from './debounced-input.directive'
-import type { Column, RowData, Table } from '@tanstack/angular-table'
+import type {
+  CellData,
+  Column,
+  RowData,
+  Table,
+  TableFeatures,
+} from '@tanstack/angular-table'
 
 declare module '@tanstack/angular-table' {
   //allows us to define custom properties for our columns
-  interface ColumnMeta<TData extends RowData, TValue> {
+  interface ColumnMeta<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  > {
     filterVariant?: 'text' | 'range' | 'select'
   }
 }
@@ -80,10 +90,13 @@ declare module '@tanstack/angular-table' {
   standalone: true,
   imports: [CommonModule, DebouncedInputDirective],
 })
-export class FilterComponent<T> {
+export class FilterComponent<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   column = input.required<Column<any, any>>()
 
-  table = input.required<Table<T>>()
+  table = input.required<Table<TFeatures, TData>>()
 
   readonly filterVariant = computed(() => {
     return (this.column().columnDef.meta ?? {}).filterVariant

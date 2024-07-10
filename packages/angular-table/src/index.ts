@@ -5,6 +5,7 @@ import { proxifyTable } from './proxy'
 import type {
   RowData,
   Table,
+  TableFeatures,
   TableOptions,
   TableOptionsResolved,
   TableState,
@@ -19,9 +20,12 @@ export {
   injectFlexRenderContext,
 } from './flex-render'
 
-export function injectTable<TData extends RowData>(
-  options: () => TableOptions<TData>,
-): Table<TData> & Signal<Table<TData>> {
+export function injectTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  options: () => TableOptions<TFeatures, TData>,
+): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
   return lazyInit(() => {
     const resolvedOptions = {
       state: {},
@@ -37,24 +41,26 @@ export function injectTable<TData extends RowData>(
 
     // Compose table options using computed.
     // This is to allow `tableSignal` to listen and set table option
-    const updatedOptions = computed<TableOptionsResolved<TData>>(() => {
-      // listen to table state changed
-      const tableState = state()
-      // listen to input options changed
-      const tableOptions = options()
-      return {
-        ...table.options,
-        ...resolvedOptions,
-        ...tableOptions,
-        state: { ...tableState, ...tableOptions.state },
-        onStateChange: (updater) => {
-          const value =
-            updater instanceof Function ? updater(tableState) : updater
-          state.set(value)
-          resolvedOptions.onStateChange(updater)
-        },
-      }
-    })
+    const updatedOptions = computed<TableOptionsResolved<TFeatures, TData>>(
+      () => {
+        // listen to table state changed
+        const tableState = state()
+        // listen to input options changed
+        const tableOptions = options()
+        return {
+          ...table.options,
+          ...resolvedOptions,
+          ...tableOptions,
+          state: { ...tableState, ...tableOptions.state },
+          onStateChange: (updater) => {
+            const value =
+              updater instanceof Function ? updater(tableState) : updater
+            state.set(value)
+            resolvedOptions.onStateChange(updater)
+          },
+        }
+      },
+    )
 
     // convert table instance to signal for proxify to listen to any table state and options changes
     const tableSignal = computed(

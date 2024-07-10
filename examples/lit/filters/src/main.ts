@@ -11,10 +11,12 @@ import {
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
 import type {
+  CellData,
   Column,
   ColumnDef,
   ColumnFiltersState,
   RowData,
+  TableFeatures,
 } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
@@ -67,7 +69,11 @@ const columns: Array<ColumnDef<Person, any>> = [
 
 declare module '@tanstack/lit-table' {
   //allows us to define custom properties for our columns
-  interface ColumnMeta<TData extends RowData, TValue> {
+  interface ColumnMeta<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  > {
     filterVariant?: 'text' | 'range' | 'select'
   }
 }
@@ -136,7 +142,7 @@ class ColumnFilter extends LitElement {
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<Person>(this)
+  private tableController = new TableController<any, any>(this)
 
   @state()
   private _columnFilters: ColumnFiltersState = []

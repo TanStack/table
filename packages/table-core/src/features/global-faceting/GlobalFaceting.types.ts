@@ -1,6 +1,9 @@
-import type { RowData, RowModel } from '../../types'
+import type { RowData, RowModel, TableFeatures } from '../../types'
 
-export interface Table_GlobalFaceting<TData extends RowData> {
+export interface Table_GlobalFaceting<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * Returns the min and max values for the global filter.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting#getglobalfacetedminmaxvalues)
@@ -12,7 +15,7 @@ export interface Table_GlobalFaceting<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting#getglobalfacetedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
    */
-  getGlobalFacetedRowModel: () => RowModel<TData>
+  getGlobalFacetedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns the faceted unique values for the global filter.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting#getglobalfaceteduniquevalues)

@@ -3,6 +3,7 @@ import * as React from 'react'
 import { _createTable } from '@tanstack/table-core'
 import type {
   RowData,
+  TableFeatures,
   TableOptions,
   TableOptionsResolved,
 } from '@tanstack/table-core'
@@ -55,9 +56,12 @@ function isExoticComponent(component: any) {
   )
 }
 
-export function useTable<TData extends RowData>(options: TableOptions<TData>) {
+export function useTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(options: TableOptions<TFeatures, TData>) {
   // Compose in the generic options to the user options
-  const resolvedOptions: TableOptionsResolved<TData> = {
+  const resolvedOptions: TableOptionsResolved<TFeatures, TData> = {
     state: {}, // Dummy state
     onStateChange: () => {}, // noop
     renderFallbackValue: null,
@@ -66,7 +70,7 @@ export function useTable<TData extends RowData>(options: TableOptions<TData>) {
 
   // Create a new table and store it in state
   const [tableRef] = React.useState(() => ({
-    current: _createTable<TData>(resolvedOptions),
+    current: _createTable<TFeatures, TData>(resolvedOptions),
   }))
 
   // By default, manage table state here using the table's initial state

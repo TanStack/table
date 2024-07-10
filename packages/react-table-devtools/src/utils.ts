@@ -1,7 +1,8 @@
 import React from 'react'
 
-import { Theme, useTheme } from './theme'
+import { useTheme } from './theme'
 import useMediaQuery from './useMediaQuery'
+import type { Theme } from './theme'
 
 const isServer = typeof window === 'undefined'
 
@@ -59,7 +60,6 @@ export function styled<T extends keyof HTMLElementTagNameMap>(
 
       const mediaStyles = Object.entries(queries).reduce(
         (current, [key, value]) => {
-          // eslint-disable-next-line react-hooks/rules-of-hooks
           return useMediaQuery(key)
             ? {
                 ...current,

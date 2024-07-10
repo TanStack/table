@@ -13,17 +13,23 @@ import {
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { Column, ColumnDef, RowData, Table } from '@tanstack/react-table'
+import type {
+  Column,
+  ColumnDef,
+  RowData,
+  Table,
+  TableFeatures,
+} from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 declare module '@tanstack/react-table' {
-  interface TableMeta<TData extends RowData> {
+  interface TableMeta<TFeatures extends TableFeatures, TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
   }
 }
 
 // Give our default column cell renderer editing superpowers!
-const defaultColumn: Partial<ColumnDef<Person>> = {
+const defaultColumn: Partial<ColumnDef<any, any>> = {
   cell: ({ getValue, row: { index }, column: { id }, table }) => {
     const initialValue = getValue()
     // We need to keep and update the state of the cell normally
@@ -68,7 +74,7 @@ function useSkipper() {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         header: 'Name',
@@ -281,8 +287,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
-  table: Table<any>
+  column: Column<any, Person>
+  table: Table<any, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

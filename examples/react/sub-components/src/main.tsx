@@ -11,7 +11,7 @@ import {
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef, Row } from '@tanstack/react-table'
+import type { ColumnDef, Row, TableFeatures } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const columns: Array<ColumnDef<Person>> = [
@@ -97,11 +97,13 @@ const columns: Array<ColumnDef<Person>> = [
   },
 ]
 
-type TableProps<TData> = {
+type TableProps<TFeatures extends TableFeatures, TData> = {
   data: Array<TData>
-  columns: Array<ColumnDef<TData>>
-  renderSubComponent: (props: { row: Row<TData> }) => React.ReactElement
-  getRowCanExpand: (row: Row<TData>) => boolean
+  columns: Array<ColumnDef<TFeatures, TData>>
+  renderSubComponent: (props: {
+    row: Row<TFeatures, TData>
+  }) => React.ReactElement
+  getRowCanExpand: (row: Row<TFeatures, TData>) => boolean
 }
 
 function Table({
@@ -109,8 +111,8 @@ function Table({
   data,
   getRowCanExpand,
   renderSubComponent,
-}: TableProps<Person>): JSX.Element {
-  const table = useTable<Person>({
+}: TableProps<any, Person>): JSX.Element {
+  const table = useTable({
     _features: { RowExpanding },
     _rowModels: {
       Core: createCoreRowModel(),
@@ -181,7 +183,7 @@ function Table({
   )
 }
 
-const renderSubComponent = ({ row }: { row: Row<Person> }) => {
+const renderSubComponent = ({ row }: { row: Row<any, Person> }) => {
   return (
     <pre style={{ fontSize: '10px' }}>
       <code>{JSON.stringify(row.original, null, 2)}</code>

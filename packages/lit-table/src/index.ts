@@ -2,6 +2,7 @@ import { _createTable } from '@tanstack/table-core'
 import type {
   RowData,
   Table,
+  TableFeatures,
   TableOptions,
   TableOptionsResolved,
   TableState,
@@ -27,12 +28,14 @@ export function flexRender<TProps>(
   return Comp
 }
 
-export class TableController<TData extends RowData>
-  implements ReactiveController
+export class TableController<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> implements ReactiveController
 {
   host: ReactiveControllerHost
 
-  private tableInstance: Table<TData> | null = null
+  private tableInstance: Table<TFeatures, TData> | null = null
 
   private _tableState: TableState | null = null
 
@@ -40,9 +43,9 @@ export class TableController<TData extends RowData>
     ;(this.host = host).addController(this)
   }
 
-  public table(options: TableOptions<TData>) {
+  public table(options: TableOptions<TFeatures, TData>) {
     if (!this.tableInstance) {
-      const resolvedOptions: TableOptionsResolved<TData> = {
+      const resolvedOptions: TableOptionsResolved<TFeatures, TData> = {
         state: {},
         onStateChange: () => {}, // noop
         renderFallbackValue: null,

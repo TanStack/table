@@ -11,7 +11,13 @@ import {
   table_getTopRows,
   table_resetRowPinning,
 } from './RowPinning.utils'
-import type { Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  Row,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 import type {
   RowPinningDefaultOptions,
   TableState_RowPinning,
@@ -25,17 +31,17 @@ export const RowPinning: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
   ): RowPinningDefaultOptions => {
     return {
       onRowPinningChange: makeStateUpdater('rowPinning', table),
     }
   },
 
-  _createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>,
+  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ): void => {
     row.getCanPin = () => row_getCanPin(row, table)
 
@@ -52,7 +58,9 @@ export const RowPinning: TableFeature = {
       row_pin(row, table, position, includeLeafRows, includeParentRows)
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.setRowPinning = (updater) =>
       table.options.onRowPinningChange?.(updater)
 

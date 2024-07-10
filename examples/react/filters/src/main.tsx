@@ -16,17 +16,23 @@ import {
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type {
+  CellData,
   Column,
   ColumnDef,
   ColumnFiltersState,
   RowData,
+  TableFeatures,
 } from '@tanstack/react-table'
 
 import type { Person } from './makeData'
 
 declare module '@tanstack/react-table' {
   //allows us to define custom properties for our columns
-  interface ColumnMeta<TData extends RowData, TValue> {
+  interface ColumnMeta<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  > {
     filterVariant?: 'text' | 'range' | 'select'
   }
 }
@@ -38,7 +44,7 @@ function App() {
     [],
   )
 
-  const columns = React.useMemo<Array<ColumnDef<Person, any>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person, any>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -251,7 +257,7 @@ function App() {
   )
 }
 
-function Filter({ column }: { column: Column<any, unknown> }) {
+function Filter({ column }: { column: Column<any, Person, unknown> }) {
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}
 

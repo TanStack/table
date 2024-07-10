@@ -1,4 +1,11 @@
-import type { Cell, Column, OnChangeFn, RowData, Updater } from '../../types'
+import type {
+  Cell,
+  Column,
+  OnChangeFn,
+  RowData,
+  TableFeatures,
+  Updater,
+} from '../../types'
 
 export type ColumnVisibilityState = Record<string, boolean>
 
@@ -26,13 +33,16 @@ export type VisibilityDefaultOptions = Pick<
   'onColumnVisibilityChange'
 >
 
-export interface Table_ColumnVisibility<TData extends RowData> {
+export interface Table_ColumnVisibility<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * If column pinning, returns a flat array of leaf-node columns that are visible in the unpinned/center portion of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getcentervisibleleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getCenterVisibleLeafColumns: () => Array<Column<TData, unknown>>
+  getCenterVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Returns whether all columns are visible
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getisallcolumnsvisible)
@@ -50,13 +60,13 @@ export interface Table_ColumnVisibility<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getleftvisibleleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getLeftVisibleLeafColumns: () => Array<Column<TData, unknown>>
+  getLeftVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * If column pinning, returns a flat array of leaf-node columns that are visible in the right portion of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getrightvisibleleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getRightVisibleLeafColumns: () => Array<Column<TData, unknown>>
+  getRightVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Returns a handler for toggling the visibility of all columns, meant to be bound to a `input[type=checkbox]` element.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#gettoggleallcolumnsvisibilityhandler)
@@ -68,13 +78,13 @@ export interface Table_ColumnVisibility<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleflatcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getVisibleFlatColumns: () => Array<Column<TData, unknown>>
+  getVisibleFlatColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Returns a flat array of leaf-node columns that are visible.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getVisibleLeafColumns: () => Array<Column<TData, unknown>>
+  getVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Resets the column visibility state to the initial state. If `defaultState` is provided, the state will be reset to `{}`
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#resetcolumnvisibility)
@@ -99,14 +109,17 @@ export interface ColumnDef_ColumnVisibility {
   enableHiding?: boolean
 }
 
-export interface Row_ColumnVisibility<TData extends RowData> {
-  _getAllVisibleCells: () => Array<Cell<TData, unknown>>
+export interface Row_ColumnVisibility<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  _getAllVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
    * Returns an array of cells that account for column visibility for the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisiblecells)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getVisibleCells: () => Array<Cell<TData, unknown>>
+  getVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
 }
 
 export interface Column_ColumnVisibility {

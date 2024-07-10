@@ -7,10 +7,19 @@ import {
   table_getLeafHeaders,
 } from './Headers.utils'
 import type { Header_Header } from './Headers.types'
-import type { Header, RowData, Table, TableFeature } from '../../types'
+import type {
+  CellData,
+  Header,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 
 export const Headers: TableFeature = {
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.getHeaderGroups = memo(
       () => [
         table.getAllColumns(),
@@ -46,18 +55,22 @@ export const Headers: TableFeature = {
     )
   },
 
-  _createHeader: <TData extends RowData>(
-    header: Header<TData, unknown>,
-    table: Table<TData>,
+  _createHeader: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    header: Header<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ): void => {
-    header.getLeafHeaders = (): Array<Header<TData, unknown>> => {
-      const leafHeaders: Array<Header<TData, unknown>> = []
+    header.getLeafHeaders = (): Array<Header<TFeatures, TData, TValue>> => {
+      const leafHeaders: Array<Header<TFeatures, TData, TValue>> = []
 
-      const recurseHeader = (h: Header_Header<TData, any>) => {
+      const recurseHeader = (h: Header_Header<TFeatures, TData, TValue>) => {
         if (h.subHeaders.length) {
           h.subHeaders.map(recurseHeader)
         }
-        leafHeaders.push(h as Header<TData, unknown>)
+        leafHeaders.push(h as Header<TFeatures, TData, TValue>)
       }
 
       recurseHeader(header)

@@ -18,6 +18,7 @@ import type {
   RowData,
   Table,
   TableFeature,
+  TableFeatures,
   Updater,
 } from '../../types'
 import type {
@@ -29,8 +30,9 @@ import type {
 
 export const ColumnFiltering: TableFeature = {
   _getDefaultColumnDef: <
+    TFeatures extends TableFeatures,
     TData extends RowData,
-  >(): ColumnDef_ColumnFiltering<TData> => {
+  >(): ColumnDef_ColumnFiltering<TFeatures, TData> => {
     return {
       filterFn: 'auto',
     }
@@ -43,19 +45,19 @@ export const ColumnFiltering: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
-  ): TableOptions_ColumnFiltering<TData> => {
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
+  ): TableOptions_ColumnFiltering<TFeatures, TData> => {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),
       filterFromLeafRows: false,
       maxLeafRowFilterDepth: 100,
-    } as TableOptions_ColumnFiltering<TData>
+    } as TableOptions_ColumnFiltering<TFeatures, TData>
   },
 
-  _createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
-    table: Table<TData>,
+  _createColumn: <TFeatures extends TableFeatures, TData extends RowData>(
+    column: Column<TFeatures, TData, unknown>,
+    table: Table<TFeatures, TData>,
   ): void => {
     column.getAutoFilterFn = () => column_getAutoFilterFn(column, table)
 
@@ -73,15 +75,17 @@ export const ColumnFiltering: TableFeature = {
       column_setFilterValue(column, table, value)
   },
 
-  _createRow: <TData extends RowData>(
-    row: Row<TData>,
-    _table: Table<TData>,
+  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    _table: Table<TFeatures, TData>,
   ): void => {
     row.columnFilters = {}
     row.columnFiltersMeta = {}
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.setColumnFilters = (updater: Updater<ColumnFiltersState>) =>
       table_setColumnFilters(table, updater)
 

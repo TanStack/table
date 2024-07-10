@@ -16,7 +16,15 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from './ColumnPinning.utils'
-import type { Column, Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  CellData,
+  Column,
+  Row,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 import type {
   ColumnPinningDefaultOptions,
   TableState_ColumnPinning,
@@ -32,17 +40,21 @@ export const ColumnPinning: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
   ): ColumnPinningDefaultOptions => {
     return {
       onColumnPinningChange: makeStateUpdater('columnPinning', table),
     }
   },
 
-  _createColumn: <TData extends RowData, TValue>(
-    column: Column<TData, TValue>,
-    table: Table<TData>,
+  _createColumn: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ): void => {
     column.pin = (position) => column_pin(column, table, position)
 
@@ -53,9 +65,9 @@ export const ColumnPinning: TableFeature = {
     column.getIsPinned = () => column_getIsPinned(column, table)
   },
 
-  _createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>,
+  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ): void => {
     row.getCenterVisibleCells = memo(
       () => [
@@ -79,7 +91,9 @@ export const ColumnPinning: TableFeature = {
     )
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.setColumnPinning = (updater) => table_setColumnPinning(table, updater)
 
     table.resetColumnPinning = (defaultState) =>

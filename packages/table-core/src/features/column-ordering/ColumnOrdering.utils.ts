@@ -1,5 +1,11 @@
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
-import type { Column, RowData, Table, Updater } from '../../types'
+import type {
+  Column,
+  RowData,
+  Table,
+  TableFeatures,
+  Updater,
+} from '../../types'
 import type {
   GroupingColumnMode,
   GroupingState,
@@ -7,57 +13,69 @@ import type {
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 import type { ColumnOrderState } from './ColumnOrdering.types'
 
-export function column_getIndex<TData extends RowData>(
-  columns: Array<Column<TData, unknown>>,
-  column: Column<TData, unknown>,
+export function column_getIndex<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  columns: Array<Column<TFeatures, TData, unknown>>,
+  column: Column<TFeatures, TData, unknown>,
 ) {
   return columns.findIndex((d) => d.id === column.id)
 }
 
-export function column_getIsFirstColumn<TData extends RowData>(
-  column: Column<TData, unknown>,
-  table: Table<TData>,
+export function column_getIsFirstColumn<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  column: Column<TFeatures, TData, unknown>,
+  table: Table<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
   return columns[0]?.id === column.id
 }
 
-export function column_getIsLastColumn<TData extends RowData>(
-  column: Column<TData, unknown>,
-  table: Table<TData>,
+export function column_getIsLastColumn<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  column: Column<TFeatures, TData, unknown>,
+  table: Table<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
   return columns[columns.length - 1]?.id === column.id
 }
 
-export function table_setColumnOrder<TData extends RowData>(
-  table: Table<TData>,
-  updater: Updater<ColumnOrderState>,
-) {
+export function table_setColumnOrder<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, updater: Updater<ColumnOrderState>) {
   table.options.onColumnOrderChange?.(updater)
 }
 
-export function table_resetColumnOrder<TData extends RowData>(
-  table: Table<TData>,
-  defaultState?: boolean,
-) {
+export function table_resetColumnOrder<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
     defaultState ? [] : table.initialState.columnOrder,
   )
 }
 
-export function table_getOrderColumnsFn<TData extends RowData>(
+export function table_getOrderColumnsFn<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
   columnOrder: ColumnOrderState,
   grouping: GroupingState,
   groupedColumnMode?: false | 'reorder' | 'remove',
 ) {
-  return (columns: Array<Column<TData, unknown>>) => {
+  return (columns: Array<Column<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
     // before the headers are built
-    let orderedColumns: Array<Column<TData, unknown>> = []
+    let orderedColumns: Array<Column<TFeatures, TData, unknown>> = []
 
     // If there is no order, return the normal columns
     if (!columnOrder.length) {
@@ -87,8 +105,11 @@ export function table_getOrderColumnsFn<TData extends RowData>(
   }
 }
 
-export function orderColumns<TData extends RowData>(
-  leafColumns: Array<Column<TData, unknown>>,
+export function orderColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  leafColumns: Array<Column<TFeatures, TData, unknown>>,
   grouping: Array<string>,
   groupedColumnMode?: GroupingColumnMode,
 ) {

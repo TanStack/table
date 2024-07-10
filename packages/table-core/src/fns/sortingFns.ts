@@ -1,15 +1,30 @@
+import type { Row, RowData, TableFeatures } from '../types'
 import type { SortingFn } from '../features/row-sorting/RowSorting.types'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
-const alphanumeric: SortingFn<any> = (rowA, rowB, columnId) => {
+const alphanumeric: SortingFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
+  columnId: string,
+) => {
   return compareAlphanumeric(
     toString(rowA.getValue(columnId)).toLowerCase(),
     toString(rowB.getValue(columnId)).toLowerCase(),
   )
 }
 
-const alphanumericCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
+const alphanumericCaseSensitive: SortingFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
+  columnId: string,
+) => {
   return compareAlphanumeric(
     toString(rowA.getValue(columnId)),
     toString(rowB.getValue(columnId)),
@@ -18,7 +33,14 @@ const alphanumericCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-const text: SortingFn<any> = (rowA, rowB, columnId) => {
+const text: SortingFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
+  columnId: string,
+) => {
   return compareBasic(
     toString(rowA.getValue(columnId)).toLowerCase(),
     toString(rowB.getValue(columnId)).toLowerCase(),
@@ -27,14 +49,28 @@ const text: SortingFn<any> = (rowA, rowB, columnId) => {
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-const textCaseSensitive: SortingFn<any> = (rowA, rowB, columnId) => {
+const textCaseSensitive: SortingFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
+  columnId: string,
+) => {
   return compareBasic(
     toString(rowA.getValue(columnId)),
     toString(rowB.getValue(columnId)),
   )
 }
 
-const datetime: SortingFn<any> = (rowA, rowB, columnId) => {
+const datetime: SortingFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
+  columnId: string,
+) => {
   const a = rowA.getValue<Date>(columnId)
   const b = rowB.getValue<Date>(columnId)
 
@@ -44,7 +80,14 @@ const datetime: SortingFn<any> = (rowA, rowB, columnId) => {
   return a > b ? 1 : a < b ? -1 : 0
 }
 
-const basic: SortingFn<any> = (rowA, rowB, columnId) => {
+const basic: SortingFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
+  columnId: string,
+) => {
   return compareBasic(rowA.getValue(columnId), rowB.getValue(columnId))
 }
 

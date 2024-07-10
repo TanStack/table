@@ -7,7 +7,13 @@ import {
   table_resetGlobalFilter,
   table_setGlobalFilter,
 } from './GlobalFiltering.utils'
-import type { Column, RowData, Table, TableFeature } from '../../types'
+import type {
+  Column,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 import type {
   TableOptions_GlobalFiltering,
   TableState_GlobalFiltering,
@@ -21,14 +27,14 @@ export const GlobalFiltering: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
-  ): TableOptions_GlobalFiltering<TData> => {
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
+  ): TableOptions_GlobalFiltering<TFeatures, TData> => {
     return {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: (column) => {
-        const value = table_getCoreRowModel(table as Table<TData>)
+        const value = table_getCoreRowModel(table as Table<TFeatures, TData>)
           .flatRows[0]?._getAllCellsByColumnId()
           [column.id]?.getValue()
 
@@ -37,14 +43,16 @@ export const GlobalFiltering: TableFeature = {
     }
   },
 
-  _createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
-    table: Table<TData>,
+  _createColumn: <TFeatures extends TableFeatures, TData extends RowData>(
+    column: Column<TFeatures, TData, unknown>,
+    table: Table<TFeatures, TData>,
   ): void => {
     column.getCanGlobalFilter = () => column_getCanGlobalFilter(column, table)
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.getGlobalAutoFilterFn = () => table_getGlobalAutoFilterFn()
 
     table.getGlobalFilterFn = () => table_getGlobalFilterFn(table)

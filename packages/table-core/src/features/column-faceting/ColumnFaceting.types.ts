@@ -1,6 +1,9 @@
-import type { RowData, RowModel } from '../../types'
+import type { RowData, RowModel, TableFeatures } from '../../types'
 
-export interface Column_ColumnFaceting<TData extends RowData> {
+export interface Column_ColumnFaceting<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
    * A function that **computes and returns** a min/max tuple derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
    * > ⚠️ Requires that you pass a valid `getFacetedMinMaxValues` function to `options.getFacetedMinMaxValues`. A default implementation is provided via the exported `getFacetedMinMaxValues` function.
@@ -14,7 +17,7 @@ export interface Column_ColumnFaceting<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-faceting#getfacetedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-faceting)
    */
-  getFacetedRowModel: () => RowModel<TData>
+  getFacetedRowModel: () => RowModel<TFeatures, TData>
   /**
    * A function that **computes and returns** a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
    * > ⚠️ Requires that you pass a valid `getFacetedUniqueValues` function to `options.getFacetedUniqueValues`. A default implementation is provided via the exported `getFacetedUniqueValues` function.

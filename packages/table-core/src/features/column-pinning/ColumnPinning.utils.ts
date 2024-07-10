@@ -1,12 +1,24 @@
-import type { Cell, Column, RowData, Table, Updater } from '../../types'
+import type {
+  Cell,
+  CellData,
+  Column,
+  RowData,
+  Table,
+  TableFeatures,
+  Updater,
+} from '../../types'
 import type {
   ColumnPinningPosition,
   ColumnPinningState,
 } from './ColumnPinning.types'
 
-export function column_pin<TData extends RowData, TValue>(
-  column: Column<TData, TValue>,
-  table: Table<TData>,
+export function column_pin<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
   position: ColumnPinningPosition,
 ) {
   const columnIds = column
@@ -42,10 +54,11 @@ export function column_pin<TData extends RowData, TValue>(
   })
 }
 
-export function column_getCanPin<TData extends RowData, TValue>(
-  column: Column<TData, TValue>,
-  table: Table<TData>,
-) {
+export function column_getCanPin<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
   const leafColumns = column.getLeafColumns()
 
   return leafColumns.some(
@@ -57,9 +70,13 @@ export function column_getCanPin<TData extends RowData, TValue>(
   )
 }
 
-export function column_getIsPinned<TData extends RowData, TValue>(
-  column: Column<TData, TValue>,
-  table: Table<TData>,
+export function column_getIsPinned<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
 ): ColumnPinningPosition | false {
   const leafColumnIds = column.getLeafColumns().map((d) => d.id)
 
@@ -71,10 +88,11 @@ export function column_getIsPinned<TData extends RowData, TValue>(
   return isLeft ? 'left' : isRight ? 'right' : false
 }
 
-export function column_getPinnedIndex<TData extends RowData, TValue>(
-  column: Column<TData, TValue>,
-  table: Table<TData>,
-) {
+export function column_getPinnedIndex<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
   const position = column_getIsPinned(column, table)
 
   return position
@@ -82,8 +100,11 @@ export function column_getPinnedIndex<TData extends RowData, TValue>(
     : 0
 }
 
-export function row_getCenterVisibleCells<TData extends RowData>(
-  allCells: Array<Cell<TData, unknown>>,
+export function row_getCenterVisibleCells<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  allCells: Array<Cell<TFeatures, TData, unknown>>,
   left?: Array<string>,
   right?: Array<string>,
 ) {
@@ -91,41 +112,43 @@ export function row_getCenterVisibleCells<TData extends RowData>(
   return allCells.filter((d) => !leftAndRight.includes(d.column.id))
 }
 
-export function row_getLeftVisibleCells<TData extends RowData>(
-  allCells: Array<Cell<TData, unknown>>,
-  left?: Array<string>,
-) {
+export function row_getLeftVisibleCells<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(allCells: Array<Cell<TFeatures, TData, unknown>>, left?: Array<string>) {
   const cells = (left ?? [])
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
-    .map((d) => ({ ...d, position: 'left' }) as Cell<TData, unknown>)
+    .map((d) => ({ ...d, position: 'left' }) as Cell<TFeatures, TData, unknown>)
 
   return cells
 }
 
-export function row_getRightVisibleCells<TData extends RowData>(
-  allCells: Array<Cell<TData, unknown>>,
-  right?: Array<string>,
-) {
+export function row_getRightVisibleCells<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(allCells: Array<Cell<TFeatures, TData, unknown>>, right?: Array<string>) {
   const cells = (right ?? [])
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
-    .map((d) => ({ ...d, position: 'right' }) as Cell<TData, unknown>)
+    .map(
+      (d) => ({ ...d, position: 'right' }) as Cell<TFeatures, TData, unknown>,
+    )
 
   return cells
 }
 
-export function table_setColumnPinning<TData extends RowData>(
-  table: Table<TData>,
-  updater: Updater<ColumnPinningState>,
-) {
+export function table_setColumnPinning<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, updater: Updater<ColumnPinningState>) {
   table.options.onColumnPinningChange?.(updater)
 }
 
-export function table_resetColumnPinning<TData extends RowData>(
-  table: Table<TData>,
-  defaultState?: boolean,
-) {
+export function table_resetColumnPinning<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnPinning(
     table,
     defaultState
@@ -134,10 +157,10 @@ export function table_resetColumnPinning<TData extends RowData>(
   )
 }
 
-export function table_getIsSomeColumnsPinned<TData extends RowData>(
-  table: Table<TData>,
-  position?: ColumnPinningPosition,
-) {
+export function table_getIsSomeColumnsPinned<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, position?: ColumnPinningPosition) {
   const pinningState = table.getState().columnPinning
 
   if (!position) {
@@ -146,26 +169,29 @@ export function table_getIsSomeColumnsPinned<TData extends RowData>(
   return Boolean(pinningState[position]?.length)
 }
 
-export function table_getLeftLeafColumns<TData extends RowData>(
-  allColumns: Array<Column<TData, unknown>>,
-  left?: Array<string>,
-) {
+export function table_getLeftLeafColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(allColumns: Array<Column<TFeatures, TData, unknown>>, left?: Array<string>) {
   return (left ?? [])
     .map((columnId) => allColumns.find((column) => column.id === columnId)!)
     .filter(Boolean)
 }
 
-export function table_getRightLeafColumns<TData extends RowData>(
-  allColumns: Array<Column<TData, unknown>>,
-  right?: Array<string>,
-) {
+export function table_getRightLeafColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(allColumns: Array<Column<TFeatures, TData, unknown>>, right?: Array<string>) {
   return (right ?? [])
     .map((columnId) => allColumns.find((column) => column.id === columnId)!)
     .filter(Boolean)
 }
 
-export function table_getCenterLeafColumns<TData extends RowData>(
-  allColumns: Array<Column<TData, unknown>>,
+export function table_getCenterLeafColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  allColumns: Array<Column<TFeatures, TData, unknown>>,
   left?: Array<string>,
   right?: Array<string>,
 ) {

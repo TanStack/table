@@ -1,4 +1,11 @@
-import type { OnChangeFn, RowData, RowModel, Table, Updater } from '../../types'
+import type {
+  OnChangeFn,
+  RowData,
+  RowModel,
+  Table,
+  TableFeatures,
+  Updater,
+} from '../../types'
 
 export interface PaginationState {
   pageIndex: number
@@ -46,9 +53,12 @@ export interface PaginationDefaultOptions {
   onPaginationChange: OnChangeFn<PaginationState>
 }
 
-export interface Table_RowPagination<TData extends RowData> {
+export interface Table_RowPagination<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   _autoResetPageIndex: () => void
-  _getPaginatedRowModel?: () => RowModel<TData>
+  _getPaginatedRowModel?: () => RowModel<TFeatures, TData>
   /**
    * Returns whether the table can go to the next page.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getcannextpage)
@@ -84,13 +94,13 @@ export interface Table_RowPagination<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getPaginatedRowModel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
-  getPaginatedRowModel: () => RowModel<TData>
+  getPaginatedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns the row model for the table before any pagination has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getprepaginationrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
-  getPrePaginationRowModel: () => RowModel<TData>
+  getPrePaginationRowModel: () => RowModel<TFeatures, TData>
   /**
    * Increments the page index by one, if possible.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#nextpage)

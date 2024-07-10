@@ -23,7 +23,13 @@ import {
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './RowSelection.utils'
-import type { Row, RowData, Table, TableFeature } from '../../types'
+import type {
+  Row,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 import type {
   TableOptions_RowSelection,
   TableState_RowSelection,
@@ -37,9 +43,9 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TData extends RowData>(
-    table: Partial<Table<TData>>,
-  ): TableOptions_RowSelection<TData> => {
+  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Partial<Table<TFeatures, TData>>,
+  ): TableOptions_RowSelection<TFeatures, TData> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
       enableRowSelection: true,
@@ -51,7 +57,9 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  _createTable: <TData extends RowData>(table: Table<TData>): void => {
+  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
+  ): void => {
     table.setRowSelection = (updater) => table_setRowSelection(table, updater)
 
     table.resetRowSelection = (defaultState) =>
@@ -180,9 +188,9 @@ export const RowSelection: TableFeature = {
       table_getToggleAllPageRowsSelectedHandler(table)
   },
 
-  _createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>,
+  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ): void => {
     row.toggleSelected = (value, opts) =>
       row_toggleSelected(row, table, value, opts)

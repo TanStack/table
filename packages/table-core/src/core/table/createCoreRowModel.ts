@@ -1,24 +1,23 @@
 import { _createRow } from '../rows/createRow'
 import { getMemoOptions, memo } from '../../utils'
 import { table_getRowId } from '../rows/Rows.utils'
-import type { Row, RowData, RowModel, Table } from '../../types'
+import type { Row, RowData, RowModel, Table, TableFeatures } from '../../types'
 
-export function createCoreRowModel<TData extends RowData>(): (
-  table: Table<TData>,
-) => () => RowModel<TData> {
-  console.log('call create row model')
-  return (table: Table<TData>) =>
+export function createCoreRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+  return (table: Table<TFeatures, TData>) =>
     memo(
       () => [table.options.data],
       (
         data,
       ): {
-        rows: Array<Row<TData>>
-        flatRows: Array<Row<TData>>
-        rowsById: Record<string, Row<TData>>
+        rows: Array<Row<TFeatures, TData>>
+        flatRows: Array<Row<TFeatures, TData>>
+        rowsById: Record<string, Row<TFeatures, TData>>
       } => {
-        console.log('run row model')
-        const rowModel: RowModel<TData> = {
+        const rowModel: RowModel<TFeatures, TData> = {
           rows: [],
           flatRows: [],
           rowsById: {},
@@ -27,9 +26,9 @@ export function createCoreRowModel<TData extends RowData>(): (
         const accessRows = (
           originalRows: Array<TData>,
           depth = 0,
-          parentRow?: Row<TData>,
-        ): Array<Row<TData>> => {
-          const rows = [] as Array<Row<TData>>
+          parentRow?: Row<TFeatures, TData>,
+        ): Array<Row<TFeatures, TData>> => {
+          const rows = [] as Array<Row<TFeatures, TData>>
 
           for (let i = 0; i < originalRows.length; i++) {
             const originalRow = originalRows[i]!

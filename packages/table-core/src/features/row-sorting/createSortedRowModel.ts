@@ -2,12 +2,13 @@ import { getMemoOptions, memo } from '../../utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { column_getCanSort, column_getSortingFn } from './RowSorting.utils'
-import type { Row, RowData, RowModel, Table } from '../../types'
+import type { Row, RowData, RowModel, Table, TableFeatures } from '../../types'
 import type { SortingFn } from './RowSorting.types'
 
-export function createSortedRowModel<TData extends RowData>(): (
-  table: Table<TData>,
-) => () => RowModel<TData> {
+export function createSortedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) =>
     memo(
       () => [table.getState().sorting, table.getPreSortedRowModel()],
@@ -18,7 +19,7 @@ export function createSortedRowModel<TData extends RowData>(): (
 
         const sortingState = table.getState().sorting
 
-        const sortedFlatRows: Array<Row<TData>> = []
+        const sortedFlatRows: Array<Row<TFeatures, TData>> = []
 
         // Filter out sortings that correspond to non existing columns
         const availableSorting = sortingState.filter((sort) =>
@@ -30,7 +31,7 @@ export function createSortedRowModel<TData extends RowData>(): (
           {
             sortUndefined?: false | -1 | 1 | 'first' | 'last'
             invertSorting?: boolean
-            sortingFn: SortingFn<TData>
+            sortingFn: SortingFn<TFeatures, TData>
           }
         > = {}
 
@@ -45,7 +46,7 @@ export function createSortedRowModel<TData extends RowData>(): (
           }
         })
 
-        const sortData = (rows: Array<Row<TData>>) => {
+        const sortData = (rows: Array<Row<TFeatures, TData>>) => {
           // This will also perform a stable sorting using the row index
           // if needed.
           const sortedData = rows.map((row) => ({ ...row }))

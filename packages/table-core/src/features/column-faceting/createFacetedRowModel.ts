@@ -1,11 +1,14 @@
 import { getMemoOptions, memo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
-import type { Row, RowData, RowModel, Table } from '../../types'
+import type { Row, RowData, RowModel, Table, TableFeatures } from '../../types'
 
-export function createFacetedRowModel<TData extends RowData>(): (
-  table: Table<TData>,
+export function createFacetedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): (
+  table: Table<TFeatures, TData>,
   columnId: string,
-) => () => RowModel<TData> {
+) => () => RowModel<TFeatures, TData> {
   return (table, columnId) =>
     memo(
       () => [
@@ -27,7 +30,7 @@ export function createFacetedRowModel<TData extends RowData>(): (
           globalFilter ? '__global__' : undefined,
         ].filter(Boolean) as Array<string>
 
-        const filterRowsImpl = (row: Row<TData>) => {
+        const filterRowsImpl = (row: Row<TFeatures, TData>) => {
           // Horizontally filter rows through each column
           for (const colId of filterableIds) {
             if (row.columnFilters[colId] === false) {

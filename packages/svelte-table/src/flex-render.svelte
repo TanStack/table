@@ -1,20 +1,23 @@
 <script
   lang="ts"
-  generics="TData, TValue, TContext extends HeaderContext<TData, TValue> | CellContext<TData, TValue>"
+  generics="TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData, TContext extends HeaderContext<TFeatures, TData, TValue> | CellContext<TFeatures, TData, TValue>"
 >
   import { RenderComponentConfig } from './render-component'
   import type {
     CellContext,
+    CellData,
     ColumnDefTemplate,
     HeaderContext,
+    RowData,
+    TableFeatures,
   } from '@tanstack/table-core'
 
   type Props = {
     /** The cell or header field of the current cell's column definition. */
-    content?: TContext extends HeaderContext<TData, TValue>
-      ? ColumnDefTemplate<HeaderContext<TData, TValue>>
-      : TContext extends CellContext<TData, TValue>
-        ? ColumnDefTemplate<CellContext<TData, TValue>>
+    content?: TContext extends HeaderContext<TFeatures, TData, TValue>
+      ? ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
+      : TContext extends CellContext<TFeatures, TData, TValue>
+        ? ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
         : never
     /** The result of the `getContext()` function of the header or cell */
     context: TContext
