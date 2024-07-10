@@ -5,7 +5,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableOptionsResolved,
 } from '@tanstack/table-core'
 
 export * from '@tanstack/table-core'
@@ -36,7 +35,7 @@ export function useTable<
   TData extends RowData,
 >(options: TableOptions<TFeatures, TData>) {
   // Compose in the generic options to the user options
-  const resolvedOptions: TableOptionsResolved<TFeatures, TData> = {
+  const resolvedOptions: TableOptions<TFeatures, TData> = {
     state: {},
     onStateChange: () => {},
     renderFallbackValue: null,

@@ -1,4 +1,5 @@
 import type {
+  CellData,
   Column,
   OnChangeFn,
   RowData,
@@ -35,6 +36,7 @@ export interface Column_GlobalFiltering {
 export interface TableOptions_GlobalFiltering<
   TFeatures extends TableFeatures,
   TData extends RowData,
+  TValue extends CellData = CellData,
 > {
   /**
    * Enables/disables **global** filtering for all columns.
@@ -50,7 +52,7 @@ export interface TableOptions_GlobalFiltering<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   getColumnCanGlobalFilter?: (
-    column: Column<TFeatures, TData, unknown>,
+    column: Column<TFeatures, TData, TValue>,
   ) => boolean
   /**
    * The filter function to use for global filtering.

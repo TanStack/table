@@ -1,4 +1,4 @@
-import { _createTable, createColumnHelper } from '@tanstack/table-core'
+import { createColumnHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
 import type {
   ColumnHelper,

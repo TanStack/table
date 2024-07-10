@@ -1,12 +1,7 @@
 import { _createTable } from '@tanstack/table-core'
 import { defineComponent, h, ref, watchEffect } from 'vue'
 import { mergeProxy } from './merge-proxy'
-import type {
-  RowData,
-  TableFeatures,
-  TableOptions,
-  TableOptionsResolved,
-} from '@tanstack/table-core'
+import type { RowData, TableFeatures, TableOptions } from '@tanstack/table-core'
 
 export * from '@tanstack/table-core'
 
@@ -30,7 +25,7 @@ export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(options: TableOptions<TFeatures, TData>) {
-  const resolvedOptions: TableOptionsResolved<TFeatures, TData> = mergeProxy(
+  const resolvedOptions: TableOptions<TFeatures, TData> = mergeProxy(
     {
       state: {}, // Dummy state
       onStateChange: () => {}, // noop

@@ -10,12 +10,11 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableOptionsResolved,
   TableState,
 } from '@tanstack/table-core'
 
 function useTableRef<TFeatures extends TableFeatures, TData extends RowData>(
-  options: TableOptionsResolved<TFeatures, TData>,
+  options: TableOptions<TFeatures, TData>,
 ): Table<TFeatures, TData> {
   const tableRef = React.useRef<Table<TFeatures, TData>>()
 
@@ -38,7 +37,7 @@ export function useTable<
     getInitialTableState(builtInFeatures, tableOptions.initialState),
   )
 
-  const statefulOptions: TableOptionsResolved<TFeatures, TData> = {
+  const statefulOptions: TableOptions<TFeatures, TData> = {
     ...tableOptions,
     state: { ...state, ...tableOptions.state },
     onStateChange: (updater) => {

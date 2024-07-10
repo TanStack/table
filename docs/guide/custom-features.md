@@ -45,7 +45,7 @@ export interface TableFeature<TFeatures extends TableFeatures, TData extends Row
   _getDefaultColumnDef?: () => Partial<ColumnDef<TFeatures, TData, unknown>>
   _getDefaultOptions?: (
     table: Table<TFeatures, TData>
-  ) => Partial<TableOptionsResolved<TFeatures, TData>>
+  ) => Partial<TableOptions<TFeatures, TData>>
   _getInitialState?: (initialState?: InitialTableState) => Partial<TableState>
 }
 ```
@@ -146,7 +146,7 @@ declare module '@tanstack/react-table' { // or whatever framework adapter you ar
   //merge our new feature's state with the existing table state
   interface TableState extends DensityTableState {}
   //merge our new feature's options with the existing table options
-  interface TableOptionsResolved<TFeatures extends TableFeatures, TData extends RowData>
+  interface TableOptions<TFeatures extends TableFeatures, TData extends RowData>
     extends DensityOptions {}
   //merge our new feature's instance APIs with the existing table instance APIs
   interface Table<TFeatures extends TableFeatures, TData extends RowData> extends DensityInstance {}

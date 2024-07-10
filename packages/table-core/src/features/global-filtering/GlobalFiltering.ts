@@ -8,19 +8,25 @@ import {
   table_setGlobalFilter,
 } from './GlobalFiltering.utils'
 import type {
+  CellData,
   Column,
   RowData,
   Table,
   TableFeature,
   TableFeatures,
+  TableState,
 } from '../../types'
 import type {
+  Column_GlobalFiltering,
   TableOptions_GlobalFiltering,
   TableState_GlobalFiltering,
+  Table_GlobalFiltering,
 } from './GlobalFiltering.types'
 
 export const GlobalFiltering: TableFeature = {
-  _getInitialState: (state): TableState_GlobalFiltering => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures> & Partial<TableState_GlobalFiltering>,
+  ): TableState_GlobalFiltering => {
     return {
       globalFilter: undefined,
       ...state,
@@ -43,15 +49,20 @@ export const GlobalFiltering: TableFeature = {
     }
   },
 
-  _createColumn: <TFeatures extends TableFeatures, TData extends RowData>(
-    column: Column<TFeatures, TData, unknown>,
+  _createColumn: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue> & Partial<Column_GlobalFiltering>,
     table: Table<TFeatures, TData>,
   ): void => {
     column.getCanGlobalFilter = () => column_getCanGlobalFilter(column, table)
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): void => {
     table.getGlobalAutoFilterFn = () => table_getGlobalAutoFilterFn()
 

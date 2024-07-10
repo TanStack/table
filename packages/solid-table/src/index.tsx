@@ -1,12 +1,7 @@
 import { _createTable } from '@tanstack/table-core'
 import { createComponent, createComputed, mergeProps } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import type {
-  RowData,
-  TableFeatures,
-  TableOptions,
-  TableOptionsResolved,
-} from '@tanstack/table-core'
+import type { RowData, TableFeatures, TableOptions } from '@tanstack/table-core'
 
 import type { JSX } from 'solid-js'
 
@@ -29,7 +24,7 @@ export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(options: TableOptions<TFeatures, TData>) {
-  const resolvedOptions: TableOptionsResolved<TFeatures, TData> = mergeProps(
+  const resolvedOptions: TableOptions<TFeatures, TData> = mergeProps(
     {
       state: {}, // Dummy state
       onStateChange: () => {}, // noop

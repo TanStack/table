@@ -24,7 +24,7 @@ import type {
   Table,
   TableFeature,
   TableFeatures,
-  TableOptionsResolved,
+  TableOptions,
   TableState,
 } from '../../types'
 
@@ -48,20 +48,20 @@ export const builtInFeatures = {
   RowSorting,
 }
 
-export function getInitialTableState(
+export function getInitialTableState<TFeatures extends TableFeatures>(
   features: TableFeatures,
-  initialState: Partial<TableState> | undefined = {},
-): TableState {
+  initialState: Partial<TableState<TFeatures>> | undefined = {},
+): TableState<TFeatures> {
   Object.values(features).forEach((feature) => {
     initialState = feature._getInitialState?.(initialState) ?? initialState
   })
-  return initialState as TableState
+  return initialState as TableState<TFeatures>
 }
 
 export function _createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(options: TableOptionsResolved<TFeatures, TData>): Table<TFeatures, TData> {
+>(options: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
   if (
     process.env.NODE_ENV !== 'production' &&
     (options.debugAll || options.debugTable)
@@ -81,7 +81,7 @@ export function _createTable<
 
   const defaultOptions = featuresList.reduce((obj, feature) => {
     return Object.assign(obj, feature._getDefaultOptions?.(table))
-  }, {}) as TableOptionsResolved<TFeatures, TData>
+  }, {}) as TableOptions<TFeatures, TData>
 
   const initialState = getInitialTableState(_features, options.initialState)
 

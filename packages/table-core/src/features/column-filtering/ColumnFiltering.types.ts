@@ -1,5 +1,6 @@
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 import type {
+  CellData,
   Column,
   FilterFns,
   FilterMeta,
@@ -49,12 +50,14 @@ export interface FilterFn<
 export type TransformFilterValueFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = (value: any, column?: Column<TFeatures, TData, unknown>) => unknown
+  TValue extends CellData = CellData,
+> = (value: any, column?: Column<TFeatures, TData, TValue>) => TValue
 
 export type ColumnFilterAutoRemoveTestFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = (value: any, column?: Column<TFeatures, TData, unknown>) => boolean
+  TValue extends CellData = CellData,
+> = (value: any, column?: Column<TFeatures, TData, TValue>) => boolean
 
 export type CustomFilterFns<
   TFeatures extends TableFeatures,

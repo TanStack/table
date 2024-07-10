@@ -2,7 +2,7 @@ import {
   type RowData,
   type TableFeatures,
   type TableOptions,
-  type TableOptionsResolved,
+  type TableOptions,
   type TableState,
   _createTable,
 } from '@tanstack/table-core'
@@ -37,7 +37,7 @@ export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(options: TableOptions<TFeatures, TData>) {
-  const resolvedOptions: TableOptionsResolved<TFeatures, TData> = mergeObjects(
+  const resolvedOptions: TableOptions<TFeatures, TData> = mergeObjects(
     {
       state: {},
       onStateChange() {},

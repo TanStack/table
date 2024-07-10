@@ -4,7 +4,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableOptionsResolved,
   TableState,
 } from '@tanstack/table-core'
 import type {
@@ -45,7 +44,7 @@ export class TableController<
 
   public table(options: TableOptions<TFeatures, TData>) {
     if (!this.tableInstance) {
-      const resolvedOptions: TableOptionsResolved<TFeatures, TData> = {
+      const resolvedOptions: TableOptions<TFeatures, TData> = {
         state: {},
         onStateChange: () => {}, // noop
         renderFallbackValue: null,

@@ -3,6 +3,7 @@ import type {
   CellData,
   Column,
   ColumnDef,
+  ColumnDef_All,
   RowData,
   TableFeatures,
 } from '../../types'
@@ -23,7 +24,7 @@ export interface Column_CoreProperties<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#columndef)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-defs)
    */
-  columnDef: ColumnDef<TFeatures, TData, TValue>
+  columnDef: ColumnDef_All<TData, TValue>
   /**
    * The child column (if the column is a group column). Will be an empty array if the column is not a group column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#columns)

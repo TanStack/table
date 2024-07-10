@@ -1,5 +1,5 @@
 import type { NoInfer } from './utils.types'
-import type { TableOptionsResolved, TableState, Updater } from './types'
+import type { TableOptions, TableState, Updater } from './types'
 
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'
@@ -9,11 +9,11 @@ export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
 
 export function noop() {}
 
-export function makeStateUpdater<K extends keyof TableState>(
+export function makeStateUpdater<K extends keyof TableState<any>>(
   key: K,
   instance: unknown,
 ) {
-  return (updater: Updater<TableState[K]>) => {
+  return (updater: Updater<TableState<any>[K]>) => {
     ;(instance as any).setState(<TTableState>(old: TTableState) => {
       return {
         ...old,
@@ -121,7 +121,7 @@ export function memo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
 }
 
 export function getMemoOptions(
-  tableOptions: Partial<TableOptionsResolved<any, any>>,
+  tableOptions: Partial<TableOptions<any, any>>,
   debugLevel:
     | 'debugAll'
     | 'debugCells'

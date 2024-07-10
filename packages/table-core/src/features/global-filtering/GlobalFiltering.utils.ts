@@ -1,13 +1,20 @@
 import { filterFns } from '../../fns/filterFns'
 import { isFunction } from '../../utils'
 import type { FilterFn } from '../column-filtering/ColumnFiltering.types'
-import type { Column, RowData, Table, TableFeatures } from '../../types'
+import type {
+  CellData,
+  Column,
+  RowData,
+  Table,
+  TableFeatures,
+} from '../../types'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 
 export function column_getCanGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(column: Column<TFeatures, TData, unknown>, table: Table<TFeatures, TData>) {
+  TValue extends CellData = CellData,
+>(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
   return (
     (column.columnDef.enableGlobalFilter ?? true) &&
     (table.options.enableGlobalFilter ?? true) &&

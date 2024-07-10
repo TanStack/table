@@ -246,7 +246,7 @@ export function column_getIsSorted<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
-  const columnSort = table.getState().sorting.find((d) => d.id === column.id)
+  const columnSort = table.getState().sorting?.find((d) => d.id === column.id)
   return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
 }
 
@@ -255,7 +255,7 @@ export function column_getSortIndex<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
-  return table.getState().sorting.findIndex((d) => d.id === column.id)
+  return table.getState().sorting?.findIndex((d) => d.id === column.id)
 }
 
 export function column_clearSorting<

@@ -7,11 +7,10 @@ import type {
   TableFeatures,
   TableMeta,
   TableOptions,
-  TableOptionsResolved,
+  TableOptions_All,
   TableState,
   Updater,
 } from '../../types'
-import type { RequiredKeys } from '../../utils.types'
 
 export interface TableOptions_Table<
   TFeatures extends TableFeatures,
@@ -61,7 +60,7 @@ export interface TableOptions_Table<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  initialState?: Partial<TableState>
+  initialState?: Partial<TableState<TFeatures>>
   /**
    * This option is used to optionally implement the merging of table options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#mergeoptions)
@@ -82,14 +81,14 @@ export interface TableOptions_Table<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#onstatechange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  onStateChange: (updater: Updater<TableState>) => void
+  onStateChange?: (updater: Updater<TableState<TFeatures>>) => void
   /**
    * The `state` option can be used to optionally _control_ part or all of the table state. The state you pass here will merge with and overwrite the internal automatically-managed state to produce the final state for the table. You can also listen to state changes via the `onStateChange` option.
    * > Note: Any state passed in here will override both the internal state and any other `initialState` you provide.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#state)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  state: Partial<TableState>
+  state?: Partial<TableState<TFeatures>>
 }
 
 export interface Table_CoreProperties<
@@ -103,13 +102,13 @@ export interface Table_CoreProperties<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  initialState: TableState
+  initialState: TableState<TFeatures>
   /**
    * A read-only reference to the table's current options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#options)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  options: RequiredKeys<TableOptionsResolved<TFeatures, TData>, 'state'>
+  options: TableOptions_All<TData>
 }
 
 export interface Table_Table<
@@ -134,7 +133,7 @@ export interface Table_Table<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getstate)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  getState: () => TableState
+  getState: () => TableState<TFeatures>
   /**
    * Call this function to reset the table state to the initial state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#reset)
@@ -146,13 +145,11 @@ export interface Table_Table<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#setoptions)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  setOptions: (
-    newOptions: Updater<TableOptionsResolved<TFeatures, TData>>,
-  ) => void
+  setOptions: (newOptions: Updater<TableOptions<TFeatures, TData>>) => void
   /**
    * Call this function to update the table state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#setstate)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  setState: (updater: Updater<TableState>) => void
+  setState: (updater: Updater<TableState<TFeatures>>) => void
 }

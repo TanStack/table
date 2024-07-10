@@ -6,11 +6,10 @@ import type {
   RowModel,
   Table,
   TableFeatures,
-  TableOptionsResolved,
+  TableOptions,
   TableState,
   Updater,
 } from '../../types'
-import type { RequiredKeys } from '../../utils.types'
 
 export function table_reset<
   TFeatures extends TableFeatures,
@@ -22,10 +21,7 @@ export function table_reset<
 export function table_mergeOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData>,
-  newOptions: TableOptionsResolved<TFeatures, TData>,
-) {
+>(table: Table<TFeatures, TData>, newOptions: TableOptions<TFeatures, TData>) {
   if (table.options.mergeOptions) {
     return table.options.mergeOptions(table.options, newOptions)
   }
@@ -41,27 +37,24 @@ export function table_setOptions<
   TData extends RowData,
 >(
   table: Table<TFeatures, TData>,
-  updater: Updater<TableOptionsResolved<TFeatures, TData>>,
+  updater: Updater<TableOptions<TFeatures, TData>>,
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
-  table.options = table_mergeOptions(table, newOptions) as RequiredKeys<
-    TableOptionsResolved<TFeatures, TData>,
-    'state'
-  >
+  table.options = table_mergeOptions(table, newOptions)
 }
 
 export function table_getState<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>): TableState {
-  return table.options.state as TableState
+>(table: Table<TFeatures, TData>): TableState<TFeatures> {
+  return table.options.state as TableState<TFeatures>
 }
 
 export function table_setState<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, updater: Updater<TableState>): void {
-  table.options.onStateChange(updater)
+>(table: Table<TFeatures, TData>, updater: Updater<TableState<TFeatures>>): void {
+  table.options.onStateChange?.(updater)
 }
 
 export function table_getCoreRowModel<
