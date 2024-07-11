@@ -8,13 +8,13 @@ import {
   type ColumnDef,
   type ColumnFiltersState,
   FlexRenderDirective,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginatedRowModel,
-  getSortedRowModel,
+  createCoreRowModel,
+  createFacetedMinMaxValues,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import { FormsModule } from '@angular/forms'
@@ -90,8 +90,8 @@ export class AppComponent {
     getSortedRowModel: createSortedRowModel(),
     getPaginatedRowModel: createPaginatedRowModel(),
     getFacetedRowModel: createFacetedRowModel(), // client-side faceting
-    getFacetedUniqueValues: getFacetedUniqueValues(), // generate unique values for select filter/autocomplete
-    getFacetedMinMaxValues: getFacetedMinMaxValues(), // generate min/max values for range filter
+    getFacetedUniqueValues: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete
+    getFacetedMinMaxValues: createFacetedMinMaxValues(), // generate min/max values for range filter
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,

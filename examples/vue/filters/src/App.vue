@@ -3,11 +3,11 @@ import {
   ColumnFiltersState,
   FlexRender,
   createColumnHelper,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
+  createCoreRowModel,
+  createFacetedMinMaxValues,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFilteredRowModel,
   useTable,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
@@ -127,8 +127,8 @@ const table = useTable({
   getCoreRowModel: createCoreRowModel(),
   getFilteredRowModel: createFilteredRowModel(),
   getFacetedRowModel: createFacetedRowModel(),
-  getFacetedUniqueValues: getFacetedUniqueValues(),
-  getFacetedMinMaxValues: getFacetedMinMaxValues(),
+  getFacetedUniqueValues: createFacetedUniqueValues(),
+  getFacetedMinMaxValues: createFacetedMinMaxValues(),
 })
 </script>
 

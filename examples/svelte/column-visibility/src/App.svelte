@@ -8,8 +8,8 @@
   import {
     FlexRender,
     createTable,
-    getCoreRowModel,
-    getSortedRowModel,
+    createCoreRowModel,
+    createSortedRowModel,
   } from '@tanstack/svelte-table'
   import './index.css'
 

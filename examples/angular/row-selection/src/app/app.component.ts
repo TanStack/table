@@ -8,9 +8,9 @@ import {
 import {
   FlexRenderComponent,
   FlexRenderDirective,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginatedRowModel,
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import { FormsModule } from '@angular/forms'

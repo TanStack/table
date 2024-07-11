@@ -3,10 +3,10 @@ import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
   TableController,
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginatedRowModel,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/lit-table'

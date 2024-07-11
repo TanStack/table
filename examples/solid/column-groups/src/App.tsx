@@ -1,4 +1,8 @@
-import { createTable, flexRender, getCoreRowModel } from '@tanstack/solid-table'
+import {
+  createCoreRowModel,
+  createTable,
+  flexRender,
+} from '@tanstack/solid-table'
 import { For, createSignal } from 'solid-js'
 import type { ColumnDef } from '@tanstack/solid-table'
 

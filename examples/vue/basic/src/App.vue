@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  getCoreRowModel,
+  createCoreRowModel,
   useTable,
   createColumnHelper,
 } from '@tanstack/vue-table'

@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import {
   FlexRender,
-  getCoreRowModel,
+  createCoreRowModel,
   useTable,
   createColumnHelper,
   RowSelectionState,

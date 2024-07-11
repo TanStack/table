@@ -3,9 +3,9 @@ import { $, component$, render, useSignal } from '@builder.io/qwik'
 
 import './index.css'
 import {
+  createCoreRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
   useTable,
 } from '@tanstack/qwik-table'
 import { makeData } from './makeData'

@@ -9,9 +9,9 @@
   } from '@tanstack/svelte-table'
   import {
     FlexRender,
+    createCoreRowModel,
+    createSortedRowModel,
     createTable,
-    getCoreRowModel,
-    getSortedRowModel,
   } from '@tanstack/svelte-table'
   import './index.css'
   import { makeData, type Person } from './makeData'

@@ -2,7 +2,7 @@ import { expect, test } from 'vitest'
 import {
   ColumnDef,
   flexRender,
-  getCoreRowModel,
+  createCoreRowModel,
   TableOptions,
   useTable,
 } from '../../src'

@@ -2,8 +2,8 @@
 import {
   FlexRender,
   createColumnHelper,
-  getCoreRowModel,
-  getExpandedRowModel,
+  createCoreRowModel,
+  createExpandedRowModel,
   useTable,
   type ExpandedState,
   type Row,

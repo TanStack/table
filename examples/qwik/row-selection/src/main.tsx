@@ -5,10 +5,10 @@ import './index.css'
 
 import {
   createColumnHelper,
+  createCoreRowModel,
+  createFilteredRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
   useTable,
 } from '@tanstack/qwik-table'
 import type { ColumnDef } from '@tanstack/qwik-table'

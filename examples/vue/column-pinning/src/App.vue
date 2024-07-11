@@ -2,7 +2,7 @@
 import {
   createColumnHelper,
   FlexRender,
-  getCoreRowModel,
+  createCoreRowModel,
   useTable,
 } from '@tanstack/vue-table'
 import type {

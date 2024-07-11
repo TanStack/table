@@ -2,7 +2,7 @@ import * as React from 'react'
 import { describe, expect, it } from 'vitest'
 // import { renderHook } from '@testing-library/react-hooks'
 import * as RTL from '@testing-library/react'
-import { useTable, getCoreRowModel, ColumnDef, flexRender } from '../../src'
+import { useTable, createCoreRowModel, ColumnDef, flexRender } from '../../src'
 
 type Person = {
   firstName: string

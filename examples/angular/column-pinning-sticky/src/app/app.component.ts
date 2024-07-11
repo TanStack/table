@@ -11,7 +11,7 @@ import {
   type ColumnPinningState,
   type ColumnVisibilityState,
   FlexRenderDirective,
-  getCoreRowModel,
+  createCoreRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'

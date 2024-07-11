@@ -1,4 +1,8 @@
-import { createTable, flexRender, getCoreRowModel } from '@tanstack/solid-table'
+import {
+  createCoreRowModel,
+  createTable,
+  flexRender,
+} from '@tanstack/solid-table'
 import { For, Show, createSignal } from 'solid-js'
 import type { ColumnDef, ColumnVisibilityState } from '@tanstack/solid-table'
 

@@ -2,7 +2,7 @@
 import {
   type ColumnOrderState,
   FlexRender,
-  getCoreRowModel,
+  createCoreRowModel,
   useTable,
   type Column,
   createColumnHelper,

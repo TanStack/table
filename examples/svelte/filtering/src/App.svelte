@@ -8,9 +8,9 @@
   import {
     FlexRender,
     createTable,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginatedRowModel,
+    createCoreRowModel,
+    createFilteredRowModel,
+    createPaginatedRowModel,
   } from '@tanstack/svelte-table'
   import { type Updater } from 'svelte/store'
   import './index.css'

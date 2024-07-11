@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  getCoreRowModel,
-  getPaginatedRowModel,
+  createCoreRowModel,
+  createPaginatedRowModel,
   useTable,
   createColumnHelper,
 } from '@tanstack/vue-table'

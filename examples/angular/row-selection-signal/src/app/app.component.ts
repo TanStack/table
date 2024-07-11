@@ -7,9 +7,9 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginatedRowModel,
+  createCoreRowModel,
+  createFilteredRowModel,
+  createPaginatedRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import { FilterComponent } from './filter'

@@ -1,11 +1,11 @@
 import {
+  createCoreRowModel,
+  createFacetedMinMaxValues,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFilteredRowModel,
   createTable,
   flexRender,
-  getCoreRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
 } from '@tanstack/solid-table'
 import { debounce } from '@solid-primitives/scheduled'
 import { For, createSignal } from 'solid-js'
@@ -95,8 +95,8 @@ function App() {
     getCoreRowModel: createCoreRowModel(),
     getFilteredRowModel: createFilteredRowModel(),
     getFacetedRowModel: createFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
+    getFacetedUniqueValues: createFacetedUniqueValues(),
+    getFacetedMinMaxValues: createFacetedMinMaxValues(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,

@@ -7,7 +7,7 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
-  getCoreRowModel,
+  createCoreRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import type { ColumnDef, ColumnVisibilityState } from '@tanstack/angular-table'
