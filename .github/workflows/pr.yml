@@ -14,6 +14,9 @@ concurrency:
 env:
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Test
@@ -30,7 +33,7 @@ jobs:
       - name: Get base and head commits for `nx affected`
         uses: nrwl/nx-set-shas@v4
         with:
-          main-branch-name: 'main'
+          main-branch-name: main
       - name: Run Checks
         run: pnpm run test:pr --parallel=3
       - name: Stop Nx Agents
