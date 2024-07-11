@@ -1,6 +1,10 @@
 import { For, Show, createSignal } from 'solid-js'
 import { faker } from '@faker-js/faker'
-import { createTable, flexRender, getCoreRowModel } from '@tanstack/solid-table'
+import {
+  createCoreRowModel,
+  createTable,
+  flexRender,
+} from '@tanstack/solid-table'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type {

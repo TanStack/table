@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { ColumnDef } from '@tanstack/svelte-table'
   import {
-    createTable,
     FlexRender,
-    getCoreRowModel,
+    createCoreRowModel,
+    createTable,
     tableOptions,
   } from '@tanstack/svelte-table'
   import './index.css'

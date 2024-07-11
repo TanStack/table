@@ -3,16 +3,13 @@ import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { state } from 'lit/decorators/state.js'
 import {
-  ColumnDef,
-  SortingFn,
-  type SortingState,
   TableController,
+  createCoreRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
 } from '@tanstack/lit-table'
-
 import { Person, makeData } from './makeData'
+import type { ColumnDef, SortingFn, SortingState } from '@tanstack/lit-table'
 
 const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status

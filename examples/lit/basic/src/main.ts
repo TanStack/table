@@ -4,8 +4,8 @@ import { repeat } from 'lit/directives/repeat.js'
 import {
   TableController,
   createColumnHelper,
+  createCoreRowModel,
   flexRender,
-  getCoreRowModel,
 } from '@tanstack/lit-table'
 import install from '@twind/with-web-components'
 import config from '../twind.config'

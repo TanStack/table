@@ -5,8 +5,8 @@ import { state } from 'lit/decorators/state.js'
 import {
   ColumnDef,
   TableController,
+  createCoreRowModel,
   flexRender,
-  getCoreRowModel,
 } from '@tanstack/lit-table'
 
 import { Person, makeData } from './makeData'

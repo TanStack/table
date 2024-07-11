@@ -4,16 +4,18 @@ import {
   computed,
   signal,
 } from '@angular/core'
-import type { ColumnDef } from '@tanstack/angular-table'
 import {
-  type ColumnOrderState,
-  type ColumnVisibilityState,
   FlexRenderDirective,
-  getCoreRowModel,
+  createCoreRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'
 import { type Person, makeData } from './makeData'
+import type {
+  ColumnDef,
+  ColumnOrderState,
+  ColumnVisibilityState,
+} from '@tanstack/angular-table'
 
 const defaultColumns: Array<ColumnDef<Person>> = [
   {

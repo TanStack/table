@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  getCoreRowModel,
+  createCoreRowModel,
   useTable,
   SortingState,
   createColumnHelper,
-  getSortedRowModel,
+  createSortedRowModel,
 } from '@tanstack/vue-table'
 import { h, ref } from 'vue'
 import { makeData, Person } from './makeData'

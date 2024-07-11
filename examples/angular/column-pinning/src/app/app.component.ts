@@ -6,7 +6,7 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
-  getCoreRowModel,
+  createCoreRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'

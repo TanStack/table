@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import {
   FlexRender,
-  getCoreRowModel,
+  createCoreRowModel,
   useTable,
   createColumnHelper,
   PaginationState,

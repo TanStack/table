@@ -1,8 +1,8 @@
 import {
+  createCoreRowModel,
+  createSortedRowModel,
   createTable,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
 } from '@tanstack/solid-table'
 import { For, Show, createSignal } from 'solid-js'
 import { makeData } from './makeData'

@@ -4,9 +4,9 @@ import { repeat } from 'lit/directives/repeat.js'
 import {
   ColumnDef,
   TableController,
+  createCoreRowModel,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
 } from '@tanstack/lit-table'
 import { styleMap } from 'lit/directives/style-map.js'
 import { virtualize, virtualizerRef } from '@lit-labs/virtualizer/virtualize.js'

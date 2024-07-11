@@ -5,8 +5,8 @@ import './index.css'
 
 import {
   createColumnHelper,
+  createCoreRowModel,
   flexRender,
-  getCoreRowModel,
   useTable,
 } from '@tanstack/qwik-table'
 

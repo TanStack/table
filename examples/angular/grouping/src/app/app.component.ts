@@ -7,11 +7,11 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getGroupedRowModel,
-  getPaginatedRowModel,
+  createCoreRowModel,
+  createExpandedRowModel,
+  createFilteredRowModel,
+  createGroupedRowModel,
+  createPaginatedRowModel,
   injectTable,
   tableOptions,
 } from '@tanstack/angular-table'
