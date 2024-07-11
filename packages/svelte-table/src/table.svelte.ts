@@ -1,10 +1,9 @@
-import {
-  type RowData,
-  type TableFeatures,
-  type TableOptions,
-  type TableOptions,
-  type TableState,
-  _createTable,
+import { _createTable } from '@tanstack/table-core'
+import type {
+  RowData,
+  TableFeatures,
+  TableOptions,
+  TableState,
 } from '@tanstack/table-core'
 
 /**
