@@ -1,5 +1,6 @@
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import type {
+  CellData,
   Column,
   RowData,
   Table,
@@ -16,9 +17,10 @@ import type { ColumnOrderState } from './ColumnOrdering.types'
 export function column_getIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
+  TValue extends CellData = CellData,
 >(
-  columns: Array<Column<TFeatures, TData, unknown>>,
-  column: Column<TFeatures, TData, unknown>,
+  columns: Array<Column<TFeatures, TData, TValue>>,
+  column: Column<TFeatures, TData, TValue>,
 ) {
   return columns.findIndex((d) => d.id === column.id)
 }
@@ -26,8 +28,9 @@ export function column_getIndex<
 export function column_getIsFirstColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
+  TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, unknown>,
+  column: Column<TFeatures, TData, TValue>,
   table: Table<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
@@ -38,8 +41,9 @@ export function column_getIsFirstColumn<
 export function column_getIsLastColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
+  TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, unknown>,
+  column: Column<TFeatures, TData, TValue>,
   table: Table<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
@@ -60,7 +64,7 @@ export function table_resetColumnOrder<
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
-    defaultState ? [] : table.initialState.columnOrder,
+    defaultState ? [] : table.initialState.columnOrder ?? [],
   )
 }
 

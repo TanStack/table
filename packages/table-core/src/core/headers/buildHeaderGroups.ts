@@ -108,7 +108,7 @@ export function buildHeaderGroups<
         pendingParentHeaders.push(header)
       }
 
-      headerGroup.headers.push(headerToGroup)
+      headerGroup.headers.push(headerToGroup as any) //TODO: fix this type
       headerToGroup.headerGroup = headerGroup
     })
 
@@ -169,7 +169,7 @@ export function buildHeaderGroups<
     })
   }
 
-  recurseHeadersForSpans(headerGroups[0]?.headers ?? [])
+  recurseHeadersForSpans(headerGroups[0]?.headers ?? ([] as any)) //TODO: fix this type
 
   return headerGroups
 }

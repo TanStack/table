@@ -13,6 +13,7 @@ import type {
   TableState_ColumnOrdering,
 } from './ColumnOrdering.types'
 import type {
+  CellData,
   Column,
   RowData,
   Table,
@@ -36,13 +37,17 @@ export const ColumnOrdering: TableFeature = {
     }
   },
 
-  _createColumn: <TFeatures extends TableFeatures, TData extends RowData>(
-    column: Column<TFeatures, TData, unknown>,
+  _createColumn: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ): void => {
     column.getIndex = memo(
       (position) => [column_getVisibleLeafColumns(table, position)],
-      (columns) => column_getIndex(columns, column),
+      (columns) => column_getIndex(columns, column as any), //TODO: fix this
       getMemoOptions(table.options, 'debugColumns', 'getIndex'),
     )
 

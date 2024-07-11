@@ -37,7 +37,7 @@ export const Columns: TableFeature = {
     //@ts-ignore - don't know
     column.getLeafColumns = memo(
       () => [table._getOrderColumnsFn()],
-      (orderColumns) => column_getLeafColumns(column, orderColumns),
+      (orderColumns) => column_getLeafColumns(column as any, orderColumns), //TODO: fix type
       getMemoOptions(table.options, 'debugColumns', 'column.getLeafColumns'),
     )
   },

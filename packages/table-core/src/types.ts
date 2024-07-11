@@ -328,7 +328,7 @@ export interface Table_Core<
     Table_Rows<TFeatures, TData>,
     Table_Headers<TFeatures, TData> {}
 
-export type Table<
+export type _Table<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Table_Core<TFeatures, TData> &
@@ -373,7 +373,13 @@ export type Table<
         : never)
   >
 
-export type Table_All<TData extends RowData> = Table<TableFeatures, TData>
+export type Table_All<TData extends RowData> = _Table<TableFeatures, TData>
+
+//temp - enable all features for types internally
+export type Table<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = Table_All<TData>
 
 export interface TableOptions_Core<
   TFeatures extends TableFeatures,
@@ -384,7 +390,7 @@ export interface TableOptions_Core<
     TableOptions_Rows<TFeatures, TData>,
     TableOptions_Headers {}
 
-export type TableOptions<
+export type _TableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
@@ -430,12 +436,18 @@ export type TableOptions<
         : never)
   >
 
-export type TableOptions_All<TData extends RowData> = TableOptions<
+export type TableOptions_All<TData extends RowData> = _TableOptions<
   TableFeatures,
   TData
 >
 
-export type TableState<TFeatures extends TableFeatures> = UnionToIntersection<
+//temp - enable all features for types internally
+export type TableOptions<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = TableOptions_All<TData>
+
+export type _TableState<TFeatures extends TableFeatures> = UnionToIntersection<
   | ('ColumnFiltering' extends keyof TFeatures
       ? TableState_ColumnFiltering
       : never)
@@ -463,9 +475,12 @@ export type TableState<TFeatures extends TableFeatures> = UnionToIntersection<
   | ('RowSorting' extends keyof TFeatures ? TableState_RowSorting : never)
 >
 
-export type Table_State_All = TableState<TableFeatures>
+export type TableState_All = _TableState<TableFeatures>
 
-export type Row<
+//temp - enable all features for types internally
+export type TableState<TFeatures extends TableFeatures> = TableState_All
+
+export type _Row<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Row_Row<TFeatures, TData> &
@@ -485,9 +500,15 @@ export type Row<
     | ('RowSelection' extends keyof TFeatures ? Row_RowSelection : never)
   >
 
-export type Row_All<TData extends RowData> = Row<TableFeatures, TData>
+export type Row_All<TData extends RowData> = _Row<TableFeatures, TData>
 
-export type Cell<
+//temp - enable all features for types internally
+export type Row<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = Row_All<TData>
+
+export type _Cell<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
@@ -496,9 +517,19 @@ export type Cell<
     'ColumnGrouping' extends keyof TFeatures ? Cell_ColumnGrouping : never
   >
 
-export type Cell_All<TData extends RowData> = Cell<TableFeatures, TData>
+export type Cell_All<
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = _Cell<TableFeatures, TData, TValue>
 
-export type Header<
+//temp - enable all features for types internally
+export type Cell<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = Cell_All<TData, TValue>
+
+export type _Header<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
@@ -507,6 +538,18 @@ export type Header<
     | ('ColumnSizing' extends keyof TFeatures ? Header_ColumnSizing : never)
     | ('ColumnResizing' extends keyof TFeatures ? Header_ColumnResizing : never)
   >
+
+export type Header_All<
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = _Header<TableFeatures, TData, TValue>
+
+//temp - enable all features for types internally
+export type Header<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = Header_All<TData, TValue>
 
 export interface HeaderGroup<
   TFeatures extends TableFeatures,
@@ -548,7 +591,7 @@ type ColumnIdentifiers<
   TValue extends CellData = CellData,
 > = IdIdentifier<TFeatures, TData, TValue> | StringHeaderIdentifier
 
-export type ColumnDefBase<
+export type _ColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
@@ -579,6 +622,13 @@ export type ColumnDefBase<
   cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
   meta?: ColumnMeta<TFeatures, TData, TValue>
 }
+
+//temp - enable all features for types internally
+export type ColumnDefBase<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue = unknown,
+> = _ColumnDefBase<TableFeatures, TData, TValue>
 
 export type IdentifiedColumnDef<
   TFeatures extends TableFeatures,
@@ -672,7 +722,7 @@ export type ColumnDefResolved<
   accessorKey?: string
 }
 
-export type Column<
+export type _Column<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
@@ -705,4 +755,11 @@ export type Column<
 export type Column_All<
   TData extends RowData,
   TValue extends CellData = CellData,
-> = Column<TableFeatures, TData, TValue>
+> = _Column<TableFeatures, TData, TValue>
+
+//temp - enable all features for types internally
+export type Column<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = Column_All<TData, TValue>

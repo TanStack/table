@@ -13,6 +13,7 @@ import {
   table_setColumnFilters,
 } from './ColumnFiltering.utils'
 import type {
+  CellData,
   Column,
   Row,
   RowData,
@@ -55,8 +56,12 @@ export const ColumnFiltering: TableFeature = {
     } as TableOptions_ColumnFiltering<TFeatures, TData>
   },
 
-  _createColumn: <TFeatures extends TableFeatures, TData extends RowData>(
-    column: Column<TFeatures, TData, unknown>,
+  _createColumn: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ): void => {
     column.getAutoFilterFn = () => column_getAutoFilterFn(column, table)

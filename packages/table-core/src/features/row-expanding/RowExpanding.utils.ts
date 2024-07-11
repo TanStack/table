@@ -59,7 +59,7 @@ export function table_resetExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
-  table_setExpanded(table, defaultState ? {} : table.initialState.expanded)
+  table_setExpanded(table, defaultState ? {} : table.initialState.expanded!)
 }
 
 export function table_getCanSomeRowsExpand<

@@ -37,7 +37,8 @@ export const ColumnGrouping: TableFeature = {
   _getDefaultColumnDef: <
     TFeatures extends TableFeatures,
     TData extends RowData,
-  >(): ColumnDef_ColumnGrouping<TFeatures, TData, unknown> => {
+    TValue extends CellData = CellData,
+  >(): ColumnDef_ColumnGrouping<TFeatures, TData, TValue> => {
     return {
       aggregatedCell: (props) =>
         (props.getValue() as any)?.toString?.() ?? null,

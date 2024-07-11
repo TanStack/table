@@ -25,7 +25,8 @@ import type {
 
 export const GlobalFiltering: TableFeature = {
   _getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures> & Partial<TableState_GlobalFiltering>,
+    state: Partial<TableState<TFeatures>> &
+      Partial<TableState_GlobalFiltering> = {},
   ): TableState_GlobalFiltering => {
     return {
       globalFilter: undefined,

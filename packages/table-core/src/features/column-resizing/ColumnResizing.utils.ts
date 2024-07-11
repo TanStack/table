@@ -229,7 +229,8 @@ export function table_resetHeaderSizeInfo<
     table,
     defaultState
       ? getDefaultColumnSizingInfoState()
-      : table.initialState.columnSizingInfo,
+      : table.initialState.columnSizingInfo ??
+          getDefaultColumnSizingInfoState(),
   )
 }
 

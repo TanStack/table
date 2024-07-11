@@ -63,7 +63,9 @@ export function table_resetPagination<
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setPagination(
     table,
-    defaultState ? getDefaultPaginationState() : table.initialState.pagination,
+    defaultState
+      ? getDefaultPaginationState()
+      : table.initialState.pagination ?? getDefaultPaginationState(),
   )
 }
 
@@ -95,7 +97,9 @@ export function table_resetPageIndex<
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setPageIndex(
     table,
-    defaultState ? defaultPageIndex : table.initialState.pagination.pageIndex,
+    defaultState
+      ? defaultPageIndex
+      : table.initialState.pagination?.pageIndex ?? defaultPageIndex,
   )
 }
 
@@ -105,7 +109,9 @@ export function table_resetPageSize<
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setPageSize(
     table,
-    defaultState ? defaultPageSize : table.initialState.pagination.pageSize,
+    defaultState
+      ? defaultPageSize
+      : table.initialState.pagination?.pageSize ?? defaultPageSize,
   )
 }
 

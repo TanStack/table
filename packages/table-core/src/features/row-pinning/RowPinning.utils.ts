@@ -32,7 +32,9 @@ export function table_resetRowPinning<
 >(table: Table<TFeatures, TData>, defaultState?: boolean): void {
   table_setRowPinning(
     table,
-    defaultState ? getDefaultRowPinningState() : table.initialState.rowPinning,
+    defaultState
+      ? getDefaultRowPinningState()
+      : table.initialState.rowPinning ?? getDefaultRowPinningState(),
   )
 }
 

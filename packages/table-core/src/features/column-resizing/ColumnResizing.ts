@@ -7,7 +7,15 @@ import {
   table_resetHeaderSizeInfo,
   table_setColumnSizingInfo,
 } from './ColumnResizing.utils'
-import type { Column, Header, RowData, Table, TableFeature } from '../../types'
+import type {
+  CellData,
+  Column,
+  Header,
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '../../types'
 import type {
   ColumnResizingDefaultOptions,
   TableState_ColumnResizing,

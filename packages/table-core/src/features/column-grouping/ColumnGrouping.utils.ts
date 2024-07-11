@@ -115,7 +115,10 @@ export function table_resetGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
-  table_setGrouping(table, defaultState ? [] : table.initialState.grouping)
+  table_setGrouping(
+    table,
+    defaultState ? [] : table.initialState.grouping ?? [],
+  )
 }
 
 export function table_getPreGroupedRowModel<

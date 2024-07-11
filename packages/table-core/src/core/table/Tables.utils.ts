@@ -15,7 +15,7 @@ export function table_reset<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): void {
-  table_setState(table, table.initialState)
+  table_setState(table, table.initialState as TableState<TFeatures>)
 }
 
 export function table_mergeOptions<
@@ -53,7 +53,10 @@ export function table_getState<
 export function table_setState<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, updater: Updater<TableState<TFeatures>>): void {
+>(
+  table: Table<TFeatures, TData>,
+  updater: Updater<TableState<TFeatures>>,
+): void {
   table.options.onStateChange?.(updater)
 }
 

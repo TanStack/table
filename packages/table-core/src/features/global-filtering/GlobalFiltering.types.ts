@@ -36,7 +36,6 @@ export interface Column_GlobalFiltering {
 export interface TableOptions_GlobalFiltering<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue extends CellData = CellData,
 > {
   /**
    * Enables/disables **global** filtering for all columns.
@@ -51,7 +50,11 @@ export interface TableOptions_GlobalFiltering<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#getcolumncanglobalfilter)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
-  getColumnCanGlobalFilter?: (
+  getColumnCanGlobalFilter?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
     column: Column<TFeatures, TData, TValue>,
   ) => boolean
   /**

@@ -137,7 +137,7 @@ export function table_resetColumnVisibility<
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnVisibility(
     table,
-    defaultState ? {} : table.initialState.columnVisibility,
+    defaultState ? {} : table.initialState.columnVisibility ?? {},
   )
 }
 

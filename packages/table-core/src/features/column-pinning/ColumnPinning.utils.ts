@@ -153,7 +153,7 @@ export function table_resetColumnPinning<
     table,
     defaultState
       ? getDefaultColumnPinningState()
-      : table.initialState.columnPinning,
+      : table.initialState.columnPinning ?? getDefaultColumnPinningState(),
   )
 }
 
