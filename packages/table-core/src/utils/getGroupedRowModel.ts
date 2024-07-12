@@ -1,14 +1,26 @@
 import { createRow } from '../core/row'
-import { Table, Row, RowModel, RowData } from '../types'
+import { Row, RowData, RowModel, Table } from '../types'
 import { flattenBy, getMemoOptions, memo } from '../utils'
+import { GroupingState } from '../features/ColumnGrouping'
 
 export function getGroupedRowModel<TData extends RowData>(): (
   table: Table<TData>
 ) => () => RowModel<TData> {
+  let lastGrouping: GroupingState
+
   return table =>
     memo(
       () => [table.getState().grouping, table.getPreGroupedRowModel()],
       (grouping, rowModel) => {
+        //ungrouping
+        if (lastGrouping?.length > 0 && grouping.length === 0) {
+          rowModel.rows.forEach(row => {
+            row.depth = 0
+            delete row.parentId
+          })
+        }
+        lastGrouping = grouping
+
         if (!rowModel.rows.length || !grouping.length) {
           return rowModel
         }
@@ -118,6 +130,10 @@ export function getGroupedRowModel<TData extends RowData>(): (
               })
 
               subRows.forEach(subRow => {
+                if (!subRow.parentId) {
+                  Object.assign(subRow, { parentId: id })
+                }
+
                 groupedFlatRows.push(subRow)
                 groupedRowsById[subRow.id] = subRow
                 // if (subRow.getIsGrouped?.()) {
