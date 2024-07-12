@@ -207,15 +207,15 @@ export function table_getPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._getPaginatedRowModel) {
-    table._getPaginatedRowModel = table.options._rowModels?.Paginated?.(table)
+  if (!table._rowModels.Paginated) {
+    table._rowModels.Paginated = table.options._rowModels?.Paginated?.(table)
   }
 
-  if (table.options.manualPagination || !table._getPaginatedRowModel) {
+  if (table.options.manualPagination || !table._rowModels.Paginated) {
     return table_getPrePaginationRowModel(table)
   }
 
-  return table._getPaginatedRowModel()
+  return table._rowModels.Paginated()
 }
 
 export function table_getPageCount<

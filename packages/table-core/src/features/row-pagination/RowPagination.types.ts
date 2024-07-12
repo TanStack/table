@@ -58,7 +58,6 @@ export interface Table_RowPagination<
   TData extends RowData,
 > {
   _autoResetPageIndex: () => void
-  _getPaginatedRowModel?: () => RowModel<TFeatures, TData>
   /**
    * Returns whether the table can go to the next page.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getcannextpage)

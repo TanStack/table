@@ -2,7 +2,9 @@
  * Core
  */
 
-export * from './helpers'
+export * from './helpers/columnHelper'
+export * from './helpers/tableOptions'
+export * from './helpers/tableFactory'
 export * from './types'
 export * from './utils'
 export * from './utils.types'

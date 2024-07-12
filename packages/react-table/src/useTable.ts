@@ -33,7 +33,7 @@ export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
-  const [state, setState] = React.useState<TableState>(
+  const [state, setState] = React.useState<TableState<TFeatures>>(
     getInitialTableState(builtInFeatures, tableOptions.initialState),
   )
 

@@ -1,31 +1,36 @@
-import { createColumnHelper } from '@tanstack/table-core'
+import { _createTableFactory } from '@tanstack/table-core'
 import { useTable } from './useTable'
 import type {
-  ColumnHelper,
-  RequiredKeys,
   RowData,
+  Table,
+  TableFactoryOptions,
   TableFeatures,
   TableOptions,
+  _TableFactory,
 } from '@tanstack/table-core'
 
-export function tableFactory<
+export type TableFactory<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TOptions extends RequiredKeys<
-    Omit<TableOptions<TFeatures, TData>, 'columns' | 'data'>,
-    '_features'
-  >,
+> = Omit<_TableFactory<TFeatures, TData>, '_createTable'> & {
+  useTable: (
+    tableOptions: Omit<
+      TableOptions<TFeatures, TData>,
+      '_features' | '_rowModels'
+    >,
+  ) => Table<TFeatures, TData>
+}
+
+export function createTableFactory<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
 >(
-  options: TOptions & { TData: TData },
-): {
-  columnHelper: ColumnHelper<TFeatures, TData>
-  options: TOptions
-  useTable: typeof useTable
-} {
+  tableFactoryOptions: TableFactoryOptions<TFeatures, TData>,
+): TableFactory<TFeatures, TData> {
+  const factory = _createTableFactory(useTable, tableFactoryOptions)
   return {
-    columnHelper: createColumnHelper(),
-    options,
-    useTable,
+    ...factory,
+    useTable: factory._createTable,
   }
 }
 
@@ -37,21 +42,21 @@ export function tableFactory<
 //   age: number
 // }
 
-// const factory = tableFactory({
+// const tableFactory = createTableFactory({
 //   TData: {} as Person,
-//   _features: { RowSelection: {} },
+//   features: { RowSelection: {} },
 // })
 
-// const columns = [
-//   factory.columnHelper.accessor('firstName', { header: 'First Name' }),
-//   factory.columnHelper.accessor('lastName', { header: 'Last Name' }),
-//   factory.columnHelper.accessor('age', { header: 'Age' }),
-//   factory.columnHelper.display({ header: 'Actions', id: 'actions' }),
-// ]
+// const columns = tableFactory.columnHelper.columns([
+//   tableFactory.columnHelper.accessor('firstName', { header: 'First Name' }),
+//   tableFactory.columnHelper.accessor('lastName', { header: 'Last Name' }),
+//   tableFactory.columnHelper.accessor('age', { header: 'Age' }),
+//   tableFactory.columnHelper.display({ header: 'Actions', id: 'actions' }),
+// ])
 
 // const data: Array<Person> = []
 
-// const table = factory.useTable({
+// tableFactory.useTable({
 //   columns,
 //   data,
 // })

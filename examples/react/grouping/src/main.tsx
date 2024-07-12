@@ -4,92 +4,37 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  ColumnFiltering,
+  ColumnGrouping,
+  RowExpanding,
+  RowPagination,
+  RowSorting,
   createCoreRowModel,
   createExpandedRowModel,
   createFilteredRowModel,
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  createTableFactory,
   flexRender,
-  useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef, GroupingState } from '@tanstack/react-table'
+import type { GroupingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
-    () => [
-      {
-        header: 'Name',
-        columns: [
-          {
-            accessorKey: 'firstName',
-            header: 'First Name',
-            cell: (info) => info.getValue(),
-            /**
-             * override the value used for row grouping
-             * (otherwise, defaults to the value derived from accessorKey / accessorFn)
-             */
-            getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
-          },
-          {
-            accessorFn: (row) => row.lastName,
-            id: 'lastName',
-            header: () => <span>Last Name</span>,
-            cell: (info) => info.getValue(),
-          },
-        ],
-      },
-      {
-        header: 'Info',
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            aggregatedCell: ({ getValue }) =>
-              Math.round(getValue<number>() * 100) / 100,
-            aggregationFn: 'median',
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                aggregationFn: 'sum',
-                // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                cell: ({ getValue }) =>
-                  Math.round(getValue<number>() * 100) / 100 + '%',
-                aggregationFn: 'mean',
-                aggregatedCell: ({ getValue }) =>
-                  Math.round(getValue<number>() * 100) / 100 + '%',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    [],
-  )
-
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
-
-  const [grouping, setGrouping] = React.useState<GroupingState>([])
-
-  const table = useTable({
-    _rowModels: {
+  const tableFactory = createTableFactory({
+    TData: {} as Person,
+    features: {
+      ColumnFiltering,
+      RowPagination,
+      RowSorting,
+      ColumnGrouping,
+      RowExpanding,
+    },
+    rowModels: {
       Core: createCoreRowModel(),
       Filtered: createFilteredRowModel(),
       Paginated: createPaginatedRowModel(),
@@ -97,6 +42,78 @@ function App() {
       Grouped: createGroupedRowModel(),
       Expanded: createExpandedRowModel(),
     },
+  })
+
+  const columns = React.useMemo(
+    () =>
+      tableFactory.columnHelper.columns([
+        {
+          header: 'Name',
+          columns: [
+            {
+              accessorKey: 'firstName',
+              header: 'First Name',
+              cell: (info) => info.getValue(),
+              /**
+               * override the value used for row grouping
+               * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+               */
+              getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+            },
+            {
+              accessorFn: (row) => row.lastName,
+              id: 'lastName',
+              header: () => <span>Last Name</span>,
+              cell: (info) => info.getValue(),
+            },
+          ],
+        },
+        {
+          header: 'Info',
+          columns: [
+            {
+              accessorKey: 'age',
+              header: () => 'Age',
+              aggregatedCell: ({ getValue }) =>
+                Math.round(getValue<number>() * 100) / 100,
+              aggregationFn: 'median',
+            },
+            {
+              header: 'More Info',
+              columns: [
+                {
+                  accessorKey: 'visits',
+                  header: () => <span>Visits</span>,
+                  aggregationFn: 'sum',
+                  // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+                },
+                {
+                  accessorKey: 'status',
+                  header: 'Status',
+                },
+                {
+                  accessorKey: 'progress',
+                  header: 'Profile Progress',
+                  cell: ({ getValue }) =>
+                    Math.round(getValue<number>() * 100) / 100 + '%',
+                  aggregationFn: 'mean',
+                  aggregatedCell: ({ getValue }) =>
+                    Math.round(getValue<number>() * 100) / 100 + '%',
+                },
+              ],
+            },
+          ],
+        },
+      ]),
+    [],
+  )
+
+  const [data, setData] = React.useState(() => makeData(1000))
+  const refreshData = () => setData(() => makeData(1000))
+
+  const [grouping, setGrouping] = React.useState<GroupingState>([])
+
+  const table = tableFactory.useTable({
     columns,
     data,
     state: {
