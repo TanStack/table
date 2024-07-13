@@ -12,7 +12,7 @@ import type {
 export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Omit<_TableHelper<TFeatures, TData>, '_createTable'> & {
+> = Omit<_TableHelper<TFeatures, TData>, 'tableCreator'> & {
   useTable: (
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
@@ -39,7 +39,7 @@ export function createTableHelper<
   }
 }
 
-//test
+// test 1 - TData in table helper
 
 // type Person = {
 //   firstName: string
@@ -63,5 +63,30 @@ export function createTableHelper<
 
 // tableHelper.useTable({
 //   columns,
+//   data,
+// })
+
+// test 2 - TData in column helper
+
+// const tableHelper2 = createTableHelper({
+//   features: { RowSelection: {} },
+// })
+
+// const columns2 = tableHelper2.columnHelper.columns<
+//   typeof tableHelper2.features,
+//   Person
+// >([
+//   tableHelper2.columnHelper.accessor('firstName', {
+//     header: 'First Name',
+//   }),
+//   tableHelper2.columnHelper.accessor('lastName', {
+//     header: 'Last Name',
+//   }),
+//   tableHelper2.columnHelper.accessor('age', { header: 'Age' }),
+//   tableHelper2.columnHelper.display({ header: 'Actions', id: 'actions' }),
+// ])
+
+// tableHelper2.useTable({
+//   columns: columns2,
 //   data,
 // })
