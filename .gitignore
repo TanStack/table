@@ -7,7 +7,6 @@ package-lock.json
 yarn.lock
 
 # builds
-types
 build
 dist
 lib
