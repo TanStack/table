@@ -1,13 +1,9 @@
-import type {
-  Cell,
-  CellData,
-  Column,
-  Row,
-  RowData,
-  Table,
-  TableFeatures,
-} from '../../types'
-import type { Getter } from '../../utils.types'
+import type { CellData, Getter, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
+import type { Cell } from '../../types/Cell'
+import type { Column } from '../../types/Column'
 
 export interface CellContext<
   TFeatures extends TableFeatures,

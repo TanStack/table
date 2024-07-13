@@ -6,14 +6,11 @@ import {
   table_getCoreRowModel,
   table_getRowModel,
 } from '../../core/table/Tables.utils'
-import type {
-  Row,
-  RowData,
-  RowModel,
-  Table,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 import type { RowSelectionState } from './RowSelection.types'
 
 export function table_setRowSelection<

@@ -1,32 +1,31 @@
 import { createColumnHelper } from './columnHelper'
 import type { ColumnHelper } from './columnHelper'
-import type {
-  RowData,
-  RowModelOptions,
-  Table,
-  TableFeatures,
-  TableOptions,
-} from '../types'
+import type { RowData } from '../types/type-utils'
+import type { TableFeatures } from '../types/TableFeatures'
+import type { RowModelOptions } from '../types/RowModel'
+import type { Table } from '../types/Table'
+import type { TableOptions } from '../types/TableOptions'
 
-export type TableFactoryOptions<
+export type TableHelperOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Omit<
   TableOptions<TFeatures, TData>,
   '_features' | '_rowModels' | 'columns' | 'data' | 'state'
 > & {
-  TData: TData
+  TData?: TData
   features: TFeatures
   rowModels?: RowModelOptions<TFeatures, TData>
 }
 
-export type _TableFactory<
+export type _TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = {
   columnHelper: ColumnHelper<TFeatures, TData>
+  features: TFeatures
   options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'>
-  _createTable: (
+  tableCreator: (
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
@@ -34,36 +33,37 @@ export type _TableFactory<
   ) => Table<TFeatures, TData>
 }
 
-export function _createTableFactory<
+export function _createTableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  _createTable: (
+  tableCreator: (
     tableOptions: TableOptions<TFeatures, TData>,
   ) => Table<TFeatures, TData>,
   {
     TData: _TData,
     features,
     rowModels,
-    ...tableFactoryOptions
-  }: TableFactoryOptions<TFeatures, TData>,
-): _TableFactory<TFeatures, TData> {
+    ...tableHelperOptions
+  }: TableHelperOptions<TFeatures, TData>,
+): _TableHelper<TFeatures, TData> {
   const _tableOptions = {
     _features: features,
     _rowModels: rowModels,
-    ...tableFactoryOptions,
+    ...tableHelperOptions,
   }
   return {
-    columnHelper: createColumnHelper(),
+    columnHelper: createColumnHelper<TFeatures, TData>(),
+    features,
     options: _tableOptions,
-    _createTable: (tableOptions) =>
-      _createTable({ ..._tableOptions, ...tableOptions }),
+    tableCreator: (tableOptions) =>
+      tableCreator({ ..._tableOptions, ...tableOptions }),
   }
 }
 
 //test
 
-//// eslint-disable-next-line import/first, import/order
+// // eslint-disable-next-line import/first, import/order
 // import { _createTable } from '../core/table/createTable'
 
 // type Person = {
@@ -72,21 +72,21 @@ export function _createTableFactory<
 //   age: number
 // }
 
-// const tableFactory = _createTableFactory(_createTable, {
+// const tableHelper = _createTableHelper(_createTable, {
 //   TData: {} as Person,
 //   features: { RowSelection: {} },
 // })
 
-// const columns = tableFactory.columnHelper.columns([
-//   tableFactory.columnHelper.accessor('firstName', { header: 'First Name' }),
-//   tableFactory.columnHelper.accessor('lastName', { header: 'Last Name' }),
-//   tableFactory.columnHelper.accessor('age', { header: 'Age' }),
-//   tableFactory.columnHelper.display({ header: 'Actions', id: 'actions' }),
+// const columns = tableHelper.columnHelper.columns([
+//   tableHelper.columnHelper.accessor('firstName', { header: 'First Name' }),
+//   tableHelper.columnHelper.accessor('lastName', { header: 'Last Name' }),
+//   tableHelper.columnHelper.accessor('age', { header: 'Age' }),
+//   tableHelper.columnHelper.display({ header: 'Actions', id: 'actions' }),
 // ])
 
 // const data: Array<Person> = []
 
-// tableFactory._createTable({
+// tableHelper.tableCreator({
 //   columns,
 //   data,
 // })

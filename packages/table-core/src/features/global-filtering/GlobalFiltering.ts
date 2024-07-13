@@ -7,15 +7,11 @@ import {
   table_resetGlobalFilter,
   table_setGlobalFilter,
 } from './GlobalFiltering.utils'
-import type {
-  CellData,
-  Column,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-  TableState,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { TableState } from '../../types/TableState'
+import type { Column } from '../../types/Column'
 import type {
   Column_GlobalFiltering,
   TableOptions_GlobalFiltering,

@@ -1,5 +1,8 @@
 import { row_getValue } from '../rows/Rows.utils'
-import type { Cell, CellData, RowData, Table, TableFeatures } from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Cell } from '../../types/Cell'
 
 export function cell_getValue<
   TFeatures extends TableFeatures,

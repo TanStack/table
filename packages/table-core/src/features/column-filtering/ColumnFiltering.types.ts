@@ -1,17 +1,18 @@
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 import type {
   CellData,
-  Column,
-  FilterFns,
-  FilterMeta,
   OnChangeFn,
-  Row,
   RowData,
-  RowModel,
-  Table,
-  TableFeatures,
   Updater,
-} from '../../types'
+} from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Row } from '../../types/Row'
+import type { Column } from '../../types/Column'
+
+export interface FilterMeta {}
+
+export interface FilterFns {}
 
 export interface TableState_ColumnFiltering {
   columnFilters: ColumnFiltersState

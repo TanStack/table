@@ -1,13 +1,9 @@
-import type {
-  Cell,
-  Column,
-  Header,
-  HeaderGroup,
-  OnChangeFn,
-  RowData,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Cell } from '../../types/Cell'
+import type { Header } from '../../types/Header'
+import type { HeaderGroup } from '../../types/HeaderGroup'
+import type { Column } from '../../types/Column'
 
 export type ColumnPinningPosition = false | 'left' | 'right'
 

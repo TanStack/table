@@ -14,15 +14,11 @@ import {
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
 } from './ColumnVisibility.utils'
-import type {
-  CellData,
-  Column,
-  Row,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
+import type { Column } from '../../types/Column'
 import type {
   TableState_ColumnVisibility,
   VisibilityDefaultOptions,

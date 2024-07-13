@@ -1,11 +1,9 @@
 import { buildHeaderGroups } from './buildHeaderGroups'
-import type {
-  Column,
-  HeaderGroup,
-  RowData,
-  Table,
-  TableFeatures,
-} from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { HeaderGroup } from '../../types/HeaderGroup'
+import type { Column } from '../../types/Column'
 
 export function table_getHeaderGroups<
   TFeatures extends TableFeatures,

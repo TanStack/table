@@ -1,11 +1,7 @@
-import type {
-  Cell,
-  Column,
-  OnChangeFn,
-  RowData,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Cell } from '../../types/Cell'
+import type { Column } from '../../types/Column'
 
 export type ColumnVisibilityState = Record<string, boolean>
 

@@ -1,12 +1,7 @@
-import type { NoInfer } from './utils.types'
-import type {
-  RowData,
-  TableFeature,
-  TableFeatures,
-  TableOptions,
-  TableState,
-  Updater,
-} from './types'
+import type { NoInfer, RowData, Updater } from './types/type-utils'
+import type { TableFeatures } from './types/TableFeatures'
+import type { TableOptions } from './types/TableOptions'
+import type { TableState } from './types/TableState'
 
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'

@@ -1,11 +1,6 @@
-import type {
-  OnChangeFn,
-  RowData,
-  RowModel,
-  Table,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
 
 export interface PaginationState {
   pageIndex: number

@@ -1,22 +1,23 @@
 import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
 import type {
-  AggregationFns,
-  Cell,
   CellData,
-  ColumnDefTemplate,
   OnChangeFn,
-  Row,
   RowData,
-  RowModel,
-  TableFeatures,
   Updater,
-} from '../../types'
+} from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Row } from '../../types/Row'
+import type { Cell } from '../../types/Cell'
+import type { ColumnDefTemplate } from '../../types/ColumnDef'
 
 export type GroupingState = Array<string>
 
 export interface TableState_ColumnGrouping {
   grouping: GroupingState
 }
+
+export interface AggregationFns {}
 
 export type AggregationFn<
   TFeatures extends TableFeatures,

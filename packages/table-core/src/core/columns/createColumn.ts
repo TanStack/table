@@ -1,13 +1,12 @@
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
 import type {
   AccessorFn,
-  CellData,
-  Column,
   ColumnDef,
   ColumnDefResolved,
-  RowData,
-  Table,
-  TableFeatures,
-} from '../../types'
+} from '../../types/ColumnDef'
+import type { Column } from '../../types/Column'
 import type { Column_CoreProperties } from './Columns.types'
 
 export function _createColumn<

@@ -1,5 +1,8 @@
 import { _createCell } from '../cells/createCell'
-import type { Cell, Row, RowData, TableFeatures } from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Row } from '../../types/Row'
+import type { Cell } from '../../types/Cell'
 
 export interface Row_CoreProperties<
   TFeatures extends TableFeatures,

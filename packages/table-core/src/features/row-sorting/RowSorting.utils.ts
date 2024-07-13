@@ -4,15 +4,11 @@ import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.u
 import { row_getValue } from '../../core/rows/Rows.utils'
 import { table_getGroupedRowModel } from '../column-grouping/ColumnGrouping.utils'
 import type { BuiltInSortingFn } from '../../fns/sortingFns'
-import type {
-  CellData,
-  Column,
-  RowData,
-  RowModel,
-  Table,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { CellData, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Column } from '../../types/Column'
 import type { SortingState } from './RowSorting.types'
 
 export function column_getAutoSortingFn<

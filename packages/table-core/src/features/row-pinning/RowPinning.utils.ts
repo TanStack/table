@@ -5,7 +5,10 @@ import {
 } from '../../core/rows/Rows.utils'
 import { row_getIsAllParentsExpanded } from '../row-expanding/RowExpanding.utils'
 import { table_getRowModel } from '../../core/table/Tables.utils'
-import type { Row, RowData, Table, TableFeatures, Updater } from '../../types'
+import type { RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 import type { RowPinningPosition, RowPinningState } from './RowPinning.types'
 
 /**

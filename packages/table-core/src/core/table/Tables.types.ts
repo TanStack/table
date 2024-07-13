@@ -1,16 +1,20 @@
+import type { RowData, Updater } from '../../types/type-utils'
+import type {
+  CoreTableFeatures,
+  TableFeatures,
+} from '../../types/TableFeatures'
 import type {
   CachedRowModels,
-  CoreTableFeatures,
-  RowData,
   RowModel,
   RowModelOptions,
-  TableFeatures,
-  TableMeta,
-  TableOptions,
-  TableOptions_All,
-  TableState,
-  Updater,
-} from '../../types'
+} from '../../types/RowModel'
+import type { TableOptions } from '../../types/TableOptions'
+import type { TableState } from '../../types/TableState'
+
+export interface TableMeta<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {}
 
 export interface TableOptions_Table<
   TFeatures extends TableFeatures,

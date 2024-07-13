@@ -1,15 +1,12 @@
 import { table_getPaginatedRowModel } from '../../features/row-pagination/RowPagination.utils'
 import { functionalUpdate } from '../../utils'
 import { createCoreRowModel } from './createCoreRowModel'
-import type {
-  RowData,
-  RowModel,
-  Table,
-  TableFeatures,
-  TableOptions,
-  TableState,
-  Updater,
-} from '../../types'
+import type { RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { TableOptions } from '../../types/TableOptions'
+import type { TableState } from '../../types/TableState'
 
 export function table_reset<
   TFeatures extends TableFeatures,

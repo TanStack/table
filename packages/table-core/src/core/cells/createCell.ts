@@ -1,12 +1,9 @@
-import type {
-  Cell,
-  CellData,
-  Column,
-  Row,
-  RowData,
-  Table,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
+import type { Cell } from '../../types/Cell'
+import type { Column } from '../../types/Column'
 import type { Cell_CoreProperties } from './Cells.types'
 
 export function _createCell<

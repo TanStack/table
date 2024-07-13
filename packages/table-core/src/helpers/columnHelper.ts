@@ -1,3 +1,5 @@
+import type { DeepKeys, DeepValue, RowData } from '../types/type-utils'
+import type { TableFeatures } from '../types/TableFeatures'
 import type {
   AccessorFn,
   AccessorFnColumnDef,
@@ -6,10 +8,7 @@ import type {
   DisplayColumnDef,
   GroupColumnDef,
   IdentifiedColumnDef,
-  RowData,
-  TableFeatures,
-} from '../types'
-import type { DeepKeys, DeepValue } from '../utils.types'
+} from '../types/ColumnDef'
 
 export type ColumnHelper<
   TFeatures extends TableFeatures,
@@ -31,7 +30,7 @@ export type ColumnHelper<
     ? AccessorFnColumnDef<TFeatures, TData, TValue>
     : AccessorKeyColumnDef<TFeatures, TData, TValue>
 
-  columns: (
+  columns: <TFeatures extends TableFeatures, TData extends RowData>(
     columns:
       | Array<ColumnDef<TFeatures, TData, any>>
       | DisplayColumnDef<TFeatures, TData, any>
@@ -40,11 +39,11 @@ export type ColumnHelper<
 
   display: (
     column: DisplayColumnDef<TFeatures, TData, any>,
-  ) => DisplayColumnDef<TFeatures, TData, unknown>
+  ) => DisplayColumnDef<TFeatures, TData>
 
   group: (
     column: GroupColumnDef<TFeatures, TData>,
-  ) => GroupColumnDef<TFeatures, TData, unknown>
+  ) => GroupColumnDef<TFeatures, TData>
 }
 
 /**

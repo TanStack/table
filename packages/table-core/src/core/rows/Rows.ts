@@ -11,13 +11,10 @@ import {
   table_getRow,
   table_getRowId,
 } from './Rows.utils'
-import type {
-  Row,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-} from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 
 export const Rows: TableFeature = {
   _createRow: <TFeatures extends TableFeatures, TData extends RowData>(

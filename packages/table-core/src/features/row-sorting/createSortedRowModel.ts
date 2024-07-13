@@ -2,7 +2,11 @@ import { getMemoOptions, memo } from '../../utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { column_getCanSort, column_getSortingFn } from './RowSorting.utils'
-import type { Row, RowData, RowModel, Table, TableFeatures } from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 import type { SortingFn } from './RowSorting.types'
 
 export function createSortedRowModel<

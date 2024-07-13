@@ -1,11 +1,7 @@
-import type {
-  OnChangeFn,
-  Row,
-  RowData,
-  RowModel,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Row } from '../../types/Row'
 
 export type RowSelectionState = Record<string, boolean>
 

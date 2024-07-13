@@ -1,14 +1,13 @@
 import { _createColumn } from './createColumn'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
 import type {
-  CellData,
-  Column,
   ColumnDef,
   ColumnDefResolved,
   GroupColumnDef,
-  RowData,
-  Table,
-  TableFeatures,
-} from '../../types'
+} from '../../types/ColumnDef'
+import type { Column } from '../../types/Column'
 
 export function column_getFlatColumns<
   TFeatures extends TableFeatures,

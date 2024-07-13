@@ -2,4 +2,4 @@ export * from '@tanstack/table-core'
 
 export * from './useTable'
 export * from './FlexRender'
-export * from './tableFactory'
+export * from './tableHelper'

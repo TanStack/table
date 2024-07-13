@@ -1,13 +1,9 @@
 import { getMemoOptions, memo } from '../../utils'
 import { cell_getContext, cell_getValue, cell_renderValue } from './Cells.utils'
-import type {
-  Cell,
-  CellData,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Cell } from '../../types/Cell'
 
 export const Cells: TableFeature = {
   _createCell: <

@@ -1,11 +1,8 @@
-import type {
-  CellData,
-  Column,
-  Header,
-  RowData,
-  Table,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Header } from '../../types/Header'
+import type { Column } from '../../types/Column'
 import type { Header_CoreProperties } from './Headers.types'
 
 export function _createHeader<

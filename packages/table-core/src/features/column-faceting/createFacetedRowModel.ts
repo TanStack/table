@@ -1,6 +1,10 @@
 import { getMemoOptions, memo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
-import type { Row, RowData, RowModel, Table, TableFeatures } from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 
 export function createFacetedRowModel<
   TFeatures extends TableFeatures,

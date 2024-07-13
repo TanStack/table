@@ -12,16 +12,11 @@ import {
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './ColumnFiltering.utils'
-import type {
-  CellData,
-  Column,
-  Row,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { CellData, RowData, Updater } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
+import type { Column } from '../../types/Column'
 import type {
   ColumnDef_ColumnFiltering,
   ColumnFiltersState,

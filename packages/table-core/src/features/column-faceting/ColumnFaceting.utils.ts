@@ -1,12 +1,9 @@
 import { table_getPreFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
-import type {
-  CellData,
-  Column,
-  RowData,
-  RowModel,
-  Table,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Column } from '../../types/Column'
 
 export function column_getFacetedMinMaxValues<
   TFeatures extends TableFeatures,

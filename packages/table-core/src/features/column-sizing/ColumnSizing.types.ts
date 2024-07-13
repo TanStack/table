@@ -1,4 +1,4 @@
-import type { OnChangeFn, Updater } from '../../types'
+import type { OnChangeFn, Updater } from '../../types/type-utils'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 
 export interface TableState_ColumnSizing {

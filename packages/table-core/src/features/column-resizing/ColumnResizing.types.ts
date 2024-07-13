@@ -1,4 +1,4 @@
-import type { OnChangeFn, Updater } from '../../types'
+import type { OnChangeFn, Updater } from '../../types/type-utils'
 
 export interface TableState_ColumnResizing {
   columnSizingInfo: ColumnResizingInfoState

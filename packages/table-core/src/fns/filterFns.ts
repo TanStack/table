@@ -1,4 +1,6 @@
-import type { Row, RowData, TableFeatures } from '../types'
+import type { RowData } from '../types/type-utils'
+import type { TableFeatures } from '../types/TableFeatures'
+import type { Row } from '../types/Row'
 import type { FilterFn } from '../features/column-filtering/ColumnFiltering.types'
 
 const includesString: FilterFn<any, any> = <

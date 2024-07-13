@@ -1,6 +1,8 @@
 import { getMemoOptions, memo } from '../../utils'
 import { row_getUniqueValues } from '../../core/rows/Rows.utils'
-import type { RowData, Table, TableFeatures } from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
 
 export function createFacetedUniqueValues<
   TFeatures extends TableFeatures,

@@ -1,14 +1,9 @@
-import { Row } from '../../types'
 import { getMemoOptions, memo } from '../../utils'
-import type {
-  Cell,
-  CellData,
-  Column,
-  RowData,
-  Table,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { CellData, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Cell } from '../../types/Cell'
+import type { Column } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 import type { ColumnVisibilityState } from './ColumnVisibility.types'
 

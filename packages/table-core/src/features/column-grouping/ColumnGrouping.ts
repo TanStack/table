@@ -17,16 +17,12 @@ import {
   table_resetGrouping,
   table_setGrouping,
 } from './ColumnGrouping.utils'
-import type {
-  Cell,
-  CellData,
-  Column,
-  Row,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
+import type { Cell } from '../../types/Cell'
+import type { Column } from '../../types/Column'
 import type {
   ColumnDef_ColumnGrouping,
   TableOptions_ColumnGrouping,
@@ -40,8 +36,7 @@ export const ColumnGrouping: TableFeature = {
     TValue extends CellData = CellData,
   >(): ColumnDef_ColumnGrouping<TFeatures, TData, TValue> => {
     return {
-      aggregatedCell: (props) =>
-        (props.getValue() as any)?.toString?.() ?? null,
+      aggregatedCell: (props) => props.getValue()?.toString?.() ?? null,
       aggregationFn: 'auto',
     }
   },

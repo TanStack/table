@@ -7,14 +7,10 @@ import {
   table_getLeafHeaders,
 } from './Headers.utils'
 import type { Header_Header } from './Headers.types'
-import type {
-  CellData,
-  Header,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Header } from '../../types/Header'
 
 export const Headers: TableFeature = {
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(

@@ -2,7 +2,11 @@ import { _createRow } from '../../core/rows/createRow'
 import { flattenBy, getMemoOptions, memo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { row_getGroupingValue } from './ColumnGrouping.utils'
-import type { Row, RowData, RowModel, Table, TableFeatures } from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 
 export function createGroupedRowModel<
   TFeatures extends TableFeatures,

@@ -1,4 +1,6 @@
-import type { RowData, TableFeatures, TableOptions } from '../types'
+import type { RowData } from '../types/type-utils'
+import type { TableFeatures } from '../types/TableFeatures'
+import type { TableOptions } from '../types/TableOptions'
 
 export function tableOptions<
   TFeatures extends TableFeatures,

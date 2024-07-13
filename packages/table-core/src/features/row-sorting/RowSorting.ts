@@ -22,14 +22,10 @@ import type {
   TableOptions_RowSorting,
   TableState_RowSorting,
 } from './RowSorting.types'
-import type {
-  CellData,
-  Column,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Column } from '../../types/Column'
 
 export const RowSorting: TableFeature = {
   _getInitialState: (state): TableState_RowSorting => {

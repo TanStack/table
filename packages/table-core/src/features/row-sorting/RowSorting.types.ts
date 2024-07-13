@@ -1,13 +1,8 @@
 import type { BuiltInSortingFn } from '../../fns/sortingFns'
-import type {
-  OnChangeFn,
-  Row,
-  RowData,
-  RowModel,
-  SortingFns,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Row } from '../../types/Row'
 
 export type SortDirection = 'asc' | 'desc'
 
@@ -21,6 +16,8 @@ export type SortingState = Array<ColumnSort>
 export interface TableState_RowSorting {
   sorting: SortingState
 }
+
+export interface SortingFns {}
 
 export interface SortingFn<
   TFeatures extends TableFeatures,

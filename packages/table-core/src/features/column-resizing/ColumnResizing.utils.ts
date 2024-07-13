@@ -1,14 +1,10 @@
 import { table_setColumnSizing } from '../column-sizing/ColumnSizing.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
-import type {
-  CellData,
-  Column,
-  Header,
-  RowData,
-  Table,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { CellData, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Header } from '../../types/Header'
+import type { Column } from '../../types/Column'
 import type { ColumnSizingState } from '../column-sizing/ColumnSizing.types'
 import type { ColumnResizingInfoState } from './ColumnResizing.types'
 

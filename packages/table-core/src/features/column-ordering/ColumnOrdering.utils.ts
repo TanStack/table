@@ -1,12 +1,8 @@
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
-import type {
-  CellData,
-  Column,
-  RowData,
-  Table,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { CellData, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Column } from '../../types/Column'
 import type {
   GroupingColumnMode,
   GroupingState,

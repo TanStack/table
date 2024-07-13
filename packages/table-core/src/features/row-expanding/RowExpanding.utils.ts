@@ -2,14 +2,11 @@ import { table_getPrePaginationRowModel } from '../row-pagination/RowPagination.
 import { table_getSortedRowModel } from '../row-sorting/RowSorting.utils'
 import { table_getRow } from '../../core/rows/Rows.utils'
 import { table_getRowModel } from '../../core/table/Tables.utils'
-import type {
-  Row,
-  RowData,
-  RowModel,
-  Table,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 import type { ExpandedState, ExpandedStateList } from './RowExpanding.types'
 
 export function table_autoResetExpanded<

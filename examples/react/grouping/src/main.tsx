@@ -15,38 +15,37 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  createTableFactory,
+  createTableHelper,
   flexRender,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { GroupingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
+const tableHelper = createTableHelper({
+  features: {
+    ColumnFiltering,
+    RowPagination,
+    RowSorting,
+    ColumnGrouping,
+    RowExpanding,
+  },
+  rowModels: {
+    Core: createCoreRowModel(),
+    Filtered: createFilteredRowModel(),
+    Paginated: createPaginatedRowModel(),
+    Sorted: createSortedRowModel(),
+    Grouped: createGroupedRowModel(),
+    Expanded: createExpandedRowModel(),
+  },
+})
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const tableFactory = createTableFactory({
-    TData: {} as Person,
-    features: {
-      ColumnFiltering,
-      RowPagination,
-      RowSorting,
-      ColumnGrouping,
-      RowExpanding,
-    },
-    rowModels: {
-      Core: createCoreRowModel(),
-      Filtered: createFilteredRowModel(),
-      Paginated: createPaginatedRowModel(),
-      Sorted: createSortedRowModel(),
-      Grouped: createGroupedRowModel(),
-      Expanded: createExpandedRowModel(),
-    },
-  })
-
   const columns = React.useMemo(
     () =>
-      tableFactory.columnHelper.columns([
+      tableHelper.columnHelper.columns<typeof tableHelper.features, Person>([
         {
           header: 'Name',
           columns: [
@@ -108,12 +107,12 @@ function App() {
     [],
   )
 
-  const [data, setData] = React.useState(() => makeData(1000))
-  const refreshData = () => setData(() => makeData(1000))
+  const [data, setData] = React.useState(() => makeData(10_000))
+  const refreshData = () => setData(() => makeData(100_000)) //stress test
 
   const [grouping, setGrouping] = React.useState<GroupingState>([])
 
-  const table = tableFactory.useTable({
+  const table = tableHelper.useTable({
     columns,
     data,
     state: {
@@ -169,17 +168,15 @@ function App() {
                 {row.getVisibleCells().map((cell) => {
                   return (
                     <td
-                      {...{
-                        key: cell.id,
-                        style: {
-                          background: cell.getIsGrouped()
-                            ? '#0aff0082'
-                            : cell.getIsAggregated()
-                              ? '#ffa50078'
-                              : cell.getIsPlaceholder()
-                                ? '#ff000042'
-                                : 'white',
-                        },
+                      key={cell.id}
+                      style={{
+                        background: cell.getIsGrouped()
+                          ? '#0aff0082'
+                          : cell.getIsAggregated()
+                            ? '#ffa50078'
+                            : cell.getIsPlaceholder()
+                              ? '#ff000042'
+                              : 'white',
                       }}
                     >
                       {cell.getIsGrouped() ? (

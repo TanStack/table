@@ -2,17 +2,13 @@ import { aggregationFns } from '../../fns/aggregationFns'
 import { isFunction } from '../../utils'
 import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
-import type {
-  Cell,
-  CellData,
-  Column,
-  Row,
-  RowData,
-  RowModel,
-  Table,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { CellData, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
+import type { Cell } from '../../types/Cell'
+import type { Column } from '../../types/Column'
 import type { GroupingState } from './ColumnGrouping.types'
 
 export function column_toggleGrouping<

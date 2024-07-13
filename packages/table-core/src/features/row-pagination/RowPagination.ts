@@ -24,7 +24,9 @@ import type {
   PaginationDefaultOptions,
   TableState_RowPagination,
 } from './RowPagination.types'
-import type { RowData, Table, TableFeature, TableFeatures } from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
 
 export const RowPagination: TableFeature = {
   _getInitialState: (state): TableState_RowPagination => {

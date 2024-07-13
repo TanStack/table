@@ -3,15 +3,11 @@ import { functionalUpdate, isFunction } from '../../utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
 import { table_getCoreRowModel } from '../../core/table/Tables.utils'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
-import type {
-  CellData,
-  Column,
-  RowData,
-  RowModel,
-  Table,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { CellData, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Column } from '../../types/Column'
 import type { ColumnFiltersState, FilterFn } from './ColumnFiltering.types'
 
 export function column_getAutoFilterFn<

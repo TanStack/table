@@ -8,10 +8,11 @@ export default [
   {
     name: 'tanstack/temp',
     rules: {
-      'ts/ban-types': 'off',
-      'ts/no-empty-function': 'off',
       'no-case-declarations': 'off',
+      'no-shadow': 'off',
+      'ts/ban-types': 'off',
       'ts/naming-convention': 'off',
+      'ts/no-empty-function': 'off',
       'ts/no-unnecessary-condition': 'warn',
     },
   },

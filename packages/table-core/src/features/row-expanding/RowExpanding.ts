@@ -17,13 +17,10 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './RowExpanding.utils'
-import type {
-  Row,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-} from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 import type {
   TableOptions_RowExpanding,
   TableState_RowExpanding,

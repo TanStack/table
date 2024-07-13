@@ -1,10 +1,6 @@
-import type {
-  OnChangeFn,
-  Row,
-  RowData,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Row } from '../../types/Row'
 
 export type RowPinningPosition = false | 'top' | 'bottom'
 

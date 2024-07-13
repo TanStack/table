@@ -1,12 +1,9 @@
-import type {
-  CellData,
-  Column,
-  Header,
-  HeaderGroup,
-  RowData,
-  Table,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Header } from '../../types/Header'
+import type { HeaderGroup } from '../../types/HeaderGroup'
+import type { Column } from '../../types/Column'
 
 export interface TableOptions_Headers {
   /**

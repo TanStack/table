@@ -1,4 +1,6 @@
-import type { RowData, RowModel, TableFeatures } from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
 
 export interface Column_ColumnFaceting<
   TFeatures extends TableFeatures,

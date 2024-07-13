@@ -3,14 +3,10 @@ import {
   column_getFacetedRowModel,
   column_getFacetedUniqueValues,
 } from './ColumnFaceting.utils'
-import type {
-  CellData,
-  Column,
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-} from '../../types'
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Column } from '../../types/Column'
 
 export const ColumnFaceting: TableFeature = {
   _createColumn: <

@@ -1,10 +1,6 @@
-import type {
-  Column,
-  OnChangeFn,
-  RowData,
-  TableFeatures,
-  Updater,
-} from '../../types'
+import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Column } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 
 export type ColumnOrderState = Array<string>

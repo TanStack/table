@@ -3,7 +3,11 @@ import { table_getColumn } from '../../core/columns/Columns.utils'
 import { table_getGlobalFilterFn } from '../global-filtering/GlobalFiltering.utils'
 import { filterRows } from './filterRowsUtils'
 import { column_getFilterFn } from './ColumnFiltering.utils'
-import type { Row, RowData, RowModel, Table, TableFeatures } from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowModel } from '../../types/RowModel'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 import type { ResolvedColumnFilter } from './ColumnFiltering.types'
 
 export function createFilteredRowModel<

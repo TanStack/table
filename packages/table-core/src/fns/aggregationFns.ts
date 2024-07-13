@@ -1,5 +1,7 @@
 import { isNumberArray } from '../utils'
-import type { Row, RowData, TableFeatures } from '../types'
+import type { RowData } from '../types/type-utils'
+import type { TableFeatures } from '../types/TableFeatures'
+import type { Row } from '../types/Row'
 import type { AggregationFn } from '../features/column-grouping/ColumnGrouping.types'
 
 const sum: AggregationFn<any, any> = <

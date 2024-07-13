@@ -1,12 +1,11 @@
+import type { CellData, RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
 import type {
   AccessorFn,
-  CellData,
-  Column,
   ColumnDef,
   ColumnDef_All,
-  RowData,
-  TableFeatures,
-} from '../../types'
+} from '../../types/ColumnDef'
+import type { Column } from '../../types/Column'
 
 export interface Column_CoreProperties<
   TFeatures extends TableFeatures,

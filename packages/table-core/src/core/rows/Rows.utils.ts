@@ -3,14 +3,12 @@ import { _createCell } from '../cells/createCell'
 import { table_getColumn } from '../columns/Columns.utils'
 import { table_getPrePaginationRowModel } from '../../features/row-pagination/RowPagination.utils'
 import { table_getCoreRowModel, table_getRowModel } from '../table/Tables.utils'
-import type {
-  Cell,
-  Column,
-  Row,
-  RowData,
-  Table,
-  TableFeatures,
-} from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
+import type { Cell } from '../../types/Cell'
+import type { Column } from '../../types/Column'
 
 export function row_getValue<
   TFeatures extends TableFeatures,

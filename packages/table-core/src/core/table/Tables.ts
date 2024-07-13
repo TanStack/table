@@ -6,7 +6,9 @@ import {
   table_setOptions,
   table_setState,
 } from './Tables.utils'
-import type { RowData, Table, TableFeature, TableFeatures } from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
 
 export const Tables: TableFeature = {
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(

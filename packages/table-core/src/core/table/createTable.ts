@@ -19,14 +19,11 @@ import { RowSelection } from '../../features/row-selection/RowSelection'
 import { RowSorting } from '../../features/row-sorting/RowSorting'
 import { Tables } from './Tables'
 import type { Table_CoreProperties } from './Tables.types'
-import type {
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-  TableOptions,
-  TableState,
-} from '../../types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { TableOptions } from '../../types/TableOptions'
+import type { TableState } from '../../types/TableState'
 
 export const coreFeatures = { Tables, Rows, Headers, Columns, Cells }
 

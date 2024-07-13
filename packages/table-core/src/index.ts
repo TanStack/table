@@ -1,13 +1,27 @@
 /**
+ * Types
+ */
+
+export * from './types/Cell'
+export * from './types/Column'
+export * from './types/ColumnDef'
+export * from './types/Header'
+export * from './types/HeaderGroup'
+export * from './types/Row'
+export * from './types/Table'
+export * from './types/TableFeatures'
+export * from './types/TableOptions'
+export * from './types/TableState'
+export * from './types/type-utils'
+
+/**
  * Core
  */
 
 export * from './helpers/columnHelper'
 export * from './helpers/tableOptions'
-export * from './helpers/tableFactory'
-export * from './types'
+export * from './helpers/tableHelper'
 export * from './utils'
-export * from './utils.types'
 
 //Cells
 export * from './core/cells/createCell'

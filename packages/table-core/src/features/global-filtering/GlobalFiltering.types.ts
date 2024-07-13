@@ -1,11 +1,11 @@
 import type {
   CellData,
-  Column,
   OnChangeFn,
   RowData,
-  TableFeatures,
   Updater,
-} from '../../types'
+} from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Column } from '../../types/Column'
 import type {
   FilterFn,
   FilterFnOption,
