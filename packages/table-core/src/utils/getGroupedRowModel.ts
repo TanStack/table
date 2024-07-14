@@ -65,7 +65,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
           // Group the rows together for this level
           const rowGroupsMap = groupBy(rows, columnId)
 
-          // Peform aggregations for each group
+          // Perform aggregations for each group
           const aggregatedGroupedRows = Array.from(rowGroupsMap.entries()).map(
             ([groupingValue, groupedRows], index) => {
               let id = `${columnId}:${groupingValue}`
@@ -73,6 +73,10 @@ export function getGroupedRowModel<TData extends RowData>(): (
 
               // First, Recurse to group sub rows before aggregation
               const subRows = groupUpRecursively(groupedRows, depth + 1, id)
+
+              subRows.forEach(subRow => {
+                subRow.parentId = id
+              })
 
               // Flatten the leaf rows of the rows in this group
               const leafRows = depth
@@ -130,10 +134,6 @@ export function getGroupedRowModel<TData extends RowData>(): (
               })
 
               subRows.forEach(subRow => {
-                if (!subRow.parentId) {
-                  Object.assign(subRow, { parentId: id })
-                }
-
                 groupedFlatRows.push(subRow)
                 groupedRowsById[subRow.id] = subRow
                 // if (subRow.getIsGrouped?.()) {
