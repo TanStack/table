@@ -947,12 +947,12 @@ importers:
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
-      '@lit-labs/virtualizer':
-        specifier: ^2.0.13
-        version: 2.0.13
       '@tanstack/lit-table':
         specifier: ^8.19.2
         version: link:../../../packages/lit-table
+      '@tanstack/lit-virtual':
+        specifier: ^3.8.3
+        version: 3.8.3(lit@3.1.4)
       lit:
         specifier: ^3.1.4
         version: 3.1.4
@@ -4618,9 +4618,6 @@ packages:
   '@lit-labs/ssr-dom-shim@1.2.0':
     resolution: {integrity: sha512-yWJKmpGE6lUURKAaIltoPIE/wrbY3TEkqQt+X0m+7fQNnAv0keydnYvbiJFP1PnMhizmIWRWOG5KLhYyc/xl+g==}
 
-  '@lit-labs/virtualizer@2.0.13':
-    resolution: {integrity: sha512-OKojbIFohfrRpWd3OxcVSc2nyTd0jx10ZSQobuOW9H9jYkad02OJ1uFvV/sHJey8hoh95FIO4d43h+Ry/G4nGw==}
-
   '@lit/reactive-element@2.0.4':
     resolution: {integrity: sha512-GFn91inaUa2oHLak8awSIigYz0cU0Payr1rcFsrkf5OJ5eSPxElyZfKh0f2p9FsTiZWXQdWGJeXZICEfXXYSXQ==}
 
@@ -5167,6 +5164,11 @@ packages:
     resolution: {integrity: sha512-euTyZoHidW1+NeAW9V7SSPNjD6c54TBqKBO8HypA880HWlTXLW6V8rcBnfi1LY1W706dGCvDmZDTg6fsl/jJUw==}
     engines: {node: '>=12'}
 
+  '@tanstack/lit-virtual@3.8.3':
+    resolution: {integrity: sha512-SONYxXVjK8G0ZL3XF1Byc/U0c3ZNKyzYzSr2y4IW58X55K7OrQrLvAjJb/p1ZVLcX1T6GVMoFA3zeFss1fRwXg==}
+    peerDependencies:
+      lit: ^3.1.0
+
   '@tanstack/query-core@5.49.0':
     resolution: {integrity: sha512-xUTjCPHC8G+ZvIUzjoMOLnMpNXYPQI4HjhlizTVVBwtSp24iWo4/kaBzHAzsrCVyfbiaPIFFkUvicsY4r8kF8A==}
 
@@ -5219,6 +5221,9 @@ packages:
 
   '@tanstack/virtual-core@3.8.1':
     resolution: {integrity: sha512-uNtAwenT276M9QYCjTBoHZ8X3MUeCRoGK59zPi92hMIxdfS9AyHjkDWJ94WroDxnv48UE+hIeo21BU84jKc8aQ==}
+
+  '@tanstack/virtual-core@3.8.3':
+    resolution: {integrity: sha512-vd2A2TnM5lbnWZnHi9B+L2gPtkSeOtJOAw358JqokIH1+v2J7vUAzFVPwB/wrye12RFOurffXu33plm4uQ+JBQ==}
 
   '@testing-library/dom@10.2.0':
     resolution: {integrity: sha512-CytIvb6tVOADRngTHGWNxH8LPgO/3hi/BdCEHOf7Qd2GvZVClhVP0Wo/QHzWhpki49Bk0b4VT6xpt3fx8HTSIw==}
@@ -12418,11 +12423,6 @@ snapshots:
 
   '@lit-labs/ssr-dom-shim@1.2.0': {}
 
-  '@lit-labs/virtualizer@2.0.13':
-    dependencies:
-      lit: 3.1.4
-      tslib: 2.6.3
-
   '@lit/reactive-element@2.0.4':
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.2.0
@@ -13008,6 +13008,11 @@ snapshots:
 
   '@tanstack/history@1.41.0': {}
 
+  '@tanstack/lit-virtual@3.8.3(lit@3.1.4)':
+    dependencies:
+      '@tanstack/virtual-core': 3.8.3
+      lit: 3.1.4
+
   '@tanstack/query-core@5.49.0': {}
 
   '@tanstack/react-query@5.49.0(react@18.3.1)':
@@ -13076,6 +13081,8 @@ snapshots:
   '@tanstack/store@0.1.3': {}
 
   '@tanstack/virtual-core@3.8.1': {}
+
+  '@tanstack/virtual-core@3.8.3': {}
 
   '@testing-library/dom@10.2.0':
     dependencies:

@@ -6,12 +6,14 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  Row,
   TableController,
 } from '@tanstack/lit-table'
-import config from '../twind.config'
 import { styleMap } from 'lit/directives/style-map.js'
-import { virtualize, virtualizerRef } from '@lit-labs/virtualizer/virtualize.js'
+
 import { makeData, Person } from './makeData.ts'
+import { VirtualizerController } from '@tanstack/lit-virtual'
+import { createRef, ref, Ref } from 'lit/directives/ref.js'
 
 const columns: ColumnDef<Person>[] = [
   {
@@ -61,6 +63,20 @@ const data = makeData(50_000)
 class LitTableExample extends LitElement {
   private tableController = new TableController<Person>(this)
 
+  private tableContainerRef: Ref = createRef()
+
+  private rowVirtualizerController: VirtualizerController<Element, Element>
+
+  connectedCallback() {
+    this.rowVirtualizerController = new VirtualizerController(this, {
+      count: data.length,
+      getScrollElement: () => this.tableContainerRef.value!,
+      estimateSize: () => 33,
+      overscan: 5,
+    })
+    super.connectedCallback()
+  }
+
   protected render(): unknown {
     const table = this.tableController.table({
       columns,
@@ -69,11 +85,14 @@ class LitTableExample extends LitElement {
       getCoreRowModel: getCoreRowModel(),
     })
     const { rows } = table.getRowModel()
+
+    const virtualizer = this.rowVirtualizerController.getVirtualizer()
     return html`
       <div class="app">
         (${data.length} rows)
         <div
           class="container"
+          ${ref(this.tableContainerRef)}
           style="${styleMap({
             overflow: 'auto', //our scrollable table container
             position: 'relative', //needed for sticky header
@@ -122,21 +141,30 @@ class LitTableExample extends LitElement {
             <tbody
               style=${styleMap({
                 display: 'grid',
-                height: 500,
-                // height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
+                height: `${virtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
                 position: 'relative', //needed for absolute positioning of rows
               })}
             >
-              ${virtualize({
-                items: data,
-                renderItem: (_, index) => {
-                  const row = rows[index]
+              ${repeat(
+                this.rowVirtualizerController
+                  .getVirtualizer()
+                  .getVirtualItems(),
+                item => item.key,
+                item => {
+                  const row = rows[item.index] as Row<Person>
                   return html`
                     <tr
                       style=${styleMap({
                         display: 'flex',
+                        position: 'absolute',
+                        transform: `translateY(${item.start}px)`,
                         width: '100%',
                       })}
+                      ${ref(node =>
+                        this.rowVirtualizerController
+                          .getVirtualizer()
+                          .measureElement(node)
+                      )}
                     >
                       ${repeat(
                         row.getVisibleCells(),
@@ -157,8 +185,8 @@ class LitTableExample extends LitElement {
                       )}
                     </tr>
                   `
-                },
-              })}
+                }
+              )}
             </tbody>
           </table>
         </div>
