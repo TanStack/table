@@ -6,22 +6,15 @@ import { GroupingState } from '../features/ColumnGrouping'
 export function getGroupedRowModel<TData extends RowData>(): (
   table: Table<TData>
 ) => () => RowModel<TData> {
-  let lastGrouping: GroupingState
-
   return table =>
     memo(
       () => [table.getState().grouping, table.getPreGroupedRowModel()],
       (grouping, rowModel) => {
-        //ungrouping
-        if (lastGrouping?.length > 0 && grouping.length === 0) {
+        if (!rowModel.rows.length || !grouping.length) {
           rowModel.rows.forEach(row => {
             row.depth = 0
-            delete row.parentId
+            row.parentId = undefined
           })
-        }
-        lastGrouping = grouping
-
-        if (!rowModel.rows.length || !grouping.length) {
           return rowModel
         }
 
