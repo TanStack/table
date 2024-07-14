@@ -17,6 +17,10 @@ export function createGroupedRowModel<
       () => [table.getState().grouping, table.getPreGroupedRowModel()],
       (grouping, rowModel) => {
         if (!rowModel.rows.length || !grouping.length) {
+          rowModel.rows.forEach((row) => {
+            row.depth = 0
+            row.parentId = undefined
+          })
           return rowModel
         }
 
@@ -61,7 +65,7 @@ export function createGroupedRowModel<
           // Group the rows together for this level
           const rowGroupsMap = groupBy(rows, columnId, table)
 
-          // Peform aggregations for each group
+          // Perform aggregations for each group
           const aggregatedGroupedRows = Array.from(rowGroupsMap.entries()).map(
             ([groupingValue, groupedRows], index) => {
               let id = `${columnId}:${groupingValue}`
@@ -69,6 +73,10 @@ export function createGroupedRowModel<
 
               // First, Recurse to group sub rows before aggregation
               const subRows = groupUpRecursively(groupedRows, depth + 1, id)
+
+              subRows.forEach((subRow) => {
+                subRow.parentId = id
+              })
 
               // Flatten the leaf rows of the rows in this group
               const leafRows = depth
