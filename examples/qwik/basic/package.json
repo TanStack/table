@@ -15,6 +15,6 @@
     "vite": "^5.3.2"
   },
   "dependencies": {
-    "@tanstack/qwik-table": "^8.19.2"
+    "@tanstack/qwik-table": "^8.19.3"
   }
 }
