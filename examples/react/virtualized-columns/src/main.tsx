@@ -19,7 +19,7 @@ import type { Person } from './makeData'
 import type { ColumnDef } from '@tanstack/react-table'
 
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => makeColumns(1_000),
     [],
   )

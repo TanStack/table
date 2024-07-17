@@ -11,10 +11,14 @@ import {
 import { makeData, Person } from './makeTestData'
 
 type personKeys = keyof Person
-type PersonColumn = ColumnDef<Person, string | number | Person[] | undefined>
+type PersonColumn = ColumnDef<
+  any,
+  Person,
+  string | number | Person[] | undefined
+>
 
 function generateColumns(people: Person[]): PersonColumn[] {
-  const columnHelper = createColumnHelper<Person>()
+  const columnHelper = createColumnHelper<any, Person>()
   const person = people[0]
   return Object.keys(person).map((key) => {
     const typedKey = key as personKeys
@@ -29,7 +33,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<Person>({
+        const table = _createTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -63,7 +67,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<Person>({
+        const table = _createTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -97,7 +101,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<Person>({
+        const table = _createTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -131,7 +135,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<Person>({
+        const table = _createTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -164,7 +168,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<Person>({
+        const table = _createTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -198,7 +202,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<Person>({
+        const table = _createTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -234,7 +238,7 @@ describe('RowPinning', () => {
         const data = makeData(6)
         const columns = generateColumns(data)
 
-        const table = _createTable<Person>({
+        const table = _createTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),

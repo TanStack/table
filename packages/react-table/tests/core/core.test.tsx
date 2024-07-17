@@ -40,7 +40,7 @@ const defaultData: Person[] = [
   },
 ]
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: ColumnDef<any, Person>[] = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

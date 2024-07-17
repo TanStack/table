@@ -12,7 +12,7 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const columns: Array<ColumnDef<Person, any>> = [
+const columns: Array<ColumnDef<any, Person>> = [
   {
     id: 'select',
     header: ({ table }) => html`
@@ -71,7 +71,7 @@ const data = makeData(50_000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<Person>(this)
+  private tableController = new TableController<any, Person>(this)
 
   @state()
   private _rowSelection: Record<string, boolean> = {}

@@ -57,8 +57,8 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const columnHelper = createColumnHelper<Person>()
-const columns: Array<ColumnDef<Person, any>> = [
+const columnHelper = createColumnHelper<any, Person>()
+const columns: Array<ColumnDef<any, Person>> = [
   {
     id: 'select',
     header: ({ table }) => (

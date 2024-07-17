@@ -21,7 +21,7 @@ type Person = {
   progress: number
 }
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<any, Person>()
 
 const columns = [
   columnHelper.accessor('firstName', {
@@ -91,7 +91,7 @@ const data: Array<Person> = [
 @customElement('lit-table-example')
 @withTwind
 class LitTableExample extends LitElement {
-  private tableController = new TableController<Person>(this)
+  private tableController = new TableController<any, Person>(this)
 
   protected render(): unknown {
     const table = this.tableController.table({

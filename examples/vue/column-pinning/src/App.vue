@@ -17,7 +17,7 @@ import { faker } from '@faker-js/faker'
 
 const data = ref(makeData(5000))
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<any, Person>()
 
 const columns = ref([
   columnHelper.group({

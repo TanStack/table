@@ -43,7 +43,7 @@
     },
   ]
 
-  const defaultColumns: ColumnDef<Person>[] = [
+  const defaultColumns: ColumnDef<any, Person>[] = [
     {
       accessorKey: 'firstName',
       cell: (info) => info.getValue(),
@@ -78,7 +78,7 @@
     },
   ]
 
-  let options: TableOptions<Person> = {
+  let options: TableOptions<any, Person> = {
     data: defaultData,
     columns: defaultColumns,
     getCoreRowModel: createCoreRowModel(),

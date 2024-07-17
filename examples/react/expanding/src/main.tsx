@@ -23,7 +23,7 @@ import type {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -267,7 +267,7 @@ function Filter({
   table,
 }: {
   column: Column<any, any>
-  table: Table<any>
+  table: Table<any, any>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

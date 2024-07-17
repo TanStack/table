@@ -10,7 +10,7 @@ export type Person = {
   subRows?: Array<Person>
 }
 
-export const columns: Array<ColumnDef<Person>> = [
+export const columns: Array<ColumnDef<any, Person>> = [
   {
     header: 'Name',
     columns: [

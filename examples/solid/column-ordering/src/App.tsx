@@ -13,7 +13,7 @@ import type {
   ColumnVisibilityState,
 } from '@tanstack/solid-table'
 
-const defaultColumns: Array<ColumnDef<Person>> = [
+const defaultColumns: Array<ColumnDef<any, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

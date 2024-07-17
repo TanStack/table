@@ -14,7 +14,7 @@ import { makeData } from './makeData'
 import type { ColumnDef, Row, TableFeatures } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-const columns: Array<ColumnDef<Person>> = [
+const columns: Array<ColumnDef<any, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

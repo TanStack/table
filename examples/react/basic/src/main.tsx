@@ -46,7 +46,7 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<any, Person>()
 
 const columns = [
   columnHelper.accessor('firstName', {

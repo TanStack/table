@@ -15,7 +15,7 @@ import type { ColumnDef, SortingFn, SortingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 //custom sorting logic for one of our enum columns
-const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
+const sortStatusFn: SortingFn<any, Person> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
@@ -27,7 +27,7 @@ function App() {
 
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         accessorKey: 'firstName',

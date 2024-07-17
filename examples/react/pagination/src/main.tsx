@@ -24,7 +24,7 @@ import type { Person } from './makeData'
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -89,7 +89,7 @@ function MyTable({
   columns,
 }: {
   data: Array<Person>
-  columns: Array<ColumnDef<Person>>
+  columns: Array<ColumnDef<any, Person>>
 }) {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,

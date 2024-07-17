@@ -6,14 +6,18 @@ import {
   createGroupedRowModel,
   ColumnGrouping,
 } from '../src'
-import { createColumnHelper } from '../src/helpers'
+import { createColumnHelper } from '../src/helpers/columnHelper'
 import { makeData, Person } from './makeTestData'
 
 type personKeys = keyof Person
-type PersonColumn = ColumnDef<Person, string | number | Person[] | undefined>
+type PersonColumn = ColumnDef<
+  any,
+  Person,
+  string | number | Person[] | undefined
+>
 
 function generateColumns(people: Person[]): PersonColumn[] {
-  const columnHelper = createColumnHelper<Person>()
+  const columnHelper = createColumnHelper<any, Person>()
   const person = people[0]
   return Object.keys(person).map((key) => {
     const typedKey = key as personKeys
@@ -32,7 +36,7 @@ describe('#getGroupedRowModel', () => {
     data.forEach((p) => (p.lastName = 'Name'))
     data.forEach((p) => (p.age = 123))
 
-    const table = _createTable<Person>({
+    const table = _createTable<any, Person>({
       _features: { ColumnGrouping },
       _rowModels: {
         Core: createCoreRowModel(),

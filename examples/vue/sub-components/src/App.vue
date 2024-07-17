@@ -43,8 +43,8 @@ const defaultData: Person[] = [
     progress: 10,
   },
 ]
-const columnHelper = createColumnHelper<Person>()
-function renderExpanded(row: Row<Person>) {
+const columnHelper = createColumnHelper<any, Person>()
+function renderExpanded(row: Row<any, Person>) {
   if (!row.getCanExpand()) {
     return h(Text, '🔵')
   }

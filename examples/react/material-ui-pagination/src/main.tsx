@@ -33,7 +33,7 @@ import type {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         header: 'Name',
@@ -110,7 +110,7 @@ function LocalTable({
   columns,
 }: {
   data: Array<Person>
-  columns: Array<ColumnDef<Person>>
+  columns: Array<ColumnDef<any, Person>>
 }) {
   const table = useTable({
     _rowModels: {

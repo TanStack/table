@@ -10,7 +10,7 @@ import {
 import { h, ref } from 'vue'
 import { makeData, Person } from './makeData'
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<any, Person>()
 
 const columns = [
   columnHelper.group({

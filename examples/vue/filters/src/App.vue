@@ -47,7 +47,7 @@ const defaultData: Person[] = [
     progress: 10,
   },
 ]
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<any, Person>()
 const columns = [
   columnHelper.group({
     header: 'Name',

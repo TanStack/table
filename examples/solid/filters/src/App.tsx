@@ -14,7 +14,7 @@ import ColumnFilter from './ColumnFilter'
 import type { Person } from './makeData'
 import type { ColumnDef, ColumnFiltersState } from '@tanstack/solid-table'
 
-const columns: Array<ColumnDef<Person>> = [
+const columns: Array<ColumnDef<any, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

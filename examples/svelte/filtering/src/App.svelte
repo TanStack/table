@@ -29,7 +29,7 @@
     return itemRank.passed
   }
 
-  let columns: ColumnDef<Person>[] = [
+  let columns: ColumnDef<any, Person>[] = [
     {
       accessorFn: (row) => `${row.firstName} ${row.lastName}`,
       id: 'fullName',
@@ -46,7 +46,7 @@
     } else globalFilter = updater
   }
 
-  const options: TableOptions<Person> = {
+  const options: TableOptions<any, Person> = {
     data: makeData(25),
     columns,
     state: {

@@ -43,7 +43,7 @@ const defaultData: Person[] = [
   },
 ]
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<any, Person>()
 
 const columns = [
   columnHelper.group({

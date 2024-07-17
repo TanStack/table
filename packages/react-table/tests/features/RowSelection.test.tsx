@@ -37,7 +37,7 @@ const defaultData: Person[] = [
   },
 ]
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: ColumnDef<any, Person>[] = [
   {
     id: 'select',
     header: ({ table }) => {
@@ -67,7 +67,7 @@ const defaultColumns: ColumnDef<Person>[] = [
     accessorKey: 'firstName',
   },
 ]
-const defaultPaginatedColumns: ColumnDef<Person>[] = [
+const defaultPaginatedColumns: ColumnDef<any, Person>[] = [
   {
     id: 'select',
     header: ({ table }) => {
@@ -100,7 +100,7 @@ const defaultPaginatedColumns: ColumnDef<Person>[] = [
   },
 ]
 
-const TableComponent: FC<{ options?: Partial<TableOptions<Person>> }> = ({
+const TableComponent: FC<{ options?: Partial<TableOptions<any, Person>> }> = ({
   options = {},
 }) => {
   const table = useTable({

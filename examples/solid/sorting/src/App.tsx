@@ -14,7 +14,7 @@ function App() {
   const [sorting, setSorting] = createSignal<SortingState>([])
   const refreshData = () => setData(makeData(100_000))
 
-  const columns: Array<ColumnDef<Person>> = [
+  const columns: Array<ColumnDef<any, Person>> = [
     {
       header: 'Name',
       footer: (props) => props.column.id,

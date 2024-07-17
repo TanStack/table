@@ -46,7 +46,7 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const defaultColumns: Array<ColumnDef<Person>> = [
+const defaultColumns: Array<ColumnDef<any, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
