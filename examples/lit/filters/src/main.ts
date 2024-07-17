@@ -20,7 +20,7 @@ import type {
 } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const columns: Array<ColumnDef<Person, any>> = [
+const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),

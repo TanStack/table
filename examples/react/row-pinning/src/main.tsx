@@ -43,7 +43,7 @@ function App() {
   const [includeParentRows, setIncludeParentRows] = React.useState(false)
   const [copyPinnedRows, setCopyPinnedRows] = React.useState(false)
 
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         id: 'pin',
@@ -352,7 +352,13 @@ function App() {
   )
 }
 
-function PinnedRow({ row, table }: { row: Row<any>; table: Table<any> }) {
+function PinnedRow({
+  row,
+  table,
+}: {
+  row: Row<any, any>
+  table: Table<any, any>
+}) {
   return (
     <tr
       style={{

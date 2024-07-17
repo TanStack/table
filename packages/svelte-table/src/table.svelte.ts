@@ -52,7 +52,7 @@ export function createTable<
   )
 
   const table = _createTable(resolvedOptions)
-  let state = $state<Partial<TableState>>(table.initialState)
+  let state = $state<Partial<TableState<TFeatures>>>(table.initialState)
 
   function updateOptions() {
     table.setOptions((prev) => {

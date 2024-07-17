@@ -11,7 +11,7 @@ import { ref } from 'vue'
 import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
 import { makeData, Person } from './makeData'
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<any, Person>()
 
 const columns = [
   columnHelper.display({

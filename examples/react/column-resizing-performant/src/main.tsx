@@ -16,7 +16,7 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: Array<ColumnDef<Person>> = [
+const defaultColumns: Array<ColumnDef<any, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -199,7 +199,7 @@ function App() {
 }
 
 //un-memoized normal table body component - see memoized version below
-function TableBody({ table }: { table: Table<Person> }) {
+function TableBody({ table }: { table: Table<any, Person> }) {
   return (
     <div
       {...{

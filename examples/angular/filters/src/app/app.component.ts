@@ -33,7 +33,7 @@ export class AppComponent {
   readonly columnFilters = signal<ColumnFiltersState>([])
   readonly data = signal(makeData(5000))
 
-  readonly columns: Array<ColumnDef<Person>> = [
+  readonly columns: Array<ColumnDef<any, Person>> = [
     {
       accessorKey: 'firstName',
       cell: (info) => info.getValue(),
@@ -74,7 +74,7 @@ export class AppComponent {
     },
   ]
 
-  table = injectTable<Person>(() => ({
+  table = injectTable<any, Person>(() => ({
     columns: this.columns,
     data: this.data(),
     state: {

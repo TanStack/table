@@ -75,7 +75,7 @@ function App() {
   )
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
 
-  const columns = React.useMemo<Array<ColumnDef<Person, any>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         accessorKey: 'id',

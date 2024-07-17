@@ -23,7 +23,7 @@ export class PersonTableComponent {
 
   readonly pagination = model.required<PaginationState>()
 
-  readonly columns: Array<ColumnDef<Person>> = [
+  readonly columns: Array<ColumnDef<any, Person>> = [
     {
       accessorKey: 'firstName',
       header: 'First Name',

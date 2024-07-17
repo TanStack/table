@@ -45,7 +45,7 @@ const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
 }
 
 // Row Component
-const DraggableRow = ({ row }: { row: Row<Person> }) => {
+const DraggableRow = ({ row }: { row: Row<any, Person> }) => {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.userId,
   })
@@ -71,7 +71,7 @@ const DraggableRow = ({ row }: { row: Row<Person> }) => {
 
 // Table Component
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       // Create a dedicated drag handle column. Alternatively, you could just set up dnd events on the rows themselves.
       {

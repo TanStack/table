@@ -38,7 +38,7 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: Array<ColumnDef<Person>> = [
+  readonly columns: Array<ColumnDef<any, Person>> = [
     {
       id: 'select',
       header: () => {

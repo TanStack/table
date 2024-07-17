@@ -32,7 +32,7 @@ function App() {
 
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         accessorKey: 'id',

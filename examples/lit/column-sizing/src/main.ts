@@ -11,7 +11,7 @@ import {
 
 import { Person, makeData } from './makeData'
 
-const columns: Array<ColumnDef<Person>> = [
+const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -54,7 +54,7 @@ const data: Array<Person> = makeData(1000)
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
-  private tableController = new TableController<Person>(this)
+  private tableController = new TableController<any, Person>(this)
 
   protected render() {
     const table = this.tableController.table({

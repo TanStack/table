@@ -27,7 +27,7 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: Array<ColumnDef<Person>> = [
+const defaultColumns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'firstName',
     id: 'firstName',
@@ -103,7 +103,7 @@ export class AppComponent {
   })
 
   readonly getCommonPinningStyles = (
-    column: Column<Person>,
+    column: Column<any, Person>,
   ): Record<string, any> => {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =

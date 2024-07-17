@@ -13,7 +13,7 @@ describe('injectTable', () => {
       standalone: true,
     })
     class FakeComponent {
-      data = input.required<any[]>()
+      data = input.required<Array<any>>()
 
       table = injectTable(() => ({
         data: this.data(),
@@ -32,8 +32,8 @@ describe('injectTable', () => {
 
   describe('Proxy table', () => {
     type Data = { id: string; title: string }
-    const data = signal<Data[]>([{ id: '1', title: 'Title' }])
-    const columns: ColumnDef<Data>[] = [
+    const data = signal<Array<Data>>([{ id: '1', title: 'Title' }])
+    const columns: Array<ColumnDef<any, Data>> = [
       { id: 'id', header: 'Id', cell: (context) => context.getValue() },
       { id: 'title', header: 'Title', cell: (context) => context.getValue() },
     ]
@@ -73,7 +73,7 @@ describe('injectTable', () => {
 })
 
 const testShouldBeComputedProperty = (
-  table: Table<any>,
+  table: Table<any, any>,
   propertyName: string,
 ) => {
   if (propertyName.endsWith('Handler') || propertyName.endsWith('Model')) {
@@ -82,7 +82,7 @@ const testShouldBeComputedProperty = (
 
   if (propertyName.startsWith('get')) {
     // Only properties with no arguments are computed
-    const fn = table[propertyName as keyof Table<any>]
+    const fn = table[propertyName as keyof Table<any, any>]
     // Cannot test if is lazy computed since we return the unwrapped value
     return fn instanceof Function && fn.length === 0
   }

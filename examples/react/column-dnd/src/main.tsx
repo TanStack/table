@@ -62,7 +62,7 @@ const DraggableTableHeader = ({
   )
 }
 
-const DragAlongCell = ({ cell }: { cell: Cell<Person, unknown> }) => {
+const DragAlongCell = ({ cell }: { cell: Cell<any, Person, unknown> }) => {
   const { isDragging, setNodeRef, transform } = useSortable({
     id: cell.column.id,
   })
@@ -84,7 +84,7 @@ const DragAlongCell = ({ cell }: { cell: Cell<Person, unknown> }) => {
 }
 
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
       {
         accessorKey: 'firstName',

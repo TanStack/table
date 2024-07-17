@@ -36,7 +36,7 @@ export class TableController<
 
   private tableInstance: Table<TFeatures, TData> | null = null
 
-  private _tableState: TableState | null = null
+  private _tableState: TableState<TFeatures> | null = null
 
   constructor(host: ReactiveControllerHost) {
     ;(this.host = host).addController(this)

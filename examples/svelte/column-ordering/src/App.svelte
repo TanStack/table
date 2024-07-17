@@ -17,7 +17,7 @@
   import { makeData, type Person } from './makeData'
   import { createTableState } from './state.svelte'
 
-  const columns: ColumnDef<Person>[] = [
+  const columns: ColumnDef<any, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -75,7 +75,7 @@
   const [columnVisibility, setColumnVisibility] =
     createTableState<ColumnVisibilityState>({})
 
-  const options: TableOptions<Person> = {
+  const options: TableOptions<any, Person> = {
     get data() {
       return data
     },

@@ -11,14 +11,14 @@ import {
 import { Person, makeData } from './makeData'
 import type { ColumnDef, SortingFn, SortingState } from '@tanstack/lit-table'
 
-const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
+const sortStatusFn: SortingFn<any, Person> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columns: Array<ColumnDef<Person>> = [
+const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -71,7 +71,7 @@ class LitTableExample extends LitElement {
   @state()
   private _sorting: SortingState = []
 
-  private tableController = new TableController<Person>(this)
+  private tableController = new TableController<any, Person>(this)
 
   protected render() {
     const table = this.tableController.table({

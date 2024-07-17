@@ -17,7 +17,7 @@ import type {
   ColumnVisibilityState,
 } from '@tanstack/angular-table'
 
-const defaultColumns: Array<ColumnDef<Person>> = [
+const defaultColumns: Array<ColumnDef<any, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

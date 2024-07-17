@@ -6,7 +6,7 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 import type { ColumnDef, FilterFn, SortingFn } from '@tanstack/react-table'
 
-export const fuzzyFilter: FilterFn<Person> = (
+export const fuzzyFilter: FilterFn<any, Person> = (
   row,
   columnId,
   value,
@@ -22,7 +22,7 @@ export const fuzzyFilter: FilterFn<Person> = (
   return itemRank.passed
 }
 
-export const fuzzySort: SortingFn<Person> = (rowA, rowB, columnId) => {
+export const fuzzySort: SortingFn<any, Person> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -42,7 +42,7 @@ export type TableMeta = {
 }
 
 // Give our default column cell renderer editing superpowers!
-export const defaultColumn: Partial<ColumnDef<Person>> = {
+export const defaultColumn: Partial<ColumnDef<any, Person>> = {
   cell: ({ getValue, row: { index }, column: { id }, table }) => {
     const initialValue = getValue()
     // We need to keep and update the state of the cell normally
@@ -68,7 +68,7 @@ export const defaultColumn: Partial<ColumnDef<Person>> = {
   },
 }
 
-export const columns: Array<ColumnDef<Person>> = [
+export const columns: Array<ColumnDef<any, Person>> = [
   {
     id: 'select',
     header: ({ table }) => (

@@ -11,7 +11,7 @@ import type { ColumnDef } from '@tanstack/solid-table'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-const columns: Array<ColumnDef<Person>> = [
+const columns: Array<ColumnDef<any, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

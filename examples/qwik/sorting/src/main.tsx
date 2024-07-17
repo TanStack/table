@@ -20,7 +20,7 @@ type Person = {
   progress: number
 }
 
-const columns: Array<ColumnDef<Person>> = [
+const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),

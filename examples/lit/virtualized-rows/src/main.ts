@@ -2,19 +2,18 @@ import { customElement } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
-  ColumnDef,
   TableController,
   createCoreRowModel,
   createSortedRowModel,
   flexRender,
 } from '@tanstack/lit-table'
 import { styleMap } from 'lit/directives/style-map.js'
-
-import { makeData, Person } from './makeData.ts'
+import { Ref, createRef, ref } from 'lit/directives/ref.js'
 import { VirtualizerController } from '@tanstack/lit-virtual'
-import { createRef, ref, Ref } from 'lit/directives/ref.js'
+import { Person, makeData } from './makeData.ts'
+import type { ColumnDef, Row } from '@tanstack/lit-table'
 
-const columns: Array<ColumnDef<Person>> = [
+const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -60,7 +59,7 @@ const data = makeData(50_000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<Person>(this)
+  private tableController = new TableController<any, Person>(this)
 
   private tableContainerRef: Ref = createRef()
 
@@ -150,7 +149,7 @@ class LitTableExample extends LitElement {
                   .getVirtualItems(),
                 (item) => item.key,
                 (item) => {
-                  const row = rows[item.index] as Row<Person>
+                  const row = rows[item.index] as Row<any, Person>
                   return html`
                     <tr
                       style=${styleMap({

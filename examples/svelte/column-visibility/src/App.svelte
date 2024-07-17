@@ -49,7 +49,7 @@
     },
   ]
 
-  const columns: ColumnDef<Person>[] = [
+  const columns: ColumnDef<any, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -109,7 +109,7 @@
     } else columnVisibility = updater
   }
 
-  const options: TableOptions<Person> = {
+  const options: TableOptions<any, Person> = {
     data: defaultData,
     columns,
     state: {

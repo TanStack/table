@@ -16,7 +16,7 @@
   import './index.css'
   import { makeData, type Person } from './makeData'
 
-  const columns: ColumnDef<Person>[] = [
+  const columns: ColumnDef<any, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -84,7 +84,7 @@
     } else sorting = updater
   }
 
-  const options: TableOptions<Person> = {
+  const options: TableOptions<any, Person> = {
     get data() {
       return data
     },

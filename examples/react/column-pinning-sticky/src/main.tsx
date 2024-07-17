@@ -12,7 +12,7 @@ import type { Column, ColumnDef } from '@tanstack/react-table'
 //These are the important styles to make sticky column pinning work!
 //Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
 //View the index.css file for more needed styles such as border-collapse: separate
-const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
+const getCommonPinningStyles = (column: Column<any, Person>): CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
     isPinned === 'left' && column.getIsLastColumn('left')
@@ -34,7 +34,7 @@ const getCommonPinningStyles = (column: Column<Person>): CSSProperties => {
   }
 }
 
-const defaultColumns: Array<ColumnDef<Person>> = [
+const defaultColumns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'firstName',
     id: 'firstName',

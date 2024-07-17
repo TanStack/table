@@ -13,7 +13,7 @@ import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import { faker } from '@faker-js/faker'
 
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<any, Person>()
 
 const data = ref(makeData(20))
 const columns = ref([

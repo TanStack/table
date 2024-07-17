@@ -12,7 +12,7 @@ import { makeData, Person } from './makeData'
 const INITIAL_PAGE_INDEX = 0
 
 const defaultData = makeData(100)
-const columnHelper = createColumnHelper<Person>()
+const columnHelper = createColumnHelper<any, Person>()
 const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 const pageSizes = [10, 20, 30, 40, 50]
 const data = ref(defaultData)
