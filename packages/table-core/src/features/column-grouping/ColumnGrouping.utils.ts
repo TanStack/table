@@ -175,27 +175,28 @@ export function cell_getIsGrouped<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>, row: Row<TFeatures, TData>) {
-  return column.getIsGrouped() && column.id === row.groupingColumnId
+>(cell: Cell<TFeatures, TData, TValue>) {
+  return (
+    cell.column.getIsGrouped() && cell.column.id === cell.row.groupingColumnId
+  )
 }
 
 export function cell_getIsPlaceholder<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  cell: Cell<TFeatures, TData, TValue>,
-  column: Column<TFeatures, TData, TValue>,
-) {
-  return !cell.getIsGrouped() && column.getIsGrouped()
+>(cell: Cell<TFeatures, TData, TValue>) {
+  return !cell.getIsGrouped() && cell.column.getIsGrouped()
 }
 
 export function cell_getIsAggregated<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(cell: Cell<TFeatures, TData, TValue>, row: Row<TFeatures, TData>) {
+>(cell: Cell<TFeatures, TData, TValue>) {
   return (
-    !cell.getIsGrouped() && !cell.getIsPlaceholder() && !!row.subRows.length
+    !cell.getIsGrouped() &&
+    !cell.getIsPlaceholder() &&
+    !!cell.row.subRows.length
   )
 }

@@ -19,14 +19,21 @@ import {
 } from './RowSorting.utils'
 import type {
   ColumnDef_RowSorting,
+  Column_RowSorting,
   TableOptions_RowSorting,
   TableState_RowSorting,
+  Table_RowSorting,
 } from './RowSorting.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Column } from '../../types/Column'
 
+/**
+ * The (Row) Sorting feature adds sorting state and APIs to the table and column objects.
+ * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting)
+ * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
+ */
 export const RowSorting: TableFeature = {
   _getInitialState: (state): TableState_RowSorting => {
     return {
@@ -46,7 +53,8 @@ export const RowSorting: TableFeature = {
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowSorting<TFeatures, TData>>,
   ): TableOptions_RowSorting<TFeatures, TData> => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
@@ -61,8 +69,10 @@ export const RowSorting: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
+    column: Column<TFeatures, TData, TValue> &
+      Partial<Column_RowSorting<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowSorting<TFeatures, TData>>,
   ): void => {
     column.getAutoSortingFn = () => column_getAutoSortingFn(column, table)
 
@@ -93,7 +103,8 @@ export const RowSorting: TableFeature = {
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowSorting<TFeatures, TData>>,
   ): void => {
     table.setSorting = (updater) => table_setSorting(table, updater)
 

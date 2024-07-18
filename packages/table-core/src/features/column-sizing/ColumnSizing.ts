@@ -18,7 +18,10 @@ import {
 import type {
   ColumnDef_ColumnSizing,
   ColumnSizingDefaultOptions,
+  Column_ColumnSizing,
+  Header_ColumnSizing,
   TableState_ColumnSizing,
+  Table_ColumnSizing,
 } from './ColumnSizing.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -26,6 +29,13 @@ import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 
+/**
+ * The Column Sizing feature adds column sizing state and APIs to the table, header, and column objects.
+ *
+ * **Note:** This does not include column resizing. The ColumnResizing feature has been split out into its own standalone feature.
+ * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing)
+ * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
+ */
 export const ColumnSizing: TableFeature = {
   _getDefaultColumnDef: (): ColumnDef_ColumnSizing => {
     return defaultColumnSizing
@@ -38,7 +48,7 @@ export const ColumnSizing: TableFeature = {
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): ColumnSizingDefaultOptions => {
     return {
       onColumnSizingChange: makeStateUpdater('columnSizing', table),
@@ -50,8 +60,8 @@ export const ColumnSizing: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
+    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnSizing>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
     column.getSize = () => column_getSize(column, table)
 
@@ -83,8 +93,8 @@ export const ColumnSizing: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    header: Header<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
+    header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnSizing>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
     header.getSize = () => header_getSize(header, table)
 
@@ -92,7 +102,7 @@ export const ColumnSizing: TableFeature = {
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
     table.setColumnSizing = (updater) => table_setColumnSizing(table, updater)
 

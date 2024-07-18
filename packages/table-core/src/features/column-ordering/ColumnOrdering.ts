@@ -10,6 +10,7 @@ import {
 } from './ColumnOrdering.utils'
 import type {
   ColumnOrderDefaultOptions,
+  Column_ColumnOrdering,
   TableState_ColumnOrdering,
   Table_ColumnOrdering,
 } from './ColumnOrdering.types'
@@ -18,6 +19,11 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Column } from '../../types/Column'
 
+/**
+ * The Column Ordering feature adds column ordering state and APIs to the table and column objects.
+ * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering)
+ * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
+ */
 export const ColumnOrdering: TableFeature = {
   _getInitialState: (state): TableState_ColumnOrdering => {
     return {
@@ -27,7 +33,8 @@ export const ColumnOrdering: TableFeature = {
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): ColumnOrderDefaultOptions => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', table),
@@ -39,8 +46,9 @@ export const ColumnOrdering: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
+    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnOrdering>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
     column.getIndex = memo(
       (position) => [column_getVisibleLeafColumns(table, position)],
@@ -56,7 +64,8 @@ export const ColumnOrdering: TableFeature = {
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> & Table_ColumnOrdering<TFeatures, TData>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
     table.setColumnOrder = (updater) => table_setColumnOrder(table, updater)
 

@@ -23,11 +23,17 @@ import {
 import type {
   PaginationDefaultOptions,
   TableState_RowPagination,
+  Table_RowPagination,
 } from './RowPagination.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 
+/**
+ * The (Row) Pagination feature adds pagination state and APIs to the table object.
+ * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination)
+ * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+ */
 export const RowPagination: TableFeature = {
   _getInitialState: (state): TableState_RowPagination => {
     return {
@@ -40,7 +46,8 @@ export const RowPagination: TableFeature = {
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowPagination<TFeatures, TData>>,
   ): PaginationDefaultOptions => {
     return {
       onPaginationChange: makeStateUpdater('pagination', table),
@@ -48,7 +55,8 @@ export const RowPagination: TableFeature = {
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowPagination<TFeatures, TData>>,
   ): void => {
     const registered = false
     const queued = false

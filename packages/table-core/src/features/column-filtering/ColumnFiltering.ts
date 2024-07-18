@@ -20,11 +20,20 @@ import type { Column } from '../../types/Column'
 import type {
   ColumnDef_ColumnFiltering,
   ColumnFiltersState,
+  Column_ColumnFiltering,
+  Row_ColumnFiltering,
   TableOptions_ColumnFiltering,
   TableState_ColumnFiltering,
   Table_ColumnFiltering,
 } from './ColumnFiltering.types'
 
+/**
+ * The Column Filtering feature adds column filtering state and APIs to the table, row, and column objects.
+ *
+ * **Note:** This does not include Global Filtering. The GlobalFiltering feature has been split out into its own standalone feature.
+ * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering)
+ * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
+ */
 export const ColumnFiltering: TableFeature = {
   _getDefaultColumnDef: <
     TFeatures extends TableFeatures,
@@ -43,7 +52,8 @@ export const ColumnFiltering: TableFeature = {
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): TableOptions_ColumnFiltering<TFeatures, TData> => {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),
@@ -57,8 +67,10 @@ export const ColumnFiltering: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
+    column: Column<TFeatures, TData, TValue> &
+      Partial<Column_ColumnFiltering<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
     column.getAutoFilterFn = () => column_getAutoFilterFn(column, table)
 
@@ -77,15 +89,15 @@ export const ColumnFiltering: TableFeature = {
   },
 
   _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData>,
-    _table: Table<TFeatures, TData>,
+    row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
   ): void => {
     row.columnFilters = {}
     row.columnFiltersMeta = {}
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> & Table_ColumnFiltering<TFeatures, TData>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
     table.setColumnFilters = (updater: Updater<ColumnFiltersState>) =>
       table_setColumnFilters(table, updater)

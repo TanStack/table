@@ -14,9 +14,19 @@ import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 import type {
   ColumnResizingDefaultOptions,
+  Column_ColumnResizing,
+  Header_ColumnResizing,
   TableState_ColumnResizing,
+  Table_ColumnResizing,
 } from './ColumnResizing.types'
 
+/**
+ * The Column Resizing feature adds column resizing state and APIs to the table and column objects.
+ *
+ * **Note:** This is dependent on the Column Sizing feature.
+ * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-resizing)
+ * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
+ */
 export const ColumnResizing: TableFeature = {
   _getInitialState: (state): TableState_ColumnResizing => {
     return {
@@ -26,7 +36,7 @@ export const ColumnResizing: TableFeature = {
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): ColumnResizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',
@@ -40,8 +50,8 @@ export const ColumnResizing: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
+    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnResizing>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
     column.getCanResize = () => column_getCanResize(table, column)
 
@@ -53,15 +63,15 @@ export const ColumnResizing: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    header: Header<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
+    header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnResizing>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
     header.getResizeHandler = (_contextDocument) =>
       header_getResizeHandler(header, table, _contextDocument)
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
     table.setColumnSizingInfo = (updater) =>
       table_setColumnSizingInfo(table, updater)

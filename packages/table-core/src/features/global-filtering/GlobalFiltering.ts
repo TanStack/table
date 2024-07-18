@@ -19,6 +19,13 @@ import type {
   Table_GlobalFiltering,
 } from './GlobalFiltering.types'
 
+/**
+ * The Global Filtering feature adds global filtering state and APIs to the table and column objects.
+ *
+ * **Note:** This is dependent on the ColumnFiltering feature.
+ * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering)
+ * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
+ */
 export const GlobalFiltering: TableFeature = {
   _getInitialState: <TFeatures extends TableFeatures>(
     state: Partial<TableState<TFeatures>> &
@@ -31,7 +38,8 @@ export const GlobalFiltering: TableFeature = {
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): TableOptions_GlobalFiltering<TFeatures, TData> => {
     return {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
@@ -52,7 +60,8 @@ export const GlobalFiltering: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue> & Partial<Column_GlobalFiltering>,
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): void => {
     column.getCanGlobalFilter = () => column_getCanGlobalFilter(column, table)
   },

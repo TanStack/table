@@ -28,10 +28,18 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
+  Row_RowSelection,
   TableOptions_RowSelection,
   TableState_RowSelection,
+  Table_RowSelection,
 } from './RowSelection.types'
 
+/**
+ * The Row Selection feature adds row selection state and APIs to the table and row objects.
+ * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection)
+ * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+ 
+ */
 export const RowSelection: TableFeature = {
   _getInitialState: (state): TableState_RowSelection => {
     return {
@@ -41,7 +49,8 @@ export const RowSelection: TableFeature = {
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowSelection<TFeatures, TData>>,
   ): TableOptions_RowSelection<TFeatures, TData> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
@@ -54,8 +63,33 @@ export const RowSelection: TableFeature = {
     }
   },
 
+  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData> & Partial<Row_RowSelection>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowSelection<TFeatures, TData>>,
+  ): void => {
+    row.toggleSelected = (value, opts) =>
+      row_toggleSelected(row, table, value, opts)
+
+    row.getIsSelected = () => row_getIsSelected(row, table)
+
+    row.getIsSomeSelected = () => row_getIsSomeSelected(row, table)
+
+    row.getIsAllSubRowsSelected = () => row_getIsAllSubRowsSelected(row, table)
+
+    row.getCanSelect = () => row_getCanSelect(row, table)
+
+    row.getCanSelectSubRows = () => row_getCanSelectSubRows(row, table)
+
+    row.getCanMultiSelect = () => row_getCanMultiSelect(row, table)
+
+    row.getToggleSelectedHandler = () =>
+      row_getToggleSelectedHandler(row, table)
+  },
+
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
     table.setRowSelection = (updater) => table_setRowSelection(table, updater)
 
@@ -183,28 +217,5 @@ export const RowSelection: TableFeature = {
 
     table.getToggleAllPageRowsSelectedHandler = () =>
       table_getToggleAllPageRowsSelectedHandler(table)
-  },
-
-  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData>,
-    table: Table<TFeatures, TData>,
-  ): void => {
-    row.toggleSelected = (value, opts) =>
-      row_toggleSelected(row, table, value, opts)
-
-    row.getIsSelected = () => row_getIsSelected(row, table)
-
-    row.getIsSomeSelected = () => row_getIsSomeSelected(row, table)
-
-    row.getIsAllSubRowsSelected = () => row_getIsAllSubRowsSelected(row, table)
-
-    row.getCanSelect = () => row_getCanSelect(row, table)
-
-    row.getCanSelectSubRows = () => row_getCanSelectSubRows(row, table)
-
-    row.getCanMultiSelect = () => row_getCanMultiSelect(row, table)
-
-    row.getToggleSelectedHandler = () =>
-      row_getToggleSelectedHandler(row, table)
   },
 }
