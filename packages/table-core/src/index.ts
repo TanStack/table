@@ -20,6 +20,7 @@ export * from './types/type-utils'
 
 export * from './helpers/columnHelper'
 export * from './helpers/tableOptions'
+export * from './helpers/tableFeatures'
 export * from './helpers/tableHelper'
 export * from './utils'
 
