@@ -46,7 +46,7 @@ export interface TableFeature {
     TValue extends CellData = CellData,
   >() => Partial<ColumnDef<TFeatures, TData, TValue>>
   _getDefaultOptions?: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData>,
   ) => Partial<TableOptions<TFeatures, TData>>
   _getInitialState?: <TFeatures extends TableFeatures>(
     initialState?: Partial<TableState<TFeatures>>,

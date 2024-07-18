@@ -1,3 +1,5 @@
+import { table_getAllFlatColumns } from '../../core/columns/Columns.utils'
+import { row_getAllCells } from '../../core/rows/Rows.utils'
 import { getMemoOptions, memo } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -6,6 +8,7 @@ import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 import type { ColumnVisibilityState } from './ColumnVisibility.types'
+import type { Row } from '../../types/Row'
 
 export function column_toggleVisibility<
   TFeatures extends TableFeatures,
@@ -78,11 +81,10 @@ export function column_getVisibleLeafColumns<
 export function row_getAllVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  cells: Array<Cell<TFeatures, TData, unknown>>,
-  table: Table<TFeatures, TData>,
-) {
-  return cells.filter((cell) => column_getIsVisible(cell.column, table))
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
+  return row_getAllCells(row, table).filter((cell) =>
+    column_getIsVisible(cell.column, table),
+  )
 }
 
 export function row_getVisibleCells<
@@ -96,6 +98,7 @@ export function row_getVisibleCells<
   return [...left, ...center, ...right]
 }
 
+//TODO refactor this out
 export function table_makeVisibleColumnsMethod<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -116,6 +119,15 @@ export function table_makeVisibleColumnsMethod<
       return columns.filter((column) => column_getIsVisible(column, table))
     },
     getMemoOptions(table.options, 'debugColumns', key),
+  )
+}
+
+export function table_getVisibleFlatColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  return table_getAllFlatColumns(table).filter((column) =>
+    column_getIsVisible(column, table),
   )
 }
 

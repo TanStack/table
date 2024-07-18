@@ -1,5 +1,6 @@
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { table_makeVisibleColumnsMethod } from '../column-visibility/ColumnVisibility.utils'
 import {
   column_getCanPin,
   column_getIsPinned,
@@ -24,6 +25,7 @@ import type { Column } from '../../types/Column'
 import type {
   ColumnPinningDefaultOptions,
   TableState_ColumnPinning,
+  Table_ColumnPinning,
 } from './ColumnPinning.types'
 
 const debug = 'debugHeaders'
@@ -71,13 +73,12 @@ export const ColumnPinning: TableFeature = {
         table.getState().columnPinning.left,
         table.getState().columnPinning.right,
       ],
-      (allCells, left, right) =>
-        row_getCenterVisibleCells(allCells, left, right),
+      () => row_getCenterVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getCenterVisibleCells'),
     )
     row.getLeftVisibleCells = memo(
       () => [row._getAllVisibleCells(), table.getState().columnPinning.left],
-      (allCells, left) => row_getLeftVisibleCells(allCells, left),
+      () => row_getLeftVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getLeftVisibleCells'),
     )
     row.getRightVisibleCells = memo(
@@ -88,7 +89,7 @@ export const ColumnPinning: TableFeature = {
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> & Table_ColumnPinning<TFeatures, TData>,
   ): void => {
     table.setColumnPinning = (updater) => table_setColumnPinning(table, updater)
 
@@ -97,6 +98,24 @@ export const ColumnPinning: TableFeature = {
 
     table.getIsSomeColumnsPinned = (position) =>
       table_getIsSomeColumnsPinned(table, position)
+
+    table.getLeftVisibleLeafColumns = table_makeVisibleColumnsMethod(
+      table,
+      'getLeftVisibleLeafColumns',
+      () => table.getLeftLeafColumns(),
+    )
+
+    table.getRightVisibleLeafColumns = table_makeVisibleColumnsMethod(
+      table,
+      'getRightVisibleLeafColumns',
+      () => table.getRightLeafColumns(),
+    )
+
+    table.getCenterVisibleLeafColumns = table_makeVisibleColumnsMethod(
+      table,
+      'getCenterVisibleLeafColumns',
+      () => table.getCenterLeafColumns(),
+    )
 
     table.getLeftLeafColumns = memo(
       () => [table.getAllLeafColumns(), table.getState().columnPinning.left],

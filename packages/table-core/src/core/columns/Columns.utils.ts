@@ -46,7 +46,6 @@ export function table_getDefaultColumnDef<
   TData extends RowData,
 >(
   table: Table<TFeatures, TData>,
-  defaultColumnDef: Partial<ColumnDef<TFeatures, TData, unknown>> = {},
 ): Partial<ColumnDef<TFeatures, TData, unknown>> {
   return {
     header: (props) => {
@@ -67,17 +66,14 @@ export function table_getDefaultColumnDef<
     ...Object.values(table._features).reduce((obj, feature) => {
       return Object.assign(obj ?? {}, feature?._getDefaultColumnDef?.())
     }, {}),
-    ...defaultColumnDef,
+    ...table.options.defaultColumn,
   } as Partial<ColumnDef<TFeatures, TData, unknown>>
 }
 
 export function table_getAllColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData>,
-  columnDefs: Array<ColumnDef<TFeatures, TData, unknown>>,
-): Array<Column<TFeatures, TData, unknown>> {
+>(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
   const recurseColumns = (
     colDefs: Array<ColumnDef<TFeatures, TData, unknown>>,
     parent?: Column<TFeatures, TData, unknown>,
@@ -100,25 +96,25 @@ export function table_getAllColumns<
     })
   }
 
-  return recurseColumns(columnDefs)
+  return recurseColumns(table.options.columns as any)
 }
 
 export function table_getAllFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  allColumns: Array<Column<TFeatures, TData, unknown>>,
-): Array<Column<TFeatures, TData, unknown>> {
-  return allColumns.flatMap((column) => column_getFlatColumns(column))
+>(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
+  return table_getAllColumns(table).flatMap((column) =>
+    column_getFlatColumns(column),
+  )
 }
 
 export function table_getAllFlatColumnsById<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  flatColumns: Array<Column<TFeatures, TData, unknown>>,
+  table: Table<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
-  return flatColumns.reduce(
+  return table_getAllFlatColumns(table).reduce(
     (acc, column) => {
       acc[column.id] = column
       return acc
@@ -131,12 +127,14 @@ export function table_getAllLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  allColumns: Array<Column<TFeatures, TData, unknown>>,
+  table: Table<TFeatures, TData>,
   orderColumns: (
     cols: Array<Column<TFeatures, TData, unknown>>,
   ) => Array<Column<TFeatures, TData, unknown>>,
 ): Array<Column<TFeatures, TData, unknown>> {
-  const leafColumns = allColumns.flatMap((column) => column.getLeafColumns())
+  const leafColumns = table_getAllColumns(table).flatMap((column) =>
+    column.getLeafColumns(),
+  )
   return orderColumns(leafColumns)
 }
 

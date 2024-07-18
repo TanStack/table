@@ -43,32 +43,31 @@ export const Columns: TableFeature = {
   ) => {
     table._getDefaultColumnDef = memo(
       () => [table.options.defaultColumn],
-      (defaultColumn) => table_getDefaultColumnDef(table, defaultColumn),
+      () => table_getDefaultColumnDef(table),
       getMemoOptions(table.options, 'debugColumns', '_getDefaultColumnDef'),
     )
 
     table.getAllColumns = memo(
       () => [table.options.columns],
-      (columnDefs) => table_getAllColumns(table, columnDefs),
+      () => table_getAllColumns(table),
       getMemoOptions(table.options, 'debugColumns', 'getAllColumns'),
     )
 
     table.getAllFlatColumns = memo(
       () => [table.getAllColumns()],
-      (allColumns) => table_getAllFlatColumns(allColumns),
+      () => table_getAllFlatColumns(table),
       getMemoOptions(table.options, 'debugColumns', 'getAllFlatColumns'),
     )
 
     table._getAllFlatColumnsById = memo(
       () => [table.getAllFlatColumns()],
-      (flatColumns) => table_getAllFlatColumnsById(flatColumns),
+      () => table_getAllFlatColumnsById(table),
       getMemoOptions(table.options, 'debugColumns', 'getAllFlatColumnsById'),
     )
 
     table.getAllLeafColumns = memo(
       () => [table.getAllColumns(), table._getOrderColumnsFn()],
-      (allColumns, orderColumns) =>
-        table_getAllLeafColumns(allColumns, orderColumns),
+      (_, orderColumns) => table_getAllLeafColumns(table, orderColumns),
       getMemoOptions(table.options, 'debugColumns', 'getAllLeafColumns'),
     )
 

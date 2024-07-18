@@ -1,3 +1,5 @@
+import { row_getAllVisibleCells } from '../column-visibility/ColumnVisibility.utils'
+import type { Row } from '../../types/Row'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -99,11 +101,9 @@ export function column_getPinnedIndex<
 export function row_getCenterVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  allCells: Array<Cell<TFeatures, TData, unknown>>,
-  left?: Array<string>,
-  right?: Array<string>,
-) {
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
+  const allCells = row._getAllVisibleCells()
+  const { left, right } = table.getState().columnPinning
   const leftAndRight: Array<string> = [...(left ?? []), ...(right ?? [])]
   return allCells.filter((d) => !leftAndRight.includes(d.column.id))
 }
@@ -111,7 +111,9 @@ export function row_getCenterVisibleCells<
 export function row_getLeftVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(allCells: Array<Cell<TFeatures, TData, unknown>>, left?: Array<string>) {
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
+  const allCells = row_getAllVisibleCells(row, table)
+  const { left } = table.getState().columnPinning
   const cells = (left ?? [])
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)

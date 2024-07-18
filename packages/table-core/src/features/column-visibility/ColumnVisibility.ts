@@ -21,6 +21,7 @@ import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 import type {
   TableState_ColumnVisibility,
+  Table_ColumnVisibility,
   VisibilityDefaultOptions,
 } from './ColumnVisibility.types'
 
@@ -33,7 +34,7 @@ export const ColumnVisibility: TableFeature = {
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>,
+    table: Table<TFeatures, TData>,
   ): VisibilityDefaultOptions => {
     return {
       onColumnVisibilityChange: makeStateUpdater('columnVisibility', table),
@@ -65,7 +66,7 @@ export const ColumnVisibility: TableFeature = {
   ): void => {
     row._getAllVisibleCells = memo(
       () => [row.getAllCells(), table.getState().columnVisibility],
-      (cells) => row_getAllVisibleCells(cells, table),
+      () => row_getAllVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells'),
     )
 
@@ -81,7 +82,7 @@ export const ColumnVisibility: TableFeature = {
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> & Table_ColumnVisibility<TFeatures, TData>,
   ): void => {
     table.getVisibleFlatColumns = table_makeVisibleColumnsMethod(
       table,
@@ -93,24 +94,6 @@ export const ColumnVisibility: TableFeature = {
       table,
       'getVisibleLeafColumns',
       () => table.getAllLeafColumns(),
-    )
-
-    table.getLeftVisibleLeafColumns = table_makeVisibleColumnsMethod(
-      table,
-      'getLeftVisibleLeafColumns',
-      () => table.getLeftLeafColumns(),
-    )
-
-    table.getRightVisibleLeafColumns = table_makeVisibleColumnsMethod(
-      table,
-      'getRightVisibleLeafColumns',
-      () => table.getRightLeafColumns(),
-    )
-
-    table.getCenterVisibleLeafColumns = table_makeVisibleColumnsMethod(
-      table,
-      'getCenterVisibleLeafColumns',
-      () => table.getCenterLeafColumns(),
     )
 
     table.setColumnVisibility = (updater) =>

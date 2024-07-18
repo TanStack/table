@@ -1,6 +1,9 @@
 import { flattenBy } from '../../utils'
 import { _createCell } from '../cells/createCell'
-import { table_getColumn } from '../columns/Columns.utils'
+import {
+  table_getAllLeafColumns,
+  table_getColumn,
+} from '../columns/Columns.utils'
 import { table_getPrePaginationRowModel } from '../../features/row-pagination/RowPagination.utils'
 import { table_getCoreRowModel, table_getRowModel } from '../table/Tables.utils'
 import type { RowData } from '../../types/type-utils'
@@ -111,18 +114,19 @@ export function row_getAllCells<
 >(
   row: Row<TFeatures, TData>,
   table: Table<TFeatures, TData>,
-  leafColumns: Array<Column<TFeatures, TData, unknown>>,
 ): Array<Cell<TFeatures, TData, unknown>> {
-  return leafColumns.map((column) => {
-    return _createCell(column, row, table)
-  })
+  return table_getAllLeafColumns(table, table._getOrderColumnsFn()).map(
+    (column) => {
+      return _createCell(column, row, table)
+    },
+  )
 }
 
 export function row_getAllCellsByColumnId<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(allCells: Array<Cell<TFeatures, TData, unknown>>) {
-  return allCells.reduce(
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
+  return row_getAllCells(row, table).reduce(
     (acc, cell) => {
       acc[cell.column.id] = cell
       return acc

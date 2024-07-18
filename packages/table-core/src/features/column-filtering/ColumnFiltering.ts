@@ -22,6 +22,7 @@ import type {
   ColumnFiltersState,
   TableOptions_ColumnFiltering,
   TableState_ColumnFiltering,
+  Table_ColumnFiltering,
 } from './ColumnFiltering.types'
 
 export const ColumnFiltering: TableFeature = {
@@ -84,7 +85,7 @@ export const ColumnFiltering: TableFeature = {
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> & Table_ColumnFiltering<TFeatures, TData>,
   ): void => {
     table.setColumnFilters = (updater: Updater<ColumnFiltersState>) =>
       table_setColumnFilters(table, updater)

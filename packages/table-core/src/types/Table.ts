@@ -19,6 +19,10 @@ import type { Table_RowPinning } from '../features/row-pinning/RowPinning.types'
 import type { Table_RowSelection } from '../features/row-selection/RowSelection.types'
 import type { Table_RowSorting } from '../features/row-sorting/RowSorting.types'
 
+/**
+ * The core table object that only includes the core table functionality such as column, header, row, and table APIS.
+ * No features are included.
+ */
 export interface Table_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -27,6 +31,9 @@ export interface Table_Core<
     Table_Rows<TFeatures, TData>,
     Table_Headers<TFeatures, TData> {}
 
+/**
+ * The table object that includes both the core table functionality and the features that are enabled via the `_features` table option.
+ */
 export type _Table<
   TFeatures extends TableFeatures,
   TData extends RowData,

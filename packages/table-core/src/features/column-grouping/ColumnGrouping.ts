@@ -27,6 +27,7 @@ import type {
   ColumnDef_ColumnGrouping,
   TableOptions_ColumnGrouping,
   TableState_ColumnGrouping,
+  Table_ColumnGrouping,
 } from './ColumnGrouping.types'
 
 export const ColumnGrouping: TableFeature = {
@@ -83,7 +84,7 @@ export const ColumnGrouping: TableFeature = {
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> & Table_ColumnGrouping<TFeatures, TData>,
   ): void => {
     table.setGrouping = (updater) => table_setGrouping(table, updater)
 

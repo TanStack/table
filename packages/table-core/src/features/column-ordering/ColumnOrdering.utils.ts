@@ -3,10 +3,6 @@ import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Column } from '../../types/Column'
-import type {
-  GroupingColumnMode,
-  GroupingState,
-} from '../column-grouping/ColumnGrouping.types'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 import type { ColumnOrderState } from './ColumnOrdering.types'
 
@@ -67,11 +63,9 @@ export function table_resetColumnOrder<
 export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  columnOrder: ColumnOrderState,
-  grouping: GroupingState,
-  groupedColumnMode?: false | 'reorder' | 'remove',
-) {
+>(table: Table<TFeatures, TData>) {
+  const { columnOrder } = table.getState()
+
   return (columns: Array<Column<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
     // before the headers are built
@@ -101,7 +95,7 @@ export function table_getOrderColumnsFn<
       orderedColumns = [...orderedColumns, ...columnsCopy]
     }
 
-    return orderColumns(orderedColumns, grouping, groupedColumnMode)
+    return orderColumns(table, orderedColumns)
   }
 }
 
@@ -109,10 +103,12 @@ export function orderColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
+  table: Table<TFeatures, TData>,
   leafColumns: Array<Column<TFeatures, TData, unknown>>,
-  grouping: Array<string>,
-  groupedColumnMode?: GroupingColumnMode,
 ) {
+  const { grouping } = table.getState()
+  const { groupedColumnMode } = table.options
+
   if (!grouping.length || !groupedColumnMode) {
     return leafColumns
   }

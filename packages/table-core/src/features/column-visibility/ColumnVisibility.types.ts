@@ -34,12 +34,6 @@ export interface Table_ColumnVisibility<
   TData extends RowData,
 > {
   /**
-   * If column pinning, returns a flat array of leaf-node columns that are visible in the unpinned/center portion of the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getcentervisibleleafcolumns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
-   */
-  getCenterVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
-  /**
    * Returns whether all columns are visible
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getisallcolumnsvisible)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
@@ -51,18 +45,6 @@ export interface Table_ColumnVisibility<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getIsSomeColumnsVisible: () => boolean
-  /**
-   * If column pinning, returns a flat array of leaf-node columns that are visible in the left portion of the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getleftvisibleleafcolumns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
-   */
-  getLeftVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
-  /**
-   * If column pinning, returns a flat array of leaf-node columns that are visible in the right portion of the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getrightvisibleleafcolumns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
-   */
-  getRightVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Returns a handler for toggling the visibility of all columns, meant to be bound to a `input[type=checkbox]` element.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#gettoggleallcolumnsvisibilityhandler)

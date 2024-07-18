@@ -11,6 +11,7 @@ import {
 import type {
   ColumnOrderDefaultOptions,
   TableState_ColumnOrdering,
+  Table_ColumnOrdering,
 } from './ColumnOrdering.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -55,7 +56,7 @@ export const ColumnOrdering: TableFeature = {
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatures, TData> & Table_ColumnOrdering<TFeatures, TData>,
   ): void => {
     table.setColumnOrder = (updater) => table_setColumnOrder(table, updater)
 
@@ -68,12 +69,7 @@ export const ColumnOrdering: TableFeature = {
         table.getState().grouping,
         table.options.groupedColumnMode,
       ],
-      (columnOrder, grouping, groupedColumnMode) =>
-        table_getOrderColumnsFn<TFeatures, TData>(
-          columnOrder,
-          grouping,
-          groupedColumnMode,
-        ),
+      () => table_getOrderColumnsFn<TFeatures, TData>(table),
       getMemoOptions(table.options, 'debugTable', '_getOrderColumnsFn'),
     )
   },

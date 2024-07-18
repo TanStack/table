@@ -23,13 +23,13 @@ export const Rows: TableFeature = {
   ): void => {
     row._getAllCellsByColumnId = memo(
       () => [row.getAllCells()],
-      (allCells) => row_getAllCellsByColumnId(allCells),
+      () => row_getAllCellsByColumnId(row, table),
       getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId'),
     )
 
     row.getAllCells = memo(
       () => [table.getAllLeafColumns()],
-      (leafColumns) => row_getAllCells(row, table, leafColumns),
+      () => row_getAllCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getAllCells'),
     )
 
