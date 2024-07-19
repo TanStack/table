@@ -1,4 +1,8 @@
-import { row_getAllVisibleCells } from '../column-visibility/ColumnVisibility.utils'
+import {
+  column_getIsVisible,
+  row_getAllVisibleCells,
+} from '../column-visibility/ColumnVisibility.utils'
+import { table_getAllColumns } from '../../core/columns/Columns.utils'
 import type { Row } from '../../types/Row'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -170,31 +174,63 @@ export function table_getIsSomeColumnsPinned<
 export function table_getLeftLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(allColumns: Array<Column<TFeatures, TData, unknown>>, left?: Array<string>) {
+>(table: Table<TFeatures, TData>) {
+  const { left } = table.getState().columnPinning
   return (left ?? [])
-    .map((columnId) => allColumns.find((column) => column.id === columnId)!)
+    .map(
+      (columnId) =>
+        table_getAllColumns(table).find((column) => column.id === columnId)!,
+    )
     .filter(Boolean)
 }
 
 export function table_getRightLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(allColumns: Array<Column<TFeatures, TData, unknown>>, right?: Array<string>) {
+>(table: Table<TFeatures, TData>) {
+  const { right } = table.getState().columnPinning
   return (right ?? [])
-    .map((columnId) => allColumns.find((column) => column.id === columnId)!)
+    .map(
+      (columnId) =>
+        table_getAllColumns(table).find((column) => column.id === columnId)!,
+    )
     .filter(Boolean)
 }
 
 export function table_getCenterLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  allColumns: Array<Column<TFeatures, TData, unknown>>,
-  left?: Array<string>,
-  right?: Array<string>,
-) {
+>(table: Table<TFeatures, TData>) {
+  const { left, right } = table.getState().columnPinning
   const leftAndRight: Array<string> = [...(left ?? []), ...(right ?? [])]
-  return allColumns.filter((d) => !leftAndRight.includes(d.id))
+  return table_getAllColumns(table).filter((d) => !leftAndRight.includes(d.id))
+}
+
+export function table_getLeftVisibleLeafColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  return table_getLeftLeafColumns(table).filter((column) =>
+    column_getIsVisible(column, table),
+  )
+}
+
+export function table_getRightVisibleLeafColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  return table_getRightLeafColumns(table).filter((column) =>
+    column_getIsVisible(column, table),
+  )
+}
+
+export function table_getCenterVisibleLeafColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  return table_getCenterLeafColumns(table).filter((column) =>
+    column_getIsVisible(column, table),
+  )
 }
 
 export function getDefaultColumnPinningState(): ColumnPinningState {

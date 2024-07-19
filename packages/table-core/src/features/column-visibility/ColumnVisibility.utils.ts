@@ -1,6 +1,8 @@
-import { table_getAllFlatColumns } from '../../core/columns/Columns.utils'
+import {
+  table_getAllFlatColumns,
+  table_getAllLeafColumns,
+} from '../../core/columns/Columns.utils'
 import { row_getAllCells } from '../../core/rows/Rows.utils'
-import { getMemoOptions, memo } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -98,36 +100,21 @@ export function row_getVisibleCells<
   return [...left, ...center, ...right]
 }
 
-//TODO refactor this out
-export function table_makeVisibleColumnsMethod<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  table: Table<TFeatures, TData>,
-  key: string,
-  getColumns: () => Array<Column<TFeatures, TData, unknown>>,
-): () => Array<Column<TFeatures, TData, unknown>> {
-  return memo(
-    () => [
-      getColumns(),
-      getColumns()
-        .filter((column) => column_getIsVisible(column, table))
-        .map((d) => d.id)
-        .join('_'),
-    ],
-    (columns) => {
-      return columns.filter((column) => column_getIsVisible(column, table))
-    },
-    getMemoOptions(table.options, 'debugColumns', key),
-  )
-}
-
 export function table_getVisibleFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
   return table_getAllFlatColumns(table).filter((column) =>
     column_getIsVisible(column, table),
+  )
+}
+
+export function table_getVisibleLeafColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  return table_getAllLeafColumns(table, table._getOrderColumnsFn()).filter(
+    (column) => column_getIsVisible(column, table),
   )
 }
 

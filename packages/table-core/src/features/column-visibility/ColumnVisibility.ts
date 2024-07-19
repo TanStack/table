@@ -9,7 +9,7 @@ import {
   table_getIsAllColumnsVisible,
   table_getIsSomeColumnsVisible,
   table_getToggleAllColumnsVisibilityHandler,
-  table_makeVisibleColumnsMethod,
+  table_getVisibleFlatColumns,
   table_resetColumnVisibility,
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
@@ -94,16 +94,16 @@ export const ColumnVisibility: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
-    table.getVisibleFlatColumns = table_makeVisibleColumnsMethod(
-      table,
-      'getVisibleFlatColumns',
-      () => table.getAllFlatColumns(),
+    table.getVisibleFlatColumns = memo(
+      () => [table.getState().columnVisibility, table.options.columns],
+      () => table_getVisibleFlatColumns(table),
+      getMemoOptions(table.options, 'debugColumns', 'getVisibleFlatColumns'),
     )
 
-    table.getVisibleLeafColumns = table_makeVisibleColumnsMethod(
-      table,
-      'getVisibleLeafColumns',
-      () => table.getAllLeafColumns(),
+    table.getVisibleLeafColumns = memo(
+      () => [table.getState().columnVisibility, table.options.columns],
+      () => table_getVisibleFlatColumns(table),
+      getMemoOptions(table.options, 'debugColumns', 'getVisibleLeafColumns'),
     )
 
     table.setColumnVisibility = (updater) =>
