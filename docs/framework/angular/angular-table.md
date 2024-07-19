@@ -49,7 +49,7 @@ Example:
 })
 ```
 
-```angular2html
+```angular-html
 
 <tbody>
 @for (row of table.getRowModel().rows; track row.id) {
@@ -89,7 +89,7 @@ In most cases, each TemplateRef will be rendered with the $implicit context valu
 - Cell: `CellContext<T, ?>`,
 - Footer: `HeaderContext<T, ?>`
 
-```angular17html
+```angular-html
 
 <ng-container
   *flexRender="
@@ -111,7 +111,7 @@ In most cases, each TemplateRef will be rendered with the $implicit context valu
 
 Full example:
 
-```ts
+```angular-ts
 import type {
   CellContext,
   ColumnDef,
@@ -251,7 +251,7 @@ is then defined to be used in the component. If any of the context properties ar
 needed in your component, feel free to use them. Please take note that only input signal is supported, 
 when defining access to context properties, using this approach.
 
-```ts
+```angular-ts
 @Component({
   template: `
     <input
