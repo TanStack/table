@@ -113,8 +113,8 @@ export function table_getVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  return table_getAllLeafColumns(table).filter(
-    (column) => column_getIsVisible(column, table),
+  return table_getAllLeafColumns(table).filter((column) =>
+    column_getIsVisible(column, table),
   )
 }
 

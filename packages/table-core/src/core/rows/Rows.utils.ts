@@ -115,11 +115,9 @@ export function row_getAllCells<
   row: Row<TFeatures, TData>,
   table: Table<TFeatures, TData>,
 ): Array<Cell<TFeatures, TData, unknown>> {
-  return table_getAllLeafColumns(table).map(
-    (column) => {
-      return _createCell(column, row, table)
-    },
-  )
+  return table_getAllLeafColumns(table).map((column) => {
+    return _createCell(column, row, table)
+  })
 }
 
 export function row_getAllCellsByColumnId<
