@@ -10,6 +10,7 @@ import {
   table_getIsSomeRowsPinned,
   table_getTopRows,
   table_resetRowPinning,
+  table_setRowPinning,
 } from './RowPinning.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -55,8 +56,7 @@ export const RowPinning: TableFeature = {
 
     row.getPinnedIndex = memo(
       () => [table.getRowModel().rows, table.getState().rowPinning],
-      (allRows, rowPinning) =>
-        row_getPinnedIndex(row, table, allRows, rowPinning),
+      () => row_getPinnedIndex(row, table),
       getMemoOptions(table.options, 'debugRows', 'getPinnedIndex'),
     )
 
@@ -68,8 +68,7 @@ export const RowPinning: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowPinning<TFeatures, TData>>,
   ): void => {
-    table.setRowPinning = (updater) =>
-      table.options.onRowPinningChange?.(updater)
+    table.setRowPinning = (updater) => table_setRowPinning(table, updater)
 
     table.resetRowPinning = (defaultState) =>
       table_resetRowPinning(table, defaultState)
@@ -79,21 +78,19 @@ export const RowPinning: TableFeature = {
 
     table.getTopRows = memo(
       () => [table.getRowModel().rows, table.getState().rowPinning.top],
-      (allRows, topPinnedRowIds) =>
-        table_getTopRows(table, allRows, topPinnedRowIds),
+      () => table_getTopRows(table),
       getMemoOptions(table.options, 'debugRows', 'getTopRows'),
     )
 
     table.getBottomRows = memo(
       () => [table.getRowModel().rows, table.getState().rowPinning.bottom],
-      (allRows, bottomPinnedRowIds) =>
-        table_getBottomRows(table, allRows, bottomPinnedRowIds),
+      () => table_getBottomRows(table),
       getMemoOptions(table.options, 'debugRows', 'getBottomRows'),
     )
 
     table.getCenterRows = memo(
       () => [table.getRowModel().rows, table.getState().rowPinning],
-      (allRows, rowPinning) => table_getCenterRows(allRows, rowPinning),
+      () => table_getCenterRows(table),
       getMemoOptions(table.options, 'debugRows', 'getCenterRows'),
     )
   },

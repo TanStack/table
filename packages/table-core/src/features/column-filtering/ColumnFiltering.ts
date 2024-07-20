@@ -78,7 +78,7 @@ export const ColumnFiltering: TableFeature = {
 
     column.getCanFilter = () => column_getCanFilter(column, table)
 
-    column.getIsFiltered = () => column_getIsFiltered(column)
+    column.getIsFiltered = () => column_getIsFiltered(column, table)
 
     column.getFilterValue = () => column_getFilterValue(column, table)
 

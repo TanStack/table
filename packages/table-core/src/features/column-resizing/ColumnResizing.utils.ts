@@ -23,7 +23,7 @@ export function column_getCanResize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(table: Table<TFeatures, TData>, column: Column<TFeatures, TData, TValue>) {
+>( column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>,) {
   return (
     (column.columnDef.enableResizing ?? true) &&
     (table.options.enableColumnResizing ?? true)
@@ -34,7 +34,7 @@ export function column_getIsResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(table: Table<TFeatures, TData>, column: Column<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>, ) {
   return table.getState().columnSizingInfo.isResizingColumn === column.id
 }
 
@@ -48,7 +48,7 @@ export function header_getResizeHandler<
   _contextDocument?: Document,
 ) {
   const column = table_getColumn(table, header.column.id)!
-  const canResize = column_getCanResize(table, column)
+  const canResize = column_getCanResize(column, table)
 
   return (event: unknown) => {
     if (!canResize) {

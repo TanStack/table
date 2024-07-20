@@ -50,8 +50,13 @@ export const ColumnOrdering: TableFeature = {
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
     column.getIndex = memo(
-      (position) => [column_getVisibleLeafColumns(table, position)],
-      (columns) => column_getIndex(columns, column as any), //TODO: fix this
+      (position) => [
+        position,
+        table.getState().columnOrder,
+        table.getState().columnPinning,
+        table.getState().grouping,
+      ],
+      (position) => column_getIndex(column, table, position),
       getMemoOptions(table.options, 'debugColumns', 'getIndex'),
     )
 

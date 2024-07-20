@@ -57,8 +57,8 @@ export const ColumnVisibility: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
-    column.toggleVisibility = (value) =>
-      column_toggleVisibility(column, table, value)
+    column.toggleVisibility = (visible) =>
+      column_toggleVisibility(column, table, visible)
 
     column.getIsVisible = () => column_getIsVisible(column, table)
 

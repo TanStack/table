@@ -53,9 +53,9 @@ export const ColumnResizing: TableFeature = {
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnResizing>,
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-    column.getCanResize = () => column_getCanResize(table, column)
+    column.getCanResize = () => column_getCanResize(column, table)
 
-    column.getIsResizing = () => column_getIsResizing(table, column)
+    column.getIsResizing = () => column_getIsResizing(column, table)
   },
 
   _createHeader: <

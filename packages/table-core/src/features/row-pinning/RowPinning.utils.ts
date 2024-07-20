@@ -4,7 +4,6 @@ import {
   table_getRow,
 } from '../../core/rows/Rows.utils'
 import { row_getIsAllParentsExpanded } from '../row-expanding/RowExpanding.utils'
-import { table_getRowModel } from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -62,10 +61,11 @@ function table_getPinnedRows<
   TData extends RowData,
 >(
   table: Table<TFeatures, TData>,
-  visibleRows: Array<Row<TFeatures, TData>>,
-  pinnedRowIds: Array<string>,
   position: 'top' | 'bottom',
 ): Array<Row<TFeatures, TData>> {
+  const visibleRows = table.getRowModel().rows
+  const pinnedRowIds = table.getState().rowPinning[position]
+
   const rows =
     table.options.keepPinnedRows ?? true
       ? //get all rows that are pinned even if they would not be otherwise visible
@@ -87,33 +87,24 @@ function table_getPinnedRows<
 export function table_getTopRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData>,
-  allRows: Array<Row<TFeatures, TData>>,
-  topPinnedRowIds: Array<string>,
-): Array<Row<TFeatures, TData>> {
-  return table_getPinnedRows(table, allRows, topPinnedRowIds, 'top')
+>(table: Table<TFeatures, TData>): Array<Row<TFeatures, TData>> {
+  return table_getPinnedRows(table, 'top')
 }
 
 export function table_getBottomRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData>,
-  allRows: Array<Row<TFeatures, TData>>,
-  bottomPinnedRowIds: Array<string>,
-): Array<Row<TFeatures, TData>> {
-  return table_getPinnedRows(table, allRows, bottomPinnedRowIds, 'bottom')
+>(table: Table<TFeatures, TData>): Array<Row<TFeatures, TData>> {
+  return table_getPinnedRows(table, 'bottom')
 }
 
 export function table_getCenterRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  allRows: Array<Row<TFeatures, TData>>,
-  rowPinning: RowPinningState,
-): Array<Row<TFeatures, TData>> {
-  const { top, bottom } = rowPinning
+>(table: Table<TFeatures, TData>): Array<Row<TFeatures, TData>> {
+  const { top, bottom } = table.getState().rowPinning
+  const allRows = table.getRowModel().rows
+
   const topAndBottom = new Set([...top, ...bottom])
   return allRows.filter((d) => !topAndBottom.has(d.id))
 }
@@ -152,21 +143,12 @@ export function row_getIsPinned<
 export function row_getPinnedIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  table: Table<TFeatures, TData>,
-  allRows: Array<Row<TFeatures, TData>> = table_getRowModel(table).rows,
-  rowPinning = table.getState().rowPinning,
-): number {
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>): number {
   const position = row_getIsPinned(row, table)
   if (!position) return -1
 
-  const { bottom, top } = rowPinning
-
   const visiblePinnedRowIds = (
-    position === 'top'
-      ? table_getTopRows(table, allRows, top)
-      : table_getBottomRows(table, allRows, bottom)
+    position === 'top' ? table_getTopRows(table) : table_getBottomRows(table)
   ).map(({ id }) => id)
 
   return visiblePinnedRowIds.indexOf(row.id)

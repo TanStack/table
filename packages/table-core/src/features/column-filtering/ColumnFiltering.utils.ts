@@ -72,8 +72,8 @@ export function column_getIsFiltered<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>) {
-  return column.getFilterIndex() > -1
+>(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
+  return column_getFilterIndex(column, table) > -1
 }
 
 export function column_getFilterValue<

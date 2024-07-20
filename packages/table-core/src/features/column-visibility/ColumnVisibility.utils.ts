@@ -19,12 +19,12 @@ export function column_toggleVisibility<
 >(
   column: Column<TFeatures, TData, TValue>,
   table: Table<TFeatures, TData>,
-  value?: boolean,
+  visible?: boolean,
 ): void {
   if (column_getCanHide(column, table)) {
     table_setColumnVisibility(table, (old) => ({
       ...old,
-      [column.id]: value ?? !column_getIsVisible(column, table),
+      [column.id]: visible ?? !column_getIsVisible(column, table),
     }))
   }
 }

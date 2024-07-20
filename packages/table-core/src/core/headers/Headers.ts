@@ -1,6 +1,8 @@
 import { getMemoOptions, memo } from '../../utils'
 import { _createHeader } from './createHeader'
 import {
+  header_getContext,
+  header_getLeafHeaders,
   table_getFlatHeaders,
   table_getFooterGroups,
   table_getHeaderGroups,
@@ -13,18 +15,31 @@ import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 
 export const Headers: TableFeature = {
+  _createHeader: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    header: Header<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
+  ): void => {
+    header.getLeafHeaders = () => header_getLeafHeaders(header)
+
+    header.getContext = () => header_getContext(header, table)
+  },
+
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
     table.getHeaderGroups = memo(
       () => [
-        table.getAllColumns(),
-        table.getVisibleLeafColumns(),
-        table.getState().columnPinning.left,
-        table.getState().columnPinning.right,
+        table.options.columns,
+        table.getState().columnOrder,
+        table.getState().grouping,
+        table.getState().columnPinning,
+        table.options.groupedColumnMode,
       ],
-      (allColumns, leafColumns, left, right) =>
-        table_getHeaderGroups(table, allColumns, leafColumns, left, right),
+      () => table_getHeaderGroups(table),
       getMemoOptions(table.options, 'debugHeaders', 'getHeaderGroups'),
     )
 
@@ -49,35 +64,5 @@ export const Headers: TableFeature = {
       (left, center, right) => table_getLeafHeaders(left, center, right),
       getMemoOptions(table.options, 'debugHeaders', 'getLeafHeaders'),
     )
-  },
-
-  _createHeader: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    header: Header<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
-  ): void => {
-    header.getLeafHeaders = (): Array<Header<TFeatures, TData, TValue>> => {
-      const leafHeaders: Array<Header<TFeatures, TData, TValue>> = []
-
-      const recurseHeader = (h: Header_Header<TFeatures, TData, TValue>) => {
-        if (h.subHeaders.length) {
-          h.subHeaders.map(recurseHeader)
-        }
-        leafHeaders.push(h as Header<TFeatures, TData, TValue>)
-      }
-
-      recurseHeader(header)
-
-      return leafHeaders
-    }
-
-    header.getContext = () => ({
-      column: header.column,
-      header,
-      table,
-    })
   },
 }

@@ -86,7 +86,7 @@ export const RowSorting: TableFeature = {
     column.getFirstSortDir = () => column_getFirstSortDir(column, table)
 
     column.getNextSortingOrder = (multi?: boolean) =>
-      column_getNextSortingOrder(column, table)
+      column_getNextSortingOrder(column, table, multi)
 
     column.getCanSort = () => column_getCanSort(column, table)
 

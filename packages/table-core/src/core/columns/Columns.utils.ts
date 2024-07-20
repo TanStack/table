@@ -33,7 +33,7 @@ export function column_getLeafColumns<
 ): Array<Column<TFeatures, TData, TValue>> {
   if (column.columns.length) {
     const leafColumns = column.columns.flatMap(
-      (c) => column_getLeafColumns(c, table), //recursive
+      (col) => column_getLeafColumns(col, table), //recursive
     )
 
     return table_getOrderColumnsFn(table)(leafColumns as any) as any

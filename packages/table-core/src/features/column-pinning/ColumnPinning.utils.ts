@@ -129,7 +129,9 @@ export function row_getLeftVisibleCells<
 export function row_getRightVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(allCells: Array<Cell<TFeatures, TData, unknown>>, right?: Array<string>) {
+>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
+  const allCells = row_getAllVisibleCells(row, table)
+  const { right } = table.getState().columnPinning
   const cells = (right ?? [])
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)

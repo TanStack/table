@@ -11,9 +11,11 @@ export function column_getIndex<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  columns: Array<Column<TFeatures, TData, TValue>>,
   column: Column<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
+  position?: ColumnPinningPosition | 'center',
 ) {
+  const columns = column_getVisibleLeafColumns(table, position)
   return columns.findIndex((d) => d.id === column.id)
 }
 

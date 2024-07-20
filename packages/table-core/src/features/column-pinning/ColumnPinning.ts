@@ -78,11 +78,7 @@ export const ColumnPinning: TableFeature = {
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
     row.getCenterVisibleCells = memo(
-      () => [
-        row._getAllVisibleCells(),
-        table.getState().columnPinning.left,
-        table.getState().columnPinning.right,
-      ],
+      () => [row._getAllVisibleCells(), table.getState().columnPinning],
       () => row_getCenterVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getCenterVisibleCells'),
     )
@@ -93,7 +89,7 @@ export const ColumnPinning: TableFeature = {
     )
     row.getRightVisibleCells = memo(
       () => [row._getAllVisibleCells(), table.getState().columnPinning.right],
-      (allCells, right) => row_getRightVisibleCells(allCells, right),
+      () => row_getRightVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getRightVisibleCells'),
     )
   },

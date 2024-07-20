@@ -91,11 +91,10 @@ export function table_getPreSelectedRowModel<
 export function table_getSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData>,
-  rowSelection: RowSelectionState,
-  rowModel: RowModel<TFeatures, TData>,
-) {
+>(table: Table<TFeatures, TData>) {
+  const { rowSelection } = table.getState()
+  const rowModel = table_getCoreRowModel(table)
+
   if (!Object.keys(rowSelection).length) {
     return {
       rows: [],
@@ -110,11 +109,10 @@ export function table_getSelectedRowModel<
 export function table_getFilteredSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData>,
-  rowSelection: RowSelectionState,
-  rowModel: RowModel<TFeatures, TData>,
-) {
+>(table: Table<TFeatures, TData>) {
+  const { rowSelection } = table.getState()
+  const rowModel = table_getCoreRowModel(table)
+
   if (!Object.keys(rowSelection).length) {
     return {
       rows: [],
@@ -131,9 +129,10 @@ export function table_getGroupedSelectedRowModel<
   TData extends RowData,
 >(
   table: Table<TFeatures, TData>,
-  rowSelection: RowSelectionState,
-  rowModel: RowModel<TFeatures, TData>,
 ) {
+  const { rowSelection } = table.getState()
+  const rowModel = table_getCoreRowModel(table)
+  
   if (!Object.keys(rowSelection).length) {
     return {
       rows: [],
