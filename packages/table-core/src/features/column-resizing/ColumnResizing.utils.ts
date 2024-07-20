@@ -23,7 +23,7 @@ export function column_getCanResize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->( column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>,) {
+>(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
   return (
     (column.columnDef.enableResizing ?? true) &&
     (table.options.enableColumnResizing ?? true)
@@ -34,7 +34,7 @@ export function column_getIsResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>, ) {
+>(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
   return table.getState().columnSizingInfo.isResizingColumn === column.id
 }
 

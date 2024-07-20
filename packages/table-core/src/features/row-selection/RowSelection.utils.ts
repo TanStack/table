@@ -127,12 +127,10 @@ export function table_getFilteredSelectedRowModel<
 export function table_getGroupedSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData>,
-) {
+>(table: Table<TFeatures, TData>) {
   const { rowSelection } = table.getState()
   const rowModel = table_getCoreRowModel(table)
-  
+
   if (!Object.keys(rowSelection).length) {
     return {
       rows: [],
