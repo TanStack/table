@@ -47,9 +47,6 @@ export interface Table_ColumnOrdering<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  _getOrderColumnsFn: () => (
-    columns: Array<Column<TFeatures, TData, unknown>>,
-  ) => Array<Column<TFeatures, TData, unknown>>
   /**
    * Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be passed to force a default blank state reset to `[]`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering#resetcolumnorder)

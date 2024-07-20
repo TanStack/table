@@ -25,15 +25,19 @@ export const Columns: TableFeature = {
     table: Table<TFeatures, TData>,
   ) => {
     column.getFlatColumns = memo(
-      () => [true],
+      () => [table.options.columns],
       () => column_getFlatColumns(column),
       getMemoOptions(table.options, 'debugColumns', 'column.getFlatColumns'),
     )
 
-    //@ts-ignore - don't know
     column.getLeafColumns = memo(
-      () => [table._getOrderColumnsFn()],
-      (orderColumns) => column_getLeafColumns(column as any, orderColumns), //TODO: fix type
+      () => [
+        table.getState().columnOrder,
+        table.getState().grouping,
+        table.options.columns,
+        table.options.groupedColumnMode,
+      ],
+      () => column_getLeafColumns(column, table),
       getMemoOptions(table.options, 'debugColumns', 'column.getLeafColumns'),
     )
   },
@@ -54,20 +58,25 @@ export const Columns: TableFeature = {
     )
 
     table.getAllFlatColumns = memo(
-      () => [table.getAllColumns()],
+      () => [table.options.columns],
       () => table_getAllFlatColumns(table),
       getMemoOptions(table.options, 'debugColumns', 'getAllFlatColumns'),
     )
 
     table._getAllFlatColumnsById = memo(
-      () => [table.getAllFlatColumns()],
+      () => [table.options.columns],
       () => table_getAllFlatColumnsById(table),
       getMemoOptions(table.options, 'debugColumns', 'getAllFlatColumnsById'),
     )
 
     table.getAllLeafColumns = memo(
-      () => [table.getAllColumns(), table._getOrderColumnsFn()],
-      (_, orderColumns) => table_getAllLeafColumns(table, orderColumns),
+      () => [
+        table.getState().columnOrder,
+        table.getState().grouping,
+        table.options.columns,
+        table.options.groupedColumnMode,
+      ],
+      () => table_getAllLeafColumns(table),
       getMemoOptions(table.options, 'debugColumns', 'getAllLeafColumns'),
     )
 

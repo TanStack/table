@@ -1,3 +1,4 @@
+import { table_getOrderColumnsFn } from '../../features/column-ordering/ColumnOrdering.utils'
 import { _createColumn } from './createColumn'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -28,14 +29,14 @@ export function column_getLeafColumns<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  orderColumns: (
-    cols: Array<Column<TFeatures, TData, TValue>>,
-  ) => Array<Column<TFeatures, TData, TValue>>,
+  table: Table<TFeatures, TData>,
 ): Array<Column<TFeatures, TData, TValue>> {
   if (column.columns.length) {
-    const leafColumns = column.columns.flatMap((c) => c.getLeafColumns())
+    const leafColumns = column.columns.flatMap(
+      (c) => column_getLeafColumns(c, table), //recursive
+    )
 
-    return orderColumns(leafColumns)
+    return table_getOrderColumnsFn(table)(leafColumns as any) as any
   }
 
   return [column]
@@ -126,16 +127,11 @@ export function table_getAllFlatColumnsById<
 export function table_getAllLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData>,
-  orderColumns: (
-    cols: Array<Column<TFeatures, TData, unknown>>,
-  ) => Array<Column<TFeatures, TData, unknown>>,
-): Array<Column<TFeatures, TData, unknown>> {
-  const leafColumns = table_getAllColumns(table).flatMap((column) =>
-    column.getLeafColumns(),
+>(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
+  const leafColumns = table_getAllColumns(table).flatMap(
+    (c) => column_getLeafColumns(c, table), //recursive
   )
-  return orderColumns(leafColumns)
+  return table_getOrderColumnsFn(table)(leafColumns)
 }
 
 export function table_getColumn<
@@ -148,7 +144,7 @@ export function table_getColumn<
   const column = table._getAllFlatColumnsById()[columnId]
 
   if (process.env.NODE_ENV !== 'production' && !column) {
-    console.error(`[Table] Column with id '${columnId}' does not exist.`)
+    console.warn(`[Table] Column with id '${columnId}' does not exist.`)
   }
 
   return column

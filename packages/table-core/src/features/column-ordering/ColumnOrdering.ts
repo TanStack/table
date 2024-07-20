@@ -4,7 +4,6 @@ import {
   column_getIndex,
   column_getIsFirstColumn,
   column_getIsLastColumn,
-  table_getOrderColumnsFn,
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './ColumnOrdering.utils'
@@ -71,15 +70,5 @@ export const ColumnOrdering: TableFeature = {
 
     table.resetColumnOrder = (defaultState) =>
       table_resetColumnOrder(table, defaultState)
-
-    table._getOrderColumnsFn = memo(
-      () => [
-        table.getState().columnOrder,
-        table.getState().grouping,
-        table.options.groupedColumnMode,
-      ],
-      () => table_getOrderColumnsFn<TFeatures, TData>(table),
-      getMemoOptions(table.options, 'debugTable', '_getOrderColumnsFn'),
-    )
   },
 }
