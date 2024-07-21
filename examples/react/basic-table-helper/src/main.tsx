@@ -1,14 +1,9 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
-import {
-  createColumnHelper,
-  flexRender,
-  tableFeatures,
-  useTable,
-} from '@tanstack/react-table'
+import { createTableHelper, flexRender } from '@tanstack/react-table'
 import './index.css'
 
-// This example uses the standalone `useTable` hook to create a table without the new `createTableHelper`. You can choose to use either way.
+// This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
 
 // 1. Define what the shape of your data will be for each row
 type Person = {
@@ -57,13 +52,16 @@ const defaultData: Array<Person> = [
 ]
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
-const _features = tableFeatures({}) //util method to create sharable TFeatures object/type
+const tableHelper = createTableHelper({
+  _features: {},
+  _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
+  TData: {} as Person,
+})
 
-// 4. Optionally, create a helper object to help define our columns with slightly better type inference for each column (TValue generic)
-const columnHelper = createColumnHelper<typeof _features, Person>()
+// 4. Create a helper object to help define our columns
+const { columnHelper } = tableHelper
 
-// 5. Define the columns for your table
-// (Instead of columnHelper, you could just give this array a type of `ColumnDef<typeof _features, Person>[]`)
+// 5. Define the columns for your table with a stable reference (in this case, defined statically outside of a react component)
 const columns = [
   // accessorKey method (most common for simple use-cases)
   columnHelper.accessor('firstName', {
@@ -103,13 +101,12 @@ function App() {
   const [data, _setData] = React.useState(() => [...defaultData])
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  // 7. Create the table instance with required _features, columns, and data
-  const table = useTable({
-    _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
-    _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
+  // 7. Create the table instance with the required columns and data.
+  // Features and row models are already defined in the table helper object above
+  const table = tableHelper.useTable({
     columns,
     data,
-    // add additional table options here
+    // add additional table options here or in the table helper above
   })
 
   // 8. Render your table markup from the table instance APIs

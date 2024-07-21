@@ -25,7 +25,7 @@ export interface TableOptions_Table<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _features?: TFeatures
+  _features: TFeatures
   /**
    * The row model options that you want to enable for the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
@@ -99,7 +99,7 @@ export interface Table_CoreProperties<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  _features: CoreTableFeatures & Partial<TableFeatures>
+  _features: CoreTableFeatures & TFeatures
   _rowModels: CachedRowModels<TFeatures, TData>
   /**
    * This is the resolved initial state of the table.

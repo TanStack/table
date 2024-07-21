@@ -2,7 +2,7 @@ import type { TableFeatures } from '../types/TableFeatures'
 
 export function tableFeatures<TFeatures extends TableFeatures>(
   features: TFeatures,
-): TableFeatures {
+): TFeatures {
   return features
 }
 

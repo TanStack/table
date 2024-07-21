@@ -1,10 +1,6 @@
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type {
-  AccessorFn,
-  ColumnDef,
-  ColumnDef_All,
-} from '../../types/ColumnDef'
+import type { AccessorFn, ColumnDef } from '../../types/ColumnDef'
 import type { Column } from '../../types/Column'
 
 export interface Column_CoreProperties<
@@ -75,7 +71,7 @@ export interface Column_Column<
 export interface TableOptions_Columns<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue extends CellData = CellData,
+  TValue extends CellData = any,
 > {
   /**
    * The array of column defs to use for the table.
@@ -94,7 +90,7 @@ export interface TableOptions_Columns<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#defaultcolumn)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  defaultColumn?: Partial<ColumnDef<TFeatures, TData, unknown>>
+  defaultColumn?: Partial<ColumnDef<TFeatures, TData, TValue>>
 }
 
 export interface Table_Columns<

@@ -4,7 +4,6 @@ import type {
   AccessorFn,
   AccessorFnColumnDef,
   AccessorKeyColumnDef,
-  ColumnDef,
   DisplayColumnDef,
   GroupColumnDef,
   IdentifiedColumnDef,
@@ -29,45 +28,32 @@ export type ColumnHelper<
   ) => TAccessor extends AccessorFn<TData>
     ? AccessorFnColumnDef<TFeatures, TData, TValue>
     : AccessorKeyColumnDef<TFeatures, TData, TValue>
-
-  columns: <TFeatures extends TableFeatures, TData extends RowData>(
-    columns:
-      | Array<ColumnDef<TFeatures, TData, any>>
-      | DisplayColumnDef<TFeatures, TData, any>
-      | GroupColumnDef<TFeatures, TData, any>,
-  ) => Array<ColumnDef<TFeatures, TData, unknown>>
-
   display: (
-    column: DisplayColumnDef<TFeatures, TData, any>,
-  ) => DisplayColumnDef<TFeatures, TData>
-
+    column: DisplayColumnDef<TFeatures, TData>,
+  ) => DisplayColumnDef<TFeatures, TData, unknown>
   group: (
     column: GroupColumnDef<TFeatures, TData>,
-  ) => GroupColumnDef<TFeatures, TData>
+  ) => GroupColumnDef<TFeatures, TData, unknown>
 }
 
-/**
- * Create a column helper to make it easier to define columns with better TValue type inference
- */
 export function createColumnHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(): ColumnHelper<TFeatures, TData> {
   return {
-    accessor: (accessor, accessorColumnDef) => {
+    accessor: (accessor, column) => {
       return typeof accessor === 'function'
         ? ({
-            ...accessorColumnDef,
+            ...column,
             accessorFn: accessor,
           } as any)
         : {
-            ...accessorColumnDef,
+            ...column,
             accessorKey: accessor,
           }
     },
-    columns: (columnDefs) => columnDefs as any,
-    display: (displayColumnDef) => displayColumnDef,
-    group: (groupColumnDef) => groupColumnDef,
+    display: (column) => column,
+    group: (column) => column,
   }
 }
 

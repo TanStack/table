@@ -2,23 +2,25 @@ import { createColumnHelper } from './columnHelper'
 import type { ColumnHelper } from './columnHelper'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
-import type { RowModelOptions } from '../types/RowModel'
 import type { Table } from '../types/Table'
 import type { TableOptions } from '../types/TableOptions'
 
+/**
+ * Options for creating a table helper to share common options across multiple tables
+ * Columns, data, and state are excluded from this type and reserved for only the `useTable`/`createTable` functions
+ */
 export type TableHelperOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Omit<
-  TableOptions<TFeatures, TData>,
-  '_features' | '_rowModels' | 'columns' | 'data' | 'state'
-> & {
-  TData?: TData
-  features: TFeatures
-  rowModels?: RowModelOptions<TFeatures, TData>
+> = Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'> & {
+  _features: TFeatures
+  TData: TData //provide a cast for the TData type
 }
 
-export type _TableHelper<
+/**
+ * Internal type that each adapter package will build off of to create a table helper
+ */
+export type TableHelper_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = {
@@ -33,6 +35,9 @@ export type _TableHelper<
   ) => Table<TFeatures, TData>
 }
 
+/**
+ * Internal function to create a table helper that each adapter package will use to create their own table helper
+ */
 export function _createTableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -40,24 +45,14 @@ export function _createTableHelper<
   tableCreator: (
     tableOptions: TableOptions<TFeatures, TData>,
   ) => Table<TFeatures, TData>,
-  {
-    TData: _TData,
-    features,
-    rowModels,
-    ...tableHelperOptions
-  }: TableHelperOptions<TFeatures, TData>,
-): _TableHelper<TFeatures, TData> {
-  const _tableOptions = {
-    _features: features,
-    _rowModels: rowModels,
-    ...tableHelperOptions,
-  }
+  tableHelperOptions: TableHelperOptions<TFeatures, TData>,
+): TableHelper_Core<TFeatures, TData> {
   return {
     columnHelper: createColumnHelper<TFeatures, TData>(),
-    features,
-    options: _tableOptions,
+    features: tableHelperOptions._features as TFeatures,
+    options: tableHelperOptions,
     tableCreator: (tableOptions) =>
-      tableCreator({ ..._tableOptions, ...tableOptions }),
+      tableCreator({ ...tableHelperOptions, ...tableOptions }),
   }
 }
 
@@ -73,16 +68,17 @@ export function _createTableHelper<
 // }
 
 // const tableHelper = _createTableHelper(_createTable, {
+//   _features: { RowSelection: {} },
+//   _rowModels: {},
 //   TData: {} as Person,
-//   features: { RowSelection: {} },
 // })
 
-// const columns = tableHelper.columnHelper.columns([
+// const columns = [
 //   tableHelper.columnHelper.accessor('firstName', { header: 'First Name' }),
 //   tableHelper.columnHelper.accessor('lastName', { header: 'Last Name' }),
 //   tableHelper.columnHelper.accessor('age', { header: 'Age' }),
 //   tableHelper.columnHelper.display({ header: 'Actions', id: 'actions' }),
-// ])
+// ]
 
 // const data: Array<Person> = []
 

@@ -5,14 +5,14 @@ import type {
   Table,
   TableFeatures,
   TableHelperOptions,
+  TableHelper_Core,
   TableOptions,
-  _TableHelper,
 } from '@tanstack/table-core'
 
 export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Omit<_TableHelper<TFeatures, TData>, 'tableCreator'> & {
+> = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
   useTable: (
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
@@ -20,10 +20,6 @@ export type TableHelper<
     >,
   ) => Table<TFeatures, TData>
 }
-
-export function createTableHelper<TFeatures extends TableFeatures>(
-  tableHelperOptions: TableHelperOptions<TFeatures, any>,
-): TableHelper<TFeatures, any>
 
 export function createTableHelper<
   TFeatures extends TableFeatures,
@@ -39,7 +35,7 @@ export function createTableHelper<
   }
 }
 
-// test 1 - TData in table helper
+// test
 
 // type Person = {
 //   firstName: string
@@ -48,45 +44,20 @@ export function createTableHelper<
 // }
 
 // const tableHelper = createTableHelper({
+//   _features: { RowSelection: {} },
 //   TData: {} as Person,
-//   features: { RowSelection: {} },
 // })
 
-// const columns = tableHelper.columnHelper.columns([
+// const columns = [
 //   tableHelper.columnHelper.accessor('firstName', { header: 'First Name' }),
 //   tableHelper.columnHelper.accessor('lastName', { header: 'Last Name' }),
 //   tableHelper.columnHelper.accessor('age', { header: 'Age' }),
 //   tableHelper.columnHelper.display({ header: 'Actions', id: 'actions' }),
-// ])
+// ]
 
 // const data: Array<Person> = []
 
 // tableHelper.useTable({
 //   columns,
-//   data,
-// })
-
-// test 2 - TData in column helper
-
-// const tableHelper2 = createTableHelper({
-//   features: { RowSelection: {} },
-// })
-
-// const columns2 = tableHelper2.columnHelper.columns<
-//   typeof tableHelper2.features,
-//   Person
-// >([
-//   tableHelper2.columnHelper.accessor('firstName', {
-//     header: 'First Name',
-//   }),
-//   tableHelper2.columnHelper.accessor('lastName', {
-//     header: 'Last Name',
-//   }),
-//   tableHelper2.columnHelper.accessor('age', { header: 'Age' }),
-//   tableHelper2.columnHelper.display({ header: 'Actions', id: 'actions' }),
-// ])
-
-// tableHelper2.useTable({
-//   columns: columns2,
 //   data,
 // })
