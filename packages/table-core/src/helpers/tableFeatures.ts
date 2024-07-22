@@ -10,7 +10,7 @@ import type { TableFeatures } from '../types/TableFeatures'
  * @example ```tsx
  * import { tableFeatures, ColumnVisibility, RowPinning } from '@tanstack/react-table'
  * const _features = tableFeatures({ ColumnVisibility, RowPinning });
- * 
+ *
  * const table = useTable({ _features, rowModels: {}, columns, data });
  * ```
  */
