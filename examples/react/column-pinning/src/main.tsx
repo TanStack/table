@@ -4,7 +4,13 @@ import { faker } from '@faker-js/faker'
 
 import './index.css'
 
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
+import {
+  ColumnOrdering,
+  ColumnPinning,
+  ColumnVisibility,
+  flexRender,
+  useTable,
+} from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type {
   ColumnDef,
@@ -13,7 +19,9 @@ import type {
 } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const _features = { ColumnVisibility, ColumnPinning, ColumnOrdering }
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -78,9 +86,8 @@ function App() {
   const rerender = () => setData(() => makeData(5000))
 
   const table = useTable({
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _features,
+    _rowModels: {},
     columns,
     data,
     state: {

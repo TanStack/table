@@ -1,14 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
-import './index.css'
-
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
+import {
+  ColumnResizing,
+  ColumnSizing,
+  flexRender,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
 import type {
   ColumnDef,
   ColumnResizeDirection,
   ColumnResizeMode,
 } from '@tanstack/react-table'
+import './index.css'
+
+const _features = tableFeatures({ ColumnResizing, ColumnSizing })
 
 type Person = {
   firstName: string
@@ -46,7 +52,7 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -113,9 +119,8 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _features,
+    _rowModels: {},
     columns,
     data,
     columnResizeMode,

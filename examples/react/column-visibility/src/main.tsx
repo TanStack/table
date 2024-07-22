@@ -1,10 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
+import {
+  ColumnVisibility,
+  flexRender,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 import './index.css'
 
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
-import type { ColumnDef } from '@tanstack/react-table'
+const _features = tableFeatures({ ColumnVisibility })
 
 type Person = {
   firstName: string
@@ -42,7 +47,7 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -95,7 +100,7 @@ const defaultColumns: Array<ColumnDef<any, Person>> = [
 ]
 
 function App() {
-  const [data, setData] = React.useState(() => [...defaultData])
+  const [data, _setData] = React.useState(() => [...defaultData])
   const [columns] = React.useState<typeof defaultColumns>(() => [
     ...defaultColumns,
   ])
@@ -104,9 +109,8 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _features,
+    _rowModels: {},
     columns,
     data,
     state: {

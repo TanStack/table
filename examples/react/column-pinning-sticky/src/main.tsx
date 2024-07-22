@@ -1,13 +1,25 @@
 import React, { type CSSProperties } from 'react'
 import ReactDOM from 'react-dom/client'
-
-import './index.css'
-
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
+import {
+  type Column,
+  type ColumnDef,
+  ColumnOrdering,
+  ColumnPinning,
+  ColumnVisibility,
+  flexRender,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
 import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
-import type { Column, ColumnDef } from '@tanstack/react-table'
+import './index.css'
+
+const _features = tableFeatures({
+  ColumnVisibility,
+  ColumnPinning,
+  ColumnOrdering,
+})
 
 //These are the important styles to make sticky column pinning work!
 //Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
@@ -88,9 +100,8 @@ function App() {
   const rerender = () => setData(() => makeData(30))
 
   const table = useTable({
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _features,
+    _rowModels: {},
     columns,
     data,
     debugTable: true,

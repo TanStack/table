@@ -1,11 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
-import './index.css'
-
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
+import {
+  ColumnResizing,
+  ColumnSizing,
+  flexRender,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef, Table } from '@tanstack/react-table'
+import './index.css'
+
+const _features = tableFeatures({ ColumnSizing, ColumnResizing })
 
 type Person = {
   firstName: string
@@ -16,7 +22,7 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -72,9 +78,8 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _features,
+    _rowModels: {},
     columns,
     data,
     defaultColumn: {
@@ -96,8 +101,7 @@ function App() {
   const columnSizeVars = React.useMemo(() => {
     const headers = table.getFlatHeaders()
     const colSizes: { [key: string]: number } = {}
-    for (let i = 0; i < headers.length; i++) {
-      const header = headers[i]
+    for (const header of headers) {
       colSizes[`--header-${header.id}-size`] = header.getSize()
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
@@ -215,7 +219,7 @@ function TableBody({ table }: { table: Table<any, Person> }) {
         >
           {row.getVisibleCells().map((cell) => {
             //simulate expensive render
-            for (let i = 0; i < 10000; i++) {
+            for (const _ of Array(10000)) {
               Math.random()
             }
 

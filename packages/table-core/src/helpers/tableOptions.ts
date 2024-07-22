@@ -6,15 +6,23 @@ export function tableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  options: Omit<TableOptions<TFeatures, TData>, 'columns'>,
-): Omit<TableOptions<TFeatures, TData>, 'columns'>
+  options: Omit<TableOptions<TFeatures, TData>, 'columns'> & {
+    _features: TFeatures
+  },
+): Omit<TableOptions<TFeatures, TData>, 'columns' | '_features'> & {
+  _features: TFeatures
+}
 
 export function tableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  options: Omit<TableOptions<TFeatures, TData>, 'data'>,
-): Omit<TableOptions<TFeatures, TData>, 'data'>
+  options: Omit<TableOptions<TFeatures, TData>, 'data'> & {
+    _features: TFeatures
+  },
+): Omit<TableOptions<TFeatures, TData>, 'data' | '_features'> & {
+  _features: TFeatures
+}
 
 export function tableOptions<
   TFeatures extends TableFeatures,
@@ -27,8 +35,12 @@ export function tableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  options: Omit<TableOptions<TFeatures, TData>, 'data' | 'columns'>,
-): Omit<TableOptions<TFeatures, TData>, 'data' | 'columns'>
+  options: Omit<TableOptions<TFeatures, TData>, 'data' | 'columns'> & {
+    _features: TFeatures
+  },
+): Omit<TableOptions<TFeatures, TData>, 'data' | 'columns' | '_features'> & {
+  _features: TFeatures
+}
 
 export function tableOptions<
   TFeatures extends TableFeatures,
