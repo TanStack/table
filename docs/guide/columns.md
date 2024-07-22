@@ -67,6 +67,6 @@ There are dozens of Column APIs that you can use to interact with the table stat
 
 ### Column Rendering
 
-Don't necessarily use `column` objects to render `headers` or `cells` directly. Instead, use the [`header](../headers) and [`cell`](../cells) objects, as discussed above.
+Don't necessarily use `column` objects to render `headers` or `cells` directly. Instead, use the [`header`](../headers) and [`cell`](../cells) objects, as discussed above.
 
 But if you are just rendering a list of columns somewhere else in your UI for something like a column visibility menu or something similar, you can just map over a columns array and render out the UI as you normally would.
