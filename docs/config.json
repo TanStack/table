@@ -499,6 +499,10 @@
               "label": "Basic"
             },
             {
+              "to": "framework/react/examples/basic-table-helper",
+              "label": "Basic with Helpers"
+            },
+            {
               "to": "framework/react/examples/column-groups",
               "label": "Header Groups"
             },
@@ -601,10 +605,6 @@
             {
               "to": "framework/react/examples/kitchen-sink",
               "label": "Kitchen Sink"
-            },
-            {
-              "to": "framework/react/examples/bootstrap",
-              "label": "React Bootstrap"
             },
             {
               "to": "framework/react/examples/material-ui-pagination",

@@ -1,14 +1,10 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
-import {
-  createColumnHelper,
-  flexRender,
-  tableFeatures,
-  useTable,
-} from '@tanstack/react-table'
+import { flexRender, tableFeatures, useTable } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 import './index.css'
 
-// This example uses the standalone `useTable` hook to create a table without the new `createTableHelper`. You can choose to use either way.
+// This example uses the classic standalone `useTable` hook to create a table without the new `createTableHelper` util.
 
 // 1. Define what the shape of your data will be for each row
 type Person = {
@@ -54,56 +50,58 @@ const defaultData: Array<Person> = [
     status: 'Single',
     progress: 70,
   },
+  {
+    firstName: 'kevin',
+    lastName: 'vandy',
+    age: 28,
+    visits: 100,
+    status: 'Single',
+    progress: 70,
+  },
 ]
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
 const _features = tableFeatures({}) //util method to create sharable TFeatures object/type
 
-// 4. Optionally, create a helper object to help define our columns with slightly better type inference for each column (TValue generic)
-const columnHelper = createColumnHelper<typeof _features, Person>()
-
-// 5. Define the columns for your table
-// (Instead of columnHelper, you could just give this array a type of `ColumnDef<typeof _features, Person>[]`)
-const columns = [
-  // accessorKey method (most common for simple use-cases)
-  columnHelper.accessor('firstName', {
+// 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns. Alternatively, check out the createTableHelper/createColumnHelper util for an even more type-safe way to define columns.
+const columns: Array<ColumnDef<typeof _features, Person>> = [
+  {
+    accessorKey: 'firstName', // accessorKey method (most common for simple use-cases)
+    header: 'First Name',
     cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
-  }),
-  // accessorFn used (alternative) along with a custom id
-  columnHelper.accessor((row) => row.lastName, {
+  },
+  {
+    accessorFn: (row) => row.lastName, // accessorFn used (alternative) along with a custom id
     id: 'lastName',
-    cell: (info) => <i>{info.getValue()}</i>,
     header: () => <span>Last Name</span>,
-    footer: (info) => info.column.id,
-  }),
-  // accessorFn used to transform the data
-  columnHelper.accessor((row) => Number(row.age), {
+    cell: (info) => <i>{info.getValue<string>()}</i>,
+  },
+  {
+    accessorFn: (row) => Number(row.age), // accessorFn used to transform the data
     id: 'age',
     header: () => 'Age',
     cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('visits', {
+  },
+  {
+    accessorKey: 'visits',
     header: () => <span>Visits</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('status', {
+  },
+  {
+    accessorKey: 'status',
     header: 'Status',
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('progress', {
+  },
+  {
+    accessorKey: 'progress',
     header: 'Profile Progress',
-    footer: (info) => info.column.id,
-  }),
+  },
 ]
 
 function App() {
-  // 6. Store data with a stable reference
+  // 5. Store data with a stable reference
   const [data, _setData] = React.useState(() => [...defaultData])
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  // 7. Create the table instance with required _features, columns, and data
+  // 6. Create the table instance with required _features, columns, and data
   const table = useTable({
     _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
     _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
@@ -112,7 +110,7 @@ function App() {
     // add additional table options here
   })
 
-  // 8. Render your table markup from the table instance APIs
+  // 7. Render your table markup from the table instance APIs
   return (
     <div className="p-2">
       <table>

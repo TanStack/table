@@ -1,11 +1,10 @@
 import React, { type CSSProperties } from 'react'
 import ReactDOM from 'react-dom/client'
-
-import './index.css'
-
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
-
-// needed for table body level scope DnD setup
+import {
+  ColumnOrdering,
+  createTableHelper,
+  flexRender,
+} from '@tanstack/react-table'
 import {
   DndContext,
   type DragEndEvent,
@@ -23,17 +22,26 @@ import {
   horizontalListSortingStrategy,
   useSortable,
 } from '@dnd-kit/sortable'
-
-// needed for row & cell level scope DnD setup
 import { CSS } from '@dnd-kit/utilities'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { Cell, ColumnDef, Header } from '@tanstack/react-table'
 
+import './index.css'
+
+const tableHelper = createTableHelper({
+  _features: { ColumnOrdering: ColumnOrdering },
+  _rowModels: {},
+  TData: {} as Person,
+  debugTable: true,
+  debugHeaders: true,
+  debugColumns: true,
+})
+
 const DraggableTableHeader = ({
   header,
 }: {
-  header: Header<Person, unknown>
+  header: Header<typeof tableHelper.features, Person, unknown>
 }) => {
   const { attributes, isDragging, listeners, setNodeRef, transform } =
     useSortable({
@@ -62,7 +70,11 @@ const DraggableTableHeader = ({
   )
 }
 
-const DragAlongCell = ({ cell }: { cell: Cell<any, Person, unknown> }) => {
+const DragAlongCell = ({
+  cell,
+}: {
+  cell: Cell<typeof tableHelper.features, Person, unknown>
+}) => {
   const { isDragging, setNodeRef, transform } = useSortable({
     id: cell.column.id,
   })
@@ -84,7 +96,9 @@ const DragAlongCell = ({ cell }: { cell: Cell<any, Person, unknown> }) => {
 }
 
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<
+    Array<ColumnDef<typeof tableHelper.features, Person>>
+  >(
     () => [
       {
         accessorKey: 'firstName',
@@ -134,25 +148,19 @@ function App() {
 
   const rerender = () => setData(() => makeData(20))
 
-  const table = useTable({
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+  const table = tableHelper.useTable({
     columns,
     data,
     state: {
       columnOrder,
     },
     onColumnOrderChange: setColumnOrder,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
   })
 
   // reorder columns after drag & drop
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
-    if (active && over && active.id !== over.id) {
+    if (over && active.id !== over.id) {
       setColumnOrder((prevColumnOrder) => {
         const oldIndex = prevColumnOrder.indexOf(active.id as string)
         const newIndex = prevColumnOrder.indexOf(over.id as string)
@@ -201,7 +209,7 @@ function App() {
           <tbody>
             {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
+                {row.getAllCells().map((cell) => (
                   <SortableContext
                     key={cell.id}
                     items={columnOrder}
@@ -214,7 +222,7 @@ function App() {
             ))}
           </tbody>
         </table>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+        <pre>{JSON.stringify(columnOrder, null, 2)}</pre>
       </div>
     </DndContext>
   )

@@ -44,7 +44,7 @@ const defaultData: Array<Person> = [
   {
     firstName: 'kevin',
     lastName: 'vandy',
-    age: 12,
+    age: 28,
     visits: 100,
     status: 'Single',
     progress: 70,
