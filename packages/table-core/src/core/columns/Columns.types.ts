@@ -71,7 +71,7 @@ export interface Column_Column<
 export interface TableOptions_Columns<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue extends CellData = any,
+  TValue extends CellData = CellData,
 > {
   /**
    * The array of column defs to use for the table.

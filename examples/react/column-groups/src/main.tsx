@@ -5,10 +5,11 @@ import './index.css'
 
 import {
   createColumnHelper,
-  createCoreRowModel,
   flexRender,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 
 type Person = {
   firstName: string
@@ -46,13 +47,14 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const columnHelper = createColumnHelper<any, Person>()
+const _features = tableFeatures({})
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
 
 const columns = [
   columnHelper.group({
     id: 'hello',
     header: () => <span>Hello</span>,
-    // footer: props => props.column.id,
     columns: [
       columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
@@ -64,7 +66,7 @@ const columns = [
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
       }),
-    ],
+    ] as Array<ColumnDef<typeof _features, Person>>,
   }),
   columnHelper.group({
     header: 'Info',
@@ -89,9 +91,9 @@ const columns = [
             header: 'Profile Progress',
             footer: (props) => props.column.id,
           }),
-        ],
+        ] as Array<ColumnDef<typeof _features, Person>>,
       }),
-    ],
+    ] as Array<ColumnDef<typeof _features, Person>>,
   }),
 ]
 
@@ -100,9 +102,8 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _features,
+    _rowModels: {},
     columns,
     data,
   })

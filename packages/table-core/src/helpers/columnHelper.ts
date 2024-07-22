@@ -32,10 +32,27 @@ export type ColumnHelper<
     column: DisplayColumnDef<TFeatures, TData>,
   ) => DisplayColumnDef<TFeatures, TData, unknown>
   group: (
-    column: GroupColumnDef<TFeatures, TData>,
+    column: GroupColumnDef<TFeatures, TData, unknown>,
   ) => GroupColumnDef<TFeatures, TData, unknown>
 }
 
+/**
+ * A helper utility for creating column definitions with slightly better type inference for each individual column.
+ * The `TValue` generic is inferred based on the accessor key or function provided.
+ *
+ * **Note:** From a JavaScript perspective, the functions in these helpers do not do anything. They are only used to help TypeScript infer the correct types for the column definitions.
+ *
+ * @example
+ * ```tsx
+ * const helper = createColumnHelper<typeof _features, Person>() // _features is the result of `tableFeatures({})` helper
+ *
+ * const columns = [
+ *  helper.display({ id: 'actions', header: 'Actions' }),
+ *  helper.accessor('firstName', {}),
+ *  helper.accessor((row) => row.lastName, {}
+ * ]
+ * ```
+ */
 export function createColumnHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -86,7 +103,7 @@ export function createColumnHelper<
 // const test: DeepKeys<Person> = 'nested.foo.0.bar'
 // const test2: DeepKeys<Person> = 'nested.bar'
 
-// const helper = createColumnHelper<any, Person>()
+// const helper = createColumnHelper<{}, Person>()
 
 // helper.accessor('nested.foo', {
 //   cell: (info) => info.getValue(),
@@ -100,9 +117,13 @@ export function createColumnHelper<
 //   cell: (info) => info.getValue(),
 // })
 
-// helper.columns([
-//   helper.accessor('firstName', { cell: (info) => info.getValue() }),
-//   helper.accessor('lastName', { cell: (info) => info.getValue() }),
-//   helper.accessor('age', { cell: (info) => info.getValue() }),
-//   helper.display({ header: 'Visits', id: 'visits' }),
-// ])
+// helper.group({
+//   id: 'hello',
+//   columns: [
+//     helper.accessor('firstName', {}),
+//     helper.accessor((row) => row.lastName, {
+//       id: 'lastName',
+//     }),
+//     helper.accessor('age', {}),
+//   ] as Array<ColumnDef<{}, Person>>,
+// })

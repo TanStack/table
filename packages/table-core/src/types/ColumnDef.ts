@@ -54,7 +54,7 @@ type ColumnIdentifiers<
 export type _ColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = UnionToIntersection<
   | ('ColumnVisibility' extends keyof TFeatures
       ? ColumnDef_ColumnVisibility
@@ -87,13 +87,13 @@ export type _ColumnDefBase<
 export type ColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
-> = _ColumnDefBase<TableFeatures, TData, TValue>
+  TValue extends CellData = CellData,
+> = _ColumnDefBase<TFeatures, TData, TValue>
 
 export type IdentifiedColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = ColumnDefBase<TFeatures, TData, TValue> & {
   id?: string
   header?: StringOrTemplateHeader<TFeatures, TData, TValue>
@@ -102,13 +102,13 @@ export type IdentifiedColumnDef<
 export type DisplayColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = ColumnDefBase<TFeatures, TData, TValue> &
   ColumnIdentifiers<TFeatures, TData, TValue>
 type GroupColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = ColumnDefBase<TFeatures, TData, TValue> & {
   columns?: Array<ColumnDef<TFeatures, TData, unknown>>
 }
@@ -116,14 +116,14 @@ type GroupColumnDefBase<
 export type GroupColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = GroupColumnDefBase<TFeatures, TData, TValue> &
   ColumnIdentifiers<TFeatures, TData, TValue>
 
 export type AccessorFnColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = ColumnDefBase<TFeatures, TData, TValue> & {
   accessorFn: AccessorFn<TData, TValue>
 }
@@ -131,14 +131,14 @@ export type AccessorFnColumnDefBase<
 export type AccessorFnColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = AccessorFnColumnDefBase<TFeatures, TData, TValue> &
   ColumnIdentifiers<TFeatures, TData, TValue>
 
 export type AccessorKeyColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = ColumnDefBase<TFeatures, TData, TValue> & {
   id?: string
   accessorKey: (string & {}) | keyof TData
@@ -147,14 +147,14 @@ export type AccessorKeyColumnDefBase<
 export type AccessorKeyColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = AccessorKeyColumnDefBase<TFeatures, TData, TValue> &
   Partial<ColumnIdentifiers<TFeatures, TData, TValue>>
 
 export type AccessorColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > =
   | AccessorKeyColumnDef<TFeatures, TData, TValue>
   | AccessorFnColumnDef<TFeatures, TData, TValue>
@@ -162,7 +162,7 @@ export type AccessorColumnDef<
 export type ColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > =
   | DisplayColumnDef<TFeatures, TData, TValue>
   | GroupColumnDef<TFeatures, TData, TValue>
@@ -176,7 +176,7 @@ export type ColumnDef_All<
 export type ColumnDefResolved<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TValue = unknown,
+  TValue extends CellData = CellData,
 > = Partial<UnionToIntersection<ColumnDef<TFeatures, TData, TValue>>> & {
   accessorKey?: string
 }

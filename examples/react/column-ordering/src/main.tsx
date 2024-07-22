@@ -1,15 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { faker } from '@faker-js/faker'
-
+import {
+  ColumnOrdering,
+  ColumnVisibility,
+  flexRender,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type {
+  ColumnDef,
+  ColumnOrderState,
+  ColumnVisibilityState,
+} from '@tanstack/react-table'
+import type { Person } from './makeData'
 import './index.css'
 
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
-import { makeData } from './makeData'
-import type { ColumnDef, ColumnOrderState } from '@tanstack/react-table'
-import type { Person } from './makeData'
+const _features = tableFeatures({ ColumnOrdering, ColumnVisibility })
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -65,15 +75,15 @@ function App() {
   const [data, setData] = React.useState(() => makeData(20))
   const [columns] = React.useState(() => [...defaultColumns])
 
-  const [columnVisibility, setColumnVisibility] = React.useState({})
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<ColumnVisibilityState>({})
   const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([])
 
   const rerender = () => setData(() => makeData(20))
 
   const table = useTable({
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _features,
+    _rowModels: {},
     columns,
     data,
     state: {
