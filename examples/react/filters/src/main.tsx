@@ -12,6 +12,7 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   flexRender,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -37,6 +38,8 @@ declare module '@tanstack/react-table' {
   }
 }
 
+const _features = tableFeatures({ ColumnFiltering, RowSorting, RowPagination })
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -44,7 +47,9 @@ function App() {
     [],
   )
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person, any>>>(
+  const columns = React.useMemo<
+    Array<ColumnDef<typeof _features, Person, any>>
+  >(
     () => [
       {
         accessorKey: 'firstName',
@@ -98,7 +103,7 @@ function App() {
   const refreshData = () => setData((_old) => makeData(50_000)) //stress test
 
   const table = useTable({
-    _features: { ColumnFiltering, RowSorting, RowPagination },
+    _features,
     _rowModels: {
       Core: createCoreRowModel(),
       Filtered: createFilteredRowModel(), //client side filtering

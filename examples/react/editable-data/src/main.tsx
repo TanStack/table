@@ -6,6 +6,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   flexRender,
+  tableFeatures,
   tableOptions,
   useTable,
 } from '@tanstack/react-table'
@@ -20,8 +21,10 @@ import type {
 import type { Person } from './makeData'
 import './index.css'
 
-const options = tableOptions({
-  _features: { RowPagination, ColumnFiltering },
+const _features = tableFeatures({ RowPagination, ColumnFiltering })
+
+const options = tableOptions<typeof _features, Person>({
+  _features,
   _rowModels: {
     Filtered: createFilteredRowModel(),
     Paginated: createPaginatedRowModel(),

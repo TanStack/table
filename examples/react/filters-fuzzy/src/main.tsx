@@ -4,12 +4,16 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  ColumnFiltering,
+  RowPagination,
+  RowSorting,
   createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   flexRender,
   sortingFns,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
@@ -27,10 +31,16 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 import type { Person } from './makeData'
 
+const _features = tableFeatures({
+  ColumnFiltering,
+  RowSorting,
+  RowPagination,
+})
+
 declare module '@tanstack/react-table' {
   //add fuzzy filter to the filterFns
   interface FilterFns {
-    fuzzy: FilterFn<unknown>
+    fuzzy: FilterFn<typeof _features, unknown>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
@@ -38,7 +48,12 @@ declare module '@tanstack/react-table' {
 }
 
 // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+const fuzzyFilter: FilterFn<typeof _features, any> = (
+  row,
+  columnId,
+  value,
+  addMeta,
+) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
 
@@ -52,7 +67,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 }
 
 // Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+const fuzzySort: SortingFn<typeof _features, any> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -75,7 +90,7 @@ function App() {
   )
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'id',
@@ -109,7 +124,8 @@ function App() {
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData((_old) => makeData(50_000)) //stress test
 
-  const table = useTable({
+  const table = useTable<typeof _features, Person>({
+    _features,
     _rowModels: {
       Core: createCoreRowModel(),
       Filtered: createFilteredRowModel(),
@@ -294,7 +310,7 @@ function App() {
   )
 }
 
-function Filter({ column }: { column: Column<any, unknown> }) {
+function Filter({ column }: { column: Column<typeof _features, Person> }) {
   const columnFilterValue = column.getFilterValue()
 
   return (

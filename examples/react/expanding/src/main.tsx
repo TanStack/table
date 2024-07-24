@@ -1,14 +1,16 @@
 import React, { type HTMLProps } from 'react'
 import ReactDOM from 'react-dom/client'
-
-import './index.css'
-
 import {
+  ColumnFiltering,
+  RowExpanding,
+  RowPagination,
+  RowSorting,
   createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   flexRender,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -19,11 +21,19 @@ import type {
   ExpandedState,
   Table,
 } from '@tanstack/react-table'
+import './index.css'
+
+const _features = tableFeatures({
+  ColumnFiltering,
+  RowExpanding,
+  RowPagination,
+  RowSorting,
+})
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -119,6 +129,7 @@ function App() {
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
   const table = useTable({
+    _features,
     _rowModels: {
       Core: createCoreRowModel(),
       Filtered: createFilteredRowModel(),
@@ -266,8 +277,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
-  table: Table<any, any>
+  column: Column<typeof _features, Person>
+  table: Table<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
