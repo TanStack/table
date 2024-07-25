@@ -1,9 +1,18 @@
+import { _table_getState } from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 import type { ColumnSizingState } from './ColumnSizing.types'
+
+export function getDefaultColumnSizingState() {
+  return structuredClone({
+    size: 150,
+    minSize: 20,
+    maxSize: Number.MAX_SAFE_INTEGER,
+  })
+}
 
 export function column_getSize<
   TFeatures extends TableFeatures,
@@ -13,14 +22,15 @@ export function column_getSize<
   column: Column<TFeatures, TData, TValue>,
   table: Table<TFeatures, TData>,
 ): number {
-  const columnSize = table.getState().columnSizing[column.id]
+  const defaultSizes = getDefaultColumnSizingState()
+  const columnSize = _table_getState(table).columnSizing?.[column.id]
 
   return Math.min(
     Math.max(
-      column.columnDef.minSize ?? defaultColumnSizing.minSize,
-      columnSize ?? column.columnDef.size ?? defaultColumnSizing.size,
+      column.columnDef.minSize ?? defaultSizes.minSize,
+      columnSize ?? column.columnDef.size ?? defaultSizes.size,
     ),
-    column.columnDef.maxSize ?? defaultColumnSizing.maxSize,
+    column.columnDef.maxSize ?? defaultSizes.maxSize,
   )
 }
 
@@ -158,10 +168,4 @@ export function table_getRightTotalSize<
       return sum + header.getSize()
     }, 0) ?? 0
   )
-}
-
-export const defaultColumnSizing = {
-  size: 150,
-  minSize: 20,
-  maxSize: Number.MAX_SAFE_INTEGER,
 }

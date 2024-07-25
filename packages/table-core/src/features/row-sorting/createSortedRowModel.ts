@@ -1,6 +1,7 @@
 import { getMemoOptions, memo } from '../../utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import { column_getCanSort, column_getSortingFn } from './RowSorting.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -15,18 +16,18 @@ export function createSortedRowModel<
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) =>
     memo(
-      () => [table.getState().sorting, table.getPreSortedRowModel()],
+      () => [_table_getState(table).sorting, table.getPreSortedRowModel()],
       (sorting, rowModel) => {
-        if (!rowModel.rows.length || !sorting.length) {
+        if (!rowModel.rows.length || !sorting?.length) {
           return rowModel
         }
 
-        const sortingState = table.getState().sorting
+        const sortingState = _table_getState(table).sorting
 
         const sortedFlatRows: Array<Row<TFeatures, TData>> = []
 
         // Filter out sortings that correspond to non existing columns
-        const availableSorting = sortingState.filter((sort) =>
+        const availableSorting = sortingState?.filter((sort) =>
           column_getCanSort(table_getColumn(table, sort.id)!, table),
         )
 
@@ -39,7 +40,7 @@ export function createSortedRowModel<
           }
         > = {}
 
-        availableSorting.forEach((sortEntry) => {
+        availableSorting?.forEach((sortEntry) => {
           const column = table_getColumn(table, sortEntry.id)
           if (!column) return
 
@@ -56,7 +57,7 @@ export function createSortedRowModel<
           const sortedData = rows.map((row) => ({ ...row }))
 
           sortedData.sort((rowA, rowB) => {
-            for (const sortEntry of availableSorting) {
+            for (const sortEntry of availableSorting ?? []) {
               const columnInfo = columnInfoById[sortEntry.id]!
               const sortUndefined = columnInfo.sortUndefined
               const isDesc = sortEntry.desc

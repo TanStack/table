@@ -1,5 +1,6 @@
 import { getMemoOptions, memo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -17,20 +18,21 @@ export function createFacetedRowModel<
     memo(
       () => [
         table.getPreFilteredRowModel(),
-        table.getState().columnFilters,
-        table.getState().globalFilter,
+        _table_getState(table).columnFilters,
+        _table_getState(table).globalFilter,
         table.getFilteredRowModel(),
       ],
       (preRowModel, columnFilters, globalFilter) => {
         if (
           !preRowModel.rows.length ||
-          (!columnFilters.length && !globalFilter)
+          (!columnFilters?.length && !globalFilter)
         ) {
           return preRowModel
         }
 
         const filterableIds = [
-          ...columnFilters.map((d) => d.id).filter((d) => d !== columnId),
+          ...(columnFilters?.map((d) => d.id).filter((d) => d !== columnId) ??
+            []),
           globalFilter ? '__global__' : undefined,
         ].filter(Boolean) as Array<string>
 

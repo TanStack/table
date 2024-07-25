@@ -1,4 +1,5 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import {
   getDefaultRowPinningState,
   row_getCanPin,
@@ -55,7 +56,7 @@ export const RowPinning: TableFeature = {
     row.getIsPinned = () => row_getIsPinned(row, table)
 
     row.getPinnedIndex = memo(
-      () => [table.getRowModel().rows, table.getState().rowPinning],
+      () => [table.getRowModel().rows, _table_getState(table).rowPinning],
       () => row_getPinnedIndex(row, table),
       getMemoOptions(table.options, 'debugRows', 'getPinnedIndex'),
     )
@@ -77,19 +78,22 @@ export const RowPinning: TableFeature = {
       table_getIsSomeRowsPinned(table, position)
 
     table.getTopRows = memo(
-      () => [table.getRowModel().rows, table.getState().rowPinning.top],
+      () => [table.getRowModel().rows, _table_getState(table).rowPinning?.top],
       () => table_getTopRows(table),
       getMemoOptions(table.options, 'debugRows', 'getTopRows'),
     )
 
     table.getBottomRows = memo(
-      () => [table.getRowModel().rows, table.getState().rowPinning.bottom],
+      () => [
+        table.getRowModel().rows,
+        _table_getState(table).rowPinning?.bottom,
+      ],
       () => table_getBottomRows(table),
       getMemoOptions(table.options, 'debugRows', 'getBottomRows'),
     )
 
     table.getCenterRows = memo(
-      () => [table.getRowModel().rows, table.getState().rowPinning],
+      () => [table.getRowModel().rows, _table_getState(table).rowPinning],
       () => table_getCenterRows(table),
       getMemoOptions(table.options, 'debugRows', 'getCenterRows'),
     )

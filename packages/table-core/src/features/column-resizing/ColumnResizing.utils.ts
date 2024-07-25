@@ -1,5 +1,6 @@
 import { table_setColumnSizing } from '../column-sizing/ColumnSizing.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -35,7 +36,7 @@ export function column_getIsResizing<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
-  return table.getState().columnSizingInfo.isResizingColumn === column.id
+  return _table_getState(table).columnSizingInfo?.isResizingColumn === column.id
 }
 
 export function header_getResizeHandler<

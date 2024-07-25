@@ -1,11 +1,12 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import {
   column_getAfter,
   column_getSize,
   column_getStart,
   column_resetSize,
-  defaultColumnSizing,
+  getDefaultColumnSizingState,
   header_getSize,
   header_getStart,
   table_getCenterTotalSize,
@@ -37,14 +38,15 @@ import type { Column } from '../../types/Column'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
  */
 export const ColumnSizing: TableFeature = {
-  _getDefaultColumnDef: (): ColumnDef_ColumnSizing => {
-    return defaultColumnSizing
-  },
   _getInitialState: (state): TableState_ColumnSizing => {
     return {
       columnSizing: {},
       ...state,
     }
+  },
+
+  _getDefaultColumnDef: (): ColumnDef_ColumnSizing => {
+    return getDefaultColumnSizingState()
   },
 
   _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
@@ -69,7 +71,7 @@ export const ColumnSizing: TableFeature = {
       (position) => [
         position,
         column_getVisibleLeafColumns(table, position),
-        table.getState().columnSizing,
+        _table_getState(table).columnSizing,
       ],
       (position, columns) => column_getStart(columns, column, table, position),
       getMemoOptions(table.options, 'debugColumns', 'getStart'),
@@ -79,7 +81,7 @@ export const ColumnSizing: TableFeature = {
       (position) => [
         position,
         column_getVisibleLeafColumns(table, position),
-        table.getState().columnSizing,
+        _table_getState(table).columnSizing,
       ],
       (position, columns) => column_getAfter(columns, column, table, position),
       getMemoOptions(table.options, 'debugColumns', 'getAfter'),

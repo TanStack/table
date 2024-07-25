@@ -17,6 +17,7 @@ import {
   table_resetSorting,
   table_setSorting,
 } from './RowSorting.utils'
+import type { ColumnDef } from '../../types/ColumnDef'
 import type {
   ColumnDef_RowSorting,
   Column_RowSorting,

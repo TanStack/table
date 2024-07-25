@@ -4,16 +4,26 @@ import {
   table_getRow,
 } from '../../core/rows/Rows.utils'
 import { row_getIsAllParentsExpanded } from '../row-expanding/RowExpanding.utils'
+import {
+  _table_getInitialState,
+  _table_getState,
+} from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
-import type { RowPinningPosition, RowPinningState } from './RowPinning.types'
+import type {
+  RowPinningPosition,
+  RowPinningState,
+  TableOptions_RowPinning,
+} from './RowPinning.types'
+
+// State Utils
 
 /**
- * State Utils
+ *
+ * @returns
  */
-
 export function getDefaultRowPinningState(): RowPinningState {
   return structuredClone({
     top: [],
@@ -21,50 +31,87 @@ export function getDefaultRowPinningState(): RowPinningState {
   })
 }
 
+/**
+ *
+ * @param table
+ * @param updater
+ */
 export function table_setRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, updater: Updater<RowPinningState>): void {
+>(
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
+  updater: Updater<RowPinningState>,
+): void {
   table.options.onRowPinningChange?.(updater)
 }
 
+/**
+ *
+ * @param table
+ * @param defaultState
+ */
 export function table_resetRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, defaultState?: boolean): void {
+>(
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
+  defaultState?: boolean,
+): void {
   table_setRowPinning(
     table,
     defaultState
       ? getDefaultRowPinningState()
-      : table.initialState.rowPinning ?? getDefaultRowPinningState(),
+      : _table_getInitialState(table).rowPinning ?? getDefaultRowPinningState(),
   )
 }
 
-/**
- * Table Utils
- */
+// Table Utils
 
+/**
+ *
+ * @param table
+ * @param position
+ * @returns
+ */
 export function table_getIsSomeRowsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, position?: RowPinningPosition): boolean {
-  const rowPinning = table.getState().rowPinning
+>(
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
+  position?: RowPinningPosition,
+): boolean {
+  const rowPinning = _table_getState(table).rowPinning
 
   if (!position) {
-    return Boolean(rowPinning.top.length || rowPinning.bottom.length)
+    return Boolean(rowPinning?.top.length || rowPinning?.bottom.length)
   }
-  return Boolean(rowPinning[position].length)
+  return Boolean(rowPinning?.[position].length)
 }
 
+/**
+ *
+ * @param table
+ * @param position
+ * @returns
+ */
 function table_getPinnedRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
   position: 'top' | 'bottom',
 ): Array<Row<TFeatures, TData>> {
   const visibleRows = table.getRowModel().rows
-  const pinnedRowIds = table.getState().rowPinning[position]
+  const pinnedRowIds = _table_getState(table).rowPinning?.[position] ?? []
 
   const rows =
     table.options.keepPinnedRows ?? true
@@ -79,44 +126,81 @@ function table_getPinnedRows<
           (rowId) => visibleRows.find((row) => row.id === rowId)!,
         )
 
-  return rows.filter(Boolean).map((d) => ({ ...d, position })) as Array<
+  return rows.filter((r) => !!r).map((d) => ({ ...d, position })) as Array<
     Row<TFeatures, TData>
   >
 }
 
+/**
+ *
+ * @param table
+ * @returns
+ */
 export function table_getTopRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>): Array<Row<TFeatures, TData>> {
+>(
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
+): Array<Row<TFeatures, TData>> {
   return table_getPinnedRows(table, 'top')
 }
 
+/**
+ *
+ * @param table
+ * @returns
+ */
 export function table_getBottomRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>): Array<Row<TFeatures, TData>> {
+>(
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
+): Array<Row<TFeatures, TData>> {
   return table_getPinnedRows(table, 'bottom')
 }
 
+/**
+ *
+ * @param table
+ * @returns
+ */
 export function table_getCenterRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>): Array<Row<TFeatures, TData>> {
-  const { top, bottom } = table.getState().rowPinning
+>(
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
+): Array<Row<TFeatures, TData>> {
+  const { top, bottom } =
+    _table_getState(table).rowPinning ?? getDefaultRowPinningState()
   const allRows = table.getRowModel().rows
 
   const topAndBottom = new Set([...top, ...bottom])
   return allRows.filter((d) => !topAndBottom.has(d.id))
 }
 
-/**
- * Row Utils
- */
+// Row Utils
 
+/**
+ *
+ * @param row
+ * @param table
+ * @returns
+ */
 export function row_getCanPin<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>): boolean {
+>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
+): boolean {
   const { enableRowPinning } = table.options
   if (typeof enableRowPinning === 'function') {
     return enableRowPinning(row)
@@ -124,14 +208,23 @@ export function row_getCanPin<
   return enableRowPinning ?? true
 }
 
+/**
+ *
+ * @param row
+ * @param table
+ * @returns
+ */
 export function row_getIsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
   row: Row<TFeatures, TData>,
-  table: Table<TFeatures, TData>,
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
 ): RowPinningPosition {
-  const { top, bottom } = table.getState().rowPinning
+  const { top, bottom } =
+    _table_getState(table).rowPinning ?? getDefaultRowPinningState()
 
   return top.includes(row.id)
     ? 'top'
@@ -140,10 +233,21 @@ export function row_getIsPinned<
       : false
 }
 
+/**
+ *
+ * @param row
+ * @param table
+ * @returns
+ */
 export function row_getPinnedIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>): number {
+>(
+  row: Row<TFeatures, TData>,
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
+): number {
   const position = row_getIsPinned(row, table)
   if (!position) return -1
 
@@ -154,9 +258,19 @@ export function row_getPinnedIndex<
   return visiblePinnedRowIds.indexOf(row.id)
 }
 
+/**
+ *
+ * @param row
+ * @param table
+ * @param position
+ * @param includeLeafRows
+ * @param includeParentRows
+ */
 export function row_pin<TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
-  table: Table<TFeatures, TData>,
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPinning<TFeatures, TData>>
+  },
   position: RowPinningPosition,
   includeLeafRows?: boolean,
   includeParentRows?: boolean,

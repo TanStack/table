@@ -126,7 +126,7 @@ export function getMemoOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  tableOptions: Partial<TableOptions<TFeatures, TData>>,
+  tableOptions: TableOptions<TFeatures, TData>,
   debugLevel:
     | 'debugAll'
     | 'debugCells'

@@ -1,5 +1,7 @@
 import { getMemoOptions, memo } from '../../utils'
 import { expandRows } from '../row-expanding/createExpandedRowModel'
+import { _table_getState } from '../../core/table/Tables.utils'
+import { getDefaultPaginationState } from './RowPagination.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -15,18 +17,19 @@ export function createPaginatedRowModel<
   return (table) =>
     memo(
       () => [
-        table.getState().pagination,
+        _table_getState(table).pagination,
         table.getPrePaginationRowModel(),
         table.options.paginateExpandedRows
           ? undefined
-          : table.getState().expanded,
+          : _table_getState(table).expanded,
       ],
       (pagination, rowModel) => {
         if (!rowModel.rows.length) {
           return rowModel
         }
 
-        const { pageSize, pageIndex } = pagination
+        const { pageSize, pageIndex } =
+          pagination ?? getDefaultPaginationState()
         const { rows, flatRows, rowsById } = rowModel
         const pageStart = pageSize * pageIndex
         const pageEnd = pageStart + pageSize

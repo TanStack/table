@@ -1,5 +1,6 @@
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import {
   column_getCanPin,
   column_getIsPinned,
@@ -78,17 +79,23 @@ export const ColumnPinning: TableFeature = {
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
     row.getCenterVisibleCells = memo(
-      () => [row._getAllVisibleCells(), table.getState().columnPinning],
+      () => [row._getAllVisibleCells(), _table_getState(table).columnPinning],
       () => row_getCenterVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getCenterVisibleCells'),
     )
     row.getLeftVisibleCells = memo(
-      () => [row._getAllVisibleCells(), table.getState().columnPinning.left],
+      () => [
+        row._getAllVisibleCells(),
+        _table_getState(table).columnPinning?.left,
+      ],
       () => row_getLeftVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getLeftVisibleCells'),
     )
     row.getRightVisibleCells = memo(
-      () => [row._getAllVisibleCells(), table.getState().columnPinning.right],
+      () => [
+        row._getAllVisibleCells(),
+        _table_getState(table).columnPinning?.right,
+      ],
       () => row_getRightVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getRightVisibleCells'),
     )
@@ -115,7 +122,7 @@ export const ColumnPinning: TableFeature = {
       () => [
         table.getAllColumns(),
         table.getVisibleLeafColumns(),
-        table.getState().columnPinning.left,
+        _table_getState(table).columnPinning?.left,
       ],
       (allColumns, leafColumns, left) => {
         const orderedLeafColumns =
@@ -132,7 +139,7 @@ export const ColumnPinning: TableFeature = {
       () => [
         table.getAllColumns(),
         table.getVisibleLeafColumns(),
-        table.getState().columnPinning.right,
+        _table_getState(table).columnPinning?.right,
       ],
       (allColumns, leafColumns, right) => {
         const orderedLeafColumns =
@@ -149,8 +156,8 @@ export const ColumnPinning: TableFeature = {
       () => [
         table.getAllColumns(),
         table.getVisibleLeafColumns(),
-        table.getState().columnPinning.left,
-        table.getState().columnPinning.right,
+        _table_getState(table).columnPinning?.left,
+        _table_getState(table).columnPinning?.right,
       ],
       (allColumns, leafColumns, left, right) => {
         leafColumns = leafColumns.filter(

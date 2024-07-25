@@ -3,6 +3,7 @@ import {
   row_getAllVisibleCells,
 } from '../column-visibility/ColumnVisibility.utils'
 import { table_getAllColumns } from '../../core/columns/Columns.utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import type { Row } from '../../types/Row'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -31,9 +32,9 @@ export function column_pin<
   table_setColumnPinning(table, (old) => {
     if (position === 'right') {
       return {
-        left: (old.left ?? []).filter((d) => !columnIds.includes(d)),
+        left: old.left.filter((d) => !columnIds.includes(d)),
         right: [
-          ...(old.right ?? []).filter((d) => !columnIds.includes(d)),
+          ...old.right.filter((d) => !columnIds.includes(d)),
           ...columnIds,
         ],
       }
@@ -41,17 +42,14 @@ export function column_pin<
 
     if (position === 'left') {
       return {
-        left: [
-          ...(old.left ?? []).filter((d) => !columnIds.includes(d)),
-          ...columnIds,
-        ],
-        right: (old.right ?? []).filter((d) => !columnIds.includes(d)),
+        left: [...old.left.filter((d) => !columnIds.includes(d)), ...columnIds],
+        right: old.right.filter((d) => !columnIds.includes(d)),
       }
     }
 
     return {
-      left: (old.left ?? []).filter((d) => !columnIds.includes(d)),
-      right: (old.right ?? []).filter((d) => !columnIds.includes(d)),
+      left: old.left.filter((d) => !columnIds.includes(d)),
+      right: old.right.filter((d) => !columnIds.includes(d)),
     }
   })
 }
@@ -82,10 +80,11 @@ export function column_getIsPinned<
 ): ColumnPinningPosition | false {
   const leafColumnIds = column.getLeafColumns().map((d) => d.id)
 
-  const { left, right } = table.getState().columnPinning
+  const { left, right } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
 
-  const isLeft = leafColumnIds.some((d) => left?.includes(d))
-  const isRight = leafColumnIds.some((d) => right?.includes(d))
+  const isLeft = leafColumnIds.some((d) => left.includes(d))
+  const isRight = leafColumnIds.some((d) => right.includes(d))
 
   return isLeft ? 'left' : isRight ? 'right' : false
 }
@@ -98,7 +97,7 @@ export function column_getPinnedIndex<
   const position = column_getIsPinned(column, table)
 
   return position
-    ? table.getState().columnPinning[position]?.indexOf(column.id) ?? -1
+    ? _table_getState(table).columnPinning?.[position].indexOf(column.id) ?? -1
     : 0
 }
 
@@ -106,9 +105,10 @@ export function row_getCenterVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
-  const allCells = row._getAllVisibleCells()
-  const { left, right } = table.getState().columnPinning
-  const leftAndRight: Array<string> = [...(left ?? []), ...(right ?? [])]
+  const allCells = row_getAllVisibleCells(row, table)
+  const { left, right } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+  const leftAndRight: Array<string> = [...left, ...right]
   return allCells.filter((d) => !leftAndRight.includes(d.column.id))
 }
 
@@ -117,8 +117,9 @@ export function row_getLeftVisibleCells<
   TData extends RowData,
 >(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   const allCells = row_getAllVisibleCells(row, table)
-  const { left } = table.getState().columnPinning
-  const cells = (left ?? [])
+  const { left } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+  const cells = left
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
     .map((d) => ({ ...d, position: 'left' }) as Cell<TFeatures, TData, unknown>)
@@ -131,8 +132,9 @@ export function row_getRightVisibleCells<
   TData extends RowData,
 >(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   const allCells = row_getAllVisibleCells(row, table)
-  const { right } = table.getState().columnPinning
-  const cells = (right ?? [])
+  const { right } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+  const cells = right
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
     .map(
@@ -165,20 +167,21 @@ export function table_getIsSomeColumnsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, position?: ColumnPinningPosition) {
-  const pinningState = table.getState().columnPinning
+  const pinningState = _table_getState(table).columnPinning
 
   if (!position) {
-    return Boolean(pinningState.left?.length || pinningState.right?.length)
+    return Boolean(pinningState?.left.length || pinningState?.right.length)
   }
-  return Boolean(pinningState[position]?.length)
+  return Boolean(pinningState?.[position].length)
 }
 
 export function table_getLeftLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const { left } = table.getState().columnPinning
-  return (left ?? [])
+  const { left } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+  return left
     .map(
       (columnId) =>
         table_getAllColumns(table).find((column) => column.id === columnId)!,
@@ -190,8 +193,9 @@ export function table_getRightLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const { right } = table.getState().columnPinning
-  return (right ?? [])
+  const { right } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+  return right
     .map(
       (columnId) =>
         table_getAllColumns(table).find((column) => column.id === columnId)!,
@@ -203,8 +207,9 @@ export function table_getCenterLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const { left, right } = table.getState().columnPinning
-  const leftAndRight: Array<string> = [...(left ?? []), ...(right ?? [])]
+  const { left, right } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+  const leftAndRight: Array<string> = [...left, ...right]
   return table_getAllColumns(table).filter((d) => !leftAndRight.includes(d.id))
 }
 

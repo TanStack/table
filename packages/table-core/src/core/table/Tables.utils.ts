@@ -40,11 +40,42 @@ export function table_setOptions<
   table.options = table_mergeOptions(table, newOptions)
 }
 
+export function table_getInitialState<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>): TableState<TFeatures> {
+  return structuredClone(table.initialState) as TableState<TFeatures>
+}
+
+/**
+ * For internal use only. Assumes any features may or may not be present.
+ * @param table
+ * @returns
+ */
+export function _table_getInitialState<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>): Partial<TableState<TableFeatures>> {
+  return table_getInitialState(table) as Partial<TableState<TableFeatures>>
+}
+
 export function table_getState<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): TableState<TFeatures> {
   return table.options.state as TableState<TFeatures>
+}
+
+/**
+ * For internal use only. Assumes any features may or may not be present.
+ * @param table
+ * @returns
+ */
+export function _table_getState<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>): Partial<TableState<TableFeatures>> {
+  return table_getState(table) as Partial<TableState<TableFeatures>>
 }
 
 export function table_setState<

@@ -1,4 +1,9 @@
-import type { CellData, RowData, UnionToIntersection } from './type-utils'
+import type {
+  CellData,
+  Prettify,
+  RowData,
+  UnionToIntersection,
+} from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { CellContext } from '../core/cells/Cells.types'
 import type { HeaderContext } from '../core/headers/Headers.types'
@@ -83,12 +88,12 @@ export type _ColumnDefBase<
   meta?: ColumnMeta<TFeatures, TData, TValue>
 }
 
-//temp - enable all features for types internally
+//temp
 export type ColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = _ColumnDefBase<TFeatures, TData, TValue>
+> = _ColumnDefBase<TableFeatures, TData, TValue>
 
 export type IdentifiedColumnDef<
   TFeatures extends TableFeatures,

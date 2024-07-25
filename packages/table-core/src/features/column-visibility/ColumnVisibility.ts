@@ -1,4 +1,5 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import {
   column_getCanHide,
   column_getIsVisible,
@@ -74,7 +75,7 @@ export const ColumnVisibility: TableFeature = {
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
     row._getAllVisibleCells = memo(
-      () => [row.getAllCells(), table.getState().columnVisibility],
+      () => [row.getAllCells(), _table_getState(table).columnVisibility],
       () => row_getAllVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells'),
     )
@@ -95,13 +96,13 @@ export const ColumnVisibility: TableFeature = {
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
     table.getVisibleFlatColumns = memo(
-      () => [table.getState().columnVisibility, table.options.columns],
+      () => [_table_getState(table).columnVisibility, table.options.columns],
       () => table_getVisibleFlatColumns(table),
       getMemoOptions(table.options, 'debugColumns', 'getVisibleFlatColumns'),
     )
 
     table.getVisibleLeafColumns = memo(
-      () => [table.getState().columnVisibility, table.options.columns],
+      () => [_table_getState(table).columnVisibility, table.options.columns],
       () => table_getVisibleFlatColumns(table),
       getMemoOptions(table.options, 'debugColumns', 'getVisibleLeafColumns'),
     )

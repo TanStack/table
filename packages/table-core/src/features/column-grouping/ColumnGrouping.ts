@@ -39,6 +39,13 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
  */
 export const ColumnGrouping: TableFeature = {
+  _getInitialState: (state): TableState_ColumnGrouping => {
+    return {
+      grouping: [],
+      ...state,
+    }
+  },
+
   _getDefaultColumnDef: <
     TFeatures extends TableFeatures,
     TData extends RowData,
@@ -47,13 +54,6 @@ export const ColumnGrouping: TableFeature = {
     return {
       aggregatedCell: (props) => props.getValue()?.toString?.() ?? null,
       aggregationFn: 'auto',
-    }
-  },
-
-  _getInitialState: (state): TableState_ColumnGrouping => {
-    return {
-      grouping: [],
-      ...state,
     }
   },
 

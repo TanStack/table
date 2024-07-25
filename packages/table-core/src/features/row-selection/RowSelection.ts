@@ -1,4 +1,5 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import {
   row_getCanMultiSelect,
   row_getCanSelect,
@@ -105,13 +106,13 @@ export const RowSelection: TableFeature = {
     table.getPreSelectedRowModel = () => table_getPreSelectedRowModel(table)
 
     table.getSelectedRowModel = memo(
-      () => [table.getState().rowSelection, table.getCoreRowModel()],
+      () => [_table_getState(table).rowSelection, table.getCoreRowModel()],
       () => table_getSelectedRowModel(table),
       getMemoOptions(table.options, 'debugTable', 'getSelectedRowModel'),
     )
 
     table.getFilteredSelectedRowModel = memo(
-      () => [table.getState().rowSelection, table.getFilteredRowModel()],
+      () => [_table_getState(table).rowSelection, table.getFilteredRowModel()],
       () => table_getFilteredSelectedRowModel(table),
       getMemoOptions(
         table.options,
@@ -121,7 +122,7 @@ export const RowSelection: TableFeature = {
     )
 
     table.getGroupedSelectedRowModel = memo(
-      () => [table.getState().rowSelection, table.getSortedRowModel()],
+      () => [_table_getState(table).rowSelection, table.getSortedRowModel()],
       () => table_getGroupedSelectedRowModel(table),
       getMemoOptions(table.options, 'debugTable', 'getGroupedSelectedRowModel'),
     )

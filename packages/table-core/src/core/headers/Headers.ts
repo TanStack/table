@@ -1,4 +1,5 @@
 import { getMemoOptions, memo } from '../../utils'
+import { _table_getState } from '../table/Tables.utils'
 import { _createHeader } from './createHeader'
 import {
   header_getContext,
@@ -8,7 +9,6 @@ import {
   table_getHeaderGroups,
   table_getLeafHeaders,
 } from './Headers.utils'
-import type { Header_Header } from './Headers.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -34,9 +34,9 @@ export const Headers: TableFeature = {
     table.getHeaderGroups = memo(
       () => [
         table.options.columns,
-        table.getState().columnOrder,
-        table.getState().grouping,
-        table.getState().columnPinning,
+        _table_getState(table).columnOrder,
+        _table_getState(table).grouping,
+        _table_getState(table).columnPinning,
         table.options.groupedColumnMode,
       ],
       () => table_getHeaderGroups(table),

@@ -20,6 +20,7 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './RowPagination.utils'
+import type { TableState } from '../../types/TableState'
 import type {
   PaginationDefaultOptions,
   TableState_RowPagination,
@@ -80,8 +81,8 @@ export const RowPagination: TableFeature = {
     table.setPageSize = (updater) => table_setPageSize(table, updater)
 
     table.getPageOptions = memo(
-      () => [table.getPageCount()],
-      (pageCount) => table_getPageOptions(pageCount),
+      () => [table_getPageCount(table)],
+      () => table_getPageOptions(table),
       getMemoOptions(table.options, 'debugTable', 'getPageOptions'),
     )
 

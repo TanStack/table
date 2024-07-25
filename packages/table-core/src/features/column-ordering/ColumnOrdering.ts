@@ -1,5 +1,6 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import {
   column_getIndex,
   column_getIsFirstColumn,
@@ -52,9 +53,9 @@ export const ColumnOrdering: TableFeature = {
     column.getIndex = memo(
       (position) => [
         position,
-        table.getState().columnOrder,
-        table.getState().columnPinning,
-        table.getState().grouping,
+        _table_getState(table).columnOrder,
+        _table_getState(table).columnPinning,
+        _table_getState(table).grouping,
       ],
       (position) => column_getIndex(column, table, position),
       getMemoOptions(table.options, 'debugColumns', 'getIndex'),

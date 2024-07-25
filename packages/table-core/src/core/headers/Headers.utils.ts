@@ -1,5 +1,7 @@
 import { table_getAllColumns } from '../columns/Columns.utils'
 import { table_getVisibleLeafColumns } from '../../features/column-visibility/ColumnVisibility.utils'
+import { _table_getState } from '../table/Tables.utils'
+import { getDefaultColumnPinningState } from '../../features/column-pinning/ColumnPinning.utils'
 import { buildHeaderGroups } from './buildHeaderGroups'
 import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
@@ -43,22 +45,21 @@ export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const { left, right } = table.getState().columnPinning
+  const { left, right } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
   const allColumns = table_getAllColumns(table)
   const leafColumns = table_getVisibleLeafColumns(table)
 
-  const leftColumns =
-    left
-      ?.map((columnId) => leafColumns.find((d) => d.id === columnId)!)
-      .filter(Boolean) ?? []
+  const leftColumns = left
+    .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
+    .filter(Boolean)
 
-  const rightColumns =
-    right
-      ?.map((columnId) => leafColumns.find((d) => d.id === columnId)!)
-      .filter(Boolean) ?? []
+  const rightColumns = right
+    .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
+    .filter(Boolean)
 
   const centerColumns = leafColumns.filter(
-    (column) => !left?.includes(column.id) && !right?.includes(column.id),
+    (column) => !left.includes(column.id) && !right.includes(column.id),
   )
 
   const headerGroups = buildHeaderGroups(

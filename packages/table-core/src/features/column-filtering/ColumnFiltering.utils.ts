@@ -1,7 +1,10 @@
 import { filterFns } from '../../fns/filterFns'
 import { functionalUpdate, isFunction } from '../../utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
-import { table_getCoreRowModel } from '../../core/table/Tables.utils'
+import {
+  _table_getState,
+  table_getCoreRowModel,
+} from '../../core/table/Tables.utils'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -81,15 +84,23 @@ export function column_getFilterValue<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
-  return table.getState().columnFilters.find((d) => d.id === column.id)?.value
+  return _table_getState(table).columnFilters?.find((d) => d.id === column.id)
+    ?.value
 }
 
 export function column_getFilterIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
-  return table.getState().columnFilters.findIndex((d) => d.id === column.id)
+>(
+  column: Column<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
+): number {
+  return (
+    _table_getState(table).columnFilters?.findIndex(
+      (d) => d.id === column.id,
+    ) ?? -1
+  )
 }
 
 export function column_setFilterValue<

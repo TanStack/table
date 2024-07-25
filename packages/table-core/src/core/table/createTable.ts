@@ -20,7 +20,11 @@ import { RowSorting } from '../../features/row-sorting/RowSorting'
 import { Tables } from './Tables'
 import type { Table_CoreProperties } from './Tables.types'
 import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type {
+  CoreTableFeatures,
+  TableFeature,
+  TableFeatures,
+} from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
@@ -69,8 +73,8 @@ export function _createTable<
   const _features = {
     ...coreFeatures,
     ...builtInFeatures,
-    ...(options._features ?? {}),
-  }
+    ...options._features,
+  } as CoreTableFeatures & TFeatures
 
   const featuresList: Array<TableFeature> = Object.values(_features)
 

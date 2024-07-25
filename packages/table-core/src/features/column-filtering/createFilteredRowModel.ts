@@ -1,6 +1,7 @@
 import { getMemoOptions, memo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { table_getGlobalFilterFn } from '../global-filtering/GlobalFiltering.utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import { filterRows } from './filterRowsUtils'
 import { column_getFilterFn } from './ColumnFiltering.utils'
 import type { RowData } from '../../types/type-utils'
@@ -18,11 +19,14 @@ export function createFilteredRowModel<
     memo(
       () => [
         table.getPreFilteredRowModel(),
-        table.getState().columnFilters,
-        table.getState().globalFilter,
+        _table_getState(table).columnFilters,
+        _table_getState(table).globalFilter,
       ],
       (rowModel, columnFilters, globalFilter) => {
-        if (!rowModel.rows.length || (!columnFilters.length && !globalFilter)) {
+        if (
+          !rowModel.rows.length ||
+          (!columnFilters?.length && !globalFilter)
+        ) {
           for (const row of rowModel.flatRows) {
             row.columnFilters = {}
             row.columnFiltersMeta = {}
@@ -37,7 +41,7 @@ export function createFilteredRowModel<
           ResolvedColumnFilter<TFeatures, TData>
         > = []
 
-        columnFilters.forEach((d) => {
+        columnFilters?.forEach((d) => {
           const column = table_getColumn(table, d.id)
 
           if (!column) {
@@ -62,7 +66,7 @@ export function createFilteredRowModel<
           })
         })
 
-        const filterableIds = columnFilters.map((d) => d.id)
+        const filterableIds = columnFilters?.map((d) => d.id)
 
         const globalFilterFn = table_getGlobalFilterFn(table)
 
@@ -75,7 +79,7 @@ export function createFilteredRowModel<
           globalFilterFn &&
           globallyFilterableColumns.length
         ) {
-          filterableIds.push('__global__')
+          filterableIds?.push('__global__')
 
           globallyFilterableColumns.forEach((column) => {
             resolvedGlobalFilters.push({
@@ -135,7 +139,7 @@ export function createFilteredRowModel<
 
         const filterRowsImpl = (row: Row<TFeatures, TData>) => {
           // Horizontally filter rows through each column
-          for (const columnId of filterableIds) {
+          for (const columnId of filterableIds ?? []) {
             if (row.columnFilters[columnId] === false) {
               return false
             }

@@ -1,4 +1,5 @@
 import { getMemoOptions, memo } from '../../utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import { row_getIsExpanded } from './RowExpanding.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -13,14 +14,14 @@ export function createExpandedRowModel<
   return (table) =>
     memo(
       () => [
-        table.getState().expanded,
+        _table_getState(table).expanded,
         table.getPreExpandedRowModel(),
         table.options.paginateExpandedRows,
       ],
       (expanded, rowModel, paginateExpandedRows) => {
         if (
           !rowModel.rows.length ||
-          (expanded !== true && !Object.keys(expanded).length)
+          (expanded !== true && !Object.keys(expanded ?? {}).length)
         ) {
           return rowModel
         }

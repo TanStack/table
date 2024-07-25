@@ -1,6 +1,7 @@
 import { aggregationFns } from '../../fns/aggregationFns'
 import { isFunction } from '../../utils'
 import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -42,16 +43,22 @@ export function column_getIsGrouped<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
-  return table.getState().grouping.includes(column.id)
+>(
+  column: Column<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
+): boolean {
+  return !!_table_getState(table).grouping?.includes(column.id)
 }
 
 export function column_getGroupedIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
-  return table.getState().grouping.indexOf(column.id)
+>(
+  column: Column<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TData>,
+): number {
+  return _table_getState(table).grouping?.indexOf(column.id) ?? -1
 }
 
 export function column_getToggleGroupingHandler<

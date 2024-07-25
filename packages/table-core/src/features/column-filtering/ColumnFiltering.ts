@@ -35,19 +35,19 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
  */
 export const ColumnFiltering: TableFeature = {
+  _getInitialState: (state): TableState_ColumnFiltering => {
+    return {
+      columnFilters: [],
+      ...state,
+    }
+  },
+
   _getDefaultColumnDef: <
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(): ColumnDef_ColumnFiltering<TFeatures, TData> => {
     return {
       filterFn: 'auto',
-    }
-  },
-
-  _getInitialState: (state): TableState_ColumnFiltering => {
-    return {
-      columnFilters: [],
-      ...state,
     }
   },
 

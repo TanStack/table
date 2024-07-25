@@ -8,8 +8,8 @@ import type { Column } from '../../types/Column'
 export type ColumnPinningPosition = false | 'left' | 'right'
 
 export interface ColumnPinningState {
-  left?: Array<string>
-  right?: Array<string>
+  left: Array<string>
+  right: Array<string>
 }
 
 export interface TableState_ColumnPinning {

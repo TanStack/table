@@ -1,6 +1,7 @@
 import { _createRow } from '../../core/rows/createRow'
 import { flattenBy, getMemoOptions, memo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
+import { _table_getState } from '../../core/table/Tables.utils'
 import { row_getGroupingValue } from './ColumnGrouping.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -14,9 +15,9 @@ export function createGroupedRowModel<
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) =>
     memo(
-      () => [table.getState().grouping, table.getPreGroupedRowModel()],
+      () => [_table_getState(table).grouping, table.getPreGroupedRowModel()],
       (grouping, rowModel) => {
-        if (!rowModel.rows.length || !grouping.length) {
+        if (!rowModel.rows.length || !grouping?.length) {
           rowModel.rows.forEach((row) => {
             row.depth = 0
             row.parentId = undefined
