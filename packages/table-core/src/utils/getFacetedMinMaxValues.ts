@@ -12,7 +12,7 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
         if (!facetedRowModel) return undefined
 
         const firstValue =
-          facetedRowModel.flatRows[0]?.getUniqueValues(columnId)
+          facetedRowModel.flatRows[0]?.getUniqueValues(columnId)?.[0]
 
         if (typeof firstValue === 'undefined') {
           return undefined
