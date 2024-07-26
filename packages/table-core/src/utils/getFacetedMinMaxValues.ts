@@ -10,32 +10,23 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
       () => [table.getColumn(columnId)?.getFacetedRowModel()],
       facetedRowModel => {
         if (!facetedRowModel) return undefined
+        
+        const uniqueValues = facetedRowModel.flatRows
+          .flatMap((flatRow) => flatRow.getUniqueValues(columnId) ?? [])
+          .map(Number)
+          .filter((value) => !Number.isNaN(value))
 
-        const firstValue =
-          facetedRowModel.flatRows[0]?.getUniqueValues(columnId)?.[0]
+        if (!uniqueValues.length) return
 
-        if (typeof firstValue === 'undefined') {
-          return undefined
+        let facetedMinValue = uniqueValues.at(0)!
+        let facetedMaxValue = uniqueValues.at(-1)!
+
+        for (const value of uniqueValues) {
+          if (value < facetedMinValue) facetedMinValue = value
+          else if (value > facetedMaxValue) facetedMaxValue = value
         }
 
-        let facetedMinMaxValues: [any, any] = [firstValue, firstValue]
-
-        for (let i = 0; i < facetedRowModel.flatRows.length; i++) {
-          const values =
-            facetedRowModel.flatRows[i]!.getUniqueValues<number>(columnId)
-
-          for (let j = 0; j < values.length; j++) {
-            const value = values[j]!
-
-            if (value < facetedMinMaxValues[0]) {
-              facetedMinMaxValues[0] = value
-            } else if (value > facetedMinMaxValues[1]) {
-              facetedMinMaxValues[1] = value
-            }
-          }
-        }
-
-        return facetedMinMaxValues
+        return [facetedMinValue, facetedMaxValue]
       },
       getMemoOptions(table.options, 'debugTable', 'getFacetedMinMaxValues')
     )
