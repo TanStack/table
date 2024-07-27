@@ -4,6 +4,10 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  ColumnFaceting,
+  ColumnFiltering,
+  RowPagination,
+  RowSorting,
   createCoreRowModel,
   createFacetedMinMaxValues,
   createFacetedRowModel,
@@ -12,6 +16,7 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   flexRender,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -25,6 +30,13 @@ import type {
 } from '@tanstack/react-table'
 
 import type { Person } from './makeData'
+
+const _features = tableFeatures({
+  ColumnFaceting,
+  ColumnFiltering,
+  RowPagination,
+  RowSorting,
+})
 
 declare module '@tanstack/react-table' {
   //allows us to define custom properties for our columns
@@ -42,7 +54,9 @@ function App() {
     [],
   )
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person, any>>>(
+  const columns = React.useMemo<
+    Array<ColumnDef<typeof _features, Person>>
+  >(
     () => [
       {
         accessorKey: 'firstName',
@@ -91,6 +105,7 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
+    _features,
     _rowModels: {
       Core: createCoreRowModel(),
       Filtered: createFilteredRowModel(), //client-side filtering

@@ -52,7 +52,7 @@ export function _createTableHelper<
     features: tableHelperOptions._features as TFeatures,
     options: tableHelperOptions,
     tableCreator: (tableOptions) =>
-      tableCreator({ ...tableHelperOptions, ...(tableOptions as any) }),
+      tableCreator({ ...tableHelperOptions, ...(tableOptions) }),
   }
 }
 
