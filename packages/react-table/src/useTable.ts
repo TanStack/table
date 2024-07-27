@@ -48,7 +48,7 @@ export function useTable<
 
   const table = useTableRef(statefulOptions)
 
-  table.setOptions((prev) => ({ ...prev, ...statefulOptions })) //force re-render when state or options change
+  table.setOptions((prev) => ({ ...prev, ...statefulOptions })) // force re-render when state or options change
 
   return table
 }

@@ -36,7 +36,7 @@ export function injectTable<
     const table = _createTable(resolvedOptions)
 
     // By default, manage table state here using the table's initial state
-    const state = signal<TableState<TFeatures>>(table.initialState as any) //TODO: fix type
+    const state = signal<TableState<TFeatures>>(table.initialState as any) // TODO: fix type
 
     // Compose table options using computed.
     // This is to allow `tableSignal` to listen and set table option

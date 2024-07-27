@@ -31,7 +31,7 @@ export type _Row<
 
 export type Row_All<TData extends RowData> = _Row<TableFeatures, TData>
 
-//temp - enable all features for types internally
+// temp - enable all features for types internally
 export type Row<
   TFeatures extends TableFeatures,
   TData extends RowData,

@@ -732,6 +732,6 @@ export function isSubRowSelected<
     }
   })
 
-  // eslint-disable-next-line ts/no-unnecessary-condition
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return allChildrenSelected ? 'all' : someSelected ? 'some' : false
 }

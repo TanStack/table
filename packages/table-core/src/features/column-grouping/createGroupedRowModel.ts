@@ -52,7 +52,7 @@ export function createGroupedRowModel<
               groupedFlatRows.push(row)
               groupedRowsById[row.id] = row
 
-              // eslint-disable-next-line ts/no-unnecessary-condition
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               if (row.subRows) {
                 row.subRows = groupUpRecursively(row.subRows, depth + 1, row.id)
               }

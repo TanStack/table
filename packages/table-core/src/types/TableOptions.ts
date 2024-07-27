@@ -78,7 +78,7 @@ export type TableOptions_All<TData extends RowData> = Prettify<
   _TableOptions<TableFeatures, TData>
 >
 
-//temp - enable all features for types internally
+// temp - enable all features for types internally
 export type TableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,

@@ -88,7 +88,7 @@ export type _ColumnDefBase<
   meta?: ColumnMeta<TFeatures, TData, TValue>
 }
 
-//temp
+// temp
 export type ColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,

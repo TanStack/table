@@ -33,7 +33,7 @@ export function column_getLeafColumns<
 ): Array<Column<TFeatures, TData, TValue>> {
   if (column.columns.length) {
     const leafColumns = column.columns.flatMap(
-      (col) => column_getLeafColumns(col, table), //recursive
+      (col) => column_getLeafColumns(col, table), // recursive
     )
 
     return table_getOrderColumnsFn(table)(leafColumns as any) as any
@@ -129,7 +129,7 @@ export function table_getAllLeafColumns<
   TData extends RowData,
 >(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
   const leafColumns = table_getAllColumns(table).flatMap(
-    (c) => column_getLeafColumns(c, table), //recursive
+    (c) => column_getLeafColumns(c, table), // recursive
   )
   return table_getOrderColumnsFn(table)(leafColumns)
 }

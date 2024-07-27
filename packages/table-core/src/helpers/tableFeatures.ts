@@ -20,7 +20,7 @@ export function tableFeatures<TFeatures extends TableFeatures>(
   return features
 }
 
-//test
+// test
 
 // const features = tableFeatures({
 //   RowPinning: {},

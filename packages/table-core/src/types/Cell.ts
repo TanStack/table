@@ -17,7 +17,7 @@ export type Cell_All<
   TValue extends CellData = CellData,
 > = _Cell<TableFeatures, TData, TValue>
 
-//temp - enable all features for types internally
+// temp - enable all features for types internally
 export type Cell<
   TFeatures extends TableFeatures,
   TData extends RowData,

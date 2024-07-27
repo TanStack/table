@@ -44,6 +44,6 @@ export type _TableState<TFeatures extends TableFeatures> = UnionToIntersection<
 
 export type TableState_All = _TableState<TableFeatures>
 
-//temp - enable all features for types internally
+// temp - enable all features for types internally
 export type TableState<TFeatures extends TableFeatures> =
   Prettify<TableState_All>

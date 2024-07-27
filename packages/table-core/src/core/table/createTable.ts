@@ -88,7 +88,7 @@ export function _createTable<
 
   const coreInstance: Table_CoreProperties<TFeatures, TData> = {
     _features,
-    _rowModels: {}, //row models get cached here later
+    _rowModels: {}, // row models get cached here later
     options: {
       ...defaultOptions,
       ...options,

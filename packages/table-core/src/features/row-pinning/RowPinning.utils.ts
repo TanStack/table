@@ -115,13 +115,13 @@ function table_getPinnedRows<
 
   const rows =
     table.options.keepPinnedRows ?? true
-      ? //get all rows that are pinned even if they would not be otherwise visible
-        //account for expanded parent rows, but not pagination or filtering
+      ? // get all rows that are pinned even if they would not be otherwise visible
+        // account for expanded parent rows, but not pagination or filtering
         pinnedRowIds.map((rowId) => {
           const row = table_getRow(table, rowId, true)
           return row_getIsAllParentsExpanded(row, table) ? row : null
         })
-      : //else get only visible rows that are pinned
+      : // else get only visible rows that are pinned
         pinnedRowIds.map(
           (rowId) => visibleRows.find((row) => row.id === rowId)!,
         )

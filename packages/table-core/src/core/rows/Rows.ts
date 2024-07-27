@@ -56,7 +56,7 @@ export const Rows: TableFeature = {
       parent?: Row<TFeatures, TData>,
     ) => table_getRowId(row, table, index, parent)
 
-    //in next version, we should just pass in the row model as the optional 2nd arg
+    // in next version, we should just pass in the row model as the optional 2nd arg
     table.getRow = (id: string, searchAll?: boolean) =>
       table_getRow(table, id, searchAll)
   },

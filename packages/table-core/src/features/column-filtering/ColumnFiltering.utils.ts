@@ -212,7 +212,7 @@ export function shouldAutoRemoveFilter<
 ) {
   return (
     (filterFn && filterFn.autoRemove
-      ? filterFn.autoRemove(value, column as any) //TODO: fix this
+      ? filterFn.autoRemove(value, column as any) // TODO: fix this
       : false) ||
     typeof value === 'undefined' ||
     (typeof value === 'string' && !value)

@@ -59,7 +59,7 @@ export function table_resetSorting<
   )
 }
 
-//Column Utils
+// Column Utils
 
 /**
  *
@@ -444,7 +444,7 @@ export function column_clearSorting<
     options: Partial<TableOptions_RowSorting<TFeatures, TData>>
   },
 ) {
-  //clear sorting for just 1 column
+  // clear sorting for just 1 column
   table_setSorting(table, (old) =>
     old.length ? old.filter((d) => d.id !== column.id) : [],
   )

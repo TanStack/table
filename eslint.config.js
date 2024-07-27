@@ -10,10 +10,10 @@ export default [
     rules: {
       'no-case-declarations': 'off',
       'no-shadow': 'off',
-      'ts/ban-types': 'off',
-      'ts/naming-convention': 'off',
-      'ts/no-empty-function': 'off',
-      'ts/no-unnecessary-condition': 'warn',
+      '@typescript-eslint/ban-types': 'off',
+      '@typescript-eslint/naming-convention': 'off',
+      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'warn',
     },
   },
 ]

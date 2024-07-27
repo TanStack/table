@@ -28,7 +28,7 @@ export interface Table_ColumnSizing {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
   getCenterTotalSize: () => number
-  /**`
+  /**
    * Returns the total size of the left portion of the table by calculating the sum of the sizes of all left leaf-columns.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getlefttotalsize)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)

@@ -19,7 +19,7 @@ export type Header_All<
   TValue extends CellData = CellData,
 > = _Header<TableFeatures, TData, TValue>
 
-//temp - enable all features for types internally
+// temp - enable all features for types internally
 export type Header<
   TFeatures extends TableFeatures,
   TData extends RowData,

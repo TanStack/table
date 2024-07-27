@@ -116,7 +116,7 @@ export const ColumnPinning: TableFeature = {
     table.getIsSomeColumnsPinned = (position) =>
       table_getIsSomeColumnsPinned(table, position)
 
-    //header groups
+    // header groups
 
     table.getLeftHeaderGroups = memo(
       () => [
@@ -168,7 +168,7 @@ export const ColumnPinning: TableFeature = {
       getMemoOptions(table.options, 'debugHeaders', 'getCenterHeaderGroups'),
     )
 
-    //footer groups
+    // footer groups
 
     table.getLeftFooterGroups = memo(
       () => [table.getLeftHeaderGroups()],
@@ -194,7 +194,7 @@ export const ColumnPinning: TableFeature = {
       getMemoOptions(table.options, 'debugHeaders', 'getRightFooterGroups'),
     )
 
-    //flat headers
+    // flat headers
 
     table.getLeftFlatHeaders = memo(
       () => [table.getLeftHeaderGroups()],
@@ -232,7 +232,7 @@ export const ColumnPinning: TableFeature = {
       getMemoOptions(table.options, 'debugHeaders', 'getCenterFlatHeaders'),
     )
 
-    //leaf headers
+    // leaf headers
 
     table.getCenterLeafHeaders = memo(
       () => [table.getCenterFlatHeaders()],
@@ -258,7 +258,7 @@ export const ColumnPinning: TableFeature = {
       getMemoOptions(table.options, 'debugHeaders', 'getRightLeafHeaders'),
     )
 
-    //leaf columns
+    // leaf columns
 
     table.getLeftLeafColumns = memo(
       () => [columns, columnPinning],
@@ -278,7 +278,7 @@ export const ColumnPinning: TableFeature = {
       getMemoOptions(table.options, 'debugColumns', 'getCenterLeafColumns'),
     )
 
-    //visible leaf columns
+    // visible leaf columns
 
     table.getLeftVisibleLeafColumns = memo(
       () => [columns, columnPinning, columnVisibility],

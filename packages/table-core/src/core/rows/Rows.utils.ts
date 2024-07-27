@@ -98,7 +98,7 @@ export function row_getParentRows<
 >(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
   const parentRows: Array<Row<TFeatures, TData>> = []
   let currentRow = row
-  // eslint-disable-next-line ts/no-unnecessary-condition
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   while (true) {
     const parentRow = row_getParentRow(currentRow, table)
     if (!parentRow) break

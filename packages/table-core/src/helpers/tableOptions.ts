@@ -75,7 +75,7 @@ export function tableOptions(options: unknown) {
   return options
 }
 
-//test
+// test
 
 // const options = tableOptions({
 //   _features: {},

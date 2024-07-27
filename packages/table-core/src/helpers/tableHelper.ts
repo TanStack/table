@@ -14,7 +14,7 @@ export type TableHelperOptions<
   TData extends RowData,
 > = Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'> & {
   _features: TFeatures
-  TData: TData //provide a cast for the TData type
+  TData: TData // provide a cast for the TData type
 }
 
 /**
@@ -56,7 +56,7 @@ export function _createTableHelper<
   }
 }
 
-//test
+// test
 
 // // eslint-disable-next-line import/first, import/order
 // import { _createTable } from '../core/table/createTable'
