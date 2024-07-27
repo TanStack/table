@@ -70,7 +70,7 @@ import {combineLatest, switchMap} from 'rxjs';
 
 class TableComponent {
   readonly columnFilters = signal<ColumnFiltersState>([]) //no default filters
-  readonly sorting = signal<SortingState[]>([
+  readonly sorting = signal<SortingState>([
     {
       id: 'age',
       desc: true, //sort by age in descending order by default
