@@ -54,9 +54,7 @@ function App() {
     [],
   )
 
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof _features, Person>>
-  >(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
