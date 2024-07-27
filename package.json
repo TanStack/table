@@ -54,7 +54,7 @@
     "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-terser": "^0.4.4",
     "@size-limit/preset-small-lib": "^11.1.4",
-    "@tanstack/config": "^0.9.0",
+    "@tanstack/config": "^0.11.1",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/react-hooks": "^8.0.1",
