@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  ColumnDef,
   ColumnFiltering,
   ColumnGrouping,
   RowExpanding,
@@ -23,14 +24,14 @@ import type { GroupingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const tableHelper = createTableHelper({
-  features: {
+  _features: {
     ColumnFiltering,
     RowPagination,
     RowSorting,
     ColumnGrouping,
     RowExpanding,
   },
-  rowModels: {
+  _rowModels: {
     Core: createCoreRowModel(),
     Filtered: createFilteredRowModel(),
     Paginated: createPaginatedRowModel(),
@@ -38,59 +39,61 @@ const tableHelper = createTableHelper({
     Grouped: createGroupedRowModel(),
     Expanded: createExpandedRowModel(),
   },
+  TData: {} as Person,
 })
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo(
-    () =>
-      tableHelper.columnHelper.columns<typeof tableHelper.features, Person>([
-        {
-          accessorKey: 'firstName',
-          header: 'First Name',
-          cell: (info) => info.getValue(),
-          /**
-           * override the value used for row grouping
-           * (otherwise, defaults to the value derived from accessorKey / accessorFn)
-           */
-          getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
-        },
-        {
-          accessorFn: (row) => row.lastName,
-          id: 'lastName',
-          header: () => <span>Last Name</span>,
-          cell: (info) => info.getValue(),
-        },
+  const columns = React.useMemo<
+    Array<ColumnDef<typeof tableHelper.features, Person>>
+  >(
+    () => [
+      {
+        accessorKey: 'firstName',
+        header: 'First Name',
+        cell: (info) => info.getValue(),
+        /**
+         * override the value used for row grouping
+         * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+         */
+        getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+      },
+      {
+        accessorFn: (row) => row.lastName,
+        id: 'lastName',
+        header: () => <span>Last Name</span>,
+        cell: (info) => info.getValue(),
+      },
 
-        {
-          accessorKey: 'age',
-          header: () => 'Age',
-          aggregatedCell: ({ getValue }) =>
-            Math.round(getValue<number>() * 100) / 100,
-          aggregationFn: 'median',
-        },
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        aggregatedCell: ({ getValue }) =>
+          Math.round(getValue<number>() * 100) / 100,
+        aggregationFn: 'median',
+      },
 
-        {
-          accessorKey: 'visits',
-          header: () => <span>Visits</span>,
-          aggregationFn: 'sum',
-          // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-        },
-        {
-          accessorKey: 'status',
-          header: 'Status',
-        },
-        {
-          accessorKey: 'progress',
-          header: 'Profile Progress',
-          cell: ({ getValue }) =>
-            Math.round(getValue<number>() * 100) / 100 + '%',
-          aggregationFn: 'mean',
-          aggregatedCell: ({ getValue }) =>
-            Math.round(getValue<number>() * 100) / 100 + '%',
-        },
-      ]),
+      {
+        accessorKey: 'visits',
+        header: () => <span>Visits</span>,
+        aggregationFn: 'sum',
+        // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+      },
+      {
+        accessorKey: 'progress',
+        header: 'Profile Progress',
+        cell: ({ getValue }) =>
+          Math.round(getValue<number>() * 100) / 100 + '%',
+        aggregationFn: 'mean',
+        aggregatedCell: ({ getValue }) =>
+          Math.round(getValue<number>() * 100) / 100 + '%',
+      },
+    ],
     [],
   )
 

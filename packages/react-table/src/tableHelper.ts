@@ -24,15 +24,14 @@ export type TableHelper<
 export function createTableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
->({
-  TData,
-  ...tableHelperOptions
-}: TableHelperOptions<TFeatures, TData>): TableHelper<TFeatures, TData> {
+>(
+  tableHelperOptions: TableHelperOptions<TFeatures, TData>,
+): TableHelper<TFeatures, TData> {
   const tableHelper = _createTableHelper(useTable, tableHelperOptions)
   return {
     ...tableHelper,
     useTable: tableHelper.tableCreator,
-  }
+  } as any
 }
 
 // test
