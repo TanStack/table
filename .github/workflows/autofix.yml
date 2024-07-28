@@ -23,6 +23,10 @@ jobs:
         uses: tanstack/config/.github/setup@main
       - name: Fix formatting
         run: pnpm prettier:write
+      - name: Fix linting
+        run: pnpm lint:fix
+      - name: Regenerate docs
+        run: pnpm docs:generate
       - name: Apply fixes
         uses: autofix-ci/action@dd55f44df8f7cdb7a6bf74c78677eb8acd40cd0a
         with:
