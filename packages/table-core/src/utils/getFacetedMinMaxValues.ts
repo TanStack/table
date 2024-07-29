@@ -10,11 +10,11 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
       () => [table.getColumn(columnId)?.getFacetedRowModel()],
       facetedRowModel => {
         if (!facetedRowModel) return undefined
-        
+
         const uniqueValues = facetedRowModel.flatRows
-          .flatMap((flatRow) => flatRow.getUniqueValues(columnId) ?? [])
+          .flatMap(flatRow => flatRow.getUniqueValues(columnId) ?? [])
           .map(Number)
-          .filter((value) => !Number.isNaN(value))
+          .filter(value => !Number.isNaN(value))
 
         if (!uniqueValues.length) return
 
