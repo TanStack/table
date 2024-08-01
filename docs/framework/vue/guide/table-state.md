@@ -152,9 +152,7 @@ const table = useVueTable({
   get columns() {
     return columns.value
   },
-  get data() {
-    return data.value
-  },
+  data,
   //... Note: `state` values are NOT passed in yet
 })
 
