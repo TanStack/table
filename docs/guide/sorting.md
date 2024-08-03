@@ -202,7 +202,7 @@ const table = useReactTable({
   getSortedRowModel: getSortedRowModel(),
   sortingFns: { //add a custom sorting function
     myCustomSortingFn: (rowA, rowB, columnId) => {
-      return rowA.original[columnId] > rowB.original[columnId] ? 1 : rowA.original[columnId] < rowB.original[columnId] ? -1 : 0 
+      return rowA.original[columnId] > rowB.original[columnId] ? 1 : rowA.original[columnId] < rowB.original[columnId] ? -1 : 0
     },
   },
 })
@@ -308,7 +308,7 @@ const columns = [
 
 By default, the ability to remove sorting while cycling through the sorting states for a column is enabled. You can disable this behavior using the `enableSortingRemoval` table option. This behavior is useful if you want to ensure that at least one column is always sorted.
 
-The default behavior when using either the `getToggleSortingHandler` or `toggleSorting` APIs is to cycle through the sorting states like this: 
+The default behavior when using either the `getToggleSortingHandler` or `toggleSorting` APIs is to cycle through the sorting states like this:
 
 `'none' -> 'desc' -> 'asc' -> 'none' -> 'desc' -> 'asc' -> ...`
 
@@ -334,14 +334,14 @@ Sorting by multiple columns at once is enabled by default if using the `column.g
 
 ##### Disable Multi-Sorting
 
-You can disable multi-sorting for either a specific column or the entire table using the `enableMultiSorting` column option or table option. Disabling multi-sorting for a specific column will replace all existing sorting with the new column's sorting.
+You can disable multi-sorting for either a specific column or the entire table using the `enableMultiSort` column option or table option. Disabling multi-sorting for a specific column will replace all existing sorting with the new column's sorting.
 
 ```jsx
 const columns = [
   {
     header: () => 'Created At',
     accessorKey: 'createdAt',
-    enableMultiSorting: false, // always sort by just this column if sorting by this column
+    enableMultiSort: false, // always sort by just this column if sorting by this column
   },
   //...
 ]
@@ -349,7 +349,7 @@ const columns = [
 const table = useReactTable({
   columns,
   data,
-  enableMultiSorting: false, // disable multi-sorting for the entire table
+  enableMultiSort: false, // disable multi-sorting for the entire table
 })
 ```
 
