@@ -1,9 +1,35 @@
-import { _createTable } from '@tanstack/table-core'
-import { defineComponent, h, ref, watchEffect } from 'vue'
+import {
+  _createTable,
+  type RowData,
+  type TableFeatures,
+  type TableOptions,
+} from '@tanstack/table-core'
+import {
+  h,
+  watchEffect,
+  ref,
+  defineComponent,
+  isRef,
+  unref,
+  MaybeRef,
+} from 'vue'
 import { mergeProxy } from './merge-proxy'
-import type { RowData, TableFeatures, TableOptions } from '@tanstack/table-core'
 
 export * from '@tanstack/table-core'
+
+type TableOptionsWithReactiveData<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = Omit<TableOptions<TFeatures, TData>, 'data'> & {
+  data: MaybeRef<TData[]>
+}
+
+type TableOptionsResolvedWithReactiveData<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = Omit<TableOptions<TFeatures, TData>, 'data'> & {
+  data: MaybeRef<TData[]>
+}
 
 export const FlexRender = defineComponent({
   props: ['render', 'props'],
@@ -21,26 +47,35 @@ export const FlexRender = defineComponent({
   },
 })
 
-export function useTable<
+export function useVueTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(options: TableOptions<TFeatures, TData>) {
-  const resolvedOptions: TableOptions<TFeatures, TData> = mergeProxy(
+>(options: TableOptionsWithReactiveData<TFeatures, TData>) {
+  const resolvedOptions: TableOptionsResolvedWithReactiveData<
+    TFeatures,
+    TData
+  > = mergeProxy(
     {
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
-      renderFallbackValue: null,
       mergeOptions(
         defaultOptions: TableOptions<TFeatures, TData>,
-        newOptions: TableOptions<TFeatures, TData>,
+        options: TableOptions<TFeatures, TData>,
       ) {
-        return mergeProxy(defaultOptions, newOptions)
+        return mergeProxy(defaultOptions, options)
       },
     },
     options,
   )
 
-  const table = _createTable<TFeatures, TData>(resolvedOptions)
+  // Add support for reactivity
+  if (isRef(options.data)) {
+    resolvedOptions.data = unref(options.data)
+  }
+
+  const table = _createTable<TFeatures, TData>(
+    resolvedOptions as TableOptions<TFeatures, TData>,
+  )
   // can't use `reactive` because update needs to be immutable
   const state = ref(table.initialState)
 
@@ -50,7 +85,7 @@ export function useTable<
         get: (_, prop) => state.value[prop as keyof typeof state.value],
       })
 
-      return mergeProxy(prev, options, {
+      const newOptions = mergeProxy(prev, options, {
         // merge the initialState and `options.state`
         // create a new proxy on each `setOptions` call
         // and get the value from state on each property access
@@ -67,6 +102,16 @@ export function useTable<
           options.onStateChange?.(updater)
         },
       })
+
+      // Add support for reactivity
+      if (isRef(options.data)) {
+        return {
+          ...newOptions,
+          data: unref(options.data),
+        }
+      }
+
+      return newOptions
     })
   })
 

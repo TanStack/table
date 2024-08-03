@@ -18,7 +18,7 @@ To create a table instance, 3 `options` are required: `columns`, `data`, and a `
 
 #### Defining Data
 
-Define your data as an array of objects with a stable reference. `data` can come from anywhere like an API response or defined statically in your code, but it must have a stable reference to prevent infinite re-renders. If using TypeScript, the the type that you give your data will be used as a `TData` generic. See the [Data Guide](../data) for more info.
+Define your data as an array of objects with a stable reference. `data` can come from anywhere like an API response or defined statically in your code, but it must have a stable reference to prevent infinite re-renders. If using TypeScript, the type that you give your data will be used as a `TData` generic. See the [Data Guide](../data) for more info.
 
 #### Defining Columns
 

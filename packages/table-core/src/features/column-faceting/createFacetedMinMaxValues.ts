@@ -17,28 +17,24 @@ export function createFacetedMinMaxValues<
       (facetedRowModel) => {
         if (!facetedRowModel) return undefined
 
-        const firstValue =
-          facetedRowModel.flatRows[0]?.getUniqueValues(columnId)
+        const uniqueValues = facetedRowModel.flatRows
+          .flatMap(
+            (flatRow) => row_getUniqueValues(flatRow, table, columnId) ?? [],
+          )
+          .map(Number)
+          .filter((value) => !Number.isNaN(value))
 
-        if (typeof firstValue === 'undefined') {
-          return undefined
+        if (!uniqueValues.length) return
+
+        let facetedMinValue = uniqueValues[0]!
+        let facetedMaxValue = uniqueValues[uniqueValues.length - 1]!
+
+        for (const value of uniqueValues) {
+          if (value < facetedMinValue) facetedMinValue = value
+          else if (value > facetedMaxValue) facetedMaxValue = value
         }
 
-        const facetedMinMaxValues: [any, any] = [firstValue, firstValue]
-
-        for (const row of facetedRowModel.flatRows) {
-          const values = row_getUniqueValues(row, table, columnId)
-
-          for (const value of values) {
-            if (value < facetedMinMaxValues[0]) {
-              facetedMinMaxValues[0] = value
-            } else if (value > facetedMinMaxValues[1]) {
-              facetedMinMaxValues[1] = value
-            }
-          }
-        }
-
-        return facetedMinMaxValues
+        return [facetedMinValue, facetedMaxValue]
       },
       getMemoOptions(table.options, 'debugTable', 'getFacetedMinMaxValues'),
     )

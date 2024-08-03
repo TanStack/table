@@ -46,13 +46,13 @@ Try other [TanStack](https://tanstack.com) libraries:
 
 You may know **TanStack Table** by our adapter names, too!
 
-- [Angular Table](https://tanstack.com/table/v8/docs/adapters/angular-table)
-- [Lit Table](https://tanstack.com/table/v8/docs/adapters/lit-table)
-- [Qwik Table](https://tanstack.com/table/v8/docs/adapters/qwik-table)
-- [**React Table**](https://tanstack.com/table/v8/docs/adapters/react-table)
-- [Solid Table](https://tanstack.com/table/v8/docs/adapters/solid-table)
-- [Svelte Table](https://tanstack.com/table/v8/docs/adapters/svelte-table)
-- [Vue Table](https://tanstack.com/table/v8/docs/adapters/vue-table)
+- [Angular Table](https://tanstack.com/table/v8/docs/framework/angular/angular-table)
+- [Lit Table](https://tanstack.com/table/v8/docs/framework/lit/lit-table)
+- [Qwik Table](https://tanstack.com/table/v8/docs/framework/qwik/qwik-table)
+- [**React Table**](https://tanstack.com/table/v8/docs/framework/react/react-table)
+- [Solid Table](https://tanstack.com/table/v8/docs/framework/solid/solid-table)
+- [Svelte Table](https://tanstack.com/table/v8/docs/framework/svelte/svelte-table)
+- [Vue Table](https://tanstack.com/table/v8/docs/framework/vue/vue-table)
 
 ## Summary
 
