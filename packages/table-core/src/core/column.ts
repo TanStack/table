@@ -79,11 +79,11 @@ export function createColumn<TData extends RowData, TValue>(
 
   let id =
     resolvedColumnDef.id ??
-    (accessorKey ? (
-      typeof String.prototype.replaceAll === 'function'
+    (accessorKey
+      ? typeof String.prototype.replaceAll === 'function'
         ? accessorKey.replaceAll('.', '_')
         : accessorKey.replace(/\./g, '_')
-    ) : undefined) ??
+      : undefined) ??
     (typeof resolvedColumnDef.header === 'string'
       ? resolvedColumnDef.header
       : undefined)
