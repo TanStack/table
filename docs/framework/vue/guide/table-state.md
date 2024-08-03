@@ -23,7 +23,9 @@ console.log(table.getState().rowSelection) //access just the row selection state
 
 ### Using Reactive Data
 
-The `useVueTable` now supports reactive data. This means you can pass a Vue `ref` or `computed` containing your data to the `data`-option. The table will automatically react to changes in the data.
+> **New in v8.20.0**
+
+The `useVueTable` hook now supports reactive data. This means you can pass a Vue `ref` or `computed` containing your data to the `data`-option. The table will automatically react to changes in the data.
 
 ```ts
 const columns = [
