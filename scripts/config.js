@@ -13,6 +13,14 @@ export const packages = [
     packageDir: 'packages/table-core',
   },
   {
+    name: '@tanstack/angular-table',
+    packageDir: 'packages/angular-table',
+  },
+  {
+    name: '@tanstack/lit-table',
+    packageDir: 'packages/lit-table',
+  },
+  {
     name: '@tanstack/qwik-table',
     packageDir: 'packages/qwik-table',
   },
@@ -25,12 +33,12 @@ export const packages = [
     packageDir: 'packages/solid-table',
   },
   {
-    name: '@tanstack/vue-table',
-    packageDir: 'packages/vue-table',
-  },
-  {
     name: '@tanstack/svelte-table',
     packageDir: 'packages/svelte-table',
+  },
+  {
+    name: '@tanstack/vue-table',
+    packageDir: 'packages/vue-table',
   },
   {
     name: '@tanstack/react-table-devtools',
@@ -50,13 +58,13 @@ export const branchConfigs = {
   main: {
     prerelease: false,
   },
-  next: {
+  alpha: {
     prerelease: true,
   },
   beta: {
     prerelease: true,
   },
-  alpha: {
+  rc: {
     prerelease: true,
   },
 }

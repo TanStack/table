@@ -11,7 +11,7 @@ import {
   useQwikTable,
   getFilteredRowModel,
   ColumnDef,
-} from '../../../../packages/qwik-table/src/index'
+} from '@tanstack/qwik-table'
 
 import { component$ } from '@builder.io/qwik'
 
@@ -157,7 +157,7 @@ const App = component$(() => {
                   <th
                     key={id}
                     onClick$={$(() => {
-                      const thisCol = table.getColumn(id)!
+                      const thisCol = table.getColumn(id)! //avoid serialization error
                       thisCol.toggleSorting()
                     })}
                     colSpan={header.colSpan}

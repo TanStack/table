@@ -5,17 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "serve dist"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.5.1",
-    "serve": "^14.2.1",
-    "typescript": "5.4.2",
-    "vite": "^5.2.2"
+    "@builder.io/qwik": "^1.6.0",
+    "@faker-js/faker": "^8.4.1",
+    "serve": "^14.2.3",
+    "typescript": "5.4.5",
+    "vite": "^5.3.2"
   },
   "dependencies": {
-    "@tanstack/qwik-table": "^8.15.0",
-    "@tanstack/match-sorter-utils": "^8.11.8"
+    "@tanstack/qwik-table": "^8.19.4",
+    "@tanstack/match-sorter-utils": "^8.19.4"
   }
 }

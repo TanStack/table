@@ -105,7 +105,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.getState().columnSizingInfo])
+  }, [table.getState().columnSizingInfo, table.getState().columnSizing])
 
   //demo purposes
   const [enableMemo, setEnableMemo] = React.useState(true)

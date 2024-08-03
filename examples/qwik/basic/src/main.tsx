@@ -8,7 +8,7 @@ import {
   getCoreRowModel,
   flexRender,
   useQwikTable,
-} from '../../../../packages/qwik-table/src/index'
+} from '@tanstack/qwik-table'
 
 type Person = {
   firstName: string

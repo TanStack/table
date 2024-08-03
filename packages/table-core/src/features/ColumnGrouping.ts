@@ -283,11 +283,9 @@ export const ColumnGrouping: TableFeature = {
 
     column.getCanGroup = () => {
       return (
-        column.columnDef.enableGrouping ??
-        true ??
-        table.options.enableGrouping ??
-        true ??
-        !!column.accessorFn
+        (column.columnDef.enableGrouping ?? true) &&
+        (table.options.enableGrouping ?? true) &&
+        (!!column.accessorFn || !!column.columnDef.getGroupingValue)
       )
     }
 

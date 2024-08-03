@@ -6,12 +6,12 @@ title: Sorting Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [sorting](../framework/react/examples/sorting)
-- [filters](../framework/react/examples/filters)
+- [sorting](../../framework/react/examples/sorting)
+- [filters](../../framework/react/examples/filters)
 
 ## API
 
-[Sorting API](../api/features/sorting)
+[Sorting API](../../api/features/sorting)
 
 ## Sorting Guide
 
@@ -158,6 +158,8 @@ const myCustomSortingFn: SortingFn<TData> = (rowA: Row<TData>, rowB: Row<TData>,
 }
 ```
 
+> Note: The comparison function does not need to take whether or not the column is in descending or ascending order into account. The row models will take of that logic. `sortingFn` functions only need to provide a consistent comparison.
+
 Every sorting function receives 2 rows and a column ID and are expected to compare the two rows using the column ID to return `-1`, `0`, or `1` in ascending order. Here's a cheat sheet:
 
 | Return | Ascending Order |
@@ -200,7 +202,7 @@ const table = useReactTable({
   getSortedRowModel: getSortedRowModel(),
   sortingFns: { //add a custom sorting function
     myCustomSortingFn: (rowA, rowB, columnId) => {
-      return rowA.original[columnId] > rowB.original[columnId] ? 1 : rowA.original[columnId] < rowB.original[columnId] ? -1 : 0 
+      return rowA.original[columnId] > rowB.original[columnId] ? 1 : rowA.original[columnId] < rowB.original[columnId] ? -1 : 0
     },
   },
 })
@@ -278,22 +280,26 @@ const columns = [
 ]
 ```
 
-#### Sort Undefined or Nullish Values
+#### Sort Undefined Values
 
-Any undefined or nullish values will be sorted to the beginning or end of the list based on the `sortUndefined` column option or table option. You can customize this behavior for your specific use-case.
+Any undefined values will be sorted to the beginning or end of the list based on the `sortUndefined` column option or table option. You can customize this behavior for your specific use-case.
 
 In not specified, the default value for `sortUndefined` is `1`, and undefined values will be sorted with lower priority (descending), if ascending, undefined will appear on the end of the list.
 
+- `'first'` - Undefined values will be pushed to the beginning of the list
+- `'last'` - Undefined values will be pushed to the end of the list
 - `false` - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
 - `-1` - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
 - `1` - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
+
+> NOTE: `'first'` and `'last'` options are new in v8.16.0
 
 ```jsx
 const columns = [
   {
     header: () => 'Rank',
     accessorKey: 'rank',
-    sortUndefined: -1, // 1 | -1 | false
+    sortUndefined: -1, // 'first' | 'last' | 1 | -1 | false
   },
 ]
 ```
@@ -302,7 +308,7 @@ const columns = [
 
 By default, the ability to remove sorting while cycling through the sorting states for a column is enabled. You can disable this behavior using the `enableSortingRemoval` table option. This behavior is useful if you want to ensure that at least one column is always sorted.
 
-The default behavior when using either the `getToggleSortingHandler` or `toggleSorting` APIs is to cycle through the sorting states like this: 
+The default behavior when using either the `getToggleSortingHandler` or `toggleSorting` APIs is to cycle through the sorting states like this:
 
 `'none' -> 'desc' -> 'asc' -> 'none' -> 'desc' -> 'asc' -> ...`
 
@@ -328,14 +334,14 @@ Sorting by multiple columns at once is enabled by default if using the `column.g
 
 ##### Disable Multi-Sorting
 
-You can disable multi-sorting for either a specific column or the entire table using the `enableMultiSorting` column option or table option. Disabling multi-sorting for a specific column will replace all existing sorting with the new column's sorting.
+You can disable multi-sorting for either a specific column or the entire table using the `enableMultiSort` column option or table option. Disabling multi-sorting for a specific column will replace all existing sorting with the new column's sorting.
 
 ```jsx
 const columns = [
   {
     header: () => 'Created At',
     accessorKey: 'createdAt',
-    enableMultiSorting: false, // always sort by just this column if sorting by this column
+    enableMultiSort: false, // always sort by just this column if sorting by this column
   },
   //...
 ]
@@ -343,7 +349,7 @@ const columns = [
 const table = useReactTable({
   columns,
   data,
-  enableMultiSorting: false, // disable multi-sorting for the entire table
+  enableMultiSort: false, // disable multi-sorting for the entire table
 })
 ```
 

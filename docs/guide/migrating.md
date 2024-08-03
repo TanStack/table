@@ -26,9 +26,9 @@ npm uninstall react-table @types/react-table
 npm install @tanstack/react-table
 ```
 
-```diff
-- import { useTable } from 'react-table'
-+ import { useReactTable } from '@tanstack/react-table'
+```tsx
+- import { useTable } from 'react-table' // [!code --]
++ import { useReactTable } from '@tanstack/react-table' // [!code ++]
 ```
 
 Types are now included in the base package, so you can remove the `@types/react-table` package.
@@ -40,31 +40,31 @@ Types are now included in the base package, so you can remove the `@types/react-
 - Rename `useTable` to `useReactTable`
 - The old hook and plugin systems have been removed, but they have replaced with tree-shakable row model imports for each feature.
 
-```diff
-- import { useTable, usePagination, useSortBy } from 'react-table';
-+ import {
-+   useReactTable,
-+   getCoreRowModel,
-+   getPaginationRowModel,
-+   getSortedRowModel
-+ } from '@tanstack/react-table';
+```tsx
+- import { useTable, usePagination, useSortBy } from 'react-table'; // [!code --]
++ import { // [!code ++]
++   useReactTable, // [!code ++]
++   getCoreRowModel, // [!code ++]
++   getPaginationRowModel, // [!code ++]
++   getSortedRowModel // [!code ++]
++ } from '@tanstack/react-table'; // [!code ++]
 
 // ...
 
--   const tableInstance = useTable(
--     { columns,  data },
--     useSortBy,
--     usePagination, //order of hooks used to matter
--     // etc.
--   );
-+   const tableInstance = useReactTable({
-+     columns,
-+     data,
-+     getCoreRowModel: getCoreRowModel(),
-+     getPaginationRowModel: getPaginationRowModel(),
-+     getSortedRowModel: getSortedRowModel(), //order doesn't matter anymore!
-+     // etc.
-+   });
+-   const tableInstance = useTable( // [!code --]
+-     { columns,  data }, // [!code --]
+-     useSortBy, // [!code --]
+-     usePagination, //order of hooks used to matter // [!code --]
+-     // etc. // [!code --]
+-   ); // [!code --]
++   const tableInstance = useReactTable({ // [!code ++]
++     columns, // [!code ++]
++     data, // [!code ++]
++     getCoreRowModel: getCoreRowModel(), // [!code ++]
++     getPaginationRowModel: getPaginationRowModel(), // [!code ++]
++     getSortedRowModel: getSortedRowModel(), //order doesn't matter anymore! // [!code ++]
++     // etc. // [!code ++]
++   }); // [!code ++]
 ```
 
 - All `disable*` table options were renamed to `enable*` table options. (e.g. `disableSortBy` is now `enableSorting`, `disableGroupBy` is now `enableGrouping`, etc.)
@@ -78,34 +78,34 @@ Types are now included in the base package, so you can remove the `@types/react-
   - The first parameter is the accessor function or accessor string.
   - The second parameter is an object of column options.
 
-```diff
+```tsx
 const columns = [
--  {
--    accessor: 'firstName',
--    Header: 'First Name',
--  },
--  {
--    accessor: row => row.lastName,
--    Header: () => <span>Last Name</span>,
--  },
+-  { // [!code --]
+-    accessor: 'firstName', // [!code --]
+-    Header: 'First Name', // [!code --]
+-  }, // [!code --]
+-  { // [!code --]
+-    accessor: row => row.lastName, // [!code --]
+-    Header: () => <span>Last Name</span>, // [!code --]
+-  }, // [!code --]
 
 // Best TypeScript experience, especially when using `cell.getValue()` later on
-+  columnHelper.accessor('firstName', { //accessorKey
-+    header: 'First Name',
-+  }),
-+  columnHelper.accessor(row => row.lastName, { //accessorFn
-+    header: () => <span>Last Name</span>,
-+  }),
++  columnHelper.accessor('firstName', { //accessorKey // [!code ++]
++    header: 'First Name', // [!code ++]
++  }), // [!code ++]
++  columnHelper.accessor(row => row.lastName, { //accessorFn // [!code ++]
++    header: () => <span>Last Name</span>, // [!code ++]
++  }), // [!code ++]
 
 // OR (if you prefer)
-+ {
-+   accessorKey: 'firstName',
-+   header: 'First Name',
-+ },
-+ {
-+   accessorFn: row => row.lastName,
-+   header: () => <span>Last Name</span>,
-+ },
++ { // [!code ++]
++   accessorKey: 'firstName', // [!code ++]
++   header: 'First Name', // [!code ++]
++ }, // [!code ++]
++ { // [!code ++]
++   accessorFn: row => row.lastName, // [!code ++]
++   header: () => <span>Last Name</span>, // [!code ++]
++ }, // [!code ++]
 ]
 ```
 
@@ -136,58 +136,58 @@ const columns = [
   - You will need to define the `key` props manually
   - You will need to define the `colSpan` prop manually if using features that require it (grouped headers, aggregation, etc.)
 
-```diff
-- <th {...header.getHeaderProps()}>{cell.render('Header')}</th>
-+ <th colSpan={header.colSpan} key={column.id}>
-+   {flexRender(
-+     header.column.columnDef.header,
-+     header.getContext()
-+   )}
-+ </th>
+```tsx
+- <th {...header.getHeaderProps()}>{cell.render('Header')}</th> // [!code --]
++ <th colSpan={header.colSpan} key={column.id}> // [!code ++]
++   {flexRender( // [!code ++]
++     header.column.columnDef.header, // [!code ++]
++     header.getContext() // [!code ++]
++   )} // [!code ++]
++ </th> // [!code ++]
 ```
 
-```diff
-- <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-+ <td key={cell.id}>
-+   {flexRender(
-+     cell.column.columnDef.cell,
-+     cell.getContext()
-+   )}
-+ </td>
+```tsx
+- <td {...cell.getCellProps()}>{cell.render('Cell')}</td> // [!code --]
++ <td key={cell.id}> // [!code ++]
++   {flexRender( // [!code ++]
++     cell.column.columnDef.cell, // [!code ++]
++     cell.getContext() // [!code ++]
++   )} // [!code ++]
++ </td> // [!code ++]
 ```
 
-```diff
+```tsx
 // in column definitions in this case
-- Header: ({ getToggleAllRowsSelectedProps }) => (
--   <input type="checkbox" {...getToggleAllRowsSelectedProps()} />
-- ),
-- Cell: ({ row }) => (
--   <input type="checkbox" {...row.getToggleRowSelectedProps()} />
-- ),
-+ header: ({ table }) => (
-+   <Checkbox
-+     checked={table.getIsAllRowsSelected()}
-+     indeterminate={table.getIsSomeRowsSelected()}
-+     onChange={table.getToggleAllRowsSelectedHandler()}
-+   />
-+ ),
-+ cell: ({ row }) => (
-+   <Checkbox
-+     checked={row.getIsSelected()}
-+     disabled={!row.getCanSelect()}
-+     indeterminate={row.getIsSomeSelected()}
-+     onChange={row.getToggleSelectedHandler()}
-+   />
-+ ),
+- Header: ({ getToggleAllRowsSelectedProps }) => ( // [!code --]
+-   <input type="checkbox" {...getToggleAllRowsSelectedProps()} /> // [!code --]
+- ), // [!code --]
+- Cell: ({ row }) => ( // [!code --]
+-   <input type="checkbox" {...row.getToggleRowSelectedProps()} /> // [!code --]
+- ), // [!code --]
++ header: ({ table }) => ( // [!code ++]
++   <Checkbox // [!code ++]
++     checked={table.getIsAllRowsSelected()} // [!code ++]
++     indeterminate={table.getIsSomeRowsSelected()} // [!code ++]
++     onChange={table.getToggleAllRowsSelectedHandler()} // [!code ++]
++   /> // [!code ++]
++ ), // [!code ++]
++ cell: ({ row }) => ( // [!code ++]
++   <Checkbox // [!code ++]
++     checked={row.getIsSelected()} // [!code ++]
++     disabled={!row.getCanSelect()} // [!code ++]
++     indeterminate={row.getIsSomeSelected()} // [!code ++]
++     onChange={row.getToggleSelectedHandler()} // [!code ++]
++   /> // [!code ++]
++ ), // [!code ++]
 ```
 
 ### Other Changes
 
 - custom `filterTypes` (now called `filterFns`) have a new function signature as it only returns a boolean for whether the row should be included or not.
 
-```diff
-- (rows: Row[], id: string, filterValue: any) => Row[]
-+ (row: Row, id: string, filterValue: any) => boolean
+```tsx
+- (rows: Row[], id: string, filterValue: any) => Row[] // [!code --]
++ (row: Row, id: string, filterValue: any) => boolean // [!code ++]
 ```
 
 - ...

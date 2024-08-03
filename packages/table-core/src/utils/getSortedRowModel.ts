@@ -18,14 +18,14 @@ export function getSortedRowModel<TData extends RowData>(): (
         const sortedFlatRows: Row<TData>[] = []
 
         // Filter out sortings that correspond to non existing columns
-        const availableSorting = sortingState.filter(
-          sort => table.getColumn(sort.id)?.getCanSort()
+        const availableSorting = sortingState.filter(sort =>
+          table.getColumn(sort.id)?.getCanSort()
         )
 
         const columnInfoById: Record<
           string,
           {
-            sortUndefined?: false | -1 | 1
+            sortUndefined?: false | -1 | 1 | 'first' | 'last'
             invertSorting?: boolean
             sortingFn: SortingFn<TData>
           }
@@ -51,12 +51,13 @@ export function getSortedRowModel<TData extends RowData>(): (
             for (let i = 0; i < availableSorting.length; i += 1) {
               const sortEntry = availableSorting[i]!
               const columnInfo = columnInfoById[sortEntry.id]!
+              const sortUndefined = columnInfo.sortUndefined
               const isDesc = sortEntry?.desc ?? false
 
               let sortInt = 0
 
               // All sorting ints should always return in ascending order
-              if (columnInfo.sortUndefined) {
+              if (sortUndefined) {
                 const aValue = rowA.getValue(sortEntry.id)
                 const bValue = rowB.getValue(sortEntry.id)
 
@@ -64,12 +65,14 @@ export function getSortedRowModel<TData extends RowData>(): (
                 const bUndefined = bValue === undefined
 
                 if (aUndefined || bUndefined) {
+                  if (sortUndefined === 'first') return aUndefined ? -1 : 1
+                  if (sortUndefined === 'last') return aUndefined ? 1 : -1
                   sortInt =
                     aUndefined && bUndefined
                       ? 0
                       : aUndefined
-                        ? columnInfo.sortUndefined
-                        : -columnInfo.sortUndefined
+                        ? sortUndefined
+                        : -sortUndefined
                 }
               }
 

@@ -22,17 +22,39 @@
           "to": "installation"
         },
         {
+          "label": "Migrating to V8",
+          "to": "guide/migrating"
+        },
+        {
           "label": "FAQ",
           "to": "faq"
         }
       ],
       "frameworks": [
         {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Angular Table Adapter",
+              "to": "framework/angular/angular-table"
+            }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            {
+              "label": "Lit Table Adapter",
+              "to": "framework/lit/lit-table"
+            }
+          ]
+        },
+        {
           "label": "qwik",
           "children": [
             {
-              "label": "Qwik Table",
-              "to": "framework/react/qwik-table"
+              "label": "Qwik Table Adapter",
+              "to": "framework/qwik/qwik-table"
             }
           ]
         },
@@ -40,7 +62,7 @@
           "label": "react",
           "children": [
             {
-              "label": "React Table",
+              "label": "React Table Adapter",
               "to": "framework/react/react-table"
             }
           ]
@@ -49,7 +71,7 @@
           "label": "solid",
           "children": [
             {
-              "label": "Solid Table",
+              "label": "Solid Table Adapter",
               "to": "framework/solid/solid-table"
             }
           ]
@@ -58,7 +80,7 @@
           "label": "svelte",
           "children": [
             {
-              "label": "Svelte Table",
+              "label": "Svelte Table Adapter",
               "to": "framework/svelte/svelte-table"
             }
           ]
@@ -67,7 +89,7 @@
           "label": "vue",
           "children": [
             {
-              "label": "Vue Table",
+              "label": "Vue Table Adapter",
               "to": "framework/vue/vue-table"
             }
           ]
@@ -76,7 +98,7 @@
           "label": "vanilla",
           "children": [
             {
-              "label": "Vanilla JS/TS",
+              "label": "Vanilla JS (No Framework)",
               "to": "vanilla"
             }
           ]
@@ -87,16 +109,16 @@
       "label": "Core Guides",
       "children": [
         {
-          "label": "Migrating to V8",
-          "to": "guide/migrating"
-        },
-        {
-          "label": "Table Instance",
-          "to": "guide/tables"
+          "label": "Data",
+          "to": "guide/data"
         },
         {
           "label": "Column Defs",
           "to": "guide/column-defs"
+        },
+        {
+          "label": "Table Instance",
+          "to": "guide/tables"
         },
         {
           "label": "Rows Models",
@@ -107,21 +129,92 @@
           "to": "guide/rows"
         },
         {
+          "label": "Cells",
+          "to": "guide/cells"
+        },
+        {
+          "label": "Header Groups",
+          "to": "guide/header-groups"
+        },
+        {
           "label": "Headers",
           "to": "guide/headers"
         },
         {
-          "label": "Cells",
-          "to": "guide/cells"
+          "label": "Columns",
+          "to": "guide/columns"
         }
       ],
       "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/angular/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/lit/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "qwik",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/qwik/guide/table-state"
+            }
+          ]
+        },
         {
           "label": "react",
           "children": [
             {
               "label": "Table State",
               "to": "framework/react/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "solid",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/solid/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "svelte",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/svelte/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "vue",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/vue/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "vanilla",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/vanilla/guide/table-state"
             }
           ]
         }
@@ -159,8 +252,12 @@
           "to": "guide/fuzzy-filtering"
         },
         {
-          "label": "Faceted Values",
-          "to": "guide/faceted-values"
+          "label": "Column Faceting",
+          "to": "guide/column-faceting"
+        },
+        {
+          "label": "Global Faceting",
+          "to": "guide/global-faceting"
         },
         {
           "label": "Grouping",
@@ -233,6 +330,14 @@
       "label": "Feature APIs",
       "children": [
         {
+          "label": "Column Filtering",
+          "to": "api/features/column-filtering"
+        },
+        {
+          "label": "Column Faceting",
+          "to": "api/features/column-faceting"
+        },
+        {
           "label": "Column Ordering",
           "to": "api/features/column-ordering"
         },
@@ -249,8 +354,12 @@
           "to": "api/features/column-visibility"
         },
         {
-          "label": "Filters",
-          "to": "api/features/filters"
+          "label": "Global Faceting",
+          "to": "api/features/global-faceting"
+        },
+        {
+          "label": "Global Filtering",
+          "to": "api/features/global-filtering"
         },
         {
           "label": "Sorting",
@@ -292,6 +401,76 @@
       "children": [],
       "frameworks": [
         {
+          "label": "angular",
+          "children": [
+            {
+              "to": "framework/angular/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/angular/examples/grouping",
+              "label": "Column Grouping"
+            },
+            {
+              "to": "framework/angular/examples/column-ordering",
+              "label": "Column Ordering"
+            },
+            {
+              "to": "framework/angular/examples/column-pinning",
+              "label": "Column Pinning"
+            },
+            {
+              "to": "framework/angular/examples/column-pinning-sticky",
+              "label": "Sticky Column Pinning"
+            },
+            {
+              "to": "framework/angular/examples/column-visibility",
+              "label": "Column Visibility"
+            },
+            {
+              "to": "framework/angular/examples/filters",
+              "label": "Column Filters"
+            },
+            {
+              "to": "framework/angular/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/angular/examples/signal-input",
+              "label": "Signal Input"
+            }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            {
+              "to": "framework/lit/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/lit/examples/column-sizing",
+              "label": "Column Sizing"
+            },
+            {
+              "to": "framework/lit/examples/filters",
+              "label": "Filters"
+            },
+            {
+              "to": "framework/lit/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/lit/examples/sorting",
+              "label": "Sorting"
+            },
+            {
+              "to": "framework/lit/examples/virtualized-rows",
+              "label": "Virtualized Rows"
+            }
+          ]
+        },
+        {
           "label": "qwik",
           "children": [
             {
@@ -299,12 +478,16 @@
               "label": "Basic"
             },
             {
+              "to": "framework/qwik/examples/filters",
+              "label": "Filters"
+            },
+            {
               "to": "framework/qwik/examples/row-selection",
               "label": "Row Selection"
             },
             {
-              "to": "framework/qwik/examples/filters",
-              "label": "Filters"
+              "to": "framework/qwik/examples/sorting",
+              "label": "Sorting"
             }
           ]
         },
@@ -317,7 +500,19 @@
             },
             {
               "to": "framework/react/examples/column-groups",
-              "label": "Column Groups"
+              "label": "Header Groups"
+            },
+            {
+              "to": "framework/react/examples/filters",
+              "label": "Column Filters"
+            },
+            {
+              "to": "framework/react/examples/filters-faceted",
+              "label": "Column Filters (Faceted)"
+            },
+            {
+              "to": "framework/react/examples/filters-fuzzy",
+              "label": "Fuzzy Search Filters"
             },
             {
               "to": "framework/react/examples/column-ordering",
@@ -358,10 +553,6 @@
             {
               "to": "framework/react/examples/sub-components",
               "label": "Sub Components"
-            },
-            {
-              "to": "framework/react/examples/filters",
-              "label": "Filters"
             },
             {
               "to": "framework/react/examples/fully-controlled",
@@ -430,6 +621,10 @@
             {
               "to": "framework/react/examples/custom-features",
               "label": "Custom Features"
+            },
+            {
+              "to": "framework/react/examples/query-router-search-params",
+              "label": "Query Router Search Params"
             }
           ]
         },
@@ -525,6 +720,14 @@
             {
               "to": "framework/vue/examples/sorting",
               "label": "Sorting"
+            },
+            {
+              "to": "framework/vue/examples/sub-components",
+              "label": "Sub Components"
+            },
+            {
+              "to": "framework/vue/examples/filters",
+              "label": "Column Filters"
             }
           ]
         }

@@ -6,17 +6,17 @@ title: Pagination Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [pagination](../framework/react/examples/pagination)
-- [pagination-controlled (React Query)](../framework/react/examples/pagination-controlled)
-- [editable-data](../framework/react/examples/editable-data)
-- [expanding](../framework/react/examples/expanding)
-- [filters](../framework/react/examples/filters)
-- [fully-controlled](../framework/react/examples/fully-controlled)
-- [row-selection](../framework/react/examples/row-selection)
+- [pagination](../../framework/react/examples/pagination)
+- [pagination-controlled (React Query)](../../framework/react/examples/pagination-controlled)
+- [editable-data](../../framework/react/examples/editable-data)
+- [expanding](../../framework/react/examples/expanding)
+- [filters](../../framework/react/examples/filters)
+- [fully-controlled](../../framework/react/examples/fully-controlled)
+- [row-selection](../../framework/react/examples/row-selection)
 
 ## API
 
-[Pagination API](../api/features/pagination)
+[Pagination API](../../api/features/pagination)
 
 ## Pagination Guide
 
@@ -30,7 +30,7 @@ Using client-side pagination means that the `data` that you fetch will contain *
 
 Client-side pagination is usually the simplest way to implement pagination when using TanStack Table, but it might not be practical for very large datasets.
 
-However, a lot of people underestimate just how much data can be handled client-side. If your table will only ever have a few thousand rows or less, client-side pagination can still be a viable option. TanStack Table is designed to scale up to 10s of thousands of rows with decent performance for pagination, filtering, sorting, and grouping. The [official pagination example](../framework/react/examples/pagination) loads 100,000 rows and still performs well, albeit with only handful of columns.
+However, a lot of people underestimate just how much data can be handled client-side. If your table will only ever have a few thousand rows or less, client-side pagination can still be a viable option. TanStack Table is designed to scale up to 10s of thousands of rows with decent performance for pagination, filtering, sorting, and grouping. The [official pagination example](../../framework/react/examples/pagination) loads 100,000 rows and still performs well, albeit with only handful of columns.
 
 Every use-case is different and will depend on the complexity of the table, how many columns you have, how large every piece of data is, etc. The main bottlenecks to pay attention to are:
 
@@ -87,7 +87,7 @@ const table = useReactTable({
 
 ### Pagination State
 
-Whether or not you are using client-side or manual server-side pagination, you can use the built-in `pagination` state state and APIs.
+Whether or not you are using client-side or manual server-side pagination, you can use the built-in `pagination` state and APIs.
 
 The `pagination` state is an object that contains the following properties:
 
@@ -142,9 +142,7 @@ Besides the `manualPagination`, `pageCount`, and `rowCount` options which are us
 
 #### Auto Reset Page Index
 
-The `autoResetPageIndex` table option is true by default, and it will reset the `pageIndex` to `0` when page-altering state changes occur, such as when the `data` is updated, filters change, grouping changes, etc. This is useful to prevent the table from showing an empty page when the `pageIndex` is out of range.
-
-However, you can opt out of this behavior by setting the `autoResetPageIndex` option to `false`.
+By default, `pageIndex` is reset to `0` when page-altering state changes occur, such as when the `data` is updated, filters change, grouping changes, etc. This behavior is automatically disabled when `manualPagination` is true but it can be overridden by explicitly assigning a boolean value to the `autoResetPageIndex` table option.
 
 ```jsx
 const table = useReactTable({
@@ -170,14 +168,14 @@ There are several pagination table instance APIs that are useful for hooking up 
 - `nextPage`: Useful for going to the next page. (Button click handler)
 - `firstPage`: Useful for going to the first page. (Button click handler)
 - `lastPage`: Useful for going to the last page. (Button click handler)
-- `setPageIndex`: uUseful for a "go to page" input.
+- `setPageIndex`: Useful for a "go to page" input.
 - `resetPageIndex`: Useful for resetting the table state to the original page index.
-- `setPageSize`: Useful for a "page size" input/select
+- `setPageSize`: Useful for a "page size" input/select.
 - `resetPageSize`: Useful for resetting the table state to the original page size.
 - `setPagination`: Useful for setting all of the pagination state at once.
 - `resetPagination`: Useful for resetting the table state to the original pagination state.
 
-> **Note**: Some of these APIs are new in `v8.13.0`
+> **Note**: Some of these APIs are new in `v8.13.0`.
 
 ```jsx
 <Button
@@ -204,7 +202,7 @@ There are several pagination table instance APIs that are useful for hooking up 
 >
   {'>>'}
 </Button>
- <select
+<select
   value={table.getState().pagination.pageSize}
   onChange={e => {
     table.setPageSize(Number(e.target.value))

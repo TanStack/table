@@ -30,6 +30,7 @@ import { ColumnOrdering } from '../features/ColumnOrdering'
 import { ColumnPinning } from '../features/ColumnPinning'
 import { ColumnSizing } from '../features/ColumnSizing'
 import { ColumnVisibility } from '../features/ColumnVisibility'
+import { GlobalFaceting } from '../features/GlobalFaceting'
 import { GlobalFiltering } from '../features/GlobalFiltering'
 import { RowExpanding } from '../features/RowExpanding'
 import { RowPagination } from '../features/RowPagination'
@@ -44,7 +45,8 @@ const builtInFeatures = [
   ColumnPinning,
   ColumnFaceting,
   ColumnFiltering,
-  GlobalFiltering, //depends on ColumnFiltering and ColumnFaceting
+  GlobalFaceting, //depends on ColumnFaceting
+  GlobalFiltering, //depends on ColumnFiltering
   RowSorting,
   ColumnGrouping, //depends on RowSorting
   RowExpanding,

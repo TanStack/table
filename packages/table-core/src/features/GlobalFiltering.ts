@@ -1,4 +1,4 @@
-import { FilterFn, FilterFnOption, RowModel } from '..'
+import { FilterFn, FilterFnOption } from '..'
 import { BuiltInFilterFn, filterFns } from '../filterFns'
 import {
   Column,
@@ -17,8 +17,8 @@ export interface GlobalFilterTableState {
 export interface GlobalFilterColumnDef {
   /**
    * Enables/disables the **global** filter for this column.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#enableglobalfilter)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#enableglobalfilter)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   enableGlobalFilter?: boolean
 }
@@ -26,8 +26,8 @@ export interface GlobalFilterColumnDef {
 export interface GlobalFilterColumn {
   /**
    * Returns whether or not the column can be **globally** filtered. Set to `false` to disable a column from being scanned during global filtering.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getcanglobalfilter)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#getcanglobalfilter)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   getCanGlobalFilter: () => boolean
 }
@@ -35,16 +35,16 @@ export interface GlobalFilterColumn {
 export interface GlobalFilterOptions<TData extends RowData> {
   /**
    * Enables/disables **global** filtering for all columns.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#enableglobalfilter)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#enableglobalfilter)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   enableGlobalFilter?: boolean
   /**
    * If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
    *
    * This is useful if the column can contain data that is not `string` or `number` (i.e. `undefined`).
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getcolumncanglobalfilter)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#getcolumncanglobalfilter)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   getColumnCanGlobalFilter?: (column: Column<TData, unknown>) => boolean
   /**
@@ -52,62 +52,41 @@ export interface GlobalFilterOptions<TData extends RowData> {
    * - A `string` referencing a built-in filter function
    * - A `string` that references a custom filter functions provided via the `tableOptions.filterFns` option
    * - A custom filter function
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#globalfilterfn)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#globalfilterfn)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   globalFilterFn?: FilterFnOption<TData>
   /**
    * If provided, this function will be called with an `updaterFn` when `state.globalFilter` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#onglobalfilterchange)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#onglobalfilterchange)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   onGlobalFilterChange?: OnChangeFn<any>
 }
 
 export interface GlobalFilterInstance<TData extends RowData> {
-  _getGlobalFacetedMinMaxValues?: () => undefined | [number, number]
-  _getGlobalFacetedRowModel?: () => RowModel<TData>
-  _getGlobalFacetedUniqueValues?: () => Map<any, number>
   /**
    * Currently, this function returns the built-in `includesString` filter function. In future releases, it may return more dynamic filter functions based on the nature of the data provided.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getglobalautofilterfn)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#getglobalautofilterfn)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   getGlobalAutoFilterFn: () => FilterFn<TData> | undefined
   /**
-   * Returns the faceted min and max values for the global filter.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getglobalfacetedminmaxvalues)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
-   */
-  getGlobalFacetedMinMaxValues: () => undefined | [number, number]
-  /**
-   * Returns the row model for the table after **global** filtering has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getglobalfacetedrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
-   */
-  getGlobalFacetedRowModel: () => RowModel<TData>
-  /**
-   * Returns the faceted unique values for the global filter.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getglobalfaceteduniquevalues)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
-   */
-  getGlobalFacetedUniqueValues: () => Map<any, number>
-  /**
    * Returns the filter function (either user-defined or automatic, depending on configuration) for the global filter.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#getglobalfilterfn)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#getglobalfilterfn)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   getGlobalFilterFn: () => FilterFn<TData> | undefined
   /**
    * Resets the **globalFilter** state to `initialState.globalFilter`, or `true` can be passed to force a default blank state reset to `undefined`.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#resetglobalfilter)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#resetglobalfilter)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   resetGlobalFilter: (defaultState?: boolean) => void
   /**
    * Sets or updates the `state.globalFilter` state.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/filters#setglobalfilter)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/filters)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#setglobalfilter)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
    */
   setGlobalFilter: (updater: Updater<any>) => void
 }
@@ -166,8 +145,7 @@ export const GlobalFiltering: TableFeature = {
         ? globalFilterFn
         : globalFilterFn === 'auto'
           ? table.getGlobalAutoFilterFn()
-          : // @ts-ignore
-            table.options.filterFns?.[globalFilterFn as string] ??
+          : table.options.filterFns?.[globalFilterFn as string] ??
             filterFns[globalFilterFn as BuiltInFilterFn]
     }
 
@@ -179,40 +157,6 @@ export const GlobalFiltering: TableFeature = {
       table.setGlobalFilter(
         defaultState ? undefined : table.initialState.globalFilter
       )
-    }
-
-    table._getGlobalFacetedRowModel =
-      table.options.getFacetedRowModel &&
-      table.options.getFacetedRowModel(table, '__global__')
-
-    table.getGlobalFacetedRowModel = () => {
-      if (table.options.manualFiltering || !table._getGlobalFacetedRowModel) {
-        return table.getPreFilteredRowModel()
-      }
-
-      return table._getGlobalFacetedRowModel()
-    }
-
-    table._getGlobalFacetedUniqueValues =
-      table.options.getFacetedUniqueValues &&
-      table.options.getFacetedUniqueValues(table, '__global__')
-    table.getGlobalFacetedUniqueValues = () => {
-      if (!table._getGlobalFacetedUniqueValues) {
-        return new Map()
-      }
-
-      return table._getGlobalFacetedUniqueValues()
-    }
-
-    table._getGlobalFacetedMinMaxValues =
-      table.options.getFacetedMinMaxValues &&
-      table.options.getFacetedMinMaxValues(table, '__global__')
-    table.getGlobalFacetedMinMaxValues = () => {
-      if (!table._getGlobalFacetedMinMaxValues) {
-        return
-      }
-
-      return table._getGlobalFacetedMinMaxValues()
     }
   },
 }

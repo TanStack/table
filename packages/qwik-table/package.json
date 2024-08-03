@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/qwik-table",
-  "version": "8.15.0",
+  "version": "8.19.4",
   "description": "Headless UI for building powerful tables & datagrids for Qwik.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -50,6 +50,9 @@
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@builder.io/qwik": "^1.6.0"
   },
   "peerDependencies": {
     "@builder.io/qwik": ">=1.5"

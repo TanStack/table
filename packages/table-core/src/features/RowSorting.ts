@@ -90,7 +90,7 @@ export interface SortingColumnDef<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#sortundefined)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
    */
-  sortUndefined?: false | -1 | 1
+  sortUndefined?: false | -1 | 1 | 'first' | 'last'
 }
 
 export interface SortingColumn<TData extends RowData> {

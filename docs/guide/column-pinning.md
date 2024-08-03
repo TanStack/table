@@ -6,17 +6,17 @@ title: Column Pinning Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [column-pinning](../framework/react/examples/column-pinning)
-- [sticky-column-pinning](../framework/react/examples/column-pinning-sticky)
+- [column-pinning](../../framework/react/examples/column-pinning)
+- [sticky-column-pinning](../../framework/react/examples/column-pinning-sticky)
 
  ### Other Examples
  
-- [Svelte column-pinning](../framework/svelte/examples/column-pinning)
-- [Vue column-pinning](../framework/vue/examples/column-pinning)
+- [Svelte column-pinning](../../framework/svelte/examples/column-pinning)
+- [Vue column-pinning](../../framework/vue/examples/column-pinning)
 
 ## API
 
-[Column Pinning API](../api/features/column-pinning)
+[Column Pinning API](../../api/features/column-pinning)
 
 ## Column Pinning Guide
 
@@ -27,8 +27,8 @@ TanStack Table offers state and APIs helpful for implementing column pinning fea
 There are 3 table features that can reorder columns, which happen in the following order:
 
 1. **Column Pinning** - If pinning, columns are split into left, center (unpinned), and right pinned columns.
-2. Manual [Column Ordering](../guide/column-ordering) - A manually specified column order is applied.
-3. [Grouping](../guide/grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
+2. Manual [Column Ordering](../column-ordering) - A manually specified column order is applied.
+3. [Grouping](../grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
 
 The only way to change the order of the pinned columns is in the `columnPinning.left` and `columnPinning.right` state itself. `columnOrder` state will only affect the order of the unpinned ("center") columns.
 
@@ -77,13 +77,13 @@ const table = useReactTable({
 
 There are a handful of useful Column API methods to help you implement column pinning features:
 
-- [`column.getCanPin`](../api/features/column-pinning#getcanpin): Use to determine if a column can be pinned.
-- [`column.pin`](../api/features/column-pinning#pin): Use to pin a column to the left or right. Or use to unpin a column.
-- [`column.getIsPinned`](../api/features/column-pinning#getispinned): Use to determine where a column is pinned.
-- [`column.getStart`](../api/features/column-pinning#getstart): Use to provide the correct `left` CSS value for a pinned column.
-- [`column.getAfter`](../api/features/column-pinning#getafter): Use to provide the correct `right` CSS value for a pinned column.
-- [`column.getIsLastColumn`](../api/features/column-pinning#getislastcolumn): Use to determine if a column is the last column in its pinned group. Useful for adding a box-shadow
-- [`column.getIsFirstColumn`](../api/features/column-pinning#getisfirstcolumn): Use to determine if a column is the first column in its pinned group. Useful for adding a box-shadow
+- [`column.getCanPin`](../../api/features/column-pinning#getcanpin): Use to determine if a column can be pinned.
+- [`column.pin`](../../api/features/column-pinning#pin): Use to pin a column to the left or right. Or use to unpin a column.
+- [`column.getIsPinned`](../../api/features/column-pinning#getispinned): Use to determine where a column is pinned.
+- [`column.getStart`](../../api/features/column-pinning#getstart): Use to provide the correct `left` CSS value for a pinned column.
+- [`column.getAfter`](../../api/features/column-pinning#getafter): Use to provide the correct `right` CSS value for a pinned column.
+- [`column.getIsLastColumn`](../../api/features/column-pinning#getislastcolumn): Use to determine if a column is the last column in its pinned group. Useful for adding a box-shadow
+- [`column.getIsFirstColumn`](../../api/features/column-pinning#getisfirstcolumn): Use to determine if a column is the first column in its pinned group. Useful for adding a box-shadow
 
 ### Split Table Column Pinning
 
