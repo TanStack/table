@@ -13,14 +13,42 @@ You do not need to set up anything special in order for the table state to work.
 ```ts
 const table = useVueTable({
   columns,
-  get data() {
-    return data.value
-  },
+  data: dataRef, // Reactive data support
   //...
 })
 
 console.log(table.getState()) //access the entire internal state
 console.log(table.getState().rowSelection) //access just the row selection state
+```
+
+### Using Reactive Data
+
+> **New in v8.20.0**
+
+The `useVueTable` hook now supports reactive data. This means you can pass a Vue `ref` or `computed` containing your data to the `data`-option. The table will automatically react to changes in the data.
+
+```ts
+const columns = [
+  { accessor: 'id', Header: 'ID' },
+  { accessor: 'name', Header: 'Name' }
+]
+
+const dataRef = ref([
+  { id: 1, name: 'John' },
+  { id: 2, name: 'Jane' }
+])
+
+const table = useVueTable({
+  columns,
+  data: dataRef, // Pass the reactive data ref
+})
+
+// Later, updating dataRef will automatically update the table
+dataRef.value = [
+  { id: 1, name: 'John' },
+  { id: 2, name: 'Jane' },
+  { id: 3, name: 'Doe' }
+]
 ```
 
 ### Custom Initial State
@@ -126,9 +154,7 @@ const table = useVueTable({
   get columns() {
     return columns.value
   },
-  get data() {
-    return data.value
-  },
+  data,
   //... Note: `state` values are NOT passed in yet
 })
 

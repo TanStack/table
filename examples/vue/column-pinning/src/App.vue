@@ -94,10 +94,12 @@ const table = useVueTable({
   },
 
   onColumnOrderChange: order => {
-    columnOrder.value = order
+    columnOrder.value =
+      order instanceof Function ? order(columnOrder.value) : order
   },
   onColumnPinningChange: pinning => {
-    columnPinning.value = pinning()
+    columnPinning.value =
+      pinning instanceof Function ? pinning(columnPinning.value) : pinning
   },
   getCoreRowModel: getCoreRowModel(),
   debugTable: true,
