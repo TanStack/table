@@ -18,8 +18,8 @@ export function getFacetedMinMaxValues<TData extends RowData>(): (
 
         if (!uniqueValues.length) return
 
-        let facetedMinValue = uniqueValues.at(0)!
-        let facetedMaxValue = uniqueValues.at(-1)!
+        let facetedMinValue = uniqueValues[0]!
+        let facetedMaxValue = uniqueValues[uniqueValues.length - 1]!
 
         for (const value of uniqueValues) {
           if (value < facetedMinValue) facetedMinValue = value
