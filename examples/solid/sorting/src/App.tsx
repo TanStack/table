@@ -1,20 +1,23 @@
 import {
-  createCoreRowModel,
+  RowSorting,
   createSortedRowModel,
   createTable,
   flexRender,
+  tableFeatures,
 } from '@tanstack/solid-table'
 import { For, Show, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type { ColumnDef, SortingState } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-function App() {
-  const [data, setData] = createSignal(makeData(100_000))
-  const [sorting, setSorting] = createSignal<SortingState>([])
-  const refreshData = () => setData(makeData(100_000))
+const _features = tableFeatures({ RowSorting })
 
-  const columns: Array<ColumnDef<any, Person>> = [
+function App() {
+  const [data, setData] = createSignal(makeData(1_000))
+  const [sorting, setSorting] = createSignal<SortingState>([])
+  const refreshData = () => setData(makeData(100_000)) // stress test
+
+  const columns: Array<ColumnDef<typeof _features, Person>> = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -67,6 +70,10 @@ function App() {
   ]
 
   const table = createTable({
+    _features,
+    _rowModels: {
+      Sorted: createSortedRowModel(),
+    },
     get data() {
       return data()
     },
@@ -77,8 +84,6 @@ function App() {
       },
     },
     onSortingChange: setSorting,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
     debugTable: true,
   })
 

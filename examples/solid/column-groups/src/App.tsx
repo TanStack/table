@@ -1,10 +1,10 @@
+import { For, createSignal } from 'solid-js'
 import {
-  createCoreRowModel,
+  type ColumnDef,
   createTable,
   flexRender,
+  tableFeatures,
 } from '@tanstack/solid-table'
-import { For, createSignal } from 'solid-js'
-import type { ColumnDef } from '@tanstack/solid-table'
 
 type Person = {
   firstName: string
@@ -42,7 +42,9 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({})
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -99,11 +101,11 @@ function App() {
   const rerender = () => setData(defaultData)
 
   const table = createTable({
+    _features,
     get data() {
       return data()
     },
     columns: defaultColumns,
-    getCoreRowModel: createCoreRowModel(),
   })
 
   return (

@@ -1,11 +1,14 @@
 import {
-  createCoreRowModel,
+  ColumnFaceting,
+  ColumnFiltering,
+  GlobalFiltering,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
   createTable,
   flexRender,
+  tableFeatures,
 } from '@tanstack/solid-table'
 import { debounce } from '@solid-primitives/scheduled'
 import { For, createSignal } from 'solid-js'
@@ -14,7 +17,13 @@ import ColumnFilter from './ColumnFilter'
 import type { Person } from './makeData'
 import type { ColumnDef, ColumnFiltersState } from '@tanstack/solid-table'
 
-const columns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  ColumnFiltering,
+  GlobalFiltering,
+  ColumnFaceting,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -67,16 +76,23 @@ const columns: Array<ColumnDef<any, Person>> = [
 ]
 
 function App() {
-  const [data, setData] = createSignal(makeData(50000))
+  const [data, setData] = createSignal(makeData(1_000))
   const [columnFilters, setColumnFilters] = createSignal<ColumnFiltersState>([])
   const [globalFilter, setGlobalFilter] = createSignal('')
   const debounceSetGlobalFilter = debounce(
     (value: string) => setGlobalFilter(value),
     500,
   )
-  const refreshData = () => setData(makeData(50000))
+  const refreshData = () => setData(makeData(50_000)) // stress test
 
   const table = createTable({
+    _features,
+    _rowModels: {
+      Faceted: createFacetedRowModel(),
+      FacetedMinMax: createFacetedMinMaxValues(),
+      FacetedUnique: createFacetedUniqueValues(),
+      Filtered: createFilteredRowModel(),
+    },
     get data() {
       return data()
     },
@@ -92,11 +108,6 @@ function App() {
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: 'includesString',
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: createCoreRowModel(),
-    getFilteredRowModel: createFilteredRowModel(),
-    getFacetedRowModel: createFacetedRowModel(),
-    getFacetedUniqueValues: createFacetedUniqueValues(),
-    getFacetedMinMaxValues: createFacetedMinMaxValues(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
@@ -106,11 +117,11 @@ function App() {
     <div class="p-2">
       <input
         class="p-2 font-lg shadow border border-block"
-        value={globalFilter() ?? ''}
+        value={globalFilter()}
         onInput={(e) => debounceSetGlobalFilter(e.currentTarget.value)}
         placeholder="Search all columns..."
       />
-      <div className="h-2" />
+      <div class="h-2" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -129,7 +140,7 @@ function App() {
                             <div>
                               <ColumnFilter
                                 column={header.column}
-                                table={table}
+                                table={table as any}
                               />
                             </div>
                           ) : null}

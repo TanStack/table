@@ -1,7 +1,8 @@
 import {
-  createCoreRowModel,
+  ColumnVisibility,
   createTable,
   flexRender,
+  tableFeatures,
 } from '@tanstack/solid-table'
 import { For, Show, createSignal } from 'solid-js'
 import type { ColumnDef, ColumnVisibilityState } from '@tanstack/solid-table'
@@ -42,7 +43,9 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({ ColumnVisibility })
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -101,6 +104,7 @@ function App() {
   const rerender = () => setData(defaultData)
 
   const table = createTable({
+    _features,
     get data() {
       return data()
     },
@@ -111,7 +115,6 @@ function App() {
       },
     },
     onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: createCoreRowModel(),
   })
 
   return (

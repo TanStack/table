@@ -1,9 +1,10 @@
 import { For, Show, createSignal } from 'solid-js'
 import { faker } from '@faker-js/faker'
 import {
-  createCoreRowModel,
+  ColumnOrdering,
   createTable,
   flexRender,
+  tableFeatures,
 } from '@tanstack/solid-table'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
@@ -13,7 +14,9 @@ import type {
   ColumnVisibilityState,
 } from '@tanstack/solid-table'
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({ ColumnOrdering })
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -73,6 +76,7 @@ function App() {
   const rerender = () => setData(() => makeData(20))
 
   const table = createTable({
+    _features,
     get data() {
       return data()
     },
@@ -87,7 +91,6 @@ function App() {
     },
     onColumnOrderChange: setColumnOrder,
     onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: createCoreRowModel(),
   })
 
   const randomizeColumns = () => {
