@@ -30,7 +30,7 @@ export function _createColumn<
 
   const id =
     resolvedColumnDef.id ??
-    (accessorKey ? accessorKey.replace('.', '_') : undefined) ??
+    (accessorKey ? accessorKey.replaceAll('.', '_') : undefined) ??
     (typeof resolvedColumnDef.header === 'string'
       ? resolvedColumnDef.header
       : undefined)
