@@ -2622,7 +2622,7 @@ importers:
   examples/vue/basic:
     dependencies:
       '@tanstack/vue-table':
-        specifier: ^8.20.1
+        specifier: ^8.20.2
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
@@ -2650,7 +2650,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.20.1
+        specifier: ^8.20.2
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
@@ -2678,7 +2678,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.20.1
+        specifier: ^8.20.2
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
@@ -2706,7 +2706,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.20.1
+        specifier: ^8.20.2
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
@@ -2734,7 +2734,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.20.1
+        specifier: ^8.20.2
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
@@ -2762,7 +2762,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.20.1
+        specifier: ^8.20.2
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
@@ -2790,7 +2790,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.20.1
+        specifier: ^8.20.2
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
@@ -2821,7 +2821,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.20.1
+        specifier: ^8.20.2
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
@@ -2849,7 +2849,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/vue-table':
-        specifier: ^8.20.1
+        specifier: ^8.20.2
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.4.31
