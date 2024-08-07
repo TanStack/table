@@ -13,7 +13,7 @@ import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
 
-type TableOptionsWithReactiveData<TData extends RowData> = Omit<
+export type TableOptionsWithReactiveData<TData extends RowData> = Omit<
   TableOptions<TData>,
   'data'
 > & {
