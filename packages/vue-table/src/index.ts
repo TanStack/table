@@ -52,12 +52,6 @@ export function useVueTable<TData extends RowData>(
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
       renderFallbackValue: null,
-      mergeOptions(
-        defaultOptions: TableOptions<TData>,
-        options: TableOptions<TData>
-      ) {
-        return mergeProxy(defaultOptions, options)
-      },
     },
     getOptionsWithReactiveData(initialOptions)
   )
