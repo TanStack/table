@@ -1,4 +1,9 @@
-import { TableOptions, createTable, RowData } from '@tanstack/table-core'
+import {
+  TableOptions,
+  createTable,
+  RowData,
+  TableOptionsResolved,
+} from '@tanstack/table-core'
 import {
   h,
   watchEffect,
@@ -8,6 +13,7 @@ import {
   unref,
   MaybeRef,
   watch,
+  shallowRef,
 } from 'vue'
 import { mergeProxy } from './merge-proxy'
 
@@ -47,28 +53,44 @@ function getOptionsWithReactiveData<TData extends RowData>(
 export function useVueTable<TData extends RowData>(
   initialOptions: TableOptionsWithReactiveData<TData>
 ) {
+  const IS_REACTIVE = isRef(initialOptions.data)
+
   const resolvedOptions = mergeProxy(
     {
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
       renderFallbackValue: null,
+      mergeOptions(
+        defaultOptions: TableOptions<TData>,
+        options: TableOptions<TData>
+      ) {
+        return IS_REACTIVE
+          ? {
+              ...defaultOptions,
+              ...options,
+            }
+          : mergeProxy(defaultOptions, options)
+      },
     },
-    getOptionsWithReactiveData(initialOptions)
+    IS_REACTIVE ? getOptionsWithReactiveData(initialOptions) : initialOptions
   )
 
-  const table = createTable<TData>(resolvedOptions)
+  const table = createTable<TData>(
+    resolvedOptions as TableOptionsResolved<TData>
+  )
 
   // Add reactivity support
-  if (isRef(initialOptions.data)) {
+  if (IS_REACTIVE) {
+    const dataRef = shallowRef(initialOptions.data)
     watch(
-      initialOptions.data,
+      dataRef,
       () => {
         table.setState(prev => ({
           ...prev,
-          data: unref(initialOptions.data),
+          data: dataRef.value,
         }))
       },
-      { immediate: true, deep: true }
+      { immediate: true }
     )
   }
 
@@ -81,23 +103,29 @@ export function useVueTable<TData extends RowData>(
         get: (_, prop) => state.value[prop as keyof typeof state.value],
       })
 
-      return mergeProxy(prev, getOptionsWithReactiveData(initialOptions), {
-        // merge the initialState and `options.state`
-        // create a new proxy on each `setOptions` call
-        // and get the value from state on each property access
-        state: mergeProxy(stateProxy, initialOptions.state ?? {}),
-        // Similarly, we'll maintain both our internal state and any user-provided
-        // state.
-        onStateChange: (updater: any) => {
-          if (updater instanceof Function) {
-            state.value = updater(state.value)
-          } else {
-            state.value = updater
-          }
+      return mergeProxy(
+        prev,
+        IS_REACTIVE
+          ? getOptionsWithReactiveData(initialOptions)
+          : initialOptions,
+        {
+          // merge the initialState and `options.state`
+          // create a new proxy on each `setOptions` call
+          // and get the value from state on each property access
+          state: mergeProxy(stateProxy, initialOptions.state ?? {}),
+          // Similarly, we'll maintain both our internal state and any user-provided
+          // state.
+          onStateChange: (updater: any) => {
+            if (updater instanceof Function) {
+              state.value = updater(state.value)
+            } else {
+              state.value = updater
+            }
 
-          initialOptions.onStateChange?.(updater)
-        },
-      })
+            initialOptions.onStateChange?.(updater)
+          },
+        }
+      )
     })
   })
 
