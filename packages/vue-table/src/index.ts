@@ -13,7 +13,7 @@ import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
 
-type TableOptionsWithReactiveData<TData extends RowData> = Omit<
+export type TableOptionsWithReactiveData<TData extends RowData> = Omit<
   TableOptions<TData>,
   'data'
 > & {
@@ -52,12 +52,6 @@ export function useVueTable<TData extends RowData>(
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
       renderFallbackValue: null,
-      mergeOptions(
-        defaultOptions: TableOptions<TData>,
-        options: TableOptions<TData>
-      ) {
-        return mergeProxy(defaultOptions, options)
-      },
     },
     getOptionsWithReactiveData(initialOptions)
   )
