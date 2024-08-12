@@ -83,7 +83,8 @@ const table = useVueTable({
   },
 
   onColumnOrderChange: order => {
-    columnOrder.value = order
+    columnOrder.value =
+      order instanceof Function ? order(columnOrder.value) : order
   },
   getCoreRowModel: getCoreRowModel(),
   debugTable: true,

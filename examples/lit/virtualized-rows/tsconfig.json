@@ -15,6 +15,7 @@
     "jsx": "react-jsx",
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
+    "strictPropertyInitialization": false,
 
     /* Linting */
     "strict": true,

@@ -6,7 +6,6 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
 } from '../src'
-import * as RowPinning from '../src/features/RowPinning'
 import { makeData, Person } from './makeTestData'
 
 type personKeys = keyof Person
@@ -23,7 +22,7 @@ function generateColumns(people: Person[]): PersonColumn[] {
 
 describe('RowPinning', () => {
   describe('createTable', () => {
-    describe('_getPinnedRows', () => {
+    describe('getTopRows', () => {
       it('should return pinned rows when keepPinnedRows is true rows are visible', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
@@ -48,7 +47,7 @@ describe('RowPinning', () => {
           getCoreRowModel: getCoreRowModel(),
         })
 
-        const result = table._getPinnedRows('top')
+        const result = table.getTopRows()
 
         expect(result.length).toBe(2)
         expect(result[0].id).toBe('0')
@@ -78,7 +77,7 @@ describe('RowPinning', () => {
           getCoreRowModel: getCoreRowModel(),
         })
 
-        const result = table._getPinnedRows('top')
+        const result = table.getTopRows()
 
         expect(result.length).toBe(2)
         expect(result[0].id).toBe('0')
@@ -108,7 +107,7 @@ describe('RowPinning', () => {
           getCoreRowModel: getCoreRowModel(),
         })
 
-        const result = table._getPinnedRows('top')
+        const result = table.getTopRows()
 
         expect(result.length).toBe(2)
         expect(result[0].id).toBe('0')
@@ -138,12 +137,11 @@ describe('RowPinning', () => {
           getCoreRowModel: getCoreRowModel(),
         })
 
-        const result = table._getPinnedRows('top')
+        const result = table.getTopRows()
 
         expect(result.length).toBe(0)
       })
-    })
-    describe('getTopRows', () => {
+
       it('should return correct top rows', () => {
         const data = makeData(10)
         const columns = generateColumns(data)

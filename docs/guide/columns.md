@@ -18,7 +18,7 @@ You can find the `column` objects in many places. They are often attached
 
 #### Header and Cell Objects
 
-Before you reach for one of the `table` instance APIs, consider if you actually need to retrieve either [`headers`](../headers) or [`cells`](../cells) instead of `columns`. If you are rending out the markup for your table, you will most likely want to reach for the APIs that return headers or cells instead of columns. The column objects themselves are not really meant to render out the headers or cells, but the `header` and `cell` objects will contain references to these `column` objects from which they can derive the necessary information to render their UI.
+Before you reach for one of the `table` instance APIs, consider if you actually need to retrieve either [headers](../headers) or [cells](../cells) instead of `columns`. If you are rending out the markup for your table, you will most likely want to reach for the APIs that return headers or cells instead of columns. The column objects themselves are not really meant to render out the headers or cells, but the `header` and `cell` objects will contain references to these `column` objects from which they can derive the necessary information to render their UI.
 
 ```js
 const column = cell.column; // get column from cell
@@ -67,6 +67,6 @@ There are dozens of Column APIs that you can use to interact with the table stat
 
 ### Column Rendering
 
-Don't necessarily use `column` objects to render `headers` or `cells` directly. Instead, use the [`header](../headers) and [`cell`](../cells) objects, as discussed above.
+Don't necessarily use `column` objects to render `headers` or `cells` directly. Instead, use the [`header`](../headers) and [`cell`](../cells) objects, as discussed above.
 
 But if you are just rendering a list of columns somewhere else in your UI for something like a column visibility menu or something similar, you can just map over a columns array and render out the UI as you normally would.
