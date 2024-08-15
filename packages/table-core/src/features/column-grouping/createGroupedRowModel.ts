@@ -2,7 +2,17 @@ import { _createRow } from '../../core/rows/createRow'
 import { flattenBy, getMemoOptions, memo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { _table_getState } from '../../core/table/Tables.utils'
-import { row_getGroupingValue } from './ColumnGrouping.utils'
+import { table_autoResetExpanded } from '../row-expanding/RowExpanding.utils'
+import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
+import {
+  row_getGroupingValue,
+  table_getPreGroupedRowModel,
+} from './ColumnGrouping.utils'
+import type { Column } from '../../types/Column'
+import type {
+  Column_ColumnGrouping,
+  Row_ColumnGrouping,
+} from './ColumnGrouping.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -15,7 +25,10 @@ export function createGroupedRowModel<
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) =>
     memo(
-      () => [_table_getState(table).grouping, table.getPreGroupedRowModel()],
+      () => [
+        _table_getState(table).grouping,
+        table_getPreGroupedRowModel(table),
+      ],
       (grouping, rowModel) => {
         if (!rowModel.rows.length || !grouping?.length) {
           rowModel.rows.forEach((row) => {
@@ -92,7 +105,7 @@ export function createGroupedRowModel<
                 depth,
                 undefined,
                 parentId,
-              )
+              ) as Row<TFeatures, TData> & Row_ColumnGrouping
 
               Object.assign(row, {
                 groupingColumnId: columnId,
@@ -119,8 +132,12 @@ export function createGroupedRowModel<
                   }
 
                   // Aggregate the values
-                  const column = table.getColumn(colId)
-                  const aggregateFn = column?.getAggregationFn()
+                  const column = table.getColumn(colId) as Column<
+                    TFeatures,
+                    TData
+                  > &
+                    Column_ColumnGrouping<TFeatures, TData>
+                  const aggregateFn = column.getAggregationFn()
 
                   if (aggregateFn) {
                     row._groupingValuesCache[colId] = aggregateFn(
@@ -175,8 +192,8 @@ export function createGroupedRowModel<
       },
       getMemoOptions(table.options, 'debugTable', 'getGroupedRowModel', () => {
         table._queue(() => {
-          table._autoResetExpanded()
-          table._autoResetPageIndex()
+          table_autoResetExpanded(table)
+          table_autoResetPageIndex(table)
         })
       }),
     )

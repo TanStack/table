@@ -73,7 +73,7 @@ export const ColumnSizing: TableFeature = {
         column_getVisibleLeafColumns(table, position),
         _table_getState(table).columnSizing,
       ],
-      (position, columns) => column_getStart(columns, column, table, position),
+      (position) => column_getStart(column, table, position),
       getMemoOptions(table.options, 'debugColumns', 'getStart'),
     )
 
@@ -83,7 +83,7 @@ export const ColumnSizing: TableFeature = {
         column_getVisibleLeafColumns(table, position),
         _table_getState(table).columnSizing,
       ],
-      (position, columns) => column_getAfter(columns, column, table, position),
+      (position) => column_getAfter(column, table, position),
       getMemoOptions(table.options, 'debugColumns', 'getAfter'),
     )
 
@@ -100,7 +100,7 @@ export const ColumnSizing: TableFeature = {
   ): void => {
     header.getSize = () => header_getSize(header, table)
 
-    header.getStart = () => header_getStart(header)
+    header.getStart = () => header_getStart(header, table)
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(

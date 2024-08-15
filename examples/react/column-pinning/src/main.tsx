@@ -15,6 +15,7 @@ import { makeData } from './makeData'
 import type {
   ColumnDef,
   ColumnOrderState,
+  ColumnPinningState,
   ColumnVisibilityState,
 } from '@tanstack/react-table'
 import type { Person } from './makeData'
@@ -80,7 +81,10 @@ function App() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<ColumnVisibilityState>({})
   const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([])
-  const [columnPinning, setColumnPinning] = React.useState({})
+  const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>({
+    left: [],
+    right: [],
+  })
 
   const [isSplit, setIsSplit] = React.useState(false)
   const rerender = () => setData(() => makeData(5000))

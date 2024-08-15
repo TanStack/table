@@ -9,7 +9,7 @@ import type { Row_RowExpanding } from '../features/row-expanding/RowExpanding.ty
 import type { Row_RowPinning } from '../features/row-pinning/RowPinning.types'
 import type { Row_RowSelection } from '../features/row-selection/RowSelection.types'
 
-export type _Row<
+export type Row<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Row_Row<TFeatures, TData> &
@@ -28,11 +28,3 @@ export type _Row<
     | ('RowPinning' extends keyof TFeatures ? Row_RowPinning : never)
     | ('RowSelection' extends keyof TFeatures ? Row_RowSelection : never)
   >
-
-export type Row_All<TData extends RowData> = _Row<TableFeatures, TData>
-
-// temp - enable all features for types internally
-export type Row<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = Row_All<TData>

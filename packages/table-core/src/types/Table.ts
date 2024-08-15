@@ -34,7 +34,7 @@ export interface Table_Core<
 /**
  * The table object that includes both the core table functionality and the features that are enabled via the `_features` table option.
  */
-export type _Table<
+export type Table<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Table_Core<TFeatures, TData> &
@@ -78,11 +78,3 @@ export type _Table<
         ? Table_RowSorting<TFeatures, TData>
         : never)
   >
-
-export type Table_All<TData extends RowData> = _Table<TableFeatures, TData>
-
-// temp - enable all features for types internally
-export type Table<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = Table_All<TData>

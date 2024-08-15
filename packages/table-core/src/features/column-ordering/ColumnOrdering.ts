@@ -1,5 +1,4 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
-import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import { _table_getState } from '../../core/table/Tables.utils'
 import {
   column_getIndex,

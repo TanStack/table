@@ -20,7 +20,6 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './RowPagination.utils'
-import type { TableState } from '../../types/TableState'
 import type {
   PaginationDefaultOptions,
   TableState_RowPagination,

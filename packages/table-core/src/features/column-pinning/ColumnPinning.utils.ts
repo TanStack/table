@@ -1,9 +1,14 @@
 import {
   column_getIsVisible,
   row_getAllVisibleCells,
+  table_getVisibleLeafColumns,
 } from '../column-visibility/ColumnVisibility.utils'
 import { table_getAllColumns } from '../../core/columns/Columns.utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import {
+  _table_getInitialState,
+  _table_getState,
+} from '../../core/table/Tables.utils'
+import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import type { Row } from '../../types/Row'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -11,9 +16,20 @@ import type { Table } from '../../types/Table'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 import type {
+  ColumnDef_ColumnPinning,
   ColumnPinningPosition,
   ColumnPinningState,
+  TableOptions_ColumnPinning,
 } from './ColumnPinning.types'
+
+// State
+
+export function getDefaultColumnPinningState(): ColumnPinningState {
+  return structuredClone({
+    left: [],
+    right: [],
+  })
+}
 
 export function column_pin<
   TFeatures extends TableFeatures,
@@ -58,15 +74,20 @@ export function column_getCanPin<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
-  const leafColumns = column.getLeafColumns()
+>(
+  column: Column<TFeatures, TData, TValue> & {
+    columnDef: ColumnDef_ColumnPinning
+  },
+  table: Table<TFeatures, TData> & { options: TableOptions_ColumnPinning },
+) {
+  const leafColumns = column.getLeafColumns() as Array<
+    Column<TFeatures, TData, TValue> & { columnDef: ColumnDef_ColumnPinning }
+  >
 
   return leafColumns.some(
-    (d) =>
-      (d.columnDef.enablePinning ?? true) &&
-      (table.options.enableColumnPinning ??
-        table.options.enablePinning ??
-        true),
+    (leafColumn) =>
+      (leafColumn.columnDef.enablePinning ?? true) &&
+      (table.options.enableColumnPinning ?? true),
   )
 }
 
@@ -147,19 +168,26 @@ export function row_getRightVisibleCells<
 export function table_setColumnPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, updater: Updater<ColumnPinningState>) {
+>(
+  table: Table<TFeatures, TData> & { options: TableOptions_ColumnPinning },
+  updater: Updater<ColumnPinningState>,
+) {
   table.options.onColumnPinningChange?.(updater)
 }
 
 export function table_resetColumnPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, defaultState?: boolean) {
+>(
+  table: Table<TFeatures, TData> & { options: TableOptions_ColumnPinning },
+  defaultState?: boolean,
+) {
   table_setColumnPinning(
     table,
     defaultState
       ? getDefaultColumnPinningState()
-      : table.initialState.columnPinning ?? getDefaultColumnPinningState(),
+      : _table_getInitialState(table).columnPinning ??
+          getDefaultColumnPinningState(),
   )
 }
 
@@ -174,6 +202,151 @@ export function table_getIsSomeColumnsPinned<
   }
   return Boolean(pinningState?.[position].length)
 }
+
+// header groups
+
+export function table_getLeftHeaderGroups<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  const allColumns = table_getAllColumns(table)
+  const leafColumns = table_getVisibleLeafColumns(table)
+  const { left } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+
+  const orderedLeafColumns = left
+    .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
+    .filter(Boolean)
+
+  return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
+}
+
+export function table_getRightHeaderGroups<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  const allColumns = table_getAllColumns(table)
+  const leafColumns = table_getVisibleLeafColumns(table)
+  const { right } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+
+  const orderedLeafColumns = right
+    .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
+    .filter(Boolean)
+
+  return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
+}
+
+export function table_getCenterHeaderGroups<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  const allColumns = table_getAllColumns(table)
+  let leafColumns = table_getVisibleLeafColumns(table)
+  const { left, right } =
+    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+  const leftAndRight: Array<string> = [...left, ...right]
+
+  leafColumns = leafColumns.filter(
+    (column) => !leftAndRight.includes(column.id),
+  )
+  return buildHeaderGroups(allColumns, leafColumns, table, 'center')
+}
+
+// footer groups
+
+export function table_getLeftFooterGroups<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  const headerGroups = table_getLeftHeaderGroups(table)
+  return [...headerGroups].reverse()
+}
+
+export function table_getRightFooterGroups<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  const headerGroups = table_getRightHeaderGroups(table)
+  return [...headerGroups].reverse()
+}
+
+export function table_getCenterFooterGroups<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  const headerGroups = table_getCenterHeaderGroups(table)
+  return [...headerGroups].reverse()
+}
+
+// flat headers
+
+export function table_getLeftFlatHeaders<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  const leftHeaderGroups = table_getLeftHeaderGroups(table)
+  return leftHeaderGroups
+    .map((headerGroup) => {
+      return headerGroup.headers
+    })
+    .flat()
+}
+
+export function table_getRightFlatHeaders<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  const rightHeaderGroups = table_getRightHeaderGroups(table)
+  return rightHeaderGroups
+    .map((headerGroup) => {
+      return headerGroup.headers
+    })
+    .flat()
+}
+
+export function table_getCenterFlatHeaders<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  const centerHeaderGroups = table_getCenterHeaderGroups(table)
+  return centerHeaderGroups
+    .map((headerGroup) => {
+      return headerGroup.headers
+    })
+    .flat()
+}
+
+// leaf headers
+
+export function table_getLeftLeafHeaders<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  return table_getLeftFlatHeaders(table).filter(
+    (header) => !header.subHeaders.length,
+  )
+}
+
+export function table_getRightLeafHeaders<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  return table_getRightFlatHeaders(table).filter(
+    (header) => !header.subHeaders.length,
+  )
+}
+
+export function table_getCenterLeafHeaders<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>) {
+  return table_getCenterFlatHeaders(table).filter(
+    (header) => !header.subHeaders.length,
+  )
+}
+
+// leaf columns
 
 export function table_getLeftLeafColumns<
   TFeatures extends TableFeatures,
@@ -213,6 +386,8 @@ export function table_getCenterLeafColumns<
   return table_getAllColumns(table).filter((d) => !leftAndRight.includes(d.id))
 }
 
+// visible leaf columns
+
 export function table_getLeftVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -238,11 +413,4 @@ export function table_getCenterVisibleLeafColumns<
   return table_getCenterLeafColumns(table).filter((column) =>
     column_getIsVisible(column, table),
   )
-}
-
-export function getDefaultColumnPinningState(): ColumnPinningState {
-  return structuredClone({
-    left: [],
-    right: [],
-  })
 }

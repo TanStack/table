@@ -1,6 +1,9 @@
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import { _table_getState } from '../../core/table/Tables.utils'
+import { table_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
+import { table_getAllColumns } from '../../core/columns/Columns.utils'
+import { row_getAllCells } from '../../core/rows/Rows.utils'
 import {
   column_getCanPin,
   column_getIsPinned,
@@ -10,12 +13,24 @@ import {
   row_getCenterVisibleCells,
   row_getLeftVisibleCells,
   row_getRightVisibleCells,
+  table_getCenterFlatHeaders,
+  table_getCenterFooterGroups,
+  table_getCenterHeaderGroups,
   table_getCenterLeafColumns,
+  table_getCenterLeafHeaders,
   table_getCenterVisibleLeafColumns,
   table_getIsSomeColumnsPinned,
+  table_getLeftFlatHeaders,
+  table_getLeftFooterGroups,
+  table_getLeftHeaderGroups,
   table_getLeftLeafColumns,
+  table_getLeftLeafHeaders,
   table_getLeftVisibleLeafColumns,
+  table_getRightFlatHeaders,
+  table_getRightFooterGroups,
+  table_getRightHeaderGroups,
   table_getRightLeafColumns,
+  table_getRightLeafHeaders,
   table_getRightVisibleLeafColumns,
   table_resetColumnPinning,
   table_setColumnPinning,
@@ -79,22 +94,28 @@ export const ColumnPinning: TableFeature = {
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
     row.getCenterVisibleCells = memo(
-      () => [row._getAllVisibleCells(), _table_getState(table).columnPinning],
+      () => [
+        row_getAllCells(row, table),
+        _table_getState(table).columnPinning,
+        _table_getState(table).columnVisibility,
+      ],
       () => row_getCenterVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getCenterVisibleCells'),
     )
     row.getLeftVisibleCells = memo(
       () => [
-        row._getAllVisibleCells(),
+        row_getAllCells(row, table),
         _table_getState(table).columnPinning?.left,
+        _table_getState(table).columnVisibility,
       ],
       () => row_getLeftVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getLeftVisibleCells'),
     )
     row.getRightVisibleCells = memo(
       () => [
-        row._getAllVisibleCells(),
+        row_getAllCells(row, table),
         _table_getState(table).columnPinning?.right,
+        _table_getState(table).columnVisibility,
       ],
       () => row_getRightVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', 'getRightVisibleCells'),
@@ -105,9 +126,6 @@ export const ColumnPinning: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
-    const { columnPinning, columnVisibility } = table.getState()
-    const columns = table.options.columns
-
     table.setColumnPinning = (updater) => table_setColumnPinning(table, updater)
 
     table.resetColumnPinning = (defaultState) =>
@@ -120,160 +138,110 @@ export const ColumnPinning: TableFeature = {
 
     table.getLeftHeaderGroups = memo(
       () => [
-        table.getAllColumns(),
-        table.getVisibleLeafColumns(),
+        table_getAllColumns(table),
+        table_getVisibleLeafColumns(table),
         _table_getState(table).columnPinning?.left,
       ],
-      (allColumns, leafColumns, left) => {
-        const orderedLeafColumns =
-          left
-            ?.map((columnId) => leafColumns.find((d) => d.id === columnId)!)
-            .filter(Boolean) ?? []
-
-        return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
-      },
+      () => table_getLeftHeaderGroups(table),
       getMemoOptions(table.options, 'debugHeaders', 'getLeftHeaderGroups'),
     )
 
     table.getRightHeaderGroups = memo(
       () => [
-        table.getAllColumns(),
-        table.getVisibleLeafColumns(),
+        table_getAllColumns(table),
+        table_getVisibleLeafColumns(table),
         _table_getState(table).columnPinning?.right,
       ],
-      (allColumns, leafColumns, right) => {
-        const orderedLeafColumns =
-          right
-            ?.map((columnId) => leafColumns.find((d) => d.id === columnId)!)
-            .filter(Boolean) ?? []
-
-        return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
-      },
+      () => table_getRightHeaderGroups(table),
       getMemoOptions(table.options, 'debugHeaders', 'getRightHeaderGroups'),
     )
 
     table.getCenterHeaderGroups = memo(
       () => [
         table.getAllColumns(),
-        table.getVisibleLeafColumns(),
-        _table_getState(table).columnPinning?.left,
-        _table_getState(table).columnPinning?.right,
+        table_getVisibleLeafColumns(table),
+        _table_getState(table).columnPinning,
       ],
-      (allColumns, leafColumns, left, right) => {
-        leafColumns = leafColumns.filter(
-          (column) => !left?.includes(column.id) && !right?.includes(column.id),
-        )
-        return buildHeaderGroups(allColumns, leafColumns, table, 'center')
-      },
+      () => table_getCenterHeaderGroups(table),
       getMemoOptions(table.options, 'debugHeaders', 'getCenterHeaderGroups'),
     )
 
     // footer groups
 
     table.getLeftFooterGroups = memo(
-      () => [table.getLeftHeaderGroups()],
-      (headerGroups) => {
-        return [...headerGroups].reverse()
-      },
+      () => [table_getLeftHeaderGroups(table)],
+      (headerGroups) => table_getLeftFooterGroups(table),
       getMemoOptions(table.options, 'debugHeaders', 'getLeftFooterGroups'),
     )
 
     table.getCenterFooterGroups = memo(
-      () => [table.getCenterHeaderGroups()],
-      (headerGroups) => {
-        return [...headerGroups].reverse()
-      },
+      () => [table_getCenterHeaderGroups(table)],
+      () => table_getCenterFooterGroups(table),
       getMemoOptions(table.options, 'debugHeaders', 'getCenterFooterGroups'),
     )
 
     table.getRightFooterGroups = memo(
-      () => [table.getRightHeaderGroups()],
-      (headerGroups) => {
-        return [...headerGroups].reverse()
-      },
+      () => [table_getRightHeaderGroups(table)],
+      () => table_getRightFooterGroups(table),
       getMemoOptions(table.options, 'debugHeaders', 'getRightFooterGroups'),
     )
 
     // flat headers
 
     table.getLeftFlatHeaders = memo(
-      () => [table.getLeftHeaderGroups()],
-      (left) => {
-        return left
-          .map((headerGroup) => {
-            return headerGroup.headers
-          })
-          .flat()
-      },
+      () => [table_getLeftHeaderGroups(table)],
+      (left) => table_getLeftFlatHeaders(table),
       getMemoOptions(table.options, 'debugHeaders', 'getLeftFlatHeaders'),
     )
 
     table.getRightFlatHeaders = memo(
-      () => [table.getRightHeaderGroups()],
-      (left) => {
-        return left
-          .map((headerGroup) => {
-            return headerGroup.headers
-          })
-          .flat()
-      },
+      () => [table_getRightHeaderGroups(table)],
+      () => table_getRightFlatHeaders(table),
       getMemoOptions(table.options, 'debugHeaders', 'getRightFlatHeaders'),
     )
 
     table.getCenterFlatHeaders = memo(
-      () => [table.getCenterHeaderGroups()],
-      (left) => {
-        return left
-          .map((headerGroup) => {
-            return headerGroup.headers
-          })
-          .flat()
-      },
+      () => [table_getCenterHeaderGroups(table)],
+      () => table_getCenterFlatHeaders(table),
       getMemoOptions(table.options, 'debugHeaders', 'getCenterFlatHeaders'),
     )
 
     // leaf headers
 
     table.getCenterLeafHeaders = memo(
-      () => [table.getCenterFlatHeaders()],
-      (flatHeaders) => {
-        return flatHeaders.filter((header) => !header.subHeaders.length)
-      },
+      () => [table_getCenterFlatHeaders(table)],
+      () => table_getCenterLeafHeaders(table),
       getMemoOptions(table.options, 'debugHeaders', 'getCenterLeafHeaders'),
     )
 
     table.getLeftLeafHeaders = memo(
-      () => [table.getLeftFlatHeaders()],
-      (flatHeaders) => {
-        return flatHeaders.filter((header) => !header.subHeaders.length)
-      },
+      () => [table_getLeftFlatHeaders(table)],
+      () => table_getLeftLeafHeaders(table),
       getMemoOptions(table.options, 'debugHeaders', 'getLeftLeafHeaders'),
     )
 
     table.getRightLeafHeaders = memo(
-      () => [table.getRightFlatHeaders()],
-      (flatHeaders) => {
-        return flatHeaders.filter((header) => !header.subHeaders.length)
-      },
+      () => [table_getRightFlatHeaders(table)],
+      () => table_getRightLeafHeaders(table),
       getMemoOptions(table.options, 'debugHeaders', 'getRightLeafHeaders'),
     )
 
     // leaf columns
 
     table.getLeftLeafColumns = memo(
-      () => [columns, columnPinning],
+      () => [table.options.columns, _table_getState(table).columnPinning],
       () => table_getLeftLeafColumns(table),
       getMemoOptions(table.options, 'debugColumns', 'getLeftLeafColumns'),
     )
 
     table.getRightLeafColumns = memo(
-      () => [columns, columnPinning],
+      () => [table.options.columns, _table_getState(table).columnPinning],
       () => table_getRightLeafColumns(table),
       getMemoOptions(table.options, 'debugColumns', 'getRightLeafColumns'),
     )
 
     table.getCenterLeafColumns = memo(
-      () => [columns, columnPinning],
+      () => [table.options.columns, _table_getState(table).columnPinning],
       () => table_getCenterLeafColumns(table),
       getMemoOptions(table.options, 'debugColumns', 'getCenterLeafColumns'),
     )
@@ -281,7 +249,11 @@ export const ColumnPinning: TableFeature = {
     // visible leaf columns
 
     table.getLeftVisibleLeafColumns = memo(
-      () => [columns, columnPinning, columnVisibility],
+      () => [
+        table.options.columns,
+        _table_getState(table).columnPinning,
+        _table_getState(table).columnVisibility,
+      ],
       () => table_getLeftVisibleLeafColumns(table),
       getMemoOptions(
         table.options,
@@ -291,7 +263,11 @@ export const ColumnPinning: TableFeature = {
     )
 
     table.getCenterVisibleLeafColumns = memo(
-      () => [columns, columnPinning, columnVisibility],
+      () => [
+        table.options.columns,
+        _table_getState(table).columnPinning,
+        _table_getState(table).columnVisibility,
+      ],
       () => table_getCenterVisibleLeafColumns(table),
       getMemoOptions(
         table.options,
@@ -301,7 +277,11 @@ export const ColumnPinning: TableFeature = {
     )
 
     table.getRightVisibleLeafColumns = memo(
-      () => [columns, columnPinning, columnVisibility],
+      () => [
+        table.options.columns,
+        _table_getState(table).columnPinning,
+        _table_getState(table).columnVisibility,
+      ],
       () => table_getRightVisibleLeafColumns(table),
       getMemoOptions(
         table.options,

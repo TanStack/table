@@ -1,15 +1,25 @@
 import { getMemoOptions, memo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
-import { table_getGlobalFilterFn } from '../global-filtering/GlobalFiltering.utils'
+import {
+  column_getCanGlobalFilter,
+  table_getGlobalFilterFn,
+} from '../global-filtering/GlobalFiltering.utils'
 import { _table_getState } from '../../core/table/Tables.utils'
+import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
 import { filterRows } from './filterRowsUtils'
-import { column_getFilterFn } from './ColumnFiltering.utils'
+import {
+  column_getFilterFn,
+  table_getPreFilteredRowModel,
+} from './ColumnFiltering.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
-import type { ResolvedColumnFilter } from './ColumnFiltering.types'
+import type {
+  ResolvedColumnFilter,
+  Row_ColumnFiltering,
+} from './ColumnFiltering.types'
 
 export function createFilteredRowModel<
   TFeatures extends TableFeatures,
@@ -18,7 +28,7 @@ export function createFilteredRowModel<
   return (table) =>
     memo(
       () => [
-        table.getPreFilteredRowModel(),
+        table_getPreFilteredRowModel(table),
         _table_getState(table).columnFilters,
         _table_getState(table).globalFilter,
       ],
@@ -27,7 +37,9 @@ export function createFilteredRowModel<
           !rowModel.rows.length ||
           (!columnFilters?.length && !globalFilter)
         ) {
-          for (const row of rowModel.flatRows) {
+          for (const row of rowModel.flatRows as Array<
+            Row<TFeatures, TData> & Row_ColumnFiltering<TFeatures, TData>
+          >) {
             row.columnFilters = {}
             row.columnFiltersMeta = {}
           }
@@ -72,7 +84,7 @@ export function createFilteredRowModel<
 
         const globallyFilterableColumns = table
           .getAllLeafColumns()
-          .filter((column) => column.getCanGlobalFilter())
+          .filter((column) => column_getCanGlobalFilter(column, table))
 
         if (
           globalFilter &&
@@ -93,7 +105,9 @@ export function createFilteredRowModel<
         }
 
         // Flag the prefiltered row model with each filter state
-        for (const row of rowModel.flatRows) {
+        for (const row of rowModel.flatRows as Array<
+          Row<TFeatures, TData> & Row_ColumnFiltering<TFeatures, TData>
+        >) {
           row.columnFilters = {}
 
           if (resolvedColumnFilters.length) {
@@ -137,7 +151,9 @@ export function createFilteredRowModel<
           }
         }
 
-        const filterRowsImpl = (row: Row<TFeatures, TData>) => {
+        const filterRowsImpl = (
+          row: Row<TFeatures, TData> & Row_ColumnFiltering<TFeatures, TData>,
+        ) => {
           // Horizontally filter rows through each column
           for (const columnId of filterableIds ?? []) {
             if (row.columnFilters[columnId] === false) {
@@ -148,10 +164,10 @@ export function createFilteredRowModel<
         }
 
         // Filter final rows using all of the active filters
-        return filterRows(rowModel.rows, filterRowsImpl, table)
+        return filterRows(rowModel.rows as any, filterRowsImpl as any, table)
       },
       getMemoOptions(table.options, 'debugTable', 'getFilteredRowModel', () =>
-        table._autoResetPageIndex(),
+        table_autoResetPageIndex(table),
       ),
     )
 }

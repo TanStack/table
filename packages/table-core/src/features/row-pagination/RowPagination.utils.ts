@@ -41,8 +41,8 @@ export function table_autoResetPageIndex<
   table: Table<TFeatures, TData> & {
     options: Partial<TableOptions_RowPagination>
   },
-  registered: boolean,
-  queued: boolean,
+  registered?: boolean,
+  queued?: boolean,
 ) {
   if (!registered) {
     table._queue(() => {

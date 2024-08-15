@@ -7,6 +7,11 @@ import {
   _table_getInitialState,
   _table_getState,
 } from '../../core/table/Tables.utils'
+import {
+  table_getCenterVisibleLeafColumns,
+  table_getLeftVisibleLeafColumns,
+  table_getRightVisibleLeafColumns,
+} from '../column-pinning/ColumnPinning.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -110,12 +115,12 @@ export function column_getVisibleLeafColumns<
   position?: ColumnPinningPosition | 'center',
 ) {
   return !position
-    ? table.getVisibleLeafColumns()
+    ? table_getVisibleLeafColumns(table)
     : position === 'center'
-      ? table.getCenterVisibleLeafColumns()
+      ? table_getCenterVisibleLeafColumns(table)
       : position === 'left'
-        ? table.getLeftVisibleLeafColumns()
-        : table.getRightVisibleLeafColumns()
+        ? table_getLeftVisibleLeafColumns(table)
+        : table_getRightVisibleLeafColumns(table)
 }
 
 export function row_getAllVisibleCells<

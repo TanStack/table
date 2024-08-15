@@ -1,4 +1,4 @@
-import type { CellData, RowData, UnionToIntersection } from './type-utils'
+import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { Column_Column } from '../core/columns/Columns.types'
 import type { Column_ColumnFaceting } from '../features/column-faceting/ColumnFaceting.types'
@@ -12,7 +12,7 @@ import type { Column_ColumnVisibility } from '../features/column-visibility/Colu
 import type { Column_GlobalFiltering } from '../features/global-filtering/GlobalFiltering.types'
 import type { Column_RowSorting } from '../features/row-sorting/RowSorting.types'
 
-export type _Column<
+export type Column<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
@@ -41,15 +41,3 @@ export type _Column<
         ? Column_RowSorting<TFeatures, TData>
         : never)
   >
-
-export type Column_All<
-  TData extends RowData,
-  TValue extends CellData = CellData,
-> = _Column<TableFeatures, TData, TValue>
-
-// temp - enable all features for types internally
-export type Column<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TValue extends CellData = CellData,
-> = Column_All<TData, TValue>

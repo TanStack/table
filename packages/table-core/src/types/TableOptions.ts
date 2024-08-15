@@ -16,7 +16,7 @@ import type { TableOptions_RowPagination } from '../features/row-pagination/RowP
 import type { TableOptions_RowPinning } from '../features/row-pinning/RowPinning.types'
 import type { TableOptions_RowSelection } from '../features/row-selection/RowSelection.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/RowSorting.types'
-import type { Prettify, RowData, UnionToIntersection } from './type-utils'
+import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 
 export interface TableOptions_Core<
@@ -28,7 +28,7 @@ export interface TableOptions_Core<
     TableOptions_Rows<TFeatures, TData>,
     TableOptions_Headers {}
 
-export type _TableOptions<
+export type TableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
@@ -73,13 +73,3 @@ export type _TableOptions<
         ? TableOptions_RowSorting<TFeatures, TData>
         : never)
   >
-
-export type TableOptions_All<TData extends RowData> = Prettify<
-  _TableOptions<TableFeatures, TData>
->
-
-// temp - enable all features for types internally
-export type TableOptions<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = TableOptions_All<TData>

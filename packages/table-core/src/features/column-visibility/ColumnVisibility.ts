@@ -1,5 +1,11 @@
 import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import { _table_getState } from '../../core/table/Tables.utils'
+import { row_getAllCells } from '../../core/rows/Rows.utils'
+import {
+  row_getCenterVisibleCells,
+  row_getLeftVisibleCells,
+  row_getRightVisibleCells,
+} from '../column-pinning/ColumnPinning.utils'
 import {
   column_getCanHide,
   column_getIsVisible,
@@ -23,6 +29,7 @@ import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 import type {
   Column_ColumnVisibility,
+  Row_ColumnVisibility,
   TableState_ColumnVisibility,
   Table_ColumnVisibility,
   VisibilityDefaultOptions,
@@ -70,21 +77,25 @@ export const ColumnVisibility: TableFeature = {
   },
 
   _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> & Partial<Row_RowExpanding>,
+    row: Row<TFeatures, TData> &
+      Partial<Row_ColumnVisibility<TFeatures, TData>>,
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
     row._getAllVisibleCells = memo(
-      () => [row.getAllCells(), _table_getState(table).columnVisibility],
+      () => [
+        row_getAllCells(row, table),
+        _table_getState(table).columnVisibility,
+      ],
       () => row_getAllVisibleCells(row, table),
       getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells'),
     )
 
     row.getVisibleCells = memo(
       () => [
-        row.getLeftVisibleCells(),
-        row.getCenterVisibleCells(),
-        row.getRightVisibleCells(),
+        row_getLeftVisibleCells(row, table),
+        row_getCenterVisibleCells(row, table),
+        row_getRightVisibleCells(row, table),
       ],
       (left, center, right) => row_getVisibleCells(left, center, right),
       getMemoOptions(table.options, 'debugRows', 'getVisibleCells'),

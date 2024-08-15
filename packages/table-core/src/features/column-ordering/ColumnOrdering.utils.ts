@@ -1,10 +1,19 @@
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
+import {
+  _table_getInitialState,
+  _table_getState,
+  table_getState,
+} from '../../core/table/Tables.utils'
+import type { TableOptions_ColumnGrouping } from '../column-grouping/ColumnGrouping.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Column } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
-import type { ColumnOrderState } from './ColumnOrdering.types'
+import type {
+  ColumnOrderState,
+  TableOptions_ColumnOrdering,
+} from './ColumnOrdering.types'
 
 export function column_getIndex<
   TFeatures extends TableFeatures,
@@ -48,7 +57,12 @@ export function column_getIsLastColumn<
 export function table_setColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, updater: Updater<ColumnOrderState>) {
+>(
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_ColumnOrdering>
+  },
+  updater: Updater<ColumnOrderState>,
+) {
   table.options.onColumnOrderChange?.(updater)
 }
 
@@ -58,7 +72,7 @@ export function table_resetColumnOrder<
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
-    defaultState ? [] : table.initialState.columnOrder ?? [],
+    defaultState ? [] : _table_getInitialState(table).columnOrder ?? [],
   )
 }
 
@@ -66,7 +80,7 @@ export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const { columnOrder } = table.getState()
+  const { columnOrder = [] } = _table_getState(table)
 
   return (columns: Array<Column<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
@@ -105,10 +119,15 @@ export function orderColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table<TFeatures, TData> & {
+    options: Partial<
+      TableOptions_ColumnOrdering &
+        TableOptions_ColumnGrouping<TFeatures, TData>
+    >
+  },
   leafColumns: Array<Column<TFeatures, TData, unknown>>,
 ) {
-  const { grouping } = table.getState()
+  const { grouping = [] } = _table_getState(table)
   const { groupedColumnMode } = table.options
 
   if (!grouping.length || !groupedColumnMode) {

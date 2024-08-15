@@ -1,6 +1,10 @@
 import { getMemoOptions, memo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
 import { _table_getState } from '../../core/table/Tables.utils'
+import {
+  table_getFilteredRowModel,
+  table_getPreFilteredRowModel,
+} from '../column-filtering/ColumnFiltering.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -17,10 +21,10 @@ export function createFacetedRowModel<
   return (table, columnId) =>
     memo(
       () => [
-        table.getPreFilteredRowModel(),
+        table_getPreFilteredRowModel(table),
         _table_getState(table).columnFilters,
         _table_getState(table).globalFilter,
-        table.getFilteredRowModel(),
+        table_getFilteredRowModel(table),
       ],
       (preRowModel, columnFilters, globalFilter) => {
         if (

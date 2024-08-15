@@ -15,7 +15,9 @@ export function flexRender<TProps>(
 }
 
 export function FlexRender<TProps>(
-  props: { Comp: ((_props: TProps) => JSX.Element) | JSX.Element | undefined } & TProps,
+  props: {
+    Comp: ((_props: TProps) => JSX.Element) | JSX.Element | undefined
+  } & TProps,
 ): JSX.Element {
   return flexRender(props.Comp, props)
 }

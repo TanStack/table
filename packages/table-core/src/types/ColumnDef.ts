@@ -1,9 +1,4 @@
-import type {
-  CellData,
-  Prettify,
-  RowData,
-  UnionToIntersection,
-} from './type-utils'
+import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { CellContext } from '../core/cells/Cells.types'
 import type { HeaderContext } from '../core/headers/Headers.types'
@@ -56,7 +51,7 @@ type ColumnIdentifiers<
   TValue extends CellData = CellData,
 > = IdIdentifier<TFeatures, TData, TValue> | StringHeaderIdentifier
 
-export type _ColumnDefBase<
+export type ColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
@@ -87,13 +82,6 @@ export type _ColumnDefBase<
   cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
   meta?: ColumnMeta<TFeatures, TData, TValue>
 }
-
-// temp
-export type ColumnDefBase<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TValue extends CellData = CellData,
-> = _ColumnDefBase<TableFeatures, TData, TValue>
 
 export type IdentifiedColumnDef<
   TFeatures extends TableFeatures,
@@ -172,11 +160,6 @@ export type ColumnDef<
   | DisplayColumnDef<TFeatures, TData, TValue>
   | GroupColumnDef<TFeatures, TData, TValue>
   | AccessorColumnDef<TFeatures, TData, TValue>
-
-export type ColumnDef_All<
-  TData extends RowData,
-  TValue extends CellData = CellData,
-> = ColumnDef<TableFeatures, TData, TValue>
 
 export type ColumnDefResolved<
   TFeatures extends TableFeatures,

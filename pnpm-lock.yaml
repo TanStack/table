@@ -2232,34 +2232,6 @@ importers:
         specifier: ^2.10.2
         version: 2.10.2(@testing-library/jest-dom@6.4.6(vitest@1.6.0(@types/node@20.14.9)(jsdom@24.1.0)(less@4.2.0)(sass@1.77.6)(terser@5.31.1)))(solid-js@1.8.18)(vite@5.3.2(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1))
 
-  examples/solid/bootstrap:
-    dependencies:
-      '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.10
-        version: link:../../../packages/solid-table
-      bootstrap:
-        specifier: ^5.3.3
-        version: 5.3.3(@popperjs/core@2.11.8)
-      solid-bootstrap:
-        specifier: ^1.0.20
-        version: 1.0.20(solid-js@1.8.18)
-      solid-js:
-        specifier: ^1.8.18
-        version: 1.8.18
-    devDependencies:
-      '@faker-js/faker':
-        specifier: ^8.4.1
-        version: 8.4.1
-      typescript:
-        specifier: 5.4.5
-        version: 5.4.5
-      vite:
-        specifier: ^5.3.2
-        version: 5.3.2(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1)
-      vite-plugin-solid:
-        specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.6(vitest@1.6.0(@types/node@20.14.9)(jsdom@24.1.0)(less@4.2.0)(sass@1.77.6)(terser@5.31.1)))(solid-js@1.8.18)(vite@5.3.2(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1))
-
   examples/solid/column-groups:
     dependencies:
       '@tanstack/solid-table':
@@ -5811,11 +5783,6 @@ packages:
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
 
-  bootstrap@5.3.3:
-    resolution: {integrity: sha512-8HLCdWgyoMguSO9o+aH+iuZ+aht+mzW0u3HIMzVu7Srrpv7EBBxTnrFlSCskwdY1+EOFQSm7uMJhNQHkdPcmjg==}
-    peerDependencies:
-      '@popperjs/core': ^2.11.8
-
   boxen@7.0.0:
     resolution: {integrity: sha512-j//dBVuyacJbvW+tvZ9HuH03fZ46QcaKvvhZickZqtB271DxJ7SNRSNxrV/dZX0085m7hISRZWbzWlJvx/rHSg==}
     engines: {node: '>=14.16'}
@@ -9032,23 +8999,8 @@ packages:
     resolution: {integrity: sha512-l5x7VUUWbjVFbafGLxPWkYsHIhEvmF85tbIeFZWc8ZPtoMyybuEhL7Jye/ooC4/d48FgOjSJXgsF/AJPYCW8Zw==}
     engines: {node: '>= 10.0.0', npm: '>= 3.0.0'}
 
-  solid-bootstrap-core@2.0.0:
-    resolution: {integrity: sha512-tw1me1iEvI+UzYRL2Gs53MP51WVwx785CU+6KQVGhaLESw3OoayeFLhe1CvUYb7kuskjtNGyAorZMdMwBJQIBA==}
-    peerDependencies:
-      solid-js: '>=1.6.0'
-
-  solid-bootstrap@1.0.20:
-    resolution: {integrity: sha512-2Dhmg+lcEzrjBHh04XmVESFda/EVMwyr0Zx4w6r7cOeQBxz4JtX5AQRwv6cXx3AC9ZjBdeOlYpVtH/hO/wb/1A==}
-    peerDependencies:
-      solid-js: '>=1.6.0'
-
   solid-js@1.8.18:
     resolution: {integrity: sha512-cpkxDPvO/AuKBugVv6xKFd1C9VC0XZMu4VtF56IlHoux8HgyW44uqNSWbozMnVcpIzHIhS3vVXPAVZYM26jpWw==}
-
-  solid-react-transition@1.0.11:
-    resolution: {integrity: sha512-YMT7z6sOupCicDtX19156vbVOm3vCIgjVhPTybR9gLKiIPrDB2NDVqnQk4kpNCDZTOwSjLTOyUQw0xJnXgDg2A==}
-    peerDependencies:
-      solid-js: '>=1.6.0'
 
   solid-refresh@0.6.3:
     resolution: {integrity: sha512-F3aPsX6hVw9ttm5LYlth8Q15x6MlI/J3Dn+o3EQyRTtTxidepSTwAYdozt01/YA+7ObcciagGEyXIopGZzQtbA==}
@@ -13375,10 +13327,6 @@ snapshots:
 
   boolbase@1.0.0: {}
 
-  bootstrap@5.3.3(@popperjs/core@2.11.8):
-    dependencies:
-      '@popperjs/core': 2.11.8
-
   boxen@7.0.0:
     dependencies:
       ansi-align: 3.0.1
@@ -16950,29 +16898,11 @@ snapshots:
       ip-address: 9.0.5
       smart-buffer: 4.2.0
 
-  solid-bootstrap-core@2.0.0(solid-js@1.8.18):
-    dependencies:
-      '@popperjs/core': 2.11.8
-      dom-helpers: 5.2.1
-      solid-js: 1.8.18
-      solid-react-transition: 1.0.11(solid-js@1.8.18)
-
-  solid-bootstrap@1.0.20(solid-js@1.8.18):
-    dependencies:
-      dom-helpers: 5.2.1
-      solid-bootstrap-core: 2.0.0(solid-js@1.8.18)
-      solid-js: 1.8.18
-      solid-react-transition: 1.0.11(solid-js@1.8.18)
-
   solid-js@1.8.18:
     dependencies:
       csstype: 3.1.3
       seroval: 1.0.7
       seroval-plugins: 1.0.7(seroval@1.0.7)
-
-  solid-react-transition@1.0.11(solid-js@1.8.18):
-    dependencies:
-      solid-js: 1.8.18
 
   solid-refresh@0.6.3(solid-js@1.8.18):
     dependencies:

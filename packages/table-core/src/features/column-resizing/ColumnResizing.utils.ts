@@ -1,13 +1,24 @@
-import { table_setColumnSizing } from '../column-sizing/ColumnSizing.utils'
+import {
+  column_getSize,
+  header_getSize,
+  table_setColumnSizing,
+} from '../column-sizing/ColumnSizing.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import {
+  _table_getInitialState,
+  _table_getState,
+} from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 import type { ColumnSizingState } from '../column-sizing/ColumnSizing.types'
-import type { ColumnResizingInfoState } from './ColumnResizing.types'
+import type {
+  ColumnDef_ColumnResizing,
+  ColumnResizingInfoState,
+  TableOptions_ColumnResizing,
+} from './ColumnResizing.types'
 
 export function getDefaultColumnSizingInfoState(): ColumnResizingInfoState {
   return structuredClone({
@@ -24,7 +35,14 @@ export function column_getCanResize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
+>(
+  column: Column<TFeatures, TData, TValue> & {
+    columnDef: Partial<ColumnDef_ColumnResizing>
+  },
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_ColumnResizing>
+  },
+) {
   return (
     (column.columnDef.enableResizing ?? true) &&
     (table.options.enableColumnResizing ?? true)
@@ -35,7 +53,14 @@ export function column_getIsResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
+>(
+  column: Column<TFeatures, TData, TValue> & {
+    columnDef: Partial<ColumnDef_ColumnResizing>
+  },
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_ColumnResizing>
+  },
+) {
   return _table_getState(table).columnSizingInfo?.isResizingColumn === column.id
 }
 
@@ -45,7 +70,9 @@ export function header_getResizeHandler<
   TValue extends CellData = CellData,
 >(
   header: Header<TFeatures, TData, TValue>,
-  table: Table<TFeatures, TData>,
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_ColumnResizing>
+  },
   _contextDocument?: Document,
 ) {
   const column = table_getColumn(table, header.column.id)!
@@ -65,11 +92,14 @@ export function header_getResizeHandler<
       }
     }
 
-    const startSize = header.getSize()
+    const startSize = header_getSize(header, table)
 
     const columnSizingStart: Array<[string, number]> = header
       .getLeafHeaders()
-      .map((d) => [d.column.id, d.column.getSize()])
+      .map((leafHeader) => [
+        leafHeader.column.id,
+        column_getSize(leafHeader.column, table),
+      ])
 
     const clientX = isTouchStartEvent(event)
       ? Math.round(event.touches[0]!.clientX)
@@ -214,19 +244,29 @@ export function header_getResizeHandler<
 export function table_setColumnSizingInfo<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, updater: Updater<ColumnResizingInfoState>) {
+>(
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_ColumnResizing>
+  },
+  updater: Updater<ColumnResizingInfoState>,
+) {
   table.options.onColumnSizingInfoChange?.(updater)
 }
 
 export function table_resetHeaderSizeInfo<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, defaultState?: boolean) {
+>(
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_ColumnResizing>
+  },
+  defaultState?: boolean,
+) {
   table_setColumnSizingInfo(
     table,
     defaultState
       ? getDefaultColumnSizingInfoState()
-      : table.initialState.columnSizingInfo ??
+      : _table_getInitialState(table).columnSizingInfo ??
           getDefaultColumnSizingInfoState(),
   )
 }

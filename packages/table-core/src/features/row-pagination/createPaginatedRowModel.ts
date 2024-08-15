@@ -1,7 +1,12 @@
 import { getMemoOptions, memo } from '../../utils'
 import { expandRows } from '../row-expanding/createExpandedRowModel'
 import { _table_getState } from '../../core/table/Tables.utils'
-import { getDefaultPaginationState } from './RowPagination.utils'
+import {
+  getDefaultPaginationState,
+  table_getPrePaginationRowModel,
+} from './RowPagination.utils'
+import type { TableOptions_RowExpanding } from '../row-expanding/RowExpanding.types'
+import type { TableOptions_RowPagination } from './RowPagination.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -13,12 +18,17 @@ export function createPaginatedRowModel<
   TData extends RowData,
 >(opts?: {
   initialSync: boolean
-}): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+}): (
+  table: Table<TFeatures, TData> & {
+    options: Partial<TableOptions_RowPagination> &
+      Partial<TableOptions_RowExpanding<TFeatures, TData>>
+  },
+) => () => RowModel<TFeatures, TData> {
   return (table) =>
     memo(
       () => [
         _table_getState(table).pagination,
-        table.getPrePaginationRowModel(),
+        table_getPrePaginationRowModel(table),
         table.options.paginateExpandedRows
           ? undefined
           : _table_getState(table).expanded,

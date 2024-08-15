@@ -69,12 +69,14 @@ export const ColumnGrouping: TableFeature = {
 
   _createCell: <TFeatures extends TableFeatures, TData extends RowData, TValue>(
     cell: Cell<TFeatures, TData, TValue> & Partial<Cell_ColumnGrouping>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
-    cell.getIsGrouped = () => cell_getIsGrouped(cell)
+    cell.getIsGrouped = () => cell_getIsGrouped(cell, table)
 
-    cell.getIsPlaceholder = () => cell_getIsPlaceholder(cell)
+    cell.getIsPlaceholder = () => cell_getIsPlaceholder(cell, table)
 
-    cell.getIsAggregated = () => cell_getIsAggregated(cell)
+    cell.getIsAggregated = () => cell_getIsAggregated(cell, table)
   },
 
   _createColumn: <
@@ -96,7 +98,7 @@ export const ColumnGrouping: TableFeature = {
     column.getGroupedIndex = () => column_getGroupedIndex(column, table)
 
     column.getToggleGroupingHandler = () =>
-      column_getToggleGroupingHandler(column)
+      column_getToggleGroupingHandler(column, table)
 
     column.getAutoAggregationFn = () =>
       column_getAutoAggregationFn(column, table)
@@ -109,7 +111,7 @@ export const ColumnGrouping: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
-    row.getIsGrouped = () => row_getIsGrouped(row)
+    row.getIsGrouped = () => row_getIsGrouped(row as any)
 
     row.getGroupingValue = (columnId) =>
       row_getGroupingValue(row, table, columnId)

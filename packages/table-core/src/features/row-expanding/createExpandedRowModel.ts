@@ -1,6 +1,10 @@
 import { getMemoOptions, memo } from '../../utils'
 import { _table_getState } from '../../core/table/Tables.utils'
-import { row_getIsExpanded } from './RowExpanding.utils'
+import {
+  row_getIsExpanded,
+  table_getPreExpandedRowModel,
+} from './RowExpanding.utils'
+import type { TableOptions_RowExpanding } from './RowExpanding.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -10,12 +14,16 @@ import type { Row } from '../../types/Row'
 export function createExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (
+  table: Table<TFeatures, TData> & {
+    options: TableOptions_RowExpanding<TFeatures, TData>
+  },
+) => () => RowModel<TFeatures, TData> {
   return (table) =>
     memo(
       () => [
         _table_getState(table).expanded,
-        table.getPreExpandedRowModel(),
+        table_getPreExpandedRowModel(table),
         table.options.paginateExpandedRows,
       ],
       (expanded, rowModel, paginateExpandedRows) => {

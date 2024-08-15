@@ -1,5 +1,6 @@
 import { getMemoOptions, memo } from '../../utils'
 import { row_getUniqueValues } from '../../core/rows/Rows.utils'
+import { column_getFacetedRowModel } from './ColumnFaceting.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -13,7 +14,7 @@ export function createFacetedUniqueValues<
 ) => () => Map<any, number> {
   return (table, columnId) =>
     memo(
-      () => [table.getColumn(columnId)?.getFacetedRowModel()],
+      () => [column_getFacetedRowModel(table.getColumn(columnId), table)()],
       (facetedRowModel) => {
         if (!facetedRowModel) return new Map()
 

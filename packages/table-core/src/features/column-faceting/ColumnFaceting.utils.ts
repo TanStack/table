@@ -24,11 +24,11 @@ export function column_getFacetedRowModel<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue>,
+  column: Column<TFeatures, TData, TValue> | undefined,
   table: Table<TFeatures, TData>,
 ): () => RowModel<TFeatures, TData> {
   return (
-    table.options._rowModels?.Faceted?.(table, column.id) ??
+    table.options._rowModels?.Faceted?.(table, column?.id ?? '') ??
     (() => table_getPreFilteredRowModel(table))
   )
 }

@@ -1,6 +1,7 @@
 import { _createRow } from '../rows/createRow'
 import { getMemoOptions, memo } from '../../utils'
 import { table_getRowId } from '../rows/Rows.utils'
+import { table_autoResetPageIndex } from '../../features/row-pagination/RowPagination.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -73,7 +74,7 @@ export function createCoreRowModel<
         return rowModel
       },
       getMemoOptions(table.options, 'debugTable', 'getRowModel', () =>
-        table._autoResetPageIndex(),
+        table_autoResetPageIndex(table),
       ),
     )
 }

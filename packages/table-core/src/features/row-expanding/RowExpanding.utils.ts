@@ -32,8 +32,8 @@ export function table_autoResetExpanded<
   table: Table<TFeatures, TData> & {
     options: Partial<TableOptions_RowExpanding<TFeatures, TData>>
   },
-  registered: boolean,
-  queued: boolean,
+  registered?: boolean,
+  queued?: boolean,
 ) {
   if (!registered) {
     table._queue(() => {

@@ -32,7 +32,7 @@ export function buildHeaderGroups<
     maxDepth = Math.max(maxDepth, depth)
 
     columns
-      .filter((column) => column.getIsVisible())
+      .filter((column) => column_getIsVisible(column, table))
       .forEach((column) => {
         if (column.columns.length) {
           findMaxDepth(column.columns, depth + 1)

@@ -11,10 +11,10 @@ import type { TableState_RowPagination } from '../features/row-pagination/RowPag
 import type { TableState_RowPinning } from '../features/row-pinning/RowPinning.types'
 import type { TableState_RowSelection } from '../features/row-selection/RowSelection.types'
 import type { TableState_RowSorting } from '../features/row-sorting/RowSorting.types'
-import type { Prettify, UnionToIntersection } from './type-utils'
+import type { UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 
-export type _TableState<TFeatures extends TableFeatures> = UnionToIntersection<
+export type TableState<TFeatures extends TableFeatures> = UnionToIntersection<
   | ('ColumnFiltering' extends keyof TFeatures
       ? TableState_ColumnFiltering
       : never)
@@ -41,9 +41,3 @@ export type _TableState<TFeatures extends TableFeatures> = UnionToIntersection<
   | ('RowSelection' extends keyof TFeatures ? TableState_RowSelection : never)
   | ('RowSorting' extends keyof TFeatures ? TableState_RowSorting : never)
 >
-
-export type TableState_All = _TableState<TableFeatures>
-
-// temp - enable all features for types internally
-export type TableState<TFeatures extends TableFeatures> =
-  Prettify<TableState_All>
