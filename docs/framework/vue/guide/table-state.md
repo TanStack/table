@@ -51,6 +51,24 @@ dataRef.value = [
 ]
 ```
 
+> ⚠️ `shallowRef` is used under the hood for performance reasons, meaning that the data is not deeply reactive, only the `.value` is. To update the data you have to mutate the data directly.
+
+```ts
+const dataRef = ref([
+  { id: 1, name: 'John' },
+  { id: 2, name: 'Jane' }
+])
+
+// This will NOT update the table ❌
+dataRef.value.push({ id: 4, name: 'John' })
+
+// This will update the table ✅
+dataRef.value = [
+  ...dataRef.value,
+  { id: 4, name: 'John' }
+]
+```
+
 ### Custom Initial State
 
 If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
