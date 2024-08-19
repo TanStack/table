@@ -184,7 +184,7 @@ function App() {
       ({flatData.length} of {totalDBRowCount} rows fetched)
       <div
         className="container"
-        onScroll={e => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
+        onScroll={e => fetchMoreOnBottomReached(e.currentTarget)}
         ref={tableContainerRef}
         style={{
           overflow: 'auto', //our scrollable table container
