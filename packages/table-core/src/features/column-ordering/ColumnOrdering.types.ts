@@ -9,11 +9,25 @@ export interface TableState_ColumnOrdering {
   columnOrder: ColumnOrderState
 }
 
+export interface TableState_ColumnOrdering_Unavailable {
+  /**
+   * @deprecated Import the `ColumnOrderState` feature to use the column ordering APIs.
+   */
+  columnOrder: ColumnOrderState
+}
+
 export interface TableOptions_ColumnOrdering {
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnOrder` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering#oncolumnorderchange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
+   */
+  onColumnOrderChange?: OnChangeFn<ColumnOrderState>
+}
+
+export interface TableOptions_ColumnOrdering_Unavailable {
+  /**
+   * @deprecated Import the `OnChangeFn<ColumnOrderState>` feature to use the table options column ordering APIs.
    */
   onColumnOrderChange?: OnChangeFn<ColumnOrderState>
 }

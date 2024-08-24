@@ -17,6 +17,13 @@ export interface TableState_ColumnGrouping {
   grouping: GroupingState
 }
 
+export interface TableState_ColumnGrouping_Unavailable {
+  /**
+   * @deprecated Import the `GroupingState` feature to use the column grouping APIs.
+   */
+  grouping: GroupingState
+}
+
 export interface AggregationFns {}
 
 export type AggregationFn<
@@ -223,6 +230,16 @@ export interface TableOptions_ColumnGrouping<
   TData extends RowData,
 > extends GroupingOptionsBase,
     ResolvedAggregationFns<TFeatures, TData> {}
+
+export interface TableOptions_ColumnGrouping_Unavailable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> extends GroupingOptionsBase,
+    ResolvedAggregationFns<TFeatures, TData> {
+  /**
+   * @description Allows `any`.
+   */
+}
 
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 

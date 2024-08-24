@@ -9,6 +9,13 @@ export interface TableState_ColumnVisibility {
   columnVisibility: ColumnVisibilityState
 }
 
+export interface TableState_ColumnVisibility_Unavailable {
+  /**
+   * @deprecated Import the `ColumnVisibilityState` feature to use the column visibility APIs.
+   */
+  columnVisibility: ColumnVisibilityState
+}
+
 export interface TableOptions_ColumnVisibility {
   /**
    * Whether to enable column hiding. Defaults to `true`.
