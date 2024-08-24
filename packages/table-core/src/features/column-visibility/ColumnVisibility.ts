@@ -1,4 +1,4 @@
-import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
 import { _table_getState } from '../../core/table/Tables.utils'
 import { row_getAllCells } from '../../core/rows/Rows.utils'
 import {
@@ -17,11 +17,11 @@ import {
   table_getIsSomeColumnsVisible,
   table_getToggleAllColumnsVisibilityHandler,
   table_getVisibleFlatColumns,
+  table_getVisibleLeafColumns,
   table_resetColumnVisibility,
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
 } from './ColumnVisibility.utils'
-import type { Row_RowExpanding } from '../row-expanding/RowExpanding.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -65,15 +65,20 @@ export const ColumnVisibility: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
-    column.toggleVisibility = (visible) =>
-      column_toggleVisibility(column, table, visible)
-
-    column.getIsVisible = () => column_getIsVisible(column, table)
-
-    column.getCanHide = () => column_getCanHide(column, table)
-
-    column.getToggleVisibilityHandler = () =>
-      column_getToggleVisibilityHandler(column, table)
+    assignAPIs(column, table, [
+      {
+        fn: () => column_getIsVisible(column, table),
+      },
+      {
+        fn: () => column_getCanHide(column, table),
+      },
+      {
+        fn: () => column_getToggleVisibilityHandler(column, table),
+      },
+      {
+        fn: (visible) => column_toggleVisibility(column, table, visible),
+      },
+    ])
   },
 
   _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
@@ -82,56 +87,62 @@ export const ColumnVisibility: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
-    row._getAllVisibleCells = memo(
-      () => [
-        row_getAllCells(row, table),
-        _table_getState(table).columnVisibility,
-      ],
-      () => row_getAllVisibleCells(row, table),
-      getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells'),
-    )
-
-    row.getVisibleCells = memo(
-      () => [
-        row_getLeftVisibleCells(row, table),
-        row_getCenterVisibleCells(row, table),
-        row_getRightVisibleCells(row, table),
-      ],
-      (left, center, right) => row_getVisibleCells(left, center, right),
-      getMemoOptions(table.options, 'debugRows', 'getVisibleCells'),
-    )
+    assignAPIs(row, table, [
+      {
+        fn: () => row_getAllVisibleCells(row, table),
+        memoDeps: () => [
+          row_getAllCells(row, table),
+          _table_getState(table).columnVisibility,
+        ],
+      },
+      {
+        fn: (left, center, right) => row_getVisibleCells(left, center, right),
+        memoDeps: () => [
+          row_getLeftVisibleCells(row, table),
+          row_getCenterVisibleCells(row, table),
+          row_getRightVisibleCells(row, table),
+        ],
+      },
+    ])
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
-    table.getVisibleFlatColumns = memo(
-      () => [_table_getState(table).columnVisibility, table.options.columns],
-      () => table_getVisibleFlatColumns(table),
-      getMemoOptions(table.options, 'debugColumns', 'getVisibleFlatColumns'),
-    )
-
-    table.getVisibleLeafColumns = memo(
-      () => [_table_getState(table).columnVisibility, table.options.columns],
-      () => table_getVisibleFlatColumns(table),
-      getMemoOptions(table.options, 'debugColumns', 'getVisibleLeafColumns'),
-    )
-
-    table.setColumnVisibility = (updater) =>
-      table_setColumnVisibility(table, updater)
-
-    table.resetColumnVisibility = (defaultState) =>
-      table_resetColumnVisibility(table, defaultState)
-
-    table.toggleAllColumnsVisible = (value) =>
-      table_toggleAllColumnsVisible(table, value)
-
-    table.getIsAllColumnsVisible = () => table_getIsAllColumnsVisible(table)
-
-    table.getIsSomeColumnsVisible = () => table_getIsSomeColumnsVisible(table)
-
-    table.getToggleAllColumnsVisibilityHandler = () =>
-      table_getToggleAllColumnsVisibilityHandler(table)
+    assignAPIs(table, table, [
+      {
+        fn: () => table_getVisibleFlatColumns(table),
+        memoDeps: () => [
+          _table_getState(table).columnVisibility,
+          table.options.columns,
+        ],
+      },
+      {
+        fn: () => table_getVisibleLeafColumns(table),
+        memoDeps: () => [
+          _table_getState(table).columnVisibility,
+          table.options.columns,
+        ],
+      },
+      {
+        fn: (updater) => table_setColumnVisibility(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetColumnVisibility(table, defaultState),
+      },
+      {
+        fn: (value) => table_toggleAllColumnsVisible(table, value),
+      },
+      {
+        fn: () => table_getIsAllColumnsVisible(table),
+      },
+      {
+        fn: () => table_getIsSomeColumnsVisible(table),
+      },
+      {
+        fn: () => table_getToggleAllColumnsVisibilityHandler(table),
+      },
+    ])
   },
 }

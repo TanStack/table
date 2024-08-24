@@ -1,3 +1,4 @@
+import type { Derived } from '@tanstack/store'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'

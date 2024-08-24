@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
@@ -30,14 +30,14 @@ import type {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  //table states
+  // table states
   const [rowPinning, setRowPinning] = React.useState<RowPinningState>({
     top: [],
     bottom: [],
   })
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
-  //demo states
+  // demo states
   const [keepPinnedRows, setKeepPinnedRows] = React.useState(true)
   const [includeLeafRows, setIncludeLeafRows] = React.useState(true)
   const [includeParentRows, setIncludeParentRows] = React.useState(false)
@@ -168,8 +168,13 @@ function App() {
     onRowPinningChange: setRowPinning,
     getSubRows: (row) => row.subRows,
     keepPinnedRows,
-    debugRows: true,
+    debugAll: true,
   })
+
+  // console.log(table.getBottomRows)
+  useEffect(() => {
+    console.log(table.getBottomRows())
+  }, [table.getBottomRows()])
 
   return (
     <div className="app">

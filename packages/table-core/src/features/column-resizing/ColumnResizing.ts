@@ -1,4 +1,4 @@
-import { makeStateUpdater } from '../../utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
 import {
   column_getCanResize,
   column_getIsResizing,
@@ -53,9 +53,14 @@ export const ColumnResizing: TableFeature = {
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnResizing>,
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-    column.getCanResize = () => column_getCanResize(column, table)
+    // column.getCanResize = () => column_getCanResize(column, table)
 
-    column.getIsResizing = () => column_getIsResizing(column, table)
+    // column.getIsResizing = () => column_getIsResizing(column, table)
+    assignAPIs(column, table, [
+      {
+        fn: () => column_getCanResize(column, table),
+      },
+    ])
   },
 
   _createHeader: <
@@ -66,17 +71,32 @@ export const ColumnResizing: TableFeature = {
     header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnResizing>,
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-    header.getResizeHandler = (_contextDocument) =>
-      header_getResizeHandler(header, table, _contextDocument)
+    // header.getResizeHandler = (_contextDocument) =>
+    //   header_getResizeHandler(header, table, _contextDocument)
+    assignAPIs(header, table, [
+      {
+        fn: (_contextDocument) =>
+          header_getResizeHandler(header, table, _contextDocument),
+      },
+    ])
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-    table.setColumnSizingInfo = (updater) =>
-      table_setColumnSizingInfo(table, updater)
+    // table.setColumnSizingInfo = (updater) =>
+    //   table_setColumnSizingInfo(table, updater)
 
-    table.resetHeaderSizeInfo = (defaultState) =>
-      table_resetHeaderSizeInfo(table, defaultState)
+    // table.resetHeaderSizeInfo = (defaultState) =>
+    //   table_resetHeaderSizeInfo(table, defaultState)
+
+    assignAPIs(table, table, [
+      {
+        fn: (updater) => table_setColumnSizingInfo(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetHeaderSizeInfo(table, defaultState),
+      },
+    ])
   },
 }

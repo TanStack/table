@@ -56,7 +56,7 @@ export interface Row_CoreProperties<
 
 export interface Row_Row<TFeatures extends TableFeatures, TData extends RowData>
   extends Row_CoreProperties<TFeatures, TData> {
-  _getAllCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>
+  getAllCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>
   /**
    * Returns all of the cells for the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#getallcells)
@@ -135,7 +135,7 @@ export interface Table_Rows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  _getRowId: (_: TData, index: number, parent?: Row<TFeatures, TData>) => string
+  getRowId: (_: TData, index: number, parent?: Row<TFeatures, TData>) => string
   /**
    * Returns the row with the given ID.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrow)

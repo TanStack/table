@@ -1,4 +1,4 @@
-import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { assignAPIs, getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import { _table_getState } from '../../core/table/Tables.utils'
 import {
   column_getIndex,
@@ -49,31 +49,58 @@ export const ColumnOrdering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
-    column.getIndex = memo(
-      (position) => [
-        position,
-        _table_getState(table).columnOrder,
-        _table_getState(table).columnPinning,
-        _table_getState(table).grouping,
-      ],
-      (position) => column_getIndex(column, table, position),
-      getMemoOptions(table.options, 'debugColumns', 'getIndex'),
-    )
+    // column.getIndex = memo(
+    //   (position) => [
+    //     position,
+    //     _table_getState(table).columnOrder,
+    //     _table_getState(table).columnPinning,
+    //     _table_getState(table).grouping,
+    //   ],
+    //   (position) => column_getIndex(column, table, position),
+    //   getMemoOptions(table.options, 'debugColumns', 'getIndex'),
+    // )
 
-    column.getIsFirstColumn = (position) =>
-      column_getIsFirstColumn(column, table, position)
+    // column.getIsFirstColumn = (position) =>
+    //   column_getIsFirstColumn(column, table, position)
 
-    column.getIsLastColumn = (position) =>
-      column_getIsLastColumn(column, table, position)
+    // column.getIsLastColumn = (position) =>
+    //   column_getIsLastColumn(column, table, position)
+
+    assignAPIs(column, table, [
+      {
+        fn: (position) => column_getIndex(column, table, position),
+        memoDeps: (position) => [
+          position,
+          _table_getState(table).columnOrder,
+          _table_getState(table).columnPinning,
+          _table_getState(table).grouping,
+        ],
+      },
+      {
+        fn: (position) => column_getIsFirstColumn(column, table, position),
+      },
+      {
+        fn: (position) => column_getIsLastColumn(column, table, position),
+      },
+    ])
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
-    table.setColumnOrder = (updater) => table_setColumnOrder(table, updater)
+    // table.setColumnOrder = (updater) => table_setColumnOrder(table, updater)
 
-    table.resetColumnOrder = (defaultState) =>
-      table_resetColumnOrder(table, defaultState)
+    // table.resetColumnOrder = (defaultState) =>
+    //   table_resetColumnOrder(table, defaultState)
+
+    assignAPIs(table, table, [
+      {
+        fn: (updater) => table_setColumnOrder(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetColumnOrder(table, defaultState),
+      },
+    ])
   },
 }

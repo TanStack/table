@@ -1,4 +1,4 @@
-import { makeStateUpdater } from '../../utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
 import { table_getCoreRowModel } from '../../core/table/Tables.utils'
 import {
   column_getCanGlobalFilter,
@@ -46,7 +46,7 @@ export const GlobalFiltering: TableFeature = {
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: (column) => {
         const value = table_getCoreRowModel(table as Table<TFeatures, TData>)
-          .flatRows[0]?._getAllCellsByColumnId()
+          .flatRows[0]?.getAllCellsByColumnId()
           [column.id]?.getValue()
 
         return typeof value === 'string' || typeof value === 'number'
@@ -63,20 +63,30 @@ export const GlobalFiltering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): void => {
-    column.getCanGlobalFilter = () => column_getCanGlobalFilter(column, table)
+    assignAPIs(column, table, [
+      {
+        fn: () => column_getCanGlobalFilter(column, table),
+      },
+    ])
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): void => {
-    table.getGlobalAutoFilterFn = () => table_getGlobalAutoFilterFn()
-
-    table.getGlobalFilterFn = () => table_getGlobalFilterFn(table)
-
-    table.setGlobalFilter = (updater) => table_setGlobalFilter(table, updater)
-
-    table.resetGlobalFilter = (defaultState) =>
-      table_resetGlobalFilter(table, defaultState)
+    assignAPIs(table, table, [
+      {
+        fn: () => table_getGlobalAutoFilterFn(),
+      },
+      {
+        fn: () => table_getGlobalFilterFn(table),
+      },
+      {
+        fn: (updater) => table_setGlobalFilter(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetGlobalFilter(table, defaultState),
+      },
+    ])
   },
 }

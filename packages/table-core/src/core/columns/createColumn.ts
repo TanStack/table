@@ -1,3 +1,4 @@
+import { table_getDefaultColumnDef } from './Columns.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -19,7 +20,7 @@ export function _createColumn<
   depth: number,
   parent?: Column<TFeatures, TData, TValue>,
 ): Column<TFeatures, TData, TValue> {
-  const defaultColumn = table._getDefaultColumnDef()
+  const defaultColumn = table_getDefaultColumnDef(table)
 
   const resolvedColumnDef = {
     ...defaultColumn,

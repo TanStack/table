@@ -1,10 +1,11 @@
-import { getMemoOptions, memo } from '../../utils'
+import { isDev, tableMemo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
 import { _table_getState } from '../../core/table/Tables.utils'
 import {
   table_getFilteredRowModel,
   table_getPreFilteredRowModel,
 } from '../column-filtering/ColumnFiltering.utils'
+import type { ColumnFiltersState } from '../column-filtering/ColumnFiltering.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -19,39 +20,54 @@ export function createFacetedRowModel<
   columnId: string,
 ) => () => RowModel<TFeatures, TData> {
   return (table, columnId) =>
-    memo(
-      () => [
+    tableMemo({
+      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      fnName: 'createFacetedRowModel',
+      memoDeps: () => [
         table_getPreFilteredRowModel(table),
         _table_getState(table).columnFilters,
         _table_getState(table).globalFilter,
         table_getFilteredRowModel(table),
       ],
-      (preRowModel, columnFilters, globalFilter) => {
-        if (
-          !preRowModel.rows.length ||
-          (!columnFilters?.length && !globalFilter)
-        ) {
-          return preRowModel
-        }
+      fn: (preRowModel, columnFilters, globalFilter) =>
+        _createFacetedRowModel(
+          table,
+          columnId,
+          preRowModel,
+          columnFilters,
+          globalFilter,
+        ),
+    })
+}
 
-        const filterableIds = [
-          ...(columnFilters?.map((d) => d.id).filter((d) => d !== columnId) ??
-            []),
-          globalFilter ? '__global__' : undefined,
-        ].filter(Boolean) as Array<string>
+function _createFacetedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
+  columnId: string,
+  preRowModel: RowModel<TFeatures, TData>,
+  columnFilters?: ColumnFiltersState,
+  globalFilter?: string,
+) {
+  if (!preRowModel.rows.length || (!columnFilters.length && !globalFilter)) {
+    return preRowModel
+  }
 
-        const filterRowsImpl = (row: Row<TFeatures, TData>) => {
-          // Horizontally filter rows through each column
-          for (const colId of filterableIds) {
-            if (row.columnFilters[colId] === false) {
-              return false
-            }
-          }
-          return true
-        }
+  const filterableIds = [
+    ...(columnFilters.map((d) => d.id).filter((d) => d !== columnId) ?? []),
+    globalFilter ? '__global__' : undefined,
+  ].filter(Boolean) as Array<string>
 
-        return filterRows(preRowModel.rows, filterRowsImpl, table)
-      },
-      getMemoOptions(table.options, 'debugTable', 'getFacetedRowModel'),
-    )
+  const filterRowsImpl = (row: Row<TFeatures, TData>) => {
+    // Horizontally filter rows through each column
+    for (const colId of filterableIds) {
+      if (row.columnFilters[colId] === false) {
+        return false
+      }
+    }
+    return true
+  }
+
+  return filterRows(preRowModel.rows, filterRowsImpl, table)
 }

@@ -275,6 +275,7 @@ export function row_pin<TFeatures extends TableFeatures, TData extends RowData>(
   includeLeafRows?: boolean,
   includeParentRows?: boolean,
 ): void {
+  console.log('pinning row', row.id)
   const leafRowIds = includeLeafRows
     ? row_getLeafRows(row).map(({ id }) => id)
     : []

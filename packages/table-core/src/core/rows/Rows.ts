@@ -1,4 +1,5 @@
-import { getMemoOptions, memo } from '../../utils'
+import { assignAPIs, getMemoOptions, memo } from '../../utils'
+import { table_getAllLeafColumns } from '../columns/Columns.utils'
 import {
   row_getAllCells,
   row_getAllCellsByColumnId,
@@ -21,43 +22,49 @@ export const Rows: TableFeature = {
     row: Row<TFeatures, TData>,
     table: Table<TFeatures, TData>,
   ): void => {
-    row._getAllCellsByColumnId = memo(
-      () => [row.getAllCells()],
-      () => row_getAllCellsByColumnId(row, table),
-      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId'),
-    )
-
-    row.getAllCells = memo(
-      () => [table.getAllLeafColumns()],
-      () => row_getAllCells(row, table),
-      getMemoOptions(table.options, 'debugRows', 'getAllCells'),
-    )
-
-    row.getLeafRows = () => row_getLeafRows(row)
-
-    row.getParentRow = () => row_getParentRow(row, table)
-
-    row.getParentRows = () => row_getParentRows(row, table)
-
-    row.getUniqueValues = (columnId) =>
-      row_getUniqueValues(row, table, columnId)
-
-    row.getValue = (columnId) => row_getValue(row, table, columnId)
-
-    row.renderValue = (columnId) => row_renderValue(row, table, columnId)
+    assignAPIs(row, table, [
+      {
+        fn: () => row_getAllCellsByColumnId(row, table),
+        memoDeps: () => [row_getAllCells(row, table)],
+      },
+      {
+        fn: () => row_getAllCells(row, table),
+        memoDeps: () => [table_getAllLeafColumns(table)],
+      },
+      {
+        fn: () => row_getLeafRows(row),
+      },
+      {
+        fn: () => row_getParentRow(row, table),
+      },
+      {
+        fn: () => row_getParentRows(row, table),
+      },
+      {
+        fn: (columnId) => row_getUniqueValues(row, table, columnId),
+      },
+      {
+        fn: (columnId) => row_getValue(row, table, columnId),
+      },
+      {
+        fn: (columnId) => row_renderValue(row, table, columnId),
+      },
+    ])
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
-    table._getRowId = (
-      row: TData,
-      index: number,
-      parent?: Row<TFeatures, TData>,
-    ) => table_getRowId(row, table, index, parent)
 
-    // in next version, we should just pass in the row model as the optional 2nd arg
-    table.getRow = (id: string, searchAll?: boolean) =>
-      table_getRow(table, id, searchAll)
+    assignAPIs(table, table, [
+      {
+        fn: (row, index, parent) => table_getRowId(row, table, index, parent),
+      },
+      {
+        // in next version, we should just pass in the row model as the optional 3rd arg
+        fn: (id: string, searchAll?: boolean) =>
+          table_getRow(table, id, searchAll),
+      },
+    ])
   },
 }
