@@ -1,4 +1,4 @@
-import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { assignAPIs, getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import { _table_getState } from '../../core/table/Tables.utils'
 import {
@@ -65,29 +65,30 @@ export const ColumnSizing: TableFeature = {
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnSizing>,
     table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
-    column.getSize = () => column_getSize(column, table)
-
-    column.getStart = memo(
-      (position) => [
-        position,
-        column_getVisibleLeafColumns(table, position),
-        _table_getState(table).columnSizing,
-      ],
-      (position) => column_getStart(column, table, position),
-      getMemoOptions(table.options, 'debugColumns', 'getStart'),
-    )
-
-    column.getAfter = memo(
-      (position) => [
-        position,
-        column_getVisibleLeafColumns(table, position),
-        _table_getState(table).columnSizing,
-      ],
-      (position) => column_getAfter(column, table, position),
-      getMemoOptions(table.options, 'debugColumns', 'getAfter'),
-    )
-
-    column.resetSize = () => column_resetSize(table, column)
+    assignAPIs(column, table, [
+      {
+        fn: () => column_getSize(column, table),
+      },
+      {
+        fn: (position) => column_getStart(column, table, position),
+        memoDeps: (position) => [
+          position,
+          column_getVisibleLeafColumns(table, position),
+          _table_getState(table).columnSizing,
+        ],
+      },
+      {
+        fn: (position) => column_getAfter(column, table, position),
+        memoDeps: (position) => [
+          position,
+          column_getVisibleLeafColumns(table, position),
+          _table_getState(table).columnSizing,
+        ],
+      },
+      {
+        fn: () => column_resetSize(table, column),
+      },
+    ])
   },
 
   _createHeader: <
@@ -106,17 +107,25 @@ export const ColumnSizing: TableFeature = {
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
-    table.setColumnSizing = (updater) => table_setColumnSizing(table, updater)
-
-    table.resetColumnSizing = (defaultState) =>
-      table_resetColumnSizing(table, defaultState)
-
-    table.getTotalSize = () => table_getTotalSize(table)
-
-    table.getLeftTotalSize = () => table_getLeftTotalSize(table)
-
-    table.getCenterTotalSize = () => table_getCenterTotalSize(table)
-
-    table.getRightTotalSize = () => table_getRightTotalSize(table)
+    assignAPIs(table, table, [
+      {
+        fn: (updater) => table_setColumnSizing(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetColumnSizing(table, defaultState),
+      },
+      {
+        fn: () => table_getTotalSize(table),
+      },
+      {
+        fn: () => table_getLeftTotalSize(table),
+      },
+      {
+        fn: () => table_getCenterTotalSize(table),
+      },
+      {
+        fn: () => table_getRightTotalSize(table),
+      },
+    ])
   },
 }

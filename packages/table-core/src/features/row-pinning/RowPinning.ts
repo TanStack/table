@@ -1,4 +1,4 @@
-import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { _memo, assignAPIs, makeStateUpdater } from '../../utils'
 import { _table_getState } from '../../core/table/Tables.utils'
 import {
   getDefaultRowPinningState,
@@ -51,51 +51,62 @@ export const RowPinning: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowPinning<TFeatures, TData>>,
   ): void => {
-    row.getCanPin = () => row_getCanPin(row, table)
-
-    row.getIsPinned = () => row_getIsPinned(row, table)
-
-    row.getPinnedIndex = memo(
-      () => [table.getRowModel().rows, _table_getState(table).rowPinning],
-      () => row_getPinnedIndex(row, table),
-      getMemoOptions(table.options, 'debugRows', 'getPinnedIndex'),
-    )
-
-    row.pin = (position, includeLeafRows, includeParentRows) =>
-      row_pin(row, table, position, includeLeafRows, includeParentRows)
+    assignAPIs(row, table, [
+      {
+        fn: () => row_getCanPin(row, table),
+      },
+      {
+        fn: () => row_getIsPinned(row, table),
+      },
+      {
+        fn: () => row_getPinnedIndex(row, table),
+        memoDeps: () => [
+          table.getRowModel().rows,
+          _table_getState(table).rowPinning,
+        ],
+      },
+      {
+        fn: (position, includeLeafRows, includeParentRows) =>
+          row_pin(row, table, position, includeLeafRows, includeParentRows),
+      },
+    ])
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowPinning<TFeatures, TData>>,
   ): void => {
-    table.setRowPinning = (updater) => table_setRowPinning(table, updater)
-
-    table.resetRowPinning = (defaultState) =>
-      table_resetRowPinning(table, defaultState)
-
-    table.getIsSomeRowsPinned = (position) =>
-      table_getIsSomeRowsPinned(table, position)
-
-    table.getTopRows = memo(
-      () => [table.getRowModel().rows, _table_getState(table).rowPinning?.top],
-      () => table_getTopRows(table),
-      getMemoOptions(table.options, 'debugRows', 'getTopRows'),
-    )
-
-    table.getBottomRows = memo(
-      () => [
-        table.getRowModel().rows,
-        _table_getState(table).rowPinning?.bottom,
-      ],
-      () => table_getBottomRows(table),
-      getMemoOptions(table.options, 'debugRows', 'getBottomRows'),
-    )
-
-    table.getCenterRows = memo(
-      () => [table.getRowModel().rows, _table_getState(table).rowPinning],
-      () => table_getCenterRows(table),
-      getMemoOptions(table.options, 'debugRows', 'getCenterRows'),
-    )
+    assignAPIs(table, table, [
+      {
+        fn: (updater) => table_setRowPinning(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetRowPinning(table, defaultState),
+      },
+      {
+        fn: (position) => table_getIsSomeRowsPinned(table, position),
+      },
+      {
+        fn: () => table_getTopRows(table),
+        memoDeps: () => [
+          table.getRowModel().rows,
+          _table_getState(table).rowPinning?.top,
+        ],
+      },
+      {
+        fn: () => table_getBottomRows(table),
+        memoDeps: () => [
+          table.getRowModel().rows,
+          _table_getState(table).rowPinning?.bottom,
+        ],
+      },
+      {
+        fn: () => table_getCenterRows(table),
+        memoDeps: () => [
+          table.getRowModel().rows,
+          _table_getState(table).rowPinning,
+        ],
+      },
+    ])
   },
 }

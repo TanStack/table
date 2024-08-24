@@ -1,3 +1,4 @@
+import { assignAPIs } from '../../utils'
 import {
   column_getFacetedMinMaxValues,
   column_getFacetedRowModel,
@@ -22,10 +23,16 @@ export const ColumnFaceting: TableFeature = {
       Partial<Column_ColumnFaceting<TFeatures, TData>>,
     table: Table<TFeatures, TData>,
   ): void => {
-    column.getFacetedMinMaxValues = column_getFacetedMinMaxValues(column, table)
-
-    column.getFacetedRowModel = column_getFacetedRowModel(column, table)
-
-    column.getFacetedUniqueValues = column_getFacetedUniqueValues(column, table)
+    assignAPIs(column, table, [
+      {
+        fn: () => column_getFacetedMinMaxValues(column, table),
+      },
+      {
+        fn: () => column_getFacetedRowModel(column, table),
+      },
+      {
+        fn: () => column_getFacetedUniqueValues(column, table),
+      },
+    ])
   },
 }

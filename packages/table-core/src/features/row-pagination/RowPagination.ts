@@ -1,4 +1,4 @@
-import { getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { assignAPIs, getMemoOptions, makeStateUpdater, memo } from '../../utils'
 import {
   getDefaultPaginationState,
   table_autoResetPageIndex,
@@ -58,51 +58,109 @@ export const RowPagination: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowPagination<TFeatures, TData>>,
   ): void => {
-    const registered = false
-    const queued = false
+    // table.autoResetPageIndex = () =>
+    //   table_autoResetPageIndex(table)
 
-    table._autoResetPageIndex = () =>
-      table_autoResetPageIndex(table, registered, queued)
+    // table.setPagination = (updater) => table_setPagination(table, updater)
 
-    table.setPagination = (updater) => table_setPagination(table, updater)
+    // table.resetPagination = (defaultState) =>
+    //   table_resetPagination(table, defaultState)
 
-    table.resetPagination = (defaultState) =>
-      table_resetPagination(table, defaultState)
+    // table.setPageIndex = (updater) => table_setPageIndex(table, updater)
 
-    table.setPageIndex = (updater) => table_setPageIndex(table, updater)
+    // table.resetPageIndex = (defaultState) =>
+    //   table_resetPageIndex(table, defaultState)
 
-    table.resetPageIndex = (defaultState) =>
-      table_resetPageIndex(table, defaultState)
+    // table.resetPageSize = (defaultState) =>
+    //   table_resetPageSize(table, defaultState)
 
-    table.resetPageSize = (defaultState) =>
-      table_resetPageSize(table, defaultState)
+    // table.setPageSize = (updater) => table_setPageSize(table, updater)
 
-    table.setPageSize = (updater) => table_setPageSize(table, updater)
+    // table.getPageOptions = memo(
+    //   () => [table_getPageCount(table)],
+    //   () => table_getPageOptions(table),
+    //   getMemoOptions(table.options, 'debugTable', 'getPageOptions'),
+    // )
 
-    table.getPageOptions = memo(
-      () => [table_getPageCount(table)],
-      () => table_getPageOptions(table),
-      getMemoOptions(table.options, 'debugTable', 'getPageOptions'),
-    )
+    // table.getCanPreviousPage = () => table_getCanPreviousPage(table)
 
-    table.getCanPreviousPage = () => table_getCanPreviousPage(table)
+    // table.getCanNextPage = () => table_getCanNextPage(table)
 
-    table.getCanNextPage = () => table_getCanNextPage(table)
+    // table.previousPage = () => table_previousPage(table)
 
-    table.previousPage = () => table_previousPage(table)
+    // table.nextPage = () => table_nextPage(table)
 
-    table.nextPage = () => table_nextPage(table)
+    // table.firstPage = () => table_firstPage(table)
 
-    table.firstPage = () => table_firstPage(table)
+    // table.lastPage = () => table_lastPage(table)
 
-    table.lastPage = () => table_lastPage(table)
+    // table.getPrePaginationRowModel = () => table_getPrePaginationRowModel(table)
 
-    table.getPrePaginationRowModel = () => table_getPrePaginationRowModel(table)
+    // table.getPaginatedRowModel = () => table_getPaginatedRowModel(table)
 
-    table.getPaginatedRowModel = () => table_getPaginatedRowModel(table)
+    // table.getPageCount = () => table_getPageCount(table)
 
-    table.getPageCount = () => table_getPageCount(table)
+    // table.getRowCount = () => table_getRowCount(table)
 
-    table.getRowCount = () => table_getRowCount(table)
+    assignAPIs(table, table, [
+      {
+        fn: () => table_autoResetPageIndex(table),
+      },
+      {
+        fn: (updater) => table_setPagination(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetPagination(table, defaultState),
+      },
+      {
+        fn: (updater) => table_setPageIndex(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetPageIndex(table, defaultState),
+      },
+      {
+        fn: (updater) => table_setPageSize(table, updater),
+      },
+      {
+        fn: () => table_getPageCount(table),
+        memoDeps: () => [table_getPageCount(table)],
+      },
+      {
+        fn: (defaultState) => table_resetPageSize(table, defaultState),
+      },
+      {
+        fn: () => table_getPageOptions(table),
+      },
+      {
+        fn: () => table_getCanPreviousPage(table),
+      },
+      {
+        fn: () => table_getCanNextPage(table),
+      },
+      {
+        fn: () => table_previousPage(table),
+      },
+      {
+        fn: () => table_nextPage(table),
+      },
+      {
+        fn: () => table_firstPage(table),
+      },
+      {
+        fn: () => table_lastPage(table),
+      },
+      {
+        fn: () => table_getPrePaginationRowModel(table),
+      },
+      {
+        fn: () => table_getPaginatedRowModel(table),
+      },
+      {
+        fn: () => table_getPageCount(table),
+      },
+      {
+        fn: () => table_getRowCount(table),
+      },
+    ])
   },
 }

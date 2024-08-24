@@ -18,6 +18,13 @@ export interface TableState_ColumnFiltering {
   columnFilters: ColumnFiltersState
 }
 
+export interface TableState_ColumnFiltering_Unavailable {
+  /**
+   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
+   */
+  columnFilters: ColumnFiltersState
+}
+
 export type ColumnFiltersState = Array<ColumnFilter>
 
 export interface ColumnFilter {

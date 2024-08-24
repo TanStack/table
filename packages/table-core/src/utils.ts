@@ -1,7 +1,10 @@
+import type { Table } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableOptions } from './types/TableOptions'
 import type { TableState } from './types/TableState'
+
+export const isDev = process.env.NODE_ENV === 'development'
 
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'
@@ -56,8 +59,9 @@ export function flattenBy<TNode>(
   return flat
 }
 
+// TODO delete old memo function
 export function memo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
-  getDeps: (depArgs?: TDepArgs) => [...TDeps],
+  memoDeps: (depArgs?: TDepArgs) => [...TDeps],
   fn: (...args: NoInfer<[...TDeps]>) => TResult,
   opts: {
     key: any
@@ -72,7 +76,7 @@ export function memo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
     let depTime: number
     if (opts.key && opts.debug) depTime = Date.now()
 
-    const newDeps = getDeps(depArgs)
+    const newDeps = memoDeps(depArgs)
 
     const depsChanged =
       newDeps.length !== deps.length ||
@@ -122,6 +126,7 @@ export function memo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
   }
 }
 
+// TODO delete
 export function getMemoOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -142,4 +147,129 @@ export function getMemoOptions<
     key: process.env.NODE_ENV === 'development' && key,
     onChange,
   }
+}
+
+interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
+  memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
+  fn: (...args: NoInfer<TDeps>) => TResult
+  onAfterUpdate?: (result: TResult) => void
+  onBeforeUpdate?: () => void
+}
+
+export const _memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
+  options: MemoOptions<TDeps, TDepArgs, TResult>,
+): ((depArgs?: TDepArgs) => TResult) => {
+  const { memoDeps, fn, onAfterUpdate, onBeforeUpdate } = options
+  let deps: Array<any> | undefined = []
+  let result: TResult | undefined
+
+  return (depArgs): TResult => {
+    const newDeps = memoDeps?.(depArgs)
+
+    const depsChanged =
+      !newDeps ||
+      newDeps.length !== deps?.length ||
+      newDeps.some((dep: any, index: number) => deps?.[index] !== dep)
+
+    if (!depsChanged) {
+      return result!
+    }
+
+    deps = newDeps
+
+    onBeforeUpdate?.()
+    result = fn(...(newDeps ?? ([] as any)))
+    onAfterUpdate?.(result)
+
+    return result
+  }
+}
+
+interface TableMemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>
+  extends MemoOptions<TDeps, TDepArgs, TResult> {
+  debug?: boolean
+  fnName: string
+  onAfterUpdate?: () => void
+}
+
+const pad = (str: number | string, num: number) => {
+  str = String(str)
+  while (str.length < num) {
+    str = ' ' + str
+  }
+  return str
+}
+
+export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
+  tableMemoOptions: TableMemoOptions<TDeps, TDepArgs, TResult>,
+) {
+  const { debug, fnName, onAfterUpdate, ...memoOptions } = tableMemoOptions
+
+  let startTime: number
+  let endTime: number
+
+  const debugOptions = isDev
+    ? {
+        onBeforeUpdate: () => {
+          if (debug) startTime = performance.now()
+        },
+        onAfterUpdate: () => {
+          if (debug) {
+            endTime = performance.now()
+            const executionTime =
+              Math.round((endTime - startTime) * 1000) / 1000
+            console.info(
+              `%c⏱ ${pad(executionTime, 5)} ms`,
+              `font-size: .6rem; font-weight: bold; color: hsl(
+              ${Math.max(0, Math.min(120 - executionTime, 120))}deg 100% 31%);`,
+              fnName,
+            )
+          }
+          onAfterUpdate?.()
+        },
+      }
+    : {}
+
+  return _memo({
+    ...memoOptions,
+    ...debugOptions,
+  })
+}
+
+interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
+  fn: (...args: any) => any
+  memoDeps?: (depArgs?: any) => [...any] | undefined
+}
+
+export function assignAPIs<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TObject extends Record<string, any>,
+  TDeps extends ReadonlyArray<any>,
+  TDepArgs,
+>(
+  obj: TObject extends Record<string, infer U> ? U : never, // table, row, cell, column, header
+  table: Table<TFeatures, TData>,
+  apis: Array<API<TDeps, NoInfer<TDepArgs>>>,
+): void {
+  apis.forEach(({ fn, memoDeps }) => {
+    const name = fn.toString().match(/\s*(\w+)\s*\(/)?.[1] as string
+    const fnName = name.replace('_', '.')
+    const fnKey = name.split('_')[1]!
+
+    const debugLevel = (name.split('_')[0]! + 's').replace(
+      name.split('_')[0]!,
+      name.split('_')[0]!.charAt(0).toUpperCase() +
+        name.split('_')[0]!.slice(1),
+    ) as 'Table' | 'Rows' | 'Columns' | 'Headers' | 'Cells'
+
+    obj[fnKey] = memoDeps
+      ? tableMemo({
+          memoDeps,
+          fn,
+          fnName,
+          debug: table.options.debugAll ?? table.options[`debug${debugLevel}`],
+        })
+      : fn
+  })
 }

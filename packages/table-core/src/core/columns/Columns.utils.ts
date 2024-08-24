@@ -65,7 +65,7 @@ export function table_getDefaultColumnDef<
     },
     cell: (props) => props.renderValue<any>()?.toString?.() ?? null,
     ...Object.values(table._features).reduce((obj, feature) => {
-      return Object.assign(obj ?? {}, feature?._getDefaultColumnDef?.())
+      return Object.assign(obj ?? {}, feature?.getDefaultColumnDef?.())
     }, {}),
     ...table.options.defaultColumn,
   } as Partial<ColumnDef<TFeatures, TData, unknown>>
@@ -141,7 +141,7 @@ export function table_getColumn<
   table: Table<TFeatures, TData>,
   columnId: string,
 ): Column<TFeatures, TData, unknown> | undefined {
-  const column = table._getAllFlatColumnsById()[columnId]
+  const column = table_getAllFlatColumnsById(table)[columnId]
 
   if (process.env.NODE_ENV !== 'production' && !column) {
     console.warn(`[Table] Column with id '${columnId}' does not exist.`)

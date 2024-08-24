@@ -1,4 +1,4 @@
-import { makeStateUpdater } from '../../utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
 import {
   column_clearSorting,
   column_getAutoSortDir,
@@ -17,7 +17,6 @@ import {
   table_resetSorting,
   table_setSorting,
 } from './RowSorting.utils'
-import type { ColumnDef } from '../../types/ColumnDef'
 import type {
   ColumnDef_RowSorting,
   Column_RowSorting,
@@ -75,45 +74,99 @@ export const RowSorting: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowSorting<TFeatures, TData>>,
   ): void => {
-    column.getAutoSortingFn = () => column_getAutoSortingFn(column, table)
+    // column.getAutoSortingFn = () => column_getAutoSortingFn(column, table)
 
-    column.getAutoSortDir = () => column_getAutoSortDir(column, table)
+    // column.getAutoSortDir = () => column_getAutoSortDir(column, table)
 
-    column.getSortingFn = () => column_getSortingFn(column, table)
+    // column.getSortingFn = () => column_getSortingFn(column, table)
 
-    column.toggleSorting = (desc, multi) =>
-      column_toggleSorting(column, table, desc, multi)
+    // column.toggleSorting = (desc, multi) =>
+    //   column_toggleSorting(column, table, desc, multi)
 
-    column.getFirstSortDir = () => column_getFirstSortDir(column, table)
+    // column.getFirstSortDir = () => column_getFirstSortDir(column, table)
 
-    column.getNextSortingOrder = (multi?: boolean) =>
-      column_getNextSortingOrder(column, table, multi)
+    // column.getNextSortingOrder = (multi?: boolean) =>
+    //   column_getNextSortingOrder(column, table, multi)
 
-    column.getCanSort = () => column_getCanSort(column, table)
+    // column.getCanSort = () => column_getCanSort(column, table)
 
-    column.getCanMultiSort = () => column_getCanMultiSort(column, table)
+    // column.getCanMultiSort = () => column_getCanMultiSort(column, table)
 
-    column.getIsSorted = () => column_getIsSorted(column, table)
+    // column.getIsSorted = () => column_getIsSorted(column, table)
 
-    column.getSortIndex = () => column_getSortIndex(column, table)
+    // column.getSortIndex = () => column_getSortIndex(column, table)
 
-    column.clearSorting = () => column_clearSorting(column, table)
+    // column.clearSorting = () => column_clearSorting(column, table)
 
-    column.getToggleSortingHandler = () =>
-      column_getToggleSortingHandler(column, table)
+    // column.getToggleSortingHandler = () =>
+    //   column_getToggleSortingHandler(column, table)
+
+    assignAPIs(column, table, [
+      {
+        fn: () => column_getAutoSortingFn(column, table),
+      },
+      {
+        fn: () => column_getAutoSortDir(column, table),
+      },
+      {
+        fn: () => column_getSortingFn(column, table),
+      },
+      {
+        fn: (desc, multi) => column_toggleSorting(column, table, desc, multi),
+      },
+      {
+        fn: () => column_getFirstSortDir(column, table),
+      },
+      {
+        fn: (multi) => column_getNextSortingOrder(column, table, multi),
+      },
+      {
+        fn: () => column_getCanSort(column, table),
+      },
+      {
+        fn: () => column_getCanMultiSort(column, table),
+      },
+      {
+        fn: () => column_getIsSorted(column, table),
+      },
+      {
+        fn: () => column_getSortIndex(column, table),
+      },
+      {
+        fn: () => column_clearSorting(column, table),
+      },
+      {
+        fn: () => column_getToggleSortingHandler(column, table),
+      },
+    ])
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowSorting<TFeatures, TData>>,
   ): void => {
-    table.setSorting = (updater) => table_setSorting(table, updater)
+    // table.setSorting = (updater) => table_setSorting(table, updater)
 
-    table.resetSorting = (defaultState) =>
-      table_resetSorting(table, defaultState)
+    // table.resetSorting = (defaultState) =>
+    //   table_resetSorting(table, defaultState)
 
-    table.getPreSortedRowModel = () => table_getPreSortedRowModel(table)
+    // table.getPreSortedRowModel = () => table_getPreSortedRowModel(table)
 
-    table.getSortedRowModel = () => table_getSortedRowModel(table)
+    // table.getSortedRowModel = () => table_getSortedRowModel(table)
+
+    assignAPIs(table, table, [
+      {
+        fn: (updater) => table_setSorting(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetSorting(table, defaultState),
+      },
+      {
+        fn: () => table_getPreSortedRowModel(table),
+      },
+      {
+        fn: () => table_getSortedRowModel(table),
+      },
+    ])
   },
 }

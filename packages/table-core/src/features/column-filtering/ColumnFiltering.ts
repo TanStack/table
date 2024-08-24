@@ -1,4 +1,4 @@
-import { makeStateUpdater } from '../../utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
 import {
   column_getAutoFilterFn,
   column_getCanFilter,
@@ -72,20 +72,31 @@ export const ColumnFiltering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
-    column.getAutoFilterFn = () => column_getAutoFilterFn(column, table)
 
-    column.getFilterFn = () => column_getFilterFn(column, table)
 
-    column.getCanFilter = () => column_getCanFilter(column, table)
-
-    column.getIsFiltered = () => column_getIsFiltered(column, table)
-
-    column.getFilterValue = () => column_getFilterValue(column, table)
-
-    column.getFilterIndex = () => column_getFilterIndex(column, table)
-
-    column.setFilterValue = (value) =>
-      column_setFilterValue(column, table, value)
+    assignAPIs(column, table, [
+      {
+        fn: () => column_getAutoFilterFn(column, table),
+      },
+      {
+        fn: () => column_getFilterFn(column, table),
+      },
+      {
+        fn: () => column_getCanFilter(column, table),
+      },
+      {
+        fn: () => column_getIsFiltered(column, table),
+      },
+      {
+        fn: () => column_getFilterValue(column, table),
+      },
+      {
+        fn: () => column_getFilterIndex(column, table),
+      },
+      {
+        fn: (value) => column_setFilterValue(column, table, value),
+      },
+    ])
   },
 
   _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
@@ -99,14 +110,22 @@ export const ColumnFiltering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
-    table.setColumnFilters = (updater: Updater<ColumnFiltersState>) =>
-      table_setColumnFilters(table, updater)
 
-    table.resetColumnFilters = (defaultState) =>
-      table_resetColumnFilters(table, defaultState)
 
-    table.getPreFilteredRowModel = () => table_getPreFilteredRowModel(table)
-
-    table.getFilteredRowModel = () => table_getFilteredRowModel(table)
+    assignAPIs(table, table, [
+      {
+        fn: (updater: Updater<ColumnFiltersState>) =>
+          table_setColumnFilters(table, updater),
+      },
+      {
+        fn: (defaultState) => table_resetColumnFilters(table, defaultState),
+      },
+      {
+        fn: () => table_getPreFilteredRowModel(table),
+      },
+      {
+        fn: () => table_getFilteredRowModel(table),
+      },
+    ])
   },
 }

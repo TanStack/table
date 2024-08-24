@@ -1,5 +1,10 @@
-import { getMemoOptions, memo } from '../../utils'
+import { assignAPIs, getMemoOptions, memo } from '../../utils'
 import { _table_getState } from '../table/Tables.utils'
+import {
+  table_getCenterHeaderGroups,
+  table_getLeftHeaderGroups,
+  table_getRightHeaderGroups,
+} from '../../features/column-pinning/ColumnPinning.utils'
 import { _createHeader } from './createHeader'
 import {
   header_getContext,
@@ -31,38 +36,33 @@ export const Headers: TableFeature = {
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
-    table.getHeaderGroups = memo(
-      () => [
-        table.options.columns,
-        _table_getState(table).columnOrder,
-        _table_getState(table).grouping,
-        _table_getState(table).columnPinning,
-        table.options.groupedColumnMode,
-      ],
-      () => table_getHeaderGroups(table),
-      getMemoOptions(table.options, 'debugHeaders', 'getHeaderGroups'),
-    )
-
-    table.getFooterGroups = memo(
-      () => [table.getHeaderGroups()],
-      (headerGroups) => table_getFooterGroups(headerGroups),
-      getMemoOptions(table.options, 'debugHeaders', 'getFooterGroups'),
-    )
-
-    table.getFlatHeaders = memo(
-      () => [table.getHeaderGroups()],
-      (headerGroups) => table_getFlatHeaders(headerGroups),
-      getMemoOptions(table.options, 'debugHeaders', 'getFlatHeaders'),
-    )
-
-    table.getLeafHeaders = memo(
-      () => [
-        table.getLeftHeaderGroups(),
-        table.getCenterHeaderGroups(),
-        table.getRightHeaderGroups(),
-      ],
-      (left, center, right) => table_getLeafHeaders(left, center, right),
-      getMemoOptions(table.options, 'debugHeaders', 'getLeafHeaders'),
-    )
+    assignAPIs(table, table, [
+      {
+        fn: () => table_getHeaderGroups(table),
+        memoDeps: () => [
+          table.options.columns,
+          _table_getState(table).columnOrder,
+          _table_getState(table).grouping,
+          _table_getState(table).columnPinning,
+          table.options.groupedColumnMode,
+        ],
+      },
+      {
+        fn: () => table_getFooterGroups(table),
+        memoDeps: () => [table_getHeaderGroups(table)],
+      },
+      {
+        fn: () => table_getFlatHeaders(table),
+        memoDeps: () => [table_getHeaderGroups(table)],
+      },
+      {
+        fn: () => table_getLeafHeaders(table),
+        memoDeps: () => [
+          table_getLeftHeaderGroups(table),
+          table_getCenterHeaderGroups(table),
+          table_getRightHeaderGroups(table),
+        ],
+      },
+    ])
   },
 }

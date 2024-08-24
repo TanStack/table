@@ -1,4 +1,4 @@
-import { getMemoOptions, memo } from '../../utils'
+import { assignAPIs, getMemoOptions, memo } from '../../utils'
 import { _table_getState } from '../table/Tables.utils'
 import { _createColumn } from './createColumn'
 import {
@@ -25,62 +25,55 @@ export const Columns: TableFeature = {
     column: Column<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ) => {
-    column.getFlatColumns = memo(
-      () => [table.options.columns],
-      () => column_getFlatColumns(column),
-      getMemoOptions(table.options, 'debugColumns', 'column.getFlatColumns'),
-    )
-
-    column.getLeafColumns = memo(
-      () => [
-        _table_getState(table).columnOrder,
-        _table_getState(table).grouping,
-        table.options.columns,
-        table.options.groupedColumnMode,
-      ],
-      () => column_getLeafColumns(column, table),
-      getMemoOptions(table.options, 'debugColumns', 'column.getLeafColumns'),
-    )
+    assignAPIs(column, table, [
+      {
+        fn: () => column_getFlatColumns(column),
+        memoDeps: () => [table.options.columns],
+      },
+      {
+        fn: () => column_getLeafColumns(column, table),
+        memoDeps: () => [
+          _table_getState(table).columnOrder,
+          _table_getState(table).grouping,
+          table.options.columns,
+          table.options.groupedColumnMode,
+        ],
+      },
+    ])
   },
 
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ) => {
-    table._getDefaultColumnDef = memo(
-      () => [table.options.defaultColumn],
-      () => table_getDefaultColumnDef(table),
-      getMemoOptions(table.options, 'debugColumns', '_getDefaultColumnDef'),
-    )
-
-    table.getAllColumns = memo(
-      () => [table.options.columns],
-      () => table_getAllColumns(table),
-      getMemoOptions(table.options, 'debugColumns', 'getAllColumns'),
-    )
-
-    table.getAllFlatColumns = memo(
-      () => [table.options.columns],
-      () => table_getAllFlatColumns(table),
-      getMemoOptions(table.options, 'debugColumns', 'getAllFlatColumns'),
-    )
-
-    table._getAllFlatColumnsById = memo(
-      () => [table.options.columns],
-      () => table_getAllFlatColumnsById(table),
-      getMemoOptions(table.options, 'debugColumns', 'getAllFlatColumnsById'),
-    )
-
-    table.getAllLeafColumns = memo(
-      () => [
-        _table_getState(table).columnOrder,
-        _table_getState(table).grouping,
-        table.options.columns,
-        table.options.groupedColumnMode,
-      ],
-      () => table_getAllLeafColumns(table),
-      getMemoOptions(table.options, 'debugColumns', 'getAllLeafColumns'),
-    )
-
-    table.getColumn = (columnId) => table_getColumn(table, columnId)
+    assignAPIs(table, table, [
+      {
+        fn: () => table_getDefaultColumnDef(table),
+        memoDeps: () => [table.options.defaultColumn],
+      },
+      {
+        fn: () => table_getAllColumns(table),
+        memoDeps: () => [table.options.columns],
+      },
+      {
+        fn: () => table_getAllFlatColumns(table),
+        memoDeps: () => [table.options.columns],
+      },
+      {
+        fn: () => table_getAllFlatColumnsById(table),
+        memoDeps: () => [table.options.columns],
+      },
+      {
+        fn: () => table_getAllLeafColumns(table),
+        memoDeps: () => [
+          _table_getState(table).columnOrder,
+          _table_getState(table).grouping,
+          table.options.columns,
+          table.options.groupedColumnMode,
+        ],
+      },
+      {
+        fn: (columnId) => table_getColumn(table, columnId),
+      },
+    ])
   },
 }

@@ -1,7 +1,12 @@
 import { table_getAllColumns } from '../columns/Columns.utils'
 import { table_getVisibleLeafColumns } from '../../features/column-visibility/ColumnVisibility.utils'
 import { _table_getState } from '../table/Tables.utils'
-import { getDefaultColumnPinningState } from '../../features/column-pinning/ColumnPinning.utils'
+import {
+  getDefaultColumnPinningState,
+  table_getCenterHeaderGroups,
+  table_getLeftHeaderGroups,
+  table_getRightHeaderGroups,
+} from '../../features/column-pinning/ColumnPinning.utils'
 import { buildHeaderGroups } from './buildHeaderGroups'
 import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
@@ -74,14 +79,16 @@ export function table_getHeaderGroups<
 export function table_getFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(headerGroups: Array<HeaderGroup<TFeatures, TData>>) {
+>(table: Table<TFeatures, TData>) {
+  const headerGroups = table_getHeaderGroups(table)
   return [...headerGroups].reverse()
 }
 
 export function table_getFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(headerGroups: Array<HeaderGroup<TFeatures, TData>>) {
+>(table: Table<TFeatures, TData>) {
+  const headerGroups = table_getHeaderGroups(table)
   return headerGroups
     .map((headerGroup) => {
       return headerGroup.headers
@@ -92,11 +99,11 @@ export function table_getFlatHeaders<
 export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  left: Array<HeaderGroup<TFeatures, TData>>,
-  center: Array<HeaderGroup<TFeatures, TData>>,
-  right: Array<HeaderGroup<TFeatures, TData>>,
-) {
+>(table: Table<TFeatures, TData>) {
+  const left = table_getLeftHeaderGroups(table)
+  const center = table_getCenterHeaderGroups(table)
+  const right = table_getRightHeaderGroups(table)
+
   return [
     ...(left[0]?.headers ?? []),
     ...(center[0]?.headers ?? []),

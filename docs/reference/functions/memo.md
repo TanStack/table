@@ -7,7 +7,7 @@ title: memo
 
 ```ts
 function memo<TDeps, TDepArgs, TResult>(
-   getDeps, 
+   memoDeps, 
    fn, 
    opts): (depArgs?) => TResult
 ```
@@ -22,7 +22,7 @@ function memo<TDeps, TDepArgs, TResult>(
 
 ## Parameters
 
-• **getDeps**
+• **memoDeps**
 
 • **fn**
 

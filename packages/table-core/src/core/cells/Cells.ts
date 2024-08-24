@@ -1,4 +1,4 @@
-import { getMemoOptions, memo } from '../../utils'
+import { assignAPIs, getMemoOptions, memo } from '../../utils'
 import { cell_getContext, cell_getValue, cell_renderValue } from './Cells.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -14,14 +14,17 @@ export const Cells: TableFeature = {
     cell: Cell<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ) => {
-    cell.getValue = () => cell_getValue(cell, table) as any
-
-    cell.renderValue = () => cell_renderValue(cell, table)
-
-    cell.getContext = memo(
-      () => [cell, table],
-      (c, t) => cell_getContext(c, t),
-      getMemoOptions(table.options, 'debugCells', 'cell.getContext'),
-    )
+    assignAPIs(cell, table, [
+      {
+        fn: () => cell_getValue(cell, table) as any,
+      },
+      {
+        fn: () => cell_renderValue(cell, table),
+      },
+      {
+        fn: () => cell_getContext(cell, table),
+        memoDeps: () => [cell, table],
+      },
+    ])
   },
 }

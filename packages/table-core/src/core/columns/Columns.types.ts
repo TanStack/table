@@ -97,11 +97,8 @@ export interface Table_Columns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  _getAllFlatColumnsById: () => Record<
-    string,
-    Column<TFeatures, TData, unknown>
-  >
-  _getDefaultColumnDef: () => Partial<ColumnDef<TFeatures, TData, unknown>>
+  getAllFlatColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>
+  getDefaultColumnDef: () => Partial<ColumnDef<TFeatures, TData, unknown>>
   /**
    * Returns all columns in the table in their normalized and nested hierarchy.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallcolumns)

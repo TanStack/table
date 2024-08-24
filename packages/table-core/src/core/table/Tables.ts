@@ -1,3 +1,4 @@
+import { assignAPIs } from '../../utils'
 import {
   table_getCoreRowModel,
   table_getRowModel,
@@ -14,16 +15,25 @@ export const Tables: TableFeature = {
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
-    table.getCoreRowModel = () => table_getCoreRowModel(table)
-
-    table.getRowModel = () => table_getRowModel(table)
-
-    table.getState = () => table_getState(table)
-
-    table.reset = () => table_reset(table)
-
-    table.setOptions = (updater) => table_setOptions(table, updater)
-
-    table.setState = (updater) => table_setState(table, updater)
+    assignAPIs(table, table, [
+      {
+        fn: () => table_getCoreRowModel(table),
+      },
+      {
+        fn: () => table_getRowModel(table),
+      },
+      {
+        fn: () => table_getState(table),
+      },
+      {
+        fn: () => table_reset(table),
+      },
+      {
+        fn: (updater) => table_setOptions(table, updater),
+      },
+      {
+        fn: (updater) => table_setState(table, updater),
+      },
+    ])
   },
 }

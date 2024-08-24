@@ -123,7 +123,7 @@ export function createSortedRowModel<
         }
       },
       getMemoOptions(table.options, 'debugTable', 'getSortedRowModel', () =>
-        table._autoResetPageIndex(),
+        table.autoResetPageIndex(),
       ),
     )
 }

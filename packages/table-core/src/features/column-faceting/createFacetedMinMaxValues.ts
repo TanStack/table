@@ -1,6 +1,7 @@
-import { getMemoOptions, memo } from '../../utils'
+import { isDev, tableMemo } from '../../utils'
 import { row_getUniqueValues } from '../../core/rows/Rows.utils'
 import { column_getFacetedRowModel } from './ColumnFaceting.utils'
+import type { RowModel } from '../../types/RowModel'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -13,30 +14,41 @@ export function createFacetedMinMaxValues<
   columnId: string,
 ) => () => undefined | [number, number] {
   return (table, columnId) =>
-    memo(
-      () => [column_getFacetedRowModel(table.getColumn(columnId), table)()],
-      (facetedRowModel) => {
-        if (!facetedRowModel) return undefined
+    tableMemo({
+      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      fnName: 'createFacetedMinMaxValues',
+      memoDeps: () => [
+        column_getFacetedRowModel(table.getColumn(columnId), table)(),
+      ],
+      fn: (facetedRowModel) =>
+        _createFacetedMinMaxValues(table, columnId, facetedRowModel),
+    })
+}
 
-        const uniqueValues = facetedRowModel.flatRows
-          .flatMap(
-            (flatRow) => row_getUniqueValues(flatRow, table, columnId) ?? [],
-          )
-          .map(Number)
-          .filter((value) => !Number.isNaN(value))
+function _createFacetedMinMaxValues<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
+  columnId: string,
+  facetedRowModel?: RowModel<TFeatures, TData>,
+): undefined | [number, number] {
+  if (!facetedRowModel) return undefined
 
-        if (!uniqueValues.length) return
+  const uniqueValues = facetedRowModel.flatRows
+    .flatMap((flatRow) => row_getUniqueValues(flatRow, table, columnId) ?? [])
+    .map(Number)
+    .filter((value) => !Number.isNaN(value))
 
-        let facetedMinValue = uniqueValues[0]!
-        let facetedMaxValue = uniqueValues[uniqueValues.length - 1]!
+  if (!uniqueValues.length) return
 
-        for (const value of uniqueValues) {
-          if (value < facetedMinValue) facetedMinValue = value
-          else if (value > facetedMaxValue) facetedMaxValue = value
-        }
+  let facetedMinValue = uniqueValues[0]!
+  let facetedMaxValue = uniqueValues[uniqueValues.length - 1]!
 
-        return [facetedMinValue, facetedMaxValue]
-      },
-      getMemoOptions(table.options, 'debugTable', 'getFacetedMinMaxValues'),
-    )
+  for (const value of uniqueValues) {
+    if (value < facetedMinValue) facetedMinValue = value
+    else if (value > facetedMaxValue) facetedMaxValue = value
+  }
+
+  return [facetedMinValue, facetedMaxValue]
 }

@@ -91,7 +91,7 @@ export interface Row_ColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  _getAllVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
+  getAllVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
    * Returns an array of cells that account for column visibility for the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisiblecells)
