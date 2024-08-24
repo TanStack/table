@@ -7,6 +7,7 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './ColumnOrdering.utils'
+import type { TableState } from '../../types/TableState'
 import type {
   ColumnOrderDefaultOptions,
   Column_ColumnOrdering,
@@ -24,7 +25,9 @@ import type { Column } from '../../types/Column'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
  */
 export const ColumnOrdering: TableFeature = {
-  _getInitialState: (state): TableState_ColumnOrdering => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_ColumnOrdering => {
     return {
       columnOrder: [],
       ...state,
@@ -49,22 +52,7 @@ export const ColumnOrdering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
-    // column.getIndex = memo(
-    //   (position) => [
-    //     position,
-    //     _table_getState(table).columnOrder,
-    //     _table_getState(table).columnPinning,
-    //     _table_getState(table).grouping,
-    //   ],
-    //   (position) => column_getIndex(column, table, position),
-    //   getMemoOptions(table.options, 'debugColumns', 'getIndex'),
-    // )
 
-    // column.getIsFirstColumn = (position) =>
-    //   column_getIsFirstColumn(column, table, position)
-
-    // column.getIsLastColumn = (position) =>
-    //   column_getIsLastColumn(column, table, position)
 
     assignAPIs(column, table, [
       {
@@ -89,10 +77,7 @@ export const ColumnOrdering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
-    // table.setColumnOrder = (updater) => table_setColumnOrder(table, updater)
 
-    // table.resetColumnOrder = (defaultState) =>
-    //   table_resetColumnOrder(table, defaultState)
 
     assignAPIs(table, table, [
       {

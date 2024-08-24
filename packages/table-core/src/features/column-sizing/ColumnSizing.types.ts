@@ -7,7 +7,7 @@ export interface TableState_ColumnSizing {
 
 export interface TableState_ColumnSizing_Unavailable {
   /**
-   * @deprecated Import the `ColumnSizingState` feature to use the column sizing APIs.
+   * @deprecated Import the `ColumnSizing` feature to use the column sizing APIs.
    */
   columnSizing: ColumnSizingState
 }

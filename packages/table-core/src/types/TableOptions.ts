@@ -3,22 +3,10 @@ import type { TableOptions_Columns } from '../core/columns/Columns.types'
 import type { TableOptions_Headers } from '../core/headers/Headers.types'
 import type { TableOptions_Rows } from '../core/rows/Rows.types'
 import type { TableOptions_Table } from '../core/table/Tables.types'
-import type {
-  TableOptions_ColumnFiltering,
-  TableOptions_ColumnFiltering_Unavailable,
-} from '../features/column-filtering/ColumnFiltering.types'
-import type {
-  TableOptions_ColumnGrouping,
-  TableOptions_ColumnGrouping_Unavailable,
-} from '../features/column-grouping/ColumnGrouping.types'
-import type {
-  TableOptions_ColumnOrdering,
-  TableOptions_ColumnOrdering_Unavailable,
-} from '../features/column-ordering/ColumnOrdering.types'
-import type {
-  TableOptions_ColumnPinning,
-  TableOptions_ColumnPinning_Unavailable,
-} from '../features/column-pinning/ColumnPinning.types'
+import type { TableOptions_ColumnFiltering } from '../features/column-filtering/ColumnFiltering.types'
+import type { TableOptions_ColumnGrouping } from '../features/column-grouping/ColumnGrouping.types'
+import type { TableOptions_ColumnOrdering } from '../features/column-ordering/ColumnOrdering.types'
+import type { TableOptions_ColumnPinning } from '../features/column-pinning/ColumnPinning.types'
 import type { TableOptions_ColumnResizing } from '../features/column-resizing/ColumnResizing.types'
 import type { TableOptions_ColumnSizing } from '../features/column-sizing/ColumnSizing.types'
 import type { TableOptions_ColumnVisibility } from '../features/column-visibility/ColumnVisibility.types'
@@ -47,16 +35,16 @@ export type TableOptions<
   UnionToIntersection<
     | ('ColumnFiltering' extends keyof TFeatures
         ? TableOptions_ColumnFiltering<TFeatures, TData>
-        : TableOptions_ColumnFiltering_Unavailable<TFeatures, TData>)
+        : never)
     | ('ColumnGrouping' extends keyof TFeatures
         ? TableOptions_ColumnGrouping<TFeatures, TData>
-        : TableOptions_ColumnGrouping_Unavailable<TFeatures, TData>)
+        : never)
     | ('ColumnOrdering' extends keyof TFeatures
         ? TableOptions_ColumnOrdering
-        : TableOptions_ColumnOrdering_Unavailable)
+        : never)
     | ('ColumnPinning' extends keyof TFeatures
         ? TableOptions_ColumnPinning
-        : TableOptions_ColumnPinning_Unavailable)
+        : never)
     | ('ColumnResizing' extends keyof TFeatures
         ? TableOptions_ColumnResizing
         : never)

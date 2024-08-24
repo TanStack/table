@@ -1,6 +1,5 @@
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Column } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 
 export type ColumnOrderState = Array<string>
@@ -11,7 +10,7 @@ export interface TableState_ColumnOrdering {
 
 export interface TableState_ColumnOrdering_Unavailable {
   /**
-   * @deprecated Import the `ColumnOrderState` feature to use the column ordering APIs.
+   * @deprecated Import the `ColumnOrdering` feature to use the column ordering APIs.
    */
   columnOrder: ColumnOrderState
 }
@@ -21,13 +20,6 @@ export interface TableOptions_ColumnOrdering {
    * If provided, this function will be called with an `updaterFn` when `state.columnOrder` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering#oncolumnorderchange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
-   */
-  onColumnOrderChange?: OnChangeFn<ColumnOrderState>
-}
-
-export interface TableOptions_ColumnOrdering_Unavailable {
-  /**
-   * @deprecated Import the `OnChangeFn<ColumnOrderState>` feature to use the table options column ordering APIs.
    */
   onColumnOrderChange?: OnChangeFn<ColumnOrderState>
 }

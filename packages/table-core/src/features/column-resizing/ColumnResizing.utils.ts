@@ -16,11 +16,11 @@ import type { Column } from '../../types/Column'
 import type { ColumnSizingState } from '../column-sizing/ColumnSizing.types'
 import type {
   ColumnDef_ColumnResizing,
-  ColumnResizingInfoState,
   TableOptions_ColumnResizing,
+  columnResizingState,
 } from './ColumnResizing.types'
 
-export function getDefaultColumnSizingInfoState(): ColumnResizingInfoState {
+export function getDefaultColumnResizingState(): columnResizingState {
   return structuredClone({
     startOffset: null,
     startSize: null,
@@ -61,7 +61,7 @@ export function column_getIsResizing<
     options: Partial<TableOptions_ColumnResizing>
   },
 ) {
-  return _table_getState(table).columnSizingInfo?.isResizingColumn === column.id
+  return _table_getState(table).columnResizing?.isResizingColumn === column.id
 }
 
 export function header_getResizeHandler<
@@ -112,7 +112,7 @@ export function header_getResizeHandler<
         return
       }
 
-      table_setColumnSizingInfo(table, (old) => {
+      table_setcolumnResizing(table, (old) => {
         const deltaDirection =
           table.options.columnResizeDirection === 'rtl' ? -1 : 1
         const deltaOffset =
@@ -152,7 +152,7 @@ export function header_getResizeHandler<
     const onEnd = (clientXPos?: number) => {
       updateOffset('end', clientXPos)
 
-      table_setColumnSizingInfo(table, (old) => ({
+      table_setcolumnResizing(table, (old) => ({
         ...old,
         isResizingColumn: false,
         startOffset: null,
@@ -229,7 +229,7 @@ export function header_getResizeHandler<
       )
     }
 
-    table_setColumnSizingInfo(table, (old) => ({
+    table_setcolumnResizing(table, (old) => ({
       ...old,
       startOffset: clientX,
       startSize,
@@ -241,16 +241,16 @@ export function header_getResizeHandler<
   }
 }
 
-export function table_setColumnSizingInfo<
+export function table_setcolumnResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
   table: Table<TFeatures, TData> & {
     options: Partial<TableOptions_ColumnResizing>
   },
-  updater: Updater<ColumnResizingInfoState>,
+  updater: Updater<columnResizingState>,
 ) {
-  table.options.onColumnSizingInfoChange?.(updater)
+  table.options.oncolumnResizingChange?.(updater)
 }
 
 export function table_resetHeaderSizeInfo<
@@ -262,12 +262,12 @@ export function table_resetHeaderSizeInfo<
   },
   defaultState?: boolean,
 ) {
-  table_setColumnSizingInfo(
+  table_setcolumnResizing(
     table,
     defaultState
-      ? getDefaultColumnSizingInfoState()
-      : _table_getInitialState(table).columnSizingInfo ??
-          getDefaultColumnSizingInfoState(),
+      ? getDefaultColumnResizingState()
+      : _table_getInitialState(table).columnResizing ??
+          getDefaultColumnResizingState(),
   )
 }
 

@@ -201,7 +201,7 @@ function App() {
                                     'rtl'
                                       ? -1
                                       : 1) *
-                                    (table.getState().columnSizingInfo
+                                    (table.getState().columnResizing
                                       .deltaOffset ?? 0)
                                   }px)`
                                 : '',
@@ -290,7 +290,7 @@ function App() {
                                     'rtl'
                                       ? -1
                                       : 1) *
-                                    (table.getState().columnSizingInfo
+                                    (table.getState().columnResizing
                                       .deltaOffset ?? 0)
                                   }px)`
                                 : '',
@@ -394,7 +394,7 @@ function App() {
                                     'rtl'
                                       ? -1
                                       : 1) *
-                                    (table.getState().columnSizingInfo
+                                    (table.getState().columnResizing
                                       .deltaOffset ?? 0)
                                   }px)`
                                 : '',
@@ -453,7 +453,7 @@ function App() {
         {JSON.stringify(
           {
             columnSizing: table.getState().columnSizing,
-            columnSizingInfo: table.getState().columnSizingInfo,
+            columnResizing: table.getState().columnResizing,
           },
           null,
           2,

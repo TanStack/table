@@ -17,7 +17,7 @@ export interface TableState_GlobalFiltering {
 
 export interface TableState_GlobalFiltering_Unavailable {
   /**
-   * @deprecated Import the `GlobalFilteringState` feature to use the global filtering APIs.
+   * @deprecated Import the `GlobalFiltering` feature to use the global filtering APIs.
    */
   globalFilter: any
 }

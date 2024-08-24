@@ -49,7 +49,7 @@ export interface TableFeature {
     table: Table<TFeatures, TData>,
   ) => Partial<TableOptions<TFeatures, TData>>
   _getInitialState?: <TFeatures extends TableFeatures>(
-    initialState?: Partial<TableState<TFeatures>>,
+    initialState: TableState<TFeatures>,
   ) => Partial<TableState<TFeatures>>
 }
 

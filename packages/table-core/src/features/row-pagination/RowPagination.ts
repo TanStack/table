@@ -20,6 +20,7 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './RowPagination.utils'
+import type { TableState } from '../../types/TableState'
 import type {
   PaginationDefaultOptions,
   TableState_RowPagination,
@@ -35,12 +36,14 @@ import type { Table } from '../../types/Table'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
  */
 export const RowPagination: TableFeature = {
-  _getInitialState: (state): TableState_RowPagination => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures> & Partial<TableState_RowPagination>,
+  ): TableState<TFeatures> & TableState_RowPagination => {
     return {
       ...state,
       pagination: {
         ...getDefaultPaginationState(),
-        ...state?.pagination,
+        ...state.pagination,
       },
     }
   },
@@ -58,49 +61,7 @@ export const RowPagination: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowPagination<TFeatures, TData>>,
   ): void => {
-    // table.autoResetPageIndex = () =>
-    //   table_autoResetPageIndex(table)
 
-    // table.setPagination = (updater) => table_setPagination(table, updater)
-
-    // table.resetPagination = (defaultState) =>
-    //   table_resetPagination(table, defaultState)
-
-    // table.setPageIndex = (updater) => table_setPageIndex(table, updater)
-
-    // table.resetPageIndex = (defaultState) =>
-    //   table_resetPageIndex(table, defaultState)
-
-    // table.resetPageSize = (defaultState) =>
-    //   table_resetPageSize(table, defaultState)
-
-    // table.setPageSize = (updater) => table_setPageSize(table, updater)
-
-    // table.getPageOptions = memo(
-    //   () => [table_getPageCount(table)],
-    //   () => table_getPageOptions(table),
-    //   getMemoOptions(table.options, 'debugTable', 'getPageOptions'),
-    // )
-
-    // table.getCanPreviousPage = () => table_getCanPreviousPage(table)
-
-    // table.getCanNextPage = () => table_getCanNextPage(table)
-
-    // table.previousPage = () => table_previousPage(table)
-
-    // table.nextPage = () => table_nextPage(table)
-
-    // table.firstPage = () => table_firstPage(table)
-
-    // table.lastPage = () => table_lastPage(table)
-
-    // table.getPrePaginationRowModel = () => table_getPrePaginationRowModel(table)
-
-    // table.getPaginatedRowModel = () => table_getPaginatedRowModel(table)
-
-    // table.getPageCount = () => table_getPageCount(table)
-
-    // table.getRowCount = () => table_getRowCount(table)
 
     assignAPIs(table, table, [
       {

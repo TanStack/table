@@ -53,44 +53,46 @@ import type {
 import type { UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 
-export type TableState<TFeatures extends TableFeatures> = UnionToIntersection<
+export type TableState<TFeatures extends TableFeatures> = {
+  _: never
+} & UnionToIntersection<
   | ('ColumnFiltering' extends keyof TFeatures
       ? TableState_ColumnFiltering
-      : TableState_ColumnFiltering_Unavailable)
+      : Partial<TableState_ColumnFiltering_Unavailable>)
   | ('ColumnGrouping' extends keyof TFeatures
       ? TableState_ColumnGrouping
-      : TableState_ColumnGrouping_Unavailable)
+      : Partial<TableState_ColumnGrouping_Unavailable>)
   | ('ColumnOrdering' extends keyof TFeatures
       ? TableState_ColumnOrdering
-      : TableState_ColumnOrdering_Unavailable)
+      : Partial<TableState_ColumnOrdering_Unavailable>)
   | ('ColumnPinning' extends keyof TFeatures
       ? TableState_ColumnPinning
-      : TableState_ColumnPinning_Unavailable)
+      : Partial<TableState_ColumnPinning_Unavailable>)
   | ('ColumnResizing' extends keyof TFeatures
       ? TableState_ColumnResizing
-      : TableState_ColumnResizing_Unavailable)
+      : Partial<TableState_ColumnResizing_Unavailable>)
   | ('ColumnSizing' extends keyof TFeatures
       ? TableState_ColumnSizing
-      : TableState_ColumnSizing_Unavailable)
+      : Partial<TableState_ColumnSizing_Unavailable>)
   | ('ColumnVisibility' extends keyof TFeatures
       ? TableState_ColumnVisibility
-      : TableState_ColumnVisibility_Unavailable)
+      : Partial<TableState_ColumnVisibility_Unavailable>)
   | ('GlobalFiltering' extends keyof TFeatures
       ? TableState_GlobalFiltering
-      : TableState_GlobalFiltering_Unavailable)
+      : Partial<TableState_GlobalFiltering_Unavailable>)
   | ('RowExpanding' extends keyof TFeatures
       ? TableState_RowExpanding
-      : TableState_RowExpanding_Unavailable)
+      : Partial<TableState_RowExpanding_Unavailable>)
   | ('RowPagination' extends keyof TFeatures
       ? TableState_RowPagination
-      : TableState_RowPagination_Unavailable)
+      : Partial<TableState_RowPagination_Unavailable>)
   | ('RowPinning' extends keyof TFeatures
       ? TableState_RowPinning
-      : TableState_RowPinning_Unavailable)
+      : Partial<TableState_RowPinning_Unavailable>)
   | ('RowSelection' extends keyof TFeatures
       ? TableState_RowSelection
-      : TableState_RowSelection_Unavailable)
+      : Partial<TableState_RowSelection_Unavailable>)
   | ('RowSorting' extends keyof TFeatures
       ? TableState_RowSorting
-      : TableState_RowSorting_Unavailable)
+      : Partial<TableState_RowSorting_Unavailable>)
 >

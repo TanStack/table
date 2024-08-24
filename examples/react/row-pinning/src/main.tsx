@@ -1,8 +1,5 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
-
-import './index.css'
-
 import {
   ColumnFiltering,
   RowExpanding,
@@ -13,11 +10,11 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   flexRender,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
-
 import type {
   Column,
   ColumnDef,
@@ -26,6 +23,14 @@ import type {
   RowPinningState,
   Table,
 } from '@tanstack/react-table'
+import './index.css'
+
+const _features = tableFeatures({
+  RowPinning,
+  RowExpanding,
+  ColumnFiltering,
+  RowPagination,
+})
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -43,7 +48,7 @@ function App() {
   const [includeParentRows, setIncludeParentRows] = React.useState(false)
   const [copyPinnedRows, setCopyPinnedRows] = React.useState(false)
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         id: 'pin',
@@ -150,7 +155,7 @@ function App() {
   const refreshData = () => setData(() => makeData(1000, 2, 2))
 
   const table = useTable({
-    _features: { RowPinning, RowExpanding, ColumnFiltering, RowPagination },
+    _features,
     _rowModels: {
       Core: createCoreRowModel(),
       Filtered: createFilteredRowModel(),
@@ -172,9 +177,9 @@ function App() {
   })
 
   // console.log(table.getBottomRows)
-  useEffect(() => {
-    console.log(table.getBottomRows())
-  }, [table.getBottomRows()])
+  // React.useEffect(() => {
+  //   console.log(table.getBottomRows())
+  // }, [table.getBottomRows()])
 
   return (
     <div className="app">
@@ -216,7 +221,7 @@ function App() {
             ).map((row) => {
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => {
+                  {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
                         {flexRender(
@@ -363,8 +368,8 @@ function PinnedRow({
   row,
   table,
 }: {
-  row: Row<any, any>
-  table: Table<any, any>
+  row: Row<typeof _features, Person>
+  table: Table<typeof _features, Person>
 }) {
   return (
     <tr
@@ -383,7 +388,7 @@ function PinnedRow({
             : undefined,
       }}
     >
-      {row.getVisibleCells().map((cell) => {
+      {row.getAllCells().map((cell) => {
         return (
           <td key={cell.id}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -398,8 +403,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
-  table: Table<any>
+  column: Column<typeof _features, Person>
+  table: Table<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

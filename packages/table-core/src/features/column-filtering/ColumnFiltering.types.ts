@@ -213,7 +213,7 @@ type ResolvedFilterFns<
       filterFns?: Record<string, FilterFn<TFeatures, TData>>
     }
   : {
-    filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>
+      filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>
     }
 
 export interface TableOptions_ColumnFiltering<
@@ -221,16 +221,6 @@ export interface TableOptions_ColumnFiltering<
   TData extends RowData,
 > extends ColumnFiltersOptionsBase<TFeatures, TData>,
     ResolvedFilterFns<TFeatures, TData> {}
-
-export interface TableOptions_ColumnFiltering_Unavailable<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> extends ColumnFiltersOptionsBase<TFeatures, TData>,
-    ResolvedFilterFns<TFeatures, TData> {
-  /**
-   * @description Allows `any`.
-   */
-}
 
 export interface Table_ColumnFiltering<
   TFeatures extends TableFeatures,

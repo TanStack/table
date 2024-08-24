@@ -22,6 +22,7 @@ import {
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
 } from './ColumnVisibility.utils'
+import type { TableState } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -40,7 +41,9 @@ import type {
  * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility)
  */
 export const ColumnVisibility: TableFeature = {
-  _getInitialState: (state): TableState_ColumnVisibility => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_ColumnVisibility => {
     return {
       columnVisibility: {},
       ...state,

@@ -17,6 +17,7 @@ import {
   table_resetGrouping,
   table_setGrouping,
 } from './ColumnGrouping.utils'
+import type { TableState } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -39,7 +40,9 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
  */
 export const ColumnGrouping: TableFeature = {
-  _getInitialState: (state): TableState_ColumnGrouping => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_ColumnGrouping => {
     return {
       grouping: [],
       ...state,

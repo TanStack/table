@@ -35,6 +35,7 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from './ColumnPinning.utils'
+import type { TableState } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -54,7 +55,9 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
  */
 export const ColumnPinning: TableFeature = {
-  _getInitialState: (state): TableState_ColumnPinning => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_ColumnPinning => {
     return {
       columnPinning: getDefaultColumnPinningState(),
       ...state,
@@ -79,7 +82,6 @@ export const ColumnPinning: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
-
     assignAPIs(column, table, [
       {
         fn: (position) => column_pin(column, table, position),
@@ -101,7 +103,6 @@ export const ColumnPinning: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
-
     assignAPIs(row, table, [
       {
         fn: () => row_getCenterVisibleCells(row, table),
@@ -134,8 +135,6 @@ export const ColumnPinning: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(table, table, [
       {
         fn: (updater) => table_setColumnPinning(table, updater),

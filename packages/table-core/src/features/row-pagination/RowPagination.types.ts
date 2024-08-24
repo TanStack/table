@@ -12,7 +12,7 @@ export interface TableState_RowPagination {
 }
 export interface TableState_RowPagination_Unavailable {
   /**
-   * @deprecated Import the `PaginationState` feature to use the row pagination  APIs.
+   * @deprecated Import the `RowPagination` feature to use the row pagination  APIs.
    */
   pagination: PaginationState
 }

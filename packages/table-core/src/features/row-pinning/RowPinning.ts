@@ -13,6 +13,7 @@ import {
   table_resetRowPinning,
   table_setRowPinning,
 } from './RowPinning.utils'
+import type { TableState } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -30,7 +31,9 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
  */
 export const RowPinning: TableFeature = {
-  _getInitialState: (state): TableState_RowPinning => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_RowPinning => {
     return {
       rowPinning: getDefaultRowPinningState(),
       ...state,

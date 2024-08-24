@@ -16,7 +16,7 @@ export interface TableState_RowPinning {
 
 export interface TableState_RowPinning_Unavailable {
   /**
-   * @deprecated Import the `RowPinningState` feature to use the row pinning APIs.
+   * @deprecated Import the `RowPinning` feature to use the row pinning APIs.
    */
   rowPinning: RowPinningState
 }

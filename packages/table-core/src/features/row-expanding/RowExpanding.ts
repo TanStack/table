@@ -17,6 +17,7 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './RowExpanding.utils'
+import type { TableState } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -34,7 +35,9 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-expanding)
  */
 export const RowExpanding: TableFeature = {
-  _getInitialState: (state): TableState_RowExpanding => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_RowExpanding => {
     return {
       expanded: {},
       ...state,
@@ -56,16 +59,7 @@ export const RowExpanding: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {
-    // row.toggleExpanded = (expanded) => row_toggleExpanded(row, table, expanded)
 
-    // row.getIsExpanded = () => row_getIsExpanded(row, table)
-
-    // row.getCanExpand = () => row_getCanExpand(row, table)
-
-    // row.getIsAllParentsExpanded = () => row_getIsAllParentsExpanded(row, table)
-
-    // row.getToggleExpandedHandler = () =>
-    //   row_getToggleExpandedHandler(row, table)
 
     assignAPIs(row, table, [
       {
@@ -90,31 +84,7 @@ export const RowExpanding: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {
-    // table.autoResetExpanded = () =>
-    //   table_autoResetExpanded(table)
 
-    // table.setExpanded = (updater) => table_setExpanded(table, updater)
-
-    // table.toggleAllRowsExpanded = (expanded) =>
-    //   table_toggleAllRowsExpanded(table, expanded)
-
-    // table.resetExpanded = (defaultState) =>
-    //   table_resetExpanded(table, defaultState)
-
-    // table.getCanSomeRowsExpand = () => table_getCanSomeRowsExpand(table)
-
-    // table.getToggleAllRowsExpandedHandler = () =>
-    //   table_getToggleAllRowsExpandedHandler(table)
-
-    // table.getIsSomeRowsExpanded = () => table_getIsSomeRowsExpanded(table)
-
-    // table.getIsAllRowsExpanded = () => table_getIsAllRowsExpanded(table)
-
-    // table.getExpandedDepth = () => table_getExpandedDepth(table)
-
-    // table.getPreExpandedRowModel = () => table_getPreExpandedRowModel(table)
-
-    // table.getExpandedRowModel = () => table_getExpandedRowModel(table)
 
     assignAPIs(table, table, [
       {

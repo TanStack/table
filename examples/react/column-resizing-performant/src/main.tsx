@@ -106,7 +106,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.getState().columnSizingInfo, table.getState().columnSizing])
+  }, [table.getState().columnResizing, table.getState().columnSizing])
 
   //demo purposes
   const [enableMemo, setEnableMemo] = React.useState(true)
@@ -191,7 +191,7 @@ function App() {
             ))}
           </div>
           {/* When resizing any column we will render this special memoized version of our table body */}
-          {table.getState().columnSizingInfo.isResizingColumn && enableMemo ? (
+          {table.getState().columnResizing.isResizingColumn && enableMemo ? (
             <MemoizedTableBody table={table} />
           ) : (
             <TableBody table={table} />

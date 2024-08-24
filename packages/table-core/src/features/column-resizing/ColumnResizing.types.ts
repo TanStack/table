@@ -1,17 +1,17 @@
 import type { OnChangeFn, Updater } from '../../types/type-utils'
 
 export interface TableState_ColumnResizing {
-  columnSizingInfo: ColumnResizingInfoState
+  columnResizing: columnResizingState
 }
 
 export interface TableState_ColumnResizing_Unavailable {
   /**
-   * @deprecated Import the `ColumnResizingInfoState` feature to use the column resizing information APIs.
+   * @deprecated Import the `ColumnResizing` feature to use the column resizing APIs.
    */
-  columnSizingInfo: ColumnResizingInfoState
+  columnResizing: columnResizingState
 }
 
-export interface ColumnResizingInfoState {
+export interface columnResizingState {
   columnSizingStart: Array<[string, number]>
   deltaOffset: null | number
   deltaPercentage: null | number
@@ -44,16 +44,16 @@ export interface TableOptions_ColumnResizing {
    */
   columnResizeDirection?: ColumnResizeDirection
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.columnSizingInfo` changes. This overrides the default internal state management, so you will also need to supply `state.columnSizingInfo` from your own managed state.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#oncolumnsizinginfochange)
+   * If provided, this function will be called with an `updaterFn` when `state.columnResizing` changes. This overrides the default internal state management, so you will also need to supply `state.columnResizing` from your own managed state.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#oncolumnResizingchange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
-  onColumnSizingInfoChange?: OnChangeFn<ColumnResizingInfoState>
+  oncolumnResizingChange?: OnChangeFn<columnResizingState>
 }
 
 export type ColumnResizingDefaultOptions = Pick<
   TableOptions_ColumnResizing,
-  'columnResizeMode' | 'onColumnSizingInfoChange' | 'columnResizeDirection'
+  'columnResizeMode' | 'oncolumnResizingChange' | 'columnResizeDirection'
 >
 
 export interface Table_ColumnResizing {
@@ -64,11 +64,11 @@ export interface Table_ColumnResizing {
    */
   resetHeaderSizeInfo: (defaultState?: boolean) => void
   /**
-   * Sets the column sizing info state using an updater function or a value. This will trigger the underlying `onColumnSizingInfoChange` function if one is passed to the table options, otherwise the state will be managed automatically by the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#setcolumnsizinginfo)
+   * Sets the column sizing info state using an updater function or a value. This will trigger the underlying `oncolumnResizingChange` function if one is passed to the table options, otherwise the state will be managed automatically by the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#setcolumnResizing)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
-  setColumnSizingInfo: (updater: Updater<ColumnResizingInfoState>) => void
+  setcolumnResizing: (updater: Updater<columnResizingState>) => void
 }
 
 export interface ColumnDef_ColumnResizing {

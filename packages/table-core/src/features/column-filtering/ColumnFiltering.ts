@@ -12,6 +12,7 @@ import {
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './ColumnFiltering.utils'
+import type { TableState } from '../../types/TableState'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -35,7 +36,9 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
  */
 export const ColumnFiltering: TableFeature = {
-  _getInitialState: (state): TableState_ColumnFiltering => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_ColumnFiltering => {
     return {
       columnFilters: [],
       ...state,
@@ -72,8 +75,6 @@ export const ColumnFiltering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(column, table, [
       {
         fn: () => column_getAutoFilterFn(column, table),
@@ -110,8 +111,6 @@ export const ColumnFiltering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(table, table, [
       {
         fn: (updater: Updater<ColumnFiltersState>) =>

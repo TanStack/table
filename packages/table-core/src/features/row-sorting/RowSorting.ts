@@ -17,6 +17,7 @@ import {
   table_resetSorting,
   table_setSorting,
 } from './RowSorting.utils'
+import type { TableState } from '../../types/TableState'
 import type {
   ColumnDef_RowSorting,
   Column_RowSorting,
@@ -35,7 +36,9 @@ import type { Column } from '../../types/Column'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
  */
 export const RowSorting: TableFeature = {
-  _getInitialState: (state): TableState_RowSorting => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_RowSorting => {
     return {
       sorting: [],
       ...state,
@@ -74,32 +77,7 @@ export const RowSorting: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowSorting<TFeatures, TData>>,
   ): void => {
-    // column.getAutoSortingFn = () => column_getAutoSortingFn(column, table)
 
-    // column.getAutoSortDir = () => column_getAutoSortDir(column, table)
-
-    // column.getSortingFn = () => column_getSortingFn(column, table)
-
-    // column.toggleSorting = (desc, multi) =>
-    //   column_toggleSorting(column, table, desc, multi)
-
-    // column.getFirstSortDir = () => column_getFirstSortDir(column, table)
-
-    // column.getNextSortingOrder = (multi?: boolean) =>
-    //   column_getNextSortingOrder(column, table, multi)
-
-    // column.getCanSort = () => column_getCanSort(column, table)
-
-    // column.getCanMultiSort = () => column_getCanMultiSort(column, table)
-
-    // column.getIsSorted = () => column_getIsSorted(column, table)
-
-    // column.getSortIndex = () => column_getSortIndex(column, table)
-
-    // column.clearSorting = () => column_clearSorting(column, table)
-
-    // column.getToggleSortingHandler = () =>
-    //   column_getToggleSortingHandler(column, table)
 
     assignAPIs(column, table, [
       {
@@ -145,14 +123,7 @@ export const RowSorting: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowSorting<TFeatures, TData>>,
   ): void => {
-    // table.setSorting = (updater) => table_setSorting(table, updater)
 
-    // table.resetSorting = (defaultState) =>
-    //   table_resetSorting(table, defaultState)
-
-    // table.getPreSortedRowModel = () => table_getPreSortedRowModel(table)
-
-    // table.getSortedRowModel = () => table_getSortedRowModel(table)
 
     assignAPIs(table, table, [
       {

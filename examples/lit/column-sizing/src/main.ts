@@ -132,7 +132,7 @@ class LitTableExample extends LitElement {
 ${JSON.stringify(
           {
             columnSizing: table.getState().columnSizing,
-            columnSizingInfo: table.getState().columnSizingInfo,
+            columnResizing: table.getState().columnResizing,
           },
           null,
           2,
