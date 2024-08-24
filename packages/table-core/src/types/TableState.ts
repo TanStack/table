@@ -1,4 +1,7 @@
-import type { TableState_ColumnFiltering } from '../features/column-filtering/ColumnFiltering.types'
+import type {
+  TableState_ColumnFiltering,
+  TableState_ColumnFiltering_Unavailable,
+} from '../features/column-filtering/ColumnFiltering.types'
 import type { TableState_ColumnGrouping } from '../features/column-grouping/ColumnGrouping.types'
 import type { TableState_ColumnOrdering } from '../features/column-ordering/ColumnOrdering.types'
 import type { TableState_ColumnPinning } from '../features/column-pinning/ColumnPinning.types'
@@ -17,7 +20,7 @@ import type { TableFeatures } from './TableFeatures'
 export type TableState<TFeatures extends TableFeatures> = UnionToIntersection<
   | ('ColumnFiltering' extends keyof TFeatures
       ? TableState_ColumnFiltering
-      : never)
+      : TableState_ColumnFiltering_Unavailable)
   | ('ColumnGrouping' extends keyof TFeatures
       ? TableState_ColumnGrouping
       : never)
