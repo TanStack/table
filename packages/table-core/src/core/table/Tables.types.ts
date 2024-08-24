@@ -106,7 +106,7 @@ export interface Table_CoreProperties<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#initialstate)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  initialState: Partial<TableState<TFeatures>>
+  initialState: TableState<TFeatures>
   /**
    * A read-only reference to the table's current options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#options)

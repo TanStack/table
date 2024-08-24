@@ -16,6 +16,7 @@ import {
   table_resetColumnSizing,
   table_setColumnSizing,
 } from './ColumnSizing.utils'
+import type { TableState } from '../../types/TableState'
 import type {
   ColumnDef_ColumnSizing,
   ColumnSizingDefaultOptions,
@@ -38,7 +39,9 @@ import type { Column } from '../../types/Column'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
  */
 export const ColumnSizing: TableFeature = {
-  _getInitialState: (state): TableState_ColumnSizing => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_ColumnSizing => {
     return {
       columnSizing: {},
       ...state,

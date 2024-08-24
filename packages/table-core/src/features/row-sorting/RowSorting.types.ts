@@ -17,6 +17,17 @@ export interface TableState_RowSorting {
   sorting: SortingState
 }
 
+export interface TableState_RowSorting {
+  sorting: SortingState
+}
+
+export interface TableState_RowSorting_Unavailable {
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  sorting: SortingState
+}
+
 export interface SortingFns {}
 
 export interface SortingFn<

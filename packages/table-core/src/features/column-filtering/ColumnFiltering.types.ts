@@ -191,7 +191,7 @@ interface ColumnFiltersOptionsBase<
   manualFiltering?: boolean
   /**
      * By default, filtering is done for all rows (max depth of 100), no matter if they are root level parent rows or the child leaf rows of a parent row. Setting this option to `0` will cause filtering to only be applied to the root level parent rows, with all sub-rows remaining unfiltered. Similarly, setting this option to `1` will cause filtering to only be applied to child leaf rows 1 level deep, and so on.
-  
+
      * This is useful for situations where you want a row's entire child hierarchy to be visible regardless of the applied filter.
       * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#maxleafrowfilterdepth)
       * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)

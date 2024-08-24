@@ -16,6 +16,13 @@ export interface TableState_ColumnPinning {
   columnPinning: ColumnPinningState
 }
 
+export interface TableState_ColumnPinning_Unavailable {
+  /**
+   * @deprecated Import the `ColumnPinning` feature to use the column pinning APIs.
+   */
+  columnPinning: ColumnPinningState
+}
+
 export interface TableOptions_ColumnPinning {
   /**
    * Enables/disables column pinning for the table. Defaults to `true`.
@@ -23,13 +30,6 @@ export interface TableOptions_ColumnPinning {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
    */
   enableColumnPinning?: boolean
-  /**
-   * @deprecated Use `enableColumnPinning` or `enableRowPinning` instead.
-   * Enables/disables all pinning for the table. Defaults to `true`.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#enablepinning)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
-   */
-  enablePinning?: boolean
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnPinning` changes. This overrides the default internal state management, so you will also need to supply `state.columnPinning` from your own managed state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#oncolumnpinningchange)

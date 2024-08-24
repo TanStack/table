@@ -26,6 +26,7 @@ import {
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './RowSelection.utils'
+import type { TableState } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -44,7 +45,9 @@ import type {
  
  */
 export const RowSelection: TableFeature = {
-  _getInitialState: (state): TableState_RowSelection => {
+  _getInitialState: <TFeatures extends TableFeatures>(
+    state: TableState<TFeatures>,
+  ): TableState<TFeatures> & TableState_RowSelection => {
     return {
       rowSelection: {},
       ...state,
@@ -71,23 +74,7 @@ export const RowSelection: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
-    // row.toggleSelected = (value, opts) =>
-    //   row_toggleSelected(row, table, value, opts)
 
-    // row.getIsSelected = () => row_getIsSelected(row, table)
-
-    // row.getIsSomeSelected = () => row_getIsSomeSelected(row, table)
-
-    // row.getIsAllSubRowsSelected = () => row_getIsAllSubRowsSelected(row, table)
-
-    // row.getCanSelect = () => row_getCanSelect(row, table)
-
-    // row.getCanSelectSubRows = () => row_getCanSelectSubRows(row, table)
-
-    // row.getCanMultiSelect = () => row_getCanMultiSelect(row, table)
-
-    // row.getToggleSelectedHandler = () =>
-    //   row_getToggleSelectedHandler(row, table)
 
     assignAPIs(row, table, [
       {
@@ -121,61 +108,7 @@ export const RowSelection: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
-    // table.setRowSelection = (updater) => table_setRowSelection(table, updater)
 
-    // table.resetRowSelection = (defaultState) =>
-    //   table_resetRowSelection(table, defaultState)
-
-    // table.toggleAllRowsSelected = (value) =>
-    //   table_toggleAllRowsSelected(table, value)
-
-    // table.toggleAllPageRowsSelected = (value) =>
-    //   table_toggleAllPageRowsSelected(table, value)
-
-    // table.getPreSelectedRowModel = () => table_getPreSelectedRowModel(table)
-
-    // table.getSelectedRowModel = memo(
-    //   () => [_table_getState(table).rowSelection, table.getCoreRowModel()],
-    //   () => table_getSelectedRowModel(table),
-    //   getMemoOptions(table.options, 'debugTable', 'getSelectedRowModel'),
-    // )
-
-    // table.getFilteredSelectedRowModel = memo(
-    //   () => [
-    //     _table_getState(table).rowSelection,
-    //     table_getFilteredRowModel(table),
-    //   ],
-    //   () => table_getFilteredSelectedRowModel(table),
-    //   getMemoOptions(
-    //     table.options,
-    //     'debugTable',
-    //     'getFilteredSelectedRowModel',
-    //   ),
-    // )
-
-    // table.getGroupedSelectedRowModel = memo(
-    //   () => [
-    //     _table_getState(table).rowSelection,
-    //     table_getSortedRowModel(table),
-    //   ],
-    //   () => table_getGroupedSelectedRowModel(table),
-    //   getMemoOptions(table.options, 'debugTable', 'getGroupedSelectedRowModel'),
-    // )
-
-    // table.getIsAllRowsSelected = () => table_getIsAllRowsSelected(table)
-
-    // table.getIsAllPageRowsSelected = () => table_getIsAllPageRowsSelected(table)
-
-    // table.getIsSomeRowsSelected = () => table_getIsSomeRowsSelected(table)
-
-    // table.getIsSomePageRowsSelected = () =>
-    //   table_getIsSomePageRowsSelected(table)
-
-    // table.getToggleAllRowsSelectedHandler = () =>
-    //   table_getToggleAllRowsSelectedHandler(table)
-
-    // table.getToggleAllPageRowsSelectedHandler = () =>
-    //   table_getToggleAllPageRowsSelectedHandler(table)
 
     assignAPIs(table, table, [
       {
