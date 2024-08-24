@@ -51,31 +51,6 @@ export interface TableOptions_ColumnResizing {
   onColumnSizingInfoChange?: OnChangeFn<ColumnResizingInfoState>
 }
 
-export interface TableOptions_ColumnResizing_Unavailable {
-  /**
-   * @deprecated Import the `OnChangeFn<ColumnOrderState>` feature to use the table options column ordering APIs.
-   */
-  columnResizeMode?: ColumnResizeMode
-  /**
-   * Enables or disables column resizing for the column.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#enablecolumnresizing)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
-   */
-  enableColumnResizing?: boolean
-  /**
-   * Enables or disables right-to-left support for resizing the column. defaults to 'ltr'.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#columnResizeDirection)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
-   */
-  columnResizeDirection?: ColumnResizeDirection
-  /**
-   * If provided, this function will be called with an `updaterFn` when `state.columnSizingInfo` changes. This overrides the default internal state management, so you will also need to supply `state.columnSizingInfo` from your own managed state.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#oncolumnsizinginfochange)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
-   */
-  onColumnSizingInfoChange?: OnChangeFn<ColumnResizingInfoState>
-}
-
 export type ColumnResizingDefaultOptions = Pick<
   TableOptions_ColumnResizing,
   'columnResizeMode' | 'onColumnSizingInfoChange' | 'columnResizeDirection'
