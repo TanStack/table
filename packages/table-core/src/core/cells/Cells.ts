@@ -1,4 +1,4 @@
-import { assignAPIs, getMemoOptions, memo } from '../../utils'
+import { assignAPIs } from '../../utils'
 import { cell_getContext, cell_getValue, cell_renderValue } from './Cells.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'

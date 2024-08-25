@@ -61,7 +61,7 @@ export interface CoreTableFeatures {
   Cells: TableFeature
 }
 
-export interface TableFeatures {
+export interface TableFeatures extends CoreTableFeatures {
   ColumnFaceting?: TableFeature
   ColumnFiltering?: TableFeature
   ColumnGrouping?: TableFeature

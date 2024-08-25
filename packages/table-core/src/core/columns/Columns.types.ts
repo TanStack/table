@@ -97,7 +97,17 @@ export interface Table_Columns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
+  /**
+   * Returns a map of all flat columns by their ID.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallflatcolumnsbyid)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
   getAllFlatColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>
+  /**
+   * Returns the default column options to use for all column defs supplied to the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getdefaultcolumndef)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
   getDefaultColumnDef: () => Partial<ColumnDef<TFeatures, TData, unknown>>
   /**
    * Returns all columns in the table in their normalized and nested hierarchy.

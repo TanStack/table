@@ -1,4 +1,4 @@
-import type { TableFeatures } from '../types/TableFeatures'
+import type { CoreTableFeatures, TableFeatures } from '../types/TableFeatures'
 
 /**
  * A helper function to help define the features that are to be imported and applied to a table instance.
