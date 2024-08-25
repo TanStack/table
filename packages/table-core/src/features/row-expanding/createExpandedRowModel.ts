@@ -1,5 +1,5 @@
 import { getMemoOptions, memo } from '../../utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import {
   row_getIsExpanded,
   table_getPreExpandedRowModel,
@@ -22,7 +22,7 @@ export function createExpandedRowModel<
   return (table) =>
     memo(
       () => [
-        _table_getState(table).expanded,
+        table_getState(table).expanded,
         table_getPreExpandedRowModel(table),
         table.options.paginateExpandedRows,
       ],

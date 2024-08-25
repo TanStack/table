@@ -37,7 +37,7 @@ import type {
 export const RowExpanding: TableFeature = {
   _getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_RowExpanding => {
+  ): TableState<TFeatures> => {
     return {
       expanded: {},
       ...state,
@@ -59,8 +59,6 @@ export const RowExpanding: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(row, table, [
       {
         fn: (expanded) => row_toggleExpanded(row, table, expanded),
@@ -84,8 +82,6 @@ export const RowExpanding: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(table, table, [
       {
         fn: () => table_autoResetExpanded(table),

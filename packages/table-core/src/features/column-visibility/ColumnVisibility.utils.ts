@@ -4,8 +4,8 @@ import {
 } from '../../core/columns/Columns.utils'
 import { row_getAllCells } from '../../core/rows/Rows.utils'
 import {
-  _table_getInitialState,
-  _table_getState,
+  table_getInitialState,
+  table_getState,
 } from '../../core/table/Tables.utils'
 import {
   table_getCenterVisibleLeafColumns,
@@ -62,7 +62,7 @@ export function column_getIsVisible<
   return (
     (childColumns.length
       ? childColumns.some((c) => column_getIsVisible(c, table))
-      : _table_getState(table).columnVisibility?.[column.id]) ?? true
+      : table_getState(table).columnVisibility?.[column.id]) ?? true
   )
 }
 
@@ -197,7 +197,7 @@ export function table_resetColumnVisibility<
 ) {
   table_setColumnVisibility(
     table,
-    defaultState ? {} : _table_getInitialState(table).columnVisibility ?? {},
+    defaultState ? {} : (table_getInitialState(table).columnVisibility ?? {}),
   )
 }
 

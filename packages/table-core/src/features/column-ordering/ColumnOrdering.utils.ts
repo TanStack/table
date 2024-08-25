@@ -1,7 +1,7 @@
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import {
-  _table_getInitialState,
-  _table_getState,
+  table_getInitialState,
+  table_getState,
   table_getState,
 } from '../../core/table/Tables.utils'
 import type { TableOptions_ColumnGrouping } from '../column-grouping/ColumnGrouping.types'
@@ -72,7 +72,7 @@ export function table_resetColumnOrder<
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
-    defaultState ? [] : _table_getInitialState(table).columnOrder ?? [],
+    defaultState ? [] : (table_getInitialState(table).columnOrder ?? []),
   )
 }
 
@@ -80,7 +80,7 @@ export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const { columnOrder = [] } = _table_getState(table)
+  const { columnOrder = [] } = table_getState(table)
 
   return (columns: Array<Column<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
@@ -127,7 +127,7 @@ export function orderColumns<
   },
   leafColumns: Array<Column<TFeatures, TData, unknown>>,
 ) {
-  const { grouping = [] } = _table_getState(table)
+  const { grouping = [] } = table_getState(table)
   const { groupedColumnMode } = table.options
 
   if (!grouping.length || !groupedColumnMode) {

@@ -2,10 +2,9 @@ import { table_getPrePaginationRowModel } from '../row-pagination/RowPagination.
 import { table_getSortedRowModel } from '../row-sorting/RowSorting.utils'
 import { table_getRow } from '../../core/rows/Rows.utils'
 import {
-  _table_getInitialState,
-  _table_getState,
   table_getInitialState,
   table_getRowModel,
+  table_getState,
 } from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -110,7 +109,7 @@ export function table_resetExpanded<
 ) {
   table_setExpanded(
     table,
-    defaultState ? {} : _table_getInitialState(table).expanded ?? {},
+    defaultState ? {} : (table_getInitialState(table).expanded ?? {}),
   )
 }
 
@@ -164,7 +163,7 @@ export function table_getIsSomeRowsExpanded<
     options: Partial<TableOptions_RowExpanding<TFeatures, TData>>
   },
 ) {
-  const expanded = _table_getState(table).expanded ?? {}
+  const expanded = table_getState(table).expanded ?? {}
   return expanded === true || Object.values(expanded).some(Boolean)
 }
 
@@ -181,7 +180,7 @@ export function table_getIsAllRowsExpanded<
     options: Partial<TableOptions_RowExpanding<TFeatures, TData>>
   },
 ) {
-  const expanded = _table_getState(table).expanded ?? {}
+  const expanded = table_getState(table).expanded ?? {}
 
   // If expanded is true, save some cycles and return true
   if (expanded === true) {
@@ -221,9 +220,9 @@ export function table_getExpandedDepth<
   let maxDepth = 0
 
   const rowIds =
-    _table_getState(table).expanded === true
+    table_getState(table).expanded === true
       ? Object.keys(table_getRowModel(table).rowsById)
-      : Object.keys(_table_getState(table).expanded ?? {})
+      : Object.keys(table_getState(table).expanded ?? {})
 
   rowIds.forEach((id) => {
     const splitId = id.split('.')
@@ -335,7 +334,7 @@ export function row_getIsExpanded<
     options: Partial<TableOptions_RowExpanding<TFeatures, TData>>
   },
 ) {
-  const expanded = _table_getState(table).expanded ?? {}
+  const expanded = table_getState(table).expanded ?? {}
 
   return !!(
     table.options.getIsRowExpanded?.(row) ??

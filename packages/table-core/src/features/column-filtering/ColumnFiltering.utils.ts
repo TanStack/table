@@ -2,8 +2,8 @@ import { filterFns } from '../../fns/filterFns'
 import { functionalUpdate, isFunction } from '../../utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
 import {
-  _table_getState,
   table_getCoreRowModel,
+  table_getState,
 } from '../../core/table/Tables.utils'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
@@ -61,13 +61,13 @@ export function column_getFilterFn<
   table: Table<TFeatures, TData> & {
     options: TableOptions_ColumnFiltering<TFeatures, TData>
   },
-) {
+): FilterFn<TFeatures, TData> | undefined {
   return isFunction(column.columnDef.filterFn)
     ? column.columnDef.filterFn
     : column.columnDef.filterFn === 'auto'
       ? column_getAutoFilterFn(column, table)
-      : table.options.filterFns?.[column.columnDef.filterFn as string] ??
-        filterFns[column.columnDef.filterFn as BuiltInFilterFn]
+      : (table.options.filterFns?.[column.columnDef.filterFn as string] ??
+        filterFns[column.columnDef.filterFn as BuiltInFilterFn])
 }
 
 export function column_getCanFilter<
@@ -117,7 +117,7 @@ export function column_getFilterValue<
     options: TableOptions_ColumnFiltering<TFeatures, TData>
   },
 ) {
-  return _table_getState(table).columnFilters?.find((d) => d.id === column.id)
+  return table_getState(table).columnFilters?.find((d) => d.id === column.id)
     ?.value
 }
 
@@ -134,9 +134,8 @@ export function column_getFilterIndex<
   },
 ): number {
   return (
-    _table_getState(table).columnFilters?.findIndex(
-      (d) => d.id === column.id,
-    ) ?? -1
+    table_getState(table).columnFilters?.findIndex((d) => d.id === column.id) ??
+    -1
   )
 }
 
@@ -226,7 +225,7 @@ export function table_resetColumnFilters<
 ) {
   table_setColumnFilters(
     table,
-    defaultState ? [] : table.initialState.columnFilters ?? [],
+    defaultState ? [] : (table.initialState.columnFilters ?? []),
   )
 }
 

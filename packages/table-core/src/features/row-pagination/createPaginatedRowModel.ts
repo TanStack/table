@@ -1,6 +1,6 @@
 import { getMemoOptions, memo } from '../../utils'
 import { expandRows } from '../row-expanding/createExpandedRowModel'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import {
   getDefaultPaginationState,
   table_getPrePaginationRowModel,
@@ -27,11 +27,11 @@ export function createPaginatedRowModel<
   return (table) =>
     memo(
       () => [
-        _table_getState(table).pagination,
+        table_getState(table).pagination,
         table_getPrePaginationRowModel(table),
         table.options.paginateExpandedRows
           ? undefined
-          : _table_getState(table).expanded,
+          : table_getState(table).expanded,
       ],
       (pagination, rowModel) => {
         if (!rowModel.rows.length) {

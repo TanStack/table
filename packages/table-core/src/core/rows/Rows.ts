@@ -55,7 +55,6 @@ export const Rows: TableFeature = {
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
-
     assignAPIs(table, table, [
       {
         fn: (row, index, parent) => table_getRowId(row, table, index, parent),

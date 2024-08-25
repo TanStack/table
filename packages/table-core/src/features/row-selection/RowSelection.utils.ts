@@ -3,10 +3,10 @@ import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.u
 import { table_getPaginatedRowModel } from '../row-pagination/RowPagination.utils'
 import { table_getRow } from '../../core/rows/Rows.utils'
 import {
-  _table_getInitialState,
-  _table_getState,
   table_getCoreRowModel,
+  table_getInitialState,
   table_getRowModel,
+  table_getState,
 } from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -53,7 +53,7 @@ export function table_resetRowSelection<
 ) {
   table_setRowSelection(
     table,
-    defaultState ? {} : _table_getInitialState(table).rowSelection ?? {},
+    defaultState ? {} : (table_getInitialState(table).rowSelection ?? {}),
   )
 }
 
@@ -161,7 +161,7 @@ export function table_getSelectedRowModel<
 ) {
   const rowModel = table_getCoreRowModel(table)
 
-  if (!Object.keys(_table_getState(table).rowSelection ?? {}).length) {
+  if (!Object.keys(table_getState(table).rowSelection ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -187,7 +187,7 @@ export function table_getFilteredSelectedRowModel<
 ) {
   const rowModel = table_getCoreRowModel(table)
 
-  if (!Object.keys(_table_getState(table).rowSelection ?? {}).length) {
+  if (!Object.keys(table_getState(table).rowSelection ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -213,7 +213,7 @@ export function table_getGroupedSelectedRowModel<
 ) {
   const rowModel = table_getCoreRowModel(table)
 
-  if (!Object.keys(_table_getState(table).rowSelection ?? {}).length) {
+  if (!Object.keys(table_getState(table).rowSelection ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -238,7 +238,7 @@ export function table_getIsAllRowsSelected<
   },
 ) {
   const preGroupedFlatRows = table_getFilteredRowModel(table).flatRows
-  const rowSelection = _table_getState(table).rowSelection ?? {}
+  const rowSelection = table_getState(table).rowSelection ?? {}
 
   let isAllRowsSelected = Boolean(
     preGroupedFlatRows.length && Object.keys(rowSelection).length,
@@ -273,7 +273,7 @@ export function table_getIsAllPageRowsSelected<
   const paginationFlatRows = table_getPaginatedRowModel(table).flatRows.filter(
     (row) => row_getCanSelect(row, table),
   )
-  const rowSelection = _table_getState(table).rowSelection ?? {}
+  const rowSelection = table_getState(table).rowSelection ?? {}
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
 
@@ -301,7 +301,7 @@ export function table_getIsSomeRowsSelected<
   },
 ) {
   const totalSelected = Object.keys(
-    _table_getState(table).rowSelection ?? {},
+    table_getState(table).rowSelection ?? {},
   ).length
   return (
     totalSelected > 0 &&
@@ -435,7 +435,7 @@ export function row_getIsSelected<
     options: Partial<TableOptions_RowSelection<TFeatures, TData>>
   },
 ) {
-  const rowSelection = _table_getState(table).rowSelection ?? {}
+  const rowSelection = table_getState(table).rowSelection ?? {}
   return isRowSelected(row, rowSelection)
 }
 
@@ -454,7 +454,7 @@ export function row_getIsSomeSelected<
     options: Partial<TableOptions_RowSelection<TFeatures, TData>>
   },
 ) {
-  const rowSelection = _table_getState(table).rowSelection ?? {}
+  const rowSelection = table_getState(table).rowSelection ?? {}
   return isSubRowSelected(row, rowSelection, table) === 'some'
 }
 
@@ -473,7 +473,7 @@ export function row_getIsAllSubRowsSelected<
     options: Partial<TableOptions_RowSelection<TFeatures, TData>>
   },
 ) {
-  const rowSelection = _table_getState(table).rowSelection ?? {}
+  const rowSelection = table_getState(table).rowSelection ?? {}
   return isSubRowSelected(row, rowSelection, table) === 'all'
 }
 
@@ -636,7 +636,7 @@ export function selectRowsFn<
   },
   rowModel: RowModel<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
-  const rowSelection = _table_getState(table).rowSelection ?? {}
+  const rowSelection = table_getState(table).rowSelection ?? {}
 
   const newSelectedFlatRows: Array<Row<TFeatures, TData>> = []
   const newSelectedRowsById: Record<string, Row<TFeatures, TData>> = {}

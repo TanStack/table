@@ -1,6 +1,6 @@
 import {
-  _table_getInitialState,
-  _table_getState,
+  table_getInitialState,
+  table_getState,
 } from '../../core/table/Tables.utils'
 import {
   table_getCenterHeaderGroups,
@@ -40,7 +40,7 @@ export function column_getSize<
   table: Table<TFeatures, TData> & { options: TableOptions_ColumnSizing },
 ): number {
   const defaultSizes = getDefaultColumnSizingState()
-  const columnSize = _table_getState(table).columnSizing?.[column.id]
+  const columnSize = table_getState(table).columnSizing?.[column.id]
 
   return Math.min(
     Math.max(
@@ -148,7 +148,7 @@ export function table_resetColumnSizing<
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
-    defaultState ? {} : _table_getInitialState(table).columnSizing ?? {},
+    defaultState ? {} : (table_getInitialState(table).columnSizing ?? {}),
   )
 }
 

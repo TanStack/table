@@ -1,5 +1,5 @@
 import { assignAPIs, getMemoOptions, makeStateUpdater, memo } from '../../utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import {
   column_getIndex,
   column_getIsFirstColumn,
@@ -52,16 +52,14 @@ export const ColumnOrdering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(column, table, [
       {
         fn: (position) => column_getIndex(column, table, position),
         memoDeps: (position) => [
           position,
-          _table_getState(table).columnOrder,
-          _table_getState(table).columnPinning,
-          _table_getState(table).grouping,
+          table_getState(table).columnOrder,
+          table_getState(table).columnPinning,
+          table_getState(table).grouping,
         ],
       },
       {
@@ -77,8 +75,6 @@ export const ColumnOrdering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(table, table, [
       {
         fn: (updater) => table_setColumnOrder(table, updater),

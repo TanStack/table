@@ -1,5 +1,5 @@
 import { assignAPIs, getMemoOptions, memo } from '../../utils'
-import { _table_getState } from '../table/Tables.utils'
+import { table_getState } from '../table/Tables.utils'
 import { _createColumn } from './createColumn'
 import {
   column_getFlatColumns,
@@ -33,8 +33,8 @@ export const Columns: TableFeature = {
       {
         fn: () => column_getLeafColumns(column, table),
         memoDeps: () => [
-          _table_getState(table).columnOrder,
-          _table_getState(table).grouping,
+          table_getState(table).columnOrder,
+          table_getState(table).grouping,
           table.options.columns,
           table.options.groupedColumnMode,
         ],
@@ -65,8 +65,8 @@ export const Columns: TableFeature = {
       {
         fn: () => table_getAllLeafColumns(table),
         memoDeps: () => [
-          _table_getState(table).columnOrder,
-          _table_getState(table).grouping,
+          table_getState(table).columnOrder,
+          table_getState(table).grouping,
           table.options.columns,
           table.options.groupedColumnMode,
         ],

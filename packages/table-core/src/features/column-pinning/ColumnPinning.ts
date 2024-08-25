@@ -1,6 +1,5 @@
-import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
-import { assignAPIs, getMemoOptions, makeStateUpdater, memo } from '../../utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import { table_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import { table_getAllColumns } from '../../core/columns/Columns.utils'
 import { row_getAllCells } from '../../core/rows/Rows.utils'
@@ -108,24 +107,24 @@ export const ColumnPinning: TableFeature = {
         fn: () => row_getCenterVisibleCells(row, table),
         memoDeps: () => [
           row_getAllCells(row, table),
-          _table_getState(table).columnPinning,
-          _table_getState(table).columnVisibility,
+          table_getState(table).columnPinning,
+          table_getState(table).columnVisibility,
         ],
       },
       {
         fn: () => row_getLeftVisibleCells(row, table),
         memoDeps: () => [
           row_getAllCells(row, table),
-          _table_getState(table).columnPinning?.left,
-          _table_getState(table).columnVisibility,
+          table_getState(table).columnPinning?.left,
+          table_getState(table).columnVisibility,
         ],
       },
       {
         fn: () => row_getRightVisibleCells(row, table),
         memoDeps: () => [
           row_getAllCells(row, table),
-          _table_getState(table).columnPinning?.right,
-          _table_getState(table).columnVisibility,
+          table_getState(table).columnPinning?.right,
+          table_getState(table).columnVisibility,
         ],
       },
     ])
@@ -151,7 +150,7 @@ export const ColumnPinning: TableFeature = {
         memoDeps: () => [
           table_getAllColumns(table),
           table_getVisibleLeafColumns(table),
-          _table_getState(table).columnPinning?.left,
+          table_getState(table).columnPinning?.left,
         ],
       },
       {
@@ -159,7 +158,7 @@ export const ColumnPinning: TableFeature = {
         memoDeps: () => [
           table_getAllColumns(table),
           table_getVisibleLeafColumns(table),
-          _table_getState(table).columnPinning,
+          table_getState(table).columnPinning,
         ],
       },
       {
@@ -167,7 +166,7 @@ export const ColumnPinning: TableFeature = {
         memoDeps: () => [
           table_getAllColumns(table),
           table_getVisibleLeafColumns(table),
-          _table_getState(table).columnPinning?.right,
+          table_getState(table).columnPinning?.right,
         ],
       },
       // footer groups
@@ -214,21 +213,21 @@ export const ColumnPinning: TableFeature = {
         fn: () => table_getLeftLeafColumns(table),
         memoDeps: () => [
           table.options.columns,
-          _table_getState(table).columnPinning,
+          table_getState(table).columnPinning,
         ],
       },
       {
         fn: () => table_getRightLeafColumns(table),
         memoDeps: () => [
           table.options.columns,
-          _table_getState(table).columnPinning,
+          table_getState(table).columnPinning,
         ],
       },
       {
         fn: () => table_getCenterLeafColumns(table),
         memoDeps: () => [
           table.options.columns,
-          _table_getState(table).columnPinning,
+          table_getState(table).columnPinning,
         ],
       },
       // visible leaf columns
@@ -236,24 +235,24 @@ export const ColumnPinning: TableFeature = {
         fn: () => table_getLeftVisibleLeafColumns(table),
         memoDeps: () => [
           table.options.columns,
-          _table_getState(table).columnPinning,
-          _table_getState(table).columnVisibility,
+          table_getState(table).columnPinning,
+          table_getState(table).columnVisibility,
         ],
       },
       {
         fn: () => table_getCenterVisibleLeafColumns(table),
         memoDeps: () => [
           table.options.columns,
-          _table_getState(table).columnPinning,
-          _table_getState(table).columnVisibility,
+          table_getState(table).columnPinning,
+          table_getState(table).columnVisibility,
         ],
       },
       {
         fn: () => table_getRightVisibleLeafColumns(table),
         memoDeps: () => [
           table.options.columns,
-          _table_getState(table).columnPinning,
-          _table_getState(table).columnVisibility,
+          table_getState(table).columnPinning,
+          table_getState(table).columnVisibility,
         ],
       },
     ])

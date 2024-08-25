@@ -56,7 +56,7 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   Object.values(features).forEach((feature) => {
     initialState = feature._getInitialState?.(initialState) ?? initialState
   })
-  return initialState as TableState<TFeatures>
+  return structuredClone(initialState) as TableState<TFeatures>
 }
 
 export function _createTable<

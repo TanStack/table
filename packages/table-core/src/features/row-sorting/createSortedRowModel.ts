@@ -1,8 +1,13 @@
 import { getMemoOptions, memo } from '../../utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
-import { _table_getState } from '../../core/table/Tables.utils'
-import { column_getCanSort, column_getSortingFn } from './RowSorting.utils'
+import { table_getState } from '../../core/table/Tables.utils'
+import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
+import {
+  column_getCanSort,
+  column_getSortingFn,
+  table_getPreSortedRowModel,
+} from './RowSorting.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -16,13 +21,13 @@ export function createSortedRowModel<
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) =>
     memo(
-      () => [_table_getState(table).sorting, table.getPreSortedRowModel()],
+      () => [table_getState(table).sorting, table_getPreSortedRowModel(table)],
       (sorting, rowModel) => {
         if (!rowModel.rows.length || !sorting?.length) {
           return rowModel
         }
 
-        const sortingState = _table_getState(table).sorting
+        const sortingState = table_getState(table).sorting
 
         const sortedFlatRows: Array<Row<TFeatures, TData>> = []
 
@@ -123,7 +128,7 @@ export function createSortedRowModel<
         }
       },
       getMemoOptions(table.options, 'debugTable', 'getSortedRowModel', () =>
-        table.autoResetPageIndex(),
+        table_autoResetPageIndex(table),
       ),
     )
 }

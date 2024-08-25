@@ -1,5 +1,5 @@
-import { assignAPIs, getMemoOptions, makeStateUpdater, memo } from '../../utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import { table_getSortedRowModel } from '../row-sorting/RowSorting.utils'
 import {
@@ -74,8 +74,6 @@ export const RowSelection: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(row, table, [
       {
         fn: (value, opts) => row_toggleSelected(row, table, value, opts),
@@ -108,8 +106,6 @@ export const RowSelection: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(table, table, [
       {
         fn: (updater) => table_setRowSelection(table, updater),
@@ -129,21 +125,21 @@ export const RowSelection: TableFeature = {
       {
         fn: () => table_getSelectedRowModel(table),
         memoDeps: () => [
-          _table_getState(table).rowSelection,
+          table_getState(table).rowSelection,
           table.getCoreRowModel(),
         ],
       },
       {
         fn: () => table_getFilteredSelectedRowModel(table),
         memoDeps: () => [
-          _table_getState(table).rowSelection,
+          table_getState(table).rowSelection,
           table_getFilteredRowModel(table),
         ],
       },
       {
         fn: () => table_getGroupedSelectedRowModel(table),
         memoDeps: () => [
-          _table_getState(table).rowSelection,
+          table_getState(table).rowSelection,
           table_getSortedRowModel(table),
         ],
       },

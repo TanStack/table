@@ -1,6 +1,6 @@
 import { isDev, tableMemo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import {
   table_getFilteredRowModel,
   table_getPreFilteredRowModel,
@@ -25,8 +25,8 @@ export function createFacetedRowModel<
       fnName: 'createFacetedRowModel',
       memoDeps: () => [
         table_getPreFilteredRowModel(table),
-        _table_getState(table).columnFilters,
-        _table_getState(table).globalFilter,
+        table_getState(table).columnFilters,
+        table_getState(table).globalFilter,
         table_getFilteredRowModel(table),
       ],
       fn: (preRowModel, columnFilters, globalFilter) =>

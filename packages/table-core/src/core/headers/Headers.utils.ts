@@ -1,6 +1,6 @@
 import { table_getAllColumns } from '../columns/Columns.utils'
 import { table_getVisibleLeafColumns } from '../../features/column-visibility/ColumnVisibility.utils'
-import { _table_getState } from '../table/Tables.utils'
+import { table_getState } from '../table/Tables.utils'
 import {
   getDefaultColumnPinningState,
   table_getCenterHeaderGroups,
@@ -51,7 +51,7 @@ export function table_getHeaderGroups<
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
   const { left, right } =
-    _table_getState(table).columnPinning ?? getDefaultColumnPinningState()
+    table_getState(table).columnPinning ?? getDefaultColumnPinningState()
   const allColumns = table_getAllColumns(table)
   const leafColumns = table_getVisibleLeafColumns(table)
 

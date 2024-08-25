@@ -5,8 +5,8 @@ import {
 } from '../../core/rows/Rows.utils'
 import { row_getIsAllParentsExpanded } from '../row-expanding/RowExpanding.utils'
 import {
-  _table_getInitialState,
-  _table_getState,
+  table_getInitialState,
+  table_getState,
 } from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -66,7 +66,8 @@ export function table_resetRowPinning<
     table,
     defaultState
       ? getDefaultRowPinningState()
-      : _table_getInitialState(table).rowPinning ?? getDefaultRowPinningState(),
+      : (table_getInitialState(table).rowPinning ??
+          getDefaultRowPinningState()),
   )
 }
 
@@ -87,7 +88,7 @@ export function table_getIsSomeRowsPinned<
   },
   position?: RowPinningPosition,
 ): boolean {
-  const rowPinning = _table_getState(table).rowPinning
+  const rowPinning = table_getState(table).rowPinning
 
   if (!position) {
     return Boolean(rowPinning?.top.length || rowPinning?.bottom.length)
@@ -111,10 +112,10 @@ function table_getPinnedRows<
   position: 'top' | 'bottom',
 ): Array<Row<TFeatures, TData>> {
   const visibleRows = table.getRowModel().rows
-  const pinnedRowIds = _table_getState(table).rowPinning?.[position] ?? []
+  const pinnedRowIds = table_getState(table).rowPinning?.[position] ?? []
 
   const rows =
-    table.options.keepPinnedRows ?? true
+    (table.options.keepPinnedRows ?? true)
       ? // get all rows that are pinned even if they would not be otherwise visible
         // account for expanded parent rows, but not pagination or filtering
         pinnedRowIds.map((rowId) => {
@@ -177,7 +178,7 @@ export function table_getCenterRows<
   },
 ): Array<Row<TFeatures, TData>> {
   const { top, bottom } =
-    _table_getState(table).rowPinning ?? getDefaultRowPinningState()
+    table_getState(table).rowPinning ?? getDefaultRowPinningState()
   const allRows = table.getRowModel().rows
 
   const topAndBottom = new Set([...top, ...bottom])
@@ -224,7 +225,7 @@ export function row_getIsPinned<
   },
 ): RowPinningPosition {
   const { top, bottom } =
-    _table_getState(table).rowPinning ?? getDefaultRowPinningState()
+    table_getState(table).rowPinning ?? getDefaultRowPinningState()
 
   return top.includes(row.id)
     ? 'top'

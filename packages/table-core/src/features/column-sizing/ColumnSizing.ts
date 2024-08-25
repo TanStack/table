@@ -1,6 +1,6 @@
-import { assignAPIs, getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import {
   column_getAfter,
   column_getSize,
@@ -22,7 +22,6 @@ import type {
   ColumnSizingDefaultOptions,
   Column_ColumnSizing,
   Header_ColumnSizing,
-  TableState_ColumnSizing,
   Table_ColumnSizing,
 } from './ColumnSizing.types'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -41,7 +40,7 @@ import type { Column } from '../../types/Column'
 export const ColumnSizing: TableFeature = {
   _getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_ColumnSizing => {
+  ): TableState<TFeatures> => {
     return {
       columnSizing: {},
       ...state,
@@ -77,7 +76,7 @@ export const ColumnSizing: TableFeature = {
         memoDeps: (position) => [
           position,
           column_getVisibleLeafColumns(table, position),
-          _table_getState(table).columnSizing,
+          table_getState(table).columnSizing,
         ],
       },
       {
@@ -85,7 +84,7 @@ export const ColumnSizing: TableFeature = {
         memoDeps: (position) => [
           position,
           column_getVisibleLeafColumns(table, position),
-          _table_getState(table).columnSizing,
+          table_getState(table).columnSizing,
         ],
       },
       {

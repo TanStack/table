@@ -5,8 +5,8 @@ import {
 } from '../column-sizing/ColumnSizing.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import {
-  _table_getInitialState,
-  _table_getState,
+  table_getInitialState,
+  table_getState,
 } from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -61,7 +61,7 @@ export function column_getIsResizing<
     options: Partial<TableOptions_ColumnResizing>
   },
 ) {
-  return _table_getState(table).columnResizing?.isResizingColumn === column.id
+  return table_getState(table).columnResizing?.isResizingColumn === column.id
 }
 
 export function header_getResizeHandler<
@@ -112,7 +112,7 @@ export function header_getResizeHandler<
         return
       }
 
-      table_setcolumnResizing(table, (old) => {
+      table_setColumnResizing(table, (old) => {
         const deltaDirection =
           table.options.columnResizeDirection === 'rtl' ? -1 : 1
         const deltaOffset =
@@ -152,7 +152,7 @@ export function header_getResizeHandler<
     const onEnd = (clientXPos?: number) => {
       updateOffset('end', clientXPos)
 
-      table_setcolumnResizing(table, (old) => ({
+      table_setColumnResizing(table, (old) => ({
         ...old,
         isResizingColumn: false,
         startOffset: null,
@@ -229,7 +229,7 @@ export function header_getResizeHandler<
       )
     }
 
-    table_setcolumnResizing(table, (old) => ({
+    table_setColumnResizing(table, (old) => ({
       ...old,
       startOffset: clientX,
       startSize,
@@ -241,7 +241,7 @@ export function header_getResizeHandler<
   }
 }
 
-export function table_setcolumnResizing<
+export function table_setColumnResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -262,12 +262,12 @@ export function table_resetHeaderSizeInfo<
   },
   defaultState?: boolean,
 ) {
-  table_setcolumnResizing(
+  table_setColumnResizing(
     table,
     defaultState
       ? getDefaultColumnResizingState()
-      : _table_getInitialState(table).columnResizing ??
-          getDefaultColumnResizingState(),
+      : (table_getInitialState(table).columnResizing ??
+          getDefaultColumnResizingState()),
   )
 }
 

@@ -1,5 +1,5 @@
 import { assignAPIs, getMemoOptions, memo } from '../../utils'
-import { _table_getState } from '../table/Tables.utils'
+import { table_getState } from '../table/Tables.utils'
 import {
   table_getCenterHeaderGroups,
   table_getLeftHeaderGroups,
@@ -41,9 +41,9 @@ export const Headers: TableFeature = {
         fn: () => table_getHeaderGroups(table),
         memoDeps: () => [
           table.options.columns,
-          _table_getState(table).columnOrder,
-          _table_getState(table).grouping,
-          _table_getState(table).columnPinning,
+          table_getState(table).columnOrder,
+          table_getState(table).grouping,
+          table_getState(table).columnPinning,
           table.options.groupedColumnMode,
         ],
       },

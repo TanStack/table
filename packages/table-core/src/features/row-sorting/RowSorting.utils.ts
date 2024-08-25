@@ -4,8 +4,8 @@ import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.u
 import { row_getValue } from '../../core/rows/Rows.utils'
 import { table_getGroupedRowModel } from '../column-grouping/ColumnGrouping.utils'
 import {
-  _table_getInitialState,
-  _table_getState,
+  table_getInitialState,
+  table_getState,
 } from '../../core/table/Tables.utils'
 import type { BuiltInSortingFn } from '../../fns/sortingFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
@@ -55,7 +55,7 @@ export function table_resetSorting<
 ) {
   table_setSorting(
     table,
-    defaultState ? [] : _table_getInitialState(table).sorting ?? [],
+    defaultState ? [] : (table_getInitialState(table).sorting ?? []),
   )
 }
 
@@ -150,8 +150,8 @@ export function column_getSortingFn<
     ? column.columnDef.sortingFn
     : column.columnDef.sortingFn === 'auto'
       ? column_getAutoSortingFn(column, table)
-      : table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
-        sortingFns[column.columnDef.sortingFn as BuiltInSortingFn]
+      : (table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
+        sortingFns[column.columnDef.sortingFn as BuiltInSortingFn])
 }
 
 /**
@@ -323,7 +323,7 @@ export function column_getNextSortingOrder<
   if (
     isSorted !== firstSortDirection &&
     (table.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
-    (multi ? table.options.enableMultiRemove ?? true : true) // If multi, don't allow if enableMultiRemove))
+    (multi ? (table.options.enableMultiRemove ?? true) : true) // If multi, don't allow if enableMultiRemove))
   ) {
     return false
   }
@@ -398,7 +398,7 @@ export function column_getIsSorted<
     options: Partial<TableOptions_RowSorting<TFeatures, TData>>
   },
 ): false | SortDirection {
-  const columnSort = _table_getState(table).sorting?.find(
+  const columnSort = table_getState(table).sorting?.find(
     (d) => d.id === column.id,
   )
   return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
@@ -423,7 +423,7 @@ export function column_getSortIndex<
   },
 ): number {
   return (
-    _table_getState(table).sorting?.findIndex((d) => d.id === column.id) ?? -1
+    table_getState(table).sorting?.findIndex((d) => d.id === column.id) ?? -1
   )
 }
 

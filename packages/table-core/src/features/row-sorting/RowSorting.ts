@@ -77,8 +77,6 @@ export const RowSorting: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowSorting<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(column, table, [
       {
         fn: () => column_getAutoSortingFn(column, table),
@@ -123,8 +121,6 @@ export const RowSorting: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowSorting<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(table, table, [
       {
         fn: (updater) => table_setSorting(table, updater),

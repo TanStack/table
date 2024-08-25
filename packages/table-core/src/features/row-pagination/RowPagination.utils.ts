@@ -1,8 +1,8 @@
 import { functionalUpdate } from '../../utils'
 import { table_getExpandedRowModel } from '../row-expanding/RowExpanding.utils'
 import {
-  _table_getInitialState,
-  _table_getState,
+  table_getInitialState,
+  table_getState,
 } from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -107,7 +107,8 @@ export function table_resetPagination<
     table,
     defaultState
       ? getDefaultPaginationState()
-      : _table_getInitialState(table).pagination ?? getDefaultPaginationState(),
+      : (table_getInitialState(table).pagination ??
+          getDefaultPaginationState()),
   )
 }
 
@@ -161,7 +162,8 @@ export function table_resetPageIndex<
     table,
     defaultState
       ? defaultPageIndex
-      : _table_getInitialState(table).pagination?.pageIndex ?? defaultPageIndex,
+      : (table_getInitialState(table).pagination?.pageIndex ??
+          defaultPageIndex),
   )
 }
 
@@ -183,7 +185,7 @@ export function table_resetPageSize<
     table,
     defaultState
       ? defaultPageSize
-      : _table_getInitialState(table).pagination?.pageSize ?? defaultPageSize,
+      : (table_getInitialState(table).pagination?.pageSize ?? defaultPageSize),
   )
 }
 
@@ -244,7 +246,7 @@ export function table_getCanPreviousPage<
     options: Partial<TableOptions_RowPagination>
   },
 ) {
-  return (_table_getState(table).pagination?.pageIndex ?? 0) > 0
+  return (table_getState(table).pagination?.pageIndex ?? 0) > 0
 }
 
 /**
@@ -261,7 +263,7 @@ export function table_getCanNextPage<
   },
 ) {
   const pageIndex =
-    _table_getState(table).pagination?.pageIndex ?? defaultPageIndex
+    table_getState(table).pagination?.pageIndex ?? defaultPageIndex
 
   const pageCount = table_getPageCount(table)
 
@@ -399,7 +401,7 @@ export function table_getPageCount<
     table.options.pageCount ??
     Math.ceil(
       table_getRowCount(table) /
-        (_table_getState(table).pagination?.pageSize ?? defaultPageSize),
+        (table_getState(table).pagination?.pageSize ?? defaultPageSize),
     )
   )
 }

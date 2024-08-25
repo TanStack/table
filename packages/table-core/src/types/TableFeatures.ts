@@ -54,11 +54,11 @@ export interface TableFeature {
 }
 
 export interface CoreTableFeatures {
-  Tables: TableFeature
-  Rows: TableFeature
-  Headers: TableFeature
-  Columns: TableFeature
-  Cells: TableFeature
+  Tables?: TableFeature
+  Rows?: TableFeature
+  Headers?: TableFeature
+  Columns?: TableFeature
+  Cells?: TableFeature
 }
 
 export interface TableFeatures extends CoreTableFeatures {

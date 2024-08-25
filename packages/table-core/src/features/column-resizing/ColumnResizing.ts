@@ -5,7 +5,7 @@ import {
   getDefaultColumnResizingState,
   header_getResizeHandler,
   table_resetHeaderSizeInfo,
-  table_setcolumnResizing,
+  table_setColumnResizing,
 } from './ColumnResizing.utils'
 import type { TableState } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -17,7 +17,6 @@ import type {
   ColumnResizingDefaultOptions,
   Column_ColumnResizing,
   Header_ColumnResizing,
-  TableState_ColumnResizing,
   Table_ColumnResizing,
 } from './ColumnResizing.types'
 
@@ -31,7 +30,7 @@ import type {
 export const ColumnResizing: TableFeature = {
   _getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_ColumnResizing => {
+  ): TableState<TFeatures> => {
     return {
       columnResizing: getDefaultColumnResizingState(),
       ...state,
@@ -56,7 +55,6 @@ export const ColumnResizing: TableFeature = {
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnResizing>,
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-
     assignAPIs(column, table, [
       {
         fn: () => column_getCanResize(column, table),
@@ -75,7 +73,6 @@ export const ColumnResizing: TableFeature = {
     header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnResizing>,
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-
     assignAPIs(header, table, [
       {
         fn: (_contextDocument) =>
@@ -87,11 +84,9 @@ export const ColumnResizing: TableFeature = {
   _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-
-
     assignAPIs(table, table, [
       {
-        fn: (updater) => table_setcolumnResizing(table, updater),
+        fn: (updater) => table_setColumnResizing(table, updater),
       },
       {
         fn: (defaultState) => table_resetHeaderSizeInfo(table, defaultState),

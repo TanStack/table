@@ -156,6 +156,7 @@ export function table_getRow<
   rowId: string,
   searchAll?: boolean,
 ): Row<TFeatures, TData> {
+  // TODO - simplify this across different row models
   let row = (
     searchAll ? table_getPrePaginationRowModel(table) : table_getRowModel(table)
   ).rowsById[rowId]

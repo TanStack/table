@@ -1,5 +1,5 @@
-import { _memo, assignAPIs, makeStateUpdater } from '../../utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import {
   getDefaultRowPinningState,
   row_getCanPin,
@@ -65,7 +65,7 @@ export const RowPinning: TableFeature = {
         fn: () => row_getPinnedIndex(row, table),
         memoDeps: () => [
           table.getRowModel().rows,
-          _table_getState(table).rowPinning,
+          table_getState(table).rowPinning,
         ],
       },
       {
@@ -93,21 +93,21 @@ export const RowPinning: TableFeature = {
         fn: () => table_getTopRows(table),
         memoDeps: () => [
           table.getRowModel().rows,
-          _table_getState(table).rowPinning?.top,
+          table_getState(table).rowPinning?.top,
         ],
       },
       {
         fn: () => table_getBottomRows(table),
         memoDeps: () => [
           table.getRowModel().rows,
-          _table_getState(table).rowPinning?.bottom,
+          table_getState(table).rowPinning?.bottom,
         ],
       },
       {
         fn: () => table_getCenterRows(table),
         memoDeps: () => [
           table.getRowModel().rows,
-          _table_getState(table).rowPinning,
+          table_getState(table).rowPinning,
         ],
       },
     ])

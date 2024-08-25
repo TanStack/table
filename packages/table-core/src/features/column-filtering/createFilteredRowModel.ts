@@ -4,7 +4,7 @@ import {
   column_getCanGlobalFilter,
   table_getGlobalFilterFn,
 } from '../global-filtering/GlobalFiltering.utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
 import { filterRows } from './filterRowsUtils'
 import {
@@ -29,8 +29,8 @@ export function createFilteredRowModel<
     memo(
       () => [
         table_getPreFilteredRowModel(table),
-        _table_getState(table).columnFilters,
-        _table_getState(table).globalFilter,
+        table_getState(table).columnFilters,
+        table_getState(table).globalFilter,
       ],
       (rowModel, columnFilters, globalFilter) => {
         if (

@@ -1,6 +1,6 @@
 import { filterFns } from '../../fns/filterFns'
 import { isFunction } from '../../utils'
-import { _table_getInitialState } from '../../core/table/Tables.utils'
+import { table_getInitialState } from '../../core/table/Tables.utils'
 import type {
   ColumnDef_GlobalFiltering,
   TableOptions_GlobalFiltering,
@@ -74,8 +74,8 @@ export function table_getGlobalFilterFn<
     ? globalFilterFn
     : globalFilterFn === 'auto'
       ? table_getGlobalAutoFilterFn()
-      : table.options.filterFns?.[globalFilterFn as string] ??
-        filterFns[globalFilterFn as BuiltInFilterFn]
+      : (table.options.filterFns?.[globalFilterFn as string] ??
+        filterFns[globalFilterFn as BuiltInFilterFn])
 }
 
 /**
@@ -114,6 +114,6 @@ export function table_resetGlobalFilter<
 ) {
   table_setGlobalFilter(
     table,
-    defaultState ? undefined : _table_getInitialState(table).globalFilter,
+    defaultState ? undefined : table_getInitialState(table).globalFilter,
   )
 }

@@ -1,4 +1,4 @@
-import { assignAPIs, getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
 import {
   getDefaultPaginationState,
   table_autoResetPageIndex,
@@ -37,7 +37,7 @@ import type { Table } from '../../types/Table'
  */
 export const RowPagination: TableFeature = {
   _getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures> & Partial<TableState_RowPagination>,
+    state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_RowPagination => {
     return {
       ...state,
@@ -61,8 +61,6 @@ export const RowPagination: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_RowPagination<TFeatures, TData>>,
   ): void => {
-
-
     assignAPIs(table, table, [
       {
         fn: () => table_autoResetPageIndex(table),

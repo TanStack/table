@@ -1,3 +1,4 @@
+import { assignAPIs } from '../../utils'
 import {
   table_getGlobalFacetedMinMaxValues,
   table_getGlobalFacetedRowModel,
@@ -7,7 +8,6 @@ import type { Table_GlobalFaceting } from './GlobalFaceting.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
-import { assignAPIs } from '../../utils'
 
 /**
  * The Global Faceting feature adds global faceting APIs to the table object.

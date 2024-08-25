@@ -1,7 +1,7 @@
 import { _createRow } from '../../core/rows/createRow'
 import { flattenBy, getMemoOptions, memo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
-import { _table_getState } from '../../core/table/Tables.utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import { table_autoResetExpanded } from '../row-expanding/RowExpanding.utils'
 import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
 import {
@@ -26,7 +26,7 @@ export function createGroupedRowModel<
   return (table) =>
     memo(
       () => [
-        _table_getState(table).grouping,
+        table_getState(table).grouping,
         table_getPreGroupedRowModel(table),
       ],
       (grouping, rowModel) => {
