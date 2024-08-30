@@ -107,8 +107,7 @@ export function table_resetPagination<
     table,
     defaultState
       ? getDefaultPaginationState()
-      : (table_getInitialState(table).pagination ??
-          getDefaultPaginationState()),
+      : table_getInitialState(table).pagination ?? getDefaultPaginationState(),
   )
 }
 
@@ -162,8 +161,7 @@ export function table_resetPageIndex<
     table,
     defaultState
       ? defaultPageIndex
-      : (table_getInitialState(table).pagination?.pageIndex ??
-          defaultPageIndex),
+      : table_getInitialState(table).pagination?.pageIndex ?? defaultPageIndex,
   )
 }
 
@@ -185,7 +183,7 @@ export function table_resetPageSize<
     table,
     defaultState
       ? defaultPageSize
-      : (table_getInitialState(table).pagination?.pageSize ?? defaultPageSize),
+      : table_getInitialState(table).pagination?.pageSize ?? defaultPageSize,
   )
 }
 

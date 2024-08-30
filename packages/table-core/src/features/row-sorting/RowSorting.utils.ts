@@ -55,7 +55,7 @@ export function table_resetSorting<
 ) {
   table_setSorting(
     table,
-    defaultState ? [] : (table_getInitialState(table).sorting ?? []),
+    defaultState ? [] : table_getInitialState(table).sorting ?? [],
   )
 }
 
@@ -150,8 +150,8 @@ export function column_getSortingFn<
     ? column.columnDef.sortingFn
     : column.columnDef.sortingFn === 'auto'
       ? column_getAutoSortingFn(column, table)
-      : (table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
-        sortingFns[column.columnDef.sortingFn as BuiltInSortingFn])
+      : table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
+        sortingFns[column.columnDef.sortingFn as BuiltInSortingFn]
 }
 
 /**
@@ -323,7 +323,7 @@ export function column_getNextSortingOrder<
   if (
     isSorted !== firstSortDirection &&
     (table.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
-    (multi ? (table.options.enableMultiRemove ?? true) : true) // If multi, don't allow if enableMultiRemove))
+    (multi ? table.options.enableMultiRemove ?? true : true) // If multi, don't allow if enableMultiRemove))
   ) {
     return false
   }

@@ -197,7 +197,7 @@ export function table_resetColumnVisibility<
 ) {
   table_setColumnVisibility(
     table,
-    defaultState ? {} : (table_getInitialState(table).columnVisibility ?? {}),
+    defaultState ? {} : table_getInitialState(table).columnVisibility ?? {},
   )
 }
 

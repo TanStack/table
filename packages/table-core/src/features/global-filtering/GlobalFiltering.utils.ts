@@ -74,8 +74,8 @@ export function table_getGlobalFilterFn<
     ? globalFilterFn
     : globalFilterFn === 'auto'
       ? table_getGlobalAutoFilterFn()
-      : (table.options.filterFns?.[globalFilterFn as string] ??
-        filterFns[globalFilterFn as BuiltInFilterFn])
+      : table.options.filterFns?.[globalFilterFn as string] ??
+        filterFns[globalFilterFn as BuiltInFilterFn]
 }
 
 /**

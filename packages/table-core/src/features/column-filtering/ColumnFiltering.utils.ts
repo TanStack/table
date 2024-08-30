@@ -66,8 +66,8 @@ export function column_getFilterFn<
     ? column.columnDef.filterFn
     : column.columnDef.filterFn === 'auto'
       ? column_getAutoFilterFn(column, table)
-      : (table.options.filterFns?.[column.columnDef.filterFn as string] ??
-        filterFns[column.columnDef.filterFn as BuiltInFilterFn])
+      : table.options.filterFns?.[column.columnDef.filterFn as string] ??
+        filterFns[column.columnDef.filterFn as BuiltInFilterFn]
 }
 
 export function column_getCanFilter<
@@ -225,7 +225,7 @@ export function table_resetColumnFilters<
 ) {
   table_setColumnFilters(
     table,
-    defaultState ? [] : (table.initialState.columnFilters ?? []),
+    defaultState ? [] : table.initialState.columnFilters ?? [],
   )
 }
 

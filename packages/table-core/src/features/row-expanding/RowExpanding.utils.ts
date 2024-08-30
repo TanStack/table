@@ -109,7 +109,7 @@ export function table_resetExpanded<
 ) {
   table_setExpanded(
     table,
-    defaultState ? {} : (table_getInitialState(table).expanded ?? {}),
+    defaultState ? {} : table_getInitialState(table).expanded ?? {},
   )
 }
 

@@ -66,8 +66,7 @@ export function table_resetRowPinning<
     table,
     defaultState
       ? getDefaultRowPinningState()
-      : (table_getInitialState(table).rowPinning ??
-          getDefaultRowPinningState()),
+      : table_getInitialState(table).rowPinning ?? getDefaultRowPinningState(),
   )
 }
 
@@ -115,7 +114,7 @@ function table_getPinnedRows<
   const pinnedRowIds = table_getState(table).rowPinning?.[position] ?? []
 
   const rows =
-    (table.options.keepPinnedRows ?? true)
+    table.options.keepPinnedRows ?? true
       ? // get all rows that are pinned even if they would not be otherwise visible
         // account for expanded parent rows, but not pagination or filtering
         pinnedRowIds.map((rowId) => {

@@ -11,7 +11,7 @@ const includesString: FilterFn<any, any> = <
   columnId: string,
   filterValue: string,
 ) => {
-  const search = filterValue.toLowerCase()
+  const search = filterValue.toString().toLowerCase()
   return Boolean(
     row
       .getValue<string | null>(columnId)

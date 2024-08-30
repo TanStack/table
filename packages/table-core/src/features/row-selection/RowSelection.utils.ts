@@ -53,7 +53,7 @@ export function table_resetRowSelection<
 ) {
   table_setRowSelection(
     table,
-    defaultState ? {} : (table_getInitialState(table).rowSelection ?? {}),
+    defaultState ? {} : table_getInitialState(table).rowSelection ?? {},
   )
 }
 
