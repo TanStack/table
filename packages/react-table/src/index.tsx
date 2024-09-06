@@ -69,7 +69,7 @@ export function useReactTable<TData extends RowData>(
   const tableRef = React.useRef(createTable<TData>(resolvedOptions))
 
   // By default, manage table state here using the table's initial state
-  const [state, setState] = React.useState(() => tableRef.current?.initialState)
+  const [state, setState] = React.useState(() => tableRef.current.initialState)
 
   // Compose the default state above with any user state. This will allow the user
   // to only control a subset of the state if desired.
