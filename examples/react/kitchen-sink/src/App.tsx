@@ -217,6 +217,7 @@ export const App = () => {
         setPageIndex={table.setPageIndex}
         setPageSize={table.setPageSize}
         totalRows={table.getPrePaginationRowModel().rows.length}
+        getPageCount={table.getPageCount}
       />
       <div className="p-2" />
       <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
