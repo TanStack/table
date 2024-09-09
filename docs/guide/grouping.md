@@ -112,7 +112,7 @@ const table = useReactTable({
 In the above example, myCustomAggregation is a custom aggregation function that takes the column ID, the leaf rows, and the child rows, and returns the aggregated value. You can then use this aggregation function in a column's aggregationFn option:
 
 ```tsx
-const column = columnHelper.data('key', {
+const column = columnHelper.accessor('key', {
   aggregationFn: 'myCustomAggregation',
 })
 ```
@@ -137,9 +137,9 @@ const [grouping, setGrouping] = useState<string[]>([])
 
 const table = useReactTable({
   // other options...
-  getState: () => ({
+  state: {
     grouping: grouping,
-  }),
+  },
   onGroupingChange: setGrouping
 })
 ```
