@@ -30,7 +30,7 @@ Expanded data can either contain table rows or any other data you want to displa
 
 ### Table rows as expanded data
 
-Expanded rows are essentially child rows that inherit the same column structure as their parent rows. If your data object already includes these expanded rows data, you can utilize the `getSubRows` function to specify these child rows. However, if your data object does not contain the expanded rows data, they can be treated as custom expanded data, which will be discussed in a subsequent section.
+Expanded rows are essentially child rows that inherit the same column structure as their parent rows. If your data object already includes these expanded rows data, you can utilize the `getSubRows` function to specify these child rows. However, if your data object does not contain the expanded rows data, they can be treated as custom expanded data, which is discussed in next section.
 
 For example, if you have a data object like this:
 
