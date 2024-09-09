@@ -24,22 +24,20 @@ In order to use any of the global faceting features, you must include the approp
 //only import the row models you need
 import {
   getCoreRowModel,
-  getGlobalFacetedRowModel,
-  getGlobalFacetedMinMaxValues, //depends on getGlobalFacetedRowModel
-  getGlobalFacetedUniqueValues, //depends on getGlobalFacetedRowModel
+  getFacetedRowModel,
+  getFacetedMinMaxValues, //depends on getFacetedRowModel
+  getFacetedUniqueValues, //depends on getFacetedRowModel
 } from '@tanstack/react-table'
 //...
 const table = useReactTable({
   // other options...
   getCoreRowModel: getCoreRowModel(),
-  getGlobalFacetedRowModel: getGlobalFacetedRowModel(), //if you need a list of values for a column (other faceted row models depend on this one)
-  getGlobalFacetedMinMaxValues: getGlobalFacetedMinMaxValues(), //if you need min/max values
-  getGlobalFacetedUniqueValues: getGlobalFacetedUniqueValues(), //if you need a list of unique values
+  getFacetedRowModel: getFacetedRowModel(), //Faceting model for client-side faceting (other faceting methods depend on this model)
+  getFacetedMinMaxValues: getFacetedMinMaxValues(), //if you need min/max values
+  getFacetedUniqueValues: getFacetedUniqueValues(), //if you need a list of unique values
   //...
 })
 ```
-
-First, you must include the `getGlobalFacetedRowModel` row model. This row model will generate a list of values for all columns. If you need a list of unique values, include the `getGlobalFacetedUniqueValues` row model. If you need a tuple of minimum and maximum values, include the `getGlobalFacetedMinMaxValues` row model.
 
 ### Use Global Faceted Row Models
 
