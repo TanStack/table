@@ -61,7 +61,7 @@ const table = useReactTable({
 
 ### Custom data as expanded data
 
-In some cases, you may wish to show extra details or information, which may or may not be part of your table data object, as expanded data for rows. This can be achieved by using the getRowCanExpand option in the table instance and manually incorporating your expanded data into your table's UI.
+In some cases, you may wish to show extra details or information, which may or may not be part of your table data object, as expanded data for rows. This can be achieved by using the `getRowCanExpand` option in the table instance and manually incorporating your expanded data into your table's UI.
 
 ```ts
 //...
@@ -120,11 +120,11 @@ The ExpandedState type is defined as follows:
 type ExpandedState = true | Record<string, boolean>
 ```
 
-If the ExpandedState is true, it means all rows are expanded. If it's a record, only the rows with IDs present as keys in the record and have their value set to true are expanded.  For example, if the expanded state is { row1: true, row2: false }, it means the row with ID row1 is expanded and the row with ID row2 is not expanded.  This state is used by the table to determine which rows are expanded and should display their subRows, if any.
+If the ExpandedState is true, it means all rows are expanded. If it's a record, only the rows with IDs present as keys in the record and have their value set to true are expanded.  For example, if the expanded state is { row1: true, row2: false }, it means the row with ID row1 is expanded and the row with ID row2 is not expanded. This state is used by the table to determine which rows are expanded and should display their subRows, if any.
 
 ### UI toggling handler for expanded rows
 
-TanStack table will not add a toggling handler UI for expanded data to your table. You should manually add it manually within each row's ui to allow users to expand and collapse the row. For example, you can add a button ui within the columns definition.
+TanStack table will not add a toggling handler UI for expanded data to your table. You should manually add it within each row's UI to allow users to expand and collapse the row. For example, you can add a button UI within the columns definition.
 
 ```ts
 const columns = [
