@@ -74,7 +74,7 @@ const table = useReactTable({
 When rows are grouped, you can aggregate the data in the grouped rows by columns using the aggregationFn option. This is a string that is the ID of the aggregation function. You can define the aggregation functions using the aggregationFns option.
 
 ```tsx
-const column = columnHelper.data('key', {
+const column = columnHelper.accessor('key', {
   aggregationFn: 'sum',
 })
 ```
