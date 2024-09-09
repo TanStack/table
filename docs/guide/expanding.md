@@ -17,7 +17,7 @@ Want to skip to the implementation? Check out these examples:
 
 Expanding is a feature that allows you to show and hide additional rows of data related to a specific row. This can be useful in cases where you have hierarchical data and you want to allow users to drill down into the data from a higher level.
 
-To use the expanding feature, you need to define the getExpandedRowModel function in your table options. This function is responsible for returning the expanded row model. If this function is not provided, the table will not expand rows.
+To use the expanding feature, you need to define the getExpandedRowModel function in your table options. This function is responsible for returning the expanded row model.
 
 ```ts
 const table = useReactTable({
@@ -28,9 +28,11 @@ const table = useReactTable({
 
 Expanded data can either contain table rows or any other data you want to display. We will discuss how to handle both cases in this guide.
 
-### Table rows expanded data
+### Table rows as expanded data
 
-Expanded rows data will usually come within your table data object. for example, your data object could look like this:
+Expanded rows are essentially child rows that inherit the same column structure as their parent rows. If your data object already includes these expanded rows data, you can utilize the `getSubRows` function to specify these child rows. However, if your data object does not contain the expanded rows data, they can be treated as custom expanded data, which will be discussed in a subsequent section.
+
+For example, if you have a data object like this:
 
 ```ts
 type Person = {
@@ -46,7 +48,7 @@ const data: Person =  [
 ]
 ```
 
-Then you should use the getSubRows function to return the children array in each row as expanded rows.
+Then you can use the getSubRows function to return the children array in each row as expanded rows.
 
 ```ts
 const table = useReactTable({
@@ -59,7 +61,7 @@ const table = useReactTable({
 
 ### Custom data as expanded data
 
-If your expanded data is not part of your table data object. You do not need to use the getSubRows function. Instead, you should use the getRowCanExpand option in the table instance and add your expanded data within your table UI.
+In some cases, you may wish to show extra details or information, which may or may not be part of your table data object, as expanded data for rows. This can be achieved by using the getRowCanExpand option in the table instance and manually incorporating your expanded data into your table's UI.
 
 ```ts
 //...
@@ -85,7 +87,7 @@ const table = useReactTable({
       </tr>
       {row.getIsExpanded() && (
         <tr>
-          <td colSpan={row.getAllCells().length}> // The number of columns you wish to span
+          <td colSpan={row.getAllCells().length}> // The number of columns you wish to span for the expanded data if it is not a row that shares the same columns as the parent row
             // Your custom Expanded data goes here
           </td>
         </tr>
@@ -98,7 +100,7 @@ const table = useReactTable({
 
 ### Expanded rows state
 
-You might want to access and manage the expanded state of the rows in your table if expanded data is not part of your table data object or if you are doing server-side expansion. You can use the expanded state and onExpandedChange option to manage the expanded state on your own.
+If you need to control the expanded state of the rows in your table, you can do so by using the expanded state and the `onExpandedChange` option. This allows you to manage the expanded state according to your requirements.
 
 ```ts
 const [expanded, setExpanded] = useState<ExpandedState>({})
