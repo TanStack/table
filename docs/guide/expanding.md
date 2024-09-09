@@ -107,9 +107,9 @@ const [expanded, setExpanded] = useState<ExpandedState>({})
 
 const table = useReactTable({
   // other options...
-  getState: () => ({
+  state: {
     expanded: expanded,
-  }),
+  },
   onExpandedChange: setExpanded
 })
 ```
