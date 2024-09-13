@@ -118,6 +118,22 @@ interface GlobalFilter {
 }
 ```
 
+### Adding global filter input to UI
+
+TanStack table will not add a global filter input UI to your table. You should manually add it to your UI to allow users to filter the table. For example, you can add an input UI above the table to allow users to enter a search term.
+
+```jsx
+return (
+  <div>
+    <input
+      value=""
+      onChange={e => table.setGlobalFilter(String(e.target.value))}
+      placeholder="Search..."
+    />
+  </div>
+)
+```
+
 ### Custom Global Filter Function
 
 If you want to use a custom global filter function, you can define the function and pass it to the globalFilterFn option.
