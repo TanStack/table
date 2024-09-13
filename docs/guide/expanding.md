@@ -129,16 +129,16 @@ TanStack table will not add a toggling handler UI for expanded data to your tabl
 ```ts
 const columns = [
   {
-    Header: 'Name',
-    accessor: 'name',
+    accessorKey: 'name',
+    header: 'Name',
   },
   {
-    Header: 'Age',
-    accessor: 'age',
+    accessorKey: 'age',
+    header: 'Age',
   },
   {
-    Header: 'Children',
-    Cell: ({ row }) => {
+    header: 'Children',
+    cell: ({ row }) => {
       return row.getCanExpand() ?
         <button
           {...{
@@ -149,7 +149,6 @@ const columns = [
         {row.getIsExpanded() ? '👇' : '👉'}
         </button>
        : '';
-      </div>
     },
   },
 ]
