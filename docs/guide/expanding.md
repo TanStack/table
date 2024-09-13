@@ -156,7 +156,7 @@ const columns = [
 
 ### Filtering Expanded Rows
 
-By default, the global and column filters will search through the parent rows. If you want to search through the expanded rows as well, you can use the `filterFromLeafRows` and `maxLeafRowFilterDepth` options.
+By default, the filtering process starts from the parent rows and moves downwards. This means if a parent row is excluded by the filter, all its child rows will also be excluded. However, you can change this behavior by using the `filterFromLeafRows` option. When this option is enabled, the filtering process starts from the leaf (child) rows and moves upwards. This ensures that a parent row will be included in the filtered results as long as at least one of its child or grandchild rows meets the filter criteria. Additionally, you can control how deep into the child hierarchy the filter process goes by using the `maxLeafRowFilterDepth` option. This option allows you to specify the maximum depth of child rows that the filter should consider.
 
 ```ts
 //...
@@ -170,8 +170,6 @@ const table = useReactTable({
   maxLeafRowFilterDepth: 1, // limit the depth of the expanded rows that are searched
 })
 ```
-
-The `filterFromLeafRows` option will allow the global and column filters to search through the expanded rows. The `maxLeafRowFilterDepth` option will limit the depth of the expanded rows that are searched. In this example, the global and column filters will search through the parent rows and the first level of expanded rows.
 
 ### Paginating Expanded Rows
 
