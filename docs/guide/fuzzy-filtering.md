@@ -20,20 +20,25 @@ You can implement a client side fuzzy filtering by defining a custom filter func
 
 Fuzzy filtering is mostly used with global filtering, but you can also apply it to individual columns. We will discuss how to implement fuzzy filtering for both cases.
 
+> **Note:** You will need to install the `@tanstack/match-sorter-utils` library to use fuzzy filtering.
+> TanStack Match Sorter Utils is a fork of [match-sorter](https://github.com/kentcdodds/match-sorter) by Kent C. Dodds. It was forked in order to work better with TanStack Table's row by row filtering approach.
+
+Using the match-sorter libraries is optional, but the TanStack Match Sorter Utils library provides a great way to both fuzzy filter and sort by the rank information it returns, so that rows can be sorted by their closest matches to the search query.
+
 ### Defining a Custom Fuzzy Filter Function
 
 Here's an example of a custom fuzzy filter function:
 
 ```typescript
-import {rankItem} from '@tanstack/match-sorter-utils';
-import {FilterFn} from '@tanstack/table';
+import { rankItem } from '@tanstack/match-sorter-utils';
+import { FilterFn } from '@tanstack/table';
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
 
   // Store the itemRank info
-  addMeta(itemRank)
+  addMeta({ itemRank })
 
   // Return if the item should be filtered in/out
   return itemRank.passed
@@ -47,9 +52,9 @@ In this function, we're using the rankItem function from the @tanstack/match-sor
 To use fuzzy filtering with global filtering, you can specify the fuzzy filter function in the globalFilterFn option of the table instance:
 
 ```typescript
-const table = useReactTable({// or your framework's equivalent function
-    data,
+const table = useReactTable({ // or your framework's equivalent function
     columns,
+    data,
     filterFns: {
       fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
     },
@@ -84,8 +89,8 @@ In this example, we're applying the fuzzy filter to a column that combines the f
 When using fuzzy filtering with column filtering, you might also want to sort the data based on the ranking information. You can do this by defining a custom sorting function:
 
 ```typescript
-import {compareItems} from '@tanstack/match-sorter-utils';
-import {sortingFns} from '@tanstack/table';
+import { compareItems } from '@tanstack/match-sorter-utils'
+import { sortingFns } from '@tanstack/table'
 
 const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
   let dir = 0

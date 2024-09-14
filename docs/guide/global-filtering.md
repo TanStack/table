@@ -138,6 +138,8 @@ return (
 
 If you want to use a custom global filter function, you can define the function and pass it to the globalFilterFn option.
 
+> **Note:** It is often a popular idea to use fuzzy filtering functions for global filtering. This is discussed in the [Fuzzy Filtering Guide](./fuzzy-filtering.md).
+
 ```jsx
 const customFilterFn = (rows, columnId, filterValue) => {
   // custom filter logic
@@ -153,19 +155,28 @@ const table = useReactTable({
 
 If you want to set an initial global filter state when the table is initialized, you can pass the global filter state as part of the table initialState option.
 
+However, you can also just specify the initial global filter state in the state.globalFilter option.
+
 ```jsx
+const [globalFilter, setGlobalFilter] = useState("search term") //recommended to initialize globalFilter state here
+
 const table = useReactTable({
   // other options...
   initialState: {
-    globalFilter: 'search term', // table will be filtered by 'search term' when initialized
+    globalFilter: 'search term', // if not managing globalFilter state, set initial state here
+  }
+  state: {
+    globalFilter, // pass our managed globalFilter state to the table
   }
 })
 ```
+
 > NOTE: Do not use both initialState.globalFilter and state.globalFilter at the same time, as the initialized state in the state.globalFilter will override the initialState.globalFilter.
 
 ### Disable Global Filtering
 
 By default, global filtering is enabled for all columns. You can disable the global filtering for all columns by using the enableGlobalFilter table option. You can also turn off both column and global filtering by setting the enableFilters table option to false.
+
 Disabling global filtering will cause the column.getCanGlobalFilter API to return false for that column.
 
 ```jsx

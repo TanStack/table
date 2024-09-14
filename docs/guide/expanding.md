@@ -8,6 +8,7 @@ Want to skip to the implementation? Check out these examples:
 
 - [expanding](../../framework/react/examples/expanding)
 - [grouping](../../framework/react/examples/grouping)
+- [sub-components](../../framework/react/examples/sub-components)
 
 ## API
 
@@ -15,9 +16,18 @@ Want to skip to the implementation? Check out these examples:
 
 ## Expanding Feature Guide
 
-Expanding is a feature that allows you to show and hide additional rows of data related to a specific row. This can be useful in cases where you have hierarchical data and you want to allow users to drill down into the data from a higher level.
+Expanding is a feature that allows you to show and hide additional rows of data related to a specific row. This can be useful in cases where you have hierarchical data and you want to allow users to drill down into the data from a higher level. Or it can be useful for showing additional information related to a row.
 
-To use the expanding feature, you need to define the getExpandedRowModel function in your table options. This function is responsible for returning the expanded row model.
+### Different use cases for Expanding Features
+
+There are multiple use cases for expanding features in TanStack Table that will be discussed below.
+
+1. Expanding sub-rows (child rows, aggregate rows, etc.)
+2. Expanding custom UI (detail panels, sub-tables, etc.)
+
+### Enable Client-Side Expanding
+
+To use the client-side expanding features, you need to define the getExpandedRowModel function in your table options. This function is responsible for returning the expanded row model.
 
 ```ts
 const table = useReactTable({
@@ -43,25 +53,42 @@ type Person = {
 }
 
 const data: Person =  [
-  { id: 1, name: 'John', age: 30, children: [{ id: 2, name: 'Jane', age: 5 }] },
-  { id: 3, name: 'Doe', age: 40, children: [{ id: 4, name: 'Alice', age: 10 }] },
+  { id: 1, 
+  name: 'John', 
+  age: 30, 
+  children: [
+      { id: 2, name: 'Jane', age: 5 },
+      { id: 5, name: 'Jim', age: 10 }
+    ] 
+  },
+  { id: 3,
+   name: 'Doe', 
+   age: 40, 
+    children: [
+      { id: 4, name: 'Alice', age: 10 }
+    ] 
+  },
 ]
 ```
 
-Then you can use the getSubRows function to return the children array in each row as expanded rows.
+Then you can use the getSubRows function to return the children array in each row as expanded rows. The table instance will now understand where to look for the sub rows on each row.
 
 ```ts
 const table = useReactTable({
   // other options...
-  getSubRows: (row) => row.children, // return the children array as expanded rows
+  getSubRows: (row) => row.children, // return the children array as sub-rows
   getCoreRowModel: getCoreRowModel(),
   getExpandedRowModel: getExpandedRowModel(),
 })
 ```
 
-### Custom data as expanded data
+> **Note:** You can have a complicated `getSubRows` function, but keep in mind that it will run for every row and every sub-row. This can be expensive if the function is not optimized. Async functions are not supported.
 
-In some cases, you may wish to show extra details or information, which may or may not be part of your table data object, as expanded data for rows. This can be achieved by using the `getRowCanExpand` option in the table instance and manually incorporating your expanded data into your table's UI.
+### Custom Expanding UI
+
+In some cases, you may wish to show extra details or information, which may or may not be part of your table data object, such as expanded data for rows. This kind of expanding row UI has gone by many names over the years including "expandable rows", "detail panels", "sub-components", etc.
+
+By default, the `row.getCanExpand()` row instance API will return false unless it finds `subRows` on a row. This can be overridden by implementing your own `getRowCanExpand` function in the table instance options.
 
 ```ts
 //...
@@ -75,6 +102,7 @@ const table = useReactTable({
 <tbody>
   {table.getRowModel().rows.map((row) => (
     <React.Fragment key={row.id}>
+     {/* Normal row UI */}
       <tr>
         {row.getVisibleCells().map((cell) => (
           <td key={cell.id}>
@@ -85,10 +113,11 @@ const table = useReactTable({
           </td>
         ))}
       </tr>
+      {/* If the row is expanded, render the expanded UI as a separate row with a single cell that spans the width of the table */}
       {row.getIsExpanded() && (
         <tr>
           <td colSpan={row.getAllCells().length}> // The number of columns you wish to span for the expanded data if it is not a row that shares the same columns as the parent row
-            // Your custom Expanded data goes here
+            // Your custom UI goes here
           </td>
         </tr>
       )}
@@ -108,7 +137,7 @@ const [expanded, setExpanded] = useState<ExpandedState>({})
 const table = useReactTable({
   // other options...
   state: {
-    expanded: expanded,
+    expanded: expanded, // must pass expanded state back to the table
   },
   onExpandedChange: setExpanded
 })
@@ -141,10 +170,8 @@ const columns = [
     cell: ({ row }) => {
       return row.getCanExpand() ?
         <button
-          {...{
-            onClick: row.getToggleExpandedHandler(),
-            style: { cursor: 'pointer' },
-          }}
+          onClick={row.getToggleExpandedHandler()}
+          style={{ cursor: 'pointer' }}
         >
         {row.getIsExpanded() ? '👇' : '👉'}
         </button>
