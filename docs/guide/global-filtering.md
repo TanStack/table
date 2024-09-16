@@ -106,7 +106,7 @@ const table = useReactTable({
   state: {
     globalFilter,
   },
-  onGlobalFilterChange: setGlobalFilte
+  onGlobalFilterChange: setGlobalFilter
 })
 ```
 
