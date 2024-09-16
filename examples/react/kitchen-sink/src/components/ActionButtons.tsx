@@ -16,6 +16,7 @@ type Props<T extends RowData> = {
   setPageIndex: (index: number) => void
   setPageSize: (size: number) => void
   totalRows: number
+  getPageCount: () => number
 }
 
 export function ActionButtons<T extends RowData>({
@@ -33,6 +34,7 @@ export function ActionButtons<T extends RowData>({
   setPageIndex,
   setPageSize,
   totalRows,
+  getPageCount,
 }: Props<T>) {
   return (
     <React.Fragment>
@@ -76,7 +78,7 @@ export function ActionButtons<T extends RowData>({
           <input
             type="number"
             min="1"
-            max={table.getPageCount()}
+            max={getPageCount()}
             defaultValue={pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0

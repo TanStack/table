@@ -2,9 +2,9 @@ import * as React from 'react'
 export * from '@tanstack/table-core'
 
 import {
+  RowData,
   TableOptions,
   TableOptionsResolved,
-  RowData,
   createTable,
 } from '@tanstack/table-core'
 
@@ -65,10 +65,8 @@ export function useReactTable<TData extends RowData>(
     ...options,
   }
 
-  // Create a new table and store it in state
-  const [tableRef] = React.useState(() => ({
-    current: createTable<TData>(resolvedOptions),
-  }))
+  // Create a new table and store it in ref
+  const tableRef = React.useRef(createTable<TData>(resolvedOptions))
 
   // By default, manage table state here using the table's initial state
   const [state, setState] = React.useState(() => tableRef.current.initialState)
