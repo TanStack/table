@@ -1,5 +1,5 @@
 import { type Signal, computed, signal } from '@angular/core'
-import { _createTable } from '@tanstack/table-core'
+import { constructTable } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
 import { proxifyTable } from './proxy'
 import type {
@@ -33,7 +33,7 @@ export function injectTable<
       ...options(),
     }
 
-    const table = _createTable(resolvedOptions)
+    const table = constructTable(resolvedOptions)
 
     // By default, manage table state here using the table's initial state
     const state = signal<TableState<TFeatures>>(table.initialState as any) // TODO: fix type

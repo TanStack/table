@@ -9,7 +9,7 @@ import type { TableOptions } from './TableOptions'
 import type { TableState } from './TableState'
 
 export interface TableFeature {
-  _createCell?: <
+  constructCell?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -17,7 +17,7 @@ export interface TableFeature {
     cell: Cell<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ) => void
-  _createColumn?: <
+  constructColumn?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -25,7 +25,7 @@ export interface TableFeature {
     column: Column<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ) => void
-  _createHeader?: <
+  constructHeader?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -33,22 +33,22 @@ export interface TableFeature {
     header: Header<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ) => void
-  _createRow?: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRow?: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData>,
     table: Table<TFeatures, TData>,
   ) => void
-  _createTable?: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable?: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ) => void
-  _getDefaultColumnDef?: <
+  getDefaultColumnDef?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
   >() => Partial<ColumnDef<TFeatures, TData, TValue>>
-  _getDefaultOptions?: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions?: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ) => Partial<TableOptions<TFeatures, TData>>
-  _getInitialState?: <TFeatures extends TableFeatures>(
+  getInitialState?: <TFeatures extends TableFeatures>(
     initialState: TableState<TFeatures>,
   ) => Partial<TableState<TFeatures>>
 }

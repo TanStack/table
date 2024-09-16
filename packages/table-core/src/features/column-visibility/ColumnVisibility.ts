@@ -41,7 +41,7 @@ import type {
  * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility)
  */
 export const ColumnVisibility: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> => {
     return {
@@ -50,7 +50,7 @@ export const ColumnVisibility: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): VisibilityDefaultOptions => {
@@ -59,7 +59,7 @@ export const ColumnVisibility: TableFeature = {
     }
   },
 
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -84,7 +84,7 @@ export const ColumnVisibility: TableFeature = {
     ])
   },
 
-  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> &
       Partial<Row_ColumnVisibility<TFeatures, TData>>,
     table: Table<TFeatures, TData> &
@@ -109,7 +109,7 @@ export const ColumnVisibility: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {

@@ -7,6 +7,7 @@
   "type": "module",
   "scripts": {
     "clean": "pnpm --filter \"./packages/**\" run clean",
+    "clean:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",
     "preinstall": "node -e \"if(process.env.CI == 'true') {console.log('Skipping preinstall...'); process.exit(1)}\" || npx -y only-allow pnpm",
     "test": "pnpm run test:ci",
     "test:pr": "nx affected --targets=test:format,test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build",

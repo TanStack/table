@@ -36,7 +36,7 @@ import type { Column } from '../../types/Column'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
  */
 export const RowSorting: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_RowSorting => {
     return {
@@ -45,7 +45,7 @@ export const RowSorting: TableFeature = {
     }
   },
 
-  _getDefaultColumnDef: <
+  getDefaultColumnDef: <
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(): ColumnDef_RowSorting<TFeatures, TData> => {
@@ -55,7 +55,7 @@ export const RowSorting: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowSorting<TFeatures, TData>>,
   ): TableOptions_RowSorting<TFeatures, TData> => {
@@ -67,7 +67,7 @@ export const RowSorting: TableFeature = {
     }
   },
 
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -117,7 +117,7 @@ export const RowSorting: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowSorting<TFeatures, TData>>,
   ): void => {

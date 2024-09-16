@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   ColumnDef,
   createColumnHelper,
-  _createTable,
+  constructTable,
   createCoreRowModel,
   RowSelection,
 } from '../src'
@@ -31,7 +31,7 @@ describe('RowSelection', () => {
       const data = makeData(5)
       const columns = generateColumns(data)
 
-      const table = _createTable<any, Person>({
+      const table = constructTable<any, Person>({
         _features: { RowSelection },
         _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
@@ -61,7 +61,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2) // assuming 3 parent rows with 2 sub-rows each
       const columns = generateColumns(data)
 
-      const table = _createTable<any, Person>({
+      const table = constructTable<any, Person>({
         _features: { RowSelection },
         _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
@@ -91,7 +91,7 @@ describe('RowSelection', () => {
       const data = makeData(5)
       const columns = generateColumns(data)
 
-      const table = _createTable<any, Person>({
+      const table = constructTable<any, Person>({
         _features: { RowSelection },
         _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
@@ -160,7 +160,7 @@ describe('RowSelection', () => {
       const data = makeData(3)
       const columns = generateColumns(data)
 
-      const table = _createTable<any, Person>({
+      const table = constructTable<any, Person>({
         _features: { RowSelection },
         _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
@@ -186,7 +186,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2)
       const columns = generateColumns(data)
 
-      const table = _createTable<any, Person>({
+      const table = constructTable<any, Person>({
         _features: { RowSelection },
         _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
@@ -215,7 +215,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2)
       const columns = generateColumns(data)
 
-      const table = _createTable<any, Person>({
+      const table = constructTable<any, Person>({
         _features: { RowSelection },
         _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
@@ -246,7 +246,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2)
       const columns = generateColumns(data)
 
-      const table = _createTable<any, Person>({
+      const table = constructTable<any, Person>({
         _features: { RowSelection },
         _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,
@@ -277,7 +277,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2)
       const columns = generateColumns(data)
 
-      const table = _createTable<any, Person>({
+      const table = constructTable<any, Person>({
         _features: { RowSelection },
         _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: (row) => row.index === 0, // only first row is selectable (of 2 sub-rows)
@@ -307,7 +307,7 @@ describe('RowSelection', () => {
       const data = makeData(3, 2, 2)
       const columns = generateColumns(data)
 
-      const table = _createTable<any, Person>({
+      const table = constructTable<any, Person>({
         _features: { RowSelection },
         _rowModels: { Core: createCoreRowModel() },
         enableRowSelection: true,

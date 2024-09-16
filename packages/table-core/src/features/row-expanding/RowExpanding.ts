@@ -35,7 +35,7 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-expanding)
  */
 export const RowExpanding: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> => {
     return {
@@ -44,7 +44,7 @@ export const RowExpanding: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowExpanding<TFeatures, TData>>,
   ): TableOptions_RowExpanding<TFeatures, TData> => {
@@ -54,7 +54,7 @@ export const RowExpanding: TableFeature = {
     }
   },
 
-  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_RowExpanding>,
     table: Table<TFeatures, TData> &
       Partial<Table_RowExpanding<TFeatures, TData>>,
@@ -78,7 +78,7 @@ export const RowExpanding: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {

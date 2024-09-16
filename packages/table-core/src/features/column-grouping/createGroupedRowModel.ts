@@ -1,4 +1,4 @@
-import { _createRow } from '../../core/rows/createRow'
+import { constructRow } from '../../core/rows/constructRow'
 import { flattenBy, getMemoOptions, memo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { table_getState } from '../../core/table/Tables.utils'
@@ -97,7 +97,7 @@ export function createGroupedRowModel<
                 ? flattenBy(groupedRows, (row) => row.subRows)
                 : groupedRows
 
-              const row = _createRow(
+              const row = constructRow(
                 table,
                 id,
                 leafRows[0]!.original,

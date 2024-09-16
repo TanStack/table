@@ -28,7 +28,7 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
  */
 export const ColumnResizing: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> => {
     return {
@@ -37,7 +37,7 @@ export const ColumnResizing: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): ColumnResizingDefaultOptions => {
     return {
@@ -47,7 +47,7 @@ export const ColumnResizing: TableFeature = {
     }
   },
 
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -65,7 +65,7 @@ export const ColumnResizing: TableFeature = {
     ])
   },
 
-  _createHeader: <
+  constructHeader: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -81,7 +81,7 @@ export const ColumnResizing: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
     assignAPIs(table, table, [

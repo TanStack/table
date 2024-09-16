@@ -1,4 +1,4 @@
-import { _createTable } from '@tanstack/table-core'
+import { constructTable } from '@tanstack/table-core'
 import {
   defineComponent,
   h,
@@ -78,7 +78,9 @@ export function useTable<
     IS_REACTIVE ? getOptionsWithReactiveData(initialOptions) : initialOptions,
   )
 
-  const table = _createTable(resolvedOptions as TableOptions<TFeatures, TData>)
+  const table = constructTable(
+    resolvedOptions as TableOptions<TFeatures, TData>,
+  )
 
   // Add reactivity support
   if (IS_REACTIVE) {

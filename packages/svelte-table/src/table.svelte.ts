@@ -1,4 +1,4 @@
-import { _createTable } from '@tanstack/table-core'
+import { constructTable } from '@tanstack/table-core'
 import type {
   RowData,
   TableFeatures,
@@ -51,7 +51,7 @@ export function createTable<
     options,
   )
 
-  const table = _createTable(resolvedOptions)
+  const table = constructTable(resolvedOptions)
   let state = $state<Partial<TableState<TFeatures>>>(table.initialState)
 
   function updateOptions() {

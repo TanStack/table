@@ -32,21 +32,21 @@ All of the functionality of a feature object can be described with the `TableFea
 
 ```ts
 export interface TableFeature<TFeatures extends TableFeatures, TData extends RowData = any> {
-  _createCell?: (
+  constructCell?: (
     cell: Cell<TFeatures, TData, unknown>,
     column: Column<TFeatures, TData>,
     row: Row<TFeatures, TData>,
     table: Table<TFeatures, TData>
   ) => void
-  _createColumn?: (column: Column<TFeatures, TData, unknown>, table: Table<TFeatures, TData>) => void
-  _createHeader?: (header: Header<TFeatures, TData, unknown>, table: Table<TFeatures, TData>) => void
-  _createRow?: (row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) => void
-  _createTable?: (table: Table<TFeatures, TData>) => void
-  _getDefaultColumnDef?: () => Partial<ColumnDef<TFeatures, TData, unknown>>
-  _getDefaultOptions?: (
+  constructColumn?: (column: Column<TFeatures, TData, unknown>, table: Table<TFeatures, TData>) => void
+  constructHeader?: (header: Header<TFeatures, TData, unknown>, table: Table<TFeatures, TData>) => void
+  constructRow?: (row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) => void
+  constructTable?: (table: Table<TFeatures, TData>) => void
+  getDefaultColumnDef?: () => Partial<ColumnDef<TFeatures, TData, unknown>>
+  getDefaultOptions?: (
     table: Table<TFeatures, TData>
   ) => Partial<TableOptions<TFeatures, TData>>
-  _getInitialState?: (initialState?: InitialTableState) => Partial<TableState>
+  getInitialState?: (initialState?: InitialTableState) => Partial<TableState>
 }
 ```
 
@@ -56,53 +56,53 @@ This might be a bit confusing, so let's break down what each of these methods do
 
 <br />
 
-##### _getDefaultOptions
+##### getDefaultOptions
 
-The `_getDefaultOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `_getDefaultOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
-
-<br />
-
-##### _getDefaultColumnDef
-
-The `_getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSorting.ts) feature, the `_getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
+The `getDefaultOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `getDefaultOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
 
 <br />
 
-##### _getInitialState
+##### getDefaultColumnDef
 
-The `_getInitialState` method in a table feature is responsible for setting the default state for that feature. For example, in the [Pagination](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowPagination.ts) feature, the `_getInitialState` method sets the default `pageSize` state with a value of `10` and the default `pageIndex` state with a value of `0`.
+The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSorting.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
+
+<br />
+
+##### getInitialState
+
+The `getInitialState` method in a table feature is responsible for setting the default state for that feature. For example, in the [Pagination](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowPagination.ts) feature, the `getInitialState` method sets the default `pageSize` state with a value of `10` and the default `pageIndex` state with a value of `0`.
 
 #### API Creators
 
 <br />
 
-##### _createTable
+##### constructTable
 
-The `_createTable` method in a table feature is responsible for adding methods to the `table` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSelection.ts) feature, the `_createTable` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `RowSelection` feature.
-
-<br />
-
-##### _createHeader
-
-The `_createHeader` method in a table feature is responsible for adding methods to the `header` instance. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `_createHeader` method adds many header instance API methods such as `getStart`, and many others. So then, when you call `header.getStart()`, you are calling a method that was added to the header instance by the `ColumnSizing` feature.
+The `constructTable` method in a table feature is responsible for adding methods to the `table` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSelection.ts) feature, the `constructTable` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `RowSelection` feature.
 
 <br />
 
-##### _createColumn
+##### constructHeader
 
-The `_createColumn` method in a table feature is responsible for adding methods to the `column` instance. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSorting.ts) feature, the `_createColumn` method adds many column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added to the column instance by the `RowSorting` feature.
-
-<br />
-
-##### _createRow
-
-The `_createRow` method in a table feature is responsible for adding methods to the `row` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSelection.ts) feature, the `_createRow` method adds many row instance API methods such as `toggleSelected`, `getIsSelected`, etc. So then, when you call `row.toggleSelected()`, you are calling a method that was added to the row instance by the `RowSelection` feature.
+The `constructHeader` method in a table feature is responsible for adding methods to the `header` instance. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `constructHeader` method adds many header instance API methods such as `getStart`, and many others. So then, when you call `header.getStart()`, you are calling a method that was added to the header instance by the `ColumnSizing` feature.
 
 <br />
 
-##### _createCell
+##### constructColumn
 
-The `_createCell` method in a table feature is responsible for adding methods to the `cell` instance. For example, in the [Column Grouping](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnGrouping.ts) feature, the `_createCell` method adds many cell instance API methods such as `getIsGrouped`, `getIsAggregated`, etc. So then, when you call `cell.getIsGrouped()`, you are calling a method that was added to the cell instance by the `ColumnGrouping` feature.
+The `constructColumn` method in a table feature is responsible for adding methods to the `column` instance. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSorting.ts) feature, the `constructColumn` method adds many column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added to the column instance by the `RowSorting` feature.
+
+<br />
+
+##### constructRow
+
+The `constructRow` method in a table feature is responsible for adding methods to the `row` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSelection.ts) feature, the `constructRow` method adds many row instance API methods such as `toggleSelected`, `getIsSelected`, etc. So then, when you call `row.toggleSelected()`, you are calling a method that was added to the row instance by the `RowSelection` feature.
+
+<br />
+
+##### constructCell
+
+The `constructCell` method in a table feature is responsible for adding methods to the `cell` instance. For example, in the [Column Grouping](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnGrouping.ts) feature, the `constructCell` method adds many cell instance API methods such as `getIsGrouped`, `getIsAggregated`, etc. So then, when you call `cell.getIsGrouped()`, you are calling a method that was added to the cell instance by the `ColumnGrouping` feature.
 
 ### Adding a Custom Feature
 
@@ -179,7 +179,7 @@ Use the `TableFeature` type to ensure that you are creating the feature object c
 ```ts
 export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
   // define the new feature's initial state
-  _getInitialState: (state): DensityTableState => {
+  getInitialState: (state): DensityTableState => {
     return {
       density: 'md',
       ...state,
@@ -187,7 +187,7 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
   },
 
   // define the new feature's default options
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Partial<Table<TFeatures, TData>>
   ): DensityOptions => {
     return {
@@ -196,12 +196,12 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
     } as DensityOptions
   },
   // if you need to add a default column definition...
-  // _getDefaultColumnDef: <TFeatures extends TableFeatures, TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
+  // getDefaultColumnDef: <TFeatures extends TableFeatures, TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
   //   return { meta: {} } //use meta instead of directly adding to the columnDef to avoid typescript stuff that's hard to workaround
   // },
 
   // define the new feature's table instance methods
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(table: Table<TFeatures, TData>): void => {
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(table: Table<TFeatures, TData>): void => {
     table.setDensity = updater => {
       const safeUpdater: Updater<DensityState> = old => {
         let newState = functionalUpdate(updater, old)
@@ -218,13 +218,13 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
   },
 
   // if you need to add row instance APIs...
-  // _createRow: <TFeatures extends TableFeatures, TData extends RowData>(row, table): void => {},
+  // constructRow: <TFeatures extends TableFeatures, TData extends RowData>(row, table): void => {},
   // if you need to add cell instance APIs...
-  // _createCell: <TFeatures extends TableFeatures, TData extends RowData>(cell, column, row, table): void => {},
+  // constructCell: <TFeatures extends TableFeatures, TData extends RowData>(cell, column, row, table): void => {},
   // if you need to add column instance APIs...
-  // _createColumn: <TFeatures extends TableFeatures, TData extends RowData>(column, table): void => {},
+  // constructColumn: <TFeatures extends TableFeatures, TData extends RowData>(column, table): void => {},
   // if you need to add header instance APIs...
-  // _createHeader: <TFeatures extends TableFeatures, TData extends RowData>(header, table): void => {},
+  // constructHeader: <TFeatures extends TableFeatures, TData extends RowData>(header, table): void => {},
 }
 ```
 

@@ -54,12 +54,12 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   initialState: Partial<TableState<TFeatures>> | undefined = {},
 ): TableState<TFeatures> {
   Object.values(features).forEach((feature) => {
-    initialState = feature._getInitialState?.(initialState) ?? initialState
+    initialState = feature.getInitialState?.(initialState) ?? initialState
   })
   return structuredClone(initialState) as TableState<TFeatures>
 }
 
-export function _createTable<
+export function constructTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(options: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
@@ -81,7 +81,7 @@ export function _createTable<
   const table = {} as unknown as Table<TFeatures, TData>
 
   const defaultOptions = featuresList.reduce((obj, feature) => {
-    return Object.assign(obj, feature._getDefaultOptions?.(table))
+    return Object.assign(obj, feature.getDefaultOptions?.(table))
   }, {}) as TableOptions<TFeatures, TData>
 
   const initialState = getInitialTableState(_features, options.initialState)
@@ -125,7 +125,7 @@ export function _createTable<
   }
 
   for (const feature of featuresList) {
-    feature._createTable?.(table)
+    feature.constructTable?.(table)
   }
 
   return table

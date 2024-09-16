@@ -1,5 +1,5 @@
 import { table_getOrderColumnsFn } from '../../features/column-ordering/ColumnOrdering.utils'
-import { _createColumn } from './createColumn'
+import { constructColumn } from './constructColumn'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -42,7 +42,7 @@ export function column_getLeafColumns<
   return [column]
 }
 
-export function table_getDefaultColumnDef<
+export function tablegetDefaultColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -81,7 +81,7 @@ export function table_getAllColumns<
     depth = 0,
   ): Array<Column<TFeatures, TData, unknown>> => {
     return colDefs.map((columnDef) => {
-      const column = _createColumn(table, columnDef, depth, parent)
+      const column = constructColumn(table, columnDef, depth, parent)
 
       const groupingColumnDef = columnDef as GroupColumnDef<
         TFeatures,

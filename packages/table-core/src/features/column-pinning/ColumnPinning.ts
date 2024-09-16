@@ -54,7 +54,7 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
  */
 export const ColumnPinning: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_ColumnPinning => {
     return {
@@ -63,7 +63,7 @@ export const ColumnPinning: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): ColumnPinningDefaultOptions => {
@@ -72,7 +72,7 @@ export const ColumnPinning: TableFeature = {
     }
   },
 
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -97,7 +97,7 @@ export const ColumnPinning: TableFeature = {
     ])
   },
 
-  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_ColumnPinning<TFeatures, TData>>,
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
@@ -130,7 +130,7 @@ export const ColumnPinning: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {

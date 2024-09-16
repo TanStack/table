@@ -25,7 +25,7 @@ import type { Column } from '../../types/Column'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
  */
 export const ColumnOrdering: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_ColumnOrdering => {
     return {
@@ -34,7 +34,7 @@ export const ColumnOrdering: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): ColumnOrderDefaultOptions => {
@@ -43,7 +43,7 @@ export const ColumnOrdering: TableFeature = {
     }
   },
 
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -71,7 +71,7 @@ export const ColumnOrdering: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {

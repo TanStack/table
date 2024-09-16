@@ -1,6 +1,6 @@
 import { assignAPIs, getMemoOptions, memo } from '../../utils'
 import { table_getState } from '../table/Tables.utils'
-import { _createColumn } from './createColumn'
+import { constructColumn } from './constructColumn'
 import {
   column_getFlatColumns,
   column_getLeafColumns,
@@ -9,7 +9,7 @@ import {
   table_getAllFlatColumnsById,
   table_getAllLeafColumns,
   table_getColumn,
-  table_getDefaultColumnDef,
+  tablegetDefaultColumnDef,
 } from './Columns.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -17,7 +17,7 @@ import type { Table } from '../../types/Table'
 import type { Column } from '../../types/Column'
 
 export const Columns: TableFeature = {
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -42,12 +42,12 @@ export const Columns: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ) => {
     assignAPIs(table, table, [
       {
-        fn: () => table_getDefaultColumnDef(table),
+        fn: () => tablegetDefaultColumnDef(table),
         memoDeps: () => [table.options.defaultColumn],
       },
       {

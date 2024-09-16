@@ -14,7 +14,7 @@ import type { Column } from '../../types/Column'
  * The Column Faceting feature adds column faceting APIs to the column objects.
  */
 export const ColumnFaceting: TableFeature = {
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,

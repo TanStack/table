@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { _createCell } from './createCell'
+import { constructCell } from './constructCell'
 import { Cells } from './Cells'
 import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 import type { Table } from '../../types/Table'
 
-describe('createCell', () => {
+describe('constructCell', () => {
   it('should populate the cell with all core cell APIs and properties', () => {
     const column = { id: 'test-column' } as Column<any, any, any>
     const row = { id: 'test-row' } as Row<any, any>
     const table = { _features: { Cells }, options: {} } as Table<any, any>
-    const coreCell = _createCell(column, row, table)
+    const coreCell = constructCell(column, row, table)
 
     expect(coreCell).toBeDefined()
     expect(coreCell).toHaveProperty('column')

@@ -1,4 +1,4 @@
-import { _createTableHelper } from '@tanstack/table-core'
+import { constructTableHelper } from '@tanstack/table-core'
 import { createTable } from './createTable'
 import type {
   RowData,
@@ -27,7 +27,7 @@ export function createTableHelper<
 >(
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper<TFeatures, TData> {
-  const tableHelper = _createTableHelper(createTable, tableHelperOptions)
+  const tableHelper = constructTableHelper(createTable, tableHelperOptions)
   return {
     ...tableHelper,
     createTable: tableHelper.tableCreator,

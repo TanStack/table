@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   ColumnDef,
   createColumnHelper,
-  _createTable,
+  constructTable,
   createCoreRowModel,
   createPaginatedRowModel,
   RowPinning,
@@ -27,13 +27,13 @@ function generateColumns(people: Person[]): PersonColumn[] {
 }
 
 describe('RowPinning', () => {
-  describe('_createTable', () => {
+  describe('constructTable', () => {
     describe('getTopRows', () => {
       it('should return pinned rows when keepPinnedRows is true rows are visible', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<any, Person>({
+        const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -67,7 +67,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<any, Person>({
+        const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -101,7 +101,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<any, Person>({
+        const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -135,7 +135,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<any, Person>({
+        const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -168,7 +168,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<any, Person>({
+        const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -202,7 +202,7 @@ describe('RowPinning', () => {
         const data = makeData(10)
         const columns = generateColumns(data)
 
-        const table = _createTable<any, Person>({
+        const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),
@@ -238,7 +238,7 @@ describe('RowPinning', () => {
         const data = makeData(6)
         const columns = generateColumns(data)
 
-        const table = _createTable<any, Person>({
+        const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
             Core: createCoreRowModel(),

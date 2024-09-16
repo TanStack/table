@@ -36,7 +36,7 @@ import type { Table } from '../../types/Table'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
  */
 export const RowPagination: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_RowPagination => {
     return {
@@ -48,7 +48,7 @@ export const RowPagination: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowPagination<TFeatures, TData>>,
   ): PaginationDefaultOptions => {
@@ -57,7 +57,7 @@ export const RowPagination: TableFeature = {
     }
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowPagination<TFeatures, TData>>,
   ): void => {

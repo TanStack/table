@@ -5,7 +5,7 @@ import {
   table_getLeftHeaderGroups,
   table_getRightHeaderGroups,
 } from '../../features/column-pinning/ColumnPinning.utils'
-import { _createHeader } from './createHeader'
+import { constructHeader } from './constructHeader'
 import {
   header_getContext,
   header_getLeafHeaders,
@@ -20,7 +20,7 @@ import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 
 export const Headers: TableFeature = {
-  _createHeader: <
+  constructHeader: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -33,7 +33,7 @@ export const Headers: TableFeature = {
     header.getContext = () => header_getContext(header, table)
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(table, table, [

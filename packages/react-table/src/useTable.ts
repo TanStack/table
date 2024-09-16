@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import {
-  _createTable,
+  constructTable,
   builtInFeatures,
   getInitialTableState,
 } from '@tanstack/table-core'
@@ -19,7 +19,7 @@ function useTableRef<TFeatures extends TableFeatures, TData extends RowData>(
   const tableRef = React.useRef<Table<TFeatures, TData>>()
 
   if (!tableRef.current) {
-    tableRef.current = _createTable(options)
+    tableRef.current = constructTable(options)
   }
 
   return tableRef.current

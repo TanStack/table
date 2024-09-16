@@ -1,5 +1,5 @@
 import * as Qwik from '@builder.io/qwik'
-import { _createTable } from '@tanstack/table-core'
+import { constructTable } from '@tanstack/table-core'
 import type {
   RowData,
   Table,
@@ -46,7 +46,7 @@ export function useTable<
   const table = Qwik.useStore<{
     instance: Qwik.NoSerialize<Table<TFeatures, TData>>
   }>({
-    instance: Qwik.noSerialize(_createTable(resolvedOptions)),
+    instance: Qwik.noSerialize(constructTable(resolvedOptions)),
   })
 
   // By default, manage table state here using the table's initial state

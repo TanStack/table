@@ -27,7 +27,7 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
  */
 export const GlobalFiltering: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_GlobalFiltering => {
     return {
@@ -36,7 +36,7 @@ export const GlobalFiltering: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): TableOptions_GlobalFiltering<TFeatures, TData> => {
@@ -53,7 +53,7 @@ export const GlobalFiltering: TableFeature = {
     }
   },
 
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -69,7 +69,7 @@ export const GlobalFiltering: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): void => {

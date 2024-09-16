@@ -75,7 +75,7 @@ declare module '@tanstack/react-table' {
 // Here is all of the actual javascript code for our new feature
 export const DensityFeature: TableFeature = {
   // define the new feature's initial state
-  _getInitialState: (state): DensityTableState => {
+  getInitialState: (state): DensityTableState => {
     return {
       density: 'md',
       ...state,
@@ -83,7 +83,7 @@ export const DensityFeature: TableFeature = {
   },
 
   // define the new feature's default options
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Partial<Table<TFeatures, TData>>,
   ): DensityOptions => {
     return {
@@ -92,12 +92,12 @@ export const DensityFeature: TableFeature = {
     } as DensityOptions
   },
   // if you need to add a default column definition...
-  // _getDefaultColumnDef: <TFeatures extends TableFeatures, TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
+  // getDefaultColumnDef: <TFeatures extends TableFeatures, TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
   //   return { meta: {} } //use meta instead of directly adding to the columnDef to avoid typescript stuff that's hard to workaround
   // },
 
   // define the new feature's table instance methods
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
     table.setDensity = (updater) => {
@@ -116,13 +116,13 @@ export const DensityFeature: TableFeature = {
   },
 
   // if you need to add row instance APIs...
-  // _createRow: <TFeatures extends TableFeatures, TData extends RowData>(row, table): void => {},
+  // constructRow: <TFeatures extends TableFeatures, TData extends RowData>(row, table): void => {},
   // if you need to add cell instance APIs...
-  // _createCell: <TFeatures extends TableFeatures, TData extends RowData>(cell, column, row, table): void => {},
+  // constructCell: <TFeatures extends TableFeatures, TData extends RowData>(cell, column, row, table): void => {},
   // if you need to add column instance APIs...
-  // _createColumn: <TFeatures extends TableFeatures, TData extends RowData>(column, table): void => {},
+  // constructColumn: <TFeatures extends TableFeatures, TData extends RowData>(column, table): void => {},
   // if you need to add header instance APIs...
-  // _createHeader: <TFeatures extends TableFeatures, TData extends RowData>(header, table): void => {},
+  // constructHeader: <TFeatures extends TableFeatures, TData extends RowData>(header, table): void => {},
 }
 //end of custom feature code
 

@@ -1,4 +1,4 @@
-import { _createRow } from '../rows/createRow'
+import { constructRow } from '../rows/constructRow'
 import { _memo, isDev, tableMemo } from '../../utils'
 import { table_getRowId } from '../rows/Rows.utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/RowPagination.utils'
@@ -50,7 +50,7 @@ function _createCoreRowModel<
     for (let i = 0; i < originalRows.length; i++) {
       const originalRow = originalRows[i]!
       // Make the row
-      const row = _createRow(
+      const row = constructRow(
         table,
         table_getRowId(originalRow, table, i, parentRow),
         originalRow,

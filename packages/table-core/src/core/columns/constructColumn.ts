@@ -1,4 +1,4 @@
-import { table_getDefaultColumnDef } from './Columns.utils'
+import { tablegetDefaultColumnDef } from './Columns.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -10,7 +10,7 @@ import type {
 import type { Column } from '../../types/Column'
 import type { Column_CoreProperties } from './Columns.types'
 
-export function _createColumn<
+export function constructColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
@@ -20,7 +20,7 @@ export function _createColumn<
   depth: number,
   parent?: Column<TFeatures, TData, TValue>,
 ): Column<TFeatures, TData, TValue> {
-  const defaultColumn = table_getDefaultColumnDef(table)
+  const defaultColumn = tablegetDefaultColumnDef(table)
 
   const resolvedColumnDef = {
     ...defaultColumn,
@@ -84,7 +84,10 @@ export function _createColumn<
   }
 
   for (const feature of Object.values(table._features)) {
-    feature?._createColumn?.(column as Column<TFeatures, TData, TValue>, table)
+    feature?.constructColumn?.(
+      column as Column<TFeatures, TData, TValue>,
+      table,
+    )
   }
 
   return column as Column<TFeatures, TData, TValue>

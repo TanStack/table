@@ -6,7 +6,7 @@ import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 import type { Cell_CoreProperties } from './Cells.types'
 
-export function _createCell<
+export function constructCell<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
@@ -22,7 +22,7 @@ export function _createCell<
   }
 
   for (const feature of Object.values(table._features)) {
-    feature?._createCell?.(cell as Cell<TFeatures, TData, TValue>, table)
+    feature?.constructCell?.(cell as Cell<TFeatures, TData, TValue>, table)
   }
 
   return cell as Cell<TFeatures, TData, TValue>

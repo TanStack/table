@@ -45,7 +45,7 @@ import type {
  
  */
 export const RowSelection: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_RowSelection => {
     return {
@@ -54,7 +54,7 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowSelection<TFeatures, TData>>,
   ): TableOptions_RowSelection<TFeatures, TData> => {
@@ -69,7 +69,7 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_RowSelection>,
     table: Table<TFeatures, TData> &
       Partial<Table_RowSelection<TFeatures, TData>>,
@@ -102,7 +102,7 @@ export const RowSelection: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {

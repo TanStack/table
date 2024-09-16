@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { tableFeatures } from '../../helpers/tableFeatures'
-import { _createTable, coreFeatures } from './createTable'
+import { constructTable, coreFeatures } from './constructTable'
 
 describe('createTable', () => {
   it('should create a table with all core table APIs and properties', () => {
-    const table = _createTable({
+    const table = constructTable({
       _features: coreFeatures,
       columns: [],
       data: [],

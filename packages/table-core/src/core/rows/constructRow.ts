@@ -4,7 +4,7 @@ import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Row_CoreProperties } from './Rows.types'
 
-export const _createRow = <
+export const constructRow = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -28,7 +28,7 @@ export const _createRow = <
   }
 
   for (const feature of Object.values(table._features)) {
-    feature?._createRow?.(row as Row<TFeatures, TData>, table)
+    feature?.constructRow?.(row as Row<TFeatures, TData>, table)
   }
 
   return row as Row<TFeatures, TData>

@@ -5,7 +5,7 @@ import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 import type { Header_CoreProperties } from './Headers.types'
 
-export function _createHeader<
+export function constructHeader<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
@@ -34,7 +34,10 @@ export function _createHeader<
   }
 
   for (const feature of Object.values(table._features)) {
-    feature?._createHeader?.(header as Header<TFeatures, TData, TValue>, table)
+    feature?.constructHeader?.(
+      header as Header<TFeatures, TData, TValue>,
+      table,
+    )
   }
 
   return header as Header<TFeatures, TData, TValue>

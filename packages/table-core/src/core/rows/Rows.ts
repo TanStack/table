@@ -18,7 +18,7 @@ import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
 export const Rows: TableFeature = {
-  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData>,
     table: Table<TFeatures, TData>,
   ): void => {
@@ -52,7 +52,7 @@ export const Rows: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(table, table, [

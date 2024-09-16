@@ -1,6 +1,6 @@
 import {
-  _createTable,
   builtInFeatures,
+  constructTable,
   getInitialTableState,
 } from '@tanstack/table-core'
 import { createComputed, mergeProps } from 'solid-js'
@@ -24,7 +24,7 @@ export function createTable<
     },
   }
 
-  const table = _createTable<TFeatures, TData>(statefulOptions)
+  const table = constructTable<TFeatures, TData>(statefulOptions)
 
   createComputed(() => {
     table.setOptions((prev) => {

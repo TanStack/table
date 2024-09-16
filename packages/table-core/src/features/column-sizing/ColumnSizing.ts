@@ -38,7 +38,7 @@ import type { Column } from '../../types/Column'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
  */
 export const ColumnSizing: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> => {
     return {
@@ -47,11 +47,11 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  _getDefaultColumnDef: (): ColumnDef_ColumnSizing => {
+  getDefaultColumnDef: (): ColumnDef_ColumnSizing => {
     return getDefaultColumnSizingState()
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): ColumnSizingDefaultOptions => {
     return {
@@ -59,7 +59,7 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -93,7 +93,7 @@ export const ColumnSizing: TableFeature = {
     ])
   },
 
-  _createHeader: <
+  constructHeader: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -106,7 +106,7 @@ export const ColumnSizing: TableFeature = {
     header.getStart = () => header_getStart(header, table)
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
     assignAPIs(table, table, [

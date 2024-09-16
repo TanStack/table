@@ -6,7 +6,7 @@ import type { Table } from '../../types/Table'
 import type { Cell } from '../../types/Cell'
 
 export const Cells: TableFeature = {
-  _createCell: <
+  constructCell: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,

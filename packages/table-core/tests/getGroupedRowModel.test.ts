@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  _createTable,
+  constructTable,
   ColumnDef,
   createCoreRowModel,
   createGroupedRowModel,
@@ -36,7 +36,7 @@ describe('#getGroupedRowModel', () => {
     data.forEach((p) => (p.lastName = 'Name'))
     data.forEach((p) => (p.age = 123))
 
-    const table = _createTable<any, Person>({
+    const table = constructTable<any, Person>({
       _features: { ColumnGrouping },
       _rowModels: {
         Core: createCoreRowModel(),

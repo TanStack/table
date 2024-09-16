@@ -25,33 +25,33 @@ export * from './helpers/tableHelper'
 export * from './utils'
 
 // Cells
-export * from './core/cells/createCell'
+export * from './core/cells/constructCell'
 export * from './core/cells/Cells'
 export * from './core/cells/Cells.types'
 export * from './core/cells/Cells.utils'
 
 // Columns
-export * from './core/columns/createColumn'
+export * from './core/columns/constructColumn'
 export * from './core/columns/Columns'
 export * from './core/columns/Columns.types'
 export * from './core/columns/Columns.utils'
 
 // Headers
 export * from './core/headers/buildHeaderGroups'
-export * from './core/headers/createHeader'
+export * from './core/headers/constructHeader'
 export * from './core/headers/Headers'
 export * from './core/headers/Headers.types'
 export * from './core/headers/Headers.utils'
 
 // Rows
-export * from './core/rows/createRow'
+export * from './core/rows/constructRow'
 export * from './core/rows/Rows'
 export * from './core/rows/Rows.types'
 export * from './core/rows/Rows.utils'
 
 // Tables
 export * from './core/table/createCoreRowModel'
-export * from './core/table/createTable'
+export * from './core/table/constructTable'
 export * from './core/table/Tables'
 export * from './core/table/Tables.types'
 export * from './core/table/Tables.utils'

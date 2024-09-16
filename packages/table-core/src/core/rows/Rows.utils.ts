@@ -1,5 +1,5 @@
 import { flattenBy } from '../../utils'
-import { _createCell } from '../cells/createCell'
+import { constructCell } from '../cells/constructCell'
 import {
   table_getAllLeafColumns,
   table_getColumn,
@@ -116,7 +116,7 @@ export function row_getAllCells<
   table: Table<TFeatures, TData>,
 ): Array<Cell<TFeatures, TData, unknown>> {
   return table_getAllLeafColumns(table).map((column) => {
-    return _createCell(column, row, table)
+    return constructCell(column, row, table)
   })
 }
 

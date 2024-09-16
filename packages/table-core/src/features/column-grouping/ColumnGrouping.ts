@@ -40,7 +40,7 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
  */
 export const ColumnGrouping: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_ColumnGrouping => {
     return {
@@ -49,7 +49,7 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  _getDefaultColumnDef: <
+  getDefaultColumnDef: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -60,7 +60,7 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): TableOptions_ColumnGrouping<TFeatures, TData> => {
@@ -70,7 +70,11 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  _createCell: <TFeatures extends TableFeatures, TData extends RowData, TValue>(
+  constructCell: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue,
+  >(
     cell: Cell<TFeatures, TData, TValue> & Partial<Cell_ColumnGrouping>,
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnGrouping<TFeatures, TData>>,
@@ -88,7 +92,7 @@ export const ColumnGrouping: TableFeature = {
     ])
   },
 
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -123,7 +127,7 @@ export const ColumnGrouping: TableFeature = {
     ])
   },
 
-  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>,
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnGrouping<TFeatures, TData>>,
@@ -140,7 +144,7 @@ export const ColumnGrouping: TableFeature = {
     ])
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {

@@ -38,7 +38,7 @@ export type TableHelper_Core<
 /**
  * Internal function to create a table helper that each adapter package will use to create their own table helper
  */
-export function _createTableHelper<
+export function constructTableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -59,7 +59,7 @@ export function _createTableHelper<
 // test
 
 // // eslint-disable-next-line import/first, import/order
-// import { _createTable } from '../core/table/createTable'
+// import { constructTable } from '../core/table/createTable'
 
 // type Person = {
 //   firstName: string
@@ -67,7 +67,7 @@ export function _createTableHelper<
 //   age: number
 // }
 
-// const tableHelper = _createTableHelper(_createTable, {
+// const tableHelper = constructTableHelper(constructTable, {
 //   _features: { RowSelection: {} },
 //   _rowModels: {},
 //   TData: {} as Person,

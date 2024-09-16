@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { Columns } from './Columns'
-import { _createColumn } from './createColumn'
+import { constructColumn } from './constructColumn'
 import type { ColumnDef } from '../../types/ColumnDef'
 import type { Table } from '../../types/Table'
 
-describe('createColumn', () => {
+describe('constructColumn', () => {
   it('should create a column with all core column APIs and properties', () => {
     const table = { _features: { Columns }, options: {} } as Table<any, any>
     const columnDef = {
@@ -14,7 +14,7 @@ describe('createColumn', () => {
     const depth = 0
     const parent = undefined
 
-    const column = _createColumn(table, columnDef, depth, parent)
+    const column = constructColumn(table, columnDef, depth, parent)
 
     expect(column).toBeDefined()
     expect(column).toHaveProperty('accessorFn')

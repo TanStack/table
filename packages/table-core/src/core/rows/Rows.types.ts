@@ -1,4 +1,4 @@
-import { _createCell } from '../cells/createCell'
+import { constructCell } from '../cells/constructCell'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'

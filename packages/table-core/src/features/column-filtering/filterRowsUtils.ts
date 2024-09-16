@@ -1,4 +1,4 @@
-import { _createRow } from '../../core/rows/createRow'
+import { constructRow } from '../../core/rows/constructRow'
 import { Row_RowExpanding } from '../row-expanding/RowExpanding.types'
 import type {
   Row_ColumnFiltering,
@@ -49,7 +49,7 @@ function filterRowModelFromLeafs<
 
     // Filter from children up first
     for (let row of rows) {
-      const newRow = _createRow(
+      const newRow = constructRow(
         table,
         row.id,
         row.original,
@@ -121,7 +121,7 @@ function filterRowModelFromRoot<
 
       if (pass) {
         if (row.subRows.length && depth < maxDepth) {
-          const newRow = _createRow(
+          const newRow = constructRow(
             table,
             row.id,
             row.original,

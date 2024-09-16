@@ -15,7 +15,7 @@ import type { Table } from '../../types/Table'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
  */
 export const GlobalFaceting: TableFeature = {
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_GlobalFaceting<TFeatures, TData>>,
   ): void => {

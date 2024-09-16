@@ -1,5 +1,5 @@
 import { column_getIsVisible } from '../../features/column-visibility/ColumnVisibility.utils'
-import { _createHeader } from './createHeader'
+import { constructHeader } from './constructHeader'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -44,7 +44,7 @@ export function buildHeaderGroups<
 
   const headerGroups: Array<HeaderGroup<TFeatures, TData>> = []
 
-  const createHeaderGroup = (
+  const constructHeaderGroup = (
     headersToGroup: Array<Header<TFeatures, TData, TValue>>,
     depth: number,
   ) => {
@@ -86,7 +86,7 @@ export function buildHeaderGroups<
         latestPendingParentHeader.subHeaders.push(headerToGroup)
       } else {
         // This is a new header. Let's create it
-        const header = _createHeader(table, column, {
+        const header = constructHeader(table, column, {
           id: [headerFamily, depth, column.id, headerToGroup.id]
             .filter(Boolean)
             .join('_'),
@@ -112,18 +112,18 @@ export function buildHeaderGroups<
     headerGroups.push(headerGroup)
 
     if (depth > 0) {
-      createHeaderGroup(pendingParentHeaders, depth - 1)
+      constructHeaderGroup(pendingParentHeaders, depth - 1)
     }
   }
 
   const bottomHeaders = columnsToGroup.map((column, index) =>
-    _createHeader(table, column, {
+    constructHeader(table, column, {
       depth: maxDepth,
       index,
     }),
   )
 
-  createHeaderGroup(bottomHeaders, maxDepth - 1)
+  constructHeaderGroup(bottomHeaders, maxDepth - 1)
 
   headerGroups.reverse()
 

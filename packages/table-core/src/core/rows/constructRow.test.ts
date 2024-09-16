@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { Rows } from './Rows'
-import { _createRow } from './createRow'
+import { constructRow } from './constructRow'
 import type { Row } from '../../types/Row'
 import type { Table } from '../../types/Table'
 
@@ -8,7 +8,7 @@ interface Person {
   firstName: string
 }
 
-describe('createRow', () => {
+describe('constructRow', () => {
   it('should create a row with all core row APIs and properties', () => {
     const table = { _features: { Rows }, options: {} } as Table<any, Person>
     const id = 'test-row'
@@ -18,7 +18,7 @@ describe('createRow', () => {
     const subRows = [] as Array<Row<any, Person>>
     const parentId = 'parent-id'
 
-    const row = _createRow(
+    const row = constructRow(
       table,
       id,
       original,

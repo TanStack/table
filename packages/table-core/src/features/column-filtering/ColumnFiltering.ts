@@ -36,7 +36,7 @@ import type {
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
  */
 export const ColumnFiltering: TableFeature = {
-  _getInitialState: <TFeatures extends TableFeatures>(
+  getInitialState: <TFeatures extends TableFeatures>(
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_ColumnFiltering => {
     return {
@@ -45,7 +45,7 @@ export const ColumnFiltering: TableFeature = {
     }
   },
 
-  _getDefaultColumnDef: <
+  getDefaultColumnDef: <
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(): ColumnDef_ColumnFiltering<TFeatures, TData> => {
@@ -54,7 +54,7 @@ export const ColumnFiltering: TableFeature = {
     }
   },
 
-  _getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
+  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): TableOptions_ColumnFiltering<TFeatures, TData> => {
@@ -65,7 +65,7 @@ export const ColumnFiltering: TableFeature = {
     } as TableOptions_ColumnFiltering<TFeatures, TData>
   },
 
-  _createColumn: <
+  constructColumn: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -100,14 +100,14 @@ export const ColumnFiltering: TableFeature = {
     ])
   },
 
-  _createRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
   ): void => {
     row.columnFilters = {}
     row.columnFiltersMeta = {}
   },
 
-  _createTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {

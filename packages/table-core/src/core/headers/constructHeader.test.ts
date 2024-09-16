@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { Headers } from './Headers'
-import { _createHeader } from './createHeader'
+import { constructHeader } from './constructHeader'
 import type { Column } from '../../types/Column'
 import type { Table } from '../../types/Table'
 
-describe('createHeader', () => {
+describe('constructHeader', () => {
   it('should create a column with all core column APIs and properties', () => {
     const table = { _features: { Headers }, options: {} } as Table<any, any>
     const column = {
@@ -14,7 +14,7 @@ describe('createHeader', () => {
     const index = 0
     const depth = 0
 
-    const header = _createHeader(table, column, {
+    const header = constructHeader(table, column, {
       index,
       depth,
     })

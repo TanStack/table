@@ -1,4 +1,4 @@
-import { _createTable } from '@tanstack/table-core'
+import { constructTable } from '@tanstack/table-core'
 import type {
   RowData,
   Table,
@@ -51,7 +51,7 @@ export class TableController<
         ...options,
       }
 
-      this.tableInstance = _createTable(resolvedOptions)
+      this.tableInstance = constructTable(resolvedOptions)
       this._tableState = {
         ...this.tableInstance.initialState,
         ...options.state,
