@@ -1,9 +1,8 @@
-import * as React from 'react'
-
+import { useState, useRef } from 'react'
 import {
   constructTable,
-  builtInFeatures,
   getInitialTableState,
+  coreFeatures,
 } from '@tanstack/table-core'
 import type {
   RowData,
@@ -13,10 +12,13 @@ import type {
   TableState,
 } from '@tanstack/table-core'
 
+/**
+ * Creates a table instance and caches it in a ref so that it will only be constructed once.
+ */
 function useTableRef<TFeatures extends TableFeatures, TData extends RowData>(
   options: TableOptions<TFeatures, TData>,
 ): Table<TFeatures, TData> {
-  const tableRef = React.useRef<Table<TFeatures, TData>>()
+  const tableRef = useRef<Table<TFeatures, TData>>()
 
   if (!tableRef.current) {
     tableRef.current = constructTable(options)
@@ -33,12 +35,15 @@ export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
-  const [state, setState] = React.useState<TableState<TFeatures>>(() =>
-    getInitialTableState(builtInFeatures, tableOptions.initialState),
+  const _features = { ...coreFeatures, ...tableOptions._features }
+
+  const [state, setState] = useState<TableState<TFeatures>>(() =>
+    getInitialTableState(_features, tableOptions.initialState),
   )
 
   const statefulOptions: TableOptions<TFeatures, TData> = {
     ...tableOptions,
+    _features,
     state: { ...state, ...tableOptions.state },
     onStateChange: (updater) => {
       setState(updater)

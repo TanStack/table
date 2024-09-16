@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
 import { Component, input, isSignal, signal, untracked } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { createCoreRowModel, injectTable } from '../src/index'
+import { createCoreRowModel, injectTable } from '../src/injectTable'
 import { setSignalInputs } from './test-utils'
-import type { ColumnDef, Table } from '../src/index'
+import type { ColumnDef, Table } from '../src/injectTable'
 
 describe('injectTable', () => {
   test('should render with required signal inputs', () => {

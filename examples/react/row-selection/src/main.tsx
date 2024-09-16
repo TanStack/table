@@ -8,6 +8,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   flexRender,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -15,13 +16,19 @@ import type { Person } from './makeData'
 import type { Column, ColumnDef, Table } from '@tanstack/react-table'
 import './index.css'
 
+const _features = tableFeatures({
+  RowPagination,
+  RowSelection,
+  ColumnFiltering,
+})
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         id: 'select',
@@ -100,11 +107,11 @@ function App() {
     [],
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = React.useState(() => makeData(1_000))
+  const refreshData = () => setData(() => makeData(100_000)) // stress test
 
   const table = useTable({
-    _features: { RowPagination, RowSelection, ColumnFiltering },
+    _features,
     _rowModels: {
       Core: createCoreRowModel(),
       Filtered: createFilteredRowModel(),
@@ -115,7 +122,7 @@ function App() {
     state: {
       rowSelection,
     },
-    enableRowSelection: true, //enable row selection for all rows
+    enableRowSelection: true, // enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: setRowSelection,
     debugTable: true,
@@ -162,7 +169,7 @@ function App() {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
@@ -300,8 +307,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
-  table: Table<any, any>
+  column: Column<typeof _features, Person>
+  table: Table<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

@@ -18,6 +18,7 @@ export * from './types/type-utils'
  * Core
  */
 
+export * from './core/coreFeatures'
 export * from './helpers/columnHelper'
 export * from './helpers/tableOptions'
 export * from './helpers/tableFeatures'
@@ -59,6 +60,8 @@ export * from './core/table/Tables.utils'
 /**
  * Features
  */
+
+export * from './features/stockFeatures'
 
 // ColumnFaceting
 export * from './features/column-faceting/ColumnFaceting'
