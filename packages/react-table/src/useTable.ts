@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react'
+import { useRef, useState } from 'react'
 import {
   constructTable,
-  getInitialTableState,
   coreFeatures,
+  getInitialTableState,
 } from '@tanstack/table-core'
 import type {
   RowData,

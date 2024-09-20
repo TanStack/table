@@ -1,4 +1,8 @@
-import { constructTable } from '@tanstack/table-core'
+import {
+  constructTable,
+  coreFeatures,
+  getInitialTableState,
+} from '@tanstack/table-core'
 import type {
   RowData,
   TableFeatures,
@@ -6,41 +10,22 @@ import type {
   TableState,
 } from '@tanstack/table-core'
 
-/**
- * Creates a reactive TanStack table object for Svelte.
- * @param options Table options to create the table with.
- * @returns A reactive table object.
- * @example
- * ```svelte
- * <script>
- *   const table = createTable({ ... })
- * </script>
- *
- * <table>
- *   <thead>
- *     {#each table.getHeaderGroups() as headerGroup}
- *       <tr>
- *         {#each headerGroup.headers as header}
- *           <th colspan={header.colSpan}>
- *         	   <FlexRender content={header.column.columnDef.header} context={header.getContext()} />
- *         	 </th>
- *         {/each}
- *       </tr>
- *     {/each}
- *   </thead>
- * 	 <!-- ... -->
- * </table>
- * ```
- */
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(options: TableOptions<TFeatures, TData>) {
-  const resolvedOptions: TableOptions<TFeatures, TData> = mergeObjects(
+>(tableOptions: TableOptions<TFeatures, TData>) {
+  const _features = { ...coreFeatures, ...tableOptions._features }
+
+  console.log('features', _features)
+
+  let state = $state<Partial<TableState<TFeatures>>>(
+    getInitialTableState(_features, tableOptions.initialState),
+  )
+
+  const statefulOptions: TableOptions<TFeatures, TData> = mergeObjects(
     {
-      state: {},
-      onStateChange() {},
-      renderFallbackValue: null,
+      _features,
+      state: { ...state, ...tableOptions.state },
       mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
         newOptions: Partial<TableOptions<TFeatures, TData>>,
@@ -48,21 +33,24 @@ export function createTable<
         return mergeObjects(defaultOptions, newOptions)
       },
     },
-    options,
+    tableOptions,
   )
 
-  const table = constructTable(resolvedOptions)
-  let state = $state<Partial<TableState<TFeatures>>>(table.initialState)
+  console.log('statefulOptions', statefulOptions)
+
+  const table = constructTable(statefulOptions)
+
+  console.log('table', table)
 
   function updateOptions() {
     table.setOptions((prev) => {
-      return mergeObjects(prev, options, {
-        state: mergeObjects(state, options.state || {}),
+      return mergeObjects(prev, tableOptions, {
+        state: mergeObjects(state, tableOptions.state || {}),
         onStateChange: (updater: any) => {
           if (updater instanceof Function) state = updater(state)
           else state = mergeObjects(state, updater)
 
-          options.onStateChange?.(updater)
+          tableOptions.onStateChange?.(updater)
         },
       })
     })
@@ -71,7 +59,7 @@ export function createTable<
   updateOptions()
 
   $effect.pre(() => {
-    updateOptions()
+    updateOptions() // re-render the table whenever the state or options change
   })
 
   return table

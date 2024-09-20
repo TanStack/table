@@ -1,4 +1,4 @@
 export * from '@tanstack/table-core'
-export { default as FlexRender } from './flex-render.svelte'
+export { default as FlexRender } from './FlexRender.svelte'
 export { renderComponent } from './render-component'
-export { createTable } from './table.svelte'
+export { createTable } from './createTable.svelte'
