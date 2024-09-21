@@ -31,6 +31,13 @@ export interface ColumnDef_GlobalFiltering {
   enableGlobalFilter?: boolean
 }
 
+export interface ColumnDef_GlobalFiltering_Unavailable {
+  /**
+   * @deprecated Import the `GlobalFiltering` feature to use the global filtering APIs.
+   */
+  enableGlobalFilter?: boolean
+}
+
 export interface Column_GlobalFiltering {
   /**
    * Returns whether or not the column can be **globally** filtered. Set to `false` to disable a column from being scanned during global filtering.
@@ -77,6 +84,34 @@ export interface TableOptions_GlobalFiltering<
    * If provided, this function will be called with an `updaterFn` when `state.globalFilter` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering#onglobalfilterchange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
+   */
+  onGlobalFilterChange?: OnChangeFn<any>
+}
+
+export interface TableOptions_GlobalFiltering_Unavailable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * @deprecated Import the `GlobalFiltering` feature to use the global filtering APIs.
+   */
+  enableGlobalFilter?: boolean
+  /**
+   * @deprecated Import the `GlobalFiltering` feature to use the global filtering APIs.
+   */
+  getColumnCanGlobalFilter?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+  ) => boolean
+  /**
+   * @deprecated Import the `GlobalFiltering` feature to use the global filtering APIs.
+   */
+  globalFilterFn?: FilterFnOption<TFeatures, TData>
+  /**
+   * @deprecated Import the `GlobalFiltering` feature to use the global filtering APIs.
    */
   onGlobalFilterChange?: OnChangeFn<any>
 }

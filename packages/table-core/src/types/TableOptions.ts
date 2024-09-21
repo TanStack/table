@@ -3,19 +3,58 @@ import type { TableOptions_Columns } from '../core/columns/Columns.types'
 import type { TableOptions_Headers } from '../core/headers/Headers.types'
 import type { TableOptions_Rows } from '../core/rows/Rows.types'
 import type { TableOptions_Table } from '../core/table/Tables.types'
-import type { TableOptions_ColumnFiltering } from '../features/column-filtering/ColumnFiltering.types'
-import type { TableOptions_ColumnGrouping } from '../features/column-grouping/ColumnGrouping.types'
-import type { TableOptions_ColumnOrdering } from '../features/column-ordering/ColumnOrdering.types'
-import type { TableOptions_ColumnPinning } from '../features/column-pinning/ColumnPinning.types'
-import type { TableOptions_ColumnResizing } from '../features/column-resizing/ColumnResizing.types'
-import type { TableOptions_ColumnSizing } from '../features/column-sizing/ColumnSizing.types'
-import type { TableOptions_ColumnVisibility } from '../features/column-visibility/ColumnVisibility.types'
-import type { TableOptions_GlobalFiltering } from '../features/global-filtering/GlobalFiltering.types'
-import type { TableOptions_RowExpanding } from '../features/row-expanding/RowExpanding.types'
-import type { TableOptions_RowPagination } from '../features/row-pagination/RowPagination.types'
-import type { TableOptions_RowPinning } from '../features/row-pinning/RowPinning.types'
-import type { TableOptions_RowSelection } from '../features/row-selection/RowSelection.types'
-import type { TableOptions_RowSorting } from '../features/row-sorting/RowSorting.types'
+import type {
+  TableOptions_ColumnFiltering,
+  TableOptions_ColumnFiltering_Unavailable,
+} from '../features/column-filtering/ColumnFiltering.types'
+import type {
+  TableOptions_ColumnGrouping,
+  TableOptions_ColumnGrouping_Unavailable,
+} from '../features/column-grouping/ColumnGrouping.types'
+import type {
+  TableOptions_ColumnOrdering,
+  TableOptions_ColumnOrdering_Unavailable,
+} from '../features/column-ordering/ColumnOrdering.types'
+import type {
+  TableOptions_ColumnPinning,
+  TableOptions_ColumnPinning_Unavailable,
+} from '../features/column-pinning/ColumnPinning.types'
+import type {
+  TableOptions_ColumnResizing,
+  TableOptions_ColumnResizing_Unavailable,
+} from '../features/column-resizing/ColumnResizing.types'
+import type {
+  TableOptions_ColumnSizing,
+  TableOptions_ColumnSizing_Unavailable,
+} from '../features/column-sizing/ColumnSizing.types'
+import type {
+  TableOptions_ColumnVisibility,
+  TableOptions_ColumnVisibility_Unavailable,
+} from '../features/column-visibility/ColumnVisibility.types'
+import type {
+  TableOptions_GlobalFiltering,
+  TableOptions_GlobalFiltering_Unavailable,
+} from '../features/global-filtering/GlobalFiltering.types'
+import type {
+  TableOptions_RowExpanding,
+  TableOptions_RowExpanding_Unavailable,
+} from '../features/row-expanding/RowExpanding.types'
+import type {
+  TableOptions_RowPagination,
+  TableOptions_RowPagination_Unavailable,
+} from '../features/row-pagination/RowPagination.types'
+import type {
+  TableOptions_RowPinning,
+  TableOptions_RowPinning_Unavailable,
+} from '../features/row-pinning/RowPinning.types'
+import type {
+  TableOptions_RowSelection,
+  TableOptions_RowSelection_Unavailable,
+} from '../features/row-selection/RowSelection.types'
+import type {
+  TableOptions_RowSorting,
+  TableOptions_RowSorting_Unavailable,
+} from '../features/row-sorting/RowSorting.types'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 
@@ -35,41 +74,41 @@ export type TableOptions<
   UnionToIntersection<
     | ('ColumnFiltering' extends keyof TFeatures
         ? TableOptions_ColumnFiltering<TFeatures, TData>
-        : never)
+        : Partial<TableOptions_ColumnFiltering_Unavailable<TFeatures, TData>>)
     | ('ColumnGrouping' extends keyof TFeatures
         ? TableOptions_ColumnGrouping<TFeatures, TData>
-        : never)
+        : Partial<TableOptions_ColumnGrouping_Unavailable>)
     | ('ColumnOrdering' extends keyof TFeatures
         ? TableOptions_ColumnOrdering
-        : never)
+        : Partial<TableOptions_ColumnOrdering_Unavailable>)
     | ('ColumnPinning' extends keyof TFeatures
         ? TableOptions_ColumnPinning
-        : never)
+        : Partial<TableOptions_ColumnPinning_Unavailable>)
     | ('ColumnResizing' extends keyof TFeatures
         ? TableOptions_ColumnResizing
-        : never)
+        : Partial<TableOptions_ColumnResizing_Unavailable>)
     | ('ColumnSizing' extends keyof TFeatures
         ? TableOptions_ColumnSizing
-        : never)
+        : Partial<TableOptions_ColumnSizing_Unavailable>)
     | ('ColumnVisibility' extends keyof TFeatures
         ? TableOptions_ColumnVisibility
-        : never)
+        : Partial<TableOptions_ColumnVisibility_Unavailable>)
     | ('GlobalFiltering' extends keyof TFeatures
         ? TableOptions_GlobalFiltering<TFeatures, TData>
-        : never)
+        : Partial<TableOptions_GlobalFiltering_Unavailable<TFeatures, TData>>)
     | ('RowExpanding' extends keyof TFeatures
         ? TableOptions_RowExpanding<TFeatures, TData>
-        : never)
+        : Partial<TableOptions_RowExpanding_Unavailable<TFeatures, TData>>)
     | ('RowPagination' extends keyof TFeatures
         ? TableOptions_RowPagination
-        : never)
+        : Partial<TableOptions_RowPagination_Unavailable>)
     | ('RowPinning' extends keyof TFeatures
         ? TableOptions_RowPinning<TFeatures, TData>
-        : never)
+        : Partial<TableOptions_RowPinning_Unavailable<TFeatures, TData>>)
     | ('RowSelection' extends keyof TFeatures
         ? TableOptions_RowSelection<TFeatures, TData>
-        : never)
+        : Partial<TableOptions_RowSelection_Unavailable<TFeatures, TData>>)
     | ('RowSorting' extends keyof TFeatures
         ? TableOptions_RowSorting<TFeatures, TData>
-        : never)
+        : Partial<TableOptions_RowSorting_Unavailable>)
   >

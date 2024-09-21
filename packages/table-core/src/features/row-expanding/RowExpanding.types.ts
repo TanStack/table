@@ -98,6 +98,40 @@ export interface TableOptions_RowExpanding<
   paginateExpandedRows?: boolean
 }
 
+export interface TableOptions_RowExpanding_Unavailable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
+   */
+  autoResetExpanded?: boolean
+  /**
+   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
+   */
+  enableExpanding?: boolean
+  /**
+   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
+   */
+  getIsRowExpanded?: (row: Row<TFeatures, TData>) => boolean
+  /**
+   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
+   */
+  getRowCanExpand?: (row: Row<TFeatures, TData>) => boolean
+  /**
+   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
+   */
+  manualExpanding?: boolean
+  /**
+   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
+   */
+  onExpandedChange?: OnChangeFn<ExpandedState>
+  /**
+   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
+   */
+  paginateExpandedRows?: boolean
+}
+
 export interface Table_RowExpanding<
   TFeatures extends TableFeatures,
   TData extends RowData,

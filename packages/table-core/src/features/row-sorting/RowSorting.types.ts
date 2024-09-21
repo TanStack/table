@@ -17,10 +17,6 @@ export interface TableState_RowSorting {
   sorting: SortingState
 }
 
-export interface TableState_RowSorting {
-  sorting: SortingState
-}
-
 export interface TableState_RowSorting_Unavailable {
   /**
    * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
@@ -97,6 +93,36 @@ export interface ColumnDef_RowSorting<
    *   - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#sortundefined)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
+   */
+  sortUndefined?: false | -1 | 1 | 'first' | 'last'
+}
+
+export interface ColumnDef_RowSorting_Unavailable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  enableMultiSort?: boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  enableSorting?: boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  invertSorting?: boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  sortDescFirst?: boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  sortingFn?: SortingFnOption<TFeatures, TData>
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
    */
   sortUndefined?: false | -1 | 1 | 'first' | 'last'
 }
@@ -234,6 +260,45 @@ interface SortingOptionsBase {
    * If `true`, all sorts will default to descending as their first toggle state.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#sortdescfirst)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
+   */
+  sortDescFirst?: boolean
+}
+
+export interface TableOptions_RowSorting_Unavailable {
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  enableMultiRemove?: boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  enableMultiSort?: boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  enableSorting?: boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  enableSortingRemoval?: boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  isMultiSortEvent?: (e: unknown) => boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  manualSorting?: boolean
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  maxMultiSortColCount?: number
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   */
+  onSortingChange?: OnChangeFn<SortingState>
+  /**
+   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
    */
   sortDescFirst?: boolean
 }

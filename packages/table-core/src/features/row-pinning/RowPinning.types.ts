@@ -44,6 +44,24 @@ export interface TableOptions_RowPinning<
   onRowPinningChange?: OnChangeFn<RowPinningState>
 }
 
+export interface TableOptions_RowPinning_Unavailable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * @deprecated Import the `RowPinning` feature to use the row pinning APIs.
+   */
+  enableRowPinning?: boolean | ((row: Row<TFeatures, TData>) => boolean)
+  /**
+   * @deprecated Import the `RowPinning` feature to use the row pinning APIs.
+   */
+  keepPinnedRows?: boolean
+  /**
+   * @deprecated Import the `RowPinning` feature to use the row pinning APIs.
+   */
+  onRowPinningChange?: OnChangeFn<RowPinningState>
+}
+
 export interface RowPinningDefaultOptions {
   onRowPinningChange: OnChangeFn<RowPinningState>
 }

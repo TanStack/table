@@ -50,6 +50,29 @@ export interface TableOptions_RowPagination {
   rowCount?: number
 }
 
+export interface TableOptions_RowPagination_Unavailable {
+  /**
+   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
+   */
+  autoResetPageIndex?: boolean
+  /**
+   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
+   */
+  manualPagination?: boolean
+  /**
+   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
+   */
+  onPaginationChange?: OnChangeFn<PaginationState>
+  /**
+   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
+   */
+  pageCount?: number
+  /**
+   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
+   */
+  rowCount?: number
+}
+
 export interface PaginationDefaultOptions {
   onPaginationChange: OnChangeFn<PaginationState>
 }

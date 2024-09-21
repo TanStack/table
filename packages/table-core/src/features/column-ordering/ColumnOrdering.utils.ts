@@ -2,7 +2,6 @@ import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibil
 import {
   table_getInitialState,
   table_getState,
-  table_getState,
 } from '../../core/table/Tables.utils'
 import type { TableOptions_ColumnGrouping } from '../column-grouping/ColumnGrouping.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'

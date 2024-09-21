@@ -2,14 +2,38 @@ import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { CellContext } from '../core/cells/Cells.types'
 import type { HeaderContext } from '../core/headers/Headers.types'
-import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/ColumnFiltering.types'
-import type { ColumnDef_ColumnGrouping } from '../features/column-grouping/ColumnGrouping.types'
-import type { ColumnDef_ColumnPinning } from '../features/column-pinning/ColumnPinning.types'
-import type { ColumnDef_ColumnResizing } from '../features/column-resizing/ColumnResizing.types'
-import type { ColumnDef_ColumnSizing } from '../features/column-sizing/ColumnSizing.types'
-import type { ColumnDef_ColumnVisibility } from '../features/column-visibility/ColumnVisibility.types'
-import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/GlobalFiltering.types'
-import type { ColumnDef_RowSorting } from '../features/row-sorting/RowSorting.types'
+import type {
+  ColumnDef_ColumnFiltering,
+  ColumnDef_ColumnFiltering_Unavailable,
+} from '../features/column-filtering/ColumnFiltering.types'
+import type {
+  ColumnDef_ColumnGrouping,
+  ColumnDef_ColumnGrouping_Unavailable,
+} from '../features/column-grouping/ColumnGrouping.types'
+import type {
+  ColumnDef_ColumnPinning,
+  ColumnDef_ColumnPinning_Unavailable,
+} from '../features/column-pinning/ColumnPinning.types'
+import type {
+  ColumnDef_ColumnResizing,
+  ColumnDef_ColumnResizing_Unavailable,
+} from '../features/column-resizing/ColumnResizing.types'
+import type {
+  ColumnDef_ColumnSizing,
+  ColumnDef_ColumnSizing_Unavailable,
+} from '../features/column-sizing/ColumnSizing.types'
+import type {
+  ColumnDef_ColumnVisibility,
+  ColumnDef_ColumnVisibility_Unavailable,
+} from '../features/column-visibility/ColumnVisibility.types'
+import type {
+  ColumnDef_GlobalFiltering,
+  ColumnDef_GlobalFiltering_Unavailable,
+} from '../features/global-filtering/GlobalFiltering.types'
+import type {
+  ColumnDef_RowSorting,
+  ColumnDef_RowSorting_Unavailable,
+} from '../features/row-sorting/RowSorting.types'
 
 export interface ColumnMeta<
   TFeatures extends TableFeatures,
@@ -58,24 +82,28 @@ export type ColumnDefBase<
 > = UnionToIntersection<
   | ('ColumnVisibility' extends keyof TFeatures
       ? ColumnDef_ColumnVisibility
-      : never)
-  | ('ColumnPinning' extends keyof TFeatures ? ColumnDef_ColumnPinning : never)
+      : Partial<ColumnDef_ColumnVisibility_Unavailable>)
+  | ('ColumnPinning' extends keyof TFeatures
+      ? ColumnDef_ColumnPinning
+      : Partial<ColumnDef_ColumnPinning_Unavailable>)
   | ('ColumnFiltering' extends keyof TFeatures
       ? ColumnDef_ColumnFiltering<TFeatures, TData>
-      : never)
+      : Partial<ColumnDef_ColumnFiltering_Unavailable<TFeatures, TData>>)
   | ('GlobalFiltering' extends keyof TFeatures
       ? ColumnDef_GlobalFiltering
-      : never)
+      : Partial<ColumnDef_GlobalFiltering_Unavailable>)
   | ('RowSorting' extends keyof TFeatures
       ? ColumnDef_RowSorting<TFeatures, TData>
-      : never)
+      : Partial<ColumnDef_RowSorting_Unavailable<TFeatures, TData>>)
   | ('ColumnGrouping' extends keyof TFeatures
       ? ColumnDef_ColumnGrouping<TFeatures, TData, TValue>
-      : never)
-  | ('ColumnSizing' extends keyof TFeatures ? ColumnDef_ColumnSizing : never)
+      : Partial<ColumnDef_ColumnGrouping_Unavailable<TFeatures, TData, TValue>>)
+  | ('ColumnSizing' extends keyof TFeatures
+      ? ColumnDef_ColumnSizing
+      : Partial<ColumnDef_ColumnSizing_Unavailable>)
   | ('ColumnResizing' extends keyof TFeatures
       ? ColumnDef_ColumnResizing
-      : never)
+      : Partial<ColumnDef_ColumnResizing_Unavailable>)
 > & {
   getUniqueValues?: AccessorFn<TData, Array<unknown>>
   footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>

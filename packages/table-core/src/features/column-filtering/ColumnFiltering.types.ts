@@ -95,6 +95,20 @@ export interface ColumnDef_ColumnFiltering<
   filterFn?: FilterFnOption<TFeatures, TData>
 }
 
+export interface ColumnDef_ColumnFiltering_Unavailable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
+   */
+  enableColumnFilter?: boolean
+  /**
+   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
+   */
+  filterFn?: FilterFnOption<TFeatures, TData>
+}
+
 export interface Column_ColumnFiltering<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -201,6 +215,36 @@ interface ColumnFiltersOptionsBase<
    * If provided, this function will be called with an `updaterFn` when `state.columnFilters` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#oncolumnfilterschange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
+   */
+  onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
+}
+
+export interface TableOptions_ColumnFiltering_Unavailable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
+   */
+  enableColumnFilters?: boolean
+  /**
+   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
+   */
+  enableFilters?: boolean
+  /**
+   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
+   */
+  filterFromLeafRows?: boolean
+  /**
+   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
+   */
+  manualFiltering?: boolean
+  /**
+   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
+   */
+  maxLeafRowFilterDepth?: number
+  /**
+   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
    */
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
 }

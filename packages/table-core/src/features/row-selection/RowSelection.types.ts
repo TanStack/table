@@ -60,6 +60,28 @@ export interface TableOptions_RowSelection<
   // ) => RowModel<TFeatures, TData>
 }
 
+export interface TableOptions_RowSelection_Unavailable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * @deprecated Import the `RowSelection` feature to use the row selection APIs.
+   */
+  enableMultiRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
+  /**
+   * @deprecated Import the `RowSelection` feature to use the row selection APIs.
+   */
+  enableRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
+  /**
+   * @deprecated Import the `RowSelection` feature to use the row selection APIs.
+   */
+  enableSubRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
+  /**
+   * @deprecated Import the `RowSelection` feature to use the row selection APIs.
+   */
+  onRowSelectionChange?: OnChangeFn<RowSelectionState>
+}
+
 export interface Row_RowSelection {
   /**
    * Returns whether or not the row can multi-select.

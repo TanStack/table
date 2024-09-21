@@ -82,6 +82,31 @@ export interface ColumnDef_ColumnGrouping<
   getGroupingValue?: (row: TData) => any
 }
 
+export interface ColumnDef_ColumnGrouping_Unavailable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {
+  /**
+   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
+   */
+  aggregatedCell?: ColumnDefTemplate<
+    ReturnType<Cell<TFeatures, TData, TValue>['getContext']>
+  >
+  /**
+   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
+   */
+  aggregationFn?: AggregationFnOption<TFeatures, TData>
+  /**
+   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
+   */
+  enableGrouping?: boolean
+  /**
+   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
+   */
+  getGroupingValue?: (row: TData) => any
+}
+
 export interface Column_ColumnGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -207,6 +232,25 @@ interface GroupingOptionsBase {
    * If this function is provided, it will be called when the grouping state changes and you will be expected to manage the state yourself. You can pass the managed state back to the table via the `tableOptions.state.grouping` option.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#ongroupingchange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
+   */
+  onGroupingChange?: OnChangeFn<GroupingState>
+}
+
+export interface TableOptions_ColumnGrouping_Unavailable {
+  /**
+   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
+   */
+  enableGrouping?: boolean
+  /**
+   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
+   */
+  groupedColumnMode?: false | 'reorder' | 'remove'
+  /**
+   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
+   */
+  manualGrouping?: boolean
+  /**
+   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
    */
   onGroupingChange?: OnChangeFn<GroupingState>
 }
