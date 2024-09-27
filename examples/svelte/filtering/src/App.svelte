@@ -6,19 +6,33 @@
     TableOptions,
   } from '@tanstack/svelte-table'
   import {
+    ColumnFiltering,
+    ColumnVisibility,
     FlexRender,
-    createTable,
-    createCoreRowModel,
+    GlobalFiltering,
     createFilteredRowModel,
     createPaginatedRowModel,
+    createTable,
+    tableFeatures,
   } from '@tanstack/svelte-table'
   import { type Updater } from 'svelte/store'
   import './index.css'
   import { makeData, type Person } from './makeData'
 
+  const _features = tableFeatures({
+    ColumnVisibility,
+    GlobalFiltering,
+    ColumnFiltering,
+  })
+
   let globalFilter = $state('')
 
-  const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  const fuzzyFilter: FilterFn<typeof _features, Person> = (
+    row,
+    columnId,
+    value,
+    addMeta,
+  ) => {
     // Rank the item
     const itemRank = rankItem(row.getValue(columnId), value)
 
@@ -47,6 +61,11 @@
   }
 
   const options: TableOptions<any, Person> = {
+    _features,
+    _rowModels: {
+      Filtered: createFilteredRowModel(),
+      Paginated: createPaginatedRowModel(),
+    },
     data: makeData(25),
     columns,
     state: {
@@ -58,10 +77,7 @@
       fuzzy: fuzzyFilter,
     },
     onGlobalFilterChange: setGlobalFilter,
-    getPaginatedRowModel: createPaginatedRowModel(),
-    getCoreRowModel: createCoreRowModel(),
     globalFilterFn: fuzzyFilter,
-    getFilteredRowModel: createFilteredRowModel(),
     enableMultiRowSelection: true,
   }
 

@@ -4,20 +4,31 @@
     ColumnDef,
     ColumnOrderState,
     ColumnPinningState,
-    TableOptions,
     ColumnVisibilityState,
+    Header,
+    HeaderGroup,
+    TableOptions,
   } from '@tanstack/svelte-table'
   import {
+    ColumnPinning,
+    ColumnVisibility,
     FlexRender,
-    createCoreRowModel,
+    RowSorting,
     createSortedRowModel,
     createTable,
+    tableFeatures,
   } from '@tanstack/svelte-table'
   import './index.css'
   import { makeData, type Person } from './makeData'
   import { createTableState } from './state.svelte'
 
-  const columns: ColumnDef<any, Person>[] = [
+  const _features = tableFeatures({
+    RowSorting,
+    ColumnVisibility,
+    ColumnPinning,
+  })
+
+  const columns: ColumnDef<typeof _features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -74,11 +85,13 @@
 
   const [columnOrder, setColumnOrder] = createTableState<ColumnOrderState>([])
   const [columnPinning, setColumnPinning] =
-    createTableState<ColumnPinningState>({})
+    createTableState<ColumnPinningState>({ left: [], right: [] })
   const [columnVisibility, setColumnVisibility] =
     createTableState<ColumnVisibilityState>({})
 
   const options: TableOptions<any, Person> = {
+    _features,
+    _rowModels: { Sorted: createSortedRowModel() },
     get data() {
       return data
     },
@@ -97,8 +110,6 @@
     onColumnOrderChange: setColumnOrder,
     onColumnPinningChange: setColumnPinning,
     onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
     debugTable: true,
   }
 
@@ -110,6 +121,53 @@
 
   const table = createTable(options)
 </script>
+
+{#snippet headerCell(header: Header<any, Person, unknown>)}
+  <th colSpan={header.colSpan}>
+    <div class="whitespace-nowrap">
+      {#if !header.isPlaceholder}
+        <FlexRender
+          content={header.column.columnDef.header}
+          context={header.getContext()}
+        />
+      {/if}
+    </div>
+    {#if !header.isPlaceholder && header.column.getCanPin()}
+      <div class="flex gap-1 justify-center">
+        {#if header.column.getIsPinned() !== 'left'}
+          <button
+            class="border rounded px-2"
+            onclick={() => {
+              header.column.pin('left')
+            }}
+          >
+            {'<='}
+          </button>
+        {/if}
+        {#if header.column.getIsPinned()}
+          <button
+            class="border rounded px-2"
+            onclick={() => {
+              header.column.pin(false)
+            }}
+          >
+            X
+          </button>
+        {/if}
+        {#if header.column.getIsPinned() !== 'right'}
+          <button
+            class="border rounded px-2"
+            onclick={() => {
+              header.column.pin('right')
+            }}
+          >
+            {'=>'}
+          </button>
+        {/if}
+      </div>
+    {/if}
+  </th>
+{/snippet}
 
 <div class="p-2">
   <div class="inline-block border border-black shadow rounded">
@@ -170,50 +228,7 @@
           {#each table.getLeftHeaderGroups() as headerGroup}
             <tr>
               {#each headerGroup.headers as header}
-                <th colSpan={header.colSpan}>
-                  <div class="whitespace-nowrap">
-                    {#if !header.isPlaceholder}
-                      <FlexRender
-                        content={header.column.columnDef.header}
-                        context={header.getContext()}
-                      />
-                    {/if}
-                  </div>
-                  {#if !header.isPlaceholder && header.column.getCanPin()}
-                    <div class="flex gap-1 justify-center">
-                      {#if header.column.getIsPinned() !== 'left'}
-                        <button
-                          class="border rounded px-2"
-                          onclick={() => {
-                            header.column.pin('left')
-                          }}
-                        >
-                          {'<='}
-                        </button>
-                      {/if}
-                      {#if header.column.getIsPinned()}
-                        <button
-                          class="border rounded px-2"
-                          onclick={() => {
-                            header.column.pin(false)
-                          }}
-                        >
-                          X
-                        </button>
-                      {/if}
-                      {#if header.column.getIsPinned() !== 'right'}
-                        <button
-                          class="border rounded px-2"
-                          onclick={() => {
-                            header.column.pin('right')
-                          }}
-                        >
-                          {'=>'}
-                        </button>
-                      {/if}
-                    </div>
-                  {/if}
-                </th>
+                {@render headerCell(header)}
               {/each}
             </tr>
           {/each}
@@ -239,50 +254,7 @@
         {#each isSplit ? table.getCenterHeaderGroups() : table.getHeaderGroups() as headerGroup}
           <tr>
             {#each headerGroup.headers as header}
-              <th colSpan={header.colSpan}>
-                <div class="whitespace-nowrap">
-                  {#if !header.isPlaceholder}
-                    <FlexRender
-                      content={header.column.columnDef.header}
-                      context={header.getContext()}
-                    />
-                  {/if}
-                </div>
-                {#if !header.isPlaceholder && header.column.getCanPin()}
-                  <div class="flex gap-1 justify-center">
-                    {#if header.column.getIsPinned() !== 'left'}
-                      <button
-                        class="border rounded px-2"
-                        onclick={() => {
-                          header.column.pin('left')
-                        }}
-                      >
-                        {'<='}
-                      </button>
-                    {/if}
-                    {#if header.column.getIsPinned()}
-                      <button
-                        class="border rounded px-2"
-                        onclick={() => {
-                          header.column.pin(false)
-                        }}
-                      >
-                        X
-                      </button>
-                    {/if}
-                    {#if header.column.getIsPinned() !== 'right'}
-                      <button
-                        class="border rounded px-2"
-                        onclick={() => {
-                          header.column.pin('right')
-                        }}
-                      >
-                        {'=>'}
-                      </button>
-                    {/if}
-                  </div>
-                {/if}
-              </th>
+              {@render headerCell(header)}
             {/each}
           </tr>
         {/each}
@@ -308,50 +280,7 @@
           {#each table.getRightHeaderGroups() as headerGroup}
             <tr>
               {#each headerGroup.headers as header}
-                <th colSpan={header.colSpan}>
-                  <div class="whitespace-nowrap">
-                    {#if !header.isPlaceholder}
-                      <FlexRender
-                        content={header.column.columnDef.header}
-                        context={header.getContext()}
-                      />
-                    {/if}
-                  </div>
-                  {#if !header.isPlaceholder && header.column.getCanPin()}
-                    <div class="flex gap-1 justify-center">
-                      {#if header.column.getIsPinned() !== 'left'}
-                        <button
-                          class="border rounded px-2"
-                          onclick={() => {
-                            header.column.pin('left')
-                          }}
-                        >
-                          {'<='}
-                        </button>
-                      {/if}
-                      {#if header.column.getIsPinned()}
-                        <button
-                          class="border rounded px-2"
-                          onclick={() => {
-                            header.column.pin(false)
-                          }}
-                        >
-                          X
-                        </button>
-                      {/if}
-                      {#if header.column.getIsPinned() !== 'right'}
-                        <button
-                          class="border rounded px-2"
-                          onclick={() => {
-                            header.column.pin('right')
-                          }}
-                        >
-                          {'=>'}
-                        </button>
-                      {/if}
-                    </div>
-                  {/if}
-                </th>
+                {@render headerCell(header)}
               {/each}
             </tr>
           {/each}
@@ -373,5 +302,6 @@
       </table>
     {/if}
   </div>
+  <br />
   <pre>{JSON.stringify(table.getState().columnPinning, null, 2)}</pre>
 </div>

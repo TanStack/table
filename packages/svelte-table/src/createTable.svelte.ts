@@ -23,6 +23,7 @@ export function createTable<
   )
 
   const statefulOptions: TableOptions<TFeatures, TData> = mergeObjects(
+    tableOptions,
     {
       _features,
       state: { ...state, ...tableOptions.state },
@@ -33,7 +34,6 @@ export function createTable<
         return mergeObjects(defaultOptions, newOptions)
       },
     },
-    tableOptions,
   )
 
   console.log('statefulOptions', statefulOptions)
