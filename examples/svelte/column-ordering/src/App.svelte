@@ -3,19 +3,24 @@
   import type {
     ColumnDef,
     ColumnOrderState,
-    OnChangeFn,
-    TableOptions,
     ColumnVisibilityState,
+    TableOptions,
   } from '@tanstack/svelte-table'
   import {
+    ColumnOrdering,
+    ColumnVisibility,
     FlexRender,
-    createCoreRowModel,
-    createSortedRowModel,
     createTable,
+    tableFeatures,
   } from '@tanstack/svelte-table'
   import './index.css'
   import { makeData, type Person } from './makeData'
   import { createTableState } from './state.svelte'
+
+  const _features = tableFeatures({
+    ColumnOrdering,
+    ColumnVisibility,
+  })
 
   const columns: ColumnDef<any, Person>[] = [
     {
@@ -75,7 +80,9 @@
   const [columnVisibility, setColumnVisibility] =
     createTableState<ColumnVisibilityState>({})
 
-  const options: TableOptions<any, Person> = {
+  const options: TableOptions<typeof _features, Person> = {
+    _features,
+    _rowModels: {},
     get data() {
       return data
     },
@@ -90,8 +97,6 @@
     },
     onColumnOrderChange: setColumnOrder,
     onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
     debugTable: true,
   }
 

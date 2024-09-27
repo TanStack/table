@@ -1,15 +1,15 @@
 <script lang="ts">
   import type {
     ColumnDef,
-    TableOptions,
     ColumnVisibilityState,
+    TableOptions,
     Updater,
   } from '@tanstack/svelte-table'
   import {
+    ColumnVisibility,
     FlexRender,
     createTable,
-    createCoreRowModel,
-    createSortedRowModel,
+    tableFeatures,
   } from '@tanstack/svelte-table'
   import './index.css'
 
@@ -49,7 +49,7 @@
     },
   ]
 
-  const columns: ColumnDef<any, Person>[] = [
+  const columns: ColumnDef<typeof _features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -101,6 +101,8 @@
     },
   ]
 
+  const _features = tableFeatures({ ColumnVisibility })
+
   let columnVisibility = $state<ColumnVisibilityState>({})
 
   function setColumnVisibility(updater: Updater<ColumnVisibilityState>) {
@@ -109,7 +111,9 @@
     } else columnVisibility = updater
   }
 
-  const options: TableOptions<any, Person> = {
+  const options: TableOptions<typeof _features, Person> = {
+    _features,
+    _rowModels: {},
     data: defaultData,
     columns,
     state: {
@@ -118,8 +122,6 @@
       },
     },
     onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
     debugTable: true,
   }
 

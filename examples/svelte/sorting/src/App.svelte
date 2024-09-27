@@ -7,16 +7,21 @@
   } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    createTable,
-    createCoreRowModel,
+    RowSorting,
     createSortedRowModel,
+    createTable,
     renderComponent,
+    tableFeatures,
   } from '@tanstack/svelte-table'
   import Header from './Header.svelte'
   import './index.css'
   import { makeData, type Person } from './makeData'
 
-  const columns: ColumnDef<any, Person>[] = [
+  const _features = tableFeatures({
+    RowSorting: RowSorting,
+  })
+
+  const columns: ColumnDef<typeof _features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -74,8 +79,7 @@
     },
   ]
 
-  let data = $state(makeData(100_000))
-
+  let data = $state(makeData(1_000))
   let sorting = $state<SortingState>([])
 
   function setSorting(updater: Updater<SortingState>) {
@@ -84,7 +88,11 @@
     } else sorting = updater
   }
 
-  const options: TableOptions<any, Person> = {
+  const options: TableOptions<typeof _features, Person> = {
+    _features,
+    _rowModels: {
+      Sorted: createSortedRowModel(),
+    },
     get data() {
       return data
     },
@@ -95,8 +103,6 @@
       },
     },
     onSortingChange: setSorting,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
     debugTable: true,
   }
 
@@ -130,7 +136,7 @@
     <tbody>
       {#each table.getRowModel().rows.slice(0, 10) as row}
         <tr>
-          {#each row.getVisibleCells() as cell}
+          {#each row.getAllCells() as cell}
             <td>
               <FlexRender
                 content={cell.column.columnDef.cell}

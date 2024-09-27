@@ -4,6 +4,7 @@
     FlexRender,
     createCoreRowModel,
     createTable,
+    tableFeatures,
     tableOptions,
   } from '@tanstack/svelte-table'
   import './index.css'
@@ -44,7 +45,9 @@
     },
   ]
 
-  const defaultColumns: ColumnDef<any, Person>[] = [
+  const _features = tableFeatures({})
+
+  const defaultColumns: ColumnDef<typeof _features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -97,9 +100,10 @@
   ]
 
   const options = tableOptions({
+    _features,
+    _rowModels: {},
     data: defaultData,
     columns: defaultColumns,
-    getCoreRowModel: createCoreRowModel(),
   })
 
   const table = createTable(options)
@@ -126,7 +130,7 @@
     <tbody>
       {#each table.getRowModel().rows as row}
         <tr>
-          {#each row.getVisibleCells() as cell}
+          {#each row.getAllCells() as cell}
             <td>
               <FlexRender
                 content={cell.column.columnDef.cell}

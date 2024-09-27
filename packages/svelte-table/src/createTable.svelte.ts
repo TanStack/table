@@ -16,13 +16,12 @@ export function createTable<
 >(tableOptions: TableOptions<TFeatures, TData>) {
   const _features = { ...coreFeatures, ...tableOptions._features }
 
-  console.log('features', _features)
-
   let state = $state<Partial<TableState<TFeatures>>>(
     getInitialTableState(_features, tableOptions.initialState),
   )
 
   const statefulOptions: TableOptions<TFeatures, TData> = mergeObjects(
+    tableOptions,
     {
       _features,
       state: { ...state, ...tableOptions.state },
@@ -33,14 +32,9 @@ export function createTable<
         return mergeObjects(defaultOptions, newOptions)
       },
     },
-    tableOptions,
   )
 
-  console.log('statefulOptions', statefulOptions)
-
   const table = constructTable(statefulOptions)
-
-  console.log('table', table)
 
   function updateOptions() {
     table.setOptions((prev) => {
