@@ -2,14 +2,10 @@ import { filterFns } from '../../fns/filterFns'
 import { isFunction } from '../../utils'
 import { table_getInitialState } from '../../core/table/Tables.utils'
 import type { ColumnDefBase_All } from '../../types/ColumnDef'
-import type { TableOptions_GlobalFiltering } from './GlobalFiltering.types'
-import type {
-  FilterFn,
-  TableOptions_ColumnFiltering,
-} from '../column-filtering/ColumnFiltering.types'
+import type { FilterFn } from '../column-filtering/ColumnFiltering.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 

@@ -12,13 +12,12 @@ import { column_getIndex } from '../column-ordering/ColumnOrdering.utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 import type {
   ColumnDef_ColumnSizing,
   ColumnSizingState,
-  TableOptions_ColumnSizing,
 } from './ColumnSizing.types'
 
 export function getDefaultColumnSizingState() {
@@ -37,7 +36,7 @@ export function column_getSize<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnSizing
   },
-  table: Table<TFeatures, TData> & { options: TableOptions_ColumnSizing },
+  table: Table_Internal<TFeatures, TData>,
 ): number {
   const defaultSizes = getDefaultColumnSizingState()
   const columnSize = table_getState(table).columnSizing?.[column.id]
@@ -59,7 +58,7 @@ export function column_getStart<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnSizing
   },
-  table: Table<TFeatures, TData> & { options: TableOptions_ColumnSizing },
+  table: Table_Internal<TFeatures, TData>,
   position?: false | 'left' | 'right' | 'center',
 ): number {
   return column_getVisibleLeafColumns(table, position)
@@ -73,7 +72,7 @@ export function column_getAfter<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   position?: false | 'left' | 'right' | 'center',
 ): number {
   return column_getVisibleLeafColumns(table, position)
@@ -85,7 +84,10 @@ export function column_resetSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(table: Table<TFeatures, TData>, column: Column<TFeatures, TData, TValue>) {
+>(
+  table: Table_Internal<TFeatures, TData>,
+  column: Column<TFeatures, TData, TValue>,
+) {
   table_setColumnSizing(table, ({ [column.id]: _, ...rest }) => {
     return rest
   })
@@ -95,7 +97,10 @@ export function header_getSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(header: Header<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
+>(
+  header: Header<TFeatures, TData, TValue>,
+  table: Table_Internal<TFeatures, TData>,
+) {
   let sum = 0
 
   const recurse = (h: Header<TFeatures, TData, TValue>) => {
@@ -117,7 +122,7 @@ export function header_getStart<
   TValue extends CellData = CellData,
 >(
   header: Header<TFeatures, TData, TValue>,
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
 ): number {
   if (header.index > 0) {
     const prevSiblingHeader = header.headerGroup?.headers[header.index - 1]
@@ -136,7 +141,7 @@ export function table_setColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData> & { options: TableOptions_ColumnSizing },
+  table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnSizingState>,
 ) {
   table.options.onColumnSizingChange?.(updater)
@@ -145,7 +150,7 @@ export function table_setColumnSizing<
 export function table_resetColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
     defaultState ? {} : table_getInitialState(table).columnSizing ?? {},
@@ -155,7 +160,7 @@ export function table_resetColumnSizing<
 export function table_getTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return (
     table_getHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
       return sum + header_getSize(header, table)
@@ -166,7 +171,7 @@ export function table_getTotalSize<
 export function table_getLeftTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return (
     table_getLeftHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
       return sum + header_getSize(header, table)
@@ -177,7 +182,7 @@ export function table_getLeftTotalSize<
 export function table_getCenterTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return (
     table_getCenterHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
       return sum + header_getSize(header, table)
@@ -188,7 +193,7 @@ export function table_getCenterTotalSize<
 export function table_getRightTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return (
     table_getRightHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
       return sum + header_getSize(header, table)

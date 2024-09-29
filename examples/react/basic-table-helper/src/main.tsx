@@ -1,6 +1,7 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createTableHelper, flexRender } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 import './index.css'
 
 // This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
@@ -94,7 +95,7 @@ const columns = [
     header: 'Profile Progress',
     footer: (info) => info.column.id,
   }),
-]
+] as Array<ColumnDef<typeof tableHelper.features, Person, unknown>>
 
 function App() {
   // 6. Store data with a stable reference

@@ -10,13 +10,12 @@ import {
 } from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 import type { ColumnSizingState } from '../column-sizing/ColumnSizing.types'
 import type {
   ColumnDef_ColumnResizing,
-  TableOptions_ColumnResizing,
   columnResizingState,
 } from './ColumnResizing.types'
 
@@ -39,9 +38,7 @@ export function column_getCanResize<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnResizing>
   },
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnResizing>
-  },
+  table: Table_Internal<TFeatures, TData>,
 ) {
   return (
     (column.columnDef.enableResizing ?? true) &&
@@ -57,9 +54,7 @@ export function column_getIsResizing<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnResizing>
   },
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnResizing>
-  },
+  table: Table_Internal<TFeatures, TData>,
 ) {
   return table_getState(table).columnResizing?.isResizingColumn === column.id
 }
@@ -70,9 +65,7 @@ export function header_getResizeHandler<
   TValue extends CellData = CellData,
 >(
   header: Header<TFeatures, TData, TValue>,
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnResizing>
-  },
+  table: Table_Internal<TFeatures, TData>,
   _contextDocument?: Document,
 ) {
   const column = table_getColumn(table, header.column.id)!
@@ -245,23 +238,16 @@ export function table_setColumnResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnResizing>
-  },
+  table: Table_Internal<TFeatures, TData>,
   updater: Updater<columnResizingState>,
 ) {
-  table.options.oncolumnResizingChange?.(updater)
+  table.options.onColumnResizingChange?.(updater)
 }
 
 export function table_resetHeaderSizeInfo<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnResizing>
-  },
-  defaultState?: boolean,
-) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnResizing(
     table,
     defaultState

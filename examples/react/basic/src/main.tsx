@@ -110,8 +110,6 @@ function App() {
     // add additional table options here
   })
 
-  console.log('table', table)
-
   // 7. Render your table markup from the table instance APIs
   return (
     <div className="p-2">

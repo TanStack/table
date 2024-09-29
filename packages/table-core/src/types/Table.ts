@@ -84,7 +84,7 @@ export type Table<
 export type Table_Internal<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Omit<Table<TFeatures, TData>, 'getState' | 'options'> & {
+> = Table<TFeatures, TData> & {
   getState: () => TableState_All
   options: TableOptions_All<TFeatures, TData>
 }

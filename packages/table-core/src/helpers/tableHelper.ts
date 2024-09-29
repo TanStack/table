@@ -47,19 +47,22 @@ export function constructTableHelper<
   ) => Table<TFeatures, TData>,
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper_Core<TFeatures, TData> {
+  const { TData: _TData, ..._tableHelperOptions } = tableHelperOptions
   return {
     columnHelper: createColumnHelper<TFeatures, TData>(),
-    features: tableHelperOptions._features as TFeatures,
-    options: tableHelperOptions,
+    features: tableHelperOptions._features,
+    options: _tableHelperOptions as any,
     tableCreator: (tableOptions) =>
-      tableCreator({ ...tableHelperOptions, ...tableOptions }),
+      tableCreator({ ...(_tableHelperOptions as any), ...tableOptions }),
   }
 }
 
 // test
 
 // // eslint-disable-next-line import/first, import/order
-// import { constructTable } from '../core/table/createTable'
+// import { constructTable } from '../core/table/constructTable'
+// // eslint-disable-next-line import/first, import/order
+// import { type ColumnDef } from '../types/ColumnDef'
 
 // type Person = {
 //   firstName: string
@@ -74,11 +77,14 @@ export function constructTableHelper<
 // })
 
 // const columns = [
-//   tableHelper.columnHelper.accessor('firstName', { header: 'First Name' }),
+//   tableHelper.columnHelper.accessor('firstName', {
+//     header: 'First Name',
+//     cell: (info) => info.getValue(),
+//   }),
 //   tableHelper.columnHelper.accessor('lastName', { header: 'Last Name' }),
 //   tableHelper.columnHelper.accessor('age', { header: 'Age' }),
 //   tableHelper.columnHelper.display({ header: 'Actions', id: 'actions' }),
-// ]
+// ] as Array<ColumnDef<typeof tableHelper.features, Person, unknown>>
 
 // const data: Array<Person> = []
 

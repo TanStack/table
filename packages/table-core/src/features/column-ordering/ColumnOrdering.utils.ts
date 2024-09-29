@@ -3,16 +3,12 @@ import {
   table_getInitialState,
   table_getState,
 } from '../../core/table/Tables.utils'
-import type { TableOptions_ColumnGrouping } from '../column-grouping/ColumnGrouping.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
-import type {
-  ColumnOrderState,
-  TableOptions_ColumnOrdering,
-} from './ColumnOrdering.types'
+import type { ColumnOrderState } from './ColumnOrdering.types'
 
 export function column_getIndex<
   TFeatures extends TableFeatures,
@@ -20,7 +16,7 @@ export function column_getIndex<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
@@ -33,7 +29,7 @@ export function column_getIsFirstColumn<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
@@ -46,7 +42,7 @@ export function column_getIsLastColumn<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
@@ -56,19 +52,14 @@ export function column_getIsLastColumn<
 export function table_setColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnOrdering>
-  },
-  updater: Updater<ColumnOrderState>,
-) {
+>(table: Table_Internal<TFeatures, TData>, updater: Updater<ColumnOrderState>) {
   table.options.onColumnOrderChange?.(updater)
 }
 
 export function table_resetColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
     defaultState ? [] : table_getInitialState(table).columnOrder ?? [],
@@ -78,7 +69,7 @@ export function table_resetColumnOrder<
 export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const { columnOrder = [] } = table_getState(table)
 
   return (columns: Array<Column<TFeatures, TData, unknown>>) => {
@@ -118,12 +109,7 @@ export function orderColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData> & {
-    options: Partial<
-      TableOptions_ColumnOrdering &
-        TableOptions_ColumnGrouping<TFeatures, TData>
-    >
-  },
+  table: Table_Internal<TFeatures, TData>,
   leafColumns: Array<Column<TFeatures, TData, unknown>>,
 ) {
   const { grouping = [] } = table_getState(table)

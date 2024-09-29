@@ -48,7 +48,7 @@ export interface TableOptions_ColumnResizing {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#oncolumnResizingchange)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
-  oncolumnResizingChange?: OnChangeFn<columnResizingState>
+  onColumnResizingChange?: OnChangeFn<columnResizingState>
 }
 
 export interface TableOptions_ColumnResizing_Unavailable {
@@ -72,7 +72,7 @@ export interface TableOptions_ColumnResizing_Unavailable {
 
 export type ColumnResizingDefaultOptions = Pick<
   TableOptions_ColumnResizing,
-  'columnResizeMode' | 'oncolumnResizingChange' | 'columnResizeDirection'
+  'columnResizeMode' | 'onColumnResizingChange' | 'columnResizeDirection'
 >
 
 export interface Table_ColumnResizing {

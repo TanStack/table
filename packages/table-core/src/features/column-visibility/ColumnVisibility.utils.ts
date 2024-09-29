@@ -14,14 +14,13 @@ import {
 } from '../column-pinning/ColumnPinning.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 import type {
   ColumnDef_ColumnVisibility,
   ColumnVisibilityState,
-  TableOptions_ColumnVisibility,
 } from './ColumnVisibility.types'
 import type { Row } from '../../types/Row'
 
@@ -33,9 +32,7 @@ export function column_toggleVisibility<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnVisibility>
   },
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
+  table: Table_Internal<TFeatures, TData>,
   visible?: boolean,
 ): void {
   if (column_getCanHide(column, table)) {
@@ -54,9 +51,7 @@ export function column_getIsVisible<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnVisibility>
   },
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
+  table: Table_Internal<TFeatures, TData>,
 ): boolean {
   const childColumns = column.columns
   return (
@@ -74,9 +69,7 @@ export function column_getCanHide<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnVisibility>
   },
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
+  table: Table_Internal<TFeatures, TData>,
 ) {
   return (
     (column.columnDef.enableHiding ?? true) &&
@@ -92,9 +85,7 @@ export function column_getToggleVisibilityHandler<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnVisibility>
   },
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
+  table: Table_Internal<TFeatures, TData>,
 ) {
   return (e: unknown) => {
     column_toggleVisibility(
@@ -109,9 +100,7 @@ export function column_getVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
+  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   return !position
@@ -126,12 +115,7 @@ export function column_getVisibleLeafColumns<
 export function row_getAllVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
-) {
+>(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
   return row_getAllCells(row, table).filter((cell) =>
     column_getIsVisible(cell.column, table),
   )
@@ -151,11 +135,7 @@ export function row_getVisibleCells<
 export function table_getVisibleFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
-) {
+>(table: Table_Internal<TFeatures, TData>) {
   return table_getAllFlatColumns(table).filter((column) =>
     column_getIsVisible(column, table),
   )
@@ -164,11 +144,7 @@ export function table_getVisibleFlatColumns<
 export function table_getVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
-) {
+>(table: Table_Internal<TFeatures, TData>) {
   return table_getAllLeafColumns(table).filter((column) =>
     column_getIsVisible(column, table),
   )
@@ -178,9 +154,7 @@ export function table_setColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
+  table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnVisibilityState>,
 ) {
   table.options.onColumnVisibilityChange?.(updater)
@@ -189,12 +163,7 @@ export function table_setColumnVisibility<
 export function table_resetColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
-  defaultState?: boolean,
-) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnVisibility(
     table,
     defaultState ? {} : table_getInitialState(table).columnVisibility ?? {},
@@ -204,12 +173,7 @@ export function table_resetColumnVisibility<
 export function table_toggleAllColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
-  value?: boolean,
-) {
+>(table: Table_Internal<TFeatures, TData>, value?: boolean) {
   value = value ?? !table_getIsAllColumnsVisible(table)
 
   table_setColumnVisibility(
@@ -227,11 +191,7 @@ export function table_toggleAllColumnsVisible<
 export function table_getIsAllColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
-) {
+>(table: Table_Internal<TFeatures, TData>) {
   return !table
     .getAllLeafColumns()
     .some((column) => !column_getIsVisible(column, table))
@@ -240,11 +200,7 @@ export function table_getIsAllColumnsVisible<
 export function table_getIsSomeColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
-) {
+>(table: Table_Internal<TFeatures, TData>) {
   return table
     .getAllLeafColumns()
     .some((column) => column_getIsVisible(column, table))
@@ -253,11 +209,7 @@ export function table_getIsSomeColumnsVisible<
 export function table_getToggleAllColumnsVisibilityHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_ColumnVisibility>
-  },
-) {
+>(table: Table_Internal<TFeatures, TData>) {
   return (e: unknown) => {
     table_toggleAllColumnsVisible(
       table,
