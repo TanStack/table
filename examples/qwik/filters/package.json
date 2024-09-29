@@ -10,11 +10,11 @@
     "lint": "eslint ./src"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.6.0",
-    "@faker-js/faker": "^8.4.1",
+    "@builder.io/qwik": "^1.9.0",
+    "@faker-js/faker": "^9.0.3",
     "serve": "^14.2.3",
-    "typescript": "5.4.5",
-    "vite": "^5.3.2"
+    "typescript": "5.6.2",
+    "vite": "^5.4.8"
   },
   "dependencies": {
     "@tanstack/qwik-table": "^9.0.0-alpha.10",

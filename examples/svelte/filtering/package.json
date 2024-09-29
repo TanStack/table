@@ -11,15 +11,15 @@
     "lint": "eslint ./src"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.4.1",
-    "@rollup/plugin-replace": "^5.0.7",
+    "@faker-js/faker": "^9.0.3",
+    "@rollup/plugin-replace": "^6.0.1",
     "@sveltejs/vite-plugin-svelte": "^4.0.0-next",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/svelte-table": "^9.0.0-alpha.10",
     "@tsconfig/svelte": "^5.0.4",
     "svelte": "5.0.0-next.260",
-    "svelte-check": "^3.8.4",
-    "typescript": "5.4.5",
-    "vite": "^5.3.2"
+    "svelte-check": "^4.0.4",
+    "typescript": "5.6.2",
+    "vite": "^5.4.8"
   }
 }
