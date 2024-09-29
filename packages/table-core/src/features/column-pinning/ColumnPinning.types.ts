@@ -20,7 +20,7 @@ export interface TableState_ColumnPinning_Unavailable {
   /**
    * @deprecated Import the `ColumnPinning` feature to use the column pinning APIs.
    */
-  columnPinning: ColumnPinningState
+  columnPinning?: ColumnPinningState
 }
 
 export interface TableOptions_ColumnPinning {

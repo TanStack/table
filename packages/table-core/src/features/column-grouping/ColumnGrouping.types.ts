@@ -21,7 +21,7 @@ export interface TableState_ColumnGrouping_Unavailable {
   /**
    * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
    */
-  grouping: GroupingState
+  grouping?: GroupingState
 }
 
 export interface AggregationFns {}

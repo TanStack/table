@@ -12,7 +12,7 @@ export interface TableState_ColumnOrdering_Unavailable {
   /**
    * @deprecated Import the `ColumnOrdering` feature to use the column ordering APIs.
    */
-  columnOrder: ColumnOrderState
+  columnOrder?: ColumnOrderState
 }
 
 export interface TableOptions_ColumnOrdering {

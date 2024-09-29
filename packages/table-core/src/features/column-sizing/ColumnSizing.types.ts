@@ -9,7 +9,7 @@ export interface TableState_ColumnSizing_Unavailable {
   /**
    * @deprecated Import the `ColumnSizing` feature to use the column sizing APIs.
    */
-  columnSizing: ColumnSizingState
+  columnSizing?: ColumnSizingState
 }
 
 export type ColumnSizingState = Record<string, number>

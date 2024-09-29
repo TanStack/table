@@ -14,7 +14,7 @@ export interface TableState_RowExpanding_Unavailable {
   /**
    * @deprecated Import the `RowExpanding` feature to use the row expansion APIs.
    */
-  expanded: ExpandedState
+  expanded?: ExpandedState
 }
 
 export interface Row_RowExpanding {

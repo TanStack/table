@@ -19,7 +19,7 @@ export interface TableState_GlobalFiltering_Unavailable {
   /**
    * @deprecated Import the `GlobalFiltering` feature to use the global filtering APIs.
    */
-  globalFilter: any
+  globalFilter?: any
 }
 
 export interface ColumnDef_GlobalFiltering {

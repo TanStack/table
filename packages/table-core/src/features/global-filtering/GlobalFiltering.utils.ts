@@ -1,18 +1,15 @@
 import { filterFns } from '../../fns/filterFns'
 import { isFunction } from '../../utils'
 import { table_getInitialState } from '../../core/table/Tables.utils'
+import type { ColumnDefBase_All } from '../../types/ColumnDef'
+import type { TableOptions_GlobalFiltering } from './GlobalFiltering.types'
 import type {
-  ColumnDef_GlobalFiltering,
-  TableOptions_GlobalFiltering,
-} from './GlobalFiltering.types'
-import type {
-  ColumnDef_ColumnFiltering,
   FilterFn,
   TableOptions_ColumnFiltering,
 } from '../column-filtering/ColumnFiltering.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 
@@ -28,16 +25,9 @@ export function column_getCanGlobalFilter<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue> & {
-    columnDef: Partial<
-      ColumnDef_GlobalFiltering & ColumnDef_ColumnFiltering<TFeatures, TData>
-    >
+    columnDef: ColumnDefBase_All<TFeatures, TData, TValue>
   },
-  table: Table<TFeatures, TData> & {
-    options: Partial<
-      TableOptions_GlobalFiltering<TFeatures, TData> &
-        TableOptions_ColumnFiltering<TFeatures, TData>
-    >
-  },
+  table: Table_Internal<TFeatures, TData>,
 ): boolean {
   return (
     (column.columnDef.enableGlobalFilter ?? true) &&
@@ -61,12 +51,7 @@ export function table_getGlobalFilterFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData> & {
-    options: Partial<
-      TableOptions_GlobalFiltering<TFeatures, TData> &
-        TableOptions_ColumnFiltering<TFeatures, TData>
-    >
-  },
+  table: Table_Internal<TFeatures, TData>
 ): FilterFn<TFeatures, TData> | FilterFn<TFeatures, TData> | undefined {
   const { globalFilterFn: globalFilterFn } = table.options
 
@@ -87,9 +72,7 @@ export function table_setGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData> & {
-    options: Partial<TableOptions_GlobalFiltering<TFeatures, TData>>
-  },
+  table: Table_Internal<TFeatures, TData>,
   updater: any,
 ) {
   table.options.onGlobalFilterChange?.(updater)
@@ -104,12 +87,7 @@ export function table_resetGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData> & {
-    options: Partial<
-      TableOptions_GlobalFiltering<TFeatures, TData> &
-        TableOptions_ColumnFiltering<TFeatures, TData>
-    >
-  },
+  table: Table_Internal<TFeatures, TData>,
   defaultState?: boolean,
 ) {
   table_setGlobalFilter(

@@ -13,7 +13,7 @@ export interface TableState_RowSelection_Unavailable {
   /**
    * @deprecated Import the `RowSelection` feature to use the row selection APIs.
    */
-  rowSelection: RowSelectionState
+  rowSelection?: RowSelectionState
 }
 
 export interface TableOptions_RowSelection<

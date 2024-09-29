@@ -13,7 +13,7 @@ export interface TableState_ColumnVisibility_Unavailable {
   /**
    * @deprecated Import the `ColumnVisibility` feature to use the column visibility APIs.
    */
-  columnVisibility: ColumnVisibilityState
+  columnVisibility?: ColumnVisibilityState
 }
 
 export interface TableOptions_ColumnVisibility {

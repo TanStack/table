@@ -22,7 +22,7 @@ export interface TableState_ColumnFiltering_Unavailable {
   /**
    * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
    */
-  columnFilters: ColumnFiltersState
+  columnFilters?: ColumnFiltersState
 }
 
 export type ColumnFiltersState = Array<ColumnFilter>

@@ -8,7 +8,7 @@ export interface TableState_ColumnResizing_Unavailable {
   /**
    * @deprecated Import the `ColumnResizing` feature to use the column resizing APIs.
    */
-  columnResizing: columnResizingState
+  columnResizing?: columnResizingState
 }
 
 export interface columnResizingState {
