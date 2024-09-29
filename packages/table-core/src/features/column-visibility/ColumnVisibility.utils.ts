@@ -166,7 +166,7 @@ export function table_resetColumnVisibility<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnVisibility(
     table,
-    defaultState ? {} : table_getInitialState(table).columnVisibility ?? {},
+    defaultState ? {} : (table_getInitialState(table).columnVisibility ?? {}),
   )
 }
 

@@ -120,7 +120,7 @@ export function column_getPinnedIndex<
   const position = column_getIsPinned(column, table)
 
   return position
-    ? table_getState(table).columnPinning?.[position].indexOf(column.id) ?? -1
+    ? (table_getState(table).columnPinning?.[position].indexOf(column.id) ?? -1)
     : 0
 }
 
@@ -185,8 +185,8 @@ export function table_resetColumnPinning<
     table,
     defaultState
       ? getDefaultColumnPinningState()
-      : table_getInitialState(table).columnPinning ??
-          getDefaultColumnPinningState(),
+      : (table_getInitialState(table).columnPinning ??
+          getDefaultColumnPinningState()),
   )
 }
 

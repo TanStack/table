@@ -62,7 +62,7 @@ export function table_resetColumnOrder<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
-    defaultState ? [] : table_getInitialState(table).columnOrder ?? [],
+    defaultState ? [] : (table_getInitialState(table).columnOrder ?? []),
   )
 }
 

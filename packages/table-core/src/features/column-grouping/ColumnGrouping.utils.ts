@@ -136,10 +136,10 @@ export function column_getAggregationFn<
     ? column.columnDef.aggregationFn
     : column.columnDef.aggregationFn === 'auto'
       ? column_getAutoAggregationFn(column, table)
-      : table.options.aggregationFns?.[
+      : (table.options.aggregationFns?.[
           column.columnDef.aggregationFn as string
         ] ??
-        aggregationFns[column.columnDef.aggregationFn as BuiltInAggregationFn]
+        aggregationFns[column.columnDef.aggregationFn as BuiltInAggregationFn])
 }
 
 export function table_setGrouping<
@@ -155,7 +155,7 @@ export function table_resetGrouping<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setGrouping(
     table,
-    defaultState ? [] : table_getInitialState(table).grouping ?? [],
+    defaultState ? [] : (table_getInitialState(table).grouping ?? []),
   )
 }
 
