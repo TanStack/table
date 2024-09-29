@@ -1,3 +1,4 @@
+import type { TableState_All } from './TableState'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { Table_Columns } from '../core/columns/Columns.types'
@@ -18,6 +19,7 @@ import type { Table_RowPagination } from '../features/row-pagination/RowPaginati
 import type { Table_RowPinning } from '../features/row-pinning/RowPinning.types'
 import type { Table_RowSelection } from '../features/row-selection/RowSelection.types'
 import type { Table_RowSorting } from '../features/row-sorting/RowSorting.types'
+import type { TableOptions_All } from './TableOptions'
 
 /**
  * The core table object that only includes the core table functionality such as column, header, row, and table APIS.
@@ -78,3 +80,11 @@ export type Table<
         ? Table_RowSorting<TFeatures, TData>
         : never)
   >
+
+export type Table_Internal<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = Omit<Table<TFeatures, TData>, 'getState' | 'options'> & {
+  getState: () => TableState_All
+  options: TableOptions_All<TFeatures, TData>
+}

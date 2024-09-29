@@ -2,7 +2,7 @@ export type Updater<T> = T | ((old: T) => T)
 
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void
 
-export type RowData = unknown | object | Array<any>
+export type RowData = Record<string, any> | Array<any>
 
 export type CellData = unknown
 
