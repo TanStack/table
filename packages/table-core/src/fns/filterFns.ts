@@ -1,13 +1,15 @@
+import type { Fns } from '../types/Fns'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
 import type { FilterFn } from '../features/column-filtering/ColumnFiltering.types'
 
-const includesString: FilterFn<any, any> = <
+const includesString: FilterFn<any, any, any> = <
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<TFeatures, TFns, TData>,
   columnId: string,
   filterValue: string,
 ) => {
@@ -23,11 +25,12 @@ const includesString: FilterFn<any, any> = <
 
 includesString.autoRemove = (val: any) => testFalsey(val)
 
-const includesStringSensitive: FilterFn<any, any> = <
+const includesStringSensitive: FilterFn<any, any, any> = <
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<TFeatures, TFns, TData>,
   columnId: string,
   filterValue: string,
 ) => {
@@ -38,11 +41,12 @@ const includesStringSensitive: FilterFn<any, any> = <
 
 includesStringSensitive.autoRemove = (val: any) => testFalsey(val)
 
-const equalsString: FilterFn<any, any> = <
+const equalsString: FilterFn<any, any, any> = <
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<TFeatures, TFns, TData>,
   columnId: string,
   filterValue: string,
 ) => {
@@ -54,11 +58,12 @@ const equalsString: FilterFn<any, any> = <
 
 equalsString.autoRemove = (val: any) => testFalsey(val)
 
-const arrIncludes: FilterFn<any, any> = <
+const arrIncludes: FilterFn<any, any, any> = <
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<TFeatures, TFns, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -67,11 +72,12 @@ const arrIncludes: FilterFn<any, any> = <
 
 arrIncludes.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-const arrIncludesAll: FilterFn<any, any> = <
+const arrIncludesAll: FilterFn<any, any, any> = <
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<TFeatures, TFns, TData>,
   columnId: string,
   filterValue: Array<unknown>,
 ) => {
@@ -82,11 +88,12 @@ const arrIncludesAll: FilterFn<any, any> = <
 
 arrIncludesAll.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-const arrIncludesSome: FilterFn<any, any> = <
+const arrIncludesSome: FilterFn<any, any, any> = <
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<TFeatures, TFns, TData>,
   columnId: string,
   filterValue: Array<unknown>,
 ) => {
@@ -97,11 +104,12 @@ const arrIncludesSome: FilterFn<any, any> = <
 
 arrIncludesSome.autoRemove = (val: any) => testFalsey(val) || !val?.length
 
-const equals: FilterFn<any, any> = <
+const equals: FilterFn<any, any, any> = <
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<TFeatures, TFns, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -110,11 +118,12 @@ const equals: FilterFn<any, any> = <
 
 equals.autoRemove = (val: any) => testFalsey(val)
 
-const weakEquals: FilterFn<any, any> = <
+const weakEquals: FilterFn<any, any, any> = <
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<TFeatures, TFns, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -123,11 +132,12 @@ const weakEquals: FilterFn<any, any> = <
 
 weakEquals.autoRemove = (val: any) => testFalsey(val)
 
-const inNumberRange: FilterFn<any, any> = <
+const inNumberRange: FilterFn<any, any, any> = <
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<TFeatures, TFns, TData>,
   columnId: string,
   filterValue: [number, number],
 ) => {

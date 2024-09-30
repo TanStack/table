@@ -1,4 +1,5 @@
-import { tablegetDefaultColumnDef } from './Columns.utils'
+import { tableGetDefaultColumnDef } from './Columns.utils'
+import type { Fns } from '../../types/Fns'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -12,20 +13,21 @@ import type { Column_CoreProperties } from './Columns.types'
 
 export function constructColumn<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  table: Table<TFeatures, TData>,
-  columnDef: ColumnDef<TFeatures, TData, TValue>,
+  table: Table<TFeatures, TFns, TData>,
+  columnDef: ColumnDef<TFeatures, TFns, TData, TValue>,
   depth: number,
-  parent?: Column<TFeatures, TData, TValue>,
-): Column<TFeatures, TData, TValue> {
-  const defaultColumn = tablegetDefaultColumnDef(table)
+  parent?: Column<TFeatures, TFns, TData, TValue>,
+): Column<TFeatures, TFns, TData, TValue> {
+  const defaultColumn = tableGetDefaultColumnDef(table)
 
   const resolvedColumnDef = {
     ...defaultColumn,
     ...columnDef,
-  } as ColumnDefResolved<TFeatures, TData, TValue>
+  } as ColumnDefResolved<TFeatures, TFns, TData, TValue>
 
   const accessorKey = resolvedColumnDef.accessorKey
 
@@ -74,21 +76,21 @@ export function constructColumn<
     throw new Error()
   }
 
-  const column: Column_CoreProperties<TFeatures, TData, TValue> = {
+  const column: Column_CoreProperties<TFeatures, TFns, TData, TValue> = {
     id: `${String(id)}`,
     accessorFn,
-    parent: parent as any,
+    parent: parent,
     depth,
-    columnDef: resolvedColumnDef as ColumnDef<TFeatures, TData, TValue>,
+    columnDef: resolvedColumnDef as ColumnDef<TFeatures, TFns, TData, TValue>,
     columns: [],
   }
 
   for (const feature of Object.values(table._features)) {
     feature?.constructColumn?.(
-      column as Column<TFeatures, TData, TValue>,
+      column as Column<TFeatures, TFns, TData, TValue>,
       table,
     )
   }
 
-  return column as Column<TFeatures, TData, TValue>
+  return column as Column<TFeatures, TFns, TData, TValue>
 }

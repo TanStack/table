@@ -31,21 +31,21 @@ TanStack Table's source code is arguably somewhat simple (at least we think so).
 All of the functionality of a feature object can be described with the `TableFeature` type that is exported from TanStack Table. This type is a TypeScript interface that describes the shape of a feature object needed to create a feature.
 
 ```ts
-export interface TableFeature<TFeatures extends TableFeatures, TData extends RowData = any> {
+export interface TableFeature<TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData = any> {
   constructCell?: (
-    cell: Cell<TFeatures, TData, unknown>,
-    column: Column<TFeatures, TData>,
-    row: Row<TFeatures, TData>,
-    table: Table<TFeatures, TData>
+    cell: Cell<TFeatures, TFns, TData, unknown>,
+    column: Column<TFeatures, TFns, TData>,
+    row: Row<TFeatures, TFns, TData>,
+    table: Table<TFeatures, TFns, TData>
   ) => void
-  constructColumn?: (column: Column<TFeatures, TData, unknown>, table: Table<TFeatures, TData>) => void
-  constructHeader?: (header: Header<TFeatures, TData, unknown>, table: Table<TFeatures, TData>) => void
-  constructRow?: (row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) => void
-  constructTable?: (table: Table<TFeatures, TData>) => void
-  getDefaultColumnDef?: () => Partial<ColumnDef<TFeatures, TData, unknown>>
+  constructColumn?: (column: Column<TFeatures, TFns, TData, unknown>, table: Table<TFeatures, TFns, TData>) => void
+  constructHeader?: (header: Header<TFeatures, TFns, TData, unknown>, table: Table<TFeatures, TFns, TData>) => void
+  constructRow?: (row: Row<TFeatures, TFns, TData>, table: Table<TFeatures, TFns, TData>) => void
+  constructTable?: (table: Table<TFeatures, TFns, TData>) => void
+  getDefaultColumnDef?: () => Partial<ColumnDef<TFeatures, TFns, TData, unknown>>
   getDefaultOptions?: (
-    table: Table<TFeatures, TData>
-  ) => Partial<TableOptions<TFeatures, TData>>
+    table: Table<TFeatures, TFns, TData>
+  ) => Partial<TableOptions<TFeatures, TFns, TData>>
   getInitialState?: (initialState?: InitialTableState) => Partial<TableState>
 }
 ```
@@ -146,18 +146,18 @@ declare module '@tanstack/react-table' { // or whatever framework adapter you ar
   //merge our new feature's state with the existing table state
   interface TableState extends DensityTableState {}
   //merge our new feature's options with the existing table options
-  interface TableOptions<TFeatures extends TableFeatures, TData extends RowData>
+  interface TableOptions<TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>
     extends DensityOptions {}
   //merge our new feature's instance APIs with the existing table instance APIs
-  interface Table<TFeatures extends TableFeatures, TData extends RowData> extends DensityInstance {}
+  interface Table<TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData> extends DensityInstance {}
   // if you need to add cell instance APIs...
-  // interface Cell<TFeatures extends TableFeatures, TData extends RowData, TValue> extends DensityCell
+  // interface Cell<TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData, TValue> extends DensityCell
   // if you need to add row instance APIs...
-  // interface Row<TFeatures extends TableFeatures, TData extends RowData> extends DensityRow
+  // interface Row<TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData> extends DensityRow
   // if you need to add column instance APIs...
-  // interface Column<TFeatures extends TableFeatures, TData extends RowData, TValue> extends DensityColumn
+  // interface Column<TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData, TValue> extends DensityColumn
   // if you need to add header instance APIs...
-  // interface Header<TFeatures extends TableFeatures, TData extends RowData, TValue> extends DensityHeader
+  // interface Header<TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData, TValue> extends DensityHeader
 
   // Note: declaration merging on `ColumnDef` is not possible because it is a complex type, not an interface.
   // But you can still use declaration merging on `ColumnDef.meta`
@@ -187,8 +187,8 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
   },
 
   // define the new feature's default options
-  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>
+  getDefaultOptions: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(
+    table: Partial<Table<TFeatures, TFns, TData>>
   ): DensityOptions => {
     return {
       enableDensity: true,
@@ -196,12 +196,12 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
     } as DensityOptions
   },
   // if you need to add a default column definition...
-  // getDefaultColumnDef: <TFeatures extends TableFeatures, TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
+  // getDefaultColumnDef: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(): Partial<ColumnDef<TFeatures, TFns, TData>> => {
   //   return { meta: {} } //use meta instead of directly adding to the columnDef to avoid typescript stuff that's hard to workaround
   // },
 
   // define the new feature's table instance methods
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(table: Table<TFeatures, TData>): void => {
+  constructTable: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(table: Table<TFeatures, TFns, TData>): void => {
     table.setDensity = updater => {
       const safeUpdater: Updater<DensityState> = old => {
         let newState = functionalUpdate(updater, old)
@@ -218,13 +218,13 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
   },
 
   // if you need to add row instance APIs...
-  // constructRow: <TFeatures extends TableFeatures, TData extends RowData>(row, table): void => {},
+  // constructRow: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(row, table): void => {},
   // if you need to add cell instance APIs...
-  // constructCell: <TFeatures extends TableFeatures, TData extends RowData>(cell, column, row, table): void => {},
+  // constructCell: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(cell, column, row, table): void => {},
   // if you need to add column instance APIs...
-  // constructColumn: <TFeatures extends TableFeatures, TData extends RowData>(column, table): void => {},
+  // constructColumn: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(column, table): void => {},
   // if you need to add header instance APIs...
-  // constructHeader: <TFeatures extends TableFeatures, TData extends RowData>(header, table): void => {},
+  // constructHeader: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(header, table): void => {},
 }
 ```
 

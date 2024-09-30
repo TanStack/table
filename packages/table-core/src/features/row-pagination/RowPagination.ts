@@ -20,6 +20,7 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './RowPagination.utils'
+import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type {
   PaginationDefaultOptions,
@@ -48,18 +49,26 @@ export const RowPagination: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowPagination<TFeatures, TData>>,
+  getDefaultOptions: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_RowPagination<TFeatures, TFns, TData>>,
   ): PaginationDefaultOptions => {
     return {
       onPaginationChange: makeStateUpdater('pagination', table),
     }
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowPagination<TFeatures, TData>>,
+  constructTable: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_RowPagination<TFeatures, TFns, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {

@@ -1,11 +1,10 @@
-import { filterFns } from '../../fns/filterFns'
 import { functionalUpdate, isFunction } from '../../utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
 import {
   table_getCoreRowModel,
   table_getState,
 } from '../../core/table/Tables.utils'
-import type { BuiltInFilterFn } from '../../fns/filterFns'
+import type { Fns } from '../../types/Fns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -19,66 +18,69 @@ import type {
 
 export function column_getAutoFilterFn<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
+  column: Column<TFeatures, TFns, TData, TValue>,
+  table: Table_Internal<TFeatures, TFns, TData>,
 ) {
+  const { filterFns } = table._fns
   const firstRow = table_getCoreRowModel(table).flatRows[0]
 
   const value = firstRow ? row_getValue(firstRow, table, column.id) : undefined
 
   if (typeof value === 'string') {
-    return filterFns.includesString
+    return filterFns?.includesString
   }
 
   if (typeof value === 'number') {
-    return filterFns.inNumberRange
+    return filterFns?.inNumberRange
   }
 
   if (typeof value === 'boolean') {
-    return filterFns.equals
+    return filterFns?.equals
   }
 
   if (value !== null && typeof value === 'object') {
-    return filterFns.equals
+    return filterFns?.equals
   }
 
   if (Array.isArray(value)) {
-    return filterFns.arrIncludes
+    return filterFns?.arrIncludes
   }
 
-  return filterFns.weakEquals
+  return filterFns?.weakEquals
 }
 
 export function column_getFilterFn<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
+  column: Column<TFeatures, TFns, TData, TValue> & {
+    columnDef: ColumnDef_ColumnFiltering<TFeatures, TFns, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
-): FilterFn<TFeatures, TData> | undefined {
+  table: Table_Internal<TFeatures, TFns, TData>,
+): FilterFn<TFeatures, TFns, TData> | undefined {
   return isFunction(column.columnDef.filterFn)
     ? column.columnDef.filterFn
     : column.columnDef.filterFn === 'auto'
       ? column_getAutoFilterFn(column, table)
-      : (table.options.filterFns?.[column.columnDef.filterFn as string] ??
-        filterFns[column.columnDef.filterFn as BuiltInFilterFn])
+      : table._fns.filterFns?.[column.columnDef.filterFn as string]
 }
 
 export function column_getCanFilter<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
+  column: Column<TFeatures, TFns, TData, TValue> & {
+    columnDef: ColumnDef_ColumnFiltering<TFeatures, TFns, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
 ) {
   return (
     (column.columnDef.enableColumnFilter ?? true) &&
@@ -90,26 +92,28 @@ export function column_getCanFilter<
 
 export function column_getIsFiltered<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
+  column: Column<TFeatures, TFns, TData, TValue> & {
+    columnDef: ColumnDef_ColumnFiltering<TFeatures, TFns, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
 ) {
   return column_getFilterIndex(column, table) > -1
 }
 
 export function column_getFilterValue<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
+  column: Column<TFeatures, TFns, TData, TValue> & {
+    columnDef: ColumnDef_ColumnFiltering<TFeatures, TFns, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
 ) {
   return table_getState(table).columnFilters?.find((d) => d.id === column.id)
     ?.value
@@ -117,13 +121,14 @@ export function column_getFilterValue<
 
 export function column_getFilterIndex<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
+  column: Column<TFeatures, TFns, TData, TValue> & {
+    columnDef: ColumnDef_ColumnFiltering<TFeatures, TFns, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
 ): number {
   return (
     table_getState(table).columnFilters?.findIndex((d) => d.id === column.id) ??
@@ -133,13 +138,14 @@ export function column_getFilterIndex<
 
 export function column_setFilterValue<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
+  column: Column<TFeatures, TFns, TData, TValue> & {
+    columnDef: ColumnDef_ColumnFiltering<TFeatures, TFns, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
   value: any,
 ) {
   table_setColumnFilters(table, (old) => {
@@ -176,9 +182,10 @@ export function column_setFilterValue<
 
 export function table_setColumnFilters<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
   updater: Updater<ColumnFiltersState>,
 ) {
   const leafColumns = table.getAllLeafColumns()
@@ -190,7 +197,7 @@ export function table_setColumnFilters<
       if (column) {
         const filterFn = column_getFilterFn(column, table)
 
-        if (shouldAutoRemoveFilter(filterFn, filter.value, column as any)) {
+        if (shouldAutoRemoveFilter(filterFn, filter.value, column)) {
           return false
         }
       }
@@ -204,8 +211,9 @@ export function table_setColumnFilters<
 
 export function table_resetColumnFilters<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TFns, TData>, defaultState?: boolean) {
   table_setColumnFilters(
     table,
     defaultState ? [] : (table.initialState.columnFilters ?? []),
@@ -214,15 +222,19 @@ export function table_resetColumnFilters<
 
 export function table_getPreFilteredRowModel<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TFns, TData>) {
   return table_getCoreRowModel(table)
 }
 
 export function table_getFilteredRowModel<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(
+  table: Table_Internal<TFeatures, TFns, TData>,
+): RowModel<TFeatures, TFns, TData> {
   if (!table._rowModels.Filtered) {
     table._rowModels.Filtered = table.options._rowModels?.Filtered?.(table)
   }
@@ -236,16 +248,17 @@ export function table_getFilteredRowModel<
 
 export function shouldAutoRemoveFilter<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  filterFn?: FilterFn<TFeatures, TData>,
+  filterFn?: FilterFn<TFeatures, TFns, TData>,
   value?: any,
-  column?: Column<TFeatures, TData, TValue>,
+  column?: Column<TFeatures, TFns, TData, TValue>,
 ) {
   return (
     (filterFn && filterFn.autoRemove
-      ? filterFn.autoRemove(value, column as any) // TODO: fix this
+      ? filterFn.autoRemove(value, column)
       : false) ||
     typeof value === 'undefined' ||
     (typeof value === 'string' && !value)

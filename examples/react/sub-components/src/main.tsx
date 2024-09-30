@@ -99,11 +99,11 @@ const columns: Array<ColumnDef<any, Person>> = [
 
 type TableProps<TFeatures extends TableFeatures, TData> = {
   data: Array<TData>
-  columns: Array<ColumnDef<TFeatures, TData>>
+  columns: Array<ColumnDef<TFeatures, TFns, TData>>
   renderSubComponent: (props: {
-    row: Row<TFeatures, TData>
+    row: Row<TFeatures, TFns, TData>
   }) => React.ReactElement
-  getRowCanExpand: (row: Row<TFeatures, TData>) => boolean
+  getRowCanExpand: (row: Row<TFeatures, TFns, TData>) => boolean
 }
 
 function Table({

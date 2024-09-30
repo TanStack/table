@@ -12,22 +12,23 @@ import type {
 
 export function createTable<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(tableOptions: TableOptions<TFeatures, TData>) {
+>(tableOptions: TableOptions<TFeatures, TFns, TData>) {
   const _features = { ...coreFeatures, ...tableOptions._features }
 
   let state = $state<Partial<TableState<TFeatures>>>(
     getInitialTableState(_features, tableOptions.initialState),
   )
 
-  const statefulOptions: TableOptions<TFeatures, TData> = mergeObjects(
+  const statefulOptions: TableOptions<TFeatures, TFns, TData> = mergeObjects(
     tableOptions,
     {
       _features,
       state: { ...state, ...tableOptions.state },
       mergeOptions: (
-        defaultOptions: TableOptions<TFeatures, TData>,
-        newOptions: Partial<TableOptions<TFeatures, TData>>,
+        defaultOptions: TableOptions<TFeatures, TFns, TData>,
+        newOptions: Partial<TableOptions<TFeatures, TFns, TData>>,
       ) => {
         return mergeObjects(defaultOptions, newOptions)
       },

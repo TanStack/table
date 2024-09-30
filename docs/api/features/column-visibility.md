@@ -82,7 +82,7 @@ Enables/disables hiding of columns.
 ### `getVisibleFlatColumns`
 
 ```tsx
-getVisibleFlatColumns: () => Column<TFeatures, TData>[]
+getVisibleFlatColumns: () => Column<TFeatures, TFns, TData>[]
 ```
 
 Returns a flat array of columns that are visible, including parent columns.
@@ -90,7 +90,7 @@ Returns a flat array of columns that are visible, including parent columns.
 ### `getVisibleLeafColumns`
 
 ```tsx
-getVisibleLeafColumns: () => Column<TFeatures, TData>[]
+getVisibleLeafColumns: () => Column<TFeatures, TFns, TData>[]
 ```
 
 Returns a flat array of leaf-node columns that are visible.
@@ -98,7 +98,7 @@ Returns a flat array of leaf-node columns that are visible.
 ### `getLeftVisibleLeafColumns`
 
 ```tsx
-getLeftVisibleLeafColumns: () => Column<TFeatures, TData>[]
+getLeftVisibleLeafColumns: () => Column<TFeatures, TFns, TData>[]
 ```
 
 If column pinning, returns a flat array of leaf-node columns that are visible in the left portion of the table.
@@ -106,7 +106,7 @@ If column pinning, returns a flat array of leaf-node columns that are visible in
 ### `getRightVisibleLeafColumns`
 
 ```tsx
-getRightVisibleLeafColumns: () => Column<TFeatures, TData>[]
+getRightVisibleLeafColumns: () => Column<TFeatures, TFns, TData>[]
 ```
 
 If column pinning, returns a flat array of leaf-node columns that are visible in the right portion of the table.
@@ -114,7 +114,7 @@ If column pinning, returns a flat array of leaf-node columns that are visible in
 ### `getCenterVisibleLeafColumns`
 
 ```tsx
-getCenterVisibleLeafColumns: () => Column<TFeatures, TData>[]
+getCenterVisibleLeafColumns: () => Column<TFeatures, TFns, TData>[]
 ```
 
 If column pinning, returns a flat array of leaf-node columns that are visible in the unpinned/center portion of the table.
@@ -172,7 +172,7 @@ Returns a handler for toggling the visibility of all columns, meant to be bound 
 ### `getVisibleCells`
 
 ```tsx
-getVisibleCells: () => Cell<TFeatures, TData>[]
+getVisibleCells: () => Cell<TFeatures, TFns, TData>[]
 ```
 
 Returns an array of cells that account for column visibility for the row.

@@ -1,3 +1,4 @@
+import type { Fns } from './Fns'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { CellContext } from '../core/cells/Cells.types'
@@ -34,6 +35,7 @@ import type {
 
 export interface ColumnMeta<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 > {}
@@ -49,9 +51,10 @@ export type ColumnDefTemplate<TProps extends object> =
 
 export type StringOrTemplateHeader<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = string | ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
+> = string | ColumnDefTemplate<HeaderContext<TFeatures, TFns, TData, TValue>>
 
 export interface StringHeaderIdentifier {
   header: string
@@ -60,34 +63,38 @@ export interface StringHeaderIdentifier {
 
 export interface IdIdentifier<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 > {
   id: string
-  header?: StringOrTemplateHeader<TFeatures, TData, TValue>
+  header?: StringOrTemplateHeader<TFeatures, TFns, TData, TValue>
 }
 type ColumnIdentifiers<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = IdIdentifier<TFeatures, TData, TValue> | StringHeaderIdentifier
+> = IdIdentifier<TFeatures, TFns, TData, TValue> | StringHeaderIdentifier
 
 interface ColumnDefBase_Core<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 > {
   getUniqueValues?: AccessorFn<TData, Array<unknown>>
-  footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
-  cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
-  meta?: ColumnMeta<TFeatures, TData, TValue>
+  footer?: ColumnDefTemplate<HeaderContext<TFeatures, TFns, TData, TValue>>
+  cell?: ColumnDefTemplate<CellContext<TFeatures, TFns, TData, TValue>>
+  meta?: ColumnMeta<TFeatures, TFns, TData, TValue>
 }
 
 export type ColumnDefBase<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = ColumnDefBase_Core<TFeatures, TData, TValue> &
+> = ColumnDefBase_Core<TFeatures, TFns, TData, TValue> &
   UnionToIntersection<
     | ('ColumnVisibility' extends keyof TFeatures
         ? ColumnDef_ColumnVisibility
@@ -96,16 +103,16 @@ export type ColumnDefBase<
         ? ColumnDef_ColumnPinning
         : never)
     | ('ColumnFiltering' extends keyof TFeatures
-        ? ColumnDef_ColumnFiltering<TFeatures, TData>
+        ? ColumnDef_ColumnFiltering<TFeatures, TFns, TData>
         : never)
     | ('GlobalFiltering' extends keyof TFeatures
         ? ColumnDef_GlobalFiltering
         : never)
     | ('RowSorting' extends keyof TFeatures
-        ? ColumnDef_RowSorting<TFeatures, TData>
+        ? ColumnDef_RowSorting<TFeatures, TFns, TData>
         : never)
     | ('ColumnGrouping' extends keyof TFeatures
-        ? ColumnDef_ColumnGrouping<TFeatures, TData, TValue>
+        ? ColumnDef_ColumnGrouping<TFeatures, TFns, TData, TValue>
         : never)
     | ('ColumnSizing' extends keyof TFeatures ? ColumnDef_ColumnSizing : never)
     | ('ColumnResizing' extends keyof TFeatures
@@ -117,7 +124,7 @@ export type ColumnDefBase<
 //   TFeatures extends TableFeatures,
 //   TData extends RowData,
 //   TValue extends CellData = CellData,
-// > = ColumnDefBase_Core<TFeatures, TData, TValue> &
+// > = ColumnDefBase_Core<TFeatures, TFns, TData, TValue> &
 //   ('ColumnVisibility' extends keyof TFeatures
 //     ? ColumnDef_ColumnVisibility
 //     : ColumnDef_ColumnVisibility_Unavailable) &
@@ -125,17 +132,17 @@ export type ColumnDefBase<
 //     ? ColumnDef_ColumnPinning
 //     : ColumnDef_ColumnPinning_Unavailable) &
 //   ('ColumnFiltering' extends keyof TFeatures
-//     ? ColumnDef_ColumnFiltering<TFeatures, TData>
-//     : ColumnDef_ColumnFiltering_Unavailable<TFeatures, TData>) &
+//     ? ColumnDef_ColumnFiltering<TFeatures, TFns, TData>
+//     : ColumnDef_ColumnFiltering_Unavailable<TFeatures, TFns, TData>) &
 //   ('GlobalFiltering' extends keyof TFeatures
 //     ? ColumnDef_GlobalFiltering
 //     : ColumnDef_GlobalFiltering_Unavailable) &
 //   ('RowSorting' extends keyof TFeatures
-//     ? ColumnDef_RowSorting<TFeatures, TData>
-//     : ColumnDef_RowSorting_Unavailable<TFeatures, TData>) &
+//     ? ColumnDef_RowSorting<TFeatures, TFns, TData>
+//     : ColumnDef_RowSorting_Unavailable<TFeatures, TFns, TData>) &
 //   ('ColumnGrouping' extends keyof TFeatures
-//     ? ColumnDef_ColumnGrouping<TFeatures, TData, TValue>
-//     : ColumnDef_ColumnGrouping_Unavailable<TFeatures, TData, TValue>) &
+//     ? ColumnDef_ColumnGrouping<TFeatures, TFns, TData, TValue>
+//     : ColumnDef_ColumnGrouping_Unavailable<TFeatures, TFns, TData, TValue>) &
 //   ('ColumnSizing' extends keyof TFeatures ? ColumnDef_ColumnSizing : {}) &
 //   ('ColumnResizing' extends keyof TFeatures
 //     ? ColumnDef_ColumnResizing
@@ -143,102 +150,114 @@ export type ColumnDefBase<
 
 export type ColumnDefBase_All<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = ColumnDefBase_Core<TFeatures, TData, TValue> &
+> = ColumnDefBase_Core<TFeatures, TFns, TData, TValue> &
   Partial<
     ColumnDef_ColumnVisibility &
       ColumnDef_ColumnPinning &
-      ColumnDef_ColumnFiltering<TFeatures, TData> &
+      ColumnDef_ColumnFiltering<TFeatures, TFns, TData> &
       ColumnDef_GlobalFiltering &
-      ColumnDef_RowSorting<TFeatures, TData> &
-      ColumnDef_ColumnGrouping<TFeatures, TData, TValue> &
+      ColumnDef_RowSorting<TFeatures, TFns, TData> &
+      ColumnDef_ColumnGrouping<TFeatures, TFns, TData, TValue> &
       ColumnDef_ColumnSizing &
       ColumnDef_ColumnResizing
   >
 
 export type IdentifiedColumnDef<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = ColumnDefBase<TFeatures, TData, TValue> & {
+> = ColumnDefBase<TFeatures, TFns, TData, TValue> & {
   id?: string
-  header?: StringOrTemplateHeader<TFeatures, TData, TValue>
+  header?: StringOrTemplateHeader<TFeatures, TFns, TData, TValue>
 }
 
 export type DisplayColumnDef<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = ColumnDefBase<TFeatures, TData, TValue> &
-  ColumnIdentifiers<TFeatures, TData, TValue>
+> = ColumnDefBase<TFeatures, TFns, TData, TValue> &
+  ColumnIdentifiers<TFeatures, TFns, TData, TValue>
 type GroupColumnDefBase<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = ColumnDefBase<TFeatures, TData, TValue> & {
-  columns?: Array<ColumnDef<TFeatures, TData, unknown>>
+> = ColumnDefBase<TFeatures, TFns, TData, TValue> & {
+  columns?: Array<ColumnDef<TFeatures, TFns, TData, unknown>>
 }
 
 export type GroupColumnDef<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = GroupColumnDefBase<TFeatures, TData, TValue> &
-  ColumnIdentifiers<TFeatures, TData, TValue>
+> = GroupColumnDefBase<TFeatures, TFns, TData, TValue> &
+  ColumnIdentifiers<TFeatures, TFns, TData, TValue>
 
 export type AccessorFnColumnDefBase<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = ColumnDefBase<TFeatures, TData, TValue> & {
+> = ColumnDefBase<TFeatures, TFns, TData, TValue> & {
   accessorFn: AccessorFn<TData, TValue>
 }
 
 export type AccessorFnColumnDef<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = AccessorFnColumnDefBase<TFeatures, TData, TValue> &
-  ColumnIdentifiers<TFeatures, TData, TValue>
+> = AccessorFnColumnDefBase<TFeatures, TFns, TData, TValue> &
+  ColumnIdentifiers<TFeatures, TFns, TData, TValue>
 
 export type AccessorKeyColumnDefBase<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = ColumnDefBase<TFeatures, TData, TValue> & {
+> = ColumnDefBase<TFeatures, TFns, TData, TValue> & {
   id?: string
   accessorKey: (string & {}) | keyof TData
 }
 
 export type AccessorKeyColumnDef<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = AccessorKeyColumnDefBase<TFeatures, TData, TValue> &
-  Partial<ColumnIdentifiers<TFeatures, TData, TValue>>
+> = AccessorKeyColumnDefBase<TFeatures, TFns, TData, TValue> &
+  Partial<ColumnIdentifiers<TFeatures, TFns, TData, TValue>>
 
 export type AccessorColumnDef<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 > =
-  | AccessorKeyColumnDef<TFeatures, TData, TValue>
-  | AccessorFnColumnDef<TFeatures, TData, TValue>
+  | AccessorKeyColumnDef<TFeatures, TFns, TData, TValue>
+  | AccessorFnColumnDef<TFeatures, TFns, TData, TValue>
 
 export type ColumnDef<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 > =
-  | DisplayColumnDef<TFeatures, TData, TValue>
-  | GroupColumnDef<TFeatures, TData, TValue>
-  | AccessorColumnDef<TFeatures, TData, TValue>
+  | DisplayColumnDef<TFeatures, TFns, TData, TValue>
+  | GroupColumnDef<TFeatures, TFns, TData, TValue>
+  | AccessorColumnDef<TFeatures, TFns, TData, TValue>
 
 export type ColumnDefResolved<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = Partial<UnionToIntersection<ColumnDef<TFeatures, TData, TValue>>> & {
+> = Partial<UnionToIntersection<ColumnDef<TFeatures, TFns, TData, TValue>>> & {
   accessorKey?: string
 }

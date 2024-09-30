@@ -153,7 +153,7 @@ When defining a custom sorting function in either the `sortingFns` table option 
 
 ```tsx
 //optionally use the SortingFn to infer the parameter types
-const myCustomSortingFn: SortingFn<TFeatures, TData> = (rowA: Row<TFeatures, TData>, rowB: Row<TFeatures, TData>, columnId: string) => {
+const myCustomSortingFn: SortingFn<TFeatures, TFns, TData> = (rowA: Row<TFeatures, TFns, TData>, rowB: Row<TFeatures, TFns, TData>, columnId: string) => {
   return //-1, 0, or 1 - access any row data using rowA.original and rowB.original
 }
 ```

@@ -3,8 +3,8 @@ import { For, Show, createMemo } from 'solid-js'
 import type { Column, Table } from '@tanstack/solid-table'
 
 function ColumnFilter(props: {
-  column: Column<any, any>
-  table: Table<any, any>
+  column: Column<any, any, any>
+  table: Table<any, any, any>
 }) {
   const firstValue = props.table
     .getPreFilteredRowModel()

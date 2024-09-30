@@ -152,7 +152,7 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
     setIsOpen,
     ...panelProps
   } = props as DevtoolsPanelOptions & {
-    table: Table<any, any>
+    table: Table<any, any, any>
   }
 
   // const [activeMatchId, setActiveRouteId] = useLocalStorage(

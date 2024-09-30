@@ -1,3 +1,4 @@
+import type { Fns } from './Fns'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { Column_Column } from '../core/columns/Columns.types'
@@ -14,18 +15,19 @@ import type { Column_RowSorting } from '../features/row-sorting/RowSorting.types
 
 export type Column<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue = unknown,
-> = Column_Column<TFeatures, TData, TValue> &
+> = Column_Column<TFeatures, TFns, TData, TValue> &
   UnionToIntersection<
     | ('ColumnFaceting' extends keyof TFeatures
-        ? Column_ColumnFaceting<TFeatures, TData>
+        ? Column_ColumnFaceting<TFeatures, TFns, TData>
         : never)
     | ('ColumnFiltering' extends keyof TFeatures
-        ? Column_ColumnFiltering<TFeatures, TData>
+        ? Column_ColumnFiltering<TFeatures, TFns, TData>
         : never)
     | ('ColumnGrouping' extends keyof TFeatures
-        ? Column_ColumnGrouping<TFeatures, TData>
+        ? Column_ColumnGrouping<TFeatures, TFns, TData>
         : never)
     | ('ColumnOrdering' extends keyof TFeatures ? Column_ColumnOrdering : never)
     | ('ColumnPinning' extends keyof TFeatures ? Column_ColumnPinning : never)
@@ -38,6 +40,6 @@ export type Column<
         ? Column_GlobalFiltering
         : never)
     | ('RowSorting' extends keyof TFeatures
-        ? Column_RowSorting<TFeatures, TData>
+        ? Column_RowSorting<TFeatures, TFns, TData>
         : never)
   >

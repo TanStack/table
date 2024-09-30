@@ -7,22 +7,24 @@ import {
 
 type TableSignal<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = Table<TFeatures, TData> & Signal<Table<TFeatures, TData>>
+> = Table<TFeatures, TFns, TData> & Signal<Table<TFeatures, TFns, TData>>
 
 export function proxifyTable<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  tableSignal: Signal<Table<TFeatures, TData>>,
-): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
-  const internalState = tableSignal as TableSignal<TFeatures, TData>
+  tableSignal: Signal<Table<TFeatures, TFns, TData>>,
+): Table<TFeatures, TFns, TData> & Signal<Table<TFeatures, TFns, TData>> {
+  const internalState = tableSignal as TableSignal<TFeatures, TFns, TData>
 
   return new Proxy(internalState, {
     apply() {
       return tableSignal()
     },
-    get(target, property: keyof Table<TFeatures, TData>): any {
+    get(target, property: keyof Table<TFeatures, TFns, TData>): any {
       if (target[property]) {
         return target[property]
       }
@@ -49,7 +51,7 @@ export function proxifyTable<
       // @ts-expect-error
       return (target[property] = table[property])
     },
-    has(_, prop: keyof Table<TFeatures, TData>) {
+    has(_, prop: keyof Table<TFeatures, TFns, TData>) {
       return !!untracked(tableSignal)[prop]
     },
     ownKeys() {
@@ -75,10 +77,11 @@ export function proxifyTable<
  * we'll wrap all accessors into a cached function wrapping a computed
  * that return it's value based on the given parameters
  */
-function toComputed<TFeatures extends TableFeatures, TData extends RowData>(
-  signal: Signal<Table<TFeatures, TData>>,
-  fn: Function,
-) {
+function toComputed<
+  TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
+  TData extends RowData,
+>(signal: Signal<Table<TFeatures, TFns, TData>>, fn: Function) {
   const hasArgs = fn.length > 0
   if (!hasArgs) {
     return computed(() => {

@@ -1,5 +1,6 @@
 import { column_getIsVisible } from '../../features/column-visibility/ColumnVisibility.utils'
 import { constructHeader } from './constructHeader'
+import type { Fns } from '../../types/Fns'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -9,12 +10,13 @@ import type { Column } from '../../types/Column'
 
 export function buildHeaderGroups<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  allColumns: Array<Column<TFeatures, TData, TValue>>,
-  columnsToGroup: Array<Column<TFeatures, TData, TValue>>,
-  table: Table<TFeatures, TData>,
+  allColumns: Array<Column<TFeatures, TFns, TData, TValue>>,
+  columnsToGroup: Array<Column<TFeatures, TFns, TData, TValue>>,
+  table: Table<TFeatures, TFns, TData>,
   headerFamily?: 'center' | 'left' | 'right',
 ) {
   // Find the max depth of the columns:
@@ -26,7 +28,7 @@ export function buildHeaderGroups<
   let maxDepth = 0
 
   const findMaxDepth = (
-    columns: Array<Column<TFeatures, TData, TValue>>,
+    columns: Array<Column<TFeatures, TFns, TData, TValue>>,
     depth = 1,
   ) => {
     maxDepth = Math.max(maxDepth, depth)
@@ -42,21 +44,22 @@ export function buildHeaderGroups<
 
   findMaxDepth(allColumns)
 
-  const headerGroups: Array<HeaderGroup<TFeatures, TData>> = []
+  const headerGroups: Array<HeaderGroup<TFeatures, TFns, TData>> = []
 
   const constructHeaderGroup = (
-    headersToGroup: Array<Header<TFeatures, TData, TValue>>,
+    headersToGroup: Array<Header<TFeatures, TFns, TData, TValue>>,
     depth: number,
   ) => {
     // The header group we are creating
-    const headerGroup: HeaderGroup<TFeatures, TData> = {
+    const headerGroup: HeaderGroup<TFeatures, TFns, TData> = {
       depth,
       id: [headerFamily, `${depth}`].filter(Boolean).join('_'),
       headers: [],
     }
 
     // The parent columns we're going to scan next
-    const pendingParentHeaders: Array<Header<TFeatures, TData, TValue>> = []
+    const pendingParentHeaders: Array<Header<TFeatures, TFns, TData, TValue>> =
+      []
 
     // Scan each column for parents
     headersToGroup.forEach((headerToGroup) => {
@@ -66,7 +69,7 @@ export function buildHeaderGroups<
 
       const isLeafHeader = headerToGroup.column.depth === headerGroup.depth
 
-      let column: Column<TFeatures, TData, TValue>
+      let column: Column<TFeatures, TFns, TData, TValue>
       let isPlaceholder = false
 
       if (isLeafHeader && headerToGroup.column.parent) {
@@ -132,7 +135,7 @@ export function buildHeaderGroups<
   // })
 
   const recurseHeadersForSpans = (
-    headers: Array<Header<TFeatures, TData, TValue>>,
+    headers: Array<Header<TFeatures, TFns, TData, TValue>>,
   ): Array<{ colSpan: number; rowSpan: number }> => {
     const filteredHeaders = headers.filter((header) =>
       column_getIsVisible(header.column, table),

@@ -101,7 +101,7 @@ const randomizeColumns = () => {
   )
 }
 
-function toggleColumnVisibility(column: Column<any, any>) {
+function toggleColumnVisibility(column: Column<any, any, any>) {
   columnVisibility.value = {
     ...columnVisibility.value,
     [column.id]: !column.getIsVisible(),

@@ -94,7 +94,7 @@ Enable/disable expanding for all rows.
 ### `getExpandedRowModel`
 
 ```tsx
-getExpandedRowModel?: (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData>
+getExpandedRowModel?: (table: Table<TFeatures, TFns, TData>) => () => RowModel<TFeatures, TFns, TData>
 ```
 
 This function is responsible for returning the expanded row model. If this function is not provided, the table will not expand rows. You can use the default exported `getExpandedRowModel` function to get the expanded row model or implement your own.
@@ -102,7 +102,7 @@ This function is responsible for returning the expanded row model. If this funct
 ### `getIsRowExpanded`
 
 ```tsx
-getIsRowExpanded?: (row: Row<TFeatures, TData>) => boolean
+getIsRowExpanded?: (row: Row<TFeatures, TFns, TData>) => boolean
 ```
 
 If provided, allows you to override the default behavior of determining whether a row is currently expanded.
@@ -110,7 +110,7 @@ If provided, allows you to override the default behavior of determining whether 
 ### `getRowCanExpand`
 
 ```tsx
-getRowCanExpand?: (row: Row<TFeatures, TData>) => boolean
+getRowCanExpand?: (row: Row<TFeatures, TFns, TData>) => boolean
 ```
 
 If provided, allows you to override the default behavior of determining whether a row can be expanded.
@@ -194,7 +194,7 @@ Returns the maximum depth of the expanded rows.
 ### `getExpandedRowModel`
 
 ```tsx
-getExpandedRowModel: () => RowModel<TFeatures, TData>
+getExpandedRowModel: () => RowModel<TFeatures, TFns, TData>
 ```
 
 Returns the row model after expansion has been applied.
@@ -202,7 +202,7 @@ Returns the row model after expansion has been applied.
 ### `getPreExpandedRowModel`
 
 ```tsx
-getPreExpandedRowModel: () => RowModel<TFeatures, TData>
+getPreExpandedRowModel: () => RowModel<TFeatures, TFns, TData>
 ```
 
 Returns the row model before expansion has been applied.

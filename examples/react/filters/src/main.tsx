@@ -7,15 +7,18 @@ import {
   ColumnFiltering,
   RowPagination,
   RowSorting,
-  createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFns,
   flexRender,
+  sortingFns,
   tableFeatures,
+  tableFns,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
+import type { Fns } from '../../../../packages/table-core/dist/esm/types/Fns'
 import type {
   CellData,
   Column,
@@ -28,9 +31,10 @@ import type {
 import type { Person } from './makeData'
 
 declare module '@tanstack/react-table' {
-  //allows us to define custom properties for our columns
+  // allows us to define custom properties for our columns
   interface ColumnMeta<
     TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   > {
@@ -40,6 +44,11 @@ declare module '@tanstack/react-table' {
 
 const _features = tableFeatures({ ColumnFiltering, RowSorting, RowPagination })
 
+const _fns = tableFns(_features, {
+  filterFns,
+  sortingFns,
+})
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -48,7 +57,7 @@ function App() {
   )
 
   const columns = React.useMemo<
-    Array<ColumnDef<typeof _features, Person, any>>
+    Array<ColumnDef<typeof _features, typeof _fns, Person>>
   >(
     () => [
       {
@@ -100,19 +109,18 @@ function App() {
   )
 
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
-  const refreshData = () => setData((_old) => makeData(50_000)) //stress test
+  const refreshData = () => setData((_old) => makeData(50_000)) // stress test
 
   const table = useTable({
     _features,
+    _fns,
     _rowModels: {
-      Core: createCoreRowModel(),
-      Filtered: createFilteredRowModel(), //client side filtering
+      Filtered: createFilteredRowModel(), // client side filtering
       Sorted: createSortedRowModel(),
       Paginated: createPaginatedRowModel(),
     },
     columns,
     data,
-    filterFns: {},
     state: {
       columnFilters,
     },
@@ -167,7 +175,7 @@ function App() {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
@@ -264,7 +272,7 @@ function App() {
   )
 }
 
-function Filter({ column }: { column: Column<any, Person, unknown> }) {
+function Filter({ column }: { column: Column<any, any, Person, unknown> }) {
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}
 

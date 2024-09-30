@@ -1,9 +1,11 @@
+import type { Fns } from '../../types/Fns'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
 
 export interface Table_GlobalFaceting<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
   /**
@@ -17,7 +19,7 @@ export interface Table_GlobalFaceting<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting#getglobalfacetedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
    */
-  getGlobalFacetedRowModel: () => RowModel<TFeatures, TData>
+  getGlobalFacetedRowModel: () => RowModel<TFeatures, TFns, TData>
   /**
    * Returns the faceted unique values for the global filter.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting#getglobalfaceteduniquevalues)

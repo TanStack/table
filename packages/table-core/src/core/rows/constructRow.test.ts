@@ -10,12 +10,16 @@ interface Person {
 
 describe('constructRow', () => {
   it('should create a row with all core row APIs and properties', () => {
-    const table = { _features: { Rows }, options: {} } as Table<any, Person>
+    const table = { _features: { Rows }, options: {} } as Table<
+      any,
+      any,
+      Person
+    >
     const id = 'test-row'
     const original = { firstName: 'Tanner' } as Person
     const rowIndex = 0
     const depth = 0
-    const subRows = [] as Array<Row<any, Person>>
+    const subRows = [] as Array<Row<any, any, Person>>
     const parentId = 'parent-id'
 
     const row = constructRow(

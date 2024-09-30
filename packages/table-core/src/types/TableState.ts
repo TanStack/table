@@ -57,7 +57,7 @@ export type _TableState<TFeatures extends TableFeatures> = {
   /**
    * @deprecated
    */
-  _: never
+  _?: never
 } & UnionToIntersection<
   | ('ColumnFiltering' extends keyof TFeatures
       ? TableState_ColumnFiltering

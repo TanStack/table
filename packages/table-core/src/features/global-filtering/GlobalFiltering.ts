@@ -7,6 +7,7 @@ import {
   table_resetGlobalFilter,
   table_setGlobalFilter,
 } from './GlobalFiltering.utils'
+import type { Fns } from '../../types/Fns'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -36,15 +37,21 @@ export const GlobalFiltering: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_GlobalFiltering<TFeatures, TData>>,
-  ): TableOptions_GlobalFiltering<TFeatures, TData> => {
+  getDefaultOptions: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_GlobalFiltering<TFeatures, TFns, TData>>,
+  ): TableOptions_GlobalFiltering<TFeatures, TFns, TData> => {
     return {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: (column) => {
-        const value = table_getCoreRowModel(table as Table<TFeatures, TData>)
+        const value = table_getCoreRowModel(
+          table as Table<TFeatures, TFns, TData>,
+        )
           .flatRows[0]?.getAllCellsByColumnId()
           [column.id]?.getValue()
 
@@ -55,12 +62,14 @@ export const GlobalFiltering: TableFeature = {
 
   constructColumn: <
     TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue> & Partial<Column_GlobalFiltering>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_GlobalFiltering<TFeatures, TData>>,
+    column: Column<TFeatures, TFns, TData, TValue> &
+      Partial<Column_GlobalFiltering>,
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_GlobalFiltering<TFeatures, TFns, TData>>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -69,9 +78,13 @@ export const GlobalFiltering: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_GlobalFiltering<TFeatures, TData>>,
+  constructTable: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_GlobalFiltering<TFeatures, TFns, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {

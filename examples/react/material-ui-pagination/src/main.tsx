@@ -203,7 +203,7 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
+  column: Column<any, any, any>
   table: ReactTable<any>
 }) {
   const firstValue = table

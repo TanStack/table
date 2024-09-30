@@ -8,17 +8,21 @@ import {
   column_getSortingFn,
   table_getPreSortedRowModel,
 } from './RowSorting.utils'
+import type { Fns } from '../../types/Fns'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
-import type { Table } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { SortingFn } from './RowSorting.types'
 
 export function createSortedRowModel<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (
+  table: Table_Internal<TFeatures, TFns, TData>,
+) => () => RowModel<TFeatures, TFns, TData> {
   return (table) =>
     memo(
       () => [table_getState(table).sorting, table_getPreSortedRowModel(table)],
@@ -29,11 +33,11 @@ export function createSortedRowModel<
 
         const sortingState = table_getState(table).sorting
 
-        const sortedFlatRows: Array<Row<TFeatures, TData>> = []
+        const sortedFlatRows: Array<Row<TFeatures, TFns, TData>> = []
 
         // Filter out sortings that correspond to non existing columns
         const availableSorting = sortingState?.filter((sort) =>
-          column_getCanSort(table_getColumn(table, sort.id)!, table),
+          column_getCanSort(table_getColumn(table, sort.id), table),
         )
 
         const columnInfoById: Record<
@@ -41,7 +45,7 @@ export function createSortedRowModel<
           {
             sortUndefined?: false | -1 | 1 | 'first' | 'last'
             invertSorting?: boolean
-            sortingFn: SortingFn<TFeatures, TData>
+            sortingFn: SortingFn<TFeatures, TFns, TData>
           }
         > = {}
 
@@ -56,7 +60,7 @@ export function createSortedRowModel<
           }
         })
 
-        const sortData = (rows: Array<Row<TFeatures, TData>>) => {
+        const sortData = (rows: Array<Row<TFeatures, TFns, TData>>) => {
           // This will also perform a stable sorting using the row index
           // if needed.
           const sortedData = rows.map((row) => ({ ...row }))

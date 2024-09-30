@@ -22,6 +22,7 @@ import {
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
 } from './ColumnVisibility.utils'
+import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -50,9 +51,13 @@ export const ColumnVisibility: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnVisibility<TFeatures, TData>>,
+  getDefaultOptions: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_ColumnVisibility<TFeatures, TFns, TData>>,
   ): VisibilityDefaultOptions => {
     return {
       onColumnVisibilityChange: makeStateUpdater('columnVisibility', table),
@@ -61,12 +66,14 @@ export const ColumnVisibility: TableFeature = {
 
   constructColumn: <
     TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnVisibility>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnVisibility<TFeatures, TData>>,
+    column: Column<TFeatures, TFns, TData, TValue> &
+      Partial<Column_ColumnVisibility>,
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_ColumnVisibility<TFeatures, TFns, TData>>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -84,11 +91,15 @@ export const ColumnVisibility: TableFeature = {
     ])
   },
 
-  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> &
-      Partial<Row_ColumnVisibility<TFeatures, TData>>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnVisibility<TFeatures, TData>>,
+  constructRow: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    row: Row<TFeatures, TFns, TData> &
+      Partial<Row_ColumnVisibility<TFeatures, TFns, TData>>,
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_ColumnVisibility<TFeatures, TFns, TData>>,
   ): void => {
     assignAPIs(row, table, [
       {
@@ -109,9 +120,13 @@ export const ColumnVisibility: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnVisibility<TFeatures, TData>>,
+  constructTable: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_ColumnVisibility<TFeatures, TFns, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {

@@ -32,10 +32,11 @@ export function flexRender<TProps extends object>(
 
 export function useTable<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(options: TableOptions<TFeatures, TData>) {
+>(options: TableOptions<TFeatures, TFns, TData>) {
   // Compose in the generic options to the user options
-  const resolvedOptions: TableOptions<TFeatures, TData> = {
+  const resolvedOptions: TableOptions<TFeatures, TFns, TData> = {
     state: {},
     onStateChange: () => {},
     renderFallbackValue: null,
@@ -44,7 +45,7 @@ export function useTable<
 
   // Create a new table instance and store it in a Qwik store
   const table = Qwik.useStore<{
-    instance: Qwik.NoSerialize<Table<TFeatures, TData>>
+    instance: Qwik.NoSerialize<Table<TFeatures, TFns, TData>>
   }>({
     instance: Qwik.noSerialize(constructTable(resolvedOptions)),
   })

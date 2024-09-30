@@ -33,7 +33,7 @@ const _features = tableFeatures({
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, {}, Person>>>(
     () => [
       {
         accessorKey: 'firstName',

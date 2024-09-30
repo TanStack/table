@@ -17,6 +17,7 @@ import {
   table_resetSorting,
   table_setSorting,
 } from './RowSorting.utils'
+import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type {
   ColumnDef_RowSorting,
@@ -47,18 +48,23 @@ export const RowSorting: TableFeature = {
 
   getDefaultColumnDef: <
     TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
-  >(): ColumnDef_RowSorting<TFeatures, TData> => {
+  >(): ColumnDef_RowSorting<TFeatures, TFns, TData> => {
     return {
       sortingFn: 'auto',
       sortUndefined: 1,
     }
   },
 
-  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowSorting<TFeatures, TData>>,
-  ): TableOptions_RowSorting<TFeatures, TData> => {
+  getDefaultOptions: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_RowSorting<TFeatures, TFns, TData>>,
+  ): TableOptions_RowSorting => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
       isMultiSortEvent: (e: unknown) => {
@@ -69,13 +75,14 @@ export const RowSorting: TableFeature = {
 
   constructColumn: <
     TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue> &
-      Partial<Column_RowSorting<TFeatures, TData>>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowSorting<TFeatures, TData>>,
+    column: Column<TFeatures, TFns, TData, TValue> &
+      Partial<Column_RowSorting<TFeatures, TFns, TData>>,
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_RowSorting<TFeatures, TFns, TData>>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -117,9 +124,13 @@ export const RowSorting: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowSorting<TFeatures, TData>>,
+  constructTable: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> &
+      Partial<Table_RowSorting<TFeatures, TFns, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {

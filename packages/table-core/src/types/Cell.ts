@@ -1,3 +1,4 @@
+import type { Fns } from './Fns'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { Cell_Cell } from '../core/cells/Cells.types'
@@ -5,9 +6,10 @@ import type { Cell_ColumnGrouping } from '../features/column-grouping/ColumnGrou
 
 export type Cell<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
-> = Cell_Cell<TFeatures, TData, TValue> &
+> = Cell_Cell<TFeatures, TFns, TData, TValue> &
   UnionToIntersection<
     'ColumnGrouping' extends keyof TFeatures ? Cell_ColumnGrouping : never
   >

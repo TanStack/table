@@ -67,29 +67,29 @@ This is the type signature for every filter function:
 ```tsx
 export type FilterFn<TData extends AnyData> = {
   (
-    row: Row<TFeatures, TData>,
+    row: Row<TFeatures, TFns, TData>,
     columnId: string,
     filterValue: any,
     addMeta: (meta: any) => void
   ): boolean
-  resolveFilterValue?: TransformFilterValueFn<TFeatures, TData>
-  autoRemove?: ColumnFilterAutoRemoveTestFn<TFeatures, TData>
+  resolveFilterValue?: TransformFilterValueFn<TFeatures, TFns, TData>
+  autoRemove?: ColumnFilterAutoRemoveTestFn<TFeatures, TFns, TData>
   addMeta?: (meta?: any) => void
 }
 
 export type TransformFilterValueFn<TData extends AnyData> = (
   value: any,
-  column?: Column<TFeatures, TData>
+  column?: Column<TFeatures, TFns, TData>
 ) => unknown
 
 export type ColumnFilterAutoRemoveTestFn<TData extends AnyData> = (
   value: any,
-  column?: Column<TFeatures, TData>
+  column?: Column<TFeatures, TFns, TData>
 ) => boolean
 
 export type CustomFilterFns<TData extends AnyData> = Record<
   string,
-  FilterFn<TFeatures, TData>
+  FilterFn<TFeatures, TFns, TData>
 >
 ```
 
@@ -114,7 +114,7 @@ The final list of filter functions available for the `columnDef.filterFn` option
 export type FilterFnOption<TData extends AnyData> =
   | 'auto'
   | BuiltInFilterFn
-  | FilterFn<TFeatures, TData>
+  | FilterFn<TFeatures, TFns, TData>
 ```
 
 #### Filter Meta
@@ -225,7 +225,7 @@ A function that sets the current filter value for the column. You can pass it a 
 ### `getAutoFilterFn`
 
 ```tsx
-getAutoFilterFn: (columnId: string) => FilterFn<TFeatures, TData> | undefined
+getAutoFilterFn: (columnId: string) => FilterFn<TFeatures, TFns, TData> | undefined
 ```
 
 Returns an automatically calculated filter function for the column based off of the columns first known value.
@@ -233,7 +233,7 @@ Returns an automatically calculated filter function for the column based off of 
 ### `getFilterFn`
 
 ```tsx
-getFilterFn: (columnId: string) => FilterFn<TFeatures, TData> | undefined
+getFilterFn: (columnId: string) => FilterFn<TFeatures, TFns, TData> | undefined
 ```
 
 Returns the filter function (either user-defined or automatic, depending on configuration) for the columnId specified.
@@ -342,8 +342,8 @@ Enables/disables **all** column filters for the table.
 
 ```tsx
 getFilteredRowModel?: (
-  table: Table<TFeatures, TData>
-) => () => RowModel<TFeatures, TData>
+  table: Table<TFeatures, TFns, TData>
+) => () => RowModel<TFeatures, TFns, TData>
 ```
 
 If provided, this function is called **once** per table and should return a **new function** which will calculate and return the row model for the table when it's filtered.
@@ -382,7 +382,7 @@ Resets the **columnFilters** state to `initialState.columnFilters`, or `true` ca
 ### `getPreFilteredRowModel`
 
 ```tsx
-getPreFilteredRowModel: () => RowModel<TFeatures, TData>
+getPreFilteredRowModel: () => RowModel<TFeatures, TFns, TData>
 ```
 
 Returns the row model for the table before any **column** filtering has been applied.
@@ -390,7 +390,7 @@ Returns the row model for the table before any **column** filtering has been app
 ### `getFilteredRowModel`
 
 ```tsx
-getFilteredRowModel: () => RowModel<TFeatures, TData>
+getFilteredRowModel: () => RowModel<TFeatures, TFns, TData>
 ```
 
 Returns the row model for the table after **column** filtering has been applied.

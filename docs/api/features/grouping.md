@@ -49,8 +49,8 @@ This is the type signature for every aggregation function:
 
 ```tsx
 export type AggregationFn<TData extends AnyData> = (
-  getLeafRows: () => Row<TFeatures, TData>[],
-  getChildRows: () => Row<TFeatures, TData>[]
+  getLeafRows: () => Row<TFeatures, TFns, TData>[],
+  getChildRows: () => Row<TFeatures, TFns, TData>[]
 ) => any
 ```
 
@@ -69,7 +69,7 @@ export type AggregationFnOption<TData extends AnyData> =
   | 'auto'
   | keyof AggregationFns
   | BuiltInAggregationFn
-  | AggregationFn<TFeatures, TData>
+  | AggregationFn<TFeatures, TFns, TData>
 ```
 
 ## Column Def Options
@@ -92,10 +92,10 @@ Options:
 ```tsx
 aggregatedCell?: Renderable<
   {
-    table: Table<TFeatures, TData>
-    row: Row<TFeatures, TData>
-    column: Column<TFeatures, TData>
-    cell: Cell<TFeatures, TData>
+    table: Table<TFeatures, TFns, TData>
+    row: Row<TFeatures, TFns, TData>
+    column: Column<TFeatures, TFns, TData>
+    cell: Cell<TFeatures, TFns, TData>
     getValue: () => any
     renderValue: () => any
   }
@@ -125,7 +125,7 @@ Specify a value to be used for grouping rows on this column. If this option is n
 ### `aggregationFn`
 
 ```tsx
-aggregationFn?: AggregationFnOption<TFeatures, TData>
+aggregationFn?: AggregationFnOption<TFeatures, TFns, TData>
 ```
 
 The resolved aggregation function for the column.
@@ -173,7 +173,7 @@ Returns a function that toggles the grouping state of the column. This is useful
 ### `getAutoAggregationFn`
 
 ```tsx
-getAutoAggregationFn: () => AggregationFn<TFeatures, TData> | undefined
+getAutoAggregationFn: () => AggregationFn<TFeatures, TFns, TData> | undefined
 ```
 
 Returns the automatically inferred aggregation function for the column.
@@ -181,7 +181,7 @@ Returns the automatically inferred aggregation function for the column.
 ### `getAggregationFn`
 
 ```tsx
-getAggregationFn: () => AggregationFn<TFeatures, TData> | undefined
+getAggregationFn: () => AggregationFn<TFeatures, TFns, TData> | undefined
 ```
 
 Returns the aggregation function for the column.
@@ -279,7 +279,7 @@ Enables/disables grouping for all columns.
 ### `getGroupedRowModel`
 
 ```tsx
-getGroupedRowModel?: (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData>
+getGroupedRowModel?: (table: Table<TFeatures, TFns, TData>) => () => RowModel<TFeatures, TFns, TData>
 ```
 
 Returns the row model after grouping has taken place, but no further.
@@ -313,7 +313,7 @@ Resets the **grouping** state to `initialState.grouping`, or `true` can be passe
 ### `getPreGroupedRowModel`
 
 ```tsx
-getPreGroupedRowModel: () => RowModel<TFeatures, TData>
+getPreGroupedRowModel: () => RowModel<TFeatures, TFns, TData>
 ```
 
 Returns the row model for the table before any grouping has been applied.
@@ -321,7 +321,7 @@ Returns the row model for the table before any grouping has been applied.
 ### `getGroupedRowModel`
 
 ```tsx
-getGroupedRowModel: () => RowModel<TFeatures, TData>
+getGroupedRowModel: () => RowModel<TFeatures, TFns, TData>
 ```
 
 Returns the row model for the table after grouping has been applied.

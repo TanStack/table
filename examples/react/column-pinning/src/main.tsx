@@ -22,7 +22,7 @@ import type { Person } from './makeData'
 
 const _features = { ColumnVisibility, ColumnPinning, ColumnOrdering }
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof _features, {}, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

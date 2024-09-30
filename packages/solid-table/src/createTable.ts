@@ -9,13 +9,14 @@ import type { RowData, TableFeatures, TableOptions } from '@tanstack/table-core'
 
 export function createTable<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(tableOptions: TableOptions<TFeatures, TData>) {
+>(tableOptions: TableOptions<TFeatures, TFns, TData>) {
   const [store, setStore] = createStore(
     getInitialTableState(builtInFeatures, tableOptions.initialState),
   )
 
-  const statefulOptions: TableOptions<TFeatures, TData> = {
+  const statefulOptions: TableOptions<TFeatures, TFns, TData> = {
     ...tableOptions,
     state: { ...store, ...tableOptions.state },
     onStateChange: (updater) => {
@@ -24,7 +25,7 @@ export function createTable<
     },
   }
 
-  const table = constructTable<TFeatures, TData>(statefulOptions)
+  const table = constructTable<TFeatures, TFns, TData>(statefulOptions)
 
   createComputed(() => {
     table.setOptions((prev) => {

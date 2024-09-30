@@ -1,9 +1,11 @@
+import type { Fns } from '../../types/Fns'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
 
 export interface Column_ColumnFaceting<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
   /**
@@ -19,7 +21,7 @@ export interface Column_ColumnFaceting<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-faceting#getfacetedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-faceting)
    */
-  getFacetedRowModel: () => RowModel<TFeatures, TData>
+  getFacetedRowModel: () => RowModel<TFeatures, TFns, TData>
   /**
    * A function that **computes and returns** a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
    * > ⚠️ Requires that you pass a valid `getFacetedUniqueValues` function to `options.getFacetedUniqueValues`. A default implementation is provided via the exported `getFacetedUniqueValues` function.

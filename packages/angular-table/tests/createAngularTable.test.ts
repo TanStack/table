@@ -73,7 +73,7 @@ describe('injectTable', () => {
 })
 
 const testShouldBeComputedProperty = (
-  table: Table<any, any>,
+  table: Table<any, any, any>,
   propertyName: string,
 ) => {
   if (propertyName.endsWith('Handler') || propertyName.endsWith('Model')) {
@@ -82,7 +82,7 @@ const testShouldBeComputedProperty = (
 
   if (propertyName.startsWith('get')) {
     // Only properties with no arguments are computed
-    const fn = table[propertyName as keyof Table<any, any>]
+    const fn = table[propertyName as keyof Table<any, any, any>]
     // Cannot test if is lazy computed since we return the unwrapped value
     return fn instanceof Function && fn.length === 0
   }

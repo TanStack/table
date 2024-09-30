@@ -28,7 +28,7 @@ function App() {
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, {}, Person>>>(
     () => [
       {
         id: 'select',

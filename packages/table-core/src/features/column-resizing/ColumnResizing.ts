@@ -7,6 +7,7 @@ import {
   table_resetHeaderSizeInfo,
   table_setColumnResizing,
 } from './ColumnResizing.utils'
+import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -37,23 +38,29 @@ export const ColumnResizing: TableFeature = {
     }
   },
 
-  getDefaultOptions: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
+  getDefaultOptions: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> & Partial<Table_ColumnResizing>,
   ): ColumnResizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',
       columnResizeDirection: 'ltr',
-      oncolumnResizingChange: makeStateUpdater('columnResizing', table),
+      onColumnResizingChange: makeStateUpdater('columnResizing', table),
     }
   },
 
   constructColumn: <
     TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnResizing>,
-    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
+    column: Column<TFeatures, TFns, TData, TValue> &
+      Partial<Column_ColumnResizing>,
+    table: Table<TFeatures, TFns, TData> & Partial<Table_ColumnResizing>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -67,11 +74,13 @@ export const ColumnResizing: TableFeature = {
 
   constructHeader: <
     TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnResizing>,
-    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
+    header: Header<TFeatures, TFns, TData, TValue> &
+      Partial<Header_ColumnResizing>,
+    table: Table<TFeatures, TFns, TData> & Partial<Table_ColumnResizing>,
   ): void => {
     assignAPIs(header, table, [
       {
@@ -81,8 +90,12 @@ export const ColumnResizing: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
+  constructTable: <
+    TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
+    TData extends RowData,
+  >(
+    table: Table<TFeatures, TFns, TData> & Partial<Table_ColumnResizing>,
   ): void => {
     assignAPIs(table, table, [
       {

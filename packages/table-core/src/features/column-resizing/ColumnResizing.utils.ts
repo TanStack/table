@@ -8,6 +8,7 @@ import {
   table_getInitialState,
   table_getState,
 } from '../../core/table/Tables.utils'
+import type { Fns } from '../../types/Fns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -32,13 +33,14 @@ export function getDefaultColumnResizingState(): columnResizingState {
 
 export function column_getCanResize<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
+  column: Column<TFeatures, TFns, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnResizing>
   },
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
 ) {
   return (
     (column.columnDef.enableResizing ?? true) &&
@@ -48,24 +50,26 @@ export function column_getCanResize<
 
 export function column_getIsResizing<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
+  column: Column<TFeatures, TFns, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnResizing>
   },
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
 ) {
   return table_getState(table).columnResizing?.isResizingColumn === column.id
 }
 
 export function header_getResizeHandler<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  header: Header<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
+  header: Header<TFeatures, TFns, TData, TValue>,
+  table: Table_Internal<TFeatures, TFns, TData>,
   _contextDocument?: Document,
 ) {
   const column = table_getColumn(table, header.column.id)!
@@ -236,9 +240,10 @@ export function header_getResizeHandler<
 
 export function table_setColumnResizing<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
   updater: Updater<columnResizingState>,
 ) {
   table.options.onColumnResizingChange?.(updater)
@@ -246,8 +251,9 @@ export function table_setColumnResizing<
 
 export function table_resetHeaderSizeInfo<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TFns, TData>, defaultState?: boolean) {
   table_setColumnResizing(
     table,
     defaultState

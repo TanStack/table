@@ -248,7 +248,7 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
+  column: Column<any, any, any>
   table: Table<any>
 }) {
   const firstValue = table

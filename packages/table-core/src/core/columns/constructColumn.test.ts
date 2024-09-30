@@ -6,7 +6,11 @@ import type { Table } from '../../types/Table'
 
 describe('constructColumn', () => {
   it('should create a column with all core column APIs and properties', () => {
-    const table = { _features: { Columns }, options: {} } as Table<any, any>
+    const table = { _features: { Columns }, options: {} } as Table<
+      any,
+      any,
+      any
+    >
     const columnDef = {
       id: 'test-column',
       accessorKey: 'test-accessor-key',

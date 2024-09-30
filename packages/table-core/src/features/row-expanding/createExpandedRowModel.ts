@@ -4,6 +4,7 @@ import {
   row_getIsExpanded,
   table_getPreExpandedRowModel,
 } from './RowExpanding.utils'
+import type { Fns } from '../../types/Fns'
 import type { TableOptions_RowExpanding } from './RowExpanding.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -13,12 +14,13 @@ import type { Row } from '../../types/Row'
 
 export function createExpandedRowModel<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(): (
-  table: Table<TFeatures, TData> & {
-    options: TableOptions_RowExpanding<TFeatures, TData>
+  table: Table<TFeatures, TFns, TData> & {
+    options: TableOptions_RowExpanding<TFeatures, TFns, TData>
   },
-) => () => RowModel<TFeatures, TData> {
+) => () => RowModel<TFeatures, TFns, TData> {
   return (table) =>
     memo(
       () => [
@@ -47,11 +49,15 @@ export function createExpandedRowModel<
 
 export function expandRows<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(rowModel: RowModel<TFeatures, TData>, table: Table<TFeatures, TData>) {
-  const expandedRows: Array<Row<TFeatures, TData>> = []
+>(
+  rowModel: RowModel<TFeatures, TFns, TData>,
+  table: Table<TFeatures, TFns, TData>,
+) {
+  const expandedRows: Array<Row<TFeatures, TFns, TData>> = []
 
-  const handleRow = (row: Row<TFeatures, TData>) => {
+  const handleRow = (row: Row<TFeatures, TFns, TData>) => {
     expandedRows.push(row)
 
     if (row.subRows.length && row_getIsExpanded(row, table)) {

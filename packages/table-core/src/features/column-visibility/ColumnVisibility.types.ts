@@ -1,3 +1,4 @@
+import type { Fns } from '../../types/Fns'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Cell } from '../../types/Cell'
@@ -49,6 +50,7 @@ export type VisibilityDefaultOptions = Pick<
 
 export interface Table_ColumnVisibility<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
   /**
@@ -74,13 +76,13 @@ export interface Table_ColumnVisibility<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleflatcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getVisibleFlatColumns: () => Array<Column<TFeatures, TData, unknown>>
+  getVisibleFlatColumns: () => Array<Column<TFeatures, TFns, TData, unknown>>
   /**
    * Returns a flat array of leaf-node columns that are visible.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleleafcolumns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
+  getVisibleLeafColumns: () => Array<Column<TFeatures, TFns, TData, unknown>>
   /**
    * Resets the column visibility state to the initial state. If `defaultState` is provided, the state will be reset to `{}`
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#resetcolumnvisibility)
@@ -119,15 +121,16 @@ export interface ColumnDef_ColumnVisibility_Unavailable {
 
 export interface Row_ColumnVisibility<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
-  getAllVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
+  getAllVisibleCells: () => Array<Cell<TFeatures, TFns, TData, unknown>>
   /**
    * Returns an array of cells that account for column visibility for the row.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisiblecells)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
-  getVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
+  getVisibleCells: () => Array<Cell<TFeatures, TFns, TData, unknown>>
 }
 
 export interface Column_ColumnVisibility {

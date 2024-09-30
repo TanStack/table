@@ -16,7 +16,7 @@ import type {
 
 const _features = tableFeatures({ ColumnOrdering })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof _features, {}, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

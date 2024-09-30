@@ -22,8 +22,9 @@ export * from '@tanstack/table-core'
 
 export type TableOptionsWithReactiveData<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = Omit<TableOptions<TFeatures, TData>, 'data'> & {
+> = Omit<TableOptions<TFeatures, TFns, TData>, 'data'> & {
   data: MaybeRef<Array<TData>>
 }
 
@@ -45,8 +46,9 @@ export const FlexRender = defineComponent({
 
 function getOptionsWithReactiveData<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(options: TableOptionsWithReactiveData<TFeatures, TData>) {
+>(options: TableOptionsWithReactiveData<TFeatures, TFns, TData>) {
   return mergeProxy(options, {
     data: unref(options.data),
   })
@@ -54,8 +56,9 @@ function getOptionsWithReactiveData<
 
 export function useTable<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(initialOptions: TableOptionsWithReactiveData<TFeatures, TData>) {
+>(initialOptions: TableOptionsWithReactiveData<TFeatures, TFns, TData>) {
   const IS_REACTIVE = isRef(initialOptions.data)
 
   const resolvedOptions = mergeProxy(
@@ -64,8 +67,8 @@ export function useTable<
       onStateChange: () => {}, // noop
       renderFallbackValue: null,
       mergeOptions(
-        defaultOptions: TableOptions<TFeatures, TData>,
-        options: TableOptions<TFeatures, TData>,
+        defaultOptions: TableOptions<TFeatures, TFns, TData>,
+        options: TableOptions<TFeatures, TFns, TData>,
       ) {
         return IS_REACTIVE
           ? {
@@ -79,7 +82,7 @@ export function useTable<
   )
 
   const table = constructTable(
-    resolvedOptions as TableOptions<TFeatures, TData>,
+    resolvedOptions as TableOptions<TFeatures, TFns, TData>,
   )
 
   // Add reactivity support

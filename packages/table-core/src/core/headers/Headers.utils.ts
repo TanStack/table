@@ -8,6 +8,7 @@ import {
   table_getRightHeaderGroups,
 } from '../../features/column-pinning/ColumnPinning.utils'
 import { buildHeaderGroups } from './buildHeaderGroups'
+import type { Fns } from '../../types/Fns'
 import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -16,16 +17,17 @@ import type { Header_Header } from './Headers.types'
 
 export function header_getLeafHeaders<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue,
->(header: Header<TFeatures, TData, TValue>) {
-  const leafHeaders: Array<Header<TFeatures, TData, TValue>> = []
+>(header: Header<TFeatures, TFns, TData, TValue>) {
+  const leafHeaders: Array<Header<TFeatures, TFns, TData, TValue>> = []
 
-  const recurseHeader = (h: Header_Header<TFeatures, TData, TValue>) => {
+  const recurseHeader = (h: Header_Header<TFeatures, TFns, TData, TValue>) => {
     if (h.subHeaders.length) {
       h.subHeaders.map(recurseHeader)
     }
-    leafHeaders.push(h as Header<TFeatures, TData, TValue>)
+    leafHeaders.push(h as Header<TFeatures, TFns, TData, TValue>)
   }
 
   recurseHeader(header)
@@ -35,9 +37,13 @@ export function header_getLeafHeaders<
 
 export function header_getContext<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue,
->(header: Header<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
+>(
+  header: Header<TFeatures, TFns, TData, TValue>,
+  table: Table<TFeatures, TFns, TData>,
+) {
   return {
     column: header.column,
     header,
@@ -47,8 +53,9 @@ export function header_getContext<
 
 export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table<TFeatures, TFns, TData>) {
   const { left, right } =
     table_getState(table).columnPinning ?? getDefaultColumnPinningState()
   const allColumns = table_getAllColumns(table)
@@ -77,16 +84,18 @@ export function table_getHeaderGroups<
 
 export function table_getFooterGroups<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table<TFeatures, TFns, TData>) {
   const headerGroups = table_getHeaderGroups(table)
   return [...headerGroups].reverse()
 }
 
 export function table_getFlatHeaders<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table<TFeatures, TFns, TData>) {
   const headerGroups = table_getHeaderGroups(table)
   return headerGroups
     .map((headerGroup) => {
@@ -97,8 +106,9 @@ export function table_getFlatHeaders<
 
 export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table<TFeatures, TFns, TData>) {
   const left = table_getLeftHeaderGroups(table)
   const center = table_getCenterHeaderGroups(table)
   const right = table_getRightHeaderGroups(table)

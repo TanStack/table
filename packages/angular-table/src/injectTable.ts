@@ -16,10 +16,11 @@ import type {
 
 export function injectTable<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  options: () => TableOptions<TFeatures, TData>,
-): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
+  options: () => TableOptions<TFeatures, TFns, TData>,
+): Table<TFeatures, TFns, TData> & Signal<Table<TFeatures, TFns, TData>> {
   return lazyInit(() => {
     const resolvedOptions = {
       ...options(),
@@ -41,24 +42,26 @@ export function injectTable<
 
     // Compose table options using computed.
     // This is to allow `tableSignal` to listen and set table option
-    const updatedOptions = computed<TableOptions<TFeatures, TData>>(() => {
-      // listen to table state changed
-      const tableState = state()
-      // listen to input options changed
-      const tableOptions = options()
-      return {
-        ...table.options,
-        ...resolvedOptions,
-        ...tableOptions,
-        state: { ...tableState, ...tableOptions.state },
-        onStateChange: (updater) => {
-          const value =
-            updater instanceof Function ? updater(tableState) : updater
-          state.set(value)
-          resolvedOptions.onStateChange?.(updater)
-        },
-      }
-    })
+    const updatedOptions = computed<TableOptions<TFeatures, TFns, TData>>(
+      () => {
+        // listen to table state changed
+        const tableState = state()
+        // listen to input options changed
+        const tableOptions = options()
+        return {
+          ...table.options,
+          ...resolvedOptions,
+          ...tableOptions,
+          state: { ...tableState, ...tableOptions.state },
+          onStateChange: (updater) => {
+            const value =
+              updater instanceof Function ? updater(tableState) : updater
+            state.set(value)
+            resolvedOptions.onStateChange?.(updater)
+          },
+        }
+      },
+    )
 
     // convert table instance to signal for proxify to listen to any table state and options changes
     const tableSignal = computed(

@@ -5,6 +5,7 @@ import {
   getDefaultPaginationState,
   table_getPrePaginationRowModel,
 } from './RowPagination.utils'
+import type { Fns } from '../../types/Fns'
 import type { TableOptions_RowExpanding } from '../row-expanding/RowExpanding.types'
 import type { TableOptions_RowPagination } from './RowPagination.types'
 import type { RowData } from '../../types/type-utils'
@@ -15,15 +16,16 @@ import type { Row } from '../../types/Row'
 
 export function createPaginatedRowModel<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(opts?: {
   initialSync: boolean
 }): (
-  table: Table<TFeatures, TData> & {
+  table: Table<TFeatures, TFns, TData> & {
     options: Partial<TableOptions_RowPagination> &
-      Partial<TableOptions_RowExpanding<TFeatures, TData>>
+      Partial<TableOptions_RowExpanding<TFeatures, TFns, TData>>
   },
-) => () => RowModel<TFeatures, TData> {
+) => () => RowModel<TFeatures, TFns, TData> {
   return (table) =>
     memo(
       () => [
@@ -46,7 +48,7 @@ export function createPaginatedRowModel<
 
         const paginatedRows = rows.slice(pageStart, pageEnd)
 
-        let paginatedRowModel: RowModel<TFeatures, TData>
+        let paginatedRowModel: RowModel<TFeatures, TFns, TData>
 
         if (!table.options.paginateExpandedRows) {
           paginatedRowModel = expandRows(
@@ -67,7 +69,7 @@ export function createPaginatedRowModel<
 
         paginatedRowModel.flatRows = []
 
-        const handleRow = (row: Row<TFeatures, TData>) => {
+        const handleRow = (row: Row<TFeatures, TFns, TData>) => {
           paginatedRowModel.flatRows.push(row)
           if (row.subRows.length) {
             row.subRows.forEach(handleRow)

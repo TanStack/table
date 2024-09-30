@@ -42,6 +42,7 @@ declare module '@tanstack/react-table' {
   //allows us to define custom properties for our columns
   interface ColumnMeta<
     TFeatures extends TableFeatures,
+    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   > {
@@ -54,7 +55,7 @@ function App() {
     [],
   )
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, {}, Person>>>(
     () => [
       {
         accessorKey: 'firstName',

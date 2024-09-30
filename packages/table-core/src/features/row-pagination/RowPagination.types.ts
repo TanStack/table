@@ -1,3 +1,4 @@
+import type { Fns } from '../../types/Fns'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -79,6 +80,7 @@ export interface PaginationDefaultOptions {
 
 export interface Table_RowPagination<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
   _autoResetPageIndex: () => void
@@ -117,13 +119,13 @@ export interface Table_RowPagination<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getPaginatedRowModel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
-  getPaginatedRowModel: () => RowModel<TFeatures, TData>
+  getPaginatedRowModel: () => RowModel<TFeatures, TFns, TData>
   /**
    * Returns the row model for the table before any pagination has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getprepaginationrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
-  getPrePaginationRowModel: () => RowModel<TFeatures, TData>
+  getPrePaginationRowModel: () => RowModel<TFeatures, TFns, TData>
   /**
    * Increments the page index by one, if possible.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#nextpage)

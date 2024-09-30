@@ -1,5 +1,6 @@
 import { constructTableHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
+import type { Fns } from '../../table-core/dist/esm/types/Fns'
 import type {
   RowData,
   Table,
@@ -11,22 +12,24 @@ import type {
 
 export type TableHelper<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
+> = Omit<TableHelper_Core<TFeatures, TFns, TData>, 'tableCreator'> & {
   useTable: (
     tableOptions: Omit<
-      TableOptions<TFeatures, TData>,
+      TableOptions<TFeatures, TFns, TData>,
       '_features' | '_rowModels'
     >,
-  ) => Table<TFeatures, TData>
+  ) => Table<TFeatures, TFns, TData>
 }
 
 export function createTableHelper<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  tableHelperOptions: TableHelperOptions<TFeatures, TData>,
-): TableHelper<TFeatures, TData> {
+  tableHelperOptions: TableHelperOptions<TFeatures, TFns, TData>,
+): TableHelper<TFeatures, TFns, TData> {
   const tableHelper = constructTableHelper(useTable, tableHelperOptions)
   return {
     ...tableHelper,

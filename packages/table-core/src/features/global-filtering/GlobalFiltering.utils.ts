@@ -1,6 +1,7 @@
 import { filterFns } from '../../fns/filterFns'
 import { isFunction } from '../../utils'
 import { table_getInitialState } from '../../core/table/Tables.utils'
+import type { Fns } from '../../types/Fns'
 import type { ColumnDefBase_All } from '../../types/ColumnDef'
 import type { FilterFn } from '../column-filtering/ColumnFiltering.types'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -17,13 +18,14 @@ import type { BuiltInFilterFn } from '../../fns/filterFns'
  */
 export function column_getCanGlobalFilter<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDefBase_All<TFeatures, TData, TValue>
+  column: Column<TFeatures, TFns, TData, TValue> & {
+    columnDef: ColumnDefBase_All<TFeatures, TFns, TData, TValue>
   },
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TFns, TData>,
 ): boolean {
   return (
     (column.columnDef.enableGlobalFilter ?? true) &&
@@ -45,17 +47,21 @@ export function table_getGlobalAutoFilterFn() {
  */
 export function table_getGlobalFilterFn<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
-): FilterFn<TFeatures, TData> | FilterFn<TFeatures, TData> | undefined {
+  table: Table_Internal<TFeatures, TFns, TData>,
+):
+  | FilterFn<TFeatures, TFns, TData>
+  | FilterFn<TFeatures, TFns, TData>
+  | undefined {
   const { globalFilterFn: globalFilterFn } = table.options
 
   return isFunction(globalFilterFn)
     ? globalFilterFn
     : globalFilterFn === 'auto'
       ? table_getGlobalAutoFilterFn()
-      : (table.options.filterFns?.[globalFilterFn as string] ??
+      : (table._fns.filterFns?.[globalFilterFn as string] ??
         filterFns[globalFilterFn as BuiltInFilterFn])
 }
 
@@ -66,8 +72,9 @@ export function table_getGlobalFilterFn<
  */
 export function table_setGlobalFilter<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: any) {
+>(table: Table_Internal<TFeatures, TFns, TData>, updater: any) {
   table.options.onGlobalFilterChange?.(updater)
 }
 
@@ -78,8 +85,9 @@ export function table_setGlobalFilter<
  */
 export function table_resetGlobalFilter<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TFns, TData>, defaultState?: boolean) {
   table_setGlobalFilter(
     table,
     defaultState ? undefined : table_getInitialState(table).globalFilter,

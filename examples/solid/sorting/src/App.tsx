@@ -17,7 +17,7 @@ function App() {
   const [sorting, setSorting] = createSignal<SortingState>([])
   const refreshData = () => setData(makeData(100_000)) // stress test
 
-  const columns: Array<ColumnDef<typeof _features, Person>> = [
+  const columns: Array<ColumnDef<typeof _features, {}, Person>> = [
     {
       header: 'Name',
       footer: (props) => props.column.id,

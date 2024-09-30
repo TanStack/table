@@ -1,15 +1,17 @@
 import { getMemoOptions, memo } from '../../utils'
 import { row_getUniqueValues } from '../../core/rows/Rows.utils'
 import { column_getFacetedRowModel } from './ColumnFaceting.utils'
+import type { Fns } from '../../types/Fns'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 
 export function createFacetedUniqueValues<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(): (
-  table: Table<TFeatures, TData>,
+  table: Table<TFeatures, TFns, TData>,
   columnId: string,
 ) => () => Map<any, number> {
   return (table, columnId) =>

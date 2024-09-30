@@ -40,7 +40,7 @@ import type { Column, Table } from '@tanstack/angular-table'
   imports: [CommonModule],
 })
 export class FilterComponent<T> implements OnInit {
-  column = input.required<Column<any, any>>()
+  column = input.required<Column<any, any, any>>()
 
   table = input.required<Table<T>>()
 

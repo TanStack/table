@@ -2,6 +2,7 @@ import { constructRow } from '../rows/constructRow'
 import { _memo, isDev, tableMemo } from '../../utils'
 import { table_getRowId } from '../rows/Rows.utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/RowPagination.utils'
+import type { Fns } from '../../types/Fns'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -10,9 +11,12 @@ import type { Row } from '../../types/Row'
 
 export function createCoreRowModel<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
-  return (table: Table<TFeatures, TData>) =>
+>(): (
+  table: Table<TFeatures, TFns, TData>,
+) => () => RowModel<TFeatures, TFns, TData> {
+  return (table: Table<TFeatures, TFns, TData>) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'createCoreRowModel',
@@ -25,16 +29,17 @@ export function createCoreRowModel<
 
 function _createCoreRowModel<
   TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table<TFeatures, TFns, TData>,
   data: Array<TData>,
 ): {
-  rows: Array<Row<TFeatures, TData>>
-  flatRows: Array<Row<TFeatures, TData>>
-  rowsById: Record<string, Row<TFeatures, TData>>
+  rows: Array<Row<TFeatures, TFns, TData>>
+  flatRows: Array<Row<TFeatures, TFns, TData>>
+  rowsById: Record<string, Row<TFeatures, TFns, TData>>
 } {
-  const rowModel: RowModel<TFeatures, TData> = {
+  const rowModel: RowModel<TFeatures, TFns, TData> = {
     rows: [],
     flatRows: [],
     rowsById: {},
@@ -43,9 +48,9 @@ function _createCoreRowModel<
   const accessRows = (
     originalRows: Array<TData>,
     depth = 0,
-    parentRow?: Row<TFeatures, TData>,
-  ): Array<Row<TFeatures, TData>> => {
-    const rows = [] as Array<Row<TFeatures, TData>>
+    parentRow?: Row<TFeatures, TFns, TData>,
+  ): Array<Row<TFeatures, TFns, TData>> => {
+    const rows = [] as Array<Row<TFeatures, TFns, TData>>
 
     for (let i = 0; i < originalRows.length; i++) {
       const originalRow = originalRows[i]!

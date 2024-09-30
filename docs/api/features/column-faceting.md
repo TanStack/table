@@ -8,7 +8,7 @@ id: column-faceting
 ### `getFacetedRowModel`
 
 ```tsx
-type getFacetedRowModel = () => RowModel<TFeatures, TData>
+type getFacetedRowModel = () => RowModel<TFeatures, TFns, TData>
 ```
 
 > ⚠️ Requires that you pass a valid `getFacetedRowModel` function to `options.facetedRowModel`. A default implementation is provided via the exported `getFacetedRowModel` function.
@@ -40,7 +40,7 @@ A function that **computes and returns** a min/max tuple derived from `column.ge
 ### `getColumnFacetedRowModel`
 
 ```tsx
-getColumnFacetedRowModel: (columnId: string) => RowModel<TFeatures, TData>
+getColumnFacetedRowModel: (columnId: string) => RowModel<TFeatures, TFns, TData>
 ```
 
 Returns the faceted row model for a given columnId.

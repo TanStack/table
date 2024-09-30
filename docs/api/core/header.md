@@ -35,7 +35,7 @@ The depth of the header, zero-indexed based.
 ### `column`
 
 ```tsx
-column: Column<TFeatures, TData>
+column: Column<TFeatures, TFns, TData>
 ```
 
 The header's associated [Column](../column) object
@@ -43,7 +43,7 @@ The header's associated [Column](../column) object
 ### `headerGroup`
 
 ```tsx
-headerGroup: HeaderGroup<TFeatures, TData>
+headerGroup: HeaderGroup<TFeatures, TFns, TData>
 ```
 
 The header's associated [HeaderGroup](../header-group) object
@@ -51,7 +51,7 @@ The header's associated [HeaderGroup](../header-group) object
 ### `subHeaders`
 
 ```tsx
-type subHeaders = Header<TFeatures, TData>[]
+type subHeaders = Header<TFeatures, TFns, TData>[]
 ```
 
 The header's hierarchical sub/child headers. Will be empty if the header's associated column is a leaf-column.
@@ -75,7 +75,7 @@ The row-span for the header.
 ### `getLeafHeaders`
 
 ```tsx
-type getLeafHeaders = () => Header<TFeatures, TData>[]
+type getLeafHeaders = () => Header<TFeatures, TFns, TData>[]
 ```
 
 Returns the leaf headers hierarchically nested under this header.
@@ -100,9 +100,9 @@ If the header is a placeholder header, this will be a unique header ID that does
 
 ```tsx
 getContext: () => {
-  table: Table<TFeatures, TData>
-  header: Header<TFeatures, TData, TValue>
-  column: Column<TFeatures, TData, TValue>
+  table: Table<TFeatures, TFns, TData>
+  header: Header<TFeatures, TFns, TData, TValue>
+  column: Column<TFeatures, TFns, TData, TValue>
 }
 ```
 
@@ -117,7 +117,7 @@ flexRender(header.column.columnDef.header, header.getContext())
 ### `getHeaderGroups`
 
 ```tsx
-type getHeaderGroups = () => HeaderGroup<TFeatures, TData>[]
+type getHeaderGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
 ```
 
 Returns all header groups for the table.
@@ -125,7 +125,7 @@ Returns all header groups for the table.
 ### `getLeftHeaderGroups`
 
 ```tsx
-type getLeftHeaderGroups = () => HeaderGroup<TFeatures, TData>[]
+type getLeftHeaderGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
 ```
 
 If pinning, returns the header groups for the left pinned columns.
@@ -133,7 +133,7 @@ If pinning, returns the header groups for the left pinned columns.
 ### `getCenterHeaderGroups`
 
 ```tsx
-type getCenterHeaderGroups = () => HeaderGroup<TFeatures, TData>[]
+type getCenterHeaderGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
 ```
 
 If pinning, returns the header groups for columns that are not pinned.
@@ -141,7 +141,7 @@ If pinning, returns the header groups for columns that are not pinned.
 ### `getRightHeaderGroups`
 
 ```tsx
-type getRightHeaderGroups = () => HeaderGroup<TFeatures, TData>[]
+type getRightHeaderGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
 ```
 
 If pinning, returns the header groups for the right pinned columns.
@@ -149,7 +149,7 @@ If pinning, returns the header groups for the right pinned columns.
 ### `getFooterGroups`
 
 ```tsx
-type getFooterGroups = () => HeaderGroup<TFeatures, TData>[]
+type getFooterGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
 ```
 
 Returns all footer groups for the table.
@@ -157,7 +157,7 @@ Returns all footer groups for the table.
 ### `getLeftFooterGroups`
 
 ```tsx
-type getLeftFooterGroups = () => HeaderGroup<TFeatures, TData>[]
+type getLeftFooterGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
 ```
 
 If pinning, returns the footer groups for the left pinned columns.
@@ -165,7 +165,7 @@ If pinning, returns the footer groups for the left pinned columns.
 ### `getCenterFooterGroups`
 
 ```tsx
-type getCenterFooterGroups = () => HeaderGroup<TFeatures, TData>[]
+type getCenterFooterGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
 ```
 
 If pinning, returns the footer groups for columns that are not pinned.
@@ -173,7 +173,7 @@ If pinning, returns the footer groups for columns that are not pinned.
 ### `getRightFooterGroups`
 
 ```tsx
-type getRightFooterGroups = () => HeaderGroup<TFeatures, TData>[]
+type getRightFooterGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
 ```
 
 If pinning, returns the footer groups for the right pinned columns.
@@ -181,7 +181,7 @@ If pinning, returns the footer groups for the right pinned columns.
 ### `getFlatHeaders`
 
 ```tsx
-type getFlatHeaders = () => Header<TFeatures, TData, unknown>[]
+type getFlatHeaders = () => Header<TFeatures, TFns, TData, unknown>[]
 ```
 
 Returns headers for all columns in the table, including parent headers.
@@ -189,7 +189,7 @@ Returns headers for all columns in the table, including parent headers.
 ### `getLeftFlatHeaders`
 
 ```tsx
-type getLeftFlatHeaders = () => Header<TFeatures, TData, unknown>[]
+type getLeftFlatHeaders = () => Header<TFeatures, TFns, TData, unknown>[]
 ```
 
 If pinning, returns headers for all left pinned columns in the table, including parent headers.
@@ -197,7 +197,7 @@ If pinning, returns headers for all left pinned columns in the table, including 
 ### `getCenterFlatHeaders`
 
 ```tsx
-type getCenterFlatHeaders = () => Header<TFeatures, TData, unknown>[]
+type getCenterFlatHeaders = () => Header<TFeatures, TFns, TData, unknown>[]
 ```
 
 If pinning, returns headers for all columns that are not pinned, including parent headers.
@@ -205,7 +205,7 @@ If pinning, returns headers for all columns that are not pinned, including paren
 ### `getRightFlatHeaders`
 
 ```tsx
-type getRightFlatHeaders = () => Header<TFeatures, TData, unknown>[]
+type getRightFlatHeaders = () => Header<TFeatures, TFns, TData, unknown>[]
 ```
 
 If pinning, returns headers for all right pinned columns in the table, including parent headers.
@@ -213,7 +213,7 @@ If pinning, returns headers for all right pinned columns in the table, including
 ### `getLeafHeaders`
 
 ```tsx
-type getLeafHeaders = () => Header<TFeatures, TData, unknown>[]
+type getLeafHeaders = () => Header<TFeatures, TFns, TData, unknown>[]
 ```
 
 Returns headers for all leaf columns in the table, (not including parent headers).
@@ -221,7 +221,7 @@ Returns headers for all leaf columns in the table, (not including parent headers
 ### `getLeftLeafHeaders`
 
 ```tsx
-type getLeftLeafHeaders = () => Header<TFeatures, TData, unknown>[]
+type getLeftLeafHeaders = () => Header<TFeatures, TFns, TData, unknown>[]
 ```
 
 If pinning, returns headers for all left pinned leaf columns in the table, (not including parent headers).
@@ -229,7 +229,7 @@ If pinning, returns headers for all left pinned leaf columns in the table, (not 
 ### `getCenterLeafHeaders`
 
 ```tsx
-type getCenterLeafHeaders = () => Header<TFeatures, TData, unknown>[]
+type getCenterLeafHeaders = () => Header<TFeatures, TFns, TData, unknown>[]
 ```
 
 If pinning, returns headers for all columns that are not pinned, (not including parent headers).
@@ -237,7 +237,7 @@ If pinning, returns headers for all columns that are not pinned, (not including 
 ### `getRightLeafHeaders`
 
 ```tsx
-type getRightLeafHeaders = () => Header<TFeatures, TData, unknown>[]
+type getRightLeafHeaders = () => Header<TFeatures, TFns, TData, unknown>[]
 ```
 
 If pinning, returns headers for all right pinned leaf columns in the table, (not including parent headers).

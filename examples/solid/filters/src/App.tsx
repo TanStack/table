@@ -23,7 +23,7 @@ const _features = tableFeatures({
   ColumnFaceting,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof _features, {}, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
