@@ -36,7 +36,6 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Core: createCoreRowModel(),
             Paginated: createPaginatedRowModel(),
           },
           enableRowPinning: true,
@@ -70,7 +69,6 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Core: createCoreRowModel(),
             Paginated: createPaginatedRowModel(),
           },
           enableRowPinning: true,
@@ -104,7 +102,6 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Core: createCoreRowModel(),
             Paginated: createPaginatedRowModel(),
           },
           enableRowPinning: true,
@@ -138,7 +135,6 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Core: createCoreRowModel(),
             Paginated: createPaginatedRowModel(),
           },
           enableRowPinning: true,
@@ -171,7 +167,6 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Core: createCoreRowModel(),
             Paginated: createPaginatedRowModel(),
           },
           enableRowPinning: true,
@@ -205,7 +200,6 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Core: createCoreRowModel(),
             Paginated: createPaginatedRowModel(),
           },
           enableRowPinning: true,
@@ -241,7 +235,6 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Core: createCoreRowModel(),
             Paginated: createPaginatedRowModel(),
           },
           enableRowPinning: true,

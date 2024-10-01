@@ -32,7 +32,6 @@ const tableHelper = createTableHelper({
     RowExpanding,
   },
   _rowModels: {
-    Core: createCoreRowModel(),
     Filtered: createFilteredRowModel(),
     Paginated: createPaginatedRowModel(),
     Sorted: createSortedRowModel(),

@@ -48,7 +48,7 @@ export interface TableFns_ColumnFiltering<
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
-  filterFns?: Record<keyof FilterFns, FilterFn<TFeatures, TFns, TData>>
+  filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TFns, TData>>
 }
 
 export interface FilterFn<

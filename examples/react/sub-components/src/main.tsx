@@ -115,7 +115,6 @@ function Table({
   const table = useTable({
     _features: { RowExpanding },
     _rowModels: {
-      Core: createCoreRowModel(),
       Expanded: createExpandedRowModel(),
     },
     columns,

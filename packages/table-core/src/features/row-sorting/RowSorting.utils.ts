@@ -8,7 +8,6 @@ import {
   table_getState,
 } from '../../core/table/Tables.utils'
 import type { Fns } from '../../types/Fns'
-import type { BuiltInSortingFn } from '../../fns/sortingFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../types/RowModel'
@@ -17,6 +16,7 @@ import type { Column } from '../../types/Column'
 import type {
   ColumnDef_RowSorting,
   SortDirection,
+  SortingFn,
   SortingState,
 } from './RowSorting.types'
 
@@ -73,7 +73,10 @@ export function column_getAutoSortingFn<
   },
   table: Table_Internal<TFeatures, TFns, TData>,
 ) {
-  const { sortingFns } = table._fns
+  const sortingFns = table._fns.sortingFns as
+    | Record<string, SortingFn<TFeatures, TFns, TData>>
+    | undefined
+
   const firstRows = table_getFilteredRowModel(table).flatRows.slice(10)
 
   let isString = false
@@ -144,11 +147,15 @@ export function column_getSortingFn<
   },
   table: Table_Internal<TFeatures, TFns, TData>,
 ) {
+  const sortingFns = table._fns.sortingFns as
+    | Record<string, SortingFn<TFeatures, TFns, TData>>
+    | undefined
+
   return isFunction(column.columnDef.sortingFn)
     ? column.columnDef.sortingFn
     : column.columnDef.sortingFn === 'auto'
       ? column_getAutoSortingFn(column, table)
-      : table._fns.sortingFns?.[column.columnDef.sortingFn as string]
+      : sortingFns?.[column.columnDef.sortingFn as string]
 }
 
 /**

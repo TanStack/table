@@ -272,7 +272,11 @@ function App() {
   )
 }
 
-function Filter({ column }: { column: Column<any, any, Person, unknown> }) {
+function Filter({
+  column,
+}: {
+  column: Column<typeof _features, typeof _fns, Person, unknown>
+}) {
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}
 

@@ -186,7 +186,6 @@ function App() {
   const table = useTable({
     _features: { DensityFeature }, //pass our custom feature to the table to be instantiated upon creation
     _rowModels: {
-      Core: createCoreRowModel(),
       Filtered: createFilteredRowModel(),
       Paginated: createPaginatedRowModel(),
       Sorted: createSortedRowModel(),

@@ -15,11 +15,15 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFns,
   flexRender,
+  sortingFns,
   tableFeatures,
+  tableFns,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
+import type { Fns } from '../../../../packages/table-core/dist/esm/types/Fns'
 import type {
   CellData,
   Column,
@@ -38,8 +42,13 @@ const _features = tableFeatures({
   RowSorting,
 })
 
+const _fns = tableFns(_features, {
+  filterFns,
+  sortingFns,
+})
+
 declare module '@tanstack/react-table' {
-  //allows us to define custom properties for our columns
+  // allows us to define custom properties for our columns
   interface ColumnMeta<
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
@@ -55,7 +64,9 @@ function App() {
     [],
   )
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, {}, Person>>>(
+  const columns = React.useMemo<
+    Array<ColumnDef<typeof _features, typeof _fns, Person>>
+  >(
     () => [
       {
         accessorKey: 'firstName',
@@ -100,19 +111,19 @@ function App() {
   )
 
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
-  const refreshData = () => setData((_old) => makeData(100_000)) //stress test
+  const refreshData = () => setData((_old) => makeData(100_000)) // stress test
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
     _features,
+    _fns,
     _rowModels: {
-      Core: createCoreRowModel(),
-      Filtered: createFilteredRowModel(), //client-side filtering
+      Filtered: createFilteredRowModel(), // client-side filtering
       Paginated: createPaginatedRowModel(),
       Sorted: createSortedRowModel(),
-      Faceted: createFacetedRowModel(), //client-side faceting
-      FacetedMinMax: createFacetedMinMaxValues(), //generate min/max values for range filter
-      FacetedUnique: createFacetedUniqueValues(), //generate unique values for select filter/autocomplete
+      Faceted: createFacetedRowModel(), // client-side faceting
+      FacetedMinMax: createFacetedMinMaxValues(), // generate min/max values for range filter
+      FacetedUnique: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete
     },
     columns,
     data,
@@ -319,7 +330,7 @@ function Filter({ column }: { column: Column<any, Person, unknown> }) {
     >
       <option value="">All</option>
       {sortedUniqueValues.map((value) => (
-        //dynamically generated select options from faceted values feature
+        // dynamically generated select options from faceted values feature
         <option value={value} key={value}>
           {value}
         </option>

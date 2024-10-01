@@ -30,7 +30,7 @@ export interface TableFns_RowSorting<
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
-  sortingFns?: Record<keyof SortingFns, SortingFn<TFeatures, TFns, TData>>
+  sortingFns: Record<keyof SortingFns, SortingFn<TFeatures, TFns, TData>>
 }
 
 export interface SortingFns {}

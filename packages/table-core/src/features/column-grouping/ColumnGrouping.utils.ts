@@ -14,6 +14,7 @@ import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 import type {
+  AggregationFn,
   ColumnDef_ColumnGrouping,
   GroupingState,
   Row_ColumnGrouping,
@@ -114,7 +115,10 @@ export function column_getAutoAggregationFn<
   },
   table: Table_Internal<TFeatures, TFns, TData>,
 ) {
-  const { aggregationFns } = table._fns
+  const aggregationFns = table._fns.aggregationFns as
+    | Record<string, AggregationFn<TFeatures, TFns, TData>>
+    | undefined
+
   const firstRow = table.getCoreRowModel().flatRows[0]
 
   const value = firstRow?.getValue(column.id)
@@ -139,11 +143,15 @@ export function column_getAggregationFn<
   },
   table: Table_Internal<TFeatures, TFns, TData>,
 ) {
+  const aggregationFns = table._fns.aggregationFns as
+    | Record<string, AggregationFn<TFeatures, TFns, TData>>
+    | undefined
+
   return isFunction(column.columnDef.aggregationFn)
     ? column.columnDef.aggregationFn
     : column.columnDef.aggregationFn === 'auto'
       ? column_getAutoAggregationFn(column, table)
-      : table._fns.aggregationFns?.[column.columnDef.aggregationFn as string]
+      : aggregationFns?.[column.columnDef.aggregationFn as string]
 }
 
 export function table_setGrouping<

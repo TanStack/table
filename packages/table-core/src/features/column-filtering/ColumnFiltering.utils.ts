@@ -25,7 +25,10 @@ export function column_getAutoFilterFn<
   column: Column<TFeatures, TFns, TData, TValue>,
   table: Table_Internal<TFeatures, TFns, TData>,
 ) {
-  const { filterFns } = table._fns
+  const filterFns = table._fns.filterFns as
+    | Record<string, FilterFn<TFeatures, TFns, TData>>
+    | undefined
+
   const firstRow = table_getCoreRowModel(table).flatRows[0]
 
   const value = firstRow ? row_getValue(firstRow, table, column.id) : undefined
@@ -64,11 +67,14 @@ export function column_getFilterFn<
   },
   table: Table_Internal<TFeatures, TFns, TData>,
 ): FilterFn<TFeatures, TFns, TData> | undefined {
+  const filterFns = table._fns.filterFns as
+    | Record<string, FilterFn<TFeatures, TFns, TData>>
+    | undefined
   return isFunction(column.columnDef.filterFn)
     ? column.columnDef.filterFn
     : column.columnDef.filterFn === 'auto'
       ? column_getAutoFilterFn(column, table)
-      : table._fns.filterFns?.[column.columnDef.filterFn as string]
+      : filterFns?.[column.columnDef.filterFn as string]
 }
 
 export function column_getCanFilter<
@@ -258,7 +264,10 @@ export function shouldAutoRemoveFilter<
 ) {
   return (
     (filterFn && filterFn.autoRemove
-      ? filterFn.autoRemove(value, column)
+      ? filterFn.autoRemove(
+          value,
+          column as Column<TFeatures, TFns, TData, unknown>,
+        )
       : false) ||
     typeof value === 'undefined' ||
     (typeof value === 'string' && !value)

@@ -37,7 +37,7 @@ export default function Table<T extends Record<string, string | number>>({
   sorting,
 }: Props<T>) {
   const table = useTable({
-    _rowModels: { Core: createCoreRowModel() },
+    _rowModels: {},
     columns,
     data,
     manualFiltering: true,

@@ -63,9 +63,7 @@ function App() {
   const data = React.useMemo(() => makeData(20), [])
 
   const table = useTable({
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _rowModels: {},
     columns,
     data,
     enableColumnResizing: true,

@@ -82,7 +82,6 @@ function App() {
   const table = useTable({
     _features: { RowSorting },
     _rowModels: {
-      Core: createCoreRowModel(),
       Sorted: createSortedRowModel(), //client-side sorting
     },
     columns,

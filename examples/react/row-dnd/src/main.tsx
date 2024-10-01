@@ -120,9 +120,7 @@ function App() {
 
   const table = useTable({
     _features: {},
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _rowModels: {},
     columns,
     data,
     getRowId: (row) => row.userId, //required because row indexes will change

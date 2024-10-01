@@ -8,7 +8,12 @@ export type Fns<
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = UnionToIntersection<
+> = {
+  /**
+   * @deprecated
+   */
+  _?: never
+} & UnionToIntersection<
   | ('ColumnFiltering' extends keyof TFeatures
       ? TableFns_ColumnFiltering<TFeatures, TFns, TData>
       : never)

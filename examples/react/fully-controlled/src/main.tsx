@@ -84,7 +84,6 @@ function App() {
   // Create the table and pass your options
   const table = useTable({
     _rowModels: {
-      Core: createCoreRowModel(),
       Paginated: createPaginatedRowModel(),
     },
     columns,

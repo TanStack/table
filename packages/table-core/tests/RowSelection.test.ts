@@ -33,7 +33,7 @@ describe('RowSelection', () => {
 
       const table = constructTable<any, Person>({
         _features: { RowSelection },
-        _rowModels: { Core: createCoreRowModel() },
+        _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -63,7 +63,7 @@ describe('RowSelection', () => {
 
       const table = constructTable<any, Person>({
         _features: { RowSelection },
-        _rowModels: { Core: createCoreRowModel() },
+        _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -93,7 +93,7 @@ describe('RowSelection', () => {
 
       const table = constructTable<any, Person>({
         _features: { RowSelection },
-        _rowModels: { Core: createCoreRowModel() },
+        _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -162,7 +162,7 @@ describe('RowSelection', () => {
 
       const table = constructTable<any, Person>({
         _features: { RowSelection },
-        _rowModels: { Core: createCoreRowModel() },
+        _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -188,7 +188,7 @@ describe('RowSelection', () => {
 
       const table = constructTable<any, Person>({
         _features: { RowSelection },
-        _rowModels: { Core: createCoreRowModel() },
+        _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -217,7 +217,7 @@ describe('RowSelection', () => {
 
       const table = constructTable<any, Person>({
         _features: { RowSelection },
-        _rowModels: { Core: createCoreRowModel() },
+        _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -248,7 +248,7 @@ describe('RowSelection', () => {
 
       const table = constructTable<any, Person>({
         _features: { RowSelection },
-        _rowModels: { Core: createCoreRowModel() },
+        _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',
@@ -279,7 +279,7 @@ describe('RowSelection', () => {
 
       const table = constructTable<any, Person>({
         _features: { RowSelection },
-        _rowModels: { Core: createCoreRowModel() },
+        _rowModels: {},
         enableRowSelection: (row) => row.index === 0, // only first row is selectable (of 2 sub-rows)
         onStateChange() {},
         renderFallbackValue: '',
@@ -309,7 +309,7 @@ describe('RowSelection', () => {
 
       const table = constructTable<any, Person>({
         _features: { RowSelection },
-        _rowModels: { Core: createCoreRowModel() },
+        _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
         renderFallbackValue: '',

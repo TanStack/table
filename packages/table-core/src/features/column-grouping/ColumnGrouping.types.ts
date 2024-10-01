@@ -30,7 +30,7 @@ export interface TableFns_ColumnGrouping<
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
-  aggregationFns?: Record<
+  aggregationFns: Record<
     keyof AggregationFns,
     AggregationFn<TFeatures, TFns, TData>
   >

@@ -93,9 +93,7 @@ function App() {
 
   const table = useTable({
     _features: {},
-    _rowModels: {
-      Core: createCoreRowModel(),
-    },
+    _rowModels: {},
     columns,
     data: dataQuery.data?.rows ?? defaultData,
     rowCount: dataQuery.data?.rowCount, //alternatively, just pass in `pageCount` directly
