@@ -43,7 +43,7 @@ export interface TableFeature<TFeatures extends TableFeatures, TFns extends Fns<
   constructRow?: (row: Row<TFeatures, TFns, TData>, table: Table<TFeatures, TFns, TData>) => void
   constructTable?: (table: Table<TFeatures, TFns, TData>) => void
   getDefaultColumnDef?: () => Partial<ColumnDef<TFeatures, TFns, TData, unknown>>
-  getDefaultOptions?: (
+  getDefaultTableOptions?: (
     table: Table<TFeatures, TFns, TData>
   ) => Partial<TableOptions<TFeatures, TFns, TData>>
   getInitialState?: (initialState?: InitialTableState) => Partial<TableState>
@@ -56,9 +56,9 @@ This might be a bit confusing, so let's break down what each of these methods do
 
 <br />
 
-##### getDefaultOptions
+##### getDefaultTableOptions
 
-The `getDefaultOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `getDefaultOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
+The `getDefaultTableOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `getDefaultTableOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
 
 <br />
 
@@ -187,7 +187,7 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
   },
 
   // define the new feature's default options
-  getDefaultOptions: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(
+  getDefaultTableOptions: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(
     table: Partial<Table<TFeatures, TFns, TData>>
   ): DensityOptions => {
     return {

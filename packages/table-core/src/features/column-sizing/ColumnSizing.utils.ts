@@ -21,6 +21,10 @@ import type {
   ColumnSizingState,
 } from './ColumnSizing.types'
 
+export function getDefaultColumnSizingState(): ColumnSizingState {
+  return structuredClone({})
+}
+
 export function getDefaultColumnSizingColumnDef() {
   return structuredClone({
     size: 150,

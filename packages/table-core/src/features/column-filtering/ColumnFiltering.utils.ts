@@ -16,6 +16,10 @@ import type {
   FilterFn,
 } from './ColumnFiltering.types'
 
+export function getDefaultColumnFiltersState(): ColumnFiltersState {
+  return structuredClone([])
+}
+
 export function column_getAutoFilterFn<
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,

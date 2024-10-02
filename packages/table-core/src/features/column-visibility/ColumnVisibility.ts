@@ -11,6 +11,7 @@ import {
   column_getIsVisible,
   column_getToggleVisibilityHandler,
   column_toggleVisibility,
+  getDefaultColumnVisibilityState,
   row_getAllVisibleCells,
   row_getVisibleCells,
   table_getIsAllColumnsVisible,
@@ -32,7 +33,6 @@ import type { Column } from '../../types/Column'
 import type {
   Column_ColumnVisibility,
   Row_ColumnVisibility,
-  TableState_ColumnVisibility,
   Table_ColumnVisibility,
   VisibilityDefaultOptions,
 } from './ColumnVisibility.types'
@@ -46,12 +46,12 @@ export const ColumnVisibility: TableFeature = {
     state: TableState<TFeatures>,
   ): TableState<TFeatures> => {
     return {
-      columnVisibility: {},
+      columnVisibility: getDefaultColumnVisibilityState(),
       ...state,
     }
   },
 
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,

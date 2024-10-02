@@ -89,7 +89,7 @@ export const DensityFeature: TableFeature = {
   },
 
   // define the new feature's default options
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,

@@ -4,6 +4,7 @@ import {
   column_getIndex,
   column_getIsFirstColumn,
   column_getIsLastColumn,
+  getDefaultColumnOrderState,
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './ColumnOrdering.utils'
@@ -30,12 +31,12 @@ export const ColumnOrdering: TableFeature = {
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_ColumnOrdering => {
     return {
-      columnOrder: [],
+      columnOrder: getDefaultColumnOrderState(),
       ...state,
     }
   },
 
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,

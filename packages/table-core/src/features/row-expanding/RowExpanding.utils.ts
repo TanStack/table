@@ -14,6 +14,10 @@ import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { ExpandedState, ExpandedStateList } from './RowExpanding.types'
 
+export function getDefaultExpandedState(): ExpandedState {
+  return structuredClone({})
+}
+
 /**
  *
  * @param table

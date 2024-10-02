@@ -18,6 +18,10 @@ import type { RowSelectionState } from './RowSelection.types'
 
 // State utils
 
+export function getDefaultRowSelectionState(): RowSelectionState {
+  return structuredClone({})
+}
+
 /**
  *
  * @param table

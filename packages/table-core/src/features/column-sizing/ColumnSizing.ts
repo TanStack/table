@@ -7,6 +7,7 @@ import {
   column_getStart,
   column_resetSize,
   getDefaultColumnSizingColumnDef,
+  getDefaultColumnSizingState,
   header_getSize,
   header_getStart,
   table_getCenterTotalSize,
@@ -43,7 +44,7 @@ export const ColumnSizing: TableFeature = {
     state: TableState<TFeatures>,
   ): TableState<TFeatures> => {
     return {
-      columnSizing: {},
+      columnSizing: getDefaultColumnSizingState(),
       ...state,
     }
   },
@@ -52,7 +53,7 @@ export const ColumnSizing: TableFeature = {
     return getDefaultColumnSizingColumnDef()
   },
 
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,

@@ -57,13 +57,12 @@ export const RowSorting: TableFeature = {
     }
   },
 
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowSorting<TFeatures, TFns, TData>>,
+    table: Table<TFeatures, TFns, TData>,
   ): TableOptions_RowSorting => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),

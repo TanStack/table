@@ -7,6 +7,7 @@ import {
   column_getFilterValue,
   column_getIsFiltered,
   column_setFilterValue,
+  getDefaultColumnFiltersState,
   table_getFilteredRowModel,
   table_getPreFilteredRowModel,
   table_resetColumnFilters,
@@ -41,7 +42,7 @@ export const ColumnFiltering: TableFeature = {
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_ColumnFiltering => {
     return {
-      columnFilters: [],
+      columnFilters: getDefaultColumnFiltersState(),
       ...state,
     }
   },
@@ -56,7 +57,7 @@ export const ColumnFiltering: TableFeature = {
     }
   },
 
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,

@@ -38,7 +38,7 @@ export const ColumnResizing: TableFeature = {
     }
   },
 
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,

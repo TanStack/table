@@ -20,6 +20,10 @@ import type {
   Row_ColumnGrouping,
 } from './ColumnGrouping.types'
 
+export function getDefaultGroupingState(): GroupingState {
+  return structuredClone([])
+}
+
 export function column_toggleGrouping<
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,

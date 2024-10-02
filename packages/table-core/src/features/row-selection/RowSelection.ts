@@ -3,6 +3,7 @@ import { table_getState } from '../../core/table/Tables.utils'
 import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import { table_getSortedRowModel } from '../row-sorting/RowSorting.utils'
 import {
+  getDefaultRowSelectionState,
   row_getCanMultiSelect,
   row_getCanSelect,
   row_getCanSelectSubRows,
@@ -50,12 +51,12 @@ export const RowSelection: TableFeature = {
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_RowSelection => {
     return {
-      rowSelection: {},
+      rowSelection: getDefaultRowSelectionState(),
       ...state,
     }
   },
 
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,

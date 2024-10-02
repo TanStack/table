@@ -11,6 +11,10 @@ import type { Column } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 import type { ColumnOrderState } from './ColumnOrdering.types'
 
+export function getDefaultColumnOrderState(): ColumnOrderState {
+  return structuredClone([])
+}
+
 export function column_getIndex<
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,
@@ -103,7 +107,7 @@ export function table_getOrderColumnsFn<
         const targetColumnId = columnOrderCopy.shift()
         const foundIndex = columnsCopy.findIndex((d) => d.id === targetColumnId)
         if (foundIndex > -1) {
-          orderedColumns.push(columnsCopy.splice(foundIndex, 1)[0])
+          orderedColumns.push(columnsCopy.splice(foundIndex, 1)[0]!)
         }
       }
 

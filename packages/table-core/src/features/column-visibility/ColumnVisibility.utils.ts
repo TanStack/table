@@ -25,6 +25,10 @@ import type {
 } from './ColumnVisibility.types'
 import type { Row } from '../../types/Row'
 
+export function getDefaultColumnVisibilityState(): ColumnVisibilityState {
+  return structuredClone({})
+}
+
 export function column_toggleVisibility<
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,

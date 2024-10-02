@@ -1,5 +1,6 @@
 import { assignAPIs, makeStateUpdater } from '../../utils'
 import {
+  getDefaultExpandedState,
   row_getCanExpand,
   row_getIsAllParentsExpanded,
   row_getIsExpanded,
@@ -26,7 +27,6 @@ import type { Row } from '../../types/Row'
 import type {
   Row_RowExpanding,
   TableOptions_RowExpanding,
-  TableState_RowExpanding,
   Table_RowExpanding,
 } from './RowExpanding.types'
 
@@ -40,12 +40,12 @@ export const RowExpanding: TableFeature = {
     state: TableState<TFeatures>,
   ): TableState<TFeatures> => {
     return {
-      expanded: {},
+      expanded: getDefaultExpandedState(),
       ...state,
     }
   },
 
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,

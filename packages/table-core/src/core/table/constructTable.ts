@@ -35,7 +35,7 @@ export function constructTable<
   const table = {} as unknown as Table<TFeatures, TFns, TData>
 
   const defaultOptions = featuresList.reduce((obj, feature) => {
-    return Object.assign(obj, feature.getDefaultOptions?.(table))
+    return Object.assign(obj, feature.getDefaultTableOptions?.(table))
   }, {}) as TableOptions<TFeatures, TFns, TData>
 
   const initialState = getInitialTableState(_features, options.initialState)

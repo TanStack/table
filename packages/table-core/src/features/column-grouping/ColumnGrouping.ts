@@ -10,6 +10,7 @@ import {
   column_getIsGrouped,
   column_getToggleGroupingHandler,
   column_toggleGrouping,
+  getDefaultGroupingState,
   row_getGroupingValue,
   row_getIsGrouped,
   table_getGroupedRowModel,
@@ -45,7 +46,7 @@ export const ColumnGrouping: TableFeature = {
     state: TableState<TFeatures>,
   ): TableState<TFeatures> & TableState_ColumnGrouping => {
     return {
-      grouping: [],
+      grouping: getDefaultGroupingState(),
       ...state,
     }
   },
@@ -62,7 +63,7 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  getDefaultOptions: <
+  getDefaultTableOptions: <
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
