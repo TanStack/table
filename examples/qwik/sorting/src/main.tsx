@@ -101,7 +101,7 @@ const App = component$(() => {
                             : ''
                         }
                         onClick$={$((event) => {
-                          const col = table.getColumn(id)! //avoid serializing errors
+                          const col = table.getColumn(id)! // avoid serializing errors
                           col.getToggleSortingHandler()!(event)
                         })}
                         title={

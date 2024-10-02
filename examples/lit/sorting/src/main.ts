@@ -22,30 +22,30 @@ const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
-    //this column will sort in ascending order by default since it is a string column
+    // this column will sort in ascending order by default since it is a string column
   },
   {
     accessorFn: (row) => row.lastName,
     id: 'lastName',
     cell: (info) => info.getValue(),
     header: () => html`<span>Last Name</span>`,
-    sortUndefined: 'last', //force undefined values to the end
-    sortDescFirst: false, //first sort order will be ascending (nullable values can mess up auto detection of sort order)
+    sortUndefined: 'last', // force undefined values to the end
+    sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
   },
   {
     accessorKey: 'age',
     header: () => 'Age',
-    //this column will sort in descending order by default since it is a number column
+    // this column will sort in descending order by default since it is a number column
   },
   {
     accessorKey: 'visits',
     header: () => html`<span>Visits</span>`,
-    sortUndefined: 'last', //force undefined values to the end
+    sortUndefined: 'last', // force undefined values to the end
   },
   {
     accessorKey: 'status',
     header: 'Status',
-    sortingFn: sortStatusFn, //use our custom sorting function for this enum column
+    sortingFn: sortStatusFn, // use our custom sorting function for this enum column
   },
   {
     accessorKey: 'progress',
@@ -55,7 +55,7 @@ const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'rank',
     header: 'Rank',
-    invertSorting: true, //invert the sorting order (golf score-like where smaller is better)
+    invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
   },
   {
     accessorKey: 'createdAt',

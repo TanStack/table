@@ -108,7 +108,7 @@ function App() {
     return colSizes
   }, [table.getState().columnResizing, table.getState().columnSizing])
 
-  //demo purposes
+  // demo purposes
   const [enableMemo, setEnableMemo] = React.useState(true)
 
   return (
@@ -146,7 +146,7 @@ function App() {
           {...{
             className: 'divTable',
             style: {
-              ...columnSizeVars, //Define column sizes on the <table> element
+              ...columnSizeVars, // Define column sizes on the <table> element
               width: table.getTotalSize(),
             },
           }}
@@ -202,7 +202,7 @@ function App() {
   )
 }
 
-//un-memoized normal table body component - see memoized version below
+// un-memoized normal table body component - see memoized version below
 function TableBody({ table }: { table: Table<any, Person> }) {
   return (
     <div
@@ -218,7 +218,7 @@ function TableBody({ table }: { table: Table<any, Person> }) {
           }}
         >
           {row.getVisibleCells().map((cell) => {
-            //simulate expensive render
+            // simulate expensive render
             for (const _ of Array(10000)) {
               Math.random()
             }
@@ -243,7 +243,7 @@ function TableBody({ table }: { table: Table<any, Person> }) {
   )
 }
 
-//special memoized wrapper for our table body that we will use during column resizing
+// special memoized wrapper for our table body that we will use during column resizing
 export const MemoizedTableBody = React.memo(
   TableBody,
   (prev, next) => prev.table.options.data === next.table.options.data,

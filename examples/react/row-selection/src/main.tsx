@@ -4,7 +4,6 @@ import {
   ColumnFiltering,
   RowPagination,
   RowSelection,
-  createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   flexRender,

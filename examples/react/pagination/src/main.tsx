@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -106,7 +105,7 @@ function MyTable({
     data,
     debugTable: true,
     onPaginationChange: setPagination,
-    //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
+    // no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
     state: {
       pagination,
     },

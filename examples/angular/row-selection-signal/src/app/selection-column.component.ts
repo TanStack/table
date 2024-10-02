@@ -23,8 +23,8 @@ export class TableHeadSelectionComponent<T> {
   // You can define and use the table field, which is defined in HeaderContext.
   // Please take note that only signal based input is supported.
 
-  //column = input.required<Column<T, unknown>>()
-  //header = input.required<Header<T, unknown>>()
+  // column = input.required<Column<T, unknown>>()
+  // header = input.required<Header<T, unknown>>()
   table = input.required<Table<T>>()
 }
 

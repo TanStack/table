@@ -55,6 +55,7 @@
     "@testing-library/react-hooks": "^8.0.1",
     "@types/node": "^22.7.4",
     "eslint": "^9.11.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "jsdom": "^25.0.1",
     "knip": "^5.30.6",
     "nx": "^19.8.2",

@@ -5,7 +5,6 @@ import {
   RowExpanding,
   RowPagination,
   RowSorting,
-  createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,

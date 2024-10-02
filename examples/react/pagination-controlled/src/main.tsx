@@ -10,7 +10,7 @@ import {
 
 import './index.css'
 
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
+import { flexRender, useTable } from '@tanstack/react-table'
 import { fetchData } from './fetchData'
 import type { ColumnDef, PaginationState } from '@tanstack/react-table'
 
@@ -96,13 +96,13 @@ function App() {
     _rowModels: {},
     columns,
     data: dataQuery.data?.rows ?? defaultData,
-    rowCount: dataQuery.data?.rowCount, //alternatively, just pass in `pageCount` directly
+    rowCount: dataQuery.data?.rowCount, // alternatively, just pass in `pageCount` directly
     // pageCount: dataQuery.data?.pageCount, //recommended to use `rowCount` instead like just above
     state: {
       pagination,
     },
     onPaginationChange: setPagination,
-    manualPagination: true, //we're doing manual "server-side" pagination
+    manualPagination: true, // we're doing manual "server-side" pagination
     // getPaginatedRowModel: createPaginatedRowModel(), // If only doing manual pagination, you don't need this
     debugTable: true,
   })

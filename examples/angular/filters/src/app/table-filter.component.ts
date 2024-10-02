@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common'
-import { Component, OnInit, computed, input } from '@angular/core'
+import { Component, computed, input } from '@angular/core'
 import { DebouncedInputDirective } from './debounced-input.directive'
 import type {
   CellData,
@@ -10,7 +10,7 @@ import type {
 } from '@tanstack/angular-table'
 
 declare module '@tanstack/angular-table' {
-  //allows us to define custom properties for our columns
+  // allows us to define custom properties for our columns
   interface ColumnMeta<
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,

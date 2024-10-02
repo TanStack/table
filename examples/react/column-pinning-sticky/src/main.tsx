@@ -21,9 +21,9 @@ const _features = tableFeatures({
   ColumnOrdering,
 })
 
-//These are the important styles to make sticky column pinning work!
-//Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
-//View the index.css file for more needed styles such as border-collapse: separate
+// These are the important styles to make sticky column pinning work!
+// Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
+// View the index.css file for more needed styles such as border-collapse: separate
 const getCommonPinningStyles = (column: Column<any, Person>): CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
@@ -174,7 +174,7 @@ function App() {
                     <th
                       key={header.id}
                       colSpan={header.colSpan}
-                      //IMPORTANT: This is where the magic happens!
+                      // IMPORTANT: This is where the magic happens!
                       style={{ ...getCommonPinningStyles(column) }}
                     >
                       <div className="whitespace-nowrap">
@@ -245,7 +245,7 @@ function App() {
                   return (
                     <td
                       key={cell.id}
-                      //IMPORTANT: This is where the magic happens!
+                      // IMPORTANT: This is where the magic happens!
                       style={{ ...getCommonPinningStyles(column) }}
                     >
                       {flexRender(

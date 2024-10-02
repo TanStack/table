@@ -41,7 +41,7 @@ const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'rank',
     header: 'Rank',
-    invertSorting: true, //invert the sorting order (golf score-like where smaller is better)
+    invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
   },
   {
     accessorKey: 'createdAt',

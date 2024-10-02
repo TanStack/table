@@ -3,11 +3,10 @@ import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-//3 TanStack Libraries!!!
+// 3 TanStack Libraries!!!
 import {
   ColumnSizing,
   RowSorting,
-  createCoreRowModel,
   createSortedRowModel,
   flexRender,
   useTable,
@@ -27,7 +26,7 @@ import type { ColumnDef, OnChangeFn, SortingState } from '@tanstack/react-table'
 const fetchSize = 50
 
 function App() {
-  //we need a reference to the scrolling element for logic down below
+  // we need a reference to the scrolling element for logic down below
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -78,16 +77,16 @@ function App() {
     [],
   )
 
-  //react-query has a useInfiniteQuery hook that is perfect for this use case
+  // react-query has a useInfiniteQuery hook that is perfect for this use case
   const { data, fetchNextPage, isFetching, isLoading } =
     useInfiniteQuery<PersonApiResponse>({
       queryKey: [
         'people',
-        sorting, //refetch when sorting changes
+        sorting, // refetch when sorting changes
       ],
       queryFn: async ({ pageParam = 0 }) => {
         const start = (pageParam as number) * fetchSize
-        const fetchedData = await fetchData(start, fetchSize, sorting) //pretend api call
+        const fetchedData = await fetchData(start, fetchSize, sorting) // pretend api call
         return fetchedData
       },
       initialPageParam: 0,
@@ -96,7 +95,7 @@ function App() {
       placeholderData: keepPreviousData,
     })
 
-  //flatten the array of arrays from the useInfiniteQuery hook
+  // flatten the array of arrays from the useInfiniteQuery hook
   const flatData = React.useMemo(
     () => data?.pages.flatMap((page) => page.data) ?? [],
     [data],
@@ -104,12 +103,12 @@ function App() {
   const totalDBRowCount = data?.pages[0]?.meta?.totalRowCount ?? 0
   const totalFetched = flatData.length
 
-  //called on scroll and possibly on mount to fetch more data as the user scrolls and reaches bottom of table
+  // called on scroll and possibly on mount to fetch more data as the user scrolls and reaches bottom of table
   const fetchMoreOnBottomReached = React.useCallback(
     (containerRefElement?: HTMLDivElement | null) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement
-        //once the user has scrolled within 500px of the bottom of the table, fetch more data if we can
+        // once the user has scrolled within 500px of the bottom of the table, fetch more data if we can
         if (
           scrollHeight - scrollTop - clientHeight < 500 &&
           !isFetching &&
@@ -122,7 +121,7 @@ function App() {
     [fetchNextPage, isFetching, totalFetched, totalDBRowCount],
   )
 
-  //a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
+  // a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
   React.useEffect(() => {
     fetchMoreOnBottomReached(tableContainerRef.current)
   }, [fetchMoreOnBottomReached])
@@ -139,7 +138,7 @@ function App() {
     debugTable: true,
   })
 
-  //scroll to top of table when sorting changes
+  // scroll to top of table when sorting changes
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
     setSorting(updater)
     if (table.getRowModel().rows.length) {
@@ -147,7 +146,7 @@ function App() {
     }
   }
 
-  //since this table option is derived from table row model state, we're using the table.setOptions utility
+  // since this table option is derived from table row model state, we're using the table.setOptions utility
   table.setOptions((prev) => ({
     ...prev,
     onSortingChange: handleSortingChange,
@@ -157,9 +156,9 @@ function App() {
 
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
-    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
-    //measure dynamic row height, except in firefox because it measures table border height incorrectly
+    // measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
@@ -187,9 +186,9 @@ function App() {
         onScroll={(e) => fetchMoreOnBottomReached(e.target as HTMLDivElement)}
         ref={tableContainerRef}
         style={{
-          overflow: 'auto', //our scrollable table container
-          position: 'relative', //needed for sticky header
-          height: '600px', //should be a fixed height
+          overflow: 'auto', // our scrollable table container
+          position: 'relative', // needed for sticky header
+          height: '600px', // should be a fixed height
         }}
       >
         {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
@@ -242,21 +241,21 @@ function App() {
           <tbody
             style={{
               display: 'grid',
-              height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
-              position: 'relative', //needed for absolute positioning of rows
+              height: `${rowVirtualizer.getTotalSize()}px`, // tells scrollbar how big the table is
+              position: 'relative', // needed for absolute positioning of rows
             }}
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
               const row = rows[virtualRow.index]
               return (
                 <tr
-                  data-index={virtualRow.index} //needed for dynamic row height measurement
-                  ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
+                  data-index={virtualRow.index} // needed for dynamic row height measurement
+                  ref={(node) => rowVirtualizer.measureElement(node)} // measure dynamic row height
                   key={row.id}
                   style={{
                     display: 'flex',
                     position: 'absolute',
-                    transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
+                    transform: `translateY(${virtualRow.start}px)`, // this should always be a `style` as it changes on scroll
                     width: '100%',
                   }}
                 >

@@ -5,7 +5,6 @@ import './index.css'
 
 import {
   RowExpanding,
-  createCoreRowModel,
   createExpandedRowModel,
   flexRender,
   useTable,

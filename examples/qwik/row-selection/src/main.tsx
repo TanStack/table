@@ -155,7 +155,7 @@ const App = component$(() => {
                   <th
                     key={id}
                     onClick$={$(() => {
-                      const thisCol = table.getColumn(id)! //avoid serialization error
+                      const thisCol = table.getColumn(id)! // avoid serialization error
                       thisCol.toggleSorting()
                     })}
                     colSpan={header.colSpan}

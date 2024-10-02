@@ -6,7 +6,6 @@ import './index.css'
 import {
   ColumnSizing,
   RowSorting,
-  createCoreRowModel,
   createSortedRowModel,
   flexRender,
   useTable,
@@ -18,8 +17,8 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { ColumnDef } from '@tanstack/react-table'
 
-//This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
-//See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
+// This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
+// See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
 function App() {
   const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
@@ -79,14 +78,14 @@ function App() {
 
   const { rows } = table.getRowModel()
 
-  //The virtualizer needs to know the scrollable container element
+  // The virtualizer needs to know the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
-    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
-    //measure dynamic row height, except in firefox because it measures table border height incorrectly
+    // measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
@@ -95,7 +94,7 @@ function App() {
     overscan: 5,
   })
 
-  //All important CSS styles are included as inline styles for this example. This is not recommended for your code.
+  // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
   return (
     <div className="app">
       {process.env.NODE_ENV === 'development' ? (
@@ -110,9 +109,9 @@ function App() {
         className="container"
         ref={tableContainerRef}
         style={{
-          overflow: 'auto', //our scrollable table container
-          position: 'relative', //needed for sticky header
-          height: '800px', //should be a fixed height
+          overflow: 'auto', // our scrollable table container
+          position: 'relative', // needed for sticky header
+          height: '800px', // should be a fixed height
         }}
       >
         {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
@@ -165,21 +164,21 @@ function App() {
           <tbody
             style={{
               display: 'grid',
-              height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
-              position: 'relative', //needed for absolute positioning of rows
+              height: `${rowVirtualizer.getTotalSize()}px`, // tells scrollbar how big the table is
+              position: 'relative', // needed for absolute positioning of rows
             }}
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
               const row = rows[virtualRow.index]
               return (
                 <tr
-                  data-index={virtualRow.index} //needed for dynamic row height measurement
-                  ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
+                  data-index={virtualRow.index} // needed for dynamic row height measurement
+                  ref={(node) => rowVirtualizer.measureElement(node)} // measure dynamic row height
                   key={row.id}
                   style={{
                     display: 'flex',
                     position: 'absolute',
-                    transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
+                    transform: `translateY(${virtualRow.start}px)`, // this should always be a `style` as it changes on scroll
                     width: '100%',
                   }}
                 >

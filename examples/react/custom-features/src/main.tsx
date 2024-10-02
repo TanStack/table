@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -49,15 +48,15 @@ export interface DensityInstance {
 
 // Use declaration merging to add our new feature APIs and state types to TanStack Table's existing types.
 declare module '@tanstack/react-table' {
-  //merge our new feature's state with the existing table state
+  // merge our new feature's state with the existing table state
   interface TableState extends DensityTableState {}
-  //merge our new feature's options with the existing table options
+  // merge our new feature's options with the existing table options
   interface TableOptions<
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   > extends DensityOptions {}
-  //merge our new feature's instance APIs with the existing table instance APIs
+  // merge our new feature's instance APIs with the existing table instance APIs
   interface Table<
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
@@ -124,7 +123,7 @@ export const DensityFeature: TableFeature = {
     table.toggleDensity = (value) => {
       table.setDensity((old) => {
         if (value) return value
-        return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' //cycle through the 3 options
+        return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' // cycle through the 3 options
       })
     }
   },
@@ -138,9 +137,9 @@ export const DensityFeature: TableFeature = {
   // if you need to add header instance APIs...
   // constructHeader: <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(header, table): void => {},
 }
-//end of custom feature code
+// end of custom feature code
 
-//app code
+// app code
 function App() {
   const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
     () => [
@@ -184,7 +183,7 @@ function App() {
   const [density, setDensity] = React.useState<DensityState>('md')
 
   const table = useTable({
-    _features: { DensityFeature }, //pass our custom feature to the table to be instantiated upon creation
+    _features: { DensityFeature }, // pass our custom feature to the table to be instantiated upon creation
     _rowModels: {
       Filtered: createFilteredRowModel(),
       Paginated: createPaginatedRowModel(),
@@ -194,9 +193,9 @@ function App() {
     data,
     debugTable: true,
     state: {
-      density, //passing the density state to the table, TS is still happy :)
+      density, // passing the density state to the table, TS is still happy :)
     },
-    onDensityChange: setDensity, //using the new onDensityChange option, TS is still happy :)
+    onDensityChange: setDensity, // using the new onDensityChange option, TS is still happy :)
   })
 
   return (
@@ -218,7 +217,7 @@ function App() {
                     key={header.id}
                     colSpan={header.colSpan}
                     style={{
-                      //using our new feature
+                      // using our new feature
                       padding:
                         density === 'sm'
                           ? '4px'
@@ -265,7 +264,7 @@ function App() {
                     <td
                       key={cell.id}
                       style={{
-                        //using our new feature
+                        // using our new feature
                         padding:
                           density === 'sm'
                             ? '4px'

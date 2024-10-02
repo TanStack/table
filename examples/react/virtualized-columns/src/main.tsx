@@ -6,7 +6,6 @@ import './index.css'
 import {
   ColumnSizing,
   RowSorting,
-  createCoreRowModel,
   createSortedRowModel,
   flexRender,
   useTable,
@@ -38,24 +37,24 @@ function App() {
 
   const visibleColumns = table.getVisibleLeafColumns()
 
-  //The virtualizers need to know the scrollable container element
+  // The virtualizers need to know the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  //we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
+  // we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
   const columnVirtualizer = useVirtualizer({
     count: visibleColumns.length,
-    estimateSize: (index) => visibleColumns[index].getSize(), //estimate width of each column for accurate scrollbar dragging
+    estimateSize: (index) => visibleColumns[index].getSize(), // estimate width of each column for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
     horizontal: true,
-    overscan: 3, //how many columns to render on each side off screen each way (adjust this for performance)
+    overscan: 3, // how many columns to render on each side off screen each way (adjust this for performance)
   })
 
-  //dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
+  // dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
   const rowVirtualizer = useVirtualizer({
     count: rows.length,
-    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
-    //measure dynamic row height, except in firefox because it measures table border height incorrectly
+    // measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
@@ -67,7 +66,7 @@ function App() {
   const virtualColumns = columnVirtualizer.getVirtualItems()
   const virtualRows = rowVirtualizer.getVirtualItems()
 
-  //different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right
+  // different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right
   let virtualPaddingLeft: number | undefined
   let virtualPaddingRight: number | undefined
 
@@ -78,7 +77,7 @@ function App() {
       (virtualColumns[virtualColumns.length - 1]?.end ?? 0)
   }
 
-  //All important CSS styles are included as inline styles for this example. This is not recommended for your code.
+  // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
   return (
     <div className="app">
       {process.env.NODE_ENV === 'development' ? (
@@ -95,9 +94,9 @@ function App() {
         className="container"
         ref={tableContainerRef}
         style={{
-          overflow: 'auto', //our scrollable table container
-          position: 'relative', //needed for sticky header
-          height: '800px', //should be a fixed height
+          overflow: 'auto', // our scrollable table container
+          position: 'relative', // needed for sticky header
+          height: '800px', // should be a fixed height
         }}
       >
         {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
@@ -116,7 +115,7 @@ function App() {
                 style={{ display: 'flex', width: '100%' }}
               >
                 {virtualPaddingLeft ? (
-                  //fake empty column to the left for virtualization scroll padding
+                  // fake empty column to the left for virtualization scroll padding
                   <th style={{ display: 'flex', width: virtualPaddingLeft }} />
                 ) : null}
                 {virtualColumns.map((vc) => {
@@ -150,7 +149,7 @@ function App() {
                   )
                 })}
                 {virtualPaddingRight ? (
-                  //fake empty column to the right for virtualization scroll padding
+                  // fake empty column to the right for virtualization scroll padding
                   <th style={{ display: 'flex', width: virtualPaddingRight }} />
                 ) : null}
               </tr>
@@ -159,8 +158,8 @@ function App() {
           <tbody
             style={{
               display: 'grid',
-              height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
-              position: 'relative', //needed for absolute positioning of rows
+              height: `${rowVirtualizer.getTotalSize()}px`, // tells scrollbar how big the table is
+              position: 'relative', // needed for absolute positioning of rows
             }}
           >
             {virtualRows.map((virtualRow) => {
@@ -169,18 +168,18 @@ function App() {
 
               return (
                 <tr
-                  data-index={virtualRow.index} //needed for dynamic row height measurement
-                  ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
+                  data-index={virtualRow.index} // needed for dynamic row height measurement
+                  ref={(node) => rowVirtualizer.measureElement(node)} // measure dynamic row height
                   key={row.id}
                   style={{
                     display: 'flex',
                     position: 'absolute',
-                    transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
+                    transform: `translateY(${virtualRow.start}px)`, // this should always be a `style` as it changes on scroll
                     width: '100%',
                   }}
                 >
                   {virtualPaddingLeft ? (
-                    //fake empty column to the left for virtualization scroll padding
+                    // fake empty column to the left for virtualization scroll padding
                     <td
                       style={{ display: 'flex', width: virtualPaddingLeft }}
                     />
@@ -203,7 +202,7 @@ function App() {
                     )
                   })}
                   {virtualPaddingRight ? (
-                    //fake empty column to the right for virtualization scroll padding
+                    // fake empty column to the right for virtualization scroll padding
                     <td
                       style={{ display: 'flex', width: virtualPaddingRight }}
                     />

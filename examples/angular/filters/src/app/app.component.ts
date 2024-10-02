@@ -86,7 +86,7 @@ export class AppComponent {
         : this.columnFilters.set(updater)
     },
     getCoreRowModel: createCoreRowModel(),
-    getFilteredRowModel: createFilteredRowModel(), //client-side filtering
+    getFilteredRowModel: createFilteredRowModel(), // client-side filtering
     getSortedRowModel: createSortedRowModel(),
     getPaginatedRowModel: createPaginatedRowModel(),
     getFacetedRowModel: createFacetedRowModel(), // client-side faceting

@@ -1,12 +1,12 @@
 import type { Fns } from './Fns'
 import type { CellData, RowData } from './type-utils'
-import type { ColumnDef, ColumnDefBase_All } from './ColumnDef'
+import type { ColumnDefBase_All } from './ColumnDef'
 import type { Cell } from './Cell'
 import type { Column } from './Column'
 import type { Header } from './Header'
 import type { Row } from './Row'
 import type { Table } from './Table'
-import type { TableOptions, TableOptions_All } from './TableOptions'
+import type { TableOptions_All } from './TableOptions'
 import type { TableState } from './TableState'
 
 export interface TableFeature {

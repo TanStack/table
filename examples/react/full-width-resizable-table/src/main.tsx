@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
+import { flexRender, useTable } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/react-table'
 import type { Person } from './makeData'

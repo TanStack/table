@@ -92,9 +92,9 @@ class LitTableExample extends LitElement {
           class="container"
           ${ref(this.tableContainerRef)}
           style="${styleMap({
-            overflow: 'auto', //our scrollable table container
-            position: 'relative', //needed for sticky header
-            height: '800px', //should be a fixed height
+            overflow: 'auto', // our scrollable table container
+            position: 'relative', // needed for sticky header
+            height: '800px', // should be a fixed height
           })}"
         >
           <table style="display: grid">
@@ -139,8 +139,8 @@ class LitTableExample extends LitElement {
             <tbody
               style=${styleMap({
                 display: 'grid',
-                height: `${virtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
-                position: 'relative', //needed for absolute positioning of rows
+                height: `${virtualizer.getTotalSize()}px`, // tells scrollbar how big the table is
+                position: 'relative', // needed for absolute positioning of rows
               })}
             >
               ${repeat(

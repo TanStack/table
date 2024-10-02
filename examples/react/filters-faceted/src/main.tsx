@@ -8,7 +8,6 @@ import {
   ColumnFiltering,
   RowPagination,
   RowSorting,
-  createCoreRowModel,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,

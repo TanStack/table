@@ -68,7 +68,7 @@ const columns: Array<ColumnDef<any, Person>> = [
 ]
 
 declare module '@tanstack/lit-table' {
-  //allows us to define custom properties for our columns
+  // allows us to define custom properties for our columns
   interface ColumnMeta<
     TFeatures extends TableFeatures,
     TFns extends Fns<TFeatures, TFns, TData>,
@@ -164,7 +164,7 @@ class LitTableExample extends LitElement {
         }
       },
       getCoreRowModel: createCoreRowModel(),
-      getFilteredRowModel: createFilteredRowModel(), //client side filtering
+      getFilteredRowModel: createFilteredRowModel(), // client side filtering
       getSortedRowModel: createSortedRowModel(),
       getPaginatedRowModel: createPaginatedRowModel(),
       debugTable: true,

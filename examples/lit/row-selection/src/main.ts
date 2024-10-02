@@ -1,4 +1,4 @@
-import { customElement, property, state } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {

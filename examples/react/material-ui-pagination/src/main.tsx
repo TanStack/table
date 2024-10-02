@@ -14,7 +14,6 @@ import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
 
 import {
-  createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   flexRender,

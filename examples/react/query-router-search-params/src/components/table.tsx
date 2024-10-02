@@ -1,4 +1,4 @@
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
+import { flexRender, useTable } from '@tanstack/react-table'
 import { DebouncedInput } from './debouncedInput'
 import type {
   ColumnDef,

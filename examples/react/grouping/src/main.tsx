@@ -4,13 +4,11 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  ColumnDef,
   ColumnFiltering,
   ColumnGrouping,
   RowExpanding,
   RowPagination,
   RowSorting,
-  createCoreRowModel,
   createExpandedRowModel,
   createFilteredRowModel,
   createGroupedRowModel,
@@ -20,7 +18,8 @@ import {
   flexRender,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { GroupingState } from '@tanstack/react-table'
+import type { ColumnDef ,
+  GroupingState} from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const tableHelper = createTableHelper({
@@ -97,7 +96,7 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(10_000))
-  const refreshData = () => setData(() => makeData(100_000)) //stress test
+  const refreshData = () => setData(() => makeData(100_000)) // stress test
 
   const [grouping, setGrouping] = React.useState<GroupingState>([])
 

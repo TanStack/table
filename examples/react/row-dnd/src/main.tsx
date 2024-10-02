@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
-import { createCoreRowModel, flexRender, useTable } from '@tanstack/react-table'
+import { flexRender, useTable } from '@tanstack/react-table'
 
 // needed for table body level scope DnD setup
 import {
@@ -51,7 +51,7 @@ const DraggableRow = ({ row }: { row: Row<any, Person> }) => {
   })
 
   const style: CSSProperties = {
-    transform: CSS.Transform.toString(transform), //let dnd-kit do its thing
+    transform: CSS.Transform.toString(transform), // let dnd-kit do its thing
     transition: transition,
     opacity: isDragging ? 0.8 : 1,
     zIndex: isDragging ? 1 : 0,
@@ -123,7 +123,7 @@ function App() {
     _rowModels: {},
     columns,
     data,
-    getRowId: (row) => row.userId, //required because row indexes will change
+    getRowId: (row) => row.userId, // required because row indexes will change
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
@@ -136,7 +136,7 @@ function App() {
       setData((data) => {
         const oldIndex = dataIds.indexOf(active.id)
         const newIndex = dataIds.indexOf(over.id)
-        return arrayMove(data, oldIndex, newIndex) //this is just a splice util
+        return arrayMove(data, oldIndex, newIndex) // this is just a splice util
       })
     }
   }

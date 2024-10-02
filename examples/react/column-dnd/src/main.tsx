@@ -164,7 +164,7 @@ function App() {
       setColumnOrder((prevColumnOrder) => {
         const oldIndex = prevColumnOrder.indexOf(active.id as string)
         const newIndex = prevColumnOrder.indexOf(over.id as string)
-        return arrayMove(prevColumnOrder, oldIndex, newIndex) //this is just a splice util
+        return arrayMove(prevColumnOrder, oldIndex, newIndex) // this is just a splice util
       })
     }
   }

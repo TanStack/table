@@ -7,7 +7,6 @@ import {
   ColumnFiltering,
   RowPagination,
   RowSorting,
-  createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -38,7 +37,7 @@ const _features = tableFeatures({
 })
 
 declare module '@tanstack/react-table' {
-  //add fuzzy filter to the filterFns
+  // add fuzzy filter to the filterFns
   interface FilterFns {
     fuzzy: FilterFn<typeof _features, unknown>
   }
@@ -73,8 +72,8 @@ const fuzzySort: SortingFn<typeof _features, any> = (rowA, rowB, columnId) => {
   // Only sort by rank if the column has ranking information
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
-      rowA.columnFiltersMeta[columnId].itemRank!,
-      rowB.columnFiltersMeta[columnId].itemRank!,
+      rowA.columnFiltersMeta[columnId].itemRank,
+      rowB.columnFiltersMeta[columnId].itemRank,
     )
   }
 
@@ -94,35 +93,35 @@ function App() {
     () => [
       {
         accessorKey: 'id',
-        filterFn: 'equalsString', //note: normal non-fuzzy filter column - exact match required
+        filterFn: 'equalsString', // note: normal non-fuzzy filter column - exact match required
       },
       {
         accessorKey: 'firstName',
         cell: (info) => info.getValue(),
-        filterFn: 'includesStringSensitive', //note: normal non-fuzzy filter column
+        filterFn: 'includesStringSensitive', // note: normal non-fuzzy filter column
       },
       {
-        accessorFn: (row) => row.lastName, //note: normal non-fuzzy filter column - case sensitive
+        accessorFn: (row) => row.lastName, // note: normal non-fuzzy filter column - case sensitive
         id: 'lastName',
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        filterFn: 'includesString', //note: normal non-fuzzy filter column - case insensitive
+        filterFn: 'includesString', // note: normal non-fuzzy filter column - case insensitive
       },
       {
         accessorFn: (row) => `${row.firstName} ${row.lastName}`,
         id: 'fullName',
         header: 'Full Name',
         cell: (info) => info.getValue(),
-        filterFn: 'fuzzy', //using our custom fuzzy filter function
+        filterFn: 'fuzzy', // using our custom fuzzy filter function
         // filterFn: fuzzyFilter, //or just define with the function
-        sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
+        sortingFn: fuzzySort, // sort by fuzzy rank (falls back to alphanumeric)
       },
     ],
     [],
   )
 
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
-  const refreshData = () => setData((_old) => makeData(50_000)) //stress test
+  const refreshData = () => setData((_old) => makeData(50_000)) // stress test
 
   const table = useTable<typeof _features, Person>({
     _features,
@@ -134,7 +133,7 @@ function App() {
     columns,
     data,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter, // define as a filter function that can be used in column definitions
     },
     state: {
       columnFilters,
@@ -142,13 +141,13 @@ function App() {
     },
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: 'fuzzy', //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
+    globalFilterFn: 'fuzzy', // apply fuzzy filter to the global filter (most common use case for fuzzy filter)
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
   })
 
-  //apply the fuzzy sort if the fullName column is being filtered
+  // apply the fuzzy sort if the fullName column is being filtered
   React.useEffect(() => {
     if (table.getState().columnFilters[0]?.id === 'fullName') {
       if (table.getState().sorting[0]?.id !== 'fullName') {

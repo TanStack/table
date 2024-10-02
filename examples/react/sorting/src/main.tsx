@@ -5,7 +5,6 @@ import './index.css'
 
 import {
   RowSorting,
-  createCoreRowModel,
   createSortedRowModel,
   flexRender,
   useTable,
@@ -14,7 +13,7 @@ import { makeData } from './makeData'
 import type { ColumnDef, SortingFn, SortingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-//custom sorting logic for one of our enum columns
+// custom sorting logic for one of our enum columns
 const sortStatusFn: SortingFn<any, Person> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
@@ -32,30 +31,30 @@ function App() {
       {
         accessorKey: 'firstName',
         cell: (info) => info.getValue(),
-        //this column will sort in ascending order by default since it is a string column
+        // this column will sort in ascending order by default since it is a string column
       },
       {
         accessorFn: (row) => row.lastName,
         id: 'lastName',
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        sortUndefined: 'last', //force undefined values to the end
-        sortDescFirst: false, //first sort order will be ascending (nullable values can mess up auto detection of sort order)
+        sortUndefined: 'last', // force undefined values to the end
+        sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
       },
       {
         accessorKey: 'age',
         header: () => 'Age',
-        //this column will sort in descending order by default since it is a number column
+        // this column will sort in descending order by default since it is a number column
       },
       {
         accessorKey: 'visits',
         header: () => <span>Visits</span>,
-        sortUndefined: 'last', //force undefined values to the end
+        sortUndefined: 'last', // force undefined values to the end
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        sortingFn: sortStatusFn, //use our custom sorting function for this enum column
+        sortingFn: sortStatusFn, // use our custom sorting function for this enum column
       },
       {
         accessorKey: 'progress',
@@ -65,7 +64,7 @@ function App() {
       {
         accessorKey: 'rank',
         header: 'Rank',
-        invertSorting: true, //invert the sorting order (golf score-like where smaller is better)
+        invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
       },
       {
         accessorKey: 'createdAt',
@@ -77,21 +76,21 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(1_000))
-  const refreshData = () => setData(() => makeData(100_000)) //stress test with 100k rows
+  const refreshData = () => setData(() => makeData(100_000)) // stress test with 100k rows
 
   const table = useTable({
     _features: { RowSorting },
     _rowModels: {
-      Sorted: createSortedRowModel(), //client-side sorting
+      Sorted: createSortedRowModel(), // client-side sorting
     },
     columns,
     data,
     debugTable: true,
-    onSortingChange: setSorting, //optionally control sorting state in your own scope for easy access
+    onSortingChange: setSorting, // optionally control sorting state in your own scope for easy access
     // sortingFns: {
     //   sortStatusFn, //or provide our custom sorting function globally for all columns to be able to use
     // },
-    //no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
+    // no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
     state: {
       sorting,
     },
@@ -103,7 +102,7 @@ function App() {
     // maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once - default is Infinity
   })
 
-  //access sorting state from the table instance
+  // access sorting state from the table instance
   console.log(table.getState().sorting)
 
   return (

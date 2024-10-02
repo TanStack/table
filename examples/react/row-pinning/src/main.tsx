@@ -5,7 +5,6 @@ import {
   RowExpanding,
   RowPagination,
   RowPinning,
-  createCoreRowModel,
   createExpandedRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,

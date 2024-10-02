@@ -12,7 +12,7 @@ type Props<T extends RowData> = {
   previousPage: () => void
   refreshData: () => void
   rerender: () => void
-  rowSelection: Object
+  rowSelection: object
   setPageIndex: (index: number) => void
   setPageSize: (size: number) => void
   totalRows: number

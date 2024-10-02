@@ -1,5 +1,4 @@
 import {
-  createCoreRowModel,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
