@@ -18,8 +18,7 @@ import {
   flexRender,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef ,
-  GroupingState} from '@tanstack/react-table'
+import type { ColumnDef, GroupingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const tableHelper = createTableHelper({
