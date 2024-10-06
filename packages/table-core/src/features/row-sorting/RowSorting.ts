@@ -21,10 +21,8 @@ import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type {
   ColumnDef_RowSorting,
-  Column_RowSorting,
   TableOptions_RowSorting,
   TableState_RowSorting,
-  Table_RowSorting,
 } from './RowSorting.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -78,10 +76,8 @@ export const RowSorting: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TFns, TData, TValue> &
-      Partial<Column_RowSorting<TFeatures, TFns, TData>>,
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowSorting<TFeatures, TFns, TData>>,
+    column: Column<TFeatures, TFns, TData, TValue>,
+    table: Table<TFeatures, TFns, TData>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -128,8 +124,7 @@ export const RowSorting: TableFeature = {
     TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowSorting<TFeatures, TFns, TData>>,
+    table: Table<TFeatures, TFns, TData>,
   ): void => {
     assignAPIs(table, table, [
       {

@@ -1,5 +1,5 @@
 import { constructRow } from '../rows/constructRow'
-import { _memo, isDev, tableMemo } from '../../utils'
+import { isDev, tableMemo } from '../../utils'
 import { table_getRowId } from '../rows/Rows.utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/RowPagination.utils'
 import type { Fns } from '../../types/Fns'
@@ -22,8 +22,7 @@ export function createCoreRowModel<
       fnName: 'createCoreRowModel',
       memoDeps: () => [table.options.data],
       fn: (data) => _createCoreRowModel(table, data),
-      onAfterUpdate: () =>
-        queueMicrotask(() => table_autoResetPageIndex(table)),
+      onAfterUpdate: () => table_autoResetPageIndex(table),
     })
 }
 

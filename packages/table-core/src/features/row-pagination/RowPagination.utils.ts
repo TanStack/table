@@ -36,28 +36,14 @@ export function table_autoResetPageIndex<
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TFns, TData>,
-  registered?: boolean,
-  queued?: boolean,
-) {
-  if (!registered) {
-    table._queue(() => {
-      registered = true
-    })
-    return
-  }
-
+>(table: Table_Internal<TFeatures, TFns, TData>) {
   if (
     table.options.autoResetAll ??
     table.options.autoResetPageIndex ??
     !table.options.manualPagination
   ) {
-    if (queued) return
-    queued = true
-    table._queue(() => {
+    queueMicrotask(() => {
       table_resetPageIndex(table)
-      queued = false
     })
   }
 }

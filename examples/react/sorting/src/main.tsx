@@ -7,14 +7,29 @@ import {
   RowSorting,
   createSortedRowModel,
   flexRender,
+  sortingFns,
+  tableFeatures,
+  tableFns,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef, SortingFn, SortingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
+const _features = tableFeatures({
+  RowSorting,
+})
+
+const _fns = tableFns(_features, {
+  sortingFns,
+})
+
 // custom sorting logic for one of our enum columns
-const sortStatusFn: SortingFn<any, Person> = (rowA, rowB, _columnId) => {
+const sortStatusFn: SortingFn<typeof _features, typeof _fns, Person> = (
+  rowA,
+  rowB,
+  _columnId,
+) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
@@ -24,9 +39,12 @@ const sortStatusFn: SortingFn<any, Person> = (rowA, rowB, _columnId) => {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
+  // optionally, manage sorting state in your own state management
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<
+    Array<ColumnDef<typeof _features, typeof _fns, Person>>
+  >(
     () => [
       {
         accessorKey: 'firstName',
@@ -79,7 +97,8 @@ function App() {
   const refreshData = () => setData(() => makeData(100_000)) // stress test with 100k rows
 
   const table = useTable({
-    _features: { RowSorting },
+    _features,
+    _fns,
     _rowModels: {
       Sorted: createSortedRowModel(), // client-side sorting
     },
@@ -101,9 +120,6 @@ function App() {
     // isMultiSortEvent: (e) => true, //Make all clicks multi-sort - default requires `shift` key
     // maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once - default is Infinity
   })
-
-  // access sorting state from the table instance
-  console.log(table.getState().sorting)
 
   return (
     <div className="p-2">
@@ -156,7 +172,7 @@ function App() {
             .map((row) => {
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => {
+                  {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
                         {flexRender(

@@ -30,3 +30,10 @@ export type Row<
     | ('RowPinning' extends keyof TFeatures ? Row_RowPinning : never)
     | ('RowSelection' extends keyof TFeatures ? Row_RowSelection : never)
   >
+
+export type Row_Internal<
+  TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
+  TData extends RowData,
+> = Row_Row<TFeatures, TFns, TData> &
+  Partial<Row_ColumnFiltering<TFeatures, TFns, TData>>

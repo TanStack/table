@@ -1,3 +1,4 @@
+import type { ColumnDefBase_All } from './ColumnDef'
 import type { Fns } from './Fns'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
@@ -43,3 +44,12 @@ export type Column<
         ? Column_RowSorting<TFeatures, TFns, TData>
         : never)
   >
+
+export type Column_Internal<
+  TFeatures extends TableFeatures,
+  TFns extends Fns<TFeatures, TFns, TData>,
+  TData extends RowData,
+  TValue = unknown,
+> = Column<TFeatures, TFns, TData, TValue> & {
+  columnDef: ColumnDefBase_All<TFeatures, TFns, TData, TValue>
+}

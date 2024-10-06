@@ -6,7 +6,7 @@ import type { SortingFn } from '../features/row-sorting/RowSorting.types'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
-const alphanumeric: SortingFn<any, any, any> = <
+export const sortingFn_alphanumeric: SortingFn<any, any, any> = <
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
@@ -21,7 +21,7 @@ const alphanumeric: SortingFn<any, any, any> = <
   )
 }
 
-const alphanumericCaseSensitive: SortingFn<any, any, any> = <
+export const sortingFn_alphanumericCaseSensitive: SortingFn<any, any, any> = <
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
@@ -38,7 +38,7 @@ const alphanumericCaseSensitive: SortingFn<any, any, any> = <
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-const text: SortingFn<any, any, any> = <
+export const sortingFn_text: SortingFn<any, any, any> = <
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
@@ -55,7 +55,7 @@ const text: SortingFn<any, any, any> = <
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-const textCaseSensitive: SortingFn<any, any, any> = <
+export const sortingFn_textCaseSensitive: SortingFn<any, any, any> = <
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
@@ -70,7 +70,7 @@ const textCaseSensitive: SortingFn<any, any, any> = <
   )
 }
 
-const datetime: SortingFn<any, any, any> = <
+export const sortingFn_datetime: SortingFn<any, any, any> = <
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
@@ -88,7 +88,7 @@ const datetime: SortingFn<any, any, any> = <
   return a > b ? 1 : a < b ? -1 : 0
 }
 
-const basic: SortingFn<any, any, any> = <
+export const sortingFn_basic: SortingFn<any, any, any> = <
   TFeatures extends TableFeatures,
   TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
@@ -169,12 +169,12 @@ function compareAlphanumeric(aStr: string, bStr: string) {
 // Exports
 
 export const sortingFns = {
-  alphanumeric,
-  alphanumericCaseSensitive,
-  text,
-  textCaseSensitive,
-  datetime,
-  basic,
+  alphanumeric: sortingFn_alphanumeric,
+  alphanumericCaseSensitive: sortingFn_alphanumericCaseSensitive,
+  basic: sortingFn_basic,
+  datetime: sortingFn_datetime,
+  text: sortingFn_text,
+  textCaseSensitive: sortingFn_textCaseSensitive,
 }
 
 export type BuiltInSortingFn = keyof typeof sortingFns
