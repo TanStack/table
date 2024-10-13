@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
   ColumnFiltering,
   RowPagination,
@@ -10,6 +8,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFns,
   flexRender,
   sortingFns,
   tableFeatures,
@@ -17,6 +16,7 @@ import {
 } from '@tanstack/react-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { makeData } from './makeData'
+import type { Person } from './makeData'
 import type {
   Column,
   ColumnDef,
@@ -28,26 +28,8 @@ import type {
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-import type { Person } from './makeData'
-
-const _features = tableFeatures({
-  ColumnFiltering,
-  RowSorting,
-  RowPagination,
-})
-
-declare module '@tanstack/react-table' {
-  // add fuzzy filter to the filterFns
-  interface FilterFns {
-    fuzzy: FilterFn<typeof _features, unknown>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
-
 // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
-const fuzzyFilter: FilterFn<typeof _features, any> = (
+const fuzzyFilter: FilterFn<typeof _features, Person> = (
   row,
   columnId,
   value,
@@ -66,7 +48,11 @@ const fuzzyFilter: FilterFn<typeof _features, any> = (
 }
 
 // Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-const fuzzySort: SortingFn<typeof _features, any> = (rowA, rowB, columnId) => {
+const fuzzySort: SortingFn<typeof _features, Person> = (
+  rowA,
+  rowB,
+  columnId,
+) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -81,6 +67,24 @@ const fuzzySort: SortingFn<typeof _features, any> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
+const _features = tableFeatures({
+  ColumnFiltering,
+  RowSorting,
+  RowPagination,
+})
+
+filterFns.fuzzyFilter = fuzzyFilter
+
+declare module '@tanstack/react-table' {
+  // add fuzzy filter to the filterFns
+  interface FilterFns {
+    fuzzy: FilterFn<typeof _features, Person>
+  }
+  interface FilterMeta {
+    itemRank?: RankingInfo
+  }
+}
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -89,7 +93,7 @@ function App() {
   )
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, {}, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'id',
@@ -125,6 +129,9 @@ function App() {
 
   const table = useTable<typeof _features, Person>({
     _features,
+    _processingFns: {
+      filterFns,
+    },
     _rowModels: {
       Filtered: createFilteredRowModel(),
       Paginated: createPaginatedRowModel(),
@@ -210,7 +217,7 @@ function App() {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(

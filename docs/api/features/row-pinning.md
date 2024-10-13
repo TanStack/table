@@ -32,7 +32,7 @@ export type RowPinningRowState = {
 ### `enableRowPinning`
 
 ```tsx
-enableRowPinning?: boolean | ((row: Row<TFeatures, TFns, TData>) => boolean)
+enableRowPinning?: boolean | ((row: Row<TFeatures, TData>) => boolean)
 ```
 
 Enables/disables row pinning for all rows in the table.
@@ -82,7 +82,7 @@ Returns whether or not any rows are pinned. Optionally specify to only check for
 ### `getTopRows`
 
 ```tsx
-getTopRows: () => Row<TFeatures, TFns, TData>[]
+getTopRows: () => Row<TFeatures, TData>[]
 ```
 
 Returns all top pinned rows.
@@ -90,7 +90,7 @@ Returns all top pinned rows.
 ### `getBottomRows`
 
 ```tsx
-getBottomRows: () => Row<TFeatures, TFns, TData>[]
+getBottomRows: () => Row<TFeatures, TData>[]
 ```
 
 Returns all bottom pinned rows.
@@ -98,7 +98,7 @@ Returns all bottom pinned rows.
 ### `getCenterRows`
 
 ```tsx
-getCenterRows: () => Row<TFeatures, TFns, TData>[]
+getCenterRows: () => Row<TFeatures, TData>[]
 ```
 
 Returns all rows that are not pinned to the top or bottom.

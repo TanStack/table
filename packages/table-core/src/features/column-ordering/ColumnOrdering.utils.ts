@@ -3,7 +3,6 @@ import {
   table_getInitialState,
   table_getState,
 } from '../../core/table/Tables.utils'
-import type { Fns } from '../../types/Fns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -17,12 +16,11 @@ export function getDefaultColumnOrderState(): ColumnOrderState {
 
 export function column_getIndex<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TFns, TData, TValue>,
-  table: Table_Internal<TFeatures, TFns, TData>,
+  column: Column<TFeatures, TData, TValue>,
+  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
@@ -31,12 +29,11 @@ export function column_getIndex<
 
 export function column_getIsFirstColumn<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TFns, TData, TValue>,
-  table: Table_Internal<TFeatures, TFns, TData>,
+  column: Column<TFeatures, TData, TValue>,
+  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
@@ -45,12 +42,11 @@ export function column_getIsFirstColumn<
 
 export function column_getIsLastColumn<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TFns, TData, TValue>,
-  table: Table_Internal<TFeatures, TFns, TData>,
+  column: Column<TFeatures, TData, TValue>,
+  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = column_getVisibleLeafColumns(table, position)
@@ -59,20 +55,15 @@ export function column_getIsLastColumn<
 
 export function table_setColumnOrder<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TFns, TData>,
-  updater: Updater<ColumnOrderState>,
-) {
+>(table: Table_Internal<TFeatures, TData>, updater: Updater<ColumnOrderState>) {
   table.options.onColumnOrderChange?.(updater)
 }
 
 export function table_resetColumnOrder<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TFns, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
     defaultState ? [] : (table_getInitialState(table).columnOrder ?? []),
@@ -81,15 +72,14 @@ export function table_resetColumnOrder<
 
 export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TFns, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const { columnOrder = [] } = table_getState(table)
 
-  return (columns: Array<Column<TFeatures, TFns, TData, unknown>>) => {
+  return (columns: Array<Column<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
     // before the headers are built
-    let orderedColumns: Array<Column<TFeatures, TFns, TData, unknown>> = []
+    let orderedColumns: Array<Column<TFeatures, TData, unknown>> = []
 
     // If there is no order, return the normal columns
     if (!columnOrder.length) {
@@ -121,11 +111,10 @@ export function table_getOrderColumnsFn<
 
 export function orderColumns<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TFns, TData>,
-  leafColumns: Array<Column<TFeatures, TFns, TData, unknown>>,
+  table: Table_Internal<TFeatures, TData>,
+  leafColumns: Array<Column<TFeatures, TData, unknown>>,
 ) {
   const { grouping = [] } = table_getState(table)
   const { groupedColumnMode } = table.options

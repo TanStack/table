@@ -77,9 +77,9 @@ const [movingColumnId, setMovingColumnId] = useState<string | null>(null);
 const [targetColumnId, setTargetColumnId] = useState<string | null>(null);
 
 //util function to splice and reorder the columnOrder array
-const reorderColumn = <TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData>(
-  movingColumnId: Column<TFeatures, TFns, TData>,
-  targetColumnId: Column<TFeatures, TFns, TData>,
+const reorderColumn = <TFeatures extends TableFeatures,  TData extends RowData>(
+  movingColumnId: Column<TFeatures, TData>,
+  targetColumnId: Column<TFeatures, TData>,
 ): string[] => {
   const newColumnOrder = [...columnOrder];
   newColumnOrder.splice(

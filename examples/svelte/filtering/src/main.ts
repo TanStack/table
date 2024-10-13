@@ -1,9 +1,7 @@
 // @ts-ignore
 import { mount } from 'svelte'
 import App from './App.svelte'
-
 import type { FilterFn } from '@tanstack/svelte-table'
-
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 declare module '@tanstack/svelte-table' {

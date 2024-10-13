@@ -1,9 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { faker } from '@faker-js/faker'
-
 import './index.css'
-
 import {
   ColumnOrdering,
   ColumnPinning,
@@ -22,7 +20,7 @@ import type { Person } from './makeData'
 
 const _features = { ColumnVisibility, ColumnPinning, ColumnOrdering }
 
-const defaultColumns: Array<ColumnDef<typeof _features, {}, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,

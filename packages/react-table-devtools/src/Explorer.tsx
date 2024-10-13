@@ -1,7 +1,6 @@
 // @ts-nocheck
 
 import React from 'react'
-
 import { styled } from './utils'
 
 const Entry = styled('div', {

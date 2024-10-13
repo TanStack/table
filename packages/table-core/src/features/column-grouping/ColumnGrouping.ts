@@ -18,7 +18,6 @@ import {
   table_resetGrouping,
   table_setGrouping,
 } from './ColumnGrouping.utils'
-import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -53,10 +52,9 @@ export const ColumnGrouping: TableFeature = {
 
   getDefaultColumnDef: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
-  >(): ColumnDef_ColumnGrouping<TFeatures, TFns, TData, TValue> => {
+  >(): ColumnDef_ColumnGrouping<TFeatures, TData, TValue> => {
     return {
       aggregatedCell: (props) => props.getValue()?.toString?.() ?? null,
       aggregationFn: 'auto',
@@ -65,11 +63,10 @@ export const ColumnGrouping: TableFeature = {
 
   getDefaultTableOptions: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TFns, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): TableOptions_ColumnGrouping => {
     return {
       onGroupingChange: makeStateUpdater('grouping', table),
@@ -79,13 +76,12 @@ export const ColumnGrouping: TableFeature = {
 
   constructCell: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue,
   >(
-    cell: Cell<TFeatures, TFns, TData, TValue> & Partial<Cell_ColumnGrouping>,
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TFns, TData>>,
+    cell: Cell<TFeatures, TData, TValue> & Partial<Cell_ColumnGrouping>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
     assignAPIs(cell, table, [
       {
@@ -102,14 +98,13 @@ export const ColumnGrouping: TableFeature = {
 
   constructColumn: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TFns, TData, TValue> &
-      Partial<Column_ColumnGrouping<TFeatures, TFns, TData>>,
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TFns, TData>>,
+    column: Column<TFeatures, TData, TValue> &
+      Partial<Column_ColumnGrouping<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -136,14 +131,10 @@ export const ColumnGrouping: TableFeature = {
     ])
   },
 
-  constructRow: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    row: Row<TFeatures, TFns, TData> & Partial<Row_ColumnGrouping>,
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TFns, TData>>,
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
     row._groupingValuesCache = {}
 
@@ -157,13 +148,9 @@ export const ColumnGrouping: TableFeature = {
     ])
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TFns, TData>>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {

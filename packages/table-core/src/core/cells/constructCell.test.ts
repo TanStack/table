@@ -7,9 +7,9 @@ import type { Table } from '../../types/Table'
 
 describe('constructCell', () => {
   it('should populate the cell with all core cell APIs and properties', () => {
-    const column = { id: 'test-column' } as Column<any, any, any>
-    const row = { id: 'test-row' } as Row<any, any, any>
-    const table = { _features: { Cells }, options: {} } as Table<any, any, any>
+    const column = { id: 'test-column' } as Column<any, any>
+    const row = { id: 'test-row' } as Row<any, any>
+    const table = { _features: { Cells }, options: {} } as Table<any, any>
     const coreCell = constructCell(column, row, table)
 
     expect(coreCell).toBeDefined()

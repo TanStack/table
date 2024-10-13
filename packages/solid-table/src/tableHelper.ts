@@ -11,24 +11,22 @@ import type {
 
 export type TableHelper<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = Omit<TableHelper_Core<TFeatures, TFns, TData>, 'tableCreator'> & {
+> = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
   createTable: (
     tableOptions: Omit<
-      TableOptions<TFeatures, TFns, TData>,
+      TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
     >,
-  ) => Table<TFeatures, TFns, TData>
+  ) => Table<TFeatures, TData>
 }
 
 export function createTableHelper<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  tableHelperOptions: TableHelperOptions<TFeatures, TFns, TData>,
-): TableHelper<TFeatures, TFns, TData> {
+  tableHelperOptions: TableHelperOptions<TFeatures, TData>,
+): TableHelper<TFeatures, TData> {
   const tableHelper = constructTableHelper(createTable, tableHelperOptions)
   return {
     ...tableHelper,

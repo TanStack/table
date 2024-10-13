@@ -9,7 +9,6 @@ import type { User } from '../api/user'
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   > {

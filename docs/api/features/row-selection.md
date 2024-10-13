@@ -22,7 +22,7 @@ By default, the row selection state uses the index of each row as the row identi
 ### `enableRowSelection`
 
 ```tsx
-enableRowSelection?: boolean | ((row: Row<TFeatures, TFns, TData>) => boolean)
+enableRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
 ```
 
 - Enables/disables row selection for all rows in the table OR
@@ -31,7 +31,7 @@ enableRowSelection?: boolean | ((row: Row<TFeatures, TFns, TData>) => boolean)
 ### `enableMultiRowSelection`
 
 ```tsx
-enableMultiRowSelection?: boolean | ((row: Row<TFeatures, TFns, TData>) => boolean)
+enableMultiRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
 ```
 
 - Enables/disables multiple row selection for all rows in the table OR
@@ -40,7 +40,7 @@ enableMultiRowSelection?: boolean | ((row: Row<TFeatures, TFns, TData>) => boole
 ### `enableSubRowSelection`
 
 ```tsx
-enableSubRowSelection?: boolean | ((row: Row<TFeatures, TFns, TData>) => boolean)
+enableSubRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
 ```
 
 Enables/disables automatic sub-row selection when a parent row is selected, or a function that enables/disables automatic sub-row selection for each row.
@@ -142,25 +142,25 @@ Selects/deselects all rows on the current page.
 ### `getPreSelectedRowModel`
 
 ```tsx
-getPreSelectedRowModel: () => RowModel<TFeatures, TFns, TData>
+getPreSelectedRowModel: () => RowModel<TFeatures, TData>
 ```
 
 ### `getSelectedRowModel`
 
 ```tsx
-getSelectedRowModel: () => RowModel<TFeatures, TFns, TData>
+getSelectedRowModel: () => RowModel<TFeatures, TData>
 ```
 
 ### `getFilteredSelectedRowModel`
 
 ```tsx
-getFilteredSelectedRowModel: () => RowModel<TFeatures, TFns, TData>
+getFilteredSelectedRowModel: () => RowModel<TFeatures, TData>
 ```
 
 ### `getGroupedSelectedRowModel`
 
 ```tsx
-getGroupedSelectedRowModel: () => RowModel<TFeatures, TFns, TData>
+getGroupedSelectedRowModel: () => RowModel<TFeatures, TData>
 ```
 
 ## Row API

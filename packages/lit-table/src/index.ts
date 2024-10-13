@@ -29,13 +29,12 @@ export function flexRender<TProps>(
 
 export class TableController<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > implements ReactiveController
 {
   host: ReactiveControllerHost
 
-  private tableInstance: Table<TFeatures, TFns, TData> | null = null
+  private tableInstance: Table<TFeatures, TData> | null = null
 
   private _tableState: TableState<TFeatures> | null = null
 
@@ -43,9 +42,9 @@ export class TableController<
     ;(this.host = host).addController(this)
   }
 
-  public table(options: TableOptions<TFeatures, TFns, TData>) {
+  public table(options: TableOptions<TFeatures, TData>) {
     if (!this.tableInstance) {
-      const resolvedOptions: TableOptions<TFeatures, TFns, TData> = {
+      const resolvedOptions: TableOptions<TFeatures, TData> = {
         state: {},
         onStateChange: () => {}, // noop
         renderFallbackValue: null,

@@ -1,8 +1,6 @@
 import React, { type CSSProperties } from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import { flexRender, useTable } from '@tanstack/react-table'
 
 // needed for table body level scope DnD setup

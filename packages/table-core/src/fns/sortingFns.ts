@@ -1,4 +1,3 @@
-import type { Fns } from '../types/Fns'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
@@ -6,13 +5,12 @@ import type { SortingFn } from '../features/row-sorting/RowSorting.types'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
-export const sortingFn_alphanumeric: SortingFn<any, any, any> = <
+export const sortingFn_alphanumeric: SortingFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TFns, TData>,
-  rowB: Row<TFeatures, TFns, TData>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareAlphanumeric(
@@ -21,13 +19,12 @@ export const sortingFn_alphanumeric: SortingFn<any, any, any> = <
   )
 }
 
-export const sortingFn_alphanumericCaseSensitive: SortingFn<any, any, any> = <
+export const sortingFn_alphanumericCaseSensitive: SortingFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TFns, TData>,
-  rowB: Row<TFeatures, TFns, TData>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareAlphanumeric(
@@ -38,13 +35,12 @@ export const sortingFn_alphanumericCaseSensitive: SortingFn<any, any, any> = <
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-export const sortingFn_text: SortingFn<any, any, any> = <
+export const sortingFn_text: SortingFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TFns, TData>,
-  rowB: Row<TFeatures, TFns, TData>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareBasic(
@@ -55,13 +51,12 @@ export const sortingFn_text: SortingFn<any, any, any> = <
 
 // The text filter is more basic (less numeric support)
 // but is much faster
-export const sortingFn_textCaseSensitive: SortingFn<any, any, any> = <
+export const sortingFn_textCaseSensitive: SortingFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TFns, TData>,
-  rowB: Row<TFeatures, TFns, TData>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareBasic(
@@ -70,13 +65,12 @@ export const sortingFn_textCaseSensitive: SortingFn<any, any, any> = <
   )
 }
 
-export const sortingFn_datetime: SortingFn<any, any, any> = <
+export const sortingFn_datetime: SortingFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TFns, TData>,
-  rowB: Row<TFeatures, TFns, TData>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   const a = rowA.getValue<Date>(columnId)
@@ -88,13 +82,12 @@ export const sortingFn_datetime: SortingFn<any, any, any> = <
   return a > b ? 1 : a < b ? -1 : 0
 }
 
-export const sortingFn_basic: SortingFn<any, any, any> = <
+export const sortingFn_basic: SortingFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TFns, TData>,
-  rowB: Row<TFeatures, TFns, TData>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareBasic(rowA.getValue(columnId), rowB.getValue(columnId))

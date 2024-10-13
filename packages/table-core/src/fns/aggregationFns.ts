@@ -1,18 +1,16 @@
 import { isNumberArray } from '../utils'
-import type { Fns } from '../types/Fns'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
 import type { AggregationFn } from '../features/column-grouping/ColumnGrouping.types'
 
-const sum: AggregationFn<any, any, any> = <
+export const aggregationFn_sum: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<TFeatures, TFns, TData>>,
-  childRows: Array<Row<TFeatures, TFns, TData>>,
+  _leafRows: Array<Row<TFeatures, TData>>,
+  childRows: Array<Row<TFeatures, TData>>,
 ) => {
   // It's faster to just add the aggregations together instead of
   // process leaf nodes individually
@@ -22,14 +20,13 @@ const sum: AggregationFn<any, any, any> = <
   }, 0)
 }
 
-const min: AggregationFn<any, any, any> = <
+export const aggregationFn_min: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<TFeatures, TFns, TData>>,
-  childRows: Array<Row<TFeatures, TFns, TData>>,
+  _leafRows: Array<Row<TFeatures, TData>>,
+  childRows: Array<Row<TFeatures, TData>>,
 ) => {
   let minValue: number | undefined
 
@@ -47,14 +44,13 @@ const min: AggregationFn<any, any, any> = <
   return minValue
 }
 
-const max: AggregationFn<any, any, any> = <
+export const aggregationFn_max: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<TFeatures, TFns, TData>>,
-  childRows: Array<Row<TFeatures, TFns, TData>>,
+  _leafRows: Array<Row<TFeatures, TData>>,
+  childRows: Array<Row<TFeatures, TData>>,
 ) => {
   let maxValue: number | undefined
 
@@ -71,14 +67,13 @@ const max: AggregationFn<any, any, any> = <
   return maxValue
 }
 
-const extent: AggregationFn<any, any, any> = <
+export const aggregationFn_extent: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<TFeatures, TFns, TData>>,
-  childRows: Array<Row<TFeatures, TFns, TData>>,
+  _leafRows: Array<Row<TFeatures, TData>>,
+  childRows: Array<Row<TFeatures, TData>>,
 ) => {
   let minValue: number | undefined
   let maxValue: number | undefined
@@ -98,13 +93,12 @@ const extent: AggregationFn<any, any, any> = <
   return [minValue, maxValue]
 }
 
-const mean: AggregationFn<any, any, any> = <
+export const aggregationFn_mean: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   columnId: string,
-  leafRows: Array<Row<TFeatures, TFns, TData>>,
+  leafRows: Array<Row<TFeatures, TData>>,
 ) => {
   let count = 0
   let sumValue = 0
@@ -121,13 +115,12 @@ const mean: AggregationFn<any, any, any> = <
   return
 }
 
-const median: AggregationFn<any, any, any> = <
+export const aggregationFn_median: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   columnId: string,
-  leafRows: Array<Row<TFeatures, TFns, TData>>,
+  leafRows: Array<Row<TFeatures, TData>>,
 ) => {
   if (!leafRows.length) {
     return
@@ -146,49 +139,46 @@ const median: AggregationFn<any, any, any> = <
   return values.length % 2 !== 0 ? nums[mid] : (nums[mid - 1]! + nums[mid]!) / 2
 }
 
-const unique: AggregationFn<any, any, any> = <
+export const aggregationFn_unique: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   columnId: string,
-  leafRows: Array<Row<TFeatures, TFns, TData>>,
+  leafRows: Array<Row<TFeatures, TData>>,
 ) => {
   return Array.from(new Set(leafRows.map((d) => d.getValue(columnId))).values())
 }
 
-const uniqueCount: AggregationFn<any, any, any> = <
+export const aggregationFn_uniqueCount: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   columnId: string,
-  leafRows: Array<Row<TFeatures, TFns, TData>>,
+  leafRows: Array<Row<TFeatures, TData>>,
 ) => {
   return new Set(leafRows.map((d) => d.getValue(columnId))).size
 }
 
-const count: AggregationFn<any, any, any> = <
+export const aggregationFn_count: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   _columnId: string,
-  leafRows: Array<Row<TFeatures, TFns, TData>>,
+  leafRows: Array<Row<TFeatures, TData>>,
 ) => {
   return leafRows.length
 }
 
 export const aggregationFns = {
-  sum,
-  min,
-  max,
-  extent,
-  mean,
-  median,
-  unique,
-  uniqueCount,
-  count,
+  sum: aggregationFn_sum,
+  min: aggregationFn_min,
+  max: aggregationFn_max,
+  extent: aggregationFn_extent,
+  mean: aggregationFn_mean,
+  median: aggregationFn_median,
+  unique: aggregationFn_unique,
+  uniqueCount: aggregationFn_uniqueCount,
+  count: aggregationFn_count,
 }
 
 export type BuiltInAggregationFn = keyof typeof aggregationFns

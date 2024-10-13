@@ -71,7 +71,6 @@ declare module '@tanstack/lit-table' {
   // allows us to define custom properties for our columns
   interface ColumnMeta<
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   > {
@@ -143,7 +142,7 @@ class ColumnFilter extends LitElement {
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<any, any, any>(this)
+  private tableController = new TableController<any, any>(this)
 
   @state()
   private _columnFilters: ColumnFiltersState = []

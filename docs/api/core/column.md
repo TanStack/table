@@ -39,7 +39,7 @@ The resolved accessor function to use when extracting the value for the column f
 ### `columnDef`
 
 ```tsx
-columnDef: ColumnDef<TFeatures, TFns, TData>
+columnDef: ColumnDef<TFeatures, TData>
 ```
 
 The original column def used to create the column.
@@ -47,7 +47,7 @@ The original column def used to create the column.
 ### `columns`
 
 ```tsx
-type columns = ColumnDef<TFeatures, TFns, TData>[]
+type columns = ColumnDef<TFeatures, TData>[]
 ```
 
 The child column (if the column is a group column). Will be an empty array if the column is not a group column.
@@ -55,7 +55,7 @@ The child column (if the column is a group column). Will be an empty array if th
 ### `parent`
 
 ```tsx
-parent?: Column<TFeatures, TFns, TData>
+parent?: Column<TFeatures, TData>
 ```
 
 The parent column for this column. Will be undefined if this is a root column.
@@ -63,7 +63,7 @@ The parent column for this column. Will be undefined if this is a root column.
 ### `getFlatColumns`
 
 ```tsx
-type getFlatColumns = () => Column<TFeatures, TFns, TData>[]
+type getFlatColumns = () => Column<TFeatures, TData>[]
 ```
 
 Returns the flattened array of this column and all child/grand-child columns for this column.
@@ -71,7 +71,7 @@ Returns the flattened array of this column and all child/grand-child columns for
 ### `getLeafColumns`
 
 ```tsx
-type getLeafColumns = () => Column<TFeatures, TFns, TData>[]
+type getLeafColumns = () => Column<TFeatures, TData>[]
 ```
 
 Returns an array of all leaf-node columns for this column. If a column has no children, it is considered the only leaf-node column.

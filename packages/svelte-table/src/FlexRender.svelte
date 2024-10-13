@@ -1,6 +1,6 @@
 <script
   lang="ts"
-  generics="TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData, TContext extends HeaderContext<TFeatures, TFns, TData, TValue> | CellContext<TFeatures, TFns, TData, TValue>"
+  generics="TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData, TContext extends HeaderContext<TFeatures, TData, TValue> | CellContext<TFeatures, TData, TValue>"
 >
   import { RenderComponentConfig } from './render-component'
   import type {
@@ -14,10 +14,14 @@
 
   type Props = {
     /** The cell or header field of the current cell's column definition. */
-    content?: TContext extends HeaderContext<TFeatures, TFns, TData, TValue>
-      ? ColumnDefTemplate<HeaderContext<TFeatures, TFns, TData, TValue>>
-      : TContext extends CellContext<TFeatures, TFns, TData, TValue>
-        ? ColumnDefTemplate<CellContext<TFeatures, TFns, TData, TValue>>
+    content?: TContext extends HeaderContext<
+      TFeatures,
+      TData,
+      TValue
+    >
+      ? ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
+      : TContext extends CellContext<TFeatures, TData, TValue>
+        ? ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
         : never
     /** The result of the `getContext()` function of the header or cell */
     context: TContext

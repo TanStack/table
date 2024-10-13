@@ -26,7 +26,6 @@ import { CSS } from '@dnd-kit/utilities'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { Cell, ColumnDef, Header } from '@tanstack/react-table'
-
 import './index.css'
 
 const tableHelper = createTableHelper({

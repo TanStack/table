@@ -10,7 +10,6 @@ import {
   table_getAllLeafColumns,
   table_getColumn,
 } from './Columns.utils'
-import type { Fns } from '../../types/Fns'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -19,12 +18,11 @@ import type { Column } from '../../types/Column'
 export const Columns: TableFeature = {
   constructColumn: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TFns, TData, TValue>,
-    table: Table<TFeatures, TFns, TData>,
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ) => {
     assignAPIs(column, table, [
       {
@@ -43,12 +41,8 @@ export const Columns: TableFeature = {
     ])
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
   ) => {
     assignAPIs(table, table, [
       {

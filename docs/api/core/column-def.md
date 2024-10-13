@@ -38,7 +38,7 @@ The accessor function to use when extracting the value for the column from each 
 ### `columns`
 
 ```tsx
-columns?: ColumnDef<TFeatures, TFns, TData>[]
+columns?: ColumnDef<TFeatures, TData>[]
 ```
 
 The child column defs to include in a group column.
@@ -49,9 +49,9 @@ The child column defs to include in a group column.
 header?:
   | string
   | ((props: {
-      table: Table<TFeatures, TFns, TData>
-      header: Header<TFeatures, TFns, TData>
-      column: Column<TFeatures, TFns, TData>
+      table: Table<TFeatures, TData>
+      header: Header<TFeatures, TData>
+      column: Column<TFeatures, TData>
     }) => unknown)
 ```
 
@@ -63,9 +63,9 @@ The header to display for the column. If a string is passed, it can be used as a
 footer?:
   | string
   | ((props: {
-      table: Table<TFeatures, TFns, TData>
-      header: Header<TFeatures, TFns, TData>
-      column: Column<TFeatures, TFns, TData>
+      table: Table<TFeatures, TData>
+      header: Header<TFeatures, TData>
+      column: Column<TFeatures, TData>
     }) => unknown)
 ```
 
@@ -77,10 +77,10 @@ The footer to display for the column. If a function is passed, it will be passed
 cell?:
   | string
   | ((props: {
-      table: Table<TFeatures, TFns, TData>
-      row: Row<TFeatures, TFns, TData>
-      column: Column<TFeatures, TFns, TData>
-      cell: Cell<TFeatures, TFns, TData>
+      table: Table<TFeatures, TData>
+      row: Row<TFeatures, TData>
+      column: Column<TFeatures, TData>
+      cell: Cell<TFeatures, TData>
       getValue: () => any
       renderValue: () => any
     }) => unknown)
@@ -100,7 +100,7 @@ The meta data to be associated with the column. We can access it anywhere when t
 import '@tanstack/react-table' //or vue, svelte, solid, qwik, etc.
 
 declare module '@tanstack/react-table' {
-  interface ColumnMeta<TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData, TValue> {
+  interface ColumnMeta<TFeatures extends TableFeatures,  TData extends RowData, TValue> {
     foo: string
   }
 }

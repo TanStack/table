@@ -10,7 +10,6 @@ import type {
   ColumnOrderState,
   ColumnPinningState,
 } from '@tanstack/vue-table'
-
 import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import { faker } from '@faker-js/faker'
@@ -117,7 +116,7 @@ const randomizeColumns = () => {
   )
 }
 
-function toggleColumnVisibility(column: Column<any, any, any>) {
+function toggleColumnVisibility(column: Column<any, any>) {
   columnVisibility.value = {
     ...columnVisibility.value,
     [column.id]: !column.getIsVisible(),

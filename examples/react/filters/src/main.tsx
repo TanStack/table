@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
   ColumnFiltering,
   RowPagination,
@@ -14,11 +12,9 @@ import {
   flexRender,
   sortingFns,
   tableFeatures,
-  tableFns,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { Fns } from '../../../../packages/table-core/dist/esm/types/Fns'
 import type {
   CellData,
   Column,
@@ -27,14 +23,12 @@ import type {
   RowData,
   TableFeatures,
 } from '@tanstack/react-table'
-
 import type { Person } from './makeData'
 
 declare module '@tanstack/react-table' {
   // allows us to define custom properties for our columns
   interface ColumnMeta<
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   > {
@@ -44,11 +38,6 @@ declare module '@tanstack/react-table' {
 
 const _features = tableFeatures({ ColumnFiltering, RowSorting, RowPagination })
 
-const _fns = tableFns(_features, {
-  filterFns,
-  sortingFns,
-})
-
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -56,9 +45,7 @@ function App() {
     [],
   )
 
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof _features, typeof _fns, Person>>
-  >(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -113,7 +100,10 @@ function App() {
 
   const table = useTable({
     _features,
-    _fns,
+    _processingFns: {
+      filterFns, // client side filtering
+      sortingFns,
+    },
     _rowModels: {
       Filtered: createFilteredRowModel(), // client side filtering
       Sorted: createSortedRowModel(),
@@ -275,7 +265,7 @@ function App() {
 function Filter({
   column,
 }: {
-  column: Column<typeof _features, typeof _fns, Person, unknown>
+  column: Column<typeof _features, Person, unknown>
 }) {
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}

@@ -1,15 +1,13 @@
-import type { Fns } from '../types/Fns'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
 import type { FilterFn } from '../features/column-filtering/ColumnFiltering.types'
 
-const includesString: FilterFn<any, any, any> = <
+export const filterFn_includesString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: string,
 ) => {
@@ -23,14 +21,13 @@ const includesString: FilterFn<any, any, any> = <
   )
 }
 
-includesString.autoRemove = (val: any) => testFalsey(val)
+filterFn_includesString.autoRemove = (val: any) => testFalsy(val)
 
-const includesStringSensitive: FilterFn<any, any, any> = <
+export const filterFn_includesStringSensitive: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: string,
 ) => {
@@ -39,14 +36,13 @@ const includesStringSensitive: FilterFn<any, any, any> = <
   )
 }
 
-includesStringSensitive.autoRemove = (val: any) => testFalsey(val)
+filterFn_includesStringSensitive.autoRemove = (val: any) => testFalsy(val)
 
-const equalsString: FilterFn<any, any, any> = <
+export const filterFn_equalsString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: string,
 ) => {
@@ -56,28 +52,26 @@ const equalsString: FilterFn<any, any, any> = <
   )
 }
 
-equalsString.autoRemove = (val: any) => testFalsey(val)
+filterFn_equalsString.autoRemove = (val: any) => testFalsy(val)
 
-const arrIncludes: FilterFn<any, any, any> = <
+export const filterFn_arrIncludes: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
   return row.getValue<Array<unknown>>(columnId).includes(filterValue)
 }
 
-arrIncludes.autoRemove = (val: any) => testFalsey(val) || !val?.length
+filterFn_arrIncludes.autoRemove = (val: any) => testFalsy(val) || !val?.length
 
-const arrIncludesAll: FilterFn<any, any, any> = <
+export const filterFn_arrIncludesAll: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: Array<unknown>,
 ) => {
@@ -86,14 +80,14 @@ const arrIncludesAll: FilterFn<any, any, any> = <
   )
 }
 
-arrIncludesAll.autoRemove = (val: any) => testFalsey(val) || !val?.length
+filterFn_arrIncludesAll.autoRemove = (val: any) =>
+  testFalsy(val) || !val?.length
 
-const arrIncludesSome: FilterFn<any, any, any> = <
+export const filterFn_arrIncludesSome: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: Array<unknown>,
 ) => {
@@ -102,42 +96,40 @@ const arrIncludesSome: FilterFn<any, any, any> = <
   )
 }
 
-arrIncludesSome.autoRemove = (val: any) => testFalsey(val) || !val?.length
+filterFn_arrIncludesSome.autoRemove = (val: any) =>
+  testFalsy(val) || !val?.length
 
-const equals: FilterFn<any, any, any> = <
+export const filterFn_equals: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
   return row.getValue(columnId) === filterValue
 }
 
-equals.autoRemove = (val: any) => testFalsey(val)
+filterFn_equals.autoRemove = (val: any) => testFalsy(val)
 
-const weakEquals: FilterFn<any, any, any> = <
+export const filterFn_weakEquals: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
   return row.getValue(columnId) == filterValue
 }
 
-weakEquals.autoRemove = (val: any) => testFalsey(val)
+filterFn_weakEquals.autoRemove = (val: any) => testFalsy(val)
 
-const inNumberRange: FilterFn<any, any, any> = <
+export const filterFn_inNumberRange: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: [number, number],
 ) => {
@@ -147,7 +139,7 @@ const inNumberRange: FilterFn<any, any, any> = <
   return rowValue >= min && rowValue <= max
 }
 
-inNumberRange.resolveFilterValue = (val: [any, any]) => {
+filterFn_inNumberRange.resolveFilterValue = (val: [any, any]) => {
   const [unsafeMin, unsafeMax] = val
 
   const parsedMin =
@@ -168,27 +160,27 @@ inNumberRange.resolveFilterValue = (val: [any, any]) => {
   return [min, max] as const
 }
 
-inNumberRange.autoRemove = (val: any) =>
-  testFalsey(val) || (testFalsey(val[0]) && testFalsey(val[1]))
+filterFn_inNumberRange.autoRemove = (val: any) =>
+  testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1]))
 
 // Export
 
 export const filterFns = {
-  includesString,
-  includesStringSensitive,
-  equalsString,
-  arrIncludes,
-  arrIncludesAll,
-  arrIncludesSome,
-  equals,
-  weakEquals,
-  inNumberRange,
+  includesString: filterFn_includesString,
+  includesStringSensitive: filterFn_includesStringSensitive,
+  equalsString: filterFn_equalsString,
+  arrIncludes: filterFn_arrIncludes,
+  arrIncludesAll: filterFn_arrIncludesAll,
+  arrIncludesSome: filterFn_arrIncludesSome,
+  equals: filterFn_equals,
+  weakEquals: filterFn_weakEquals,
+  inNumberRange: filterFn_inNumberRange,
 }
 
 export type BuiltInFilterFn = keyof typeof filterFns
 
 // Utils
 
-function testFalsey(val: any) {
+function testFalsy(val: any) {
   return val === undefined || val === null || val === ''
 }

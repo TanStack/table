@@ -1,4 +1,3 @@
-import type { Fns } from './Fns'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { Row_Row } from '../core/rows/Rows.types'
@@ -12,19 +11,18 @@ import type { Row_RowSelection } from '../features/row-selection/RowSelection.ty
 
 export type Row<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = Row_Row<TFeatures, TFns, TData> &
+> = Row_Row<TFeatures, TData> &
   UnionToIntersection<
     | ('ColumnFiltering' extends keyof TFeatures
-        ? Row_ColumnFiltering<TFeatures, TFns, TData>
+        ? Row_ColumnFiltering<TFeatures, TData>
         : never)
     | ('ColumnGrouping' extends keyof TFeatures ? Row_ColumnGrouping : never)
     | ('ColumnPinning' extends keyof TFeatures
-        ? Row_ColumnPinning<TFeatures, TFns, TData>
+        ? Row_ColumnPinning<TFeatures, TData>
         : never)
     | ('ColumnVisibility' extends keyof TFeatures
-        ? Row_ColumnVisibility<TFeatures, TFns, TData>
+        ? Row_ColumnVisibility<TFeatures, TData>
         : never)
     | ('RowExpanding' extends keyof TFeatures ? Row_RowExpanding : never)
     | ('RowPinning' extends keyof TFeatures ? Row_RowPinning : never)
@@ -33,7 +31,5 @@ export type Row<
 
 export type Row_Internal<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = Row_Row<TFeatures, TFns, TData> &
-  Partial<Row_ColumnFiltering<TFeatures, TFns, TData>>
+> = Row_Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>

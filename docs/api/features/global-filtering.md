@@ -40,7 +40,7 @@ The final list of filter functions available for the `tableOptions.globalFilterF
 export type FilterFnOption<TData extends AnyData> =
   | 'auto'
   | BuiltInFilterFn
-  | FilterFn<TFeatures, TFns, TData>
+  | FilterFn<TFeatures, TData>
 ```
 
 #### Filter Meta
@@ -53,7 +53,6 @@ Below is an example using our own `match-sorter-utils` package (a utility fork o
 
 ```tsx
 import { sortingFns } from '@tanstack/[adapter]-table'
-
 import { rankItem, compareItems } from '@tanstack/match-sorter-utils'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -183,8 +182,8 @@ Disables the `getFilteredRowModel` from being used to filter data. This may be u
 
 ```tsx
 getFilteredRowModel?: (
-  table: Table<TFeatures, TFns, TData>
-) => () => RowModel<TFeatures, TFns, TData>
+  table: Table<TFeatures, TData>
+) => () => RowModel<TFeatures, TData>
 ```
 
 If provided, this function is called **once** per table and should return a **new function** which will calculate and return the row model for the table when it's filtered.
@@ -234,7 +233,7 @@ Enables/disables the global filter for the table.
 ### `getColumnCanGlobalFilter`
 
 ```tsx
-getColumnCanGlobalFilter?: (column: Column<TFeatures, TFns, TData>) => boolean
+getColumnCanGlobalFilter?: (column: Column<TFeatures, TData>) => boolean
 ```
 
 If provided, this function will be called with the column and should return `true` or `false` to indicate whether this column should be used for global filtering.
@@ -245,7 +244,7 @@ This is useful if the column can contain data that is not `string` or `number` (
 ### `getPreFilteredRowModel`
 
 ```tsx
-getPreFilteredRowModel: () => RowModel<TFeatures, TFns, TData>
+getPreFilteredRowModel: () => RowModel<TFeatures, TData>
 ```
 
 Returns the row model for the table before any **column** filtering has been applied.
@@ -253,7 +252,7 @@ Returns the row model for the table before any **column** filtering has been app
 ### `getFilteredRowModel`
 
 ```tsx
-getFilteredRowModel: () => RowModel<TFeatures, TFns, TData>
+getFilteredRowModel: () => RowModel<TFeatures, TData>
 ```
 
 Returns the row model for the table after **column** filtering has been applied.
@@ -277,7 +276,7 @@ Resets the **globalFilter** state to `initialState.globalFilter`, or `true` can 
 ### `getGlobalAutoFilterFn`
 
 ```tsx
-getGlobalAutoFilterFn: (columnId: string) => FilterFn<TFeatures, TFns, TData> | undefined
+getGlobalAutoFilterFn: (columnId: string) => FilterFn<TFeatures, TData> | undefined
 ```
 
 Currently, this function returns the built-in `includesString` filter function. In future releases, it may return more dynamic filter functions based on the nature of the data provided.
@@ -285,7 +284,7 @@ Currently, this function returns the built-in `includesString` filter function. 
 ### `getGlobalFilterFn`
 
 ```tsx
-getGlobalFilterFn: (columnId: string) => FilterFn<TFeatures, TFns, TData> | undefined
+getGlobalFilterFn: (columnId: string) => FilterFn<TFeatures, TData> | undefined
 ```
 
 Returns the global filter function (either user-defined or automatic, depending on configuration) for the table.

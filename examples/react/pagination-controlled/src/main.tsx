@@ -1,15 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import {
   QueryClient,
   QueryClientProvider,
   keepPreviousData,
   useQuery,
 } from '@tanstack/react-query'
-
 import './index.css'
-
 import { flexRender, useTable } from '@tanstack/react-table'
 import { fetchData } from './fetchData'
 import type { ColumnDef, PaginationState } from '@tanstack/react-table'

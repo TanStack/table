@@ -13,7 +13,6 @@ import {
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './ColumnFiltering.utils'
-import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -49,9 +48,8 @@ export const ColumnFiltering: TableFeature = {
 
   getDefaultColumnDef: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
-  >(): ColumnDef_ColumnFiltering<TFeatures, TFns, TData> => {
+  >(): ColumnDef_ColumnFiltering<TFeatures, TData> => {
     return {
       filterFn: 'auto',
     }
@@ -59,29 +57,27 @@ export const ColumnFiltering: TableFeature = {
 
   getDefaultTableOptions: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnFiltering<TFeatures, TFns, TData>>,
-  ): TableOptions_ColumnFiltering<TFeatures, TFns, TData> => {
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnFiltering<TFeatures, TData>>,
+  ): TableOptions_ColumnFiltering<TFeatures, TData> => {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),
       filterFromLeafRows: false,
       maxLeafRowFilterDepth: 100,
-    } as TableOptions_ColumnFiltering<TFeatures, TFns, TData>
+    } as TableOptions_ColumnFiltering<TFeatures, TData>
   },
 
   constructColumn: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TFns, TData, TValue> &
-      Partial<Column_ColumnFiltering<TFeatures, TFns, TData>>,
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnFiltering<TFeatures, TFns, TData>>,
+    column: Column<TFeatures, TData, TValue> &
+      Partial<Column_ColumnFiltering<TFeatures, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -108,25 +104,16 @@ export const ColumnFiltering: TableFeature = {
     ])
   },
 
-  constructRow: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    row: Row<TFeatures, TFns, TData> &
-      Partial<Row_ColumnFiltering<TFeatures, TFns, TData>>,
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
   ): void => {
     row.columnFilters = {}
     row.columnFiltersMeta = {}
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnFiltering<TFeatures, TFns, TData>>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {

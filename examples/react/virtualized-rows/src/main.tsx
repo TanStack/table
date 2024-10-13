@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
   ColumnSizing,
   RowSorting,
@@ -10,9 +8,7 @@ import {
   flexRender,
   useTable,
 } from '@tanstack/react-table'
-
 import { useVirtualizer } from '@tanstack/react-virtual'
-
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { ColumnDef } from '@tanstack/react-table'

@@ -17,7 +17,6 @@ import {
   table_resetColumnSizing,
   table_setColumnSizing,
 } from './ColumnSizing.utils'
-import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type {
   ColumnDef_ColumnSizing,
@@ -55,10 +54,9 @@ export const ColumnSizing: TableFeature = {
 
   getDefaultTableOptions: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData> & Partial<Table_ColumnSizing>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): ColumnSizingDefaultOptions => {
     return {
       onColumnSizingChange: makeStateUpdater('columnSizing', table),
@@ -67,13 +65,11 @@ export const ColumnSizing: TableFeature = {
 
   constructColumn: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TFns, TData, TValue> &
-      Partial<Column_ColumnSizing>,
-    table: Table<TFeatures, TFns, TData> & Partial<Table_ColumnSizing>,
+    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnSizing>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -103,25 +99,19 @@ export const ColumnSizing: TableFeature = {
 
   constructHeader: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    header: Header<TFeatures, TFns, TData, TValue> &
-      Partial<Header_ColumnSizing>,
-    table: Table<TFeatures, TFns, TData> & Partial<Table_ColumnSizing>,
+    header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnSizing>,
+    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
     header.getSize = () => header_getSize(header, table)
 
     header.getStart = () => header_getStart(header, table)
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData> & Partial<Table_ColumnSizing>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
     assignAPIs(table, table, [
       {

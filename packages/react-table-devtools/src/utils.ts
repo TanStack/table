@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { useTheme } from './theme'
 import useMediaQuery from './useMediaQuery'
 import type { Theme } from './theme'

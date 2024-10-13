@@ -32,11 +32,7 @@ const options = tableOptions<typeof _features, Person>({
 })
 
 declare module '@tanstack/react-table' {
-  interface TableMeta<
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  > {
+  interface TableMeta<TFeatures extends TableFeatures, TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
   }
 }

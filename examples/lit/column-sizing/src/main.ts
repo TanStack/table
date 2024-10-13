@@ -8,7 +8,6 @@ import {
   createCoreRowModel,
   flexRender,
 } from '@tanstack/lit-table'
-
 import { Person, makeData } from './makeData'
 
 const columns: Array<ColumnDef<any, Person>> = [

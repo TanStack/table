@@ -1,4 +1,3 @@
-import type { Fns } from './Fns'
 import type { CellData, RowData } from './type-utils'
 import type { ColumnDefBase_All } from './ColumnDef'
 import type { Cell } from './Cell'
@@ -12,59 +11,46 @@ import type { TableState } from './TableState'
 export interface TableFeature {
   constructCell?: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    cell: Cell<TFeatures, TFns, TData, TValue>,
-    table: Table<TFeatures, TFns, TData>,
+    cell: Cell<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ) => void
   constructColumn?: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TFns, TData, TValue>,
-    table: Table<TFeatures, TFns, TData>,
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ) => void
   constructHeader?: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    header: Header<TFeatures, TFns, TData, TValue>,
-    table: Table<TFeatures, TFns, TData>,
+    header: Header<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ) => void
-  constructRow?: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    row: Row<TFeatures, TFns, TData>,
-    table: Table<TFeatures, TFns, TData>,
+  constructRow?: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ) => void
-  constructTable?: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData>,
+  constructTable?: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
   ) => void
   getDefaultColumnDef?: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
-  >() => ColumnDefBase_All<TFeatures, TFns, TData, TValue>
+  >() => ColumnDefBase_All<TFeatures, TData, TValue>
   getDefaultTableOptions?: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData>,
-  ) => Partial<TableOptions_All<TFeatures, TFns, TData>>
+    table: Table<TFeatures, TData>,
+  ) => Partial<TableOptions_All<TFeatures, TData>>
   getInitialState?: <TFeatures extends TableFeatures>(
     initialState: TableState<TFeatures>,
   ) => Partial<TableState<TFeatures>>

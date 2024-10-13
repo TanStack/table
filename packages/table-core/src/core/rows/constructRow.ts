@@ -1,4 +1,3 @@
-import type { Fns } from '../../types/Fns'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -7,18 +6,17 @@ import type { Row_CoreProperties } from './Rows.types'
 
 export const constructRow = <
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TFns, TData>,
+  table: Table<TFeatures, TData>,
   id: string,
   original: TData,
   rowIndex: number,
   depth: number,
-  subRows?: Array<Row<TFeatures, TFns, TData>>,
+  subRows?: Array<Row<TFeatures, TData>>,
   parentId?: string,
-): Row<TFeatures, TFns, TData> => {
-  const row: Row_CoreProperties<TFeatures, TFns, TData> = {
+): Row<TFeatures, TData> => {
+  const row: Row_CoreProperties<TFeatures, TData> = {
     _uniqueValuesCache: {},
     _valuesCache: {},
     depth,
@@ -30,8 +28,8 @@ export const constructRow = <
   }
 
   for (const feature of Object.values(table._features)) {
-    feature?.constructRow?.(row as Row<TFeatures, TFns, TData>, table)
+    feature?.constructRow?.(row as Row<TFeatures, TData>, table)
   }
 
-  return row as Row<TFeatures, TFns, TData>
+  return row as Row<TFeatures, TData>
 }

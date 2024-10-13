@@ -18,7 +18,6 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './RowExpanding.utils'
-import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -47,26 +46,21 @@ export const RowExpanding: TableFeature = {
 
   getDefaultTableOptions: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowExpanding<TFeatures, TFns, TData>>,
-  ): TableOptions_RowExpanding<TFeatures, TFns, TData> => {
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowExpanding<TFeatures, TData>>,
+  ): TableOptions_RowExpanding<TFeatures, TData> => {
     return {
       onExpandedChange: makeStateUpdater('expanded', table),
       paginateExpandedRows: true,
     }
   },
 
-  constructRow: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    row: Row<TFeatures, TFns, TData> & Partial<Row_RowExpanding>,
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowExpanding<TFeatures, TFns, TData>>,
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData> & Partial<Row_RowExpanding>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {
     assignAPIs(row, table, [
       {
@@ -87,13 +81,9 @@ export const RowExpanding: TableFeature = {
     ])
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowExpanding<TFeatures, TFns, TData>>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {

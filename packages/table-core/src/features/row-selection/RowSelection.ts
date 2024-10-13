@@ -27,7 +27,6 @@ import {
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './RowSelection.utils'
-import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -58,12 +57,11 @@ export const RowSelection: TableFeature = {
 
   getDefaultTableOptions: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowSelection<TFeatures, TFns, TData>>,
-  ): TableOptions_RowSelection<TFeatures, TFns, TData> => {
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowSelection<TFeatures, TData>>,
+  ): TableOptions_RowSelection<TFeatures, TData> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
       enableRowSelection: true,
@@ -75,14 +73,10 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  constructRow: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    row: Row<TFeatures, TFns, TData> & Partial<Row_RowSelection>,
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowSelection<TFeatures, TFns, TData>>,
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData> & Partial<Row_RowSelection>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
     assignAPIs(row, table, [
       {
@@ -112,13 +106,9 @@ export const RowSelection: TableFeature = {
     ])
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowSelection<TFeatures, TFns, TData>>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {

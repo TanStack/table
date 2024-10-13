@@ -1,5 +1,4 @@
 import { isDev } from '../../utils'
-import type { Fns } from '../../types/Fns'
 import type { Table_CoreProperties } from './Tables.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -19,30 +18,27 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
 
 export function constructTable<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(
-  options: TableOptions<TFeatures, TFns, TData>,
-): Table<TFeatures, TFns, TData> {
+>(options: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
   if (isDev && (options.debugAll || options.debugTable)) {
     console.info('Constructing Table Instance...')
   }
 
-  const { _features = {} as TFeatures, _fns = {} as TFns } = options
+  const { _features = {} as TFeatures, _processingFns = {} } = options
 
   const featuresList: Array<TableFeature> = Object.values(_features)
 
-  const table = {} as unknown as Table<TFeatures, TFns, TData>
+  const table = {} as unknown as Table<TFeatures, TData>
 
   const defaultOptions = featuresList.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
-  }, {}) as TableOptions<TFeatures, TFns, TData>
+  }, {}) as TableOptions<TFeatures, TData>
 
   const initialState = getInitialTableState(_features, options.initialState)
 
-  const coreInstance: Table_CoreProperties<TFeatures, TFns, TData> = {
+  const coreInstance: Table_CoreProperties<TFeatures, TData> = {
     _features, // features get stored here immediately
-    _fns, // processing functions get stored here
+    _processingFns, // processing functions get stored here
     _rowModels: {}, // row models get cached here later
     options: {
       ...defaultOptions,

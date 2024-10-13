@@ -236,7 +236,7 @@ You can attach a few other properties to filter functions to customize their beh
 
 ```tsx
 const startsWithFilterFn = <TData extends MRT_RowData>(
-  row: Row<TFeatures, TFns, TData>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: number | string, //resolveFilterValue will transform this to a string
 ) =>

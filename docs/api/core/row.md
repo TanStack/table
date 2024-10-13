@@ -77,7 +77,7 @@ Returns a unique array of values from the row for a given columnId.
 ### `subRows`
 
 ```tsx
-type subRows = Row<TFeatures, TFns, TData>[]
+type subRows = Row<TFeatures, TData>[]
 ```
 
 An array of subRows for the row as returned and created by the `options.getSubRows` option.
@@ -85,7 +85,7 @@ An array of subRows for the row as returned and created by the `options.getSubRo
 ### `getParentRow`
 
 ```tsx
-type getParentRow = () => Row<TFeatures, TFns, TData> | undefined
+type getParentRow = () => Row<TFeatures, TData> | undefined
 ```
 
 Returns the parent row for the row, if it exists.
@@ -93,7 +93,7 @@ Returns the parent row for the row, if it exists.
 ### `getParentRows`
 
 ```tsx
-type getParentRows = () => Row<TFeatures, TFns, TData>[]
+type getParentRows = () => Row<TFeatures, TData>[]
 ```
 
 Returns the parent rows for the row, all the way up to a root row.
@@ -101,7 +101,7 @@ Returns the parent rows for the row, all the way up to a root row.
 ### `getLeafRows`
 
 ```tsx
-type getLeafRows = () => Row<TFeatures, TFns, TData>[]
+type getLeafRows = () => Row<TFeatures, TData>[]
 ```
 
 Returns the leaf rows for the row, not including any parent rows.
@@ -117,7 +117,7 @@ An array of the original subRows as returned by the `options.getSubRows` option.
 ### `getAllCells`
 
 ```tsx
-type getAllCells = () => Cell<TFeatures, TFns, TData>[]
+type getAllCells = () => Cell<TFeatures, TData>[]
 ```
 
 Returns all of the [Cells](../cell) for the row.

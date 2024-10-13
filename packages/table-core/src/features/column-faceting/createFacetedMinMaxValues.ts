@@ -1,7 +1,6 @@
 import { isDev, tableMemo } from '../../utils'
 import { row_getUniqueValues } from '../../core/rows/Rows.utils'
 import { column_getFacetedRowModel } from './ColumnFaceting.utils'
-import type { Fns } from '../../types/Fns'
 import type { RowModel } from '../../types/RowModel'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -9,10 +8,9 @@ import type { Table } from '../../types/Table'
 
 export function createFacetedMinMaxValues<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(): (
-  table: Table<TFeatures, TFns, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
 ) => () => undefined | [number, number] {
   return (table, columnId) =>
@@ -29,12 +27,11 @@ export function createFacetedMinMaxValues<
 
 function _createFacetedMinMaxValues<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TFns, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
-  facetedRowModel?: RowModel<TFeatures, TFns, TData>,
+  facetedRowModel?: RowModel<TFeatures, TData>,
 ): undefined | [number, number] {
   if (!facetedRowModel) return undefined
 

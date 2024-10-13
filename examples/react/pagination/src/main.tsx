@@ -1,13 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
+  ColumnFiltering,
+  RowPagination,
+  RowSorting,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFns,
   flexRender,
+  sortingFns,
+  tableFeatures,
+  processingFns,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -17,13 +22,23 @@ import type {
   PaginationState,
   Table,
 } from '@tanstack/react-table'
-
 import type { Person } from './makeData'
+
+const _features = tableFeatures({
+  ColumnFiltering,
+  RowPagination,
+  RowSorting,
+})
+
+const _processingFns = processingFns(_features, {
+  sortingFns,
+  filterFns,
+})
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -61,8 +76,8 @@ function App() {
     [],
   )
 
-  const [data, setData] = React.useState(() => makeData(100000))
-  const refreshData = () => setData(() => makeData(100000))
+  const [data, setData] = React.useState(() => makeData(1_000))
+  const refreshData = () => setData(() => makeData(100_000)) // stress test
 
   return (
     <>
@@ -88,7 +103,7 @@ function MyTable({
   columns,
 }: {
   data: Array<Person>
-  columns: Array<ColumnDef<any, Person>>
+  columns: Array<ColumnDef<typeof _features, Person>>
 }) {
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
@@ -96,6 +111,8 @@ function MyTable({
   })
 
   const table = useTable({
+    _features,
+    _processingFns,
     _rowModels: {
       Sorted: createSortedRowModel(),
       Filtered: createFilteredRowModel(),
@@ -154,7 +171,7 @@ function MyTable({
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
@@ -246,8 +263,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any, any>
-  table: Table<any>
+  column: Column<typeof _features, Person>
+  table: Table<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

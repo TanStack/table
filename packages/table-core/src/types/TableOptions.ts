@@ -1,4 +1,3 @@
-import type { Fns } from './Fns'
 import type { TableOptions_Cell } from '../core/cells/Cells.types'
 import type { TableOptions_Columns } from '../core/columns/Columns.types'
 import type { TableOptions_Headers } from '../core/headers/Headers.types'
@@ -22,22 +21,20 @@ import type { TableFeatures } from './TableFeatures'
 
 export interface TableOptions_Core<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> extends TableOptions_Table<TFeatures, TFns, TData>,
+> extends TableOptions_Table<TFeatures, TData>,
     TableOptions_Cell,
-    TableOptions_Columns<TFeatures, TFns, TData>,
-    TableOptions_Rows<TFeatures, TFns, TData>,
+    TableOptions_Columns<TFeatures, TData>,
+    TableOptions_Rows<TFeatures, TData>,
     TableOptions_Headers {}
 
 export type TableOptions<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = TableOptions_Core<TFeatures, TFns, TData> &
+> = TableOptions_Core<TFeatures, TData> &
   UnionToIntersection<
     | ('ColumnFiltering' extends keyof TFeatures
-        ? TableOptions_ColumnFiltering<TFeatures, TFns, TData>
+        ? TableOptions_ColumnFiltering<TFeatures, TData>
         : never)
     | ('ColumnGrouping' extends keyof TFeatures
         ? TableOptions_ColumnGrouping
@@ -58,40 +55,39 @@ export type TableOptions<
         ? TableOptions_ColumnVisibility
         : never)
     | ('GlobalFiltering' extends keyof TFeatures
-        ? TableOptions_GlobalFiltering<TFeatures, TFns, TData>
+        ? TableOptions_GlobalFiltering<TFeatures, TData>
         : never)
     | ('RowExpanding' extends keyof TFeatures
-        ? TableOptions_RowExpanding<TFeatures, TFns, TData>
+        ? TableOptions_RowExpanding<TFeatures, TData>
         : never)
     | ('RowPagination' extends keyof TFeatures
         ? TableOptions_RowPagination
         : never)
     | ('RowPinning' extends keyof TFeatures
-        ? TableOptions_RowPinning<TFeatures, TFns, TData>
+        ? TableOptions_RowPinning<TFeatures, TData>
         : never)
     | ('RowSelection' extends keyof TFeatures
-        ? TableOptions_RowSelection<TFeatures, TFns, TData>
+        ? TableOptions_RowSelection<TFeatures, TData>
         : never)
     | ('RowSorting' extends keyof TFeatures ? TableOptions_RowSorting : never)
   >
 
 export type TableOptions_All<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = TableOptions_Core<TFeatures, TFns, TData> &
+> = TableOptions_Core<TFeatures, TData> &
   Partial<
-    TableOptions_ColumnFiltering<TFeatures, TFns, TData> &
+    TableOptions_ColumnFiltering<TFeatures, TData> &
       TableOptions_ColumnGrouping &
       TableOptions_ColumnOrdering &
       TableOptions_ColumnPinning &
       TableOptions_ColumnResizing &
       TableOptions_ColumnSizing &
       TableOptions_ColumnVisibility &
-      TableOptions_GlobalFiltering<TFeatures, TFns, TData> &
-      TableOptions_RowExpanding<TFeatures, TFns, TData> &
+      TableOptions_GlobalFiltering<TFeatures, TData> &
+      TableOptions_RowExpanding<TFeatures, TData> &
       TableOptions_RowPagination &
-      TableOptions_RowPinning<TFeatures, TFns, TData> &
-      TableOptions_RowSelection<TFeatures, TFns, TData> &
+      TableOptions_RowPinning<TFeatures, TData> &
+      TableOptions_RowSelection<TFeatures, TData> &
       TableOptions_RowSorting
   >

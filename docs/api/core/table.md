@@ -6,8 +6,8 @@ title: Table APIs
 
 ```tsx
 type useTable = <TData extends AnyData>(
-  options: TableOptions<TFeatures, TFns, TData>
-) => Table<TFeatures, TFns, TData>
+  options: TableOptions<TFeatures, TData>
+) => Table<TFeatures, TData>
 ```
 
 These functions are used to create a table. Which one you use depends on which framework adapter you are using.
@@ -31,7 +31,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 ### `columns`
 
 ```tsx
-type columns = ColumnDef<TFeatures, TFns, TData>[]
+type columns = ColumnDef<TFeatures, TData>[]
 ```
 
 The array of column defs to use for the table. See the [Column Defs Guide](../../docs/guide/column-defs) for more information on creating column definitions.
@@ -39,7 +39,7 @@ The array of column defs to use for the table. See the [Column Defs Guide](../..
 ### `defaultColumn`
 
 ```tsx
-defaultColumn?: Partial<ColumnDef<TFeatures, TFns, TData>>
+defaultColumn?: Partial<ColumnDef<TFeatures, TData>>
 ```
 
 Default column options to use for all column defs supplied to the table. This is useful for providing default cell/header/footer renderers, sorting/filtering/grouping options, etc. All column definitions passed to `options.columns` are merged with this default column definition to produce the final column definitions.
@@ -83,7 +83,7 @@ You can pass any object to `options.meta` and access it anywhere the `table` is 
 
 ```tsx
 declare module '@tanstack/table-core' {
-  interface TableMeta<TFeatures extends TableFeatures, TFns extends Fns<TFeatures, TFns, TData>, TData extends RowData> {
+  interface TableMeta<TFeatures extends TableFeatures,  TData extends RowData> {
     foo: string
   }
 }
@@ -199,7 +199,7 @@ This option is used to optionally implement the merging of table options. Some f
 ### `getCoreRowModel`
 
 ```tsx
-getCoreRowModel: (table: Table<TFeatures, TFns, TData>) => () => RowModel<TFeatures, TFns, TData>
+getCoreRowModel: (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData>
 ```
 
 This required option is a factory for a function that computes and returns the core row model for the table. It is called **once** per table and should return a **new function** which will calculate and return the row model for the table.
@@ -223,7 +223,7 @@ This optional function is used to access the sub rows for any given row. If you 
 getRowId?: (
   originalRow: TData,
   index: number,
-  parent?: Row<TFeatures, TFns, TData>
+  parent?: Row<TFeatures, TData>
 ) => string
 ```
 
@@ -281,7 +281,7 @@ Call this function to update the table state. It's recommended you pass an updat
 ### `options`
 
 ```tsx
-options: TableOptions<TFeatures, TFns, TData>
+options: TableOptions<TFeatures, TData>
 ```
 
 A read-only reference to the table's current options.
@@ -291,7 +291,7 @@ A read-only reference to the table's current options.
 ### `setOptions`
 
 ```tsx
-setOptions: (newOptions: Updater<TableOptions<TFeatures, TFns, TData>>) => void
+setOptions: (newOptions: Updater<TableOptions<TFeatures, TData>>) => void
 ```
 
 > ⚠️ This function is generally used by adapters to update the table options. It can be used to update the table options directly, but it is generally not recommended to bypass your adapters strategy for updating table options.
@@ -300,9 +300,9 @@ setOptions: (newOptions: Updater<TableOptions<TFeatures, TFns, TData>>) => void
 
 ```tsx
 getCoreRowModel: () => {
-  rows: Row<TFeatures, TFns, TData>[],
-  flatRows: Row<TFeatures, TFns, TData>[],
-  rowsById: Record<string, Row<TFeatures, TFns, TData>>,
+  rows: Row<TFeatures, TData>[],
+  flatRows: Row<TFeatures, TData>[],
+  rowsById: Record<string, Row<TFeatures, TData>>,
 }
 ```
 
@@ -312,9 +312,9 @@ Returns the core row model before any processing has been applied.
 
 ```tsx
 getRowModel: () => {
-  rows: Row<TFeatures, TFns, TData>[],
-  flatRows: Row<TFeatures, TFns, TData>[],
-  rowsById: Record<string, Row<TFeatures, TFns, TData>>,
+  rows: Row<TFeatures, TData>[],
+  flatRows: Row<TFeatures, TData>[],
+  rowsById: Record<string, Row<TFeatures, TData>>,
 }
 ```
 
@@ -323,7 +323,7 @@ Returns the final model after all processing from other used features has been a
 ### `getAllColumns`
 
 ```tsx
-type getAllColumns = () => Column<TFeatures, TFns, TData>[]
+type getAllColumns = () => Column<TFeatures, TData>[]
 ```
 
 Returns all columns in the table in their normalized and nested hierarchy, mirrored from the column defs passed to the table.
@@ -331,7 +331,7 @@ Returns all columns in the table in their normalized and nested hierarchy, mirro
 ### `getAllFlatColumns`
 
 ```tsx
-type getAllFlatColumns = () => Column<TFeatures, TFns, TData>[]
+type getAllFlatColumns = () => Column<TFeatures, TData>[]
 ```
 
 Returns all columns in the table flattened to a single level. This includes parent column objects throughout the hierarchy.
@@ -339,7 +339,7 @@ Returns all columns in the table flattened to a single level. This includes pare
 ### `getAllLeafColumns`
 
 ```tsx
-type getAllLeafColumns = () => Column<TFeatures, TFns, TData>[]
+type getAllLeafColumns = () => Column<TFeatures, TData>[]
 ```
 
 Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
@@ -347,7 +347,7 @@ Returns all leaf-node columns in the table flattened to a single level. This doe
 ### `getColumn`
 
 ```tsx
-type getColumn = (id: string) => Column<TFeatures, TFns, TData> | undefined
+type getColumn = (id: string) => Column<TFeatures, TData> | undefined
 ```
 
 Returns a single column by its ID.
@@ -355,7 +355,7 @@ Returns a single column by its ID.
 ### `getHeaderGroups`
 
 ```tsx
-type getHeaderGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
+type getHeaderGroups = () => HeaderGroup<TFeatures, TData>[]
 ```
 
 Returns the header groups for the table.
@@ -363,7 +363,7 @@ Returns the header groups for the table.
 ### `getFooterGroups`
 
 ```tsx
-type getFooterGroups = () => HeaderGroup<TFeatures, TFns, TData>[]
+type getFooterGroups = () => HeaderGroup<TFeatures, TData>[]
 ```
 
 Returns the footer groups for the table.
@@ -371,7 +371,7 @@ Returns the footer groups for the table.
 ### `getFlatHeaders`
 
 ```tsx
-type getFlatHeaders = () => Header<TFeatures, TFns, TData>[]
+type getFlatHeaders = () => Header<TFeatures, TData>[]
 ```
 
 Returns a flattened array of Header objects for the table, including parent headers.
@@ -379,7 +379,7 @@ Returns a flattened array of Header objects for the table, including parent head
 ### `getLeafHeaders`
 
 ```tsx
-type getLeafHeaders = () => Header<TFeatures, TFns, TData>[]
+type getLeafHeaders = () => Header<TFeatures, TData>[]
 ```
 
 Returns a flattened array of leaf-node Header objects for the table.

@@ -1,4 +1,4 @@
-import type { Fns, Fns_All } from './Fns'
+import type { ProcessingFns_All } from './ProcessingFns'
 import type { TableState_All } from './TableState'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
@@ -28,68 +28,65 @@ import type { TableOptions_All } from './TableOptions'
  */
 export interface Table_Core<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> extends Table_Table<TFeatures, TFns, TData>,
-    Table_Columns<TFeatures, TFns, TData>,
-    Table_Rows<TFeatures, TFns, TData>,
-    Table_Headers<TFeatures, TFns, TData> {}
+> extends Table_Table<TFeatures, TData>,
+    Table_Columns<TFeatures, TData>,
+    Table_Rows<TFeatures, TData>,
+    Table_Headers<TFeatures, TData> {}
 
 /**
  * The table object that includes both the core table functionality and the features that are enabled via the `_features` table option.
  */
 export type Table<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = Table_Core<TFeatures, TFns, TData> &
+> = Table_Core<TFeatures, TData> &
   UnionToIntersection<
     | ('ColumnFiltering' extends keyof TFeatures
-        ? Table_ColumnFiltering<TFeatures, TFns, TData>
+        ? Table_ColumnFiltering<TFeatures, TData>
         : never)
     | ('ColumnGrouping' extends keyof TFeatures
-        ? Table_ColumnGrouping<TFeatures, TFns, TData>
+        ? Table_ColumnGrouping<TFeatures, TData>
         : never)
     | ('ColumnOrdering' extends keyof TFeatures
-        ? Table_ColumnOrdering<TFeatures, TFns, TData>
+        ? Table_ColumnOrdering<TFeatures, TData>
         : never)
     | ('ColumnPinning' extends keyof TFeatures
-        ? Table_ColumnPinning<TFeatures, TFns, TData>
+        ? Table_ColumnPinning<TFeatures, TData>
         : never)
     | ('ColumnResizing' extends keyof TFeatures ? Table_ColumnResizing : never)
     | ('ColumnSizing' extends keyof TFeatures ? Table_ColumnSizing : never)
     | ('ColumnVisibility' extends keyof TFeatures
-        ? Table_ColumnVisibility<TFeatures, TFns, TData>
+        ? Table_ColumnVisibility<TFeatures, TData>
         : never)
     | ('GlobalFaceting' extends keyof TFeatures
-        ? Table_GlobalFaceting<TFeatures, TFns, TData>
+        ? Table_GlobalFaceting<TFeatures, TData>
         : never)
     | ('GlobalFiltering' extends keyof TFeatures
-        ? Table_GlobalFiltering<TFeatures, TFns, TData>
+        ? Table_GlobalFiltering<TFeatures, TData>
         : never)
     | ('RowExpanding' extends keyof TFeatures
-        ? Table_RowExpanding<TFeatures, TFns, TData>
+        ? Table_RowExpanding<TFeatures, TData>
         : never)
     | ('RowPagination' extends keyof TFeatures
-        ? Table_RowPagination<TFeatures, TFns, TData>
+        ? Table_RowPagination<TFeatures, TData>
         : never)
     | ('RowPinning' extends keyof TFeatures
-        ? Table_RowPinning<TFeatures, TFns, TData>
+        ? Table_RowPinning<TFeatures, TData>
         : never)
     | ('RowSelection' extends keyof TFeatures
-        ? Table_RowSelection<TFeatures, TFns, TData>
+        ? Table_RowSelection<TFeatures, TData>
         : never)
     | ('RowSorting' extends keyof TFeatures
-        ? Table_RowSorting<TFeatures, TFns, TData>
+        ? Table_RowSorting<TFeatures, TData>
         : never)
   >
 
 export type Table_Internal<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = Table<TFeatures, TFns, TData> & {
-  _fns: Fns_All<TFeatures, TFns, TData>
+> = Table<TFeatures, TData> & {
+  _processingFns: ProcessingFns_All<TFeatures, TData>
   getState: () => TableState_All
-  options: TableOptions_All<TFeatures, TFns, TData>
+  options: TableOptions_All<TFeatures, TData>
 }

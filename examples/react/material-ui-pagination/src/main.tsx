@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
@@ -12,14 +11,12 @@ import TableRow from '@mui/material/TableRow'
 import TablePagination from '@mui/material/TablePagination'
 import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
-
 import {
   createFilteredRowModel,
   createPaginatedRowModel,
   flexRender,
   useTable,
 } from '@tanstack/react-table'
-
 import TablePaginationActions from './actions'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
@@ -201,7 +198,7 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any, any>
+  column: Column<any, any>
   table: ReactTable<any>
 }) {
   const firstValue = table

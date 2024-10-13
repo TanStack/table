@@ -1,4 +1,3 @@
-import type { Fns } from './types/Fns'
 import type { Table } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
@@ -130,10 +129,9 @@ export function memo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
 // TODO delete
 export function getMemoOptions<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
-  tableOptions: TableOptions<TFeatures, TFns, TData>,
+  tableOptions: TableOptions<TFeatures, TData>,
   debugLevel:
     | 'debugAll'
     | 'debugCells'
@@ -245,14 +243,13 @@ interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
 
 export function assignAPIs<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
   TObject extends Record<string, any>,
   TDeps extends ReadonlyArray<any>,
   TDepArgs,
 >(
   obj: TObject extends Record<string, infer U> ? U : never, // table, row, cell, column, header
-  table: Table<TFeatures, TFns, TData>,
+  table: Table<TFeatures, TData>,
   apis: Array<API<TDeps, NoInfer<TDepArgs>>>,
 ): void {
   apis.forEach(({ fn, memoDeps }) => {

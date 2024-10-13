@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
 
 // 3 TanStack Libraries!!!
@@ -18,7 +17,6 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 import { useVirtualizer } from '@tanstack/react-virtual'
-
 import { fetchData } from './makeData'
 import type { Person, PersonApiResponse } from './makeData'
 import type { ColumnDef, OnChangeFn, SortingState } from '@tanstack/react-table'

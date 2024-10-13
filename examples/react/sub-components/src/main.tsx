@@ -1,8 +1,6 @@
 import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
   RowExpanding,
   createExpandedRowModel,
@@ -98,11 +96,11 @@ const columns: Array<ColumnDef<any, Person>> = [
 
 type TableProps<TFeatures extends TableFeatures, TData> = {
   data: Array<TData>
-  columns: Array<ColumnDef<TFeatures, TFns, TData>>
+  columns: Array<ColumnDef<TFeatures, TData>>
   renderSubComponent: (props: {
-    row: Row<TFeatures, TFns, TData>
+    row: Row<TFeatures, TData>
   }) => React.ReactElement
-  getRowCanExpand: (row: Row<TFeatures, TFns, TData>) => boolean
+  getRowCanExpand: (row: Row<TFeatures, TData>) => boolean
 }
 
 function Table({

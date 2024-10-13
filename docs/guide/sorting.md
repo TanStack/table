@@ -130,7 +130,7 @@ const table = useTable({
 })
 ```
 
-### Sorting Fns
+### Sorting ProcessingFns
 
 The default sorting function for all columns is inferred from the data type of the column. However, it can be useful to define the exact sorting function that you want to use for a specific column, especially if any of your data is nullable or not a standard data type.
 
@@ -153,7 +153,7 @@ When defining a custom sorting function in either the `sortingFns` table option 
 
 ```tsx
 //optionally use the SortingFn to infer the parameter types
-const myCustomSortingFn: SortingFn<TFeatures, TFns, TData> = (rowA: Row<TFeatures, TFns, TData>, rowB: Row<TFeatures, TFns, TData>, columnId: string) => {
+const myCustomSortingFn: SortingFn<TFeatures, TData> = (rowA: Row<TFeatures, TData>, rowB: Row<TFeatures, TData>, columnId: string) => {
   return //-1, 0, or 1 - access any row data using rowA.original and rowB.original
 }
 ```

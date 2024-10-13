@@ -1,5 +1,5 @@
 import { createColumnHelper } from './columnHelper'
-import type { Fns } from '../types/Fns'
+import type { ProcessingFns_All } from '../types/ProcessingFns'
 import type { ColumnHelper } from './columnHelper'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
@@ -12,9 +12,8 @@ import type { TableOptions } from '../types/TableOptions'
  */
 export type TableHelperOptions<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
-> = Omit<TableOptions<TFeatures, TFns, TData>, 'columns' | 'data' | 'state'> & {
+> = Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'> & {
   _features: TFeatures
   TData: TData // provide a cast for the TData type
 }
@@ -24,21 +23,18 @@ export type TableHelperOptions<
  */
 export type TableHelper_Core<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > = {
-  columnHelper: ColumnHelper<TFeatures, TFns, TData>
+  columnHelper: ColumnHelper<TFeatures, TData>
   features: TFeatures
-  options: Omit<
-    TableOptions<TFeatures, TFns, TData>,
-    'columns' | 'data' | 'state'
-  >
+  processingFns: ProcessingFns_All<TFeatures, TData>
+  options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'>
   tableCreator: (
     tableOptions: Omit<
-      TableOptions<TFeatures, TFns, TData>,
+      TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
     >,
-  ) => Table<TFeatures, TFns, TData>
+  ) => Table<TFeatures, TData>
 }
 
 /**
@@ -46,18 +42,18 @@ export type TableHelper_Core<
  */
 export function constructTableHelper<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 >(
   tableCreator: (
-    tableOptions: TableOptions<TFeatures, TFns, TData>,
-  ) => Table<TFeatures, TFns, TData>,
-  tableHelperOptions: TableHelperOptions<TFeatures, TFns, TData>,
-): TableHelper_Core<TFeatures, TFns, TData> {
+    tableOptions: TableOptions<TFeatures, TData>,
+  ) => Table<TFeatures, TData>,
+  tableHelperOptions: TableHelperOptions<TFeatures, TData>,
+): TableHelper_Core<TFeatures, TData> {
   const { TData: _TData, ..._tableHelperOptions } = tableHelperOptions
   return {
-    columnHelper: createColumnHelper<TFeatures, TFns, TData>(),
+    columnHelper: createColumnHelper<TFeatures, TData>(),
     features: tableHelperOptions._features,
+    processingFns: tableHelperOptions._processingFns ?? {},
     options: _tableHelperOptions as any,
     tableCreator: (tableOptions) =>
       tableCreator({ ...(_tableHelperOptions as any), ...tableOptions }),

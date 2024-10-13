@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
 import {
   FlexRender,
   createCoreRowModel,
@@ -8,7 +7,6 @@ import {
   createColumnHelper,
   PaginationState,
 } from '@tanstack/vue-table'
-
 import useService from './useService'
 
 type Post = {

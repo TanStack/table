@@ -27,7 +27,7 @@ The depth of the header group, zero-indexed based.
 ### `headers`
 
 ```tsx
-type headers = Header<TFeatures, TFns, TData>[]
+type headers = Header<TFeatures, TData>[]
 ```
 
 An array of [Header](../header) objects that belong to this header group

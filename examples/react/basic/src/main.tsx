@@ -64,7 +64,7 @@ const defaultData: Array<Person> = [
 const _features = tableFeatures({}) // util method to create sharable TFeatures object/type
 
 // 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns. Alternatively, check out the createTableHelper/createColumnHelper util for an even more type-safe way to define columns.
-const columns: Array<ColumnDef<typeof _features, {}, Person>> = [
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName', // accessorKey method (most common for simple use-cases)
     header: 'First Name',

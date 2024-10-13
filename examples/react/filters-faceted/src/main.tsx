@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
   ColumnFaceting,
   ColumnFiltering,
@@ -18,11 +16,11 @@ import {
   flexRender,
   sortingFns,
   tableFeatures,
-  tableFns,
+  processingFns,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { Fns } from '../../../../packages/table-core/dist/esm/types/Fns'
+import type { ProcessingFns } from '../../../../packages/table-core/dist/esm/types/ProcessingFns'
 import type {
   CellData,
   Column,
@@ -31,7 +29,6 @@ import type {
   RowData,
   TableFeatures,
 } from '@tanstack/react-table'
-
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
@@ -41,7 +38,7 @@ const _features = tableFeatures({
   RowSorting,
 })
 
-const _fns = tableFns(_features, {
+const _processingFns = processingFns(_features, {
   filterFns,
   sortingFns,
 })
@@ -50,7 +47,6 @@ declare module '@tanstack/react-table' {
   // allows us to define custom properties for our columns
   interface ColumnMeta<
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   > {
@@ -63,9 +59,7 @@ function App() {
     [],
   )
 
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof _features, typeof _fns, Person>>
-  >(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -115,7 +109,7 @@ function App() {
 
   const table = useTable({
     _features,
-    _fns,
+    _processingFns,
     _rowModels: {
       Filtered: createFilteredRowModel(), // client-side filtering
       Paginated: createPaginatedRowModel(),

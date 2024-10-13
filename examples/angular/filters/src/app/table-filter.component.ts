@@ -13,7 +13,6 @@ declare module '@tanstack/angular-table' {
   // allows us to define custom properties for our columns
   interface ColumnMeta<
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   > {
@@ -93,12 +92,11 @@ declare module '@tanstack/angular-table' {
 })
 export class FilterComponent<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
-  column = input.required<Column<any, any, any>>()
+  column = input.required<Column<any, any>>()
 
-  table = input.required<Table<TFeatures, TFns, TData>>()
+  table = input.required<Table<TFeatures, TData>>()
 
   readonly filterVariant = computed(() => {
     return (this.column().columnDef.meta ?? {}).filterVariant

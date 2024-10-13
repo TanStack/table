@@ -21,7 +21,6 @@ export * from './types/type-utils'
 export * from './core/coreFeatures'
 export * from './helpers/columnHelper'
 export * from './helpers/tableFeatures'
-export * from './helpers/tableFns'
 export * from './helpers/tableHelper'
 export * from './helpers/tableOptions'
 export * from './utils'
@@ -148,7 +147,7 @@ export * from './features/row-sorting/RowSorting.utils'
 export * from './features/row-sorting/createSortedRowModel'
 
 /**
- * Fns
+ * ProcessingFns
  */
 
 export * from './fns/aggregationFns'

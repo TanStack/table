@@ -1,15 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
   RowSorting,
   createSortedRowModel,
   flexRender,
   sortingFns,
   tableFeatures,
-  tableFns,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -20,12 +17,8 @@ const _features = tableFeatures({
   RowSorting,
 })
 
-const _fns = tableFns(_features, {
-  sortingFns,
-})
-
 // custom sorting logic for one of our enum columns
-const sortStatusFn: SortingFn<typeof _features, typeof _fns, Person> = (
+const sortStatusFn: SortingFn<typeof _features, Person> = (
   rowA,
   rowB,
   _columnId,
@@ -42,9 +35,7 @@ function App() {
   // optionally, manage sorting state in your own state management
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof _features, typeof _fns, Person>>
-  >(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -98,7 +89,9 @@ function App() {
 
   const table = useTable({
     _features,
-    _fns,
+    _processingFns: {
+      sortingFns,
+    },
     _rowModels: {
       Sorted: createSortedRowModel(), // client-side sorting
     },

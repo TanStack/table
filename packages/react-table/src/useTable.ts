@@ -4,7 +4,7 @@ import {
   coreFeatures,
   getInitialTableState,
 } from '@tanstack/table-core'
-import type { Fns } from '../../table-core/dist/esm/types/Fns'
+import type { ProcessingFns } from '../../table-core/dist/esm/types/ProcessingFns'
 import type {
   RowData,
   Table,
@@ -16,14 +16,10 @@ import type {
 /**
  * Creates a table instance and caches it in a ref so that it will only be constructed once.
  */
-function useTableRef<
-  TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
-  TData extends RowData,
->(
-  options: TableOptions<TFeatures, TFns, TData>,
-): Table<TFeatures, TFns, TData> {
-  const tableRef = useRef<Table<TFeatures, TFns, TData>>()
+function useTableRef<TFeatures extends TableFeatures, TData extends RowData>(
+  options: TableOptions<TFeatures, TData>,
+): Table<TFeatures, TData> {
+  const tableRef = useRef<Table<TFeatures, TData>>()
 
   if (!tableRef.current) {
     tableRef.current = constructTable(options)
@@ -38,18 +34,15 @@ function useTableRef<
  */
 export function useTable<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
->(
-  tableOptions: TableOptions<TFeatures, TFns, TData>,
-): Table<TFeatures, TFns, TData> {
+>(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
   const _features = { ...coreFeatures, ...tableOptions._features }
 
   const [state, setState] = useState<TableState<TFeatures>>(() =>
     getInitialTableState(_features, tableOptions.initialState),
   )
 
-  const statefulOptions: TableOptions<TFeatures, TFns, TData> = {
+  const statefulOptions: TableOptions<TFeatures, TData> = {
     ...tableOptions,
     _features,
     state: { ...state, ...tableOptions.state },

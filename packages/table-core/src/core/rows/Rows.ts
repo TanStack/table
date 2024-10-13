@@ -12,20 +12,15 @@ import {
   table_getRow,
   table_getRowId,
 } from './Rows.utils'
-import type { Fns } from '../../types/Fns'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
 export const Rows: TableFeature = {
-  constructRow: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    row: Row<TFeatures, TFns, TData>,
-    table: Table<TFeatures, TFns, TData>,
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(row, table, [
       {
@@ -57,12 +52,8 @@ export const Rows: TableFeature = {
     ])
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(table, table, [
       {

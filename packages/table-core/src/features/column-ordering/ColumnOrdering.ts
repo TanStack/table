@@ -1,4 +1,4 @@
-import { assignAPIs, getMemoOptions, makeStateUpdater, memo } from '../../utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
 import { table_getState } from '../../core/table/Tables.utils'
 import {
   column_getIndex,
@@ -8,7 +8,6 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './ColumnOrdering.utils'
-import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type {
   ColumnOrderDefaultOptions,
@@ -38,11 +37,10 @@ export const ColumnOrdering: TableFeature = {
 
   getDefaultTableOptions: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnOrdering<TFeatures, TFns, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): ColumnOrderDefaultOptions => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', table),
@@ -51,14 +49,12 @@ export const ColumnOrdering: TableFeature = {
 
   constructColumn: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TFns, TData, TValue> &
-      Partial<Column_ColumnOrdering>,
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnOrdering<TFeatures, TFns, TData>>,
+    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnOrdering>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -79,13 +75,9 @@ export const ColumnOrdering: TableFeature = {
     ])
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_ColumnOrdering<TFeatures, TFns, TData>>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData> &
+      Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {

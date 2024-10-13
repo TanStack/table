@@ -12,7 +12,6 @@ import React from 'react'
 import styled from '@emotion/styled'
 import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
-
 import { useSkipper } from './hooks'
 import {
   columns,

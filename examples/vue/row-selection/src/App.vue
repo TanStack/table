@@ -7,7 +7,6 @@ import {
   RowSelectionState,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
-
 import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
 import { makeData, Person } from './makeData'
 

@@ -47,7 +47,7 @@ function App() {
   const [includeParentRows, setIncludeParentRows] = React.useState(false)
   const [copyPinnedRows, setCopyPinnedRows] = React.useState(false)
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, {}, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         id: 'pin',

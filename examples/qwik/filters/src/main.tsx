@@ -1,8 +1,6 @@
 import '@builder.io/qwik/qwikloader.js'
-
 import { $, component$, render, useSignal } from '@builder.io/qwik'
 import './index.css'
-
 import {
   createColumnHelper,
   createCoreRowModel,
@@ -16,7 +14,6 @@ import {
   sortingFns,
   useTable,
 } from '@tanstack/qwik-table'
-
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import type {
   Column,

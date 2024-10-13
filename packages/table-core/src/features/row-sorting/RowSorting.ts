@@ -17,7 +17,6 @@ import {
   table_resetSorting,
   table_setSorting,
 } from './RowSorting.utils'
-import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type {
   ColumnDef_RowSorting,
@@ -46,9 +45,8 @@ export const RowSorting: TableFeature = {
 
   getDefaultColumnDef: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
-  >(): ColumnDef_RowSorting<TFeatures, TFns, TData> => {
+  >(): ColumnDef_RowSorting<TFeatures, TData> => {
     return {
       sortingFn: 'auto',
       sortUndefined: 1,
@@ -57,10 +55,9 @@ export const RowSorting: TableFeature = {
 
   getDefaultTableOptions: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData>,
+    table: Table<TFeatures, TData>,
   ): TableOptions_RowSorting => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
@@ -72,12 +69,11 @@ export const RowSorting: TableFeature = {
 
   constructColumn: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TFns, TData, TValue>,
-    table: Table<TFeatures, TFns, TData>,
+    column: Column<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(column, table, [
       {
@@ -119,12 +115,8 @@ export const RowSorting: TableFeature = {
     ])
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(table, table, [
       {

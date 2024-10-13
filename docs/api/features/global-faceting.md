@@ -8,7 +8,7 @@ id: global-faceting
 ### `getGlobalFacetedRowModel`
 
 ```tsx
-getGlobalFacetedRowModel: () => RowModel<TFeatures, TFns, TData>
+getGlobalFacetedRowModel: () => RowModel<TFeatures, TData>
 ```
 
 Returns the faceted row model for the global filter.

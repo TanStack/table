@@ -1,4 +1,3 @@
-import type { Fns } from '../../types/Fns'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
@@ -59,7 +58,6 @@ export interface ColumnOrderDefaultOptions {
 
 export interface Table_ColumnOrdering<
   TFeatures extends TableFeatures,
-  TFns extends Fns<TFeatures, TFns, TData>,
   TData extends RowData,
 > {
   /**

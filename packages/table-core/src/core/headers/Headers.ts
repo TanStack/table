@@ -13,7 +13,6 @@ import {
   table_getHeaderGroups,
   table_getLeafHeaders,
 } from './Headers.utils'
-import type { Fns } from '../../types/Fns'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -22,24 +21,19 @@ import type { Header } from '../../types/Header'
 export const Headers: TableFeature = {
   constructHeader: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    header: Header<TFeatures, TFns, TData, TValue>,
-    table: Table<TFeatures, TFns, TData>,
+    header: Header<TFeatures, TData, TValue>,
+    table: Table<TFeatures, TData>,
   ): void => {
     header.getLeafHeaders = () => header_getLeafHeaders(header)
 
     header.getContext = () => header_getContext(header, table)
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TFns, TData>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, table, [
       {

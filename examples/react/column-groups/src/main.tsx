@@ -1,8 +1,6 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
-
 import './index.css'
-
 import {
   createColumnHelper,
   flexRender,
@@ -66,7 +64,7 @@ const columns = [
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
       }),
-    ] as Array<ColumnDef<typeof _features, {}, Person>>,
+    ] as Array<ColumnDef<typeof _features, Person>>,
   }),
   columnHelper.group({
     header: 'Info',
@@ -91,9 +89,9 @@ const columns = [
             header: 'Profile Progress',
             footer: (props) => props.column.id,
           }),
-        ] as Array<ColumnDef<typeof _features, {}, Person>>,
+        ] as Array<ColumnDef<typeof _features, Person>>,
       }),
-    ] as Array<ColumnDef<typeof _features, {}, Person>>,
+    ] as Array<ColumnDef<typeof _features, Person>>,
   }),
 ]
 

@@ -1,8 +1,6 @@
 import '@builder.io/qwik/qwikloader.js'
 import { component$, render } from '@builder.io/qwik'
-
 import './index.css'
-
 import {
   createColumnHelper,
   createCoreRowModel,

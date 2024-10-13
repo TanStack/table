@@ -1,8 +1,6 @@
 import React from 'react'
-
 import useLocalStorage from './useLocalStorage'
 import { useIsMounted } from './utils'
-
 import { Button, Panel } from './styledComponents'
 import { ThemeProvider, defaultTheme as theme } from './theme'
 // import { getQueryStatusLabel, getQueryStatusColor } from './utils'
@@ -152,7 +150,7 @@ export const ReactTableDevtoolsPanel = React.forwardRef<
     setIsOpen,
     ...panelProps
   } = props as DevtoolsPanelOptions & {
-    table: Table<any, any, any>
+    table: Table<any, any>
   }
 
   // const [activeMatchId, setActiveRouteId] = useLocalStorage(

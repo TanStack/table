@@ -13,7 +13,6 @@ import {
   table_resetRowPinning,
   table_setRowPinning,
 } from './RowPinning.utils'
-import type { Fns } from '../../types/Fns'
 import type { TableState } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -43,25 +42,20 @@ export const RowPinning: TableFeature = {
 
   getDefaultTableOptions: <
     TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowPinning<TFeatures, TFns, TData>>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowPinning<TFeatures, TData>>,
   ): RowPinningDefaultOptions => {
     return {
       onRowPinningChange: makeStateUpdater('rowPinning', table),
     }
   },
 
-  constructRow: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    row: Row<TFeatures, TFns, TData> & Partial<Row_RowPinning>,
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowPinning<TFeatures, TFns, TData>>,
+  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData> & Partial<Row_RowPinning>,
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowPinning<TFeatures, TData>>,
   ): void => {
     assignAPIs(row, table, [
       {
@@ -84,13 +78,9 @@ export const RowPinning: TableFeature = {
     ])
   },
 
-  constructTable: <
-    TFeatures extends TableFeatures,
-    TFns extends Fns<TFeatures, TFns, TData>,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TFns, TData> &
-      Partial<Table_RowPinning<TFeatures, TFns, TData>>,
+  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table<TFeatures, TData> &
+      Partial<Table_RowPinning<TFeatures, TData>>,
   ): void => {
     assignAPIs(table, table, [
       {
