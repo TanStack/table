@@ -14,11 +14,7 @@
 
   type Props = {
     /** The cell or header field of the current cell's column definition. */
-    content?: TContext extends HeaderContext<
-      TFeatures,
-      TData,
-      TValue
-    >
+    content?: TContext extends HeaderContext<TFeatures, TData, TValue>
       ? ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
       : TContext extends CellContext<TFeatures, TData, TValue>
         ? ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>

@@ -16,10 +16,7 @@ export function proxifyTable<
 >(
   tableSignal: Signal<Table<TFeatures, TData>>,
 ): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
-  const internalState = tableSignal as TableSignal<
-    TFeatures,
-    TData
-  >
+  const internalState = tableSignal as TableSignal<TFeatures, TData>
 
   return new Proxy(internalState, {
     apply() {

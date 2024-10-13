@@ -10,10 +10,7 @@ interface Person {
 
 describe('constructRow', () => {
   it('should create a row with all core row APIs and properties', () => {
-    const table = { _features: { Rows }, options: {} } as Table<
-      any,
-      Person
-    >
+    const table = { _features: { Rows }, options: {} } as Table<any, Person>
     const id = 'test-row'
     const original = { firstName: 'Tanner' } as Person
     const rowIndex = 0
