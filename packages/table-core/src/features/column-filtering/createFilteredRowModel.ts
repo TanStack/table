@@ -1,4 +1,4 @@
-import { getMemoOptions, memo } from '../../utils'
+import { isDev, tableMemo } from '../../utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import {
   column_getCanGlobalFilter,
@@ -26,141 +26,142 @@ export function createFilteredRowModel<
   TData extends RowData,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) =>
-    memo(
-      () => [
+    tableMemo({
+      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      fnName: 'table.createFilteredRowModel',
+      memoDeps: () => [
         table_getPreFilteredRowModel(table),
         table_getState(table).columnFilters,
         table_getState(table).globalFilter,
       ],
-      (rowModel, columnFilters, globalFilter) => {
-        if (!rowModel.rows.length || (!columnFilters.length && !globalFilter)) {
-          for (const row of rowModel.flatRows) {
-            row.columnFilters = {}
-            row.columnFiltersMeta = {}
-          }
-          return rowModel
-        }
+      fn: () => _createFilteredRowModel(table),
+      onAfterUpdate: () => table_autoResetPageIndex(table),
+    })
+}
 
-        const resolvedColumnFilters: Array<
-          ResolvedColumnFilter<TFeatures, TData>
-        > = []
-        const resolvedGlobalFilters: Array<
-          ResolvedColumnFilter<TFeatures, TData>
-        > = []
+function _createFilteredRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
+  const rowModel = table_getPreFilteredRowModel(table)
+  const { columnFilters, globalFilter } = table_getState(table)
 
-        columnFilters?.forEach((d) => {
-          const column = table_getColumn(table, d.id)
+  if (!rowModel.rows.length || (!columnFilters.length && !globalFilter)) {
+    for (const row of rowModel.flatRows) {
+      row.columnFilters = {}
+      row.columnFiltersMeta = {}
+    }
+    return rowModel
+  }
 
-          if (!column) {
-            return
-          }
+  const resolvedColumnFilters: Array<ResolvedColumnFilter<TFeatures, TData>> =
+    []
+  const resolvedGlobalFilters: Array<ResolvedColumnFilter<TFeatures, TData>> =
+    []
 
-          const filterFn = column_getFilterFn(column, table)
+  columnFilters?.forEach((d) => {
+    const column = table_getColumn(table, d.id)
 
-          if (!filterFn) {
-            if (process.env.NODE_ENV !== 'production') {
-              console.warn(
-                `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`,
-              )
-            }
-            return
-          }
+    if (!column) {
+      return
+    }
 
-          resolvedColumnFilters.push({
-            id: d.id,
-            filterFn,
-            resolvedValue: filterFn.resolveFilterValue?.(d.value) ?? d.value,
-          })
-        })
+    const filterFn = column_getFilterFn(column, table)
 
-        const filterableIds = columnFilters?.map((d) => d.id) ?? []
+    if (!filterFn) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`,
+        )
+      }
+      return
+    }
 
-        const globalFilterFn = table_getGlobalFilterFn(table)
+    resolvedColumnFilters.push({
+      id: d.id,
+      filterFn,
+      resolvedValue: filterFn.resolveFilterValue?.(d.value) ?? d.value,
+    })
+  })
 
-        const globallyFilterableColumns = table
-          .getAllLeafColumns()
-          .filter((column) => column_getCanGlobalFilter(column, table))
+  const filterableIds = columnFilters?.map((d) => d.id) ?? []
 
+  const globalFilterFn = table_getGlobalFilterFn(table)
+
+  const globallyFilterableColumns = table
+    .getAllLeafColumns()
+    .filter((column) => column_getCanGlobalFilter(column, table))
+
+  if (globalFilter && globalFilterFn && globallyFilterableColumns.length) {
+    filterableIds.push('__global__')
+
+    globallyFilterableColumns.forEach((column) => {
+      resolvedGlobalFilters.push({
+        id: column.id,
+        filterFn: globalFilterFn,
+        resolvedValue:
+          globalFilterFn.resolveFilterValue?.(globalFilter) ?? globalFilter,
+      })
+    })
+  }
+
+  // Flag the prefiltered row model with each filter state
+  for (const row of rowModel.flatRows) {
+    row.columnFilters = {}
+
+    if (resolvedColumnFilters.length) {
+      for (const currentColumnFilter of resolvedColumnFilters) {
+        const id = currentColumnFilter.id
+
+        // Tag the row with the column filter state
+        row.columnFilters[id] = currentColumnFilter.filterFn(
+          row,
+          id,
+          currentColumnFilter.resolvedValue,
+          (filterMeta) => {
+            row.columnFiltersMeta[id] = filterMeta
+          },
+        )
+      }
+    }
+
+    if (resolvedGlobalFilters.length) {
+      for (const currentGlobalFilter of resolvedGlobalFilters) {
+        const id = currentGlobalFilter.id
+        // Tag the row with the first truthy global filter state
         if (
-          globalFilter &&
-          globalFilterFn &&
-          globallyFilterableColumns.length
+          currentGlobalFilter.filterFn(
+            row,
+            id,
+            currentGlobalFilter.resolvedValue,
+            (filterMeta) => {
+              row.columnFiltersMeta[id] = filterMeta
+            },
+          )
         ) {
-          filterableIds.push('__global__')
-
-          globallyFilterableColumns.forEach((column) => {
-            resolvedGlobalFilters.push({
-              id: column.id,
-              filterFn: globalFilterFn,
-              resolvedValue:
-                globalFilterFn.resolveFilterValue?.(globalFilter) ??
-                globalFilter,
-            })
-          })
+          row.columnFilters.__global__ = true
+          break
         }
+      }
 
-        // Flag the prefiltered row model with each filter state
-        for (const row of rowModel.flatRows) {
-          row.columnFilters = {}
+      if (row.columnFilters.__global__ !== true) {
+        row.columnFilters.__global__ = false
+      }
+    }
+  }
 
-          if (resolvedColumnFilters.length) {
-            for (const currentColumnFilter of resolvedColumnFilters) {
-              const id = currentColumnFilter.id
+  const filterRowsImpl = (
+    row: Row<TFeatures, TData> & Row_ColumnFiltering<TFeatures, TData>,
+  ) => {
+    // Horizontally filter rows through each column
+    for (const columnId of filterableIds) {
+      if (row.columnFilters[columnId] === false) {
+        return false
+      }
+    }
+    return true
+  }
 
-              // Tag the row with the column filter state
-              row.columnFilters[id] = currentColumnFilter.filterFn(
-                row,
-                id,
-                currentColumnFilter.resolvedValue,
-                (filterMeta) => {
-                  row.columnFiltersMeta[id] = filterMeta
-                },
-              )
-            }
-          }
-
-          if (resolvedGlobalFilters.length) {
-            for (const currentGlobalFilter of resolvedGlobalFilters) {
-              const id = currentGlobalFilter.id
-              // Tag the row with the first truthy global filter state
-              if (
-                currentGlobalFilter.filterFn(
-                  row,
-                  id,
-                  currentGlobalFilter.resolvedValue,
-                  (filterMeta) => {
-                    row.columnFiltersMeta[id] = filterMeta
-                  },
-                )
-              ) {
-                row.columnFilters.__global__ = true
-                break
-              }
-            }
-
-            if (row.columnFilters.__global__ !== true) {
-              row.columnFilters.__global__ = false
-            }
-          }
-        }
-
-        const filterRowsImpl = (
-          row: Row<TFeatures, TData> & Row_ColumnFiltering<TFeatures, TData>,
-        ) => {
-          // Horizontally filter rows through each column
-          for (const columnId of filterableIds) {
-            if (row.columnFilters[columnId] === false) {
-              return false
-            }
-          }
-          return true
-        }
-
-        // Filter final rows using all of the active filters
-        return filterRows(rowModel.rows as any, filterRowsImpl as any, table)
-      },
-      getMemoOptions(table.options, 'debugTable', 'getFilteredRowModel', () =>
-        table_autoResetPageIndex(table),
-      ),
-    )
+  // Filter final rows using all of the active filters
+  return filterRows(rowModel.rows as any, filterRowsImpl as any, table)
 }

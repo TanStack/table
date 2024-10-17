@@ -16,11 +16,9 @@ import {
   flexRender,
   sortingFns,
   tableFeatures,
-  processingFns,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ProcessingFns } from '../../../../packages/table-core/dist/esm/types/ProcessingFns'
 import type {
   CellData,
   Column,
@@ -36,11 +34,6 @@ const _features = tableFeatures({
   ColumnFiltering,
   RowPagination,
   RowSorting,
-})
-
-const _processingFns = processingFns(_features, {
-  filterFns,
-  sortingFns,
 })
 
 declare module '@tanstack/react-table' {
@@ -109,7 +102,10 @@ function App() {
 
   const table = useTable({
     _features,
-    _processingFns,
+    _processingFns: {
+      filterFns,
+      sortingFns,
+    },
     _rowModels: {
       Filtered: createFilteredRowModel(), // client-side filtering
       Paginated: createPaginatedRowModel(),
@@ -174,7 +170,7 @@ function App() {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
@@ -269,7 +265,7 @@ function App() {
   )
 }
 
-function Filter({ column }: { column: Column<any, Person, unknown> }) {
+function Filter({ column }: { column: Column<typeof _features, Person> }) {
   const { filterVariant } = column.columnDef.meta ?? {}
 
   const columnFilterValue = column.getFilterValue()

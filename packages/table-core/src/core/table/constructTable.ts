@@ -49,32 +49,6 @@ export function constructTable<
 
   Object.assign(table, coreInstance)
 
-  const queued: Array<() => void> = []
-  let queuedTimeout = false
-
-  table._queue = (cb) => {
-    queued.push(cb)
-
-    if (!queuedTimeout) {
-      queuedTimeout = true
-
-      // Schedule a microtask to run the queued callbacks after
-      // the current call stack (render, etc) has finished.
-      Promise.resolve()
-        .then(() => {
-          while (queued.length) {
-            queued.shift()!()
-          }
-          queuedTimeout = false
-        })
-        .catch((error) =>
-          setTimeout(() => {
-            throw error
-          }),
-        )
-    }
-  }
-
   for (const feature of featuresList) {
     feature.constructTable?.(table)
   }

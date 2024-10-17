@@ -1,4 +1,4 @@
-import { getMemoOptions, memo } from '../../utils'
+import { isDev, tableMemo } from '../../utils'
 import { row_getUniqueValues } from '../../core/rows/Rows.utils'
 import { column_getFacetedRowModel } from './ColumnFaceting.utils'
 import type { RowData } from '../../types/type-utils'
@@ -13,34 +13,43 @@ export function createFacetedUniqueValues<
   columnId: string,
 ) => () => Map<any, number> {
   return (table, columnId) =>
-    memo(
-      () => [column_getFacetedRowModel(table.getColumn(columnId), table)()],
-      (facetedRowModel) => {
-        if (!facetedRowModel) return new Map()
+    tableMemo({
+      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      fnName: 'table.createFacetedUniqueValues',
+      memoDeps: () => [
+        column_getFacetedRowModel(table.getColumn(columnId), table)(),
+      ],
+      fn: (facetedRowModel) =>
+        _createFacetedUniqueValues(table, columnId, facetedRowModel),
+    })
+}
 
-        const facetedUniqueValues = new Map<any, number>()
+function _createFacetedUniqueValues<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table<TFeatures, TData>,
+  columnId: string,
+  facetedRowModel?: ReturnType<ReturnType<typeof column_getFacetedRowModel>>,
+): Map<any, number> {
+  if (!facetedRowModel) return new Map()
 
-        for (const row of facetedRowModel.flatRows) {
-          const values = row_getUniqueValues(row, table, columnId)
+  const facetedUniqueValues = new Map<any, number>()
 
-          for (const value of values) {
-            if (facetedUniqueValues.has(value)) {
-              facetedUniqueValues.set(
-                value,
-                (facetedUniqueValues.get(value) ?? 0) + 1,
-              )
-            } else {
-              facetedUniqueValues.set(value, 1)
-            }
-          }
-        }
+  for (const row of facetedRowModel.flatRows) {
+    const values = row_getUniqueValues(row, table, columnId)
 
-        return facetedUniqueValues
-      },
-      getMemoOptions(
-        table.options,
-        'debugTable',
-        `getFacetedUniqueValues_${columnId}`,
-      ),
-    )
+    for (const value of values) {
+      if (facetedUniqueValues.has(value)) {
+        facetedUniqueValues.set(
+          value,
+          (facetedUniqueValues.get(value) ?? 0) + 1,
+        )
+      } else {
+        facetedUniqueValues.set(value, 1)
+      }
+    }
+  }
+
+  return facetedUniqueValues
 }

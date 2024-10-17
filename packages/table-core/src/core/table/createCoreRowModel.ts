@@ -15,7 +15,7 @@ export function createCoreRowModel<
   return (table: Table<TFeatures, TData>) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'createCoreRowModel',
+      fnName: 'table.createCoreRowModel',
       memoDeps: () => [table.options.data],
       fn: (data) => _createCoreRowModel(table, data),
       onAfterUpdate: () => table_autoResetPageIndex(table),

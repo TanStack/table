@@ -20,7 +20,7 @@ export function createPaginatedRowModel<
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'createPaginatedRowModel',
+      fnName: 'table.createPaginatedRowModel',
       memoDeps: () => [
         table_getPrePaginationRowModel(table),
         table_getState(table).pagination,

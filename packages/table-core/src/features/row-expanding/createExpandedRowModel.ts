@@ -19,7 +19,7 @@ export function createExpandedRowModel<
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'createExpandedRowModel',
+      fnName: 'table.createExpandedRowModel',
       memoDeps: () => [
         table_getState(table).expanded,
         table_getPreExpandedRowModel(table),

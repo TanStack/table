@@ -1,7 +1,6 @@
 import type { Table } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
-import type { TableOptions } from './types/TableOptions'
 import type { TableState } from './types/TableState'
 
 export const isDev = process.env.NODE_ENV === 'development'
@@ -59,117 +58,37 @@ export function flattenBy<TNode>(
   return flat
 }
 
-// TODO delete old memo function
-export function memo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
-  memoDeps: (depArgs?: TDepArgs) => [...TDeps],
-  fn: (...args: NoInfer<[...TDeps]>) => TResult,
-  opts: {
-    key: any
-    debug?: () => any
-    onChange?: (result: TResult) => void
-  },
-): (depArgs?: TDepArgs) => TResult {
-  let deps: Array<any> = []
-  let result: TResult | undefined
-
-  return (depArgs) => {
-    let depTime: number
-    if (opts.key && opts.debug) depTime = Date.now()
-
-    const newDeps = memoDeps(depArgs)
-
-    const depsChanged =
-      newDeps.length !== deps.length ||
-      newDeps.some((dep: any, index: number) => deps[index] !== dep)
-
-    if (!depsChanged) {
-      return result!
-    }
-
-    deps = newDeps
-
-    let resultTime: number
-    if (opts.key && opts.debug) resultTime = Date.now()
-
-    result = fn(...newDeps)
-    opts.onChange?.(result)
-
-    if (opts.key && opts.debug) {
-      if (opts.debug()) {
-        const depEndTime = Math.round((Date.now() - depTime!) * 100) / 100
-        const resultEndTime = Math.round((Date.now() - resultTime!) * 100) / 100
-        const resultFpsPercentage = resultEndTime / 16
-
-        const pad = (str: number | string, num: number) => {
-          str = String(str)
-          while (str.length < num) {
-            str = ' ' + str
-          }
-          return str
-        }
-
-        console.info(
-          `%c⏱ ${pad(resultEndTime, 5)} /${pad(depEndTime, 5)} ms`,
-          `
-            font-size: .6rem;
-            font-weight: bold;
-            color: hsl(${Math.max(
-              0,
-              Math.min(120 - 120 * resultFpsPercentage, 120),
-            )}deg 100% 31%);`,
-          opts.key,
-        )
-      }
-    }
-
-    return result
-  }
-}
-
-// TODO delete
-export function getMemoOptions<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  tableOptions: TableOptions<TFeatures, TData>,
-  debugLevel:
-    | 'debugAll'
-    | 'debugCells'
-    | 'debugTable'
-    | 'debugColumns'
-    | 'debugRows'
-    | 'debugHeaders',
-  key: string,
-  onChange?: (result: any) => void,
-) {
-  return {
-    debug: () => tableOptions.debugAll ?? tableOptions[debugLevel],
-    key: process.env.NODE_ENV === 'development' && key,
-    onChange,
-  }
-}
-
 interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
   memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
   fn: (...args: NoInfer<TDeps>) => TResult
   onAfterUpdate?: (result: TResult) => void
   onBeforeUpdate?: () => void
+  onBeforeCompare?: () => void
+  onAfterCompare?: () => void
 }
 
-export const _memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
+export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
   options: MemoOptions<TDeps, TDepArgs, TResult>,
 ): ((depArgs?: TDepArgs) => TResult) => {
-  const { memoDeps, fn, onAfterUpdate, onBeforeUpdate } = options
+  const {
+    memoDeps,
+    fn,
+    onAfterUpdate,
+    onBeforeUpdate,
+    onBeforeCompare,
+    onAfterCompare,
+  } = options
   let deps: Array<any> | undefined = []
   let result: TResult | undefined
 
   return (depArgs): TResult => {
+    onBeforeCompare?.()
     const newDeps = memoDeps?.(depArgs)
-
     const depsChanged =
       !newDeps ||
       newDeps.length !== deps?.length ||
       newDeps.some((dep: any, index: number) => deps?.[index] !== dep)
+    onAfterCompare?.()
 
     if (!depsChanged) {
       return result!
@@ -205,32 +124,44 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
 ) {
   const { debug, fnName, onAfterUpdate, ...memoOptions } = tableMemoOptions
 
-  let startTime: number
-  let endTime: number
+  let beforeCompareTime: number
+  let afterCompareTime: number
+
+  let startCalcTime: number
+  let endCalcTime: number
 
   const debugOptions = isDev
     ? {
+        onBeforeCompare: () => {
+          if (debug) beforeCompareTime = performance.now()
+        },
+        onAfterCompare: () => {
+          if (debug) afterCompareTime = performance.now()
+        },
         onBeforeUpdate: () => {
-          if (debug) startTime = performance.now()
+          if (debug) startCalcTime = performance.now()
         },
         onAfterUpdate: () => {
           if (debug) {
-            endTime = performance.now()
+            endCalcTime = performance.now()
+            const compareTime =
+              Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
             const executionTime =
-              Math.round((endTime - startTime) * 1000) / 1000
+              Math.round((endCalcTime - startCalcTime) * 100) / 100
+            const totalTime = compareTime + executionTime
             console.info(
-              `%c⏱ ${pad(executionTime, 5)} ms`,
+              `%c⏱ ${pad(`${compareTime.toFixed(1)} ms + ${executionTime.toFixed(1)} ms`, 17)}`,
               `font-size: .6rem; font-weight: bold; color: hsl(
-              ${Math.max(0, Math.min(120 - executionTime, 120))}deg 100% 31%);`,
+              ${Math.max(0, Math.min(120 - totalTime, 120))}deg 100% 31%);`,
               fnName,
             )
           }
-          onAfterUpdate?.()
+          queueMicrotask(() => onAfterUpdate)
         },
       }
     : {}
 
-  return _memo({
+  return memo({
     ...memoOptions,
     ...debugOptions,
   })

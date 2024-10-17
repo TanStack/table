@@ -118,6 +118,11 @@ export interface Table_CoreProperties<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   _processingFns: ProcessingFns<TFeatures, TData>
+  /**
+   * The row models that are enabled for the table.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
   _rowModels: CachedRowModels<TFeatures, TData>
   /**
    * This is the resolved initial state of the table.
@@ -137,7 +142,6 @@ export interface Table_Table<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > extends Table_CoreProperties<TFeatures, TData> {
-  _queue: (cb: () => void) => void
   /**
    * Returns the core row model before any processing has been applied.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)

@@ -16,7 +16,7 @@ export function createFacetedMinMaxValues<
   return (table, columnId) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'createFacetedMinMaxValues',
+      fnName: 'table.createFacetedMinMaxValues',
       memoDeps: () => [
         column_getFacetedRowModel(table.getColumn(columnId), table)(),
       ],

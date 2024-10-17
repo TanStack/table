@@ -25,7 +25,7 @@ export function createSortedRowModel<
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'createSortedRowModel',
+      fnName: 'table.createSortedRowModel',
       memoDeps: () => [
         table_getState(table).sorting,
         table_getPreSortedRowModel(table),
