@@ -79,7 +79,11 @@ export function createColumn<TData extends RowData, TValue>(
 
   let id =
     resolvedColumnDef.id ??
-    (accessorKey ? accessorKey.replace('.', '_') : undefined) ??
+    (accessorKey
+      ? typeof String.prototype.replaceAll === 'function'
+        ? accessorKey.replaceAll('.', '_')
+        : accessorKey.replace(/\./g, '_')
+      : undefined) ??
     (typeof resolvedColumnDef.header === 'string'
       ? resolvedColumnDef.header
       : undefined)
@@ -157,9 +161,9 @@ export function createColumn<TData extends RowData, TValue>(
   }
 
   for (const feature of table._features) {
-    feature.createColumn?.(column, table)
+    feature.createColumn?.(column as Column<TData, TValue>, table)
   }
 
-  // Yes, we have to convert table to uknown, because we know more than the compiler here.
+  // Yes, we have to convert table to unknown, because we know more than the compiler here.
   return column as Column<TData, TValue>
 }

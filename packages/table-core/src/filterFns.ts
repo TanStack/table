@@ -5,7 +5,7 @@ const includesString: FilterFn<any> = (
   columnId: string,
   filterValue: string
 ) => {
-  const search = filterValue.toLowerCase()
+  const search = filterValue?.toString()?.toLowerCase()
   return Boolean(
     row
       .getValue<string | null>(columnId)
@@ -69,8 +69,8 @@ const arrIncludesSome: FilterFn<any> = (
   columnId: string,
   filterValue: unknown[]
 ) => {
-  return filterValue.some(
-    val => row.getValue<unknown[]>(columnId)?.includes(val)
+  return filterValue.some(val =>
+    row.getValue<unknown[]>(columnId)?.includes(val)
   )
 }
 

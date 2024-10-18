@@ -6,12 +6,12 @@ title: Column Ordering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [column-ordering](../framework/react/examples/column-ordering)
-- [column-dnd](../framework/react/examples/column-dnd)
+- [column-ordering](../../framework/react/examples/column-ordering)
+- [column-dnd](../../framework/react/examples/column-dnd)
 
 ## API
 
-[Column Ordering API](../api/features/column-ordering)
+[Column Ordering API](../../api/features/column-ordering)
 
 ## Column Ordering Guide
 
@@ -21,9 +21,9 @@ By default, columns are ordered in the order they are defined in the `columns` a
 
 There are 3 table features that can reorder columns, which happen in the following order:
 
-1. [Column Pinning](../guide/column-pinning) - If pinning, columns are split into left, center (unpinned), and right pinned columns.
+1. [Column Pinning](../column-pinning) - If pinning, columns are split into left, center (unpinned), and right pinned columns.
 2. Manual **Column Ordering** - A manually specified column order is applied.
-3. [Grouping](../guide/grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
+3. [Grouping](../grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
 
 > **Note:** `columnOrder` state will only affect unpinned columns if used in conjunction with column pinning.
 
@@ -104,7 +104,7 @@ There are undoubtedly many ways to implement drag and drop features along-side T
 
 1. Do NOT try to use [`"react-dnd"`](https://react-dnd.github.io/react-dnd/docs/overview) _if you are using React 18 or newer_. React DnD was an important library for its time, but it now does not get updated very often, and it has incompatibilities with React 18, especially in React Strict Mode. It is still possible to get it to work, but there are newer alternatives that have better compatibility and are more actively maintained. React DnD's Provider may also interfere and conflict with any other DnD solutions you may want to try in your app.
 
-2. Use [`"@dnd-kit/core"`](https://dndkit.com/). DnD Kit is a modern, modular and lightweight drag and drop library that is highly compatible with the modern React ecosystem, and it works well with semantic `<table>` markup. Both of the official TanStack DnD examples, [Column DnD](../framework/react/examples/column-dnd) and [Row DnD](../framework/react/examples/row-dnd), now use DnD Kit.
+2. Use [`"@dnd-kit/core"`](https://dndkit.com/). DnD Kit is a modern, modular and lightweight drag and drop library that is highly compatible with the modern React ecosystem, and it works well with semantic `<table>` markup. Both of the official TanStack DnD examples, [Column DnD](../../framework/react/examples/column-dnd) and [Row DnD](../../framework/react/examples/row-dnd), now use DnD Kit.
 
 3. Consider other DnD libraries like [`"react-beautiful-dnd"`](https://github.com/atlassian/react-beautiful-dnd), but be aware of their potentially large bundle sizes, maintenance status, and compatibility with `<table>` markup.
 

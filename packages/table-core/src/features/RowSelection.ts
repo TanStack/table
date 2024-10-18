@@ -1,5 +1,12 @@
-import { TableFeature } from '../core/table'
-import { OnChangeFn, Table, Row, RowModel, Updater, RowData } from '../types'
+import {
+  OnChangeFn,
+  Table,
+  Row,
+  RowModel,
+  Updater,
+  RowData,
+  TableFeature,
+} from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
 export type RowSelectionState = Record<string, boolean>

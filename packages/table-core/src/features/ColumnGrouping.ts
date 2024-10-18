@@ -1,16 +1,16 @@
 import { RowModel } from '..'
 import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
-import { TableFeature } from '../core/table'
 import {
+  AggregationFns,
   Cell,
   Column,
-  OnChangeFn,
-  Table,
-  Row,
-  Updater,
   ColumnDefTemplate,
+  OnChangeFn,
+  Row,
   RowData,
-  AggregationFns,
+  Table,
+  TableFeature,
+  Updater,
 } from '../types'
 import { isFunction, makeStateUpdater } from '../utils'
 
@@ -283,11 +283,9 @@ export const ColumnGrouping: TableFeature = {
 
     column.getCanGroup = () => {
       return (
-        column.columnDef.enableGrouping ??
-        true ??
-        table.options.enableGrouping ??
-        true ??
-        !!column.accessorFn
+        (column.columnDef.enableGrouping ?? true) &&
+        (table.options.enableGrouping ?? true) &&
+        (!!column.accessorFn || !!column.columnDef.getGroupingValue)
       )
     }
 

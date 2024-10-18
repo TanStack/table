@@ -5,15 +5,15 @@ import './index.css'
 
 import {
   Column,
-  Table as ReactTable,
+  ColumnDef,
   PaginationState,
-  useReactTable,
+  Table,
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  ColumnDef,
-  flexRender,
   getSortedRowModel,
+  useReactTable,
 } from '@tanstack/react-table'
 
 import { makeData, Person } from './makeData'
@@ -64,7 +64,7 @@ function App() {
 
   return (
     <>
-      <Table
+      <MyTable
         {...{
           data,
           columns,
@@ -81,7 +81,7 @@ function App() {
   )
 }
 
-function Table({
+function MyTable({
   data,
   columns,
 }: {
@@ -207,6 +207,8 @@ function Table({
           | Go to page:
           <input
             type="number"
+            min="1"
+            max={table.getPageCount()}
             defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
@@ -236,12 +238,13 @@ function Table({
     </div>
   )
 }
+
 function Filter({
   column,
   table,
 }: {
   column: Column<any, any>
-  table: ReactTable<any>
+  table: Table<any>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -250,7 +253,7 @@ function Filter({
   const columnFilterValue = column.getFilterValue()
 
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
+    <div className="flex space-x-2" onClick={e => e.stopPropagation()}>
       <input
         type="number"
         value={(columnFilterValue as [number, number])?.[0] ?? ''}
@@ -278,11 +281,12 @@ function Filter({
     </div>
   ) : (
     <input
+      className="w-36 border shadow rounded"
+      onChange={e => column.setFilterValue(e.target.value)}
+      onClick={e => e.stopPropagation()}
+      placeholder={`Search...`}
       type="text"
       value={(columnFilterValue ?? '') as string}
-      onChange={e => column.setFilterValue(e.target.value)}
-      placeholder={`Search...`}
-      className="w-36 border shadow rounded"
     />
   )
 }

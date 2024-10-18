@@ -6,14 +6,14 @@ title: Virtualization Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [virtualized-columns](../framework/react/examples/virtualized-columns)
-- [virtualized-rows (dynamic row height)](../framework/react/examples/virtualized-rows)
-- [virtualized-rows (fixed row height)](../../../../virtual/v3/docs/framework/react/examples/table)
-- [virtualized-infinite-scrolling](../framework/react/examples/virtualized-infinite-scrolling)
+- [virtualized-columns](../../framework/react/examples/virtualized-columns)
+- [virtualized-rows (dynamic row height)](../../framework/react/examples/virtualized-rows)
+- [virtualized-rows (fixed row height)](../../../../../virtual/v3/docs/framework/react/examples/table)
+- [virtualized-infinite-scrolling](../../framework/react/examples/virtualized-infinite-scrolling)
 
 ## API
 
-[TanStack Virtual Virtualizer API](../../../../virtual/v3/docs/api/virtualizer)
+[TanStack Virtual Virtualizer API](../../../../../virtual/v3/docs/api/virtualizer)
 
 ## Virtualization Guide
 

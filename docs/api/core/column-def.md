@@ -97,7 +97,7 @@ meta?: ColumnMeta // This interface is extensible via declaration merging. See b
 The meta data to be associated with the column. We can access it anywhere when the column is available via `column.columnDef.meta`. This type is global to all tables and can be extended like so:
 
 ```tsx
-import '@tanstack/react-table' //or vue, svelte, solid, etc.
+import '@tanstack/react-table' //or vue, svelte, solid, qwik, etc.
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<TData extends RowData, TValue> {

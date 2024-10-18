@@ -1,6 +1,13 @@
 import { _getVisibleLeafColumns } from '..'
-import { TableFeature } from '../core/table'
-import { RowData, Column, Header, OnChangeFn, Table, Updater } from '../types'
+import {
+  RowData,
+  Column,
+  Header,
+  OnChangeFn,
+  Table,
+  Updater,
+  TableFeature,
+} from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 import { ColumnPinningPosition } from './ColumnPinning'
 

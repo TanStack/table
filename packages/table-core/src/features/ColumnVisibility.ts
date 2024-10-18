@@ -1,5 +1,4 @@
 import { ColumnPinningPosition } from '..'
-import { TableFeature } from '../core/table'
 import {
   Cell,
   Column,
@@ -8,6 +7,7 @@ import {
   Updater,
   Row,
   RowData,
+  TableFeature,
 } from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 

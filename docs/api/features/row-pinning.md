@@ -18,8 +18,8 @@ Pinning state is stored on the table using the following shape:
 export type RowPinningPosition = false | 'top' | 'bottom'
 
 export type RowPinningState = {
-  top?: boolean
-  bottom?: boolean
+  top?: string[]
+  bottom?: string[]
 }
 
 export type RowPinningRowState = {

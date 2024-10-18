@@ -5,66 +5,24 @@ import './index.css'
 
 import {
   Column,
-  Table,
-  useReactTable,
+  ColumnDef,
   ColumnFiltersState,
+  RowData,
+  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
   getPaginationRowModel,
-  sortingFns,
   getSortedRowModel,
-  FilterFn,
-  SortingFn,
-  ColumnDef,
-  flexRender,
+  useReactTable,
 } from '@tanstack/react-table'
-
-import {
-  RankingInfo,
-  rankItem,
-  compareItems,
-} from '@tanstack/match-sorter-utils'
 
 import { makeData, Person } from './makeData'
 
 declare module '@tanstack/react-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<unknown>
+  //allows us to define custom properties for our columns
+  interface ColumnMeta<TData extends RowData, TValue> {
+    filterVariant?: 'text' | 'range' | 'select'
   }
-  interface FilterMeta {
-    itemRank: RankingInfo
-  }
-}
-
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value)
-
-  // Store the itemRank info
-  addMeta({
-    itemRank,
-  })
-
-  // Return if the item should be filtered in/out
-  return itemRank.passed
-}
-
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
-  let dir = 0
-
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank!,
-      rowB.columnFiltersMeta[columnId]?.itemRank!
-    )
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
 function App() {
@@ -73,119 +31,79 @@ function App() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
-  const [globalFilter, setGlobalFilter] = React.useState('')
 
   const columns = React.useMemo<ColumnDef<Person, any>[]>(
     () => [
       {
-        header: 'Name',
-        footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
-          },
-          {
-            accessorFn: row => row.lastName,
-            id: 'lastName',
-            cell: info => info.getValue(),
-            header: () => <span>Last Name</span>,
-            footer: props => props.column.id,
-          },
-          {
-            accessorFn: row => `${row.firstName} ${row.lastName}`,
-            id: 'fullName',
-            header: 'Full Name',
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
-            filterFn: 'fuzzy',
-            sortingFn: fuzzySort,
-          },
-        ],
+        accessorKey: 'firstName',
+        cell: info => info.getValue(),
       },
       {
-        header: 'Info',
-        footer: props => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            footer: props => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: props => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: props => props.column.id,
-              },
-            ],
-          },
-        ],
+        accessorFn: row => row.lastName,
+        id: 'lastName',
+        cell: info => info.getValue(),
+        header: () => <span>Last Name</span>,
+      },
+      {
+        accessorFn: row => `${row.firstName} ${row.lastName}`,
+        id: 'fullName',
+        header: 'Full Name',
+        cell: info => info.getValue(),
+      },
+      {
+        accessorKey: 'age',
+        header: () => 'Age',
+        meta: {
+          filterVariant: 'range',
+        },
+      },
+      {
+        accessorKey: 'visits',
+        header: () => <span>Visits</span>,
+        meta: {
+          filterVariant: 'range',
+        },
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        meta: {
+          filterVariant: 'select',
+        },
+      },
+      {
+        accessorKey: 'progress',
+        header: 'Profile Progress',
+        meta: {
+          filterVariant: 'range',
+        },
       },
     ],
     []
   )
 
-  const [data, setData] = React.useState<Person[]>(() => makeData(50000))
-  const refreshData = () => setData(_old => makeData(50000))
+  const [data, setData] = React.useState<Person[]>(() => makeData(5_000))
+  const refreshData = () => setData(_old => makeData(50_000)) //stress test
 
   const table = useReactTable({
     data,
     columns,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
+    filterFns: {},
     state: {
       columnFilters,
-      globalFilter,
     },
     onColumnFiltersChange: setColumnFilters,
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
+    getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,
   })
 
-  React.useEffect(() => {
-    if (table.getState().columnFilters[0]?.id === 'fullName') {
-      if (table.getState().sorting[0]?.id !== 'fullName') {
-        table.setSorting([{ id: 'fullName', desc: false }])
-      }
-    }
-  }, [table.getState().columnFilters[0]?.id])
-
   return (
     <div className="p-2">
-      <div>
-        <DebouncedInput
-          value={globalFilter ?? ''}
-          onChange={value => setGlobalFilter(String(value))}
-          className="p-2 font-lg shadow border border-block"
-          placeholder="Search all columns..."
-        />
-      </div>
-      <div className="h-2" />
       <table>
         <thead>
           {table.getHeaderGroups().map(headerGroup => (
@@ -214,7 +132,7 @@ function App() {
                         </div>
                         {header.column.getCanFilter() ? (
                           <div>
-                            <Filter column={header.column} table={table} />
+                            <Filter column={header.column} />
                           </div>
                         ) : null}
                       </>
@@ -285,6 +203,8 @@ function App() {
           | Go to page:
           <input
             type="number"
+            min="1"
+            max={table.getPageCount()}
             defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
@@ -313,89 +233,70 @@ function App() {
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
-      <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
+      <pre>
+        {JSON.stringify(
+          { columnFilters: table.getState().columnFilters },
+          null,
+          2
+        )}
+      </pre>
     </div>
   )
 }
 
-function Filter({
-  column,
-  table,
-}: {
-  column: Column<any, unknown>
-  table: Table<any>
-}) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
-
+function Filter({ column }: { column: Column<any, unknown> }) {
   const columnFilterValue = column.getFilterValue()
+  const { filterVariant } = column.columnDef.meta ?? {}
 
-  const sortedUniqueValues = React.useMemo(
-    () =>
-      typeof firstValue === 'number'
-        ? []
-        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
-    [column.getFacetedUniqueValues()]
-  )
-
-  return typeof firstValue === 'number' ? (
+  return filterVariant === 'range' ? (
     <div>
       <div className="flex space-x-2">
+        {/* See faceted column filters example for min max values functionality */}
         <DebouncedInput
           type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[0] ?? ''}
           onChange={value =>
             column.setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
-          placeholder={`Min ${
-            column.getFacetedMinMaxValues()?.[0]
-              ? `(${column.getFacetedMinMaxValues()?.[0]})`
-              : ''
-          }`}
+          placeholder={`Min`}
           className="w-24 border shadow rounded"
         />
         <DebouncedInput
           type="number"
-          min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-          max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
           value={(columnFilterValue as [number, number])?.[1] ?? ''}
           onChange={value =>
             column.setFilterValue((old: [number, number]) => [old?.[0], value])
           }
-          placeholder={`Max ${
-            column.getFacetedMinMaxValues()?.[1]
-              ? `(${column.getFacetedMinMaxValues()?.[1]})`
-              : ''
-          }`}
+          placeholder={`Max`}
           className="w-24 border shadow rounded"
         />
       </div>
       <div className="h-1" />
     </div>
+  ) : filterVariant === 'select' ? (
+    <select
+      onChange={e => column.setFilterValue(e.target.value)}
+      value={columnFilterValue?.toString()}
+    >
+      {/* See faceted column filters example for dynamic select options */}
+      <option value="">All</option>
+      <option value="complicated">complicated</option>
+      <option value="relationship">relationship</option>
+      <option value="single">single</option>
+    </select>
   ) : (
-    <>
-      <datalist id={column.id + 'list'}>
-        {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-          <option value={value} key={value} />
-        ))}
-      </datalist>
-      <DebouncedInput
-        type="text"
-        value={(columnFilterValue ?? '') as string}
-        onChange={value => column.setFilterValue(value)}
-        placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        className="w-36 border shadow rounded"
-        list={column.id + 'list'}
-      />
-      <div className="h-1" />
-    </>
+    <DebouncedInput
+      className="w-36 border shadow rounded"
+      onChange={value => column.setFilterValue(value)}
+      placeholder={`Search...`}
+      type="text"
+      value={(columnFilterValue ?? '') as string}
+    />
+    // See faceted column filters example for datalist search suggestions
   )
 }
 
-// A debounced input react component
+// A typical debounced input react component
 function DebouncedInput({
   value: initialValue,
   onChange,

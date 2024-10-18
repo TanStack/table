@@ -1,13 +1,30 @@
 import {
   TableOptions,
   createTable,
-  TableOptionsResolved,
   RowData,
+  TableOptionsResolved,
 } from '@tanstack/table-core'
-import { h, watchEffect, ref, defineComponent } from 'vue'
+import {
+  h,
+  watchEffect,
+  ref,
+  defineComponent,
+  isRef,
+  unref,
+  MaybeRef,
+  watch,
+  shallowRef,
+} from 'vue'
 import { mergeProxy } from './merge-proxy'
 
 export * from '@tanstack/table-core'
+
+export type TableOptionsWithReactiveData<TData extends RowData> = Omit<
+  TableOptions<TData>,
+  'data'
+> & {
+  data: MaybeRef<TData[]>
+}
 
 export const FlexRender = defineComponent({
   props: ['render', 'props'],
@@ -25,10 +42,20 @@ export const FlexRender = defineComponent({
   },
 })
 
-export function useVueTable<TData extends RowData>(
-  options: TableOptions<TData>
+function getOptionsWithReactiveData<TData extends RowData>(
+  options: TableOptionsWithReactiveData<TData>
 ) {
-  const resolvedOptions: TableOptionsResolved<TData> = mergeProxy(
+  return mergeProxy(options, {
+    data: unref(options.data),
+  })
+}
+
+export function useVueTable<TData extends RowData>(
+  initialOptions: TableOptionsWithReactiveData<TData>
+) {
+  const IS_REACTIVE = isRef(initialOptions.data)
+
+  const resolvedOptions = mergeProxy(
     {
       state: {}, // Dummy state
       onStateChange: () => {}, // noop
@@ -37,13 +64,36 @@ export function useVueTable<TData extends RowData>(
         defaultOptions: TableOptions<TData>,
         options: TableOptions<TData>
       ) {
-        return mergeProxy(defaultOptions, options)
+        return IS_REACTIVE
+          ? {
+              ...defaultOptions,
+              ...options,
+            }
+          : mergeProxy(defaultOptions, options)
       },
     },
-    options
+    IS_REACTIVE ? getOptionsWithReactiveData(initialOptions) : initialOptions
   )
 
-  const table = createTable<TData>(resolvedOptions)
+  const table = createTable<TData>(
+    resolvedOptions as TableOptionsResolved<TData>
+  )
+
+  // Add reactivity support
+  if (IS_REACTIVE) {
+    const dataRef = shallowRef(initialOptions.data)
+    watch(
+      dataRef,
+      () => {
+        table.setState(prev => ({
+          ...prev,
+          data: dataRef.value,
+        }))
+      },
+      { immediate: true }
+    )
+  }
+
   // can't use `reactive` because update needs to be immutable
   const state = ref(table.initialState)
 
@@ -53,23 +103,29 @@ export function useVueTable<TData extends RowData>(
         get: (_, prop) => state.value[prop as keyof typeof state.value],
       })
 
-      return mergeProxy(prev, options, {
-        // merge the initialState and `options.state`
-        // create a new proxy on each `setOptions` call
-        // and get the value from state on each property access
-        state: mergeProxy(stateProxy, options.state ?? {}),
-        // Similarly, we'll maintain both our internal state and any user-provided
-        // state.
-        onStateChange: (updater: any) => {
-          if (updater instanceof Function) {
-            state.value = updater(state.value)
-          } else {
-            state.value = updater
-          }
+      return mergeProxy(
+        prev,
+        IS_REACTIVE
+          ? getOptionsWithReactiveData(initialOptions)
+          : initialOptions,
+        {
+          // merge the initialState and `options.state`
+          // create a new proxy on each `setOptions` call
+          // and get the value from state on each property access
+          state: mergeProxy(stateProxy, initialOptions.state ?? {}),
+          // Similarly, we'll maintain both our internal state and any user-provided
+          // state.
+          onStateChange: (updater: any) => {
+            if (updater instanceof Function) {
+              state.value = updater(state.value)
+            } else {
+              state.value = updater
+            }
 
-          options.onStateChange?.(updater)
-        },
-      })
+            initialOptions.onStateChange?.(updater)
+          },
+        }
+      )
     })
   })
 

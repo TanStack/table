@@ -1,4 +1,4 @@
-import React, { HTMLProps } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
@@ -262,6 +262,8 @@ function App() {
           | Go to page:
           <input
             type="number"
+            min="1"
+            max={table.getPageCount()}
             defaultValue={table.getState().pagination.pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0

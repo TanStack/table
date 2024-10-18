@@ -1,6 +1,12 @@
-import { RowData, Column, Header, HeaderGroup, Table } from '../types'
+import {
+  RowData,
+  Column,
+  Header,
+  HeaderGroup,
+  Table,
+  TableFeature,
+} from '../types'
 import { getMemoOptions, memo } from '../utils'
-import { TableFeature } from './table'
 
 const debug = 'debugHeaders'
 
@@ -250,7 +256,7 @@ function createHeader<TData extends RowData, TValue>(
   }
 
   table._features.forEach(feature => {
-    feature.createHeader?.(header, table)
+    feature.createHeader?.(header as Header<TData, TValue>, table)
   })
 
   return header as Header<TData, TValue>
