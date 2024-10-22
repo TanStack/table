@@ -263,7 +263,7 @@ const App = component$(() => {
           })}
         </tbody>
       </table>
-      <div>{table.getPrePaginationRowModel().rows.length} Rows</div>
+      <div>{table.getPrePaginatedRowModel().rows.length} Rows</div>
       <pre>{JSON.stringify(table.getState(), null, 2)}</pre>
     </div>
   )

@@ -12,8 +12,6 @@ import {
   column_getSortingFn,
   column_getToggleSortingHandler,
   column_toggleSorting,
-  table_getPreSortedRowModel,
-  table_getSortedRowModel,
   table_resetSorting,
   table_setSorting,
 } from './RowSorting.utils'
@@ -124,12 +122,6 @@ export const RowSorting: TableFeature = {
       },
       {
         fn: (defaultState) => table_resetSorting(table, defaultState),
-      },
-      {
-        fn: () => table_getPreSortedRowModel(table),
-      },
-      {
-        fn: () => table_getSortedRowModel(table),
       },
     ])
   },

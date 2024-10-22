@@ -51,25 +51,6 @@ export interface TableOptions_ColumnResizing {
   onColumnResizingChange?: OnChangeFn<columnResizingState>
 }
 
-export interface TableOptions_ColumnResizing_Unavailable {
-  /**
-   * @deprecated Import the `ColumnResizing` feature to use the column resizing APIs.
-   */
-  columnResizeMode?: ColumnResizeMode
-  /**
-   * @deprecated Import the `ColumnResizing` feature to use the column resizing APIs.
-   */
-  enableColumnResizing?: boolean
-  /**
-   * @deprecated Import the `ColumnResizing` feature to use the column resizing APIs.
-   */
-  columnResizeDirection?: ColumnResizeDirection
-  /**
-   * @deprecated Import the `ColumnResizing` feature to use the column resizing APIs.
-   */
-  oncolumnResizingChange?: OnChangeFn<columnResizingState>
-}
-
 export type ColumnResizingDefaultOptions = Pick<
   TableOptions_ColumnResizing,
   'columnResizeMode' | 'onColumnResizingChange' | 'columnResizeDirection'
@@ -95,13 +76,6 @@ export interface ColumnDef_ColumnResizing {
    * Enables or disables column resizing for the column.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#enableresizing)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
-   */
-  enableResizing?: boolean
-}
-
-export interface ColumnDef_ColumnResizing_Unavailable {
-  /**
-   * @deprecated Import the `ColumnResizing` feature to use the column resizing APIs.
    */
   enableResizing?: boolean
 }

@@ -1,6 +1,5 @@
 import { constructTableHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
-import type { ProcessingFns } from '../../table-core/dist/esm/types/ProcessingFns'
 import type {
   RowData,
   Table,

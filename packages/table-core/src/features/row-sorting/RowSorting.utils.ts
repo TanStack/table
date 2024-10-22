@@ -1,15 +1,12 @@
 import { reSplitAlphaNumeric, sortingFn_basic } from '../../fns/sortingFns'
 import { isFunction } from '../../utils'
-import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
-import { table_getGroupedRowModel } from '../column-grouping/ColumnGrouping.utils'
 import {
   table_getInitialState,
   table_getState,
 } from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
 import type { Table_Internal } from '../../types/Table'
 import type { Column_Internal } from '../../types/Column'
 import type { SortDirection, SortingFn, SortingState } from './RowSorting.types'
@@ -65,7 +62,7 @@ export function column_getAutoSortingFn<
 
   let sortingFn: SortingFn<TFeatures, TData> | undefined
 
-  const firstRows = table_getFilteredRowModel(table).flatRows.slice(10)
+  const firstRows = table.getFilteredRowModel().flatRows.slice(10)
 
   let isString = false
 
@@ -106,7 +103,7 @@ export function column_getAutoSortDir<
   column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
 ) {
-  const firstRow = table_getFilteredRowModel(table).flatRows[0]
+  const firstRow = table.getFilteredRowModel().flatRows[0]
 
   const value = firstRow ? row_getValue(firstRow, table, column.id) : undefined
 
@@ -434,33 +431,4 @@ export function column_getToggleSortingHandler<
         : false,
     )
   }
-}
-
-// Table Utils
-
-/**
- *
- * @param table
- * @returns
- */
-export function table_getPreSortedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  return table_getGroupedRowModel(table)
-}
-
-export function table_getSortedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.Sorted) {
-    table._rowModels.Sorted = table.options._rowModels?.Sorted?.(table)
-  }
-
-  if (table.options.manualSorting || !table._rowModels.Sorted) {
-    return table_getPreSortedRowModel(table)
-  }
-
-  return table._rowModels.Sorted()
 }

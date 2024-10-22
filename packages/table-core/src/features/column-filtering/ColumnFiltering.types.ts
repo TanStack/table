@@ -1,3 +1,4 @@
+import type { Table } from '../../types/Table'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 import type {
   CellData,
@@ -6,7 +7,7 @@ import type {
   Updater,
 } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 
@@ -98,20 +99,6 @@ export interface ColumnDef_ColumnFiltering<
    * The filter function to use with this column. Can be the name of a built-in filter function or a custom filter function.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#filterfn)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
-   */
-  filterFn?: FilterFnOption<TFeatures, TData>
-}
-
-export interface ColumnDef_ColumnFiltering_Unavailable<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
-   */
-  enableColumnFilter?: boolean
-  /**
-   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
    */
   filterFn?: FilterFnOption<TFeatures, TData>
 }
@@ -226,52 +213,10 @@ export interface TableOptions_ColumnFiltering<
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
 }
 
-export interface TableOptions_ColumnFiltering_Unavailable<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
-   */
-  enableColumnFilters?: boolean
-  /**
-   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
-   */
-  enableFilters?: boolean
-  /**
-   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
-   */
-  filterFromLeafRows?: boolean
-  /**
-   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
-   */
-  manualFiltering?: boolean
-  /**
-   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
-   */
-  maxLeafRowFilterDepth?: number
-  /**
-   * @deprecated Import the `ColumnFiltering` feature to use the column filtering APIs.
-   */
-  onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
-}
-
 export interface Table_ColumnFiltering<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  /**
-   * Returns the row model for the table after **column** filtering has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getfilteredrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
-   */
-  getFilteredRowModel: () => RowModel<TFeatures, TData>
-  /**
-   * Returns the row model for the table before any **column** filtering has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getprefilteredrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
-   */
-  getPreFilteredRowModel: () => RowModel<TFeatures, TData>
   /**
    * Resets the **columnFilters** state to `initialState.columnFilters`, or `true` can be passed to force a default blank state reset to `[]`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#resetcolumnfilters)
@@ -296,4 +241,45 @@ export interface Table_ColumnFiltering<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
    */
   setGlobalFilter: (updater: Updater<any>) => void
+}
+
+export interface Table_RowModels_Filtered<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * Returns the row model for the table after **column** filtering has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getfilteredrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
+   */
+  getFilteredRowModel: () => RowModel<TFeatures, TData>
+  /**
+   * Returns the row model for the table before any **column** filtering has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getprefilteredrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
+   */
+  getPreFilteredRowModel: () => RowModel<TFeatures, TData>
+}
+
+export interface CreateRowModel_Filtered<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * If provided, this function is called **once** per table and should return a **new function** which will calculate and return the row model for the table when it's filtered.
+   * - For server-side filtering, this function is unnecessary and can be ignored since the server should already return the filtered row model.
+   * - For client-side filtering, this function is required. A default implementation is provided via any table adapter's `{ getFilteredRowModel }` export.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getfilteredrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
+   */
+  filteredRowModel?: (
+    table: Table<TFeatures, TData>,
+  ) => () => RowModel<TFeatures, TData>
+}
+
+export interface CachedRowModel_Filtered<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  filteredRowModel: () => RowModel<TFeatures, TData>
 }

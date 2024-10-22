@@ -8,8 +8,6 @@ import {
   column_getIsFiltered,
   column_setFilterValue,
   getDefaultColumnFiltersState,
-  table_getFilteredRowModel,
-  table_getPreFilteredRowModel,
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './ColumnFiltering.utils'
@@ -122,12 +120,6 @@ export const ColumnFiltering: TableFeature = {
       },
       {
         fn: (defaultState) => table_resetColumnFilters(table, defaultState),
-      },
-      {
-        fn: () => table_getPreFilteredRowModel(table),
-      },
-      {
-        fn: () => table_getFilteredRowModel(table),
       },
     ])
   },

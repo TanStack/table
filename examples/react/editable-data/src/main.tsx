@@ -26,8 +26,8 @@ const _features = tableFeatures({ RowPagination, ColumnFiltering })
 const options = tableOptions<typeof _features, Person>({
   _features,
   _rowModels: {
-    Filtered: createFilteredRowModel(),
-    Paginated: createPaginatedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
   },
 })
 

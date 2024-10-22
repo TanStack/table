@@ -9,10 +9,8 @@ import {
   table_autoResetExpanded,
   table_getCanSomeRowsExpand,
   table_getExpandedDepth,
-  table_getExpandedRowModel,
   table_getIsAllRowsExpanded,
   table_getIsSomeRowsExpanded,
-  table_getPreExpandedRowModel,
   table_getToggleAllRowsExpandedHandler,
   table_resetExpanded,
   table_setExpanded,
@@ -112,12 +110,6 @@ export const RowExpanding: TableFeature = {
       },
       {
         fn: () => table_getExpandedDepth(table),
-      },
-      {
-        fn: () => table_getPreExpandedRowModel(table),
-      },
-      {
-        fn: () => table_getExpandedRowModel(table),
       },
     ])
   },

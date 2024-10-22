@@ -4,8 +4,6 @@ import {
   table_getAllLeafColumns,
   table_getColumn,
 } from '../columns/Columns.utils'
-import { table_getPrePaginationRowModel } from '../../features/row-pagination/RowPagination.utils'
-import { table_getCoreRowModel, table_getRowModel } from '../table/Tables.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -156,12 +154,11 @@ export function table_getRow<
   searchAll?: boolean,
 ): Row<TFeatures, TData> {
   // TODO - simplify this across different row models
-  let row = (
-    searchAll ? table_getPrePaginationRowModel(table) : table_getRowModel(table)
-  ).rowsById[rowId]
+  let row = (searchAll ? table.getPrePaginatedRowModel() : table.getRowModel())
+    .rowsById[rowId]
 
   if (!row) {
-    row = table_getCoreRowModel(table).rowsById[rowId]
+    row = table.getCoreRowModel().rowsById[rowId]
     if (!row) {
       if (process.env.NODE_ENV !== 'production') {
         throw new Error(`getRow could not find row with ID: ${rowId}`)

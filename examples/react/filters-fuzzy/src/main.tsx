@@ -133,9 +133,9 @@ function App() {
       filterFns,
     },
     _rowModels: {
-      Filtered: createFilteredRowModel(),
-      Paginated: createPaginatedRowModel(),
-      Sorted: createSortedRowModel(),
+      filteredRowModel: createFilteredRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel(),
     },
     columns,
     data,
@@ -294,7 +294,7 @@ function App() {
           ))}
         </select>
       </div>
-      <div>{table.getPrePaginationRowModel().rows.length} Rows</div>
+      <div>{table.getPrePaginatedRowModel().rows.length} Rows</div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>

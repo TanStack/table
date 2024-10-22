@@ -4,13 +4,10 @@ import { table_getColumn } from '../../core/columns/Columns.utils'
 import { table_getState } from '../../core/table/Tables.utils'
 import { table_autoResetExpanded } from '../row-expanding/RowExpanding.utils'
 import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
-import {
-  row_getGroupingValue,
-  table_getPreGroupedRowModel,
-} from './ColumnGrouping.utils'
+import { row_getGroupingValue } from './ColumnGrouping.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
@@ -21,10 +18,10 @@ export function createGroupedRowModel<
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'table.createGroupedRowModel',
+      fnName: 'table.getGroupedRowModel',
       memoDeps: () => [
         table_getState(table).grouping,
-        table_getPreGroupedRowModel(table),
+        table.getPreGroupedRowModel(),
       ],
       fn: () => _createGroupedRowModel(table),
       onAfterUpdate: () => {
@@ -38,7 +35,7 @@ function _createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  const rowModel = table_getPreGroupedRowModel(table)
+  const rowModel = table.getPreGroupedRowModel()
   const grouping = table_getState(table).grouping
 
   if (!rowModel.rows.length || !grouping?.length) {

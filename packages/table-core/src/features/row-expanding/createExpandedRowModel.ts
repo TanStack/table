@@ -1,12 +1,9 @@
 import { isDev, tableMemo } from '../../utils'
 import { table_getState } from '../../core/table/Tables.utils'
-import {
-  row_getIsExpanded,
-  table_getPreExpandedRowModel,
-} from './RowExpanding.utils'
+import { row_getIsExpanded } from './RowExpanding.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
@@ -19,10 +16,10 @@ export function createExpandedRowModel<
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'table.createExpandedRowModel',
+      fnName: 'table.getExpandedRowModel',
       memoDeps: () => [
         table_getState(table).expanded,
-        table_getPreExpandedRowModel(table),
+        table.getPreExpandedRowModel(),
         table.options.paginateExpandedRows,
       ],
       fn: () => _createExpandedRowModel(table),
@@ -33,7 +30,7 @@ export function _createExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  const rowModel = table_getPreExpandedRowModel(table)
+  const rowModel = table.getPreExpandedRowModel()
   const expanded = table_getState(table).expanded
 
   if (

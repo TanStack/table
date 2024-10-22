@@ -1,12 +1,8 @@
 import { functionalUpdate, isFunction } from '../../utils'
 import { row_getValue } from '../../core/rows/Rows.utils'
-import {
-  table_getCoreRowModel,
-  table_getState,
-} from '../../core/table/Tables.utils'
+import { table_getState } from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
 import type { Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
 import type {
@@ -31,7 +27,7 @@ export function column_getAutoFilterFn<
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
 
-  const firstRow = table_getCoreRowModel(table).flatRows[0]
+  const firstRow = table.getCoreRowModel().flatRows[0]
 
   const value = firstRow ? row_getValue(firstRow, table, column.id) : undefined
 
@@ -218,28 +214,6 @@ export function table_resetColumnFilters<
     table,
     defaultState ? [] : (table.initialState.columnFilters ?? []),
   )
-}
-
-export function table_getPreFilteredRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
-  return table_getCoreRowModel(table)
-}
-
-export function table_getFilteredRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.Filtered) {
-    table._rowModels.Filtered = table.options._rowModels?.Filtered?.(table)
-  }
-
-  if (table.options.manualFiltering || !table._rowModels.Filtered) {
-    return table_getPreFilteredRowModel(table)
-  }
-
-  return table._rowModels.Filtered()
 }
 
 export function shouldAutoRemoveFilter<

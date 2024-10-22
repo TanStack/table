@@ -8,6 +8,7 @@ export * from './types/ColumnDef'
 export * from './types/Header'
 export * from './types/HeaderGroup'
 export * from './types/Row'
+export * from './types/RowModel'
 export * from './types/Table'
 export * from './types/TableFeatures'
 export * from './types/TableOptions'
@@ -15,7 +16,7 @@ export * from './types/TableState'
 export * from './types/type-utils'
 
 /**
- * Core
+ * coreRowModel
  */
 
 export * from './core/coreFeatures'
@@ -50,8 +51,13 @@ export * from './core/rows/Rows'
 export * from './core/rows/Rows.types'
 export * from './core/rows/Rows.utils'
 
+// Row Models
+export * from './core/row-models/RowModels'
+export * from './core/row-models/RowModels.types'
+export * from './core/row-models/RowModels.utils'
+export * from './core/row-models/createCoreRowModel'
+
 // Tables
-export * from './core/table/createCoreRowModel'
 export * from './core/table/constructTable'
 export * from './core/table/Tables'
 export * from './core/table/Tables.types'

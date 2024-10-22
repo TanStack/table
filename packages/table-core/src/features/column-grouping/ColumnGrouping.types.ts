@@ -1,3 +1,5 @@
+import type { RowModel } from '../../core/row-models/RowModels.types'
+import type { Table } from '../../types/Table'
 import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
 import type {
   CellData,
@@ -6,7 +8,6 @@ import type {
   Updater,
 } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { ColumnDefTemplate } from '../../types/ColumnDef'
@@ -85,31 +86,6 @@ export interface ColumnDef_ColumnGrouping<
    * Specify a value to be used for grouping rows on this column. If this option is not specified, the value derived from `accessorKey` / `accessorFn` will be used instead.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getgroupingvalue)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
-   */
-  getGroupingValue?: (row: TData) => any
-}
-
-export interface ColumnDef_ColumnGrouping_Unavailable<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TValue extends CellData = CellData,
-> {
-  /**
-   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
-   */
-  aggregatedCell?: ColumnDefTemplate<
-    ReturnType<Cell<TFeatures, TData, TValue>['getContext']>
-  >
-  /**
-   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
-   */
-  aggregationFn?: AggregationFnOption<TFeatures, TData>
-  /**
-   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
-   */
-  enableGrouping?: boolean
-  /**
-   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
    */
   getGroupingValue?: (row: TData) => any
 }
@@ -243,28 +219,27 @@ export interface TableOptions_ColumnGrouping {
   onGroupingChange?: OnChangeFn<GroupingState>
 }
 
-export interface TableOptions_ColumnGrouping_Unavailable {
-  /**
-   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
-   */
-  enableGrouping?: boolean
-  /**
-   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
-   */
-  groupedColumnMode?: false | 'reorder' | 'remove'
-  /**
-   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
-   */
-  manualGrouping?: boolean
-  /**
-   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
-   */
-  onGroupingChange?: OnChangeFn<GroupingState>
-}
-
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export interface Table_ColumnGrouping<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * Resets the **grouping** state to `initialState.grouping`, or `true` can be passed to force a default blank state reset to `[]`.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#resetgrouping)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
+   */
+  resetGrouping: (defaultState?: boolean) => void
+  /**
+   * Updates the grouping state of the table via an update function or value.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#setgrouping)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
+   */
+  setGrouping: (updater: Updater<GroupingState>) => void
+}
+
+export interface Table_RowModels_Grouped<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
@@ -280,16 +255,25 @@ export interface Table_ColumnGrouping<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
   getPreGroupedRowModel: () => RowModel<TFeatures, TData>
+}
+
+export interface CreateRowModel_Grouped<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
-   * Resets the **grouping** state to `initialState.grouping`, or `true` can be passed to force a default blank state reset to `[]`.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#resetgrouping)
+   * Returns the row model after grouping has taken place, but no further.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#getgroupedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
    */
-  resetGrouping: (defaultState?: boolean) => void
-  /**
-   * Updates the grouping state of the table via an update function or value.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#setgrouping)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/grouping)
-   */
-  setGrouping: (updater: Updater<GroupingState>) => void
+  groupedRowModel?: (
+    table: Table<TFeatures, TData>,
+  ) => () => RowModel<TFeatures, TData>
+}
+
+export interface CachedRowModel_Grouped<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  groupedRowModel: () => RowModel<TFeatures, TData>
 }

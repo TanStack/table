@@ -1,12 +1,10 @@
 import { functionalUpdate } from '../../utils'
-import { table_getExpandedRowModel } from '../row-expanding/RowExpanding.utils'
 import {
   table_getInitialState,
   table_getState,
 } from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
 import type { Table_Internal } from '../../types/Table'
 import type { PaginationState } from './RowPagination.types'
 
@@ -274,38 +272,6 @@ export function table_lastPage<
  * @param table
  * @returns
  */
-export function table_getPrePaginationRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  return table_getExpandedRowModel(table)
-}
-
-/**
- *
- * @param table
- * @returns
- */
-export function table_getPaginatedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.Paginated) {
-    table._rowModels.Paginated = table.options._rowModels?.Paginated?.(table)
-  }
-
-  if (table.options.manualPagination || !table._rowModels.Paginated) {
-    return table_getPrePaginationRowModel(table)
-  }
-
-  return table._rowModels.Paginated()
-}
-
-/**
- *
- * @param table
- * @returns
- */
 export function table_getPageCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -328,7 +294,5 @@ export function table_getRowCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (
-    table.options.rowCount ?? table_getPrePaginationRowModel(table).rows.length
-  )
+  return table.options.rowCount ?? table.getPrePaginatedRowModel().rows.length
 }

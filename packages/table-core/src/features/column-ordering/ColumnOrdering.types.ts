@@ -24,13 +24,6 @@ export interface TableOptions_ColumnOrdering {
   onColumnOrderChange?: OnChangeFn<ColumnOrderState>
 }
 
-export interface TableOptions_ColumnOrdering_Unavailable {
-  /**
-   * @deprecated Import the `ColumnOrdering` feature to use the column ordering APIs.
-   */
-  onColumnOrderChange?: OnChangeFn<ColumnOrderState>
-}
-
 export interface Column_ColumnOrdering {
   /**
    * Returns the index of the column in the order of the visible columns. Optionally pass a `position` parameter to get the index of the column in a sub-section of the table

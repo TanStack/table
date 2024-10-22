@@ -1,7 +1,5 @@
 import { assignAPIs, makeStateUpdater } from '../../utils'
 import { table_getState } from '../../core/table/Tables.utils'
-import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
-import { table_getSortedRowModel } from '../row-sorting/RowSorting.utils'
 import {
   getDefaultRowSelectionState,
   row_getCanMultiSelect,
@@ -137,14 +135,14 @@ export const RowSelection: TableFeature = {
         fn: () => table_getFilteredSelectedRowModel(table),
         memoDeps: () => [
           table_getState(table).rowSelection,
-          table_getFilteredRowModel(table),
+          table.getFilteredRowModel(),
         ],
       },
       {
         fn: () => table_getGroupedSelectedRowModel(table),
         memoDeps: () => [
           table_getState(table).rowSelection,
-          table_getSortedRowModel(table),
+          table.getSortedRowModel(),
         ],
       },
       {

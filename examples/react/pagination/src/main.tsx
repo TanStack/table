@@ -114,9 +114,9 @@ function MyTable({
     _features,
     _processingFns,
     _rowModels: {
-      Sorted: createSortedRowModel(),
-      Filtered: createFilteredRowModel(),
-      Paginated: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel(),
+      filteredRowModel: createFilteredRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
     },
     columns,
     data,

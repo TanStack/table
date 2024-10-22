@@ -1,7 +1,5 @@
 import { assignAPIs } from '../../utils'
 import {
-  table_getCoreRowModel,
-  table_getRowModel,
   table_getState,
   table_reset,
   table_setOptions,
@@ -16,12 +14,6 @@ export const Tables: TableFeature = {
     table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(table, table, [
-      {
-        fn: () => table_getCoreRowModel(table),
-      },
-      {
-        fn: () => table_getRowModel(table),
-      },
       {
         fn: () => table_getState(table),
       },

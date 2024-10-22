@@ -1,6 +1,6 @@
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Row } from '../../types/Row'
 
 export type RowSelectionState = Record<string, boolean>
@@ -58,28 +58,6 @@ export interface TableOptions_RowSelection<
   //   table: Table<TFeatures, TData>,
   //   rowModel: RowModel<TFeatures, TData>
   // ) => RowModel<TFeatures, TData>
-}
-
-export interface TableOptions_RowSelection_Unavailable<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * @deprecated Import the `RowSelection` feature to use the row selection APIs.
-   */
-  enableMultiRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
-  /**
-   * @deprecated Import the `RowSelection` feature to use the row selection APIs.
-   */
-  enableRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
-  /**
-   * @deprecated Import the `RowSelection` feature to use the row selection APIs.
-   */
-  enableSubRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
-  /**
-   * @deprecated Import the `RowSelection` feature to use the row selection APIs.
-   */
-  onRowSelectionChange?: OnChangeFn<RowSelectionState>
 }
 
 export interface Row_RowSelection {

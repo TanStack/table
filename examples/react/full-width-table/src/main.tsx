@@ -73,7 +73,7 @@ function App() {
 
   const table = useTable({
     _rowModels: {
-      Paginated: createPaginatedRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
     },
     columns,
     data,

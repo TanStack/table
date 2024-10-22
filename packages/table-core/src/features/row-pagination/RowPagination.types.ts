@@ -1,6 +1,7 @@
+import type { RowModel } from '../../core/row-models/RowModels.types'
+import type { Table } from '../../types/Table'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
 
 export interface PaginationState {
   pageIndex: number
@@ -50,29 +51,6 @@ export interface TableOptions_RowPagination {
   rowCount?: number
 }
 
-export interface TableOptions_RowPagination_Unavailable {
-  /**
-   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
-   */
-  autoResetPageIndex?: boolean
-  /**
-   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
-   */
-  manualPagination?: boolean
-  /**
-   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
-   */
-  onPaginationChange?: OnChangeFn<PaginationState>
-  /**
-   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
-   */
-  pageCount?: number
-  /**
-   * @deprecated Import the `RowPagination` feature to use the row pagination APIs.
-   */
-  rowCount?: number
-}
-
 export interface PaginationDefaultOptions {
   onPaginationChange: OnChangeFn<PaginationState>
 }
@@ -112,18 +90,6 @@ export interface Table_RowPagination<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
   getPageOptions: () => Array<number>
-  /**
-   * Returns the row model for the table after pagination has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getPaginatedRowModel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
-   */
-  getPaginatedRowModel: () => RowModel<TFeatures, TData>
-  /**
-   * Returns the row model for the table before any pagination has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getprepaginationrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
-   */
-  getPrePaginationRowModel: () => RowModel<TFeatures, TData>
   /**
    * Increments the page index by one, if possible.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#nextpage)
@@ -184,4 +150,45 @@ export interface Table_RowPagination<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
    */
   setPagination: (updater: Updater<PaginationState>) => void
+}
+
+export interface Table_RowModels_Paginated<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * Returns the row model for the table after pagination has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getPaginatedRowModel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+   */
+  getPaginatedRowModel: () => RowModel<TFeatures, TData>
+  /**
+   * Returns the row model for the table before any pagination has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getprepaginationrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+   */
+  getPrePaginatedRowModel: () => RowModel<TFeatures, TData>
+}
+
+export interface CreateRowModel_Paginated<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * Returns the row model after pagination has taken place, but no further.
+   *
+   * Pagination columns are automatically reordered by default to the start of the columns list. If you would rather remove them or leave them as-is, set the appropriate mode here.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination#getPaginatedRowModel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+   */
+  paginatedRowModel?: (
+    table: Table<TFeatures, TData>,
+  ) => () => RowModel<TFeatures, TData>
+}
+
+export interface CachedRowModel_Paginated<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  paginatedRowModel: () => RowModel<TFeatures, TData>
 }

@@ -3,15 +3,11 @@ import { row_getValue } from '../../core/rows/Rows.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { table_getState } from '../../core/table/Tables.utils'
 import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
-import {
-  column_getCanSort,
-  column_getSortingFn,
-  table_getPreSortedRowModel,
-} from './RowSorting.utils'
+import { column_getCanSort, column_getSortingFn } from './RowSorting.utils'
 import type { Column_Internal } from '../../types/Column'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { SortingFn } from './RowSorting.types'
@@ -25,10 +21,10 @@ export function createSortedRowModel<
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'table.createSortedRowModel',
+      fnName: 'table.getSortedRowModel',
       memoDeps: () => [
         table_getState(table).sorting,
-        table_getPreSortedRowModel(table),
+        table.getPreSortedRowModel(),
       ],
       fn: () => _createSortedRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
@@ -39,7 +35,7 @@ function _createSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  const preSortedRowModel = table_getPreSortedRowModel(table)
+  const preSortedRowModel = table.getPreSortedRowModel()
   const sorting = table_getState(table).sorting
 
   if (!preSortedRowModel.rows.length || !sorting?.length) {
@@ -50,7 +46,7 @@ function _createSortedRowModel<
 
   // Filter out sortings that correspond to non existing columns
   const availableSorting = sorting.filter((sort) =>
-    column_getCanSort(table_getColumn(table, sort.id), table),
+    column_getCanSort(table_getColumn(table, sort.id)!, table),
   )
 
   const columnInfoById: Record<
@@ -125,7 +121,6 @@ function _createSortedRowModel<
           return sortInt
         }
       }
-
       return rowA.index - rowB.index
     })
 

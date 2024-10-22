@@ -1,9 +1,6 @@
-import { table_getPaginatedRowModel } from '../../features/row-pagination/RowPagination.utils'
 import { functionalUpdate } from '../../utils'
-import { createCoreRowModel } from './createCoreRowModel'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
 import type { Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
@@ -65,24 +62,4 @@ export function table_setState<
   updater: Updater<TableState<TFeatures>>,
 ): void {
   table.options.onStateChange?.(updater)
-}
-
-export function table_getCoreRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.Core) {
-    table._rowModels.Core =
-      table.options._rowModels?.Core?.(table) ??
-      createCoreRowModel<TFeatures, TData>()(table)
-  }
-
-  return table._rowModels.Core()
-}
-
-export function table_getRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  return table_getPaginatedRowModel(table)
 }

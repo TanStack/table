@@ -36,7 +36,7 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Paginated: createPaginatedRowModel(),
+            paginatedRowModel: createPaginatedRowModel(),
           },
           enableRowPinning: true,
           keepPinnedRows: true,
@@ -69,7 +69,7 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Paginated: createPaginatedRowModel(),
+            paginatedRowModel: createPaginatedRowModel(),
           },
           enableRowPinning: true,
           keepPinnedRows: true,
@@ -102,7 +102,7 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Paginated: createPaginatedRowModel(),
+            paginatedRowModel: createPaginatedRowModel(),
           },
           enableRowPinning: true,
           keepPinnedRows: false,
@@ -135,7 +135,7 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Paginated: createPaginatedRowModel(),
+            paginatedRowModel: createPaginatedRowModel(),
           },
           enableRowPinning: true,
           keepPinnedRows: false,
@@ -167,7 +167,7 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Paginated: createPaginatedRowModel(),
+            paginatedRowModel: createPaginatedRowModel(),
           },
           enableRowPinning: true,
           keepPinnedRows: true,
@@ -200,7 +200,7 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Paginated: createPaginatedRowModel(),
+            paginatedRowModel: createPaginatedRowModel(),
           },
           enableRowPinning: true,
           keepPinnedRows: true,
@@ -235,7 +235,7 @@ describe('RowPinning', () => {
         const table = constructTable<any, Person>({
           _features: { RowPinning, RowPagination },
           _rowModels: {
-            Paginated: createPaginatedRowModel(),
+            paginatedRowModel: createPaginatedRowModel(),
           },
           enableRowPinning: true,
           keepPinnedRows: true,

@@ -91,7 +91,7 @@
 
   const options: TableOptions<any, Person> = {
     _features,
-    _rowModels: { Sorted: createSortedRowModel() },
+    _rowModels: { sortedRowModel: createSortedRowModel() },
     get data() {
       return data
     },

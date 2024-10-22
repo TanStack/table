@@ -93,7 +93,7 @@ function App() {
       sortingFns,
     },
     _rowModels: {
-      Sorted: createSortedRowModel(), // client-side sorting
+      sortedRowModel: createSortedRowModel(), // client-side sorting
     },
     columns,
     data,
@@ -197,7 +197,7 @@ const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <App />
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )

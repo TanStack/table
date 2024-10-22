@@ -22,17 +22,17 @@ import type { Person } from './makeData'
 const tableHelper = createTableHelper({
   _features: {
     ColumnFiltering,
-    RowPagination,
-    RowSorting,
     ColumnGrouping,
     RowExpanding,
+    RowPagination,
+    RowSorting,
   },
   _rowModels: {
-    Filtered: createFilteredRowModel(),
-    Paginated: createPaginatedRowModel(),
-    Sorted: createSortedRowModel(),
-    Grouped: createGroupedRowModel(),
-    Expanded: createExpandedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(),
+    groupedRowModel: createGroupedRowModel(),
+    expandedRowModel: createExpandedRowModel(),
   },
   TData: {} as Person,
 })

@@ -13,8 +13,6 @@ import {
   getDefaultGroupingState,
   row_getGroupingValue,
   row_getIsGrouped,
-  table_getGroupedRowModel,
-  table_getPreGroupedRowModel,
   table_resetGrouping,
   table_setGrouping,
 } from './ColumnGrouping.utils'
@@ -22,7 +20,7 @@ import type { TableState } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
-import type { Row } from '../../types/Row'
+import type { Row_Internal } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 import type {
@@ -132,9 +130,8 @@ export const ColumnGrouping: TableFeature = {
   },
 
   constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TData>>,
+    row: Row_Internal<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ): void => {
     row._groupingValuesCache = {}
 
@@ -158,12 +155,6 @@ export const ColumnGrouping: TableFeature = {
       },
       {
         fn: (defaultState) => table_resetGrouping(table, defaultState),
-      },
-      {
-        fn: () => table_getPreGroupedRowModel(table),
-      },
-      {
-        fn: () => table_getGroupedRowModel(table),
       },
     ])
   },

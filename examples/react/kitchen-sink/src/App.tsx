@@ -86,13 +86,13 @@ export const App = () => {
 
   const table = useTable({
     _rowModels: {
-      Filtered: createFilteredRowModel(),
-      Paginated: createPaginatedRowModel(),
-      Sorted: createSortedRowModel(),
-      Grouped: createGroupedRowModel(),
-      Faceted: createFacetedRowModel(),
-      FacetedMinMax: createFacetedMinMaxValues(),
-      FacetedUnique: createFacetedUniqueValues(),
+      filteredRowModel: createFilteredRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel(),
+      groupedRowModel: createGroupedRowModel(),
+      facetedRowModel: createFacetedRowModel(),
+      facetedMinMaxValues: createFacetedMinMaxValues(),
+      facetedUniqueValues: createFacetedUniqueValues(),
     },
     columns,
     data,
@@ -214,7 +214,7 @@ export const App = () => {
         rowSelection={rowSelection}
         setPageIndex={table.setPageIndex}
         setPageSize={table.setPageSize}
-        totalRows={table.getPrePaginationRowModel().rows.length}
+        totalRows={table.getPrePaginatedRowModel().rows.length}
       />
       <div className="p-2" />
       <pre>{JSON.stringify(table.getState(), null, 2)}</pre>

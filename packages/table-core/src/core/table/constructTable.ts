@@ -1,4 +1,5 @@
 import { isDev } from '../../utils'
+import type { CachedRowModels } from '../../types/RowModel'
 import type { Table_CoreProperties } from './Tables.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -39,7 +40,7 @@ export function constructTable<
   const coreInstance: Table_CoreProperties<TFeatures, TData> = {
     _features, // features get stored here immediately
     _processingFns, // processing functions get stored here
-    _rowModels: {}, // row models get cached here later
+    _rowModels: {} as CachedRowModels<TFeatures, TData>, // row models get cached here later
     options: {
       ...defaultOptions,
       ...options,

@@ -88,10 +88,10 @@ function App() {
   const table = createTable({
     _features,
     _rowModels: {
-      Faceted: createFacetedRowModel(),
-      FacetedMinMax: createFacetedMinMaxValues(),
-      FacetedUnique: createFacetedUniqueValues(),
-      Filtered: createFilteredRowModel(),
+      facetedRowModel: createFacetedRowModel(),
+      facetedMinMaxValues: createFacetedMinMaxValues(),
+      facetedUniqueValues: createFacetedUniqueValues(),
+      filteredRowModel: createFilteredRowModel(),
     },
     get data() {
       return data()

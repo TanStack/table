@@ -31,17 +31,6 @@ export interface TableOptions_ColumnVisibility {
   onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>
 }
 
-export interface TableOptions_ColumnVisibility_Unavailable {
-  /**
-   * @deprecated Import the `ColumnVisibility` feature to use the column visibility APIs.
-   */
-  enableHiding?: boolean
-  /**
-   * @deprecated Import the `ColumnVisibility` feature to use the column visibility APIs.
-   */
-  onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>
-}
-
 export type VisibilityDefaultOptions = Pick<
   TableOptions_ColumnVisibility,
   'onColumnVisibilityChange'
@@ -106,13 +95,6 @@ export interface ColumnDef_ColumnVisibility {
    * Enables/disables column hiding for this column. Defaults to `true`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#enablehiding)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
-   */
-  enableHiding?: boolean
-}
-
-export interface ColumnDef_ColumnVisibility_Unavailable {
-  /**
-   * @deprecated Import the `ColumnVisibility` feature to use the column visibility APIs.
    */
   enableHiding?: boolean
 }

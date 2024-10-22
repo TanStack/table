@@ -1,14 +1,10 @@
-import { table_getPrePaginationRowModel } from '../row-pagination/RowPagination.utils'
-import { table_getSortedRowModel } from '../row-sorting/RowSorting.utils'
 import { table_getRow } from '../../core/rows/Rows.utils'
 import {
   table_getInitialState,
-  table_getRowModel,
   table_getState,
 } from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { ExpandedState, ExpandedStateList } from './RowExpanding.types'
@@ -27,29 +23,13 @@ export function getDefaultExpandedState(): ExpandedState {
 export function table_autoResetExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-  registered?: boolean,
-  queued?: boolean,
-) {
-  if (!registered) {
-    table._queue(() => {
-      registered = true
-    })
-    return
-  }
-
+>(table: Table_Internal<TFeatures, TData>) {
   if (
     table.options.autoResetAll ??
     table.options.autoResetExpanded ??
     !table.options.manualExpanding
   ) {
-    if (queued) return
-    queued = true
-    table._queue(() => {
-      table_resetExpanded(table)
-      queued = false
-    })
+    queueMicrotask(() => table_resetExpanded(table))
   }
 }
 
@@ -105,9 +85,9 @@ export function table_getCanSomeRowsExpand<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return table_getPrePaginationRowModel(table).flatRows.some((row) =>
-    row_getCanExpand(row, table),
-  )
+  return table
+    .getPrePaginatedRowModel()
+    .flatRows.some((row) => row_getCanExpand(row, table))
 }
 
 /**
@@ -160,9 +140,7 @@ export function table_getIsAllRowsExpanded<
 
   // If any row is not expanded, return false
   if (
-    table_getRowModel(table).flatRows.some(
-      (row) => !row_getIsExpanded(row, table),
-    )
+    table.getRowModel().flatRows.some((row) => !row_getIsExpanded(row, table))
   ) {
     return false
   }
@@ -184,7 +162,7 @@ export function table_getExpandedDepth<
 
   const rowIds =
     table_getState(table).expanded === true
-      ? Object.keys(table_getRowModel(table).rowsById)
+      ? Object.keys(table.getRowModel().rowsById)
       : Object.keys(table_getState(table).expanded ?? {})
 
   rowIds.forEach((id) => {
@@ -193,38 +171,6 @@ export function table_getExpandedDepth<
   })
 
   return maxDepth
-}
-
-/**
- *
- * @param table
- * @returns
- */
-export function table_getPreExpandedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  return table_getSortedRowModel(table)
-}
-
-/**
- *
- * @param table
- * @returns
- */
-export function table_getExpandedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.Expanded) {
-    table._rowModels.Expanded = table.options._rowModels?.Expanded?.(table)
-  }
-
-  if (table.options.manualExpanding || !table._rowModels.Expanded) {
-    return table_getPreExpandedRowModel(table)
-  }
-
-  return table._rowModels.Expanded()
 }
 
 /**
@@ -247,7 +193,7 @@ export function row_toggleExpanded<
     let oldExpanded: ExpandedStateList = {}
 
     if (old === true) {
-      Object.keys(table_getRowModel(table).rowsById).forEach((rowId) => {
+      Object.keys(table.getRowModel().rowsById).forEach((rowId) => {
         oldExpanded[rowId] = true
       })
     } else {

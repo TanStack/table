@@ -107,12 +107,12 @@ function App() {
       sortingFns,
     },
     _rowModels: {
-      Filtered: createFilteredRowModel(), // client-side filtering
-      Paginated: createPaginatedRowModel(),
-      Sorted: createSortedRowModel(),
-      Faceted: createFacetedRowModel(), // client-side faceting
-      FacetedMinMax: createFacetedMinMaxValues(), // generate min/max values for range filter
-      FacetedUnique: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete
+      filteredRowModel: createFilteredRowModel(), // client-side filtering
+      paginatedRowModel: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel(),
+      facetedRowModel: createFacetedRowModel(), // client-side faceting
+      facetedMinMaxValues: createFacetedMinMaxValues(), // generate min/max values for range filter
+      facetedUniqueValues: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete
     },
     columns,
     data,
@@ -247,7 +247,7 @@ function App() {
           ))}
         </select>
       </div>
-      <div>{table.getPrePaginationRowModel().rows.length} Rows</div>
+      <div>{table.getPrePaginatedRowModel().rows.length} Rows</div>
       <div>
         <button onClick={rerender}>Force Rerender</button>
       </div>

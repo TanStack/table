@@ -1,5 +1,4 @@
 import { assignAPIs, makeStateUpdater } from '../../utils'
-import { table_getCoreRowModel } from '../../core/table/Tables.utils'
 import {
   column_getCanGlobalFilter,
   table_getGlobalAutoFilterFn,
@@ -47,7 +46,7 @@ export const GlobalFiltering: TableFeature = {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: (column) => {
-        const value = table_getCoreRowModel(table as Table<TFeatures, TData>)
+        const value = table.getCoreRowModel()
           .flatRows[0]?.getAllCellsByColumnId()
           [column.id]?.getValue()
 

@@ -63,8 +63,8 @@
   const options: TableOptions<any, Person> = {
     _features,
     _rowModels: {
-      Filtered: createFilteredRowModel(),
-      Paginated: createPaginatedRowModel(),
+      filteredRowModel: createFilteredRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
     },
     data: makeData(25),
     columns,

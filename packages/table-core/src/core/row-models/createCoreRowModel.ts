@@ -2,9 +2,9 @@ import { constructRow } from '../rows/constructRow'
 import { isDev, tableMemo } from '../../utils'
 import { table_getRowId } from '../rows/Rows.utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/RowPagination.utils'
+import type { RowModel } from './RowModels.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
@@ -15,7 +15,7 @@ export function createCoreRowModel<
   return (table: Table<TFeatures, TData>) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'table.createCoreRowModel',
+      fnName: 'table.getCoreRowModel',
       memoDeps: () => [table.options.data],
       fn: (data) => _createCoreRowModel(table, data),
       onAfterUpdate: () => table_autoResetPageIndex(table),
@@ -46,6 +46,7 @@ function _createCoreRowModel<
   ): Array<Row<TFeatures, TData>> => {
     const rows = [] as Array<Row<TFeatures, TData>>
 
+    console.time('constructing rows')
     for (let i = 0; i < originalRows.length; i++) {
       const originalRow = originalRows[i]!
       // Make the row
@@ -76,6 +77,7 @@ function _createCoreRowModel<
         }
       }
     }
+    console.timeEnd('constructing rows')
 
     return rows
   }

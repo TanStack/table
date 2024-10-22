@@ -5,7 +5,7 @@ import type {
 } from './ColumnFiltering.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 

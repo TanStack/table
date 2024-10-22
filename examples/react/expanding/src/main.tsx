@@ -130,9 +130,9 @@ function App() {
   const table = useTable({
     _features,
     _rowModels: {
-      Filtered: createFilteredRowModel(),
-      Paginated: createPaginatedRowModel(),
-      Sorted: createSortedRowModel(),
+      filteredRowModel: createFilteredRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel(),
     },
     columns,
     data,

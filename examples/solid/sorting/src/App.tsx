@@ -72,7 +72,7 @@ function App() {
   const table = createTable({
     _features,
     _rowModels: {
-      Sorted: createSortedRowModel(),
+      sortedRowModel: createSortedRowModel(),
     },
     get data() {
       return data()

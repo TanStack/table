@@ -1,6 +1,7 @@
+import type { Table } from '../../types/Table'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Row } from '../../types/Row'
 
 export type ExpandedStateList = Record<string, boolean>
@@ -98,45 +99,11 @@ export interface TableOptions_RowExpanding<
   paginateExpandedRows?: boolean
 }
 
-export interface TableOptions_RowExpanding_Unavailable<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
-   */
-  autoResetExpanded?: boolean
-  /**
-   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
-   */
-  enableExpanding?: boolean
-  /**
-   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
-   */
-  getIsRowExpanded?: (row: Row<TFeatures, TData>) => boolean
-  /**
-   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
-   */
-  getRowCanExpand?: (row: Row<TFeatures, TData>) => boolean
-  /**
-   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
-   */
-  manualExpanding?: boolean
-  /**
-   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
-   */
-  onExpandedChange?: OnChangeFn<ExpandedState>
-  /**
-   * @deprecated Import the `RowExpanding` feature to use the row expanding APIs.
-   */
-  paginateExpandedRows?: boolean
-}
-
 export interface Table_RowExpanding<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  _autoResetExpanded: () => void
+  autoResetExpanded: () => void
   /**
    * Returns whether there are any rows that can be expanded.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getcansomerowsexpand)
@@ -150,12 +117,6 @@ export interface Table_RowExpanding<
    */
   getExpandedDepth: () => number
   /**
-   * Returns the row model after expansion has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getexpandedrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
-   */
-  getExpandedRowModel: () => RowModel<TFeatures, TData>
-  /**
    * Returns whether all rows are currently expanded.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getisallrowsexpanded)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
@@ -167,12 +128,6 @@ export interface Table_RowExpanding<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
    */
   getIsSomeRowsExpanded: () => boolean
-  /**
-   * Returns the row model before expansion has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getpreexpandedrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
-   */
-  getPreExpandedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns a handler that can be used to toggle the expanded state of all rows. This handler is meant to be used with an `input[type=checkbox]` element.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#gettoggleallrowsexpandedhandler)
@@ -197,4 +152,43 @@ export interface Table_RowExpanding<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
    */
   toggleAllRowsExpanded: (expanded?: boolean) => void
+}
+
+export interface Table_RowModels_Expanded<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * Returns the row model after expansion has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getexpandedrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
+   */
+  getExpandedRowModel: () => RowModel<TFeatures, TData>
+  /**
+   * Returns the row model before expansion has been applied.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getpreexpandedrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
+   */
+  getPreExpandedRowModel: () => RowModel<TFeatures, TData>
+}
+
+export interface CreateRowModel_Expanded<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * This function is responsible for returning the expanded row model. If this function is not provided, the table will not expand rows. You can use the default exported `getExpandedRowModel` function to get the expanded row model or implement your own.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/expanding#getexpandedrowmodel)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/expanding)
+   */
+  expandedRowModel?: (
+    table: Table<TFeatures, TData>,
+  ) => () => RowModel<TFeatures, TData>
+}
+
+export interface CachedRowModel_Expanded<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  expandedRowModel: () => RowModel<TFeatures, TData>
 }

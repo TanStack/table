@@ -23,13 +23,6 @@ export interface TableOptions_ColumnSizing {
   onColumnSizingChange?: OnChangeFn<ColumnSizingState>
 }
 
-export interface TableOptions_ColumnSizing_Unavailable {
-  /**
-   * @deprecated Import the `ColumnSizing` feature to use the column sizing APIs.
-   */
-  onColumnSizingChange?: OnChangeFn<ColumnSizingState>
-}
-
 export type ColumnSizingDefaultOptions = Pick<
   TableOptions_ColumnSizing,
   'onColumnSizingChange'
@@ -91,21 +84,6 @@ export interface ColumnDef_ColumnSizing {
    * The desired size for the column
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#size)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
-   */
-  size?: number
-}
-
-export interface ColumnDef_ColumnSizing_Unavailable {
-  /**
-   * @deprecated Import the `ColumnSizing` feature to use the column sizing APIs.
-   */
-  maxSize?: number
-  /**
-   * @deprecated Import the `ColumnSizing` feature to use the column sizing APIs.
-   */
-  minSize?: number
-  /**
-   * @deprecated Import the `ColumnSizing` feature to use the column sizing APIs.
    */
   size?: number
 }

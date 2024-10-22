@@ -1,16 +1,11 @@
-import { table_getPreGroupedRowModel as RowSelectionUtils } from '../column-grouping/ColumnGrouping.utils'
-import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
-import { table_getPaginatedRowModel } from '../row-pagination/RowPagination.utils'
 import { table_getRow } from '../../core/rows/Rows.utils'
 import {
-  table_getCoreRowModel,
   table_getInitialState,
-  table_getRowModel,
   table_getState,
 } from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowSelectionState } from './RowSelection.types'
@@ -68,7 +63,7 @@ export function table_toggleAllRowsSelected<
 
     const rowSelection = { ...old }
 
-    const preGroupedFlatRows = RowSelectionUtils(table).flatRows
+    const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
 
     // We don't use `mutateRowIsSelected` here for performance reasons.
     // All of the rows are flat already, so it wouldn't be worth it
@@ -106,7 +101,7 @@ export function table_toggleAllPageRowsSelected<
 
     const rowSelection: RowSelectionState = { ...old }
 
-    table_getRowModel(table).rows.forEach((row) => {
+    table.getRowModel().rows.forEach((row) => {
       mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
     })
 
@@ -123,7 +118,7 @@ export function table_getPreSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  return table_getCoreRowModel(table)
+  return table.getCoreRowModel()
 }
 
 /**
@@ -135,7 +130,7 @@ export function table_getSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const rowModel = table_getCoreRowModel(table)
+  const rowModel = table.getCoreRowModel()
 
   if (!Object.keys(table_getState(table).rowSelection ?? {}).length) {
     return {
@@ -157,7 +152,7 @@ export function table_getFilteredSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const rowModel = table_getCoreRowModel(table)
+  const rowModel = table.getCoreRowModel()
 
   if (!Object.keys(table_getState(table).rowSelection ?? {}).length) {
     return {
@@ -179,7 +174,7 @@ export function table_getGroupedSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const rowModel = table_getCoreRowModel(table)
+  const rowModel = table.getCoreRowModel()
 
   if (!Object.keys(table_getState(table).rowSelection ?? {}).length) {
     return {
@@ -201,7 +196,7 @@ export function table_getIsAllRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const preGroupedFlatRows = table_getFilteredRowModel(table).flatRows
+  const preGroupedFlatRows = table.getFilteredRowModel().flatRows
   const rowSelection = table_getState(table).rowSelection ?? {}
 
   let isAllRowsSelected = Boolean(
@@ -230,7 +225,7 @@ export function table_getIsAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const paginationFlatRows = table_getPaginatedRowModel(table).flatRows.filter(
+  const paginationFlatRows = table.getPaginatedRowModel().flatRows.filter(
     (row) => row_getCanSelect(row, table),
   )
   const rowSelection = table_getState(table).rowSelection ?? {}
@@ -261,7 +256,7 @@ export function table_getIsSomeRowsSelected<
   ).length
   return (
     totalSelected > 0 &&
-    totalSelected < table_getFilteredRowModel(table).flatRows.length
+    totalSelected < table.getFilteredRowModel().flatRows.length
   )
 }
 
@@ -274,7 +269,7 @@ export function table_getIsSomePageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const paginationFlatRows = table_getPaginatedRowModel(table).flatRows
+  const paginationFlatRows = table.getPaginatedRowModel().flatRows
   return table_getIsAllPageRowsSelected(table)
     ? false
     : paginationFlatRows

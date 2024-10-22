@@ -1,7 +1,8 @@
+import type { RowModel } from '../../core/row-models/RowModels.types'
+import type { Table } from '../../types/Table'
 import type { BuiltInSortingFn } from '../../fns/sortingFns'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
 import type { Row } from '../../types/Row'
 
 export type SortDirection = 'asc' | 'desc'
@@ -100,36 +101,6 @@ export interface ColumnDef_RowSorting<
    *   - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#sortundefined)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
-   */
-  sortUndefined?: false | -1 | 1 | 'first' | 'last'
-}
-
-export interface ColumnDef_RowSorting_Unavailable<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  enableMultiSort?: boolean
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  enableSorting?: boolean
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  invertSorting?: boolean
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  sortDescFirst?: boolean
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  sortingFn?: SortingFnOption<TFeatures, TData>
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
    */
   sortUndefined?: false | -1 | 1 | 'first' | 'last'
 }
@@ -271,46 +242,25 @@ export interface TableOptions_RowSorting {
   sortDescFirst?: boolean
 }
 
-export interface TableOptions_RowSorting_Unavailable {
+export interface Table_RowSorting<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   * Resets the **sorting** state to `initialState.sorting`, or `true` can be passed to force a default blank state reset to `[]`.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#resetsorting)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
    */
-  enableMultiRemove?: boolean
+  resetSorting: (defaultState?: boolean) => void
   /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
+   * Sets or updates the `state.sorting` state.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#setsorting)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
    */
-  enableMultiSort?: boolean
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  enableSorting?: boolean
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  enableSortingRemoval?: boolean
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  isMultiSortEvent?: (e: unknown) => boolean
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  manualSorting?: boolean
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  maxMultiSortColCount?: number
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  onSortingChange?: OnChangeFn<SortingState>
-  /**
-   * @deprecated Import the `RowSorting` feature to use the row sorting APIs.
-   */
-  sortDescFirst?: boolean
+  setSorting: (updater: Updater<SortingState>) => void
 }
 
-export interface Table_RowSorting<
+export interface Table_RowModels_Sorted<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
@@ -326,16 +276,25 @@ export interface Table_RowSorting<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
    */
   getSortedRowModel: () => RowModel<TFeatures, TData>
+}
+
+export interface CreateRowModel_Sorted<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   /**
-   * Resets the **sorting** state to `initialState.sorting`, or `true` can be passed to force a default blank state reset to `[]`.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#resetsorting)
+   * This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table or implement your own.
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#getsortedrowmodel)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
    */
-  resetSorting: (defaultState?: boolean) => void
-  /**
-   * Sets or updates the `state.sorting` state.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#setsorting)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
-   */
-  setSorting: (updater: Updater<SortingState>) => void
+  sortedRowModel?: (
+    table: Table<TFeatures, TData>,
+  ) => () => RowModel<TFeatures, TData>
+}
+
+export interface CachedRowModel_Sorted<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  sortedRowModel: () => RowModel<TFeatures, TData>
 }

@@ -4,11 +4,7 @@ import type {
   CoreTableFeatures,
   TableFeatures,
 } from '../../types/TableFeatures'
-import type {
-  CachedRowModels,
-  RowModel,
-  RowModelOptions,
-} from '../../types/RowModel'
+import type { CachedRowModels, CreateRowModels } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
 
@@ -38,7 +34,7 @@ export interface TableOptions_Table<
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _rowModels?: RowModelOptions<TFeatures, TData>
+  _rowModels?: CreateRowModels<TFeatures, TData>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -142,18 +138,6 @@ export interface Table_Table<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > extends Table_CoreProperties<TFeatures, TData> {
-  /**
-   * Returns the core row model before any processing has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getCoreRowModel: () => RowModel<TFeatures, TData>
-  /**
-   * Returns the final model after all processing from other used features has been applied. This is the row model that is most commonly used for rendering.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  getRowModel: () => RowModel<TFeatures, TData>
   /**
    * Call this function to get the table's current state. It's recommended to use this function and its state, especially when managing the table state manually. It is the exact same state used internally by the table for every feature and function it provides.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getstate)

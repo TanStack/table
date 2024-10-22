@@ -1,3 +1,5 @@
+import type { Table_RowModels } from '../core/row-models/RowModels.types'
+import type { CachedRowModel_All, CreateRowModels_All } from './RowModel'
 import type { ProcessingFns_All } from './ProcessingFns'
 import type { TableState_All } from './TableState'
 import type { RowData, UnionToIntersection } from './type-utils'
@@ -26,13 +28,14 @@ import type { TableOptions_All } from './TableOptions'
  * The core table object that only includes the core table functionality such as column, header, row, and table APIS.
  * No features are included.
  */
-export interface Table_Core<
+export type Table_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> extends Table_Table<TFeatures, TData>,
-    Table_Columns<TFeatures, TData>,
-    Table_Rows<TFeatures, TData>,
-    Table_Headers<TFeatures, TData> {}
+> = Table_Table<TFeatures, TData> &
+  Table_Columns<TFeatures, TData> &
+  Table_Rows<TFeatures, TData> &
+  Table_RowModels<TFeatures, TData> &
+  Table_Headers<TFeatures, TData>
 
 /**
  * The table object that includes both the core table functionality and the features that are enabled via the `_features` table option.
@@ -87,6 +90,9 @@ export type Table_Internal<
   TData extends RowData,
 > = Table<TFeatures, TData> & {
   _processingFns: ProcessingFns_All<TFeatures, TData>
+  _rowModels: CachedRowModel_All<TFeatures, TData>
   getState: () => TableState_All
-  options: TableOptions_All<TFeatures, TData>
+  options: TableOptions_All<TFeatures, TData> & {
+    _rowModels?: CreateRowModels_All<TFeatures, TData>
+  }
 }

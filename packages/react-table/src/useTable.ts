@@ -4,7 +4,6 @@ import {
   coreFeatures,
   getInitialTableState,
 } from '@tanstack/table-core'
-import type { ProcessingFns } from '../../table-core/dist/esm/types/ProcessingFns'
 import type {
   RowData,
   Table,

@@ -1,5 +1,4 @@
 import { isFunction } from '../../utils'
-import { table_getFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import {
   table_getInitialState,
   table_getState,
@@ -7,7 +6,7 @@ import {
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
@@ -167,27 +166,7 @@ export function table_resetGrouping<
   )
 }
 
-export function table_getPreGroupedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  return table_getFilteredRowModel(table)
-}
 
-export function table_getGroupedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.Grouped) {
-    table._rowModels.Grouped = table.options._rowModels?.Grouped?.(table)
-  }
-
-  if (table.options.manualGrouping || !table._rowModels.Grouped) {
-    return table_getPreGroupedRowModel(table)
-  }
-
-  return table._rowModels.Grouped()
-}
 
 export function row_getIsGrouped<
   TFeatures extends TableFeatures,

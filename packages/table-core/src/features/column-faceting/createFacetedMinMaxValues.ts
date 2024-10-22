@@ -1,7 +1,7 @@
 import { isDev, tableMemo } from '../../utils'
 import { row_getUniqueValues } from '../../core/rows/Rows.utils'
 import { column_getFacetedRowModel } from './ColumnFaceting.utils'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -16,7 +16,7 @@ export function createFacetedMinMaxValues<
   return (table, columnId) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'table.createFacetedMinMaxValues',
+      fnName: 'table.getFacetedMinMaxValues',
       memoDeps: () => [
         column_getFacetedRowModel(table.getColumn(columnId), table)(),
       ],

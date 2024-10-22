@@ -88,7 +88,7 @@ For normal rendering use cases, you will probably only need to use the `table.ge
 - `getPreExpandedRowModel` - returns a row model that only includes root level rows with no expanded sub-rows included. Still includes sorting.
 
 - `getPaginatedRowModel` - returns a row model that only includes the rows that should be displayed on the current page based on the pagination state.
-- `getPrePaginationRowModel` - returns a row model without pagination applied (includes all rows).
+- `getPrePaginatedRowModel` - returns a row model without pagination applied (includes all rows).
 
 - `getSelectedRowModel` - returns a row model of all selected rows (but only based on the data that was passed to the table). Runs after getCoreRowModel.
 - `getPreSelectedRowModel` - returns a row model before row selection is applied (Just returns getCoreRowModel).

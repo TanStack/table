@@ -1,7 +1,6 @@
-import { table_getPreFilteredRowModel } from '../column-filtering/ColumnFiltering.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
 
@@ -14,7 +13,7 @@ export function column_getFacetedMinMaxValues<
   table: Table_Internal<TFeatures, TData>,
 ): () => [number, number] | undefined {
   return (
-    table.options._rowModels?.FacetedMinMax?.(table, column.id) ??
+    table.options._rowModels?.facetedMinMaxValues?.(table, column.id) ??
     (() => undefined)
   )
 }
@@ -28,8 +27,8 @@ export function column_getFacetedRowModel<
   table: Table_Internal<TFeatures, TData>,
 ): () => RowModel<TFeatures, TData> {
   return (
-    table.options._rowModels?.Faceted?.(table, column?.id ?? '') ??
-    (() => table_getPreFilteredRowModel(table))
+    table.options._rowModels?.facetedRowModel?.(table, column?.id ?? '') ??
+    (() => table.getPreFilteredRowModel())
   )
 }
 
@@ -42,7 +41,7 @@ export function column_getFacetedUniqueValues<
   table: Table_Internal<TFeatures, TData>,
 ): () => Map<any, number> {
   return (
-    table.options._rowModels?.FacetedUnique?.(table, column.id) ??
+    table.options._rowModels?.facetedUniqueValues?.(table, column.id) ??
     (() => new Map<any, number>())
   )
 }

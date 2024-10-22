@@ -38,17 +38,6 @@ export interface TableOptions_ColumnPinning {
   onColumnPinningChange?: OnChangeFn<ColumnPinningState>
 }
 
-export interface TableOptions_ColumnPinning_Unavailable {
-  /**
-   * @deprecated Import the `ColumnPinning` feature to use the column pinning APIs.
-   */
-  enableColumnPinning?: boolean
-  /**
-   * @deprecated Import the `ColumnPinning` feature to use the column pinning APIs.
-   */
-  onColumnPinningChange?: OnChangeFn<ColumnPinningState>
-}
-
 export interface ColumnPinningDefaultOptions {
   onColumnPinningChange: OnChangeFn<ColumnPinningState>
 }
@@ -58,13 +47,6 @@ export interface ColumnDef_ColumnPinning {
    * Enables/disables column pinning for this column. Defaults to `true`.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning#enablepinning-1)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
-   */
-  enablePinning?: boolean
-}
-
-export interface ColumnDef_ColumnPinning_Unavailable {
-  /**
-   * @deprecated Import the `ColumnPinning` feature to use the column pinning APIs.
    */
   enablePinning?: boolean
 }

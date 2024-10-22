@@ -7,13 +7,10 @@ import {
 import { table_getState } from '../../core/table/Tables.utils'
 import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
 import { filterRows } from './filterRowsUtils'
-import {
-  column_getFilterFn,
-  table_getPreFilteredRowModel,
-} from './ColumnFiltering.utils'
+import { column_getFilterFn } from './ColumnFiltering.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../types/RowModel'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
@@ -28,9 +25,9 @@ export function createFilteredRowModel<
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'table.createFilteredRowModel',
+      fnName: 'table.getFilteredRowModel',
       memoDeps: () => [
-        table_getPreFilteredRowModel(table),
+        table.getPreFilteredRowModel(),
         table_getState(table).columnFilters,
         table_getState(table).globalFilter,
       ],
@@ -43,10 +40,10 @@ function _createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  const rowModel = table_getPreFilteredRowModel(table)
+  const rowModel = table.getPreFilteredRowModel()
   const { columnFilters, globalFilter } = table_getState(table)
 
-  if (!rowModel.rows.length || (!columnFilters.length && !globalFilter)) {
+  if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
     for (const row of rowModel.flatRows) {
       row.columnFilters = {}
       row.columnFiltersMeta = {}

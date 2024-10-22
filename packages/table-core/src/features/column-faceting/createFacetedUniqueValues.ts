@@ -15,7 +15,7 @@ export function createFacetedUniqueValues<
   return (table, columnId) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'table.createFacetedUniqueValues',
+      fnName: 'table.getFacetedUniqueValues',
       memoDeps: () => [
         column_getFacetedRowModel(table.getColumn(columnId), table)(),
       ],

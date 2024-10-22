@@ -63,7 +63,7 @@ const table = useTable({
 
 If you decide that you need to use server-side pagination, here is how you can implement it.
 
-No pagination row model is needed for server-side pagination, but if you have provided it for other tables that do need it in a shared component, you can still turn off the client-side pagination by setting the `manualPagination` option to `true`. Setting the `manualPagination` option to `true` will tell the table instance to use the `table.getPrePaginationRowModel` row model under the hood, and it will make the table instance assume that the `data` that you pass in is already paginated.
+No pagination row model is needed for server-side pagination, but if you have provided it for other tables that do need it in a shared component, you can still turn off the client-side pagination by setting the `manualPagination` option to `true`. Setting the `manualPagination` option to `true` will tell the table instance to use the `table.getPrePaginatedRowModel` row model under the hood, and it will make the table instance assume that the `data` that you pass in is already paginated.
 
 #### Page Count and Row Count
 
