@@ -166,8 +166,6 @@ export function table_resetGrouping<
   )
 }
 
-
-
 export function row_getIsGrouped<
   TFeatures extends TableFeatures,
   TData extends RowData,

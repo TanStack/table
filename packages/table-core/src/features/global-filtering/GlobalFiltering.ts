@@ -46,7 +46,8 @@ export const GlobalFiltering: TableFeature = {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: (column) => {
-        const value = table.getCoreRowModel()
+        const value = table
+          .getCoreRowModel()
           .flatRows[0]?.getAllCellsByColumnId()
           [column.id]?.getValue()
 

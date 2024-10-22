@@ -225,9 +225,9 @@ export function table_getIsAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const paginationFlatRows = table.getPaginatedRowModel().flatRows.filter(
-    (row) => row_getCanSelect(row, table),
-  )
+  const paginationFlatRows = table
+    .getPaginatedRowModel()
+    .flatRows.filter((row) => row_getCanSelect(row, table))
   const rowSelection = table_getState(table).rowSelection ?? {}
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
