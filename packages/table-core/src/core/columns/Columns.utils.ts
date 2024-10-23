@@ -143,4 +143,3 @@ export function table_getColumn<
 
   return column
 }
-

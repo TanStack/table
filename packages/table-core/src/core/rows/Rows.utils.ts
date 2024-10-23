@@ -9,10 +9,7 @@ import type { Cell } from '../../types/Cell'
 export function row_getValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-) {
+>(row: Row<TFeatures, TData>, columnId: string) {
   if (row._valuesCache.hasOwnProperty(columnId)) {
     return row._valuesCache[columnId]
   }
@@ -31,10 +28,7 @@ export function row_getValue<
 export function row_getUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-) {
+>(row: Row<TFeatures, TData>, columnId: string) {
   if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
     return row._uniqueValuesCache[columnId]
   }
@@ -61,10 +55,7 @@ export function row_getUniqueValues<
 export function row_renderValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-) {
+>(row: Row<TFeatures, TData>, columnId: string) {
   return row.getValue(columnId) ?? row.table.options.renderFallbackValue
 }
 
@@ -101,9 +92,7 @@ export function row_getParentRows<
 export function row_getAllCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-): Array<Cell<TFeatures, TData, unknown>> {
+>(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
   return row.table.getAllLeafColumns().map((column) => {
     return constructCell(column, row, row.table)
   })
