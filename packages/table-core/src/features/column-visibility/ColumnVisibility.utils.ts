@@ -1,13 +1,4 @@
 import {
-  table_getAllFlatColumns,
-  table_getAllLeafColumns,
-} from '../../core/columns/Columns.utils'
-import { row_getAllCells } from '../../core/rows/Rows.utils'
-import {
-  table_getInitialState,
-  table_getState,
-} from '../../core/table/Tables.utils'
-import {
   table_getCenterVisibleLeafColumns,
   table_getLeftVisibleLeafColumns,
   table_getRightVisibleLeafColumns,
@@ -61,7 +52,7 @@ export function column_getIsVisible<
   return (
     (childColumns.length
       ? childColumns.some((c) => column_getIsVisible(c, table))
-      : table_getState(table).columnVisibility?.[column.id]) ?? true
+      : table.getState().columnVisibility?.[column.id]) ?? true
   )
 }
 
@@ -120,9 +111,9 @@ export function row_getAllVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  return row_getAllCells(row, table).filter((cell) =>
-    column_getIsVisible(cell.column, table),
-  )
+  return row
+    .getAllCells()
+    .filter((cell) => column_getIsVisible(cell.column, table))
 }
 
 export function row_getVisibleCells<
@@ -140,18 +131,18 @@ export function table_getVisibleFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return table_getAllFlatColumns(table).filter((column) =>
-    column_getIsVisible(column, table),
-  )
+  return table
+    .getAllFlatColumns()
+    .filter((column) => column_getIsVisible(column, table))
 }
 
 export function table_getVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return table_getAllLeafColumns(table).filter((column) =>
-    column_getIsVisible(column, table),
-  )
+  return table
+    .getAllLeafColumns()
+    .filter((column) => column_getIsVisible(column, table))
 }
 
 export function table_setColumnVisibility<
@@ -170,7 +161,7 @@ export function table_resetColumnVisibility<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnVisibility(
     table,
-    defaultState ? {} : (table_getInitialState(table).columnVisibility ?? {}),
+    defaultState ? {} : (table.options.initialState?.columnVisibility ?? {}),
   )
 }
 

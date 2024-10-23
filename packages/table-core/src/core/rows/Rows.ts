@@ -1,5 +1,4 @@
 import { assignAPIs } from '../../utils'
-import { table_getAllLeafColumns } from '../columns/Columns.utils'
 import {
   row_getAllCells,
   row_getAllCellsByColumnId,
@@ -25,11 +24,11 @@ export const Rows: TableFeature = {
     assignAPIs(row, table, [
       {
         fn: () => row_getAllCellsByColumnId(row, table),
-        memoDeps: () => [row_getAllCells(row, table)],
+        memoDeps: () => [row.getAllCells()],
       },
       {
         fn: () => row_getAllCells(row, table),
-        memoDeps: () => [table_getAllLeafColumns(table)],
+        memoDeps: () => [table.getAllLeafColumns()],
       },
       {
         fn: () => row_getLeafRows(row),

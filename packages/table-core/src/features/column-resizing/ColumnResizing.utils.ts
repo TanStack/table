@@ -4,10 +4,6 @@ import {
   table_setColumnSizing,
 } from '../column-sizing/ColumnSizing.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
-import {
-  table_getInitialState,
-  table_getState,
-} from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -56,7 +52,7 @@ export function column_getIsResizing<
   },
   table: Table_Internal<TFeatures, TData>,
 ) {
-  return table_getState(table).columnResizing?.isResizingColumn === column.id
+  return table.getState().columnResizing?.isResizingColumn === column.id
 }
 
 export function header_getResizeHandler<
@@ -252,7 +248,7 @@ export function table_resetHeaderSizeInfo<
     table,
     defaultState
       ? getDefaultColumnResizingState()
-      : (table_getInitialState(table).columnResizing ??
+      : (table.options.initialState?.columnResizing ??
           getDefaultColumnResizingState()),
   )
 }

@@ -1,5 +1,4 @@
 import { isDev, tableMemo } from '../../utils'
-import { row_getUniqueValues } from '../../core/rows/Rows.utils'
 import { column_getFacetedRowModel } from './ColumnFaceting.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -37,7 +36,7 @@ function _createFacetedUniqueValues<
   const facetedUniqueValues = new Map<any, number>()
 
   for (const row of facetedRowModel.flatRows) {
-    const values = row_getUniqueValues(row, table, columnId)
+    const values = row.getUniqueValues(columnId)
 
     for (const value of values) {
       if (facetedUniqueValues.has(value)) {

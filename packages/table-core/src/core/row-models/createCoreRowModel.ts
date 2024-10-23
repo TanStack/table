@@ -1,6 +1,5 @@
 import { constructRow } from '../rows/constructRow'
 import { isDev, tableMemo } from '../../utils'
-import { table_getRowId } from '../rows/Rows.utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/RowPagination.utils'
 import type { RowModel } from './RowModels.types'
 import type { RowData } from '../../types/type-utils'
@@ -52,7 +51,7 @@ function _createCoreRowModel<
       // Make the row
       const row = constructRow(
         table,
-        table_getRowId(originalRow, table, i, parentRow),
+        table.getRowId(originalRow, i, parentRow),
         originalRow,
         i,
         depth,

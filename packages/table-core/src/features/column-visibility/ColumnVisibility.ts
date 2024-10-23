@@ -1,6 +1,4 @@
 import { assignAPIs, makeStateUpdater } from '../../utils'
-import { table_getState } from '../../core/table/Tables.utils'
-import { row_getAllCells } from '../../core/rows/Rows.utils'
 import {
   row_getCenterVisibleCells,
   row_getLeftVisibleCells,
@@ -96,10 +94,7 @@ export const ColumnVisibility: TableFeature = {
     assignAPIs(row, table, [
       {
         fn: () => row_getAllVisibleCells(row, table),
-        memoDeps: () => [
-          row_getAllCells(row, table),
-          table_getState(table).columnVisibility,
-        ],
+        memoDeps: () => [row.getAllCells(), table.getState().columnVisibility],
       },
       {
         fn: (left, center, right) => row_getVisibleCells(left, center, right),
@@ -120,14 +115,14 @@ export const ColumnVisibility: TableFeature = {
       {
         fn: () => table_getVisibleFlatColumns(table),
         memoDeps: () => [
-          table_getState(table).columnVisibility,
+          table.getState().columnVisibility,
           table.options.columns,
         ],
       },
       {
         fn: () => table_getVisibleLeafColumns(table),
         memoDeps: () => [
-          table_getState(table).columnVisibility,
+          table.getState().columnVisibility,
           table.options.columns,
         ],
       },

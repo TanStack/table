@@ -17,10 +17,7 @@ export function column_getFlatColumns<
 >(
   column: Column<TFeatures, TData, TValue>,
 ): Array<Column<TFeatures, TData, TValue>> {
-  return [
-    column,
-    ...column.columns.flatMap((col) => column_getFlatColumns(col)),
-  ]
+  return [column, ...column.columns.flatMap((col) => col.getFlatColumns())]
 }
 
 export function column_getLeafColumns<
@@ -33,7 +30,7 @@ export function column_getLeafColumns<
 ): Array<Column<TFeatures, TData, TValue>> {
   if (column.columns.length) {
     const leafColumns = column.columns.flatMap(
-      (col) => column_getLeafColumns(col, table), // recursive
+      (col) => col.getLeafColumns(), // recursive
     )
 
     return table_getOrderColumnsFn(table)(leafColumns) as any
@@ -42,7 +39,7 @@ export function column_getLeafColumns<
   return [column]
 }
 
-export function tableGetDefaultColumnDef<
+export function table_getDefaultColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -104,9 +101,7 @@ export function table_getAllFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
-  return table_getAllColumns(table).flatMap((column) =>
-    column_getFlatColumns(column),
-  )
+  return table.getAllColumns().flatMap((column) => column.getFlatColumns())
 }
 
 export function table_getAllFlatColumnsById<
@@ -115,7 +110,7 @@ export function table_getAllFlatColumnsById<
 >(
   table: Table<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
-  return table_getAllFlatColumns(table).reduce(
+  return table.getAllFlatColumns().reduce(
     (acc, column) => {
       acc[column.id] = column
       return acc
@@ -128,8 +123,8 @@ export function table_getAllLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
-  const leafColumns = table_getAllColumns(table).flatMap(
-    (c) => column_getLeafColumns(c, table), // recursive
+  const leafColumns = table.getAllColumns().flatMap(
+    (c) => c.getLeafColumns(), // recursive
   )
   return table_getOrderColumnsFn(table)(leafColumns)
 }
@@ -141,7 +136,7 @@ export function table_getColumn<
   table: Table<TFeatures, TData>,
   columnId: string,
 ): Column<TFeatures, TData, unknown> | undefined {
-  const column = table_getAllFlatColumnsById(table)[columnId]
+  const column = table.getAllFlatColumnsById()[columnId]
 
   if (process.env.NODE_ENV !== 'production' && !column) {
     console.warn(`[Table] Column with id '${columnId}' does not exist.`)

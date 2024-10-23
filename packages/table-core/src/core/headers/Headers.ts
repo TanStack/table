@@ -1,5 +1,4 @@
 import { assignAPIs } from '../../utils'
-import { table_getState } from '../table/Tables.utils'
 import {
   table_getCenterHeaderGroups,
   table_getLeftHeaderGroups,
@@ -27,9 +26,16 @@ export const Headers: TableFeature = {
     header: Header<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ): void => {
-    header.getLeafHeaders = () => header_getLeafHeaders(header)
-
-    header.getContext = () => header_getContext(header, table)
+    assignAPIs(header, table, [
+      {
+        fn: () => header_getLeafHeaders(header),
+        memoDeps: () => [table.options.columns],
+      },
+      {
+        fn: () => header_getContext(header, table),
+        memoDeps: () => [table.options.columns],
+      },
+    ])
   },
 
   constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
@@ -40,19 +46,19 @@ export const Headers: TableFeature = {
         fn: () => table_getHeaderGroups(table),
         memoDeps: () => [
           table.options.columns,
-          table_getState(table).columnOrder,
-          table_getState(table).grouping,
-          table_getState(table).columnPinning,
+          table.getState().columnOrder,
+          table.getState().grouping,
+          table.getState().columnPinning,
           table.options.groupedColumnMode,
         ],
       },
       {
         fn: () => table_getFooterGroups(table),
-        memoDeps: () => [table_getHeaderGroups(table)],
+        memoDeps: () => [table.getHeaderGroups()],
       },
       {
         fn: () => table_getFlatHeaders(table),
-        memoDeps: () => [table_getHeaderGroups(table)],
+        memoDeps: () => [table.getHeaderGroups()],
       },
       {
         fn: () => table_getLeafHeaders(table),

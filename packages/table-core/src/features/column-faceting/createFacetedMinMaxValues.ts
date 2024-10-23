@@ -1,5 +1,4 @@
 import { isDev, tableMemo } from '../../utils'
-import { row_getUniqueValues } from '../../core/rows/Rows.utils'
 import { column_getFacetedRowModel } from './ColumnFaceting.utils'
 import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { RowData } from '../../types/type-utils'
@@ -36,7 +35,7 @@ function _createFacetedMinMaxValues<
   if (!facetedRowModel) return undefined
 
   const uniqueValues = facetedRowModel.flatRows
-    .flatMap((flatRow) => row_getUniqueValues(flatRow, table, columnId) ?? [])
+    .flatMap((flatRow) => flatRow.getUniqueValues(columnId) ?? [])
     .map(Number)
     .filter((value) => !Number.isNaN(value))
 

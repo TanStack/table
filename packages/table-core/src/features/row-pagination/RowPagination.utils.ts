@@ -1,8 +1,4 @@
 import { functionalUpdate } from '../../utils'
-import {
-  table_getInitialState,
-  table_getState,
-} from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -74,8 +70,7 @@ export function table_resetPagination<
     table,
     defaultState
       ? getDefaultPaginationState()
-      : (table_getInitialState(table).pagination ??
-          getDefaultPaginationState()),
+      : (table.options.initialState?.pagination ?? getDefaultPaginationState()),
   )
 }
 
@@ -119,8 +114,7 @@ export function table_resetPageIndex<
     table,
     defaultState
       ? defaultPageIndex
-      : (table_getInitialState(table).pagination?.pageIndex ??
-          defaultPageIndex),
+      : (table.options.initialState?.pagination?.pageIndex ?? defaultPageIndex),
   )
 }
 
@@ -137,7 +131,7 @@ export function table_resetPageSize<
     table,
     defaultState
       ? defaultPageSize
-      : (table_getInitialState(table).pagination?.pageSize ?? defaultPageSize),
+      : (table.options.initialState?.pagination?.pageSize ?? defaultPageSize),
   )
 }
 
@@ -189,7 +183,7 @@ export function table_getCanPreviousPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (table_getState(table).pagination?.pageIndex ?? 0) > 0
+  return (table.getState().pagination?.pageIndex ?? 0) > 0
 }
 
 /**
@@ -201,8 +195,7 @@ export function table_getCanNextPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const pageIndex =
-    table_getState(table).pagination?.pageIndex ?? defaultPageIndex
+  const pageIndex = table.getState().pagination?.pageIndex ?? defaultPageIndex
 
   const pageCount = table_getPageCount(table)
 
@@ -280,7 +273,7 @@ export function table_getPageCount<
     table.options.pageCount ??
     Math.ceil(
       table_getRowCount(table) /
-        (table_getState(table).pagination?.pageSize ?? defaultPageSize),
+        (table.getState().pagination?.pageSize ?? defaultPageSize),
     )
   )
 }

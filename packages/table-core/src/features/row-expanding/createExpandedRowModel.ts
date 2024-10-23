@@ -1,5 +1,4 @@
 import { isDev, tableMemo } from '../../utils'
-import { table_getState } from '../../core/table/Tables.utils'
 import { row_getIsExpanded } from './RowExpanding.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -18,7 +17,7 @@ export function createExpandedRowModel<
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getExpandedRowModel',
       memoDeps: () => [
-        table_getState(table).expanded,
+        table.getState().expanded,
         table.getPreExpandedRowModel(),
         table.options.paginateExpandedRows,
       ],
@@ -31,7 +30,7 @@ export function _createExpandedRowModel<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreExpandedRowModel()
-  const expanded = table_getState(table).expanded
+  const expanded = table.getState().expanded
 
   if (
     !rowModel.rows.length ||

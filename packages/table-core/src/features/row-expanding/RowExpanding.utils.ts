@@ -1,8 +1,3 @@
-import { table_getRow } from '../../core/rows/Rows.utils'
-import {
-  table_getInitialState,
-  table_getState,
-} from '../../core/table/Tables.utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -72,7 +67,7 @@ export function table_resetExpanded<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setExpanded(
     table,
-    defaultState ? {} : (table_getInitialState(table).expanded ?? {}),
+    defaultState ? {} : (table.options.initialState?.expanded ?? {}),
   )
 }
 
@@ -114,7 +109,7 @@ export function table_getIsSomeRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const expanded = table_getState(table).expanded ?? {}
+  const expanded = table.getState().expanded ?? {}
   return expanded === true || Object.values(expanded).some(Boolean)
 }
 
@@ -127,7 +122,7 @@ export function table_getIsAllRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const expanded = table_getState(table).expanded ?? {}
+  const expanded = table.getState().expanded ?? {}
 
   // If expanded is true, save some cycles and return true
   if (expanded === true) {
@@ -161,9 +156,9 @@ export function table_getExpandedDepth<
   let maxDepth = 0
 
   const rowIds =
-    table_getState(table).expanded === true
+    table.getState().expanded === true
       ? Object.keys(table.getRowModel().rowsById)
-      : Object.keys(table_getState(table).expanded ?? {})
+      : Object.keys(table.getState().expanded ?? {})
 
   rowIds.forEach((id) => {
     const splitId = id.split('.')
@@ -228,7 +223,7 @@ export function row_getIsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  const expanded = table_getState(table).expanded ?? {}
+  const expanded = table.getState().expanded ?? {}
 
   return !!(
     table.options.getIsRowExpanded?.(row) ??
@@ -266,7 +261,7 @@ export function row_getIsAllParentsExpanded<
   let currentRow = row
 
   while (isFullyExpanded && currentRow.parentId) {
-    currentRow = table_getRow(table, currentRow.parentId, true)
+    currentRow = table.getRow(currentRow.parentId, true)
     isFullyExpanded = row_getIsExpanded(row, table)
   }
 

@@ -1,6 +1,4 @@
 import { functionalUpdate, isFunction } from '../../utils'
-import { row_getValue } from '../../core/rows/Rows.utils'
-import { table_getState } from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -29,7 +27,7 @@ export function column_getAutoFilterFn<
 
   const firstRow = table.getCoreRowModel().flatRows[0]
 
-  const value = firstRow ? row_getValue(firstRow, table, column.id) : undefined
+  const value = firstRow ? firstRow.getValue(column.id) : undefined
 
   if (typeof value === 'string') {
     return filterFns?.includesString
@@ -115,8 +113,7 @@ export function column_getFilterValue<
   },
   table: Table_Internal<TFeatures, TData>,
 ) {
-  return table_getState(table).columnFilters?.find((d) => d.id === column.id)
-    ?.value
+  return table.getState().columnFilters?.find((d) => d.id === column.id)?.value
 }
 
 export function column_getFilterIndex<
@@ -130,8 +127,7 @@ export function column_getFilterIndex<
   table: Table_Internal<TFeatures, TData>,
 ): number {
   return (
-    table_getState(table).columnFilters?.findIndex((d) => d.id === column.id) ??
-    -1
+    table.getState().columnFilters?.findIndex((d) => d.id === column.id) ?? -1
   )
 }
 

@@ -1,7 +1,6 @@
 import { flattenBy, isDev, tableMemo } from '../../utils'
 import { constructRow } from '../../core/rows/constructRow'
 import { table_getColumn } from '../../core/columns/Columns.utils'
-import { table_getState } from '../../core/table/Tables.utils'
 import { table_autoResetExpanded } from '../row-expanding/RowExpanding.utils'
 import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
 import { row_getGroupingValue } from './ColumnGrouping.utils'
@@ -20,7 +19,7 @@ export function createGroupedRowModel<
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getGroupedRowModel',
       memoDeps: () => [
-        table_getState(table).grouping,
+        table.getState().grouping,
         table.getPreGroupedRowModel(),
       ],
       fn: () => _createGroupedRowModel(table),
@@ -36,7 +35,7 @@ function _createGroupedRowModel<
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreGroupedRowModel()
-  const grouping = table_getState(table).grouping
+  const grouping = table.getState().grouping
 
   if (!rowModel.rows.length || !grouping?.length) {
     rowModel.rows.forEach((row) => {
@@ -69,7 +68,7 @@ function _createGroupedRowModel<
         groupedFlatRows.push(row)
         groupedRowsById[row.id] = row
 
-        if (row.subRows) {
+        if (row.subRows.length) {
           row.subRows = groupUpRecursively(row.subRows, depth + 1, row.id)
         }
 

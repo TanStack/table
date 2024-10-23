@@ -1,18 +1,17 @@
 import { assignAPIs } from '../../utils'
-import { table_getState } from '../table/Tables.utils'
 import {
   column_getFlatColumns,
   column_getLeafColumns,
-  tableGetDefaultColumnDef,
   table_getAllColumns,
   table_getAllFlatColumns,
   table_getAllFlatColumnsById,
   table_getAllLeafColumns,
   table_getColumn,
+  table_getDefaultColumnDef,
 } from './Columns.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
 
 export const Columns: TableFeature = {
@@ -22,7 +21,7 @@ export const Columns: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
+    table: Table_Internal<TFeatures, TData>,
   ) => {
     assignAPIs(column, table, [
       {
@@ -32,8 +31,8 @@ export const Columns: TableFeature = {
       {
         fn: () => column_getLeafColumns(column, table),
         memoDeps: () => [
-          table_getState(table).columnOrder,
-          table_getState(table).grouping,
+          table.getState().columnOrder,
+          table.getState().grouping,
           table.options.columns,
           table.options.groupedColumnMode,
         ],
@@ -42,11 +41,11 @@ export const Columns: TableFeature = {
   },
 
   constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table_Internal<TFeatures, TData>,
   ) => {
     assignAPIs(table, table, [
       {
-        fn: () => tableGetDefaultColumnDef(table),
+        fn: () => table_getDefaultColumnDef(table),
         memoDeps: () => [table.options.defaultColumn],
       },
       {
@@ -64,8 +63,8 @@ export const Columns: TableFeature = {
       {
         fn: () => table_getAllLeafColumns(table),
         memoDeps: () => [
-          table_getState(table).columnOrder,
-          table_getState(table).grouping,
+          table.getState().columnOrder,
+          table.getState().grouping,
           table.options.columns,
           table.options.groupedColumnMode,
         ],

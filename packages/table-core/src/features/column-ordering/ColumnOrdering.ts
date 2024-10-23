@@ -1,5 +1,4 @@
 import { assignAPIs, makeStateUpdater } from '../../utils'
-import { table_getState } from '../../core/table/Tables.utils'
 import {
   column_getIndex,
   column_getIsFirstColumn,
@@ -61,9 +60,9 @@ export const ColumnOrdering: TableFeature = {
         fn: (position) => column_getIndex(column, table, position),
         memoDeps: (position) => [
           position,
-          table_getState(table).columnOrder,
-          table_getState(table).columnPinning,
-          table_getState(table).grouping,
+          table.getState().columnOrder,
+          table.getState().columnPinning,
+          table.getState().grouping,
         ],
       },
       {

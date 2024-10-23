@@ -9,7 +9,7 @@ export function table_reset<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): void {
-  table_setState(table, table.initialState)
+  table.setState(table.initialState)
 }
 
 export function table_mergeOptions<

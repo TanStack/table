@@ -10,9 +10,9 @@ import {
   createSortedRowModel,
   filterFns,
   flexRender,
+  processingFns,
   sortingFns,
   tableFeatures,
-  processingFns,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'

@@ -1,6 +1,5 @@
 import { filterFns } from '../../fns/filterFns'
 import { isFunction } from '../../utils'
-import { table_getInitialState } from '../../core/table/Tables.utils'
 import type { ColumnDefBase_All } from '../../types/ColumnDef'
 import type { FilterFn } from '../column-filtering/ColumnFiltering.types'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -82,6 +81,6 @@ export function table_resetGlobalFilter<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setGlobalFilter(
     table,
-    defaultState ? undefined : table_getInitialState(table).globalFilter,
+    defaultState ? undefined : table.options.initialState?.globalFilter,
   )
 }

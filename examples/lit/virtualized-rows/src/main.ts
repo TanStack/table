@@ -11,7 +11,7 @@ import { styleMap } from 'lit/directives/style-map.js'
 import { Ref, createRef, ref } from 'lit/directives/ref.js'
 import { VirtualizerController } from '@tanstack/lit-virtual'
 import { Person, makeData } from './makeData.ts'
-import type { ColumnDef, Row } from '@tanstack/lit-table'
+import type { ColumnDef } from '@tanstack/lit-table'
 
 const columns: Array<ColumnDef<any, Person>> = [
   {
@@ -149,7 +149,7 @@ class LitTableExample extends LitElement {
                   .getVirtualItems(),
                 (item) => item.key,
                 (item) => {
-                  const row = rows[item.index] as Row<any, Person>
+                  const row = rows[item.index]
                   return html`
                     <tr
                       style=${styleMap({

@@ -1,10 +1,5 @@
 import { reSplitAlphaNumeric, sortingFn_basic } from '../../fns/sortingFns'
 import { isFunction } from '../../utils'
-import { row_getValue } from '../../core/rows/Rows.utils'
-import {
-  table_getInitialState,
-  table_getState,
-} from '../../core/table/Tables.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -36,7 +31,7 @@ export function table_resetSorting<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setSorting(
     table,
-    defaultState ? [] : (table_getInitialState(table).sorting ?? []),
+    defaultState ? [] : (table.options.initialState?.sorting ?? []),
   )
 }
 
@@ -67,7 +62,7 @@ export function column_getAutoSortingFn<
   let isString = false
 
   for (const row of firstRows) {
-    const value = row_getValue(row, table, column.id)
+    const value = row.getValue(column.id)
 
     if (Object.prototype.toString.call(value) === '[object Date]') {
       sortingFn = sortingFns?.datetime
@@ -105,7 +100,7 @@ export function column_getAutoSortDir<
 ) {
   const firstRow = table.getFilteredRowModel().flatRows[0]
 
-  const value = firstRow ? row_getValue(firstRow, table, column.id) : undefined
+  const value = firstRow ? firstRow.getValue(column.id) : undefined
 
   if (typeof value === 'string') {
     return 'asc'
@@ -359,9 +354,7 @@ export function column_getIsSorted<
   column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
 ): false | SortDirection {
-  const columnSort = table_getState(table).sorting?.find(
-    (d) => d.id === column.id,
-  )
+  const columnSort = table.getState().sorting?.find((d) => d.id === column.id)
   return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
 }
 
@@ -379,9 +372,7 @@ export function column_getSortIndex<
   column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
 ): number {
-  return (
-    table_getState(table).sorting?.findIndex((d) => d.id === column.id) ?? -1
-  )
+  return table.getState().sorting?.findIndex((d) => d.id === column.id) ?? -1
 }
 
 /**

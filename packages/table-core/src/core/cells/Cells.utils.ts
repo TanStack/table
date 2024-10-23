@@ -1,4 +1,3 @@
-import { row_getValue } from '../rows/Rows.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -8,11 +7,8 @@ export function cell_getValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  cell: Cell<TFeatures, TData, TValue>,
-  table: Table<TFeatures, TData>,
-): TValue {
-  return row_getValue(cell.row, table, cell.column.id) as TValue
+>(cell: Cell<TFeatures, TData, TValue>): TValue {
+  return cell.row.getValue(cell.column.id)
 }
 
 export function cell_renderValue<
@@ -20,7 +16,7 @@ export function cell_renderValue<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
-  return cell_getValue(cell, table) ?? table.options.renderFallbackValue
+  return cell.getValue() ?? table.options.renderFallbackValue
 }
 
 export function cell_getContext<

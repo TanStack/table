@@ -1,12 +1,10 @@
-import { table_getAllColumns } from '../columns/Columns.utils'
-import { table_getVisibleLeafColumns } from '../../features/column-visibility/ColumnVisibility.utils'
-import { table_getState } from '../table/Tables.utils'
 import {
   getDefaultColumnPinningState,
   table_getCenterHeaderGroups,
   table_getLeftHeaderGroups,
   table_getRightHeaderGroups,
 } from '../../features/column-pinning/ColumnPinning.utils'
+import { table_getVisibleLeafColumns } from '../../features/column-visibility/ColumnVisibility.utils'
 import { buildHeaderGroups } from './buildHeaderGroups'
 import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
@@ -50,8 +48,8 @@ export function table_getHeaderGroups<
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
   const { left, right } =
-    table_getState(table).columnPinning ?? getDefaultColumnPinningState()
-  const allColumns = table_getAllColumns(table)
+    table.getState().columnPinning ?? getDefaultColumnPinningState()
+  const allColumns = table.getAllColumns()
   const leafColumns = table_getVisibleLeafColumns(table)
 
   const leftColumns = left
@@ -79,7 +77,7 @@ export function table_getFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const headerGroups = table_getHeaderGroups(table)
+  const headerGroups = table.getHeaderGroups()
   return [...headerGroups].reverse()
 }
 
@@ -87,7 +85,7 @@ export function table_getFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const headerGroups = table_getHeaderGroups(table)
+  const headerGroups = table.getHeaderGroups()
   return headerGroups
     .map((headerGroup) => {
       return headerGroup.headers

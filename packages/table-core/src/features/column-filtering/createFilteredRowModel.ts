@@ -4,7 +4,6 @@ import {
   column_getCanGlobalFilter,
   table_getGlobalFilterFn,
 } from '../global-filtering/GlobalFiltering.utils'
-import { table_getState } from '../../core/table/Tables.utils'
 import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
 import { filterRows } from './filterRowsUtils'
 import { column_getFilterFn } from './ColumnFiltering.utils'
@@ -28,8 +27,8 @@ export function createFilteredRowModel<
       fnName: 'table.getFilteredRowModel',
       memoDeps: () => [
         table.getPreFilteredRowModel(),
-        table_getState(table).columnFilters,
-        table_getState(table).globalFilter,
+        table.getState().columnFilters,
+        table.getState().globalFilter,
       ],
       fn: () => _createFilteredRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
@@ -41,7 +40,7 @@ function _createFilteredRowModel<
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreFilteredRowModel()
-  const { columnFilters, globalFilter } = table_getState(table)
+  const { columnFilters, globalFilter } = table.getState()
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
     for (const row of rowModel.flatRows) {

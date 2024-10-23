@@ -1,7 +1,4 @@
 import { isDev, tableMemo } from '../../utils'
-import { row_getValue } from '../../core/rows/Rows.utils'
-import { table_getColumn } from '../../core/columns/Columns.utils'
-import { table_getState } from '../../core/table/Tables.utils'
 import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
 import { column_getCanSort, column_getSortingFn } from './RowSorting.utils'
 import type { Column_Internal } from '../../types/Column'
@@ -22,10 +19,7 @@ export function createSortedRowModel<
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getSortedRowModel',
-      memoDeps: () => [
-        table_getState(table).sorting,
-        table.getPreSortedRowModel(),
-      ],
+      memoDeps: () => [table.getState().sorting, table.getPreSortedRowModel()],
       fn: () => _createSortedRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
     })
@@ -36,7 +30,7 @@ function _createSortedRowModel<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const preSortedRowModel = table.getPreSortedRowModel()
-  const sorting = table_getState(table).sorting
+  const sorting = table.getState().sorting
 
   if (!preSortedRowModel.rows.length || !sorting?.length) {
     return preSortedRowModel
@@ -46,7 +40,7 @@ function _createSortedRowModel<
 
   // Filter out sortings that correspond to non existing columns
   const availableSorting = sorting.filter((sort) =>
-    column_getCanSort(table_getColumn(table, sort.id)!, table),
+    column_getCanSort(table.getColumn(sort.id)!, table),
   )
 
   const columnInfoById: Record<
@@ -59,7 +53,7 @@ function _createSortedRowModel<
   > = {}
 
   availableSorting.forEach((sortEntry) => {
-    const column = table_getColumn(table, sortEntry.id) as
+    const column = table.getColumn(sortEntry.id) as
       | Column_Internal<TFeatures, TData>
       | undefined
     if (!column) return
@@ -86,8 +80,8 @@ function _createSortedRowModel<
 
         // All sorting ints should always return in ascending order
         if (sortUndefined) {
-          const aValue = row_getValue(rowA, table, sortEntry.id)
-          const bValue = row_getValue(rowB, table, sortEntry.id)
+          const aValue = rowA.getValue(sortEntry.id)
+          const bValue = rowB.getValue(sortEntry.id)
 
           const aUndefined = aValue === undefined
           const bUndefined = bValue === undefined

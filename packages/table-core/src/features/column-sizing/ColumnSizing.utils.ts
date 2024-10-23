@@ -1,13 +1,8 @@
 import {
-  table_getInitialState,
-  table_getState,
-} from '../../core/table/Tables.utils'
-import {
   table_getCenterHeaderGroups,
   table_getLeftHeaderGroups,
   table_getRightHeaderGroups,
 } from '../column-pinning/ColumnPinning.utils'
-import { table_getHeaderGroups } from '../../core/headers/Headers.utils'
 import { column_getIndex } from '../column-ordering/ColumnOrdering.utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
@@ -43,7 +38,7 @@ export function column_getSize<
   table: Table_Internal<TFeatures, TData>,
 ): number {
   const defaultSizes = getDefaultColumnSizingColumnDef()
-  const columnSize = table_getState(table).columnSizing?.[column.id]
+  const columnSize = table.getState().columnSizing?.[column.id]
 
   return Math.min(
     Math.max(
@@ -157,7 +152,7 @@ export function table_resetColumnSizing<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
-    defaultState ? {} : (table_getInitialState(table).columnSizing ?? {}),
+    defaultState ? {} : (table.options.initialState?.columnSizing ?? {}),
   )
 }
 
@@ -166,7 +161,7 @@ export function table_getTotalSize<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
-    table_getHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
+    table.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
       return sum + header_getSize(header, table)
     }, 0) ?? 0
   )

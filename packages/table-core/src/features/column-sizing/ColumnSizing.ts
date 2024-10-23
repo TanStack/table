@@ -1,6 +1,6 @@
 import { assignAPIs, makeStateUpdater } from '../../utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
-import { table_getState } from '../../core/table/Tables.utils'
+
 import {
   column_getAfter,
   column_getSize,
@@ -80,7 +80,7 @@ export const ColumnSizing: TableFeature = {
         memoDeps: (position) => [
           position,
           column_getVisibleLeafColumns(table, position),
-          table_getState(table).columnSizing,
+          table.getState().columnSizing,
         ],
       },
       {
@@ -88,7 +88,7 @@ export const ColumnSizing: TableFeature = {
         memoDeps: (position) => [
           position,
           column_getVisibleLeafColumns(table, position),
-          table_getState(table).columnSizing,
+          table.getState().columnSizing,
         ],
       },
       {

@@ -1,9 +1,5 @@
 import { flattenBy } from '../../utils'
 import { constructCell } from '../cells/constructCell'
-import {
-  table_getAllLeafColumns,
-  table_getColumn,
-} from '../columns/Columns.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -22,7 +18,7 @@ export function row_getValue<
     return row._valuesCache[columnId]
   }
 
-  const column = table_getColumn(table, columnId)
+  const column = table.getColumn(columnId)
 
   if (!column?.accessorFn) {
     return undefined
@@ -45,14 +41,14 @@ export function row_getUniqueValues<
     return row._uniqueValuesCache[columnId]
   }
 
-  const column = table_getColumn(table, columnId)
+  const column = table.getColumn(columnId)
 
   if (!column?.accessorFn) {
     return undefined
   }
 
   if (!column.columnDef.getUniqueValues) {
-    row._uniqueValuesCache[columnId] = [row_getValue(row, table, columnId)]
+    row._uniqueValuesCache[columnId] = [row.getValue(columnId)]
     return row._uniqueValuesCache[columnId]
   }
 
@@ -72,7 +68,7 @@ export function row_renderValue<
   table: Table<TFeatures, TData>,
   columnId: string,
 ) {
-  return row_getValue(row, table, columnId) ?? table.options.renderFallbackValue
+  return row.getValue(columnId) ?? table.options.renderFallbackValue
 }
 
 export function row_getLeafRows<
@@ -86,7 +82,7 @@ export function row_getParentRow<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
-  return row.parentId ? table_getRow(table, row.parentId, true) : undefined
+  return row.parentId ? table.getRow(row.parentId, true) : undefined
 }
 
 export function row_getParentRows<
@@ -97,7 +93,7 @@ export function row_getParentRows<
   let currentRow = row
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   while (true) {
-    const parentRow = row_getParentRow(currentRow, table)
+    const parentRow = currentRow.getParentRow()
     if (!parentRow) break
     parentRows.push(parentRow)
     currentRow = parentRow
@@ -112,7 +108,7 @@ export function row_getAllCells<
   row: Row<TFeatures, TData>,
   table: Table<TFeatures, TData>,
 ): Array<Cell<TFeatures, TData, unknown>> {
-  return table_getAllLeafColumns(table).map((column) => {
+  return table.getAllLeafColumns().map((column) => {
     return constructCell(column, row, table)
   })
 }
@@ -121,7 +117,7 @@ export function row_getAllCellsByColumnId<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
-  return row_getAllCells(row, table).reduce(
+  return row.getAllCells().reduce(
     (acc, cell) => {
       acc[cell.column.id] = cell
       return acc

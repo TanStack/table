@@ -1,12 +1,7 @@
 import { isFunction } from '../../utils'
-import {
-  table_getInitialState,
-  table_getState,
-} from '../../core/table/Tables.utils'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
@@ -67,7 +62,7 @@ export function column_getIsGrouped<
   },
   table: Table_Internal<TFeatures, TData>,
 ): boolean {
-  return !!table_getState(table).grouping?.includes(column.id)
+  return !!table.getState().grouping?.includes(column.id)
 }
 
 export function column_getGroupedIndex<
@@ -80,7 +75,7 @@ export function column_getGroupedIndex<
   },
   table: Table_Internal<TFeatures, TData>,
 ): number {
-  return table_getState(table).grouping?.indexOf(column.id) ?? -1
+  return table.getState().grouping?.indexOf(column.id) ?? -1
 }
 
 export function column_getToggleGroupingHandler<
@@ -162,7 +157,7 @@ export function table_resetGrouping<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setGrouping(
     table,
-    defaultState ? [] : (table_getInitialState(table).grouping ?? []),
+    defaultState ? [] : (table.options.initialState.grouping ?? []),
   )
 }
 

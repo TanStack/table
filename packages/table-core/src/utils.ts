@@ -152,7 +152,7 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
             console.info(
               `%c⏱ ${pad(`${compareTime.toFixed(1)} ms + ${executionTime.toFixed(1)} ms`, 17)}`,
               `font-size: .6rem; font-weight: bold; color: hsl(
-              ${Math.max(0, Math.min(120 - totalTime, 120))}deg 100% 31%);`,
+              ${Math.max(0, Math.min(120 - Math.log10(totalTime) * 60, 120))}deg 100% 31%);`,
               fnName,
             )
           }

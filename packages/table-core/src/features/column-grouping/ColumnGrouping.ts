@@ -27,7 +27,6 @@ import type {
   Cell_ColumnGrouping,
   ColumnDef_ColumnGrouping,
   Column_ColumnGrouping,
-  Row_ColumnGrouping,
   TableOptions_ColumnGrouping,
   TableState_ColumnGrouping,
   Table_ColumnGrouping,
