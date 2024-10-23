@@ -55,12 +55,12 @@ export const RowExpanding: TableFeature = {
     }
   },
 
-  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_RowExpanding>,
     table: Table<TFeatures, TData> &
       Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {
-    assignAPIs(row, table, [
+    assignAPIs(row, [
       {
         fn: (expanded) => row_toggleExpanded(row, table, expanded),
       },
@@ -79,11 +79,11 @@ export const RowExpanding: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: () => table_autoResetExpanded(table),
       },

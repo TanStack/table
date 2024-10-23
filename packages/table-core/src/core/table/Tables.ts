@@ -10,10 +10,10 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 
 export const Tables: TableFeature = {
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: () => table_getState(table),
       },

@@ -14,7 +14,7 @@ import type { Column } from '../../types/Column'
  * The Column Faceting feature adds column faceting APIs to the column objects.
  */
 export const ColumnFaceting: TableFeature = {
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -23,7 +23,7 @@ export const ColumnFaceting: TableFeature = {
       Partial<Column_ColumnFaceting<TFeatures, TData>>,
     table: Table<TFeatures, TData>,
   ): void => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: () => column_getFacetedMinMaxValues(column, table),
       },

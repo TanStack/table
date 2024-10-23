@@ -35,11 +35,11 @@ export function header_getContext<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue,
->(header: Header<TFeatures, TData, TValue>, table: Table<TFeatures, TData>) {
+>(header: Header<TFeatures, TData, TValue>) {
   return {
     column: header.column,
     header,
-    table,
+    table: header.table,
   }
 }
 

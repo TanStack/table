@@ -67,7 +67,7 @@ export const ColumnFiltering: TableFeature = {
     } as TableOptions_ColumnFiltering<TFeatures, TData>
   },
 
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -77,7 +77,7 @@ export const ColumnFiltering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: () => column_getAutoFilterFn(column, table),
       },
@@ -102,18 +102,18 @@ export const ColumnFiltering: TableFeature = {
     ])
   },
 
-  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
   ): void => {
     row.columnFilters = {}
     row.columnFiltersMeta = {}
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: (updater: Updater<ColumnFiltersState>) =>
           table_setColumnFilters(table, updater),

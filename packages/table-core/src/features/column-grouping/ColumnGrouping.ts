@@ -71,7 +71,7 @@ export const ColumnGrouping: TableFeature = {
     }
   },
 
-  constructCell: <
+  constructCellAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue,
@@ -80,7 +80,7 @@ export const ColumnGrouping: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
-    assignAPIs(cell, table, [
+    assignAPIs(cell, [
       {
         fn: () => cell_getIsGrouped(cell, table),
       },
@@ -93,7 +93,7 @@ export const ColumnGrouping: TableFeature = {
     ])
   },
 
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -103,7 +103,7 @@ export const ColumnGrouping: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: () => column_toggleGrouping(column, table),
       },
@@ -128,13 +128,13 @@ export const ColumnGrouping: TableFeature = {
     ])
   },
 
-  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row_Internal<TFeatures, TData>,
     table: Table<TFeatures, TData>,
   ): void => {
     row._groupingValuesCache = {}
 
-    assignAPIs(row, table, [
+    assignAPIs(row, [
       {
         fn: () => row_getIsGrouped(row),
       },
@@ -144,11 +144,11 @@ export const ColumnGrouping: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: (updater) => table_setGrouping(table, updater),
       },

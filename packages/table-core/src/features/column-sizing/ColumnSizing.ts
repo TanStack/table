@@ -1,6 +1,5 @@
 import { assignAPIs, makeStateUpdater } from '../../utils'
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
-
 import {
   column_getAfter,
   column_getSize,
@@ -63,7 +62,7 @@ export const ColumnSizing: TableFeature = {
     }
   },
 
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -71,7 +70,7 @@ export const ColumnSizing: TableFeature = {
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnSizing>,
     table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: () => column_getSize(column, table),
       },
@@ -97,7 +96,7 @@ export const ColumnSizing: TableFeature = {
     ])
   },
 
-  constructHeader: <
+  constructHeaderAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -110,10 +109,10 @@ export const ColumnSizing: TableFeature = {
     header.getStart = () => header_getStart(header, table)
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: (updater) => table_setColumnSizing(table, updater),
       },

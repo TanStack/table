@@ -1,5 +1,5 @@
 import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
@@ -31,10 +31,11 @@ export function constructHeader<
     placeholderId: options.placeholderId,
     rowSpan: 0,
     subHeaders: [],
+    table,
   }
 
-  for (const feature of Object.values(table._features)) {
-    feature?.constructHeader?.(
+  for (const feature of Object.values(table._features) as Array<TableFeature>) {
+    feature.constructHeaderAPIs?.(
       header as Header<TFeatures, TData, TValue>,
       table,
     )

@@ -1,5 +1,5 @@
 import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type {
   AccessorFn,
@@ -74,16 +74,17 @@ export function constructColumn<
   }
 
   const column: Column_CoreProperties<TFeatures, TData, TValue> = {
-    id: `${String(id)}`,
     accessorFn,
-    parent: parent,
-    depth,
     columnDef: resolvedColumnDef as ColumnDef<TFeatures, TData, TValue>,
     columns: [],
+    depth,
+    id: `${String(id)}`,
+    parent: parent,
+    table,
   }
 
-  for (const feature of Object.values(table._features)) {
-    feature?.constructColumn?.(
+  for (const feature of Object.values(table._features) as Array<TableFeature>) {
+    feature.constructColumnAPIs?.(
       column as Column<TFeatures, TData, TValue>,
       table,
     )

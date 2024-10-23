@@ -1,5 +1,5 @@
 import type { RowData } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Row_CoreProperties } from './Rows.types'
@@ -25,10 +25,11 @@ export const constructRow = <
     original,
     parentId,
     subRows: subRows ?? [],
+    table,
   }
 
-  for (const feature of Object.values(table._features)) {
-    feature?.constructRow?.(row as Row<TFeatures, TData>, table)
+  for (const feature of Object.values(table._features) as Array<TableFeature>) {
+    feature.constructRowAPIs?.(row as Row<TFeatures, TData>, table)
   }
 
   return row as Row<TFeatures, TData>

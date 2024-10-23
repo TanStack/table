@@ -1,3 +1,4 @@
+import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { AccessorFn, ColumnDef } from '../../types/ColumnDef'
@@ -47,6 +48,10 @@ export interface Column_CoreProperties<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-defs)
    */
   parent?: Column<TFeatures, TData, TValue>
+  /**
+   * @deprecated Reference to the table instance.
+   */
+  table: Table_Internal<TFeatures, TData>
 }
 
 export interface Column_Column<

@@ -18,7 +18,7 @@ import type { Table, Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 
 export const Headers: TableFeature = {
-  constructHeader: <
+  constructHeaderAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -26,22 +26,22 @@ export const Headers: TableFeature = {
     header: Header<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ): void => {
-    assignAPIs(header, table, [
+    assignAPIs(header, [
       {
         fn: () => header_getLeafHeaders(header),
         memoDeps: () => [table.options.columns],
       },
       {
-        fn: () => header_getContext(header, table),
+        fn: () => header_getContext(header),
         memoDeps: () => [table.options.columns],
       },
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table_Internal<TFeatures, TData>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: () => table_getHeaderGroups(table),
         memoDeps: () => [

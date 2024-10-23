@@ -15,11 +15,11 @@ import type { Table } from '../../types/Table'
  * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
  */
 export const GlobalFaceting: TableFeature = {
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_GlobalFaceting<TFeatures, TData>>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: () => table_getGlobalFacetedMinMaxValues(table),
       },

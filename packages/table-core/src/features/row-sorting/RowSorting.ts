@@ -65,7 +65,7 @@ export const RowSorting: TableFeature = {
     }
   },
 
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -73,7 +73,7 @@ export const RowSorting: TableFeature = {
     column: Column<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ): void => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: () => column_getAutoSortingFn(column, table),
       },
@@ -113,10 +113,10 @@ export const RowSorting: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: (updater) => table_setSorting(table, updater),
       },

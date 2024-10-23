@@ -72,7 +72,7 @@ export const ColumnPinning: TableFeature = {
     }
   },
 
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -81,7 +81,7 @@ export const ColumnPinning: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: (position) => column_pin(column, table, position),
       },
@@ -97,12 +97,12 @@ export const ColumnPinning: TableFeature = {
     ])
   },
 
-  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_ColumnPinning<TFeatures, TData>>,
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
-    assignAPIs(row, table, [
+    assignAPIs(row, [
       {
         fn: () => row_getCenterVisibleCells(row, table),
         memoDeps: () => [
@@ -130,11 +130,11 @@ export const ColumnPinning: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: (updater) => table_setColumnPinning(table, updater),
       },

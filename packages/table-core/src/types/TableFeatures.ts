@@ -9,7 +9,7 @@ import type { TableOptions_All } from './TableOptions'
 import type { TableState } from './TableState'
 
 export interface TableFeature {
-  constructCell?: <
+  constructCellAPIs?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -17,7 +17,7 @@ export interface TableFeature {
     cell: Cell<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ) => void
-  constructColumn?: <
+  constructColumnAPIs?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -25,7 +25,7 @@ export interface TableFeature {
     column: Column<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ) => void
-  constructHeader?: <
+  constructHeaderAPIs?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -33,11 +33,11 @@ export interface TableFeature {
     header: Header<TFeatures, TData, TValue>,
     table: Table<TFeatures, TData>,
   ) => void
-  constructRow?: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRowAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData>,
     table: Table<TFeatures, TData>,
   ) => void
-  constructTable?: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ) => void
   getDefaultColumnDef?: <

@@ -15,7 +15,7 @@ import type { Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
 
 export const Columns: TableFeature = {
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -23,13 +23,13 @@ export const Columns: TableFeature = {
     column: Column<TFeatures, TData, TValue>,
     table: Table_Internal<TFeatures, TData>,
   ) => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: () => column_getFlatColumns(column),
         memoDeps: () => [table.options.columns],
       },
       {
-        fn: () => column_getLeafColumns(column, table),
+        fn: () => column_getLeafColumns(column),
         memoDeps: () => [
           table.getState().columnOrder,
           table.getState().grouping,
@@ -40,10 +40,10 @@ export const Columns: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table_Internal<TFeatures, TData>,
   ) => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: () => table_getDefaultColumnDef(table),
         memoDeps: () => [table.options.defaultColumn],

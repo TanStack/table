@@ -17,44 +17,44 @@ import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
 export const Rows: TableFeature = {
-  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData>,
     table: Table<TFeatures, TData>,
   ): void => {
-    assignAPIs(row, table, [
+    assignAPIs(row, [
       {
-        fn: () => row_getAllCellsByColumnId(row, table),
+        fn: () => row_getAllCellsByColumnId(row),
         memoDeps: () => [row.getAllCells()],
       },
       {
-        fn: () => row_getAllCells(row, table),
+        fn: () => row_getAllCells(row),
         memoDeps: () => [table.getAllLeafColumns()],
       },
       {
         fn: () => row_getLeafRows(row),
       },
       {
-        fn: () => row_getParentRow(row, table),
+        fn: () => row_getParentRow(row),
       },
       {
-        fn: () => row_getParentRows(row, table),
+        fn: () => row_getParentRows(row),
       },
       {
-        fn: (columnId) => row_getUniqueValues(row, table, columnId),
+        fn: (columnId) => row_getUniqueValues(row, columnId),
       },
       {
-        fn: (columnId) => row_getValue(row, table, columnId),
+        fn: (columnId) => row_getValue(row, columnId),
       },
       {
-        fn: (columnId) => row_renderValue(row, table, columnId),
+        fn: (columnId) => row_renderValue(row, columnId),
       },
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: (row, index, parent) => table_getRowId(row, table, index, parent),
       },

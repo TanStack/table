@@ -1,7 +1,11 @@
-import type { Table } from './types/Table'
+import type { Row } from './types/Row'
+import type { Table, Table_Internal } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState } from './types/TableState'
+import type { Column } from './types/Column'
+import type { Header } from './types/Header'
+import type { Cell } from './types/Cell'
 
 export const isDev = process.env.NODE_ENV === 'development'
 
@@ -59,12 +63,12 @@ export function flattenBy<TNode>(
 }
 
 interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
-  memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
   fn: (...args: NoInfer<TDeps>) => TResult
-  onAfterUpdate?: (result: TResult) => void
-  onBeforeUpdate?: () => void
-  onBeforeCompare?: () => void
+  memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
   onAfterCompare?: () => void
+  onAfterUpdate?: (result: TResult) => void
+  onBeforeCompare?: () => void
+  onBeforeUpdate?: () => void
 }
 
 export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
@@ -172,6 +176,27 @@ interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
   memoDeps?: (depArgs?: any) => [...any] | undefined
 }
 
+/**
+ * Assumes that a function name is in the format of `parentName_fnKey` and returns the `fnKey` and `fnName` in the format of `parentName.fnKey`.
+ */
+export function getFunctionNameInfo(fn: AnyFunction) {
+  const rawName = fn.name
+  const name =
+    rawName != 'fn'
+      ? rawName
+      : (fn.toString().match(/\s*(\w+)\s*\(/)?.[1] as `${string}_${string}`)
+  const [parentName, fnKey] = name.split('_')
+  const fnName = `${parentName}.${fnKey}`
+  return { fnKey, fnName, parentName } as {
+    fnKey: string
+    fnName: string
+    parentName: string
+  }
+}
+
+/**
+ * Takes a static function, looks at its name and assigns it to an object with optional memoization and debugging.
+ */
 export function assignAPIs<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -180,18 +205,15 @@ export function assignAPIs<
   TDepArgs,
 >(
   obj: TObject extends Record<string, infer U> ? U : never, // table, row, cell, column, header
-  table: Table<TFeatures, TData>,
   apis: Array<API<TDeps, NoInfer<TDepArgs>>>,
 ): void {
+  const table = (obj.table ?? obj) as Table_Internal<TFeatures, TData>
   apis.forEach(({ fn, memoDeps }) => {
-    const name = fn.toString().match(/\s*(\w+)\s*\(/)?.[1] as string
-    const fnName = name.replace('_', '.')
-    const fnKey = name.split('_')[1]!
+    const { fnKey, fnName, parentName } = getFunctionNameInfo(fn)
 
-    const debugLevel = (name.split('_')[0]! + 's').replace(
-      name.split('_')[0]!,
-      name.split('_')[0]!.charAt(0).toUpperCase() +
-        name.split('_')[0]!.slice(1),
+    const debugLevel = (parentName + 's').replace(
+      parentName,
+      parentName.charAt(0).toUpperCase() + parentName.slice(1),
     ) as 'Table' | 'Rows' | 'Columns' | 'Headers' | 'Cells'
 
     obj[fnKey] = memoDeps
@@ -203,4 +225,24 @@ export function assignAPIs<
         })
       : fn
   })
+}
+
+/**
+ * Looks to run the memoized function with the builder pattern on the object if it exists, otherwise fallback to the static method passed in.
+ */
+export function callMemoOrStaticFn<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  obj:
+    | Table<TFeatures, TData>
+    | Row<TFeatures, TData>
+    | Column<TFeatures, TData>
+    | Header<TFeatures, TData>
+    | Cell<TFeatures, TData>,
+  staticFn: AnyFunction,
+  args: Array<any>,
+) {
+  const { fnKey } = getFunctionNameInfo(staticFn)
+  return (obj as any)?.[fnKey](...args) ?? staticFn(obj, ...args)
 }

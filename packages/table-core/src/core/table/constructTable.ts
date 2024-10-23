@@ -51,7 +51,7 @@ export function constructTable<
   Object.assign(table, coreInstance)
 
   for (const feature of featuresList) {
-    feature.constructTable?.(table)
+    feature.constructTableAPIs?.(table)
   }
 
   return table

@@ -60,7 +60,7 @@ export const ColumnVisibility: TableFeature = {
     }
   },
 
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -69,7 +69,7 @@ export const ColumnVisibility: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: () => column_getIsVisible(column, table),
       },
@@ -85,13 +85,13 @@ export const ColumnVisibility: TableFeature = {
     ])
   },
 
-  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> &
       Partial<Row_ColumnVisibility<TFeatures, TData>>,
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
-    assignAPIs(row, table, [
+    assignAPIs(row, [
       {
         fn: () => row_getAllVisibleCells(row, table),
         memoDeps: () => [row.getAllCells(), table.getState().columnVisibility],
@@ -107,11 +107,11 @@ export const ColumnVisibility: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: () => table_getVisibleFlatColumns(table),
         memoDeps: () => [

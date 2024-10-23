@@ -56,7 +56,7 @@ export const GlobalFiltering: TableFeature = {
     }
   },
 
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -65,18 +65,18 @@ export const GlobalFiltering: TableFeature = {
     table: Table<TFeatures, TData> &
       Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): void => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: () => column_getCanGlobalFilter(column, table),
       },
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: () => table_getGlobalAutoFilterFn(),
       },

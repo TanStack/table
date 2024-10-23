@@ -11,14 +11,13 @@ export function row_getValue<
   TData extends RowData,
 >(
   row: Row<TFeatures, TData>,
-  table: Table<TFeatures, TData>,
   columnId: string,
 ) {
   if (row._valuesCache.hasOwnProperty(columnId)) {
     return row._valuesCache[columnId]
   }
 
-  const column = table.getColumn(columnId)
+  const column = row.table.getColumn(columnId)
 
   if (!column?.accessorFn) {
     return undefined
@@ -34,14 +33,13 @@ export function row_getUniqueValues<
   TData extends RowData,
 >(
   row: Row<TFeatures, TData>,
-  table: Table<TFeatures, TData>,
   columnId: string,
 ) {
   if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
     return row._uniqueValuesCache[columnId]
   }
 
-  const column = table.getColumn(columnId)
+  const column = row.table.getColumn(columnId)
 
   if (!column?.accessorFn) {
     return undefined
@@ -65,10 +63,9 @@ export function row_renderValue<
   TData extends RowData,
 >(
   row: Row<TFeatures, TData>,
-  table: Table<TFeatures, TData>,
   columnId: string,
 ) {
-  return row.getValue(columnId) ?? table.options.renderFallbackValue
+  return row.getValue(columnId) ?? row.table.options.renderFallbackValue
 }
 
 export function row_getLeafRows<
@@ -81,14 +78,14 @@ export function row_getLeafRows<
 export function row_getParentRow<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
-  return row.parentId ? table.getRow(row.parentId, true) : undefined
+>(row: Row<TFeatures, TData>) {
+  return row.parentId ? row.table.getRow(row.parentId, true) : undefined
 }
 
 export function row_getParentRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
+>(row: Row<TFeatures, TData>) {
   const parentRows: Array<Row<TFeatures, TData>> = []
   let currentRow = row
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -106,17 +103,16 @@ export function row_getAllCells<
   TData extends RowData,
 >(
   row: Row<TFeatures, TData>,
-  table: Table<TFeatures, TData>,
 ): Array<Cell<TFeatures, TData, unknown>> {
-  return table.getAllLeafColumns().map((column) => {
-    return constructCell(column, row, table)
+  return row.table.getAllLeafColumns().map((column) => {
+    return constructCell(column, row, row.table)
   })
 }
 
 export function row_getAllCellsByColumnId<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) {
+>(row: Row<TFeatures, TData>) {
   return row.getAllCells().reduce(
     (acc, cell) => {
       acc[cell.column.id] = cell

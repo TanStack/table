@@ -45,7 +45,6 @@ function _createCoreRowModel<
   ): Array<Row<TFeatures, TData>> => {
     const rows = [] as Array<Row<TFeatures, TData>>
 
-    console.time('constructing rows')
     for (let i = 0; i < originalRows.length; i++) {
       const originalRow = originalRows[i]!
       // Make the row
@@ -76,7 +75,6 @@ function _createCoreRowModel<
         }
       }
     }
-    console.timeEnd('constructing rows')
 
     return rows
   }

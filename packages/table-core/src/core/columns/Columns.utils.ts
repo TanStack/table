@@ -26,14 +26,13 @@ export function column_getLeafColumns<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table<TFeatures, TData>,
 ): Array<Column<TFeatures, TData, TValue>> {
   if (column.columns.length) {
     const leafColumns = column.columns.flatMap(
       (col) => col.getLeafColumns(), // recursive
     )
 
-    return table_getOrderColumnsFn(table)(leafColumns) as any
+    return table_getOrderColumnsFn(column.table)(leafColumns as any) as any
   }
 
   return [column]
@@ -144,3 +143,4 @@ export function table_getColumn<
 
   return column
 }
+

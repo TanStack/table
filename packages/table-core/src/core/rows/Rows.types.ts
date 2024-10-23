@@ -1,3 +1,4 @@
+import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
@@ -51,6 +52,10 @@ export interface Row_CoreProperties<
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/rows)
    */
   subRows: Array<Row<TFeatures, TData>>
+  /**
+   * @deprecated Reference to the table instance.
+   */
+  table: Table_Internal<TFeatures, TData>
 }
 
 export interface Row_Row<TFeatures extends TableFeatures, TData extends RowData>

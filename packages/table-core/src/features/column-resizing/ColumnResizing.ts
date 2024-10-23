@@ -50,7 +50,7 @@ export const ColumnResizing: TableFeature = {
     }
   },
 
-  constructColumn: <
+  constructColumnAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -58,7 +58,7 @@ export const ColumnResizing: TableFeature = {
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnResizing>,
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-    assignAPIs(column, table, [
+    assignAPIs(column, [
       {
         fn: () => column_getCanResize(column, table),
       },
@@ -68,7 +68,7 @@ export const ColumnResizing: TableFeature = {
     ])
   },
 
-  constructHeader: <
+  constructHeaderAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
@@ -76,7 +76,7 @@ export const ColumnResizing: TableFeature = {
     header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnResizing>,
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-    assignAPIs(header, table, [
+    assignAPIs(header, [
       {
         fn: (_contextDocument) =>
           header_getResizeHandler(header, table, _contextDocument),
@@ -84,10 +84,10 @@ export const ColumnResizing: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: (updater) => table_setColumnResizing(table, updater),
       },

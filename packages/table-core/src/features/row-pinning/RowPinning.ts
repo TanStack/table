@@ -51,12 +51,12 @@ export const RowPinning: TableFeature = {
     }
   },
 
-  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_RowPinning>,
     table: Table<TFeatures, TData> &
       Partial<Table_RowPinning<TFeatures, TData>>,
   ): void => {
-    assignAPIs(row, table, [
+    assignAPIs(row, [
       {
         fn: () => row_getCanPin(row, table),
       },
@@ -74,11 +74,11 @@ export const RowPinning: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowPinning<TFeatures, TData>>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: (updater) => table_setRowPinning(table, updater),
       },

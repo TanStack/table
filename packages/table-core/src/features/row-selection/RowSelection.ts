@@ -70,12 +70,12 @@ export const RowSelection: TableFeature = {
     }
   },
 
-  constructRow: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_RowSelection>,
     table: Table<TFeatures, TData> &
       Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
-    assignAPIs(row, table, [
+    assignAPIs(row, [
       {
         fn: (value, opts) => row_toggleSelected(row, table, value, opts),
       },
@@ -103,11 +103,11 @@ export const RowSelection: TableFeature = {
     ])
   },
 
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData> &
       Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
-    assignAPIs(table, table, [
+    assignAPIs(table, [
       {
         fn: (updater) => table_setRowSelection(table, updater),
       },
