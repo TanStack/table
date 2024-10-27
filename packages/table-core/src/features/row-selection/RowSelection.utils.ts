@@ -11,11 +11,6 @@ export function getDefaultRowSelectionState(): RowSelectionState {
   return structuredClone({})
 }
 
-/**
- *
- * @param table
- * @param updater
- */
 export function table_setRowSelection<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -26,11 +21,6 @@ export function table_setRowSelection<
   table.options.onRowSelectionChange?.(updater)
 }
 
-/**
- *
- * @param table
- * @param defaultState
- */
 export function table_resetRowSelection<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -43,11 +33,6 @@ export function table_resetRowSelection<
 
 // Table utils
 
-/**
- *
- * @param table
- * @param value
- */
 export function table_toggleAllRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -64,7 +49,7 @@ export function table_toggleAllRowsSelected<
     // All of the rows are flat already, so it wouldn't be worth it
     if (value) {
       preGroupedFlatRows.forEach((row) => {
-        if (!row_getCanSelect(row, table)) {
+        if (!row_getCanSelect(row)) {
           return
         }
         rowSelection[row.id] = true
@@ -79,11 +64,6 @@ export function table_toggleAllRowsSelected<
   })
 }
 
-/**
- *
- * @param table
- * @param value
- */
 export function table_toggleAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -104,11 +84,6 @@ export function table_toggleAllPageRowsSelected<
   })
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getPreSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -116,11 +91,6 @@ export function table_getPreSelectedRowModel<
   return table.getCoreRowModel()
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -138,11 +108,6 @@ export function table_getSelectedRowModel<
   return selectRowsFn(table, rowModel)
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getFilteredSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -160,11 +125,6 @@ export function table_getFilteredSelectedRowModel<
   return selectRowsFn(table, rowModel)
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getGroupedSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -182,11 +142,6 @@ export function table_getGroupedSelectedRowModel<
   return selectRowsFn(table, rowModel)
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getIsAllRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -201,7 +156,7 @@ export function table_getIsAllRowsSelected<
   if (isAllRowsSelected) {
     if (
       preGroupedFlatRows.some(
-        (row) => row_getCanSelect(row, table) && !rowSelection[row.id],
+        (row) => row_getCanSelect(row) && !rowSelection[row.id],
       )
     ) {
       isAllRowsSelected = false
@@ -211,18 +166,13 @@ export function table_getIsAllRowsSelected<
   return isAllRowsSelected
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getIsAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const paginationFlatRows = table
     .getPaginatedRowModel()
-    .flatRows.filter((row) => row_getCanSelect(row, table))
+    .flatRows.filter((row) => row_getCanSelect(row))
   const rowSelection = table.getState().rowSelection ?? {}
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
@@ -237,11 +187,6 @@ export function table_getIsAllPageRowsSelected<
   return isAllPageRowsSelected
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getIsSomeRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -253,11 +198,6 @@ export function table_getIsSomeRowsSelected<
   )
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getIsSomePageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -266,18 +206,10 @@ export function table_getIsSomePageRowsSelected<
   return table_getIsAllPageRowsSelected(table)
     ? false
     : paginationFlatRows
-        .filter((row) => row_getCanSelect(row, table))
-        .some(
-          (row) =>
-            row_getIsSelected(row, table) || row_getIsSomeSelected(row, table),
-        )
+        .filter((row) => row_getCanSelect(row))
+        .some((row) => row_getIsSelected(row) || row_getIsSomeSelected(row))
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getToggleAllRowsSelectedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -290,11 +222,6 @@ export function table_getToggleAllRowsSelectedHandler<
   }
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getToggleAllPageRowsSelectedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -307,30 +234,24 @@ export function table_getToggleAllPageRowsSelectedHandler<
   }
 }
 
-/**
- *
- * @param row
- * @param table
- * @param value
- * @param opts
- */
+// Row utils
+
 export function row_toggleSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
   row: Row<TFeatures, TData>,
-  table: Table_Internal<TFeatures, TData>,
   value?: boolean,
   opts?: {
     selectChildren?: boolean
   },
 ) {
-  const isSelected = row_getIsSelected(row, table)
+  const isSelected = row_getIsSelected(row)
 
-  table_setRowSelection(table, (old) => {
+  table_setRowSelection(row.table, (old) => {
     value = typeof value !== 'undefined' ? value : !isSelected
 
-    if (row_getCanSelect(row, table) && isSelected === value) {
+    if (row_getCanSelect(row) && isSelected === value) {
       return old
     }
 
@@ -341,138 +262,88 @@ export function row_toggleSelected<
       row.id,
       value,
       opts?.selectChildren ?? true,
-      table,
+      row.table,
     )
 
     return selectedRowIds
   })
 }
 
-// Row utils
-
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getIsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  const rowSelection = table.getState().rowSelection ?? {}
+>(row: Row<TFeatures, TData>) {
+  const rowSelection = row.table.getState().rowSelection ?? {}
   return isRowSelected(row, rowSelection)
 }
 
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getIsSomeSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  const rowSelection = table.getState().rowSelection ?? {}
-  return isSubRowSelected(row, rowSelection, table) === 'some'
+>(row: Row<TFeatures, TData>) {
+  const rowSelection = row.table.getState().rowSelection ?? {}
+  return isSubRowSelected(row, rowSelection) === 'some'
 }
 
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getIsAllSubRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  const rowSelection = table.getState().rowSelection ?? {}
-  return isSubRowSelected(row, rowSelection, table) === 'all'
+>(row: Row<TFeatures, TData>) {
+  const rowSelection = row.table.getState().rowSelection ?? {}
+  return isSubRowSelected(row, rowSelection) === 'all'
 }
 
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getCanSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  if (typeof table.options.enableRowSelection === 'function') {
-    return table.options.enableRowSelection(row)
+>(row: Row<TFeatures, TData>) {
+  const options = row.table.options
+  if (typeof options.enableRowSelection === 'function') {
+    return options.enableRowSelection(row)
   }
 
-  return table.options.enableRowSelection ?? true
+  return options.enableRowSelection ?? true
 }
 
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getCanSelectSubRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  if (typeof table.options.enableSubRowSelection === 'function') {
-    return table.options.enableSubRowSelection(row)
+>(row: Row<TFeatures, TData>) {
+  const options = row.table.options
+  if (typeof options.enableSubRowSelection === 'function') {
+    return options.enableSubRowSelection(row)
   }
 
-  return table.options.enableSubRowSelection ?? true
+  return options.enableSubRowSelection ?? true
 }
 
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getCanMultiSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  if (typeof table.options.enableMultiRowSelection === 'function') {
-    return table.options.enableMultiRowSelection(row)
+>(row: Row<TFeatures, TData>) {
+  const options = row.table.options
+  if (typeof options.enableMultiRowSelection === 'function') {
+    return options.enableMultiRowSelection(row)
   }
 
-  return table.options.enableMultiRowSelection ?? true
+  return options.enableMultiRowSelection ?? true
 }
 
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getToggleSelectedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  const canSelect = row_getCanSelect(row, table)
+>(row: Row<TFeatures, TData>) {
+  const canSelect = row_getCanSelect(row)
 
   return (e: unknown) => {
     if (!canSelect) return
     row_toggleSelected(
       row,
-      table,
       ((e as MouseEvent).target as HTMLInputElement).checked,
     )
   }
 }
 
-/**
- *
- * @param selectedRowIds
- * @param rowId
- * @param value
- * @param includeChildren
- * @param table
- */
 const mutateRowIsSelected = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -485,41 +356,24 @@ const mutateRowIsSelected = <
 ) => {
   const row = table.getRow(rowId, true)
 
-  // const isGrouped = row.getIsGrouped()
-
-  // if ( // TODO: enforce grouping row selection rules
-  //   !isGrouped ||
-  //   (isGrouped && table.options.enableGroupingRowSelection)
-  // ) {
   if (value) {
-    if (!row_getCanMultiSelect(row, table)) {
+    if (!row_getCanMultiSelect(row)) {
       Object.keys(selectedRowIds).forEach((key) => delete selectedRowIds[key])
     }
-    if (row_getCanSelect(row, table)) {
+    if (row_getCanSelect(row)) {
       selectedRowIds[rowId] = true
     }
   } else {
     delete selectedRowIds[rowId]
   }
-  // }
 
-  if (
-    includeChildren &&
-    row.subRows.length &&
-    row_getCanSelectSubRows(row, table)
-  ) {
+  if (includeChildren && row.subRows.length && row_getCanSelectSubRows(row)) {
     row.subRows.forEach((r) =>
       mutateRowIsSelected(selectedRowIds, r.id, value, includeChildren, table),
     )
   }
 }
 
-/**
- *
- * @param table
- * @param rowModel
- * @returns
- */
 export function selectRowsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -567,12 +421,6 @@ export function selectRowsFn<
   }
 }
 
-/**
- *
- * @param row
- * @param selection
- * @returns
- */
 export function isRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -586,7 +434,6 @@ export function isSubRowSelected<
 >(
   row: Row<TFeatures, TData>,
   selection: Record<string, boolean>,
-  table: Table_Internal<TFeatures, TData>,
 ): boolean | 'some' | 'all' {
   if (!row.subRows.length) return false
 
@@ -599,7 +446,7 @@ export function isSubRowSelected<
       return
     }
 
-    if (row_getCanSelect(subRow, table)) {
+    if (row_getCanSelect(subRow)) {
       if (isRowSelected(subRow, selection)) {
         someSelected = true
       } else {
@@ -609,7 +456,7 @@ export function isSubRowSelected<
 
     // Check row selection of nested subrows
     if (subRow.subRows.length) {
-      const subRowChildrenSelected = isSubRowSelected(subRow, selection, table)
+      const subRowChildrenSelected = isSubRowSelected(subRow, selection)
       if (subRowChildrenSelected === 'all') {
         someSelected = true
       } else if (subRowChildrenSelected === 'some') {

@@ -74,30 +74,28 @@ export const ColumnFiltering: TableFeature = {
   >(
     column: Column<TFeatures, TData, TValue> &
       Partial<Column_ColumnFiltering<TFeatures, TData>>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnFiltering<TFeatures, TData>>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: () => column_getAutoFilterFn(column, table),
+        fn: () => column_getAutoFilterFn(column),
       },
       {
-        fn: () => column_getFilterFn(column, table),
+        fn: () => column_getFilterFn(column),
       },
       {
-        fn: () => column_getCanFilter(column, table),
+        fn: () => column_getCanFilter(column),
       },
       {
-        fn: () => column_getIsFiltered(column, table),
+        fn: () => column_getIsFiltered(column),
       },
       {
-        fn: () => column_getFilterValue(column, table),
+        fn: () => column_getFilterValue(column),
       },
       {
-        fn: () => column_getFilterIndex(column, table),
+        fn: () => column_getFilterIndex(column),
       },
       {
-        fn: (value) => column_setFilterValue(column, table, value),
+        fn: (value) => column_setFilterValue(column, value),
       },
     ])
   },

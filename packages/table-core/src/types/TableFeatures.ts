@@ -15,7 +15,6 @@ export interface TableFeature {
     TValue extends CellData = CellData,
   >(
     cell: Cell<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
   ) => void
   constructColumnAPIs?: <
     TFeatures extends TableFeatures,
@@ -23,7 +22,6 @@ export interface TableFeature {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
   ) => void
   constructHeaderAPIs?: <
     TFeatures extends TableFeatures,
@@ -31,11 +29,9 @@ export interface TableFeature {
     TValue extends CellData = CellData,
   >(
     header: Header<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
   ) => void
   constructRowAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData>,
-    table: Table<TFeatures, TData>,
   ) => void
   constructTableAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,

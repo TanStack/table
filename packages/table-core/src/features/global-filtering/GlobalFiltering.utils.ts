@@ -1,4 +1,4 @@
-import { filterFns } from '../../fns/filterFns'
+import { filterFn_includesString } from '../../fns/filterFns'
 import { isFunction } from '../../utils'
 import type { ColumnDefBase_All } from '../../types/ColumnDef'
 import type { FilterFn } from '../column-filtering/ColumnFiltering.types'
@@ -6,14 +6,7 @@ import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
-import type { BuiltInFilterFn } from '../../fns/filterFns'
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getCanGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -22,8 +15,8 @@ export function column_getCanGlobalFilter<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDefBase_All<TFeatures, TData, TValue>
   },
-  table: Table_Internal<TFeatures, TData>,
 ): boolean {
+  const { table } = column
   return (
     (column.columnDef.enableGlobalFilter ?? true) &&
     (table.options.enableGlobalFilter ?? true) &&
@@ -34,14 +27,9 @@ export function column_getCanGlobalFilter<
 }
 
 export function table_getGlobalAutoFilterFn() {
-  return filterFns.includesString
+  return filterFn_includesString
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getGlobalFilterFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -49,20 +37,17 @@ export function table_getGlobalFilterFn<
   table: Table_Internal<TFeatures, TData>,
 ): FilterFn<TFeatures, TData> | FilterFn<TFeatures, TData> | undefined {
   const { globalFilterFn: globalFilterFn } = table.options
+  const filterFns = table._processingFns.filterFns as
+    | Record<string, FilterFn<TFeatures, TData>>
+    | undefined
 
   return isFunction(globalFilterFn)
     ? globalFilterFn
     : globalFilterFn === 'auto'
       ? table_getGlobalAutoFilterFn()
-      : (table._processingFns.filterFns?.[globalFilterFn as string] ??
-        filterFns[globalFilterFn as BuiltInFilterFn])
+      : filterFns?.[globalFilterFn as string]
 }
 
-/**
- *
- * @param table
- * @param updater
- */
 export function table_setGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -70,11 +55,6 @@ export function table_setGlobalFilter<
   table.options.onGlobalFilterChange?.(updater)
 }
 
-/**
- *
- * @param table
- * @param defaultState
- */
 export function table_resetGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,

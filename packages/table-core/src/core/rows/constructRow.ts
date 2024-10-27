@@ -29,7 +29,7 @@ export const constructRow = <
   }
 
   for (const feature of Object.values(table._features) as Array<TableFeature>) {
-    feature.constructRowAPIs?.(row as Row<TFeatures, TData>, table)
+    feature.constructRowAPIs?.(row as Row<TFeatures, TData>)
   }
 
   return row as Row<TFeatures, TData>

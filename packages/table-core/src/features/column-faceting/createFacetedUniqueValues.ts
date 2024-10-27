@@ -1,5 +1,6 @@
 import { isDev, tableMemo } from '../../utils'
 import { column_getFacetedRowModel } from './ColumnFaceting.utils'
+import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -19,7 +20,7 @@ export function createFacetedUniqueValues<
         column_getFacetedRowModel(table.getColumn(columnId), table)(),
       ],
       fn: (facetedRowModel) =>
-        _createFacetedUniqueValues(table, columnId, facetedRowModel),
+        _createFacetedUniqueValues(columnId, facetedRowModel),
     })
 }
 
@@ -27,9 +28,8 @@ function _createFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
   columnId: string,
-  facetedRowModel?: ReturnType<ReturnType<typeof column_getFacetedRowModel>>,
+  facetedRowModel: RowModel<TFeatures, TData> | undefined,
 ): Map<any, number> {
   if (!facetedRowModel) return new Map()
 

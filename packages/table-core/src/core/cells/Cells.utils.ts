@@ -1,5 +1,3 @@
-import { callMemoOrStaticFn } from '../../utils'
-import { row_getValue } from '../rows/Rows.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Cell } from '../../types/Cell'
@@ -9,7 +7,7 @@ export function cell_getValue<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>): TValue {
-  return callMemoOrStaticFn(cell.row, row_getValue, [cell.column.id])
+  return cell.row.getValue(cell.column.id)
 }
 
 export function cell_renderValue<

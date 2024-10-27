@@ -1,7 +1,9 @@
 import { isDev, tableMemo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
-
-import type { ColumnFiltersState } from '../column-filtering/ColumnFiltering.types'
+import type {
+  ColumnFiltersState,
+  Row_ColumnFiltering,
+} from '../column-filtering/ColumnFiltering.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/RowModels.types'
@@ -55,7 +57,9 @@ function _createFacetedRowModel<
     globalFilter ? '__global__' : undefined,
   ].filter(Boolean) as Array<string>
 
-  const filterRowsImpl = (row: Row<TFeatures, TData>) => {
+  const filterRowsImpl = (
+    row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
+  ) => {
     // Horizontally filter rows through each column
     for (const colId of filterableIds) {
       if (row.columnFilters?.[colId] === false) {

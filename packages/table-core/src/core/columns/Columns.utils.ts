@@ -47,7 +47,7 @@ export function table_getDefaultColumnDef<
   return {
     header: (props) => {
       const resolvedColumnDef = props.header.column
-        .columnDef as ColumnDefResolved<TFeatures, TData>
+        .columnDef as ColumnDefResolved<{}, TData>
 
       if (resolvedColumnDef.accessorKey) {
         return resolvedColumnDef.accessorKey

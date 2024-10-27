@@ -35,10 +35,7 @@ export function constructHeader<
   }
 
   for (const feature of Object.values(table._features) as Array<TableFeature>) {
-    feature.constructHeaderAPIs?.(
-      header as Header<TFeatures, TData, TValue>,
-      table,
-    )
+    feature.constructHeaderAPIs?.(header as Header<TFeatures, TData, TValue>)
   }
 
   return header as Header<TFeatures, TData, TValue>

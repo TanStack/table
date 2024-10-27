@@ -56,14 +56,13 @@ export const ColumnResizing: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnResizing>,
-    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: () => column_getCanResize(column, table),
+        fn: () => column_getCanResize(column),
       },
       {
-        fn: () => column_getIsResizing(column, table),
+        fn: () => column_getIsResizing(column),
       },
     ])
   },
@@ -74,12 +73,11 @@ export const ColumnResizing: TableFeature = {
     TValue extends CellData = CellData,
   >(
     header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnResizing>,
-    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
   ): void => {
     assignAPIs(header, [
       {
         fn: (_contextDocument) =>
-          header_getResizeHandler(header, table, _contextDocument),
+          header_getResizeHandler(header, _contextDocument),
       },
     ])
   },

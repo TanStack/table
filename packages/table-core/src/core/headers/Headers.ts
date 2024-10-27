@@ -14,7 +14,7 @@ import {
 } from './Headers.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 
 export const Headers: TableFeature = {
@@ -24,16 +24,15 @@ export const Headers: TableFeature = {
     TValue extends CellData = CellData,
   >(
     header: Header<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(header, [
       {
         fn: () => header_getLeafHeaders(header),
-        memoDeps: () => [table.options.columns],
+        memoDeps: () => [header.column.table.options.columns],
       },
       {
         fn: () => header_getContext(header),
-        memoDeps: () => [table.options.columns],
+        memoDeps: () => [header.column.table.options.columns],
       },
     ])
   },

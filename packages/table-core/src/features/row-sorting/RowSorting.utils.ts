@@ -49,15 +49,14 @@ export function column_getAutoSortingFn<
   TValue extends CellData = CellData,
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
 ): SortingFn<TFeatures, TData> {
-  const sortingFns = table._processingFns.sortingFns as
+  const sortingFns = column.table._processingFns.sortingFns as
     | Record<string, SortingFn<TFeatures, TData>>
     | undefined
 
   let sortingFn: SortingFn<TFeatures, TData> | undefined
 
-  const firstRows = table.getFilteredRowModel().flatRows.slice(10)
+  const firstRows = column.table.getFilteredRowModel().flatRows.slice(10)
 
   let isString = false
 
@@ -94,11 +93,8 @@ export function column_getAutoSortDir<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
-  const firstRow = table.getFilteredRowModel().flatRows[0]
+>(column: Column_Internal<TFeatures, TData, TValue>) {
+  const firstRow = column.table.getFilteredRowModel().flatRows[0]
 
   const value = firstRow ? firstRow.getValue(column.id) : undefined
 
@@ -121,16 +117,15 @@ export function column_getSortingFn<
   TValue extends CellData = CellData,
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
 ): SortingFn<TFeatures, TData> {
-  const sortingFns = table._processingFns.sortingFns as
+  const sortingFns = column.table._processingFns.sortingFns as
     | Record<string, SortingFn<TFeatures, TData>>
     | undefined
 
   return isFunction(column.columnDef.sortingFn)
     ? column.columnDef.sortingFn
     : column.columnDef.sortingFn === 'auto'
-      ? column_getAutoSortingFn(column, table)
+      ? column_getAutoSortingFn(column)
       : (sortingFns?.[column.columnDef.sortingFn as string] ?? sortingFn_basic)
 }
 
@@ -147,7 +142,6 @@ export function column_toggleSorting<
   TValue extends CellData = CellData,
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
   desc?: boolean,
   multi?: boolean,
 ) {
@@ -161,10 +155,10 @@ export function column_toggleSorting<
   // }
 
   // this needs to be outside of table.setSorting to be in sync with rerender
-  const nextSortingOrder = column_getNextSortingOrder(column, table)
+  const nextSortingOrder = column_getNextSortingOrder(column)
   const hasManualValue = typeof desc !== 'undefined'
 
-  table_setSorting(table, (old) => {
+  table_setSorting(column.table, (old) => {
     // Find any existing sorting for this column
     const existingSorting = old.find((d) => d.id === column.id)
     const existingIndex = old.findIndex((d) => d.id === column.id)
@@ -176,7 +170,7 @@ export function column_toggleSorting<
     const nextDesc = hasManualValue ? desc : nextSortingOrder === 'desc'
 
     // Multi-mode
-    if (old.length && column_getCanMultiSort(column, table) && multi) {
+    if (old.length && column_getCanMultiSort(column) && multi) {
       if (existingSorting) {
         sortAction = 'toggle'
       } else {
@@ -216,7 +210,8 @@ export function column_toggleSorting<
       newSorting.splice(
         0,
         newSorting.length -
-          (table.options.maxMultiSortColCount ?? Number.MAX_SAFE_INTEGER),
+          (column.table.options.maxMultiSortColCount ??
+            Number.MAX_SAFE_INTEGER),
       )
     } else if (sortAction === 'toggle') {
       // This flips (or sets) the
@@ -254,14 +249,11 @@ export function column_getFirstSortDir<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   const sortDescFirst =
     column.columnDef.sortDescFirst ??
-    table.options.sortDescFirst ??
-    column_getAutoSortDir(column, table) === 'desc'
+    column.table.options.sortDescFirst ??
+    column_getAutoSortDir(column) === 'desc'
   return sortDescFirst ? 'desc' : 'asc'
 }
 
@@ -276,13 +268,9 @@ export function column_getNextSortingOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-  multi?: boolean,
-) {
-  const firstSortDirection = column_getFirstSortDir(column, table)
-  const isSorted = column_getIsSorted(column, table)
+>(column: Column_Internal<TFeatures, TData, TValue>, multi?: boolean) {
+  const firstSortDirection = column_getFirstSortDir(column)
+  const isSorted = column_getIsSorted(column)
 
   if (!isSorted) {
     return firstSortDirection
@@ -290,8 +278,8 @@ export function column_getNextSortingOrder<
 
   if (
     isSorted !== firstSortDirection &&
-    (table.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
-    (multi ? (table.options.enableMultiRemove ?? true) : true) // If multi, don't allow if enableMultiRemove))
+    (column.table.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
+    (multi ? (column.table.options.enableMultiRemove ?? true) : true) // If multi, don't allow if enableMultiRemove))
   ) {
     return false
   }
@@ -308,13 +296,10 @@ export function column_getCanSort<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   return (
     (column.columnDef.enableSorting ?? true) &&
-    (table.options.enableSorting ?? true) &&
+    (column.table.options.enableSorting ?? true) &&
     !!column.accessorFn
   )
 }
@@ -329,13 +314,10 @@ export function column_getCanMultiSort<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-): boolean {
+>(column: Column_Internal<TFeatures, TData, TValue>): boolean {
   return (
     column.columnDef.enableMultiSort ??
-    table.options.enableMultiSort ??
+    column.table.options.enableMultiSort ??
     !!column.accessorFn
   )
 }
@@ -350,11 +332,10 @@ export function column_getIsSorted<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-): false | SortDirection {
-  const columnSort = table.getState().sorting?.find((d) => d.id === column.id)
+>(column: Column_Internal<TFeatures, TData, TValue>): false | SortDirection {
+  const columnSort = column.table
+    .getState()
+    .sorting?.find((d) => d.id === column.id)
   return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
 }
 
@@ -368,11 +349,10 @@ export function column_getSortIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-): number {
-  return table.getState().sorting?.findIndex((d) => d.id === column.id) ?? -1
+>(column: Column_Internal<TFeatures, TData, TValue>): number {
+  return (
+    column.table.getState().sorting?.findIndex((d) => d.id === column.id) ?? -1
+  )
 }
 
 /**
@@ -384,12 +364,9 @@ export function column_clearSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   // clear sorting for just 1 column
-  table_setSorting(table, (old) =>
+  table_setSorting(column.table, (old) =>
     old.length ? old.filter((d) => d.id !== column.id) : [],
   )
 }
@@ -404,21 +381,18 @@ export function column_getToggleSortingHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
-  const canSort = column_getCanSort(column, table)
+>(column: Column_Internal<TFeatures, TData, TValue>) {
+  const canSort = column_getCanSort(column)
 
   return (e: unknown) => {
     if (!canSort) return
     ;(e as any).persist?.()
     column_toggleSorting(
       column,
-      table,
+
       undefined,
-      column_getCanMultiSort(column, table)
-        ? table.options.isMultiSortEvent?.(e)
+      column_getCanMultiSort(column)
+        ? column.table.options.isMultiSortEvent?.(e)
         : false,
     )
   }

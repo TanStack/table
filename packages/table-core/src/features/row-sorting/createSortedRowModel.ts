@@ -40,7 +40,7 @@ function _createSortedRowModel<
 
   // Filter out sortings that correspond to non existing columns
   const availableSorting = sorting.filter((sort) =>
-    column_getCanSort(table.getColumn(sort.id)!, table),
+    column_getCanSort(table.getColumn(sort.id)!),
   )
 
   const columnInfoById: Record<
@@ -61,7 +61,7 @@ function _createSortedRowModel<
     columnInfoById[sortEntry.id] = {
       sortUndefined: column.columnDef.sortUndefined,
       invertSorting: column.columnDef.invertSorting,
-      sortingFn: column_getSortingFn(column, table),
+      sortingFn: column_getSortingFn(column),
     }
   })
 

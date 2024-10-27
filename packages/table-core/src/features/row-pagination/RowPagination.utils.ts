@@ -7,10 +7,6 @@ import type { PaginationState } from './RowPagination.types'
 const defaultPageIndex = 0
 const defaultPageSize = 10
 
-/**
- *
- * @returns
- */
 export function getDefaultPaginationState(): PaginationState {
   return structuredClone({
     pageIndex: defaultPageIndex,
@@ -18,13 +14,6 @@ export function getDefaultPaginationState(): PaginationState {
   })
 }
 
-/**
- *
- * @param table
- * @param registered
- * @param queued
- * @returns
- */
 export function table_autoResetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -38,12 +27,6 @@ export function table_autoResetPageIndex<
   }
 }
 
-/**
- *
- * @param table
- * @param updater
- * @returns
- */
 export function table_setPagination<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -57,11 +40,6 @@ export function table_setPagination<
   return table.options.onPaginationChange?.(safeUpdater)
 }
 
-/**
- *
- * @param table
- * @param defaultState
- */
 export function table_resetPagination<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -74,11 +52,6 @@ export function table_resetPagination<
   )
 }
 
-/**
- *
- * @param table
- * @param updater
- */
 export function table_setPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -101,11 +74,6 @@ export function table_setPageIndex<
   })
 }
 
-/**
- *
- * @param table
- * @param defaultState
- */
 export function table_resetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -118,11 +86,6 @@ export function table_resetPageIndex<
   )
 }
 
-/**
- *
- * @param table
- * @param defaultState
- */
 export function table_resetPageSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -135,11 +98,6 @@ export function table_resetPageSize<
   )
 }
 
-/**
- *
- * @param table
- * @param updater
- */
 export function table_setPageSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -157,11 +115,6 @@ export function table_setPageSize<
   })
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getPageOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -174,11 +127,6 @@ export function table_getPageOptions<
   return pageOptions
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getCanPreviousPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -186,11 +134,6 @@ export function table_getCanPreviousPage<
   return (table.getState().pagination?.pageIndex ?? 0) > 0
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getCanNextPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -210,11 +153,6 @@ export function table_getCanNextPage<
   return pageIndex < pageCount - 1
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_previousPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -222,11 +160,6 @@ export function table_previousPage<
   return table_setPageIndex(table, (old) => old - 1)
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_nextPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -236,11 +169,6 @@ export function table_nextPage<
   })
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_firstPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -248,11 +176,6 @@ export function table_firstPage<
   return table_setPageIndex(table, 0)
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_lastPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -260,11 +183,6 @@ export function table_lastPage<
   return table_setPageIndex(table, table_getPageCount(table) - 1)
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getPageCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -278,11 +196,6 @@ export function table_getPageCount<
   )
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getRowCount<
   TFeatures extends TableFeatures,
   TData extends RowData,

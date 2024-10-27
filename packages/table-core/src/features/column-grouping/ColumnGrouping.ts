@@ -16,17 +16,18 @@ import {
   table_resetGrouping,
   table_setGrouping,
 } from './ColumnGrouping.utils'
+import type { Row } from '../../types/Row'
 import type { TableState } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
-import type { Row_Internal } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 import type {
   Cell_ColumnGrouping,
   ColumnDef_ColumnGrouping,
   Column_ColumnGrouping,
+  Row_ColumnGrouping,
   TableOptions_ColumnGrouping,
   TableState_ColumnGrouping,
   Table_ColumnGrouping,
@@ -77,18 +78,16 @@ export const ColumnGrouping: TableFeature = {
     TValue,
   >(
     cell: Cell<TFeatures, TData, TValue> & Partial<Cell_ColumnGrouping>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
     assignAPIs(cell, [
       {
-        fn: () => cell_getIsGrouped(cell, table),
+        fn: () => cell_getIsGrouped(cell),
       },
       {
-        fn: () => cell_getIsPlaceholder(cell, table),
+        fn: () => cell_getIsPlaceholder(cell),
       },
       {
-        fn: () => cell_getIsAggregated(cell, table),
+        fn: () => cell_getIsAggregated(cell),
       },
     ])
   },
@@ -100,37 +99,34 @@ export const ColumnGrouping: TableFeature = {
   >(
     column: Column<TFeatures, TData, TValue> &
       Partial<Column_ColumnGrouping<TFeatures, TData>>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TData>>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: () => column_toggleGrouping(column, table),
+        fn: () => column_toggleGrouping(column),
       },
       {
-        fn: () => column_getCanGroup(column, table),
+        fn: () => column_getCanGroup(column),
       },
       {
-        fn: () => column_getIsGrouped(column, table),
+        fn: () => column_getIsGrouped(column),
       },
       {
-        fn: () => column_getGroupedIndex(column, table),
+        fn: () => column_getGroupedIndex(column),
       },
       {
-        fn: () => column_getToggleGroupingHandler(column, table),
+        fn: () => column_getToggleGroupingHandler(column),
       },
       {
-        fn: () => column_getAutoAggregationFn(column, table),
+        fn: () => column_getAutoAggregationFn(column),
       },
       {
-        fn: () => column_getAggregationFn(column, table),
+        fn: () => column_getAggregationFn(column),
       },
     ])
   },
 
   constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row_Internal<TFeatures, TData>,
-    table: Table<TFeatures, TData>,
+    row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>,
   ): void => {
     row._groupingValuesCache = {}
 
@@ -139,7 +135,7 @@ export const ColumnGrouping: TableFeature = {
         fn: () => row_getIsGrouped(row),
       },
       {
-        fn: (columnId) => row_getGroupingValue(row, table, columnId),
+        fn: (columnId) => row_getGroupingValue(row, columnId),
       },
     ])
   },

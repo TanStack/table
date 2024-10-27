@@ -43,7 +43,9 @@ function _createFilteredRowModel<
   const { columnFilters, globalFilter } = table.getState()
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
-    for (const row of rowModel.flatRows) {
+    for (const row of rowModel.flatRows as Array<
+      Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
+    >) {
       row.columnFilters = {}
       row.columnFiltersMeta = {}
     }
@@ -62,7 +64,7 @@ function _createFilteredRowModel<
       return
     }
 
-    const filterFn = column_getFilterFn(column, table)
+    const filterFn = column_getFilterFn(column)
 
     if (!filterFn) {
       if (process.env.NODE_ENV !== 'production') {
@@ -86,7 +88,7 @@ function _createFilteredRowModel<
 
   const globallyFilterableColumns = table
     .getAllLeafColumns()
-    .filter((column) => column_getCanGlobalFilter(column, table))
+    .filter((column) => column_getCanGlobalFilter(column))
 
   if (globalFilter && globalFilterFn && globallyFilterableColumns.length) {
     filterableIds.push('__global__')
@@ -102,7 +104,9 @@ function _createFilteredRowModel<
   }
 
   // Flag the prefiltered row model with each filter state
-  for (const row of rowModel.flatRows) {
+  for (const row of rowModel.flatRows as Array<
+    Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
+  >) {
     row.columnFilters = {}
 
     if (resolvedColumnFilters.length) {
@@ -115,7 +119,9 @@ function _createFilteredRowModel<
           id,
           currentColumnFilter.resolvedValue,
           (filterMeta) => {
-            row.columnFiltersMeta[id] = filterMeta
+            !row.columnFiltersMeta
+              ? (row.columnFiltersMeta = {})
+              : (row.columnFiltersMeta[id] = filterMeta)
           },
         )
       }
@@ -131,7 +137,9 @@ function _createFilteredRowModel<
             id,
             currentGlobalFilter.resolvedValue,
             (filterMeta) => {
-              row.columnFiltersMeta[id] = filterMeta
+              !row.columnFiltersMeta
+                ? (row.columnFiltersMeta = {})
+                : (row.columnFiltersMeta[id] = filterMeta)
             },
           )
         ) {

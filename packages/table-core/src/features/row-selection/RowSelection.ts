@@ -72,33 +72,31 @@ export const RowSelection: TableFeature = {
 
   constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_RowSelection>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowSelection<TFeatures, TData>>,
   ): void => {
     assignAPIs(row, [
       {
-        fn: (value, opts) => row_toggleSelected(row, table, value, opts),
+        fn: (value, opts) => row_toggleSelected(row, value, opts),
       },
       {
-        fn: () => row_getIsSelected(row, table),
+        fn: () => row_getIsSelected(row),
       },
       {
-        fn: () => row_getIsSomeSelected(row, table),
+        fn: () => row_getIsSomeSelected(row),
       },
       {
-        fn: () => row_getIsAllSubRowsSelected(row, table),
+        fn: () => row_getIsAllSubRowsSelected(row),
       },
       {
-        fn: () => row_getCanSelect(row, table),
+        fn: () => row_getCanSelect(row),
       },
       {
-        fn: () => row_getCanSelectSubRows(row, table),
+        fn: () => row_getCanSelectSubRows(row),
       },
       {
-        fn: () => row_getCanMultiSelect(row, table),
+        fn: () => row_getCanMultiSelect(row),
       },
       {
-        fn: () => row_getToggleSelectedHandler(row, table),
+        fn: () => row_getToggleSelectedHandler(row),
       },
     ])
   },

@@ -24,7 +24,7 @@ export function constructColumn<
   const resolvedColumnDef = {
     ...defaultColumn,
     ...columnDef,
-  } as ColumnDefResolved<TFeatures, TData, TValue>
+  } as ColumnDefResolved<{}, TData, TValue>
 
   const accessorKey = resolvedColumnDef.accessorKey
 
@@ -84,10 +84,7 @@ export function constructColumn<
   }
 
   for (const feature of Object.values(table._features) as Array<TableFeature>) {
-    feature.constructColumnAPIs?.(
-      column as Column<TFeatures, TData, TValue>,
-      table,
-    )
+    feature.constructColumnAPIs?.(column as Column<TFeatures, TData, TValue>)
   }
 
   return column as Column<TFeatures, TData, TValue>

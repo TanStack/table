@@ -3,7 +3,7 @@ import { row_getIsExpanded } from './RowExpanding.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/RowModels.types'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
 export function createExpandedRowModel<
@@ -44,19 +44,19 @@ export function _createExpandedRowModel<
     return rowModel
   }
 
-  return expandRows(rowModel, table)
+  return expandRows(rowModel)
 }
 
 export function expandRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(rowModel: RowModel<TFeatures, TData>, table: Table<TFeatures, TData>) {
+>(rowModel: RowModel<TFeatures, TData>) {
   const expandedRows: Array<Row<TFeatures, TData>> = []
 
   const handleRow = (row: Row<TFeatures, TData>) => {
     expandedRows.push(row)
 
-    if (row.subRows.length && row_getIsExpanded(row, table)) {
+    if (row.subRows.length && row_getIsExpanded(row)) {
       row.subRows.forEach(handleRow)
     }
   }

@@ -68,30 +68,29 @@ export const ColumnSizing: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnSizing>,
-    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: () => column_getSize(column, table),
+        fn: () => column_getSize(column),
       },
       {
-        fn: (position) => column_getStart(column, table, position),
+        fn: (position) => column_getStart(column, position),
         memoDeps: (position) => [
           position,
-          column_getVisibleLeafColumns(table, position),
-          table.getState().columnSizing,
+          column_getVisibleLeafColumns(column.table, position),
+          column.table.getState().columnSizing,
         ],
       },
       {
-        fn: (position) => column_getAfter(column, table, position),
+        fn: (position) => column_getAfter(column, position),
         memoDeps: (position) => [
           position,
-          column_getVisibleLeafColumns(table, position),
-          table.getState().columnSizing,
+          column_getVisibleLeafColumns(column.table, position),
+          column.table.getState().columnSizing,
         ],
       },
       {
-        fn: () => column_resetSize(table, column),
+        fn: () => column_resetSize(column),
       },
     ])
   },
@@ -102,11 +101,10 @@ export const ColumnSizing: TableFeature = {
     TValue extends CellData = CellData,
   >(
     header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnSizing>,
-    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
   ): void => {
-    header.getSize = () => header_getSize(header, table)
+    header.getSize = () => header_getSize(header)
 
-    header.getStart = () => header_getStart(header, table)
+    header.getStart = () => header_getStart(header)
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(

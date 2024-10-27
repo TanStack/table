@@ -16,7 +16,7 @@ export * from './types/TableState'
 export * from './types/type-utils'
 
 /**
- * coreRowModel
+ * Core
  */
 
 export * from './core/coreFeatures'
@@ -62,6 +62,14 @@ export * from './core/table/constructTable'
 export * from './core/table/Tables'
 export * from './core/table/Tables.types'
 export * from './core/table/Tables.utils'
+
+/**
+ * ProcessingFns
+ */
+
+export * from './fns/aggregationFns'
+export * from './fns/filterFns'
+export * from './fns/sortingFns'
 
 /**
  * Features
@@ -151,11 +159,3 @@ export * from './features/row-sorting/RowSorting'
 export * from './features/row-sorting/RowSorting.types'
 export * from './features/row-sorting/RowSorting.utils'
 export * from './features/row-sorting/createSortedRowModel'
-
-/**
- * ProcessingFns
- */
-
-export * from './fns/aggregationFns'
-export * from './fns/filterFns'
-export * from './fns/sortingFns'

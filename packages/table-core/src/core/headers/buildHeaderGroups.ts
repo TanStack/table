@@ -32,7 +32,7 @@ export function buildHeaderGroups<
     maxDepth = Math.max(maxDepth, depth)
 
     columns
-      .filter((column) => column_getIsVisible(column, table))
+      .filter((column) => column_getIsVisible(column))
       .forEach((column) => {
         if (column.columns.length) {
           findMaxDepth(column.columns, depth + 1)
@@ -135,7 +135,7 @@ export function buildHeaderGroups<
     headers: Array<Header<TFeatures, TData, TValue>>,
   ): Array<{ colSpan: number; rowSpan: number }> => {
     const filteredHeaders = headers.filter((header) =>
-      column_getIsVisible(header.column, table),
+      column_getIsVisible(header.column),
     )
 
     return filteredHeaders.map((header) => {

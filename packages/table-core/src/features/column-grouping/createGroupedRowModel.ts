@@ -3,7 +3,12 @@ import { constructRow } from '../../core/rows/constructRow'
 import { table_getColumn } from '../../core/columns/Columns.utils'
 import { table_autoResetExpanded } from '../row-expanding/RowExpanding.utils'
 import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
-import { row_getGroupingValue } from './ColumnGrouping.utils'
+import {
+  column_getAggregationFn,
+  row_getGroupingValue,
+} from './ColumnGrouping.utils'
+import type { Column } from '../../types/Column'
+import type { Row_ColumnGrouping } from './ColumnGrouping.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/RowModels.types'
@@ -50,7 +55,8 @@ function _createGroupedRowModel<
     table_getColumn(table, columnId),
   )
 
-  const groupedFlatRows: Array<Row<TFeatures, TData>> = []
+  const groupedFlatRows: Array<Row<TFeatures, TData>> &
+    Partial<Row_ColumnGrouping> = []
   const groupedRowsById: Record<string, Row<TFeatures, TData>> = {}
 
   // Recursively group the data
@@ -107,7 +113,7 @@ function _createGroupedRowModel<
           depth,
           undefined,
           parentId,
-        )
+        ) as Row<TFeatures, TData> & Partial<Row_ColumnGrouping>
 
         Object.assign(row, {
           groupingColumnId: columnId,
@@ -129,13 +135,17 @@ function _createGroupedRowModel<
               return row._valuesCache[colId]
             }
 
-            if (row._groupingValuesCache.hasOwnProperty(colId)) {
+            if (row._groupingValuesCache?.hasOwnProperty(colId)) {
               return row._groupingValuesCache[colId]
             }
 
             // Aggregate the values
             const column = table.getColumn(colId)
-            const aggregateFn = column.getAggregationFn()
+            const aggregateFn = column_getAggregationFn(
+              column as Column<TFeatures, TData, unknown>,
+            )
+
+            if (!row._groupingValuesCache) row._groupingValuesCache = {}
 
             if (aggregateFn) {
               row._groupingValuesCache[colId] = aggregateFn(
@@ -183,7 +193,7 @@ function groupBy<TFeatures extends TableFeatures, TData extends RowData>(
   const groupMap = new Map<any, Array<Row<TFeatures, TData>>>()
 
   return rows.reduce((map, row) => {
-    const resKey = `${row_getGroupingValue(row, table, columnId)}`
+    const resKey = `${row_getGroupingValue(row, columnId)}`
     const previous = map.get(resKey)
     if (!previous) {
       map.set(resKey, [row])

@@ -3,11 +3,6 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { Table_Internal } from '../../types/Table'
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getGlobalFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -18,11 +13,6 @@ export function table_getGlobalFacetedMinMaxValues<
   )
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getGlobalFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -33,11 +23,6 @@ export function table_getGlobalFacetedRowModel<
   )
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getGlobalFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,

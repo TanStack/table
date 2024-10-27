@@ -7,10 +7,6 @@ import type { RowPinningPosition, RowPinningState } from './RowPinning.types'
 
 // State Utils
 
-/**
- *
- * @returns
- */
 export function getDefaultRowPinningState(): RowPinningState {
   return structuredClone({
     top: [],
@@ -18,11 +14,6 @@ export function getDefaultRowPinningState(): RowPinningState {
   })
 }
 
-/**
- *
- * @param table
- * @param updater
- */
 export function table_setRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -33,11 +24,6 @@ export function table_setRowPinning<
   table.options.onRowPinningChange?.(updater)
 }
 
-/**
- *
- * @param table
- * @param defaultState
- */
 export function table_resetRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -52,12 +38,6 @@ export function table_resetRowPinning<
 
 // Table Utils
 
-/**
- *
- * @param table
- * @param position
- * @returns
- */
 export function table_getIsSomeRowsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -73,12 +53,6 @@ export function table_getIsSomeRowsPinned<
   return Boolean(rowPinning?.[position].length)
 }
 
-/**
- *
- * @param table
- * @param position
- * @returns
- */
 function table_getPinnedRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -95,7 +69,7 @@ function table_getPinnedRows<
         // account for expanded parent rows, but not pagination or filtering
         pinnedRowIds.map((rowId) => {
           const row = table.getRow(rowId, true)
-          return row_getIsAllParentsExpanded(row, table) ? row : null
+          return row_getIsAllParentsExpanded(row) ? row : null
         })
       : // else get only visible rows that are pinned
         pinnedRowIds.map(
@@ -105,11 +79,6 @@ function table_getPinnedRows<
   return rows.filter((r) => !!r).map((d) => ({ ...d, position }))
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getTopRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -117,11 +86,6 @@ export function table_getTopRows<
   return table_getPinnedRows(table, 'top')
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getBottomRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -129,11 +93,6 @@ export function table_getBottomRows<
   return table_getPinnedRows(table, 'bottom')
 }
 
-/**
- *
- * @param table
- * @returns
- */
 export function table_getCenterRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -148,41 +107,23 @@ export function table_getCenterRows<
 
 // Row Utils
 
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getCanPin<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  table: Table_Internal<TFeatures, TData>,
-): boolean {
-  const { enableRowPinning } = table.options
+>(row: Row<TFeatures, TData>): boolean {
+  const { enableRowPinning } = row.table.options
   if (typeof enableRowPinning === 'function') {
     return enableRowPinning(row)
   }
   return enableRowPinning ?? true
 }
 
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getIsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  table: Table_Internal<TFeatures, TData>,
-): RowPinningPosition {
+>(row: Row<TFeatures, TData>): RowPinningPosition {
   const { top, bottom } =
-    table.getState().rowPinning ?? getDefaultRowPinningState()
+    row.table.getState().rowPinning ?? getDefaultRowPinningState()
 
   return top.includes(row.id)
     ? 'top'
@@ -191,37 +132,24 @@ export function row_getIsPinned<
       : false
 }
 
-/**
- *
- * @param row
- * @param table
- * @returns
- */
 export function row_getPinnedIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>): number {
-  const position = row_getIsPinned(row, table)
+>(row: Row<TFeatures, TData>): number {
+  const position = row_getIsPinned(row)
   if (!position) return -1
 
   const visiblePinnedRowIds = (
-    position === 'top' ? table_getTopRows(table) : table_getBottomRows(table)
+    position === 'top'
+      ? table_getTopRows(row.table)
+      : table_getBottomRows(row.table)
   ).map(({ id }) => id)
 
   return visiblePinnedRowIds.indexOf(row.id)
 }
 
-/**
- *
- * @param row
- * @param table
- * @param position
- * @param includeLeafRows
- * @param includeParentRows
- */
 export function row_pin<TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
-  table: Table_Internal<TFeatures, TData>,
   position: RowPinningPosition,
   includeLeafRows?: boolean,
   includeParentRows?: boolean,
@@ -234,7 +162,7 @@ export function row_pin<TFeatures extends TableFeatures, TData extends RowData>(
     : []
   const rowIds = new Set([...parentRowIds, row.id, ...leafRowIds])
 
-  table_setRowPinning(table, (old) => {
+  table_setRowPinning(row.table, (old) => {
     if (position === 'bottom') {
       return {
         top: old.top.filter((d) => !rowIds.has(d)),

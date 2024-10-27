@@ -17,15 +17,12 @@ export function column_getAutoFilterFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
-  const filterFns = table._processingFns.filterFns as
+>(column: Column<TFeatures, TData, TValue>) {
+  const filterFns = column.table._processingFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
 
-  const firstRow = table.getCoreRowModel().flatRows[0]
+  const firstRow = column.table.getCoreRowModel().flatRows[0]
 
   const value = firstRow ? firstRow.getValue(column.id) : undefined
 
@@ -60,15 +57,14 @@ export function column_getFilterFn<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
 ): FilterFn<TFeatures, TData> | undefined {
-  const filterFns = table._processingFns.filterFns as
+  const filterFns = column.table._processingFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
   return isFunction(column.columnDef.filterFn)
     ? column.columnDef.filterFn
     : column.columnDef.filterFn === 'auto'
-      ? column_getAutoFilterFn(column, table)
+      ? column_getAutoFilterFn(column)
       : filterFns?.[column.columnDef.filterFn as string]
 }
 
@@ -80,12 +76,11 @@ export function column_getCanFilter<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
 ) {
   return (
     (column.columnDef.enableColumnFilter ?? true) &&
-    (table.options.enableColumnFilters ?? true) &&
-    (table.options.enableFilters ?? true) &&
+    (column.table.options.enableColumnFilters ?? true) &&
+    (column.table.options.enableFilters ?? true) &&
     !!column.accessorFn
   )
 }
@@ -98,9 +93,8 @@ export function column_getIsFiltered<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
 ) {
-  return column_getFilterIndex(column, table) > -1
+  return column_getFilterIndex(column) > -1
 }
 
 export function column_getFilterValue<
@@ -111,9 +105,9 @@ export function column_getFilterValue<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
 ) {
-  return table.getState().columnFilters?.find((d) => d.id === column.id)?.value
+  return column.table.getState().columnFilters?.find((d) => d.id === column.id)
+    ?.value
 }
 
 export function column_getFilterIndex<
@@ -124,10 +118,11 @@ export function column_getFilterIndex<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
 ): number {
   return (
-    table.getState().columnFilters?.findIndex((d) => d.id === column.id) ?? -1
+    column.table
+      .getState()
+      .columnFilters?.findIndex((d) => d.id === column.id) ?? -1
   )
 }
 
@@ -139,11 +134,10 @@ export function column_setFilterValue<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
-  table: Table_Internal<TFeatures, TData>,
   value: any,
 ) {
-  table_setColumnFilters(table, (old) => {
-    const filterFn = column_getFilterFn(column, table)
+  table_setColumnFilters(column.table, (old) => {
+    const filterFn = column_getFilterFn(column)
     const previousFilter = old.find((d) => d.id === column.id)
 
     const newFilter = functionalUpdate(
@@ -188,7 +182,7 @@ export function table_setColumnFilters<
       const column = leafColumns.find((d) => d.id === filter.id)
 
       if (column) {
-        const filterFn = column_getFilterFn(column, table)
+        const filterFn = column_getFilterFn(column)
 
         if (shouldAutoRemoveFilter(filterFn, filter.value, column)) {
           return false

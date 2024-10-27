@@ -7,7 +7,6 @@ import {
 import type { Column_ColumnFaceting } from './ColumnFaceting.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Column } from '../../types/Column'
 
 /**
@@ -21,17 +20,16 @@ export const ColumnFaceting: TableFeature = {
   >(
     column: Column<TFeatures, TData, TValue> &
       Partial<Column_ColumnFaceting<TFeatures, TData>>,
-    table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: () => column_getFacetedMinMaxValues(column, table),
+        fn: () => column_getFacetedMinMaxValues(column, column.table),
       },
       {
-        fn: () => column_getFacetedRowModel(column, table),
+        fn: () => column_getFacetedRowModel(column, column.table),
       },
       {
-        fn: () => column_getFacetedUniqueValues(column, table),
+        fn: () => column_getFacetedUniqueValues(column, column.table),
       },
     ])
   },

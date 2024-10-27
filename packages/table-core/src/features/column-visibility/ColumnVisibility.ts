@@ -66,21 +66,19 @@ export const ColumnVisibility: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnVisibility>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: () => column_getIsVisible(column, table),
+        fn: () => column_getIsVisible(column),
       },
       {
-        fn: () => column_getCanHide(column, table),
+        fn: () => column_getCanHide(column),
       },
       {
-        fn: () => column_getToggleVisibilityHandler(column, table),
+        fn: () => column_getToggleVisibilityHandler(column),
       },
       {
-        fn: (visible) => column_toggleVisibility(column, table, visible),
+        fn: (visible) => column_toggleVisibility(column, visible),
       },
     ])
   },
@@ -88,20 +86,21 @@ export const ColumnVisibility: TableFeature = {
   constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> &
       Partial<Row_ColumnVisibility<TFeatures, TData>>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnVisibility<TFeatures, TData>>,
   ): void => {
     assignAPIs(row, [
       {
-        fn: () => row_getAllVisibleCells(row, table),
-        memoDeps: () => [row.getAllCells(), table.getState().columnVisibility],
+        fn: () => row_getAllVisibleCells(row),
+        memoDeps: () => [
+          row.getAllCells(),
+          row.table.getState().columnVisibility,
+        ],
       },
       {
         fn: (left, center, right) => row_getVisibleCells(left, center, right),
         memoDeps: () => [
-          row_getLeftVisibleCells(row, table),
-          row_getCenterVisibleCells(row, table),
-          row_getRightVisibleCells(row, table),
+          row_getLeftVisibleCells(row),
+          row_getCenterVisibleCells(row),
+          row_getRightVisibleCells(row),
         ],
       },
     ])

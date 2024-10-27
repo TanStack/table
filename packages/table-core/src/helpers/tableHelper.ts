@@ -1,5 +1,4 @@
 import { createColumnHelper } from './columnHelper'
-import type { ProcessingFns_All } from '../types/ProcessingFns'
 import type { ColumnHelper } from './columnHelper'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
@@ -27,7 +26,6 @@ export type TableHelper_Core<
 > = {
   columnHelper: ColumnHelper<TFeatures, TData>
   features: TFeatures
-  processingFns: ProcessingFns_All<TFeatures, TData>
   options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'>
   tableCreator: (
     tableOptions: Omit<
@@ -53,7 +51,6 @@ export function constructTableHelper<
   return {
     columnHelper: createColumnHelper<TFeatures, TData>(),
     features: tableHelperOptions._features,
-    processingFns: tableHelperOptions._processingFns ?? {},
     options: _tableHelperOptions as any,
     tableCreator: (tableOptions) =>
       tableCreator({ ...(_tableHelperOptions as any), ...tableOptions }),

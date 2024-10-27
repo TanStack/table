@@ -53,23 +53,24 @@ export const RowPinning: TableFeature = {
 
   constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_RowPinning>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowPinning<TFeatures, TData>>,
   ): void => {
     assignAPIs(row, [
       {
-        fn: () => row_getCanPin(row, table),
+        fn: () => row_getCanPin(row),
       },
       {
-        fn: () => row_getIsPinned(row, table),
+        fn: () => row_getIsPinned(row),
       },
       {
-        fn: () => row_getPinnedIndex(row, table),
-        memoDeps: () => [table.getRowModel().rows, table.getState().rowPinning],
+        fn: () => row_getPinnedIndex(row),
+        memoDeps: () => [
+          row.table.getRowModel().rows,
+          row.table.getState().rowPinning,
+        ],
       },
       {
         fn: (position, includeLeafRows, includeParentRows) =>
-          row_pin(row, table, position, includeLeafRows, includeParentRows),
+          row_pin(row, position, includeLeafRows, includeParentRows),
       },
     ])
   },

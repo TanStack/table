@@ -16,10 +16,9 @@ export function column_getIndex<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = column_getVisibleLeafColumns(table, position)
+  const columns = column_getVisibleLeafColumns(column.table, position)
   return columns.findIndex((d) => d.id === column.id)
 }
 
@@ -29,10 +28,9 @@ export function column_getIsFirstColumn<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = column_getVisibleLeafColumns(table, position)
+  const columns = column_getVisibleLeafColumns(column.table, position)
   return columns[0]?.id === column.id
 }
 
@@ -42,10 +40,9 @@ export function column_getIsLastColumn<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = column_getVisibleLeafColumns(table, position)
+  const columns = column_getVisibleLeafColumns(column.table, position)
   return columns[columns.length - 1]?.id === column.id
 }
 

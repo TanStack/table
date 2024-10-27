@@ -27,13 +27,12 @@ export function column_toggleVisibility<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnVisibility>
   },
-  table: Table_Internal<TFeatures, TData>,
   visible?: boolean,
 ): void {
-  if (column_getCanHide(column, table)) {
-    table_setColumnVisibility(table, (old) => ({
+  if (column_getCanHide(column)) {
+    table_setColumnVisibility(column.table, (old) => ({
       ...old,
-      [column.id]: visible ?? !column_getIsVisible(column, table),
+      [column.id]: visible ?? !column_getIsVisible(column),
     }))
   }
 }
@@ -46,13 +45,12 @@ export function column_getIsVisible<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnVisibility>
   },
-  table: Table_Internal<TFeatures, TData>,
 ): boolean {
   const childColumns = column.columns
   return (
     (childColumns.length
-      ? childColumns.some((c) => column_getIsVisible(c, table))
-      : table.getState().columnVisibility?.[column.id]) ?? true
+      ? childColumns.some((c) => column_getIsVisible(c))
+      : column.table.getState().columnVisibility?.[column.id]) ?? true
   )
 }
 
@@ -64,11 +62,10 @@ export function column_getCanHide<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnVisibility>
   },
-  table: Table_Internal<TFeatures, TData>,
 ) {
   return (
     (column.columnDef.enableHiding ?? true) &&
-    (table.options.enableHiding ?? true)
+    (column.table.options.enableHiding ?? true)
   )
 }
 
@@ -80,12 +77,10 @@ export function column_getToggleVisibilityHandler<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnVisibility>
   },
-  table: Table_Internal<TFeatures, TData>,
 ) {
   return (e: unknown) => {
     column_toggleVisibility(
       column,
-      table,
       ((e as MouseEvent).target as HTMLInputElement).checked,
     )
   }
@@ -110,10 +105,8 @@ export function column_getVisibleLeafColumns<
 export function row_getAllVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>, table: Table_Internal<TFeatures, TData>) {
-  return row
-    .getAllCells()
-    .filter((cell) => column_getIsVisible(cell.column, table))
+>(row: Row<TFeatures, TData>) {
+  return row.getAllCells().filter((cell) => column_getIsVisible(cell.column))
 }
 
 export function row_getVisibleCells<
@@ -133,7 +126,7 @@ export function table_getVisibleFlatColumns<
 >(table: Table_Internal<TFeatures, TData>) {
   return table
     .getAllFlatColumns()
-    .filter((column) => column_getIsVisible(column, table))
+    .filter((column) => column_getIsVisible(column))
 }
 
 export function table_getVisibleLeafColumns<
@@ -142,7 +135,7 @@ export function table_getVisibleLeafColumns<
 >(table: Table_Internal<TFeatures, TData>) {
   return table
     .getAllLeafColumns()
-    .filter((column) => column_getIsVisible(column, table))
+    .filter((column) => column_getIsVisible(column))
 }
 
 export function table_setColumnVisibility<
@@ -176,7 +169,7 @@ export function table_toggleAllColumnsVisible<
     table.getAllLeafColumns().reduce(
       (obj, column) => ({
         ...obj,
-        [column.id]: !value ? !column_getCanHide(column, table) : value,
+        [column.id]: !value ? !column_getCanHide(column) : value,
       }),
       {},
     ),
@@ -189,16 +182,14 @@ export function table_getIsAllColumnsVisible<
 >(table: Table_Internal<TFeatures, TData>) {
   return !table
     .getAllLeafColumns()
-    .some((column) => !column_getIsVisible(column, table))
+    .some((column) => !column_getIsVisible(column))
 }
 
 export function table_getIsSomeColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return table
-    .getAllLeafColumns()
-    .some((column) => column_getIsVisible(column, table))
+  return table.getAllLeafColumns().some((column) => column_getIsVisible(column))
 }
 
 export function table_getToggleAllColumnsVisibilityHandler<

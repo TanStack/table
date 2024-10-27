@@ -21,8 +21,8 @@ export const Columns: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue>,
-    table: Table_Internal<TFeatures, TData>,
   ) => {
+    const { table } = column
     assignAPIs(column, [
       {
         fn: () => column_getFlatColumns(column),

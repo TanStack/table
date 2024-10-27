@@ -52,24 +52,22 @@ export const ColumnOrdering: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnOrdering>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: (position) => column_getIndex(column, table, position),
+        fn: (position) => column_getIndex(column, position),
         memoDeps: (position) => [
           position,
-          table.getState().columnOrder,
-          table.getState().columnPinning,
-          table.getState().grouping,
+          column.table.getState().columnOrder,
+          column.table.getState().columnPinning,
+          column.table.getState().grouping,
         ],
       },
       {
-        fn: (position) => column_getIsFirstColumn(column, table, position),
+        fn: (position) => column_getIsFirstColumn(column, position),
       },
       {
-        fn: (position) => column_getIsLastColumn(column, table, position),
+        fn: (position) => column_getIsLastColumn(column, position),
       },
     ])
   },

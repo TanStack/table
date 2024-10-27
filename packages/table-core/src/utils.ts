@@ -123,11 +123,12 @@ const pad = (str: number | string, num: number) => {
   return str
 }
 
-export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
-  tableMemoOptions: TableMemoOptions<TDeps, TDepArgs, TResult>,
-) {
-  const { debug, fnName, onAfterUpdate, ...memoOptions } = tableMemoOptions
-
+export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
+  debug,
+  fnName,
+  onAfterUpdate,
+  ...memoOptions
+}: TableMemoOptions<TDeps, TDepArgs, TResult>) {
   let beforeCompareTime: number
   let afterCompareTime: number
 
@@ -149,12 +150,12 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
           if (debug) {
             endCalcTime = performance.now()
             const compareTime =
-              Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
+              Math.round((afterCompareTime - beforeCompareTime) * 10000) / 10000
             const executionTime =
-              Math.round((endCalcTime - startCalcTime) * 100) / 100
+              Math.round((endCalcTime - startCalcTime) * 10000) / 10000
             const totalTime = compareTime + executionTime
             console.info(
-              `%c⏱ ${pad(`${compareTime.toFixed(1)} ms + ${executionTime.toFixed(1)} ms`, 17)}`,
+              `%c⏱ ${pad(`${compareTime.toFixed(executionTime < 1 ? 2 : 1)} ms + ${executionTime.toFixed(executionTime < 1 ? 2 : 1)} ms`, 18)}`,
               `font-size: .6rem; font-weight: bold; color: hsl(
               ${Math.max(0, Math.min(120 - Math.log10(totalTime) * 60, 120))}deg 100% 31%);`,
               fnName,
@@ -244,5 +245,8 @@ export function callMemoOrStaticFn<
   args: Array<any>,
 ) {
   const { fnKey } = getFunctionNameInfo(staticFn)
-  return (obj as any)?.[fnKey](...args) ?? staticFn(obj, ...args)
+  return (
+    ((obj as any)[fnKey] as Function | undefined)?.(...args) ??
+    staticFn(obj, ...args)
+  )
 }

@@ -21,11 +21,8 @@ export function column_toggleGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
-  table_setGrouping(table, (old) => {
+>(column: Column<TFeatures, TData, TValue>) {
+  table_setGrouping(column.table, (old) => {
     // Find any existing grouping for this column
     if (old.includes(column.id)) {
       return old.filter((d) => d !== column.id)
@@ -43,11 +40,10 @@ export function column_getCanGroup<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
-  table: Table_Internal<TFeatures, TData>,
 ) {
   return (
     (column.columnDef.enableGrouping ?? true) &&
-    (table.options.enableGrouping ?? true) &&
+    (column.table.options.enableGrouping ?? true) &&
     (!!column.accessorFn || !!column.columnDef.getGroupingValue)
   )
 }
@@ -60,9 +56,8 @@ export function column_getIsGrouped<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
-  table: Table_Internal<TFeatures, TData>,
 ): boolean {
-  return !!table.getState().grouping?.includes(column.id)
+  return !!column.table.getState().grouping?.includes(column.id)
 }
 
 export function column_getGroupedIndex<
@@ -73,9 +68,8 @@ export function column_getGroupedIndex<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
-  table: Table_Internal<TFeatures, TData>,
 ): number {
-  return table.getState().grouping?.indexOf(column.id) ?? -1
+  return column.table.getState().grouping?.indexOf(column.id) ?? -1
 }
 
 export function column_getToggleGroupingHandler<
@@ -86,13 +80,12 @@ export function column_getToggleGroupingHandler<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
-  table: Table_Internal<TFeatures, TData>,
 ) {
-  const canGroup = column_getCanGroup(column, table)
+  const canGroup = column_getCanGroup(column)
 
   return () => {
     if (!canGroup) return
-    column_toggleGrouping(column, table)
+    column_toggleGrouping(column)
   }
 }
 
@@ -104,13 +97,12 @@ export function column_getAutoAggregationFn<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
-  table: Table_Internal<TFeatures, TData>,
 ) {
-  const aggregationFns = table._processingFns.aggregationFns as
+  const aggregationFns = column.table._processingFns.aggregationFns as
     | Record<string, AggregationFn<TFeatures, TData>>
     | undefined
 
-  const firstRow = table.getCoreRowModel().flatRows[0]
+  const firstRow = column.table.getCoreRowModel().flatRows[0]
 
   const value = firstRow?.getValue(column.id)
 
@@ -131,16 +123,15 @@ export function column_getAggregationFn<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
-  table: Table_Internal<TFeatures, TData>,
 ) {
-  const aggregationFns = table._processingFns.aggregationFns as
+  const aggregationFns = column.table._processingFns.aggregationFns as
     | Record<string, AggregationFn<TFeatures, TData>>
     | undefined
 
   return isFunction(column.columnDef.aggregationFn)
     ? column.columnDef.aggregationFn
     : column.columnDef.aggregationFn === 'auto'
-      ? column_getAutoAggregationFn(column, table)
+      ? column_getAutoAggregationFn(column)
       : aggregationFns?.[column.columnDef.aggregationFn as string]
 }
 
@@ -157,32 +148,33 @@ export function table_resetGrouping<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setGrouping(
     table,
-    defaultState ? [] : (table.options.initialState.grouping ?? []),
+    defaultState ? [] : (table.options.initialState?.grouping ?? []),
   )
 }
 
 export function row_getIsGrouped<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData> & Row_ColumnGrouping) {
+>(row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>) {
   return !!row.groupingColumnId
 }
 
 export function row_getGroupingValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>,
-  table: Table_Internal<TFeatures, TData>,
-  columnId: string,
-) {
+>(row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>, columnId: string) {
   if (row._groupingValuesCache?.hasOwnProperty(columnId)) {
     return row._groupingValuesCache[columnId]
   }
 
-  const column = table_getColumn(table, columnId)
+  const column = table_getColumn(row.table, columnId) as Column<
+    TFeatures,
+    TData
+  > & {
+    columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
+  }
 
-  if (!column?.columnDef.getGroupingValue) {
+  if (!column.columnDef.getGroupingValue) {
     return row.getValue(columnId)
   }
 
@@ -199,14 +191,10 @@ export function cell_getIsGrouped<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  cell: Cell<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
-  const row = cell.row
+>(cell: Cell<TFeatures, TData, TValue>) {
+  const row = cell.row as Row<TFeatures, TData> & Partial<Row_ColumnGrouping>
   return (
-    column_getIsGrouped(cell.column, table) &&
-    cell.column.id === row.groupingColumnId
+    column_getIsGrouped(cell.column) && cell.column.id === row.groupingColumnId
   )
 }
 
@@ -214,26 +202,18 @@ export function cell_getIsPlaceholder<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  cell: Cell<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
-  return (
-    !cell_getIsGrouped(cell, table) && column_getIsGrouped(cell.column, table)
-  )
+>(cell: Cell<TFeatures, TData, TValue>) {
+  return !cell_getIsGrouped(cell) && column_getIsGrouped(cell.column)
 }
 
 export function cell_getIsAggregated<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  cell: Cell<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
+>(cell: Cell<TFeatures, TData, TValue>) {
   return (
-    !cell_getIsGrouped(cell, table) &&
-    !cell_getIsPlaceholder(cell, table) &&
+    !cell_getIsGrouped(cell) &&
+    !cell_getIsPlaceholder(cell) &&
     !!cell.row.subRows.length
   )
 }

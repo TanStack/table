@@ -57,24 +57,22 @@ export const RowExpanding: TableFeature = {
 
   constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_RowExpanding>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowExpanding<TFeatures, TData>>,
   ): void => {
     assignAPIs(row, [
       {
-        fn: (expanded) => row_toggleExpanded(row, table, expanded),
+        fn: (expanded) => row_toggleExpanded(row, expanded),
       },
       {
-        fn: () => row_getIsExpanded(row, table),
+        fn: () => row_getIsExpanded(row),
       },
       {
-        fn: () => row_getCanExpand(row, table),
+        fn: () => row_getCanExpand(row),
       },
       {
-        fn: () => row_getIsAllParentsExpanded(row, table),
+        fn: () => row_getIsAllParentsExpanded(row),
       },
       {
-        fn: () => row_getToggleExpandedHandler(row, table),
+        fn: () => row_getToggleExpandedHandler(row),
       },
     ])
   },

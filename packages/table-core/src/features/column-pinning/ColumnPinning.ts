@@ -78,53 +78,49 @@ export const ColumnPinning: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnPinning>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: (position) => column_pin(column, table, position),
+        fn: (position) => column_pin(column, position),
       },
       {
-        fn: () => column_getCanPin(column, table),
+        fn: () => column_getCanPin(column),
       },
       {
-        fn: () => column_getPinnedIndex(column, table),
+        fn: () => column_getPinnedIndex(column),
       },
       {
-        fn: () => column_getIsPinned(column, table),
+        fn: () => column_getIsPinned(column),
       },
     ])
   },
 
   constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData> & Partial<Row_ColumnPinning<TFeatures, TData>>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnPinning<TFeatures, TData>>,
   ): void => {
     assignAPIs(row, [
       {
-        fn: () => row_getCenterVisibleCells(row, table),
+        fn: () => row_getCenterVisibleCells(row),
         memoDeps: () => [
           row.getAllCells(),
-          table.getState().columnPinning,
-          table.getState().columnVisibility,
+          row.table.getState().columnPinning,
+          row.table.getState().columnVisibility,
         ],
       },
       {
-        fn: () => row_getLeftVisibleCells(row, table),
+        fn: () => row_getLeftVisibleCells(row),
         memoDeps: () => [
           row.getAllCells(),
-          table.getState().columnPinning?.left,
-          table.getState().columnVisibility,
+          row.table.getState().columnPinning?.left,
+          row.table.getState().columnVisibility,
         ],
       },
       {
-        fn: () => row_getRightVisibleCells(row, table),
+        fn: () => row_getRightVisibleCells(row),
         memoDeps: () => [
           row.getAllCells(),
-          table.getState().columnPinning?.right,
-          table.getState().columnVisibility,
+          row.table.getState().columnPinning?.right,
+          row.table.getState().columnVisibility,
         ],
       },
     ])

@@ -23,7 +23,7 @@ export function constructCell<
   }
 
   for (const feature of Object.values(table._features) as Array<TableFeature>) {
-    feature.constructCellAPIs?.(cell as Cell<TFeatures, TData, TValue>, table)
+    feature.constructCellAPIs?.(cell as Cell<TFeatures, TData, TValue>)
   }
 
   return cell as Cell<TFeatures, TData, TValue>

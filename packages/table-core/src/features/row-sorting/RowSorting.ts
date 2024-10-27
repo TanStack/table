@@ -71,44 +71,43 @@ export const RowSorting: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue>,
-    table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: () => column_getAutoSortingFn(column, table),
+        fn: () => column_getAutoSortingFn(column),
       },
       {
-        fn: () => column_getAutoSortDir(column, table),
+        fn: () => column_getAutoSortDir(column),
       },
       {
-        fn: () => column_getSortingFn(column, table),
+        fn: () => column_getSortingFn(column),
       },
       {
-        fn: (desc, multi) => column_toggleSorting(column, table, desc, multi),
+        fn: (desc, multi) => column_toggleSorting(column, desc, multi),
       },
       {
-        fn: () => column_getFirstSortDir(column, table),
+        fn: () => column_getFirstSortDir(column),
       },
       {
-        fn: (multi) => column_getNextSortingOrder(column, table, multi),
+        fn: (multi) => column_getNextSortingOrder(column, multi),
       },
       {
-        fn: () => column_getCanSort(column, table),
+        fn: () => column_getCanSort(column),
       },
       {
-        fn: () => column_getCanMultiSort(column, table),
+        fn: () => column_getCanMultiSort(column),
       },
       {
-        fn: () => column_getIsSorted(column, table),
+        fn: () => column_getIsSorted(column),
       },
       {
-        fn: () => column_getSortIndex(column, table),
+        fn: () => column_getSortIndex(column),
       },
       {
-        fn: () => column_clearSorting(column, table),
+        fn: () => column_clearSorting(column),
       },
       {
-        fn: () => column_getToggleSortingHandler(column, table),
+        fn: () => column_getToggleSortingHandler(column),
       },
     ])
   },

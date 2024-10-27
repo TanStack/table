@@ -19,7 +19,6 @@ import type { Row } from '../../types/Row'
 export const Rows: TableFeature = {
   constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData>,
-    table: Table<TFeatures, TData>,
   ): void => {
     assignAPIs(row, [
       {
@@ -28,7 +27,7 @@ export const Rows: TableFeature = {
       },
       {
         fn: () => row_getAllCells(row),
-        memoDeps: () => [table.getAllLeafColumns()],
+        memoDeps: () => [row.table.getAllLeafColumns()],
       },
       {
         fn: () => row_getLeafRows(row),

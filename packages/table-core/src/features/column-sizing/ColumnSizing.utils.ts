@@ -35,10 +35,9 @@ export function column_getSize<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnSizing
   },
-  table: Table_Internal<TFeatures, TData>,
 ): number {
   const defaultSizes = getDefaultColumnSizingColumnDef()
-  const columnSize = table.getState().columnSizing?.[column.id]
+  const columnSize = column.table.getState().columnSizing?.[column.id]
 
   return Math.min(
     Math.max(
@@ -57,12 +56,11 @@ export function column_getStart<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnSizing
   },
-  table: Table_Internal<TFeatures, TData>,
   position?: false | 'left' | 'right' | 'center',
 ): number {
-  return column_getVisibleLeafColumns(table, position)
-    .slice(0, column_getIndex(column, table, position))
-    .reduce((sum, c) => sum + column_getSize(c, table), 0)
+  return column_getVisibleLeafColumns(column.table, position)
+    .slice(0, column_getIndex(column, position))
+    .reduce((sum, c) => sum + column_getSize(c), 0)
 }
 
 export function column_getAfter<
@@ -71,23 +69,19 @@ export function column_getAfter<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
   position?: false | 'left' | 'right' | 'center',
 ): number {
-  return column_getVisibleLeafColumns(table, position)
-    .slice(column_getIndex(column, table, position) + 1)
-    .reduce((sum, c) => sum + column_getSize(c, table), 0)
+  return column_getVisibleLeafColumns(column.table, position)
+    .slice(column_getIndex(column, position) + 1)
+    .reduce((sum, c) => sum + column_getSize(c), 0)
 }
 
 export function column_resetSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  table: Table_Internal<TFeatures, TData>,
-  column: Column<TFeatures, TData, TValue>,
-) {
-  table_setColumnSizing(table, ({ [column.id]: _, ...rest }) => {
+>(column: Column<TFeatures, TData, TValue>) {
+  table_setColumnSizing(column.table, ({ [column.id]: _, ...rest }) => {
     return rest
   })
 }
@@ -96,17 +90,14 @@ export function header_getSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  header: Header<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-) {
+>(header: Header<TFeatures, TData, TValue>) {
   let sum = 0
 
   const recurse = (h: Header<TFeatures, TData, TValue>) => {
     if (h.subHeaders.length) {
       h.subHeaders.forEach(recurse)
     } else {
-      sum += column_getSize(h.column, table)
+      sum += column_getSize(h.column)
     }
   }
 
@@ -119,22 +110,20 @@ export function header_getStart<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  header: Header<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
-): number {
+>(header: Header<TFeatures, TData, TValue>): number {
   if (header.index > 0) {
     const prevSiblingHeader = header.headerGroup?.headers[header.index - 1]
     if (prevSiblingHeader) {
       return (
-        header_getStart(prevSiblingHeader, table) +
-        header_getSize(prevSiblingHeader, table)
+        header_getStart(prevSiblingHeader) + header_getSize(prevSiblingHeader)
       )
     }
   }
 
   return 0
 }
+
+// Table APIs
 
 export function table_setColumnSizing<
   TFeatures extends TableFeatures,
@@ -162,7 +151,7 @@ export function table_getTotalSize<
 >(table: Table_Internal<TFeatures, TData>) {
   return (
     table.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
-      return sum + header_getSize(header, table)
+      return sum + header_getSize(header)
     }, 0) ?? 0
   )
 }
@@ -173,7 +162,7 @@ export function table_getLeftTotalSize<
 >(table: Table_Internal<TFeatures, TData>) {
   return (
     table_getLeftHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
-      return sum + header_getSize(header, table)
+      return sum + header_getSize(header)
     }, 0) ?? 0
   )
 }
@@ -184,7 +173,7 @@ export function table_getCenterTotalSize<
 >(table: Table_Internal<TFeatures, TData>) {
   return (
     table_getCenterHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
-      return sum + header_getSize(header, table)
+      return sum + header_getSize(header)
     }, 0) ?? 0
   )
 }
@@ -195,7 +184,7 @@ export function table_getRightTotalSize<
 >(table: Table_Internal<TFeatures, TData>) {
   return (
     table_getRightHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
-      return sum + header_getSize(header, table)
+      return sum + header_getSize(header)
     }, 0) ?? 0
   )
 }

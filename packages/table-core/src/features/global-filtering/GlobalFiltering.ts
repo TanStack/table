@@ -62,12 +62,10 @@ export const GlobalFiltering: TableFeature = {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue> & Partial<Column_GlobalFiltering>,
-    table: Table<TFeatures, TData> &
-      Partial<Table_GlobalFiltering<TFeatures, TData>>,
   ): void => {
     assignAPIs(column, [
       {
-        fn: () => column_getCanGlobalFilter(column, table),
+        fn: () => column_getCanGlobalFilter(column),
       },
     ])
   },
