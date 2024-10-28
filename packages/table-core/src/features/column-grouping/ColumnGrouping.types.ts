@@ -18,13 +18,6 @@ export interface TableState_ColumnGrouping {
   grouping: GroupingState
 }
 
-export interface TableState_ColumnGrouping_Unavailable {
-  /**
-   * @deprecated Import the `ColumnGrouping` feature to use the column grouping APIs.
-   */
-  grouping?: GroupingState
-}
-
 export interface TableFns_ColumnGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,

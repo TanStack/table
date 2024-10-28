@@ -34,8 +34,8 @@ import type {
  */
 export const RowExpanding: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       expanded: getDefaultExpandedState(),
       ...state,

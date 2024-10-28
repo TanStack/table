@@ -12,7 +12,9 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   initialState: Partial<TableState<TFeatures>> | undefined = {},
 ): TableState<TFeatures> {
   Object.values(features).forEach((feature) => {
-    initialState = feature.getInitialState?.(initialState) ?? initialState
+    initialState =
+      feature.getInitialState?.(initialState as TableState<TFeatures>) ??
+      initialState
   })
   return structuredClone(initialState) as TableState<TFeatures>
 }

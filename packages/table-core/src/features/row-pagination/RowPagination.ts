@@ -21,7 +21,6 @@ import {
 import type { TableState } from '../../types/TableState'
 import type {
   PaginationDefaultOptions,
-  TableState_RowPagination,
   Table_RowPagination,
 } from './RowPagination.types'
 import type { RowData } from '../../types/type-utils'
@@ -35,8 +34,8 @@ import type { Table } from '../../types/Table'
  */
 export const RowPagination: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_RowPagination => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       ...state,
       pagination: {

@@ -27,8 +27,8 @@ export function createFilteredRowModel<
       fnName: 'table.getFilteredRowModel',
       memoDeps: () => [
         table.getPreFilteredRowModel(),
-        table.getState().columnFilters,
-        table.getState().globalFilter,
+        table.options.state?.columnFilters,
+        table.options.state?.globalFilter,
       ],
       fn: () => _createFilteredRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
@@ -40,7 +40,7 @@ function _createFilteredRowModel<
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreFilteredRowModel()
-  const { columnFilters, globalFilter } = table.getState()
+  const { columnFilters, globalFilter } = table.options.state ?? {}
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
     for (const row of rowModel.flatRows as Array<

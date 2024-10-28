@@ -57,7 +57,7 @@ export function column_getIsGrouped<
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
 ): boolean {
-  return !!column.table.getState().grouping?.includes(column.id)
+  return !!column.table.options.state?.grouping?.includes(column.id)
 }
 
 export function column_getGroupedIndex<
@@ -69,7 +69,7 @@ export function column_getGroupedIndex<
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
 ): number {
-  return column.table.getState().grouping?.indexOf(column.id) ?? -1
+  return column.table.options.state?.grouping?.indexOf(column.id) ?? -1
 }
 
 export function column_getToggleGroupingHandler<

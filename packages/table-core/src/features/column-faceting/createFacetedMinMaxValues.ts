@@ -20,7 +20,7 @@ export function createFacetedMinMaxValues<
         column_getFacetedRowModel(table.getColumn(columnId), table)(),
       ],
       fn: (facetedRowModel) =>
-        _createFacetedMinMaxValues(table, columnId, facetedRowModel),
+        _createFacetedMinMaxValues(columnId, facetedRowModel),
     })
 }
 
@@ -28,7 +28,6 @@ function _createFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
   columnId: string,
   facetedRowModel?: RowModel<TFeatures, TData>,
 ): undefined | [number, number] {

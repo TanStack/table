@@ -24,7 +24,7 @@ export function createGroupedRowModel<
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getGroupedRowModel',
       memoDeps: () => [
-        table.getState().grouping,
+        table.options.state?.grouping,
         table.getPreGroupedRowModel(),
       ],
       fn: () => _createGroupedRowModel(table),
@@ -40,7 +40,7 @@ function _createGroupedRowModel<
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreGroupedRowModel()
-  const grouping = table.getState().grouping
+  const grouping = table.options.state?.grouping
 
   if (!rowModel.rows.length || !grouping?.length) {
     rowModel.rows.forEach((row) => {

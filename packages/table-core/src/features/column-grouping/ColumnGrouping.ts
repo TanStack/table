@@ -29,7 +29,6 @@ import type {
   Column_ColumnGrouping,
   Row_ColumnGrouping,
   TableOptions_ColumnGrouping,
-  TableState_ColumnGrouping,
   Table_ColumnGrouping,
 } from './ColumnGrouping.types'
 
@@ -40,8 +39,8 @@ import type {
  */
 export const ColumnGrouping: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_ColumnGrouping => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       grouping: getDefaultGroupingState(),
       ...state,

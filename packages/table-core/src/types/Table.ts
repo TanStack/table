@@ -91,8 +91,9 @@ export type Table_Internal<
 > = Table<TFeatures, TData> & {
   _processingFns: ProcessingFns_All<TFeatures, TData>
   _rowModels: CachedRowModel_All<TFeatures, TData>
-  getState: () => TableState_All
   options: TableOptions_All<TFeatures, TData> & {
     _rowModels?: CreateRowModels_All<TFeatures, TData>
+    state?: TableState_All
+    initialState?: TableState_All
   }
 }

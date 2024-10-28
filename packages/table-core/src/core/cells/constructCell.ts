@@ -1,5 +1,5 @@
 import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
@@ -22,7 +22,7 @@ export function constructCell<
     table,
   }
 
-  for (const feature of Object.values(table._features) as Array<TableFeature>) {
+  for (const feature of Object.values(table._features)) {
     feature.constructCellAPIs?.(cell as Cell<TFeatures, TData, TValue>)
   }
 

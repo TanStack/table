@@ -37,7 +37,7 @@ export function column_getSize<
   },
 ): number {
   const defaultSizes = getDefaultColumnSizingColumnDef()
-  const columnSize = column.table.getState().columnSizing?.[column.id]
+  const columnSize = column.table.options.state?.columnSizing?.[column.id]
 
   return Math.min(
     Math.max(

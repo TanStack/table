@@ -20,7 +20,6 @@ import type { Row } from '../../types/Row'
 import type {
   RowPinningDefaultOptions,
   Row_RowPinning,
-  TableState_RowPinning,
   Table_RowPinning,
 } from './RowPinning.types'
 
@@ -31,8 +30,8 @@ import type {
  */
 export const RowPinning: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_RowPinning => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       rowPinning: getDefaultRowPinningState(),
       ...state,
@@ -65,7 +64,7 @@ export const RowPinning: TableFeature = {
         fn: () => row_getPinnedIndex(row),
         memoDeps: () => [
           row.table.getRowModel().rows,
-          row.table.getState().rowPinning,
+          row.table.options.state?.rowPinning,
         ],
       },
       {
@@ -93,19 +92,22 @@ export const RowPinning: TableFeature = {
         fn: () => table_getTopRows(table),
         memoDeps: () => [
           table.getRowModel().rows,
-          table.getState().rowPinning?.top,
+          table.options.state?.rowPinning?.top,
         ],
       },
       {
         fn: () => table_getBottomRows(table),
         memoDeps: () => [
           table.getRowModel().rows,
-          table.getState().rowPinning?.bottom,
+          table.options.state?.rowPinning?.bottom,
         ],
       },
       {
         fn: () => table_getCenterRows(table),
-        memoDeps: () => [table.getRowModel().rows, table.getState().rowPinning],
+        memoDeps: () => [
+          table.getRowModel().rows,
+          table.options.state?.rowPinning,
+        ],
       },
     ])
   },

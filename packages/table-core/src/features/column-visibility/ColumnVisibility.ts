@@ -40,8 +40,8 @@ import type {
  */
 export const ColumnVisibility: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       columnVisibility: getDefaultColumnVisibilityState(),
       ...state,
@@ -92,7 +92,7 @@ export const ColumnVisibility: TableFeature = {
         fn: () => row_getAllVisibleCells(row),
         memoDeps: () => [
           row.getAllCells(),
-          row.table.getState().columnVisibility,
+          row.table.options.state?.columnVisibility,
         ],
       },
       {
@@ -114,14 +114,14 @@ export const ColumnVisibility: TableFeature = {
       {
         fn: () => table_getVisibleFlatColumns(table),
         memoDeps: () => [
-          table.getState().columnVisibility,
+          table.options.state?.columnVisibility,
           table.options.columns,
         ],
       },
       {
         fn: () => table_getVisibleLeafColumns(table),
         memoDeps: () => [
-          table.getState().columnVisibility,
+          table.options.state?.columnVisibility,
           table.options.columns,
         ],
       },

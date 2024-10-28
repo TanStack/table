@@ -31,8 +31,8 @@ export const Columns: TableFeature = {
       {
         fn: () => column_getLeafColumns(column),
         memoDeps: () => [
-          table.getState().columnOrder,
-          table.getState().grouping,
+          table.options.state?.columnOrder,
+          table.options.state?.grouping,
           table.options.columns,
           table.options.groupedColumnMode,
         ],
@@ -63,8 +63,8 @@ export const Columns: TableFeature = {
       {
         fn: () => table_getAllLeafColumns(table),
         memoDeps: () => [
-          table.getState().columnOrder,
-          table.getState().grouping,
+          table.options.state?.columnOrder,
+          table.options.state?.grouping,
           table.options.columns,
           table.options.groupedColumnMode,
         ],

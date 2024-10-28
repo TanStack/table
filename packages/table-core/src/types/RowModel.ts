@@ -98,6 +98,7 @@ export type CachedRowModel_All<
 > = Partial<
   CachedRowModel_Core<TFeatures, TData> &
     CachedRowModel_Expanded<TFeatures, TData> &
+    CachedRowModel_Faceted<TFeatures, TData> &
     CachedRowModel_Filtered<TFeatures, TData> &
     CachedRowModel_Grouped<TFeatures, TData> &
     CachedRowModel_Paginated<TFeatures, TData> &

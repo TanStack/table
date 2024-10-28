@@ -4,13 +4,6 @@ export interface TableState_ColumnResizing {
   columnResizing: columnResizingState
 }
 
-export interface TableState_ColumnResizing_Unavailable {
-  /**
-   * @deprecated Import the `ColumnResizing` feature to use the column resizing APIs.
-   */
-  columnResizing?: columnResizingState
-}
-
 export interface columnResizingState {
   columnSizingStart: Array<[string, number]>
   deltaOffset: null | number

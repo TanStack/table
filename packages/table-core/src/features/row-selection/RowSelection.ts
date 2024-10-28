@@ -32,7 +32,6 @@ import type { Row } from '../../types/Row'
 import type {
   Row_RowSelection,
   TableOptions_RowSelection,
-  TableState_RowSelection,
   Table_RowSelection,
 } from './RowSelection.types'
 
@@ -44,8 +43,8 @@ import type {
  */
 export const RowSelection: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_RowSelection => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       rowSelection: getDefaultRowSelectionState(),
       ...state,
@@ -124,21 +123,21 @@ export const RowSelection: TableFeature = {
       {
         fn: () => table_getSelectedRowModel(table),
         memoDeps: () => [
-          table.getState().rowSelection,
+          table.options.state?.rowSelection,
           table.getCoreRowModel(),
         ],
       },
       {
         fn: () => table_getFilteredSelectedRowModel(table),
         memoDeps: () => [
-          table.getState().rowSelection,
+          table.options.state?.rowSelection,
           table.getFilteredRowModel(),
         ],
       },
       {
         fn: () => table_getGroupedSelectedRowModel(table),
         memoDeps: () => [
-          table.getState().rowSelection,
+          table.options.state?.rowSelection,
           table.getSortedRowModel(),
         ],
       },

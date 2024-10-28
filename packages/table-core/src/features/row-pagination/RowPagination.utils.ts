@@ -131,14 +131,15 @@ export function table_getCanPreviousPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (table.getState().pagination?.pageIndex ?? 0) > 0
+  return (table.options.state?.pagination?.pageIndex ?? 0) > 0
 }
 
 export function table_getCanNextPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const pageIndex = table.getState().pagination?.pageIndex ?? defaultPageIndex
+  const pageIndex =
+    table.options.state?.pagination?.pageIndex ?? defaultPageIndex
 
   const pageCount = table_getPageCount(table)
 
@@ -191,7 +192,7 @@ export function table_getPageCount<
     table.options.pageCount ??
     Math.ceil(
       table_getRowCount(table) /
-        (table.getState().pagination?.pageSize ?? defaultPageSize),
+        (table.options.state?.pagination?.pageSize ?? defaultPageSize),
     )
   )
 }

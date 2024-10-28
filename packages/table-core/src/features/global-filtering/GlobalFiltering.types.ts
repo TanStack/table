@@ -15,13 +15,6 @@ export interface TableState_GlobalFiltering {
   globalFilter: any
 }
 
-export interface TableState_GlobalFiltering_Unavailable {
-  /**
-   * @deprecated Import the `GlobalFiltering` feature to use the global filtering APIs.
-   */
-  globalFilter?: any
-}
-
 export interface ColumnDef_GlobalFiltering {
   /**
    * Enables/disables the **global** filter for this column.

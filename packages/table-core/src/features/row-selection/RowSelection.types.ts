@@ -9,13 +9,6 @@ export interface TableState_RowSelection {
   rowSelection: RowSelectionState
 }
 
-export interface TableState_RowSelection_Unavailable {
-  /**
-   * @deprecated Import the `RowSelection` feature to use the row selection APIs.
-   */
-  rowSelection?: RowSelectionState
-}
-
 export interface TableOptions_RowSelection<
   TFeatures extends TableFeatures,
   TData extends RowData,

@@ -50,7 +50,9 @@ export function column_getIsResizing<
     columnDef: Partial<ColumnDef_ColumnResizing>
   },
 ) {
-  return column.table.getState().columnResizing?.isResizingColumn === column.id
+  return (
+    column.table.options.state?.columnResizing?.isResizingColumn === column.id
+  )
 }
 
 export function header_getResizeHandler<

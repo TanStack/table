@@ -1,5 +1,5 @@
 import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type {
   AccessorFn,
@@ -83,7 +83,7 @@ export function constructColumn<
     table,
   }
 
-  for (const feature of Object.values(table._features) as Array<TableFeature>) {
+  for (const feature of Object.values(table._features)) {
     feature.constructColumnAPIs?.(column as Column<TFeatures, TData, TValue>)
   }
 

@@ -8,11 +8,6 @@ import type { SortDirection, SortingFn, SortingState } from './RowSorting.types'
 
 // State Utils
 
-/**
- *
- * @param table
- * @param updater
- */
 export function table_setSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -20,11 +15,6 @@ export function table_setSorting<
   table.options.onSortingChange?.(updater)
 }
 
-/**
- *
- * @param table
- * @param defaultState
- */
 export function table_resetSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -37,12 +27,6 @@ export function table_resetSorting<
 
 // Column Utils
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getAutoSortingFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -83,12 +67,6 @@ export function column_getAutoSortingFn<
   return sortingFn ?? sortingFn_basic
 }
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getAutoSortDir<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -105,12 +83,6 @@ export function column_getAutoSortDir<
   return 'desc'
 }
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getSortingFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -129,13 +101,6 @@ export function column_getSortingFn<
       : (sortingFns?.[column.columnDef.sortingFn as string] ?? sortingFn_basic)
 }
 
-/**
- *
- * @param column
- * @param table
- * @param desc
- * @param multi
- */
 export function column_toggleSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -239,12 +204,6 @@ export function column_toggleSorting<
   })
 }
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getFirstSortDir<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -257,13 +216,6 @@ export function column_getFirstSortDir<
   return sortDescFirst ? 'desc' : 'asc'
 }
 
-/**
- *
- * @param column
- * @param table
- * @param multi
- * @returns
- */
 export function column_getNextSortingOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -286,12 +238,6 @@ export function column_getNextSortingOrder<
   return isSorted === 'desc' ? 'asc' : 'desc'
 }
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getCanSort<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -304,12 +250,6 @@ export function column_getCanSort<
   )
 }
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getCanMultiSort<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -322,44 +262,28 @@ export function column_getCanMultiSort<
   )
 }
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getIsSorted<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): false | SortDirection {
-  const columnSort = column.table
-    .getState()
-    .sorting?.find((d) => d.id === column.id)
+  const columnSort = column.table.options.state?.sorting?.find(
+    (d) => d.id === column.id,
+  )
   return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
 }
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getSortIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): number {
   return (
-    column.table.getState().sorting?.findIndex((d) => d.id === column.id) ?? -1
+    column.table.options.state?.sorting?.findIndex((d) => d.id === column.id) ??
+    -1
   )
 }
 
-/**
- *
- * @param column
- * @param table
- */
 export function column_clearSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -371,12 +295,6 @@ export function column_clearSorting<
   )
 }
 
-/**
- *
- * @param column
- * @param table
- * @returns
- */
 export function column_getToggleSortingHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,

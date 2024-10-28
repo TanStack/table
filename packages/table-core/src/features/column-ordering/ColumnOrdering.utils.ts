@@ -1,4 +1,5 @@
 import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
+import type { GroupingState } from '../column-grouping/ColumnGrouping.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -67,7 +68,7 @@ export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { columnOrder = [] } = table.getState()
+  const { columnOrder = [] } = table.options.state ?? {}
 
   return (columns: Array<Column<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
@@ -109,7 +110,7 @@ export function orderColumns<
   table: Table_Internal<TFeatures, TData>,
   leafColumns: Array<Column<TFeatures, TData, unknown>>,
 ) {
-  const { grouping = [] } = table.getState()
+  const grouping = table.options.state?.grouping ?? ([] as GroupingState)
   const { groupedColumnMode } = table.options
 
   if (!grouping.length || !groupedColumnMode) {

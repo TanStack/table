@@ -16,13 +16,6 @@ export interface TableState_ColumnPinning {
   columnPinning: ColumnPinningState
 }
 
-export interface TableState_ColumnPinning_Unavailable {
-  /**
-   * @deprecated Import the `ColumnPinning` feature to use the column pinning APIs.
-   */
-  columnPinning?: ColumnPinningState
-}
-
 export interface TableOptions_ColumnPinning {
   /**
    * Enables/disables column pinning for the table. Defaults to `true`.

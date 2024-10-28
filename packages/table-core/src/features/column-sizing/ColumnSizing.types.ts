@@ -5,13 +5,6 @@ export interface TableState_ColumnSizing {
   columnSizing: ColumnSizingState
 }
 
-export interface TableState_ColumnSizing_Unavailable {
-  /**
-   * @deprecated Import the `ColumnSizing` feature to use the column sizing APIs.
-   */
-  columnSizing?: ColumnSizingState
-}
-
 export type ColumnSizingState = Record<string, number>
 
 export interface TableOptions_ColumnSizing {

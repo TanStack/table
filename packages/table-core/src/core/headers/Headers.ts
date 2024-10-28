@@ -45,9 +45,9 @@ export const Headers: TableFeature = {
         fn: () => table_getHeaderGroups(table),
         memoDeps: () => [
           table.options.columns,
-          table.getState().columnOrder,
-          table.getState().grouping,
-          table.getState().columnPinning,
+          table.options.state?.columnOrder,
+          table.options.state?.grouping,
+          table.options.state?.columnPinning,
           table.options.groupedColumnMode,
         ],
       },

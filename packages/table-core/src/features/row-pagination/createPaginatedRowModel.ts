@@ -20,9 +20,9 @@ export function createPaginatedRowModel<
       fnName: 'table.getPaginatedRowModel',
       memoDeps: () => [
         table.getPrePaginatedRowModel(),
-        table.getState().pagination,
+        table.options.state?.pagination,
         table.options.paginateExpandedRows
-          ? table.getState().expanded
+          ? table.options.state?.expanded
           : undefined,
       ],
       fn: () => _createPaginatedRowModel(table),
@@ -34,7 +34,7 @@ function _createPaginatedRowModel<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const prePaginatedRowModel = table.getPrePaginatedRowModel()
-  const pagination = table.getState().pagination
+  const pagination = table.options.state?.pagination
 
   if (!prePaginatedRowModel.rows.length) {
     return prePaginatedRowModel
@@ -50,14 +50,11 @@ function _createPaginatedRowModel<
   let paginatedRowModel: RowModel<TFeatures, TData>
 
   if (!table.options.paginateExpandedRows) {
-    paginatedRowModel = expandRows(
-      {
-        rows: paginatedRows,
-        flatRows,
-        rowsById,
-      },
-      table,
-    )
+    paginatedRowModel = expandRows({
+      rows: paginatedRows,
+      flatRows,
+      rowsById,
+    })
   } else {
     paginatedRowModel = {
       rows: paginatedRows,

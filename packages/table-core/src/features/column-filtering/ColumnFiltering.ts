@@ -23,7 +23,6 @@ import type {
   Column_ColumnFiltering,
   Row_ColumnFiltering,
   TableOptions_ColumnFiltering,
-  TableState_ColumnFiltering,
   Table_ColumnFiltering,
 } from './ColumnFiltering.types'
 
@@ -36,8 +35,8 @@ import type {
  */
 export const ColumnFiltering: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_ColumnFiltering => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       columnFilters: getDefaultColumnFiltersState(),
       ...state,

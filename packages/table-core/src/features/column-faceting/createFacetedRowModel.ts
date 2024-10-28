@@ -23,8 +23,8 @@ export function createFacetedRowModel<
       fnName: 'createFacetedRowModel',
       memoDeps: () => [
         table.getPreFilteredRowModel(),
-        table.getState().columnFilters,
-        table.getState().globalFilter,
+        table.options.state?.columnFilters,
+        table.options.state?.globalFilter,
         table.getFilteredRowModel(),
       ],
       fn: (preRowModel, columnFilters, globalFilter) =>

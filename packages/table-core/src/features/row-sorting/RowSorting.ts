@@ -19,7 +19,6 @@ import type { TableState } from '../../types/TableState'
 import type {
   ColumnDef_RowSorting,
   TableOptions_RowSorting,
-  TableState_RowSorting,
 } from './RowSorting.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -33,8 +32,8 @@ import type { Column } from '../../types/Column'
  */
 export const RowSorting: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_RowSorting => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       sorting: [],
       ...state,

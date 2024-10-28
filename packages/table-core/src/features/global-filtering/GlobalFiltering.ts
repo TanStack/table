@@ -14,7 +14,6 @@ import type { Column } from '../../types/Column'
 import type {
   Column_GlobalFiltering,
   TableOptions_GlobalFiltering,
-  TableState_GlobalFiltering,
   Table_GlobalFiltering,
 } from './GlobalFiltering.types'
 
@@ -27,8 +26,8 @@ import type {
  */
 export const GlobalFiltering: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_GlobalFiltering => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       globalFilter: undefined,
       ...state,

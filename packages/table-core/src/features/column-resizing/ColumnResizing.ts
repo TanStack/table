@@ -29,8 +29,8 @@ import type {
  */
 export const ColumnResizing: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       columnResizing: getDefaultColumnResizingState(),
       ...state,

@@ -50,7 +50,7 @@ export function column_getIsVisible<
   return (
     (childColumns.length
       ? childColumns.some((c) => column_getIsVisible(c))
-      : column.table.getState().columnVisibility?.[column.id]) ?? true
+      : column.table.options.state?.columnVisibility?.[column.id]) ?? true
   )
 }
 

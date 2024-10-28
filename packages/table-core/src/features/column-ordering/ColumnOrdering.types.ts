@@ -8,13 +8,6 @@ export interface TableState_ColumnOrdering {
   columnOrder: ColumnOrderState
 }
 
-export interface TableState_ColumnOrdering_Unavailable {
-  /**
-   * @deprecated Import the `ColumnOrdering` feature to use the column ordering APIs.
-   */
-  columnOrder?: ColumnOrderState
-}
-
 export interface TableOptions_ColumnOrdering {
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnOrder` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.

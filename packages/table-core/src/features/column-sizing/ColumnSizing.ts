@@ -39,8 +39,8 @@ import type { Column } from '../../types/Column'
  */
 export const ColumnSizing: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       columnSizing: getDefaultColumnSizingState(),
       ...state,
@@ -78,7 +78,7 @@ export const ColumnSizing: TableFeature = {
         memoDeps: (position) => [
           position,
           column_getVisibleLeafColumns(column.table, position),
-          column.table.getState().columnSizing,
+          column.table.options.state?.columnSizing,
         ],
       },
       {
@@ -86,7 +86,7 @@ export const ColumnSizing: TableFeature = {
         memoDeps: (position) => [
           position,
           column_getVisibleLeafColumns(column.table, position),
-          column.table.getState().columnSizing,
+          column.table.options.state?.columnSizing,
         ],
       },
       {

@@ -78,9 +78,3 @@ export type DeepValue<T, TProp> =
 export type NoInfer<T> = [T][T extends any ? 0 : never]
 
 export type Getter<TValue> = <TTValue = TValue>() => NoInfer<TTValue>
-
-export type LiteralUnion<T extends U, U = string> =
-  | T
-  | (U & Record<never, never>)
-
-export type Prettify<T> = { [K in keyof T]: T[K] } & unknown

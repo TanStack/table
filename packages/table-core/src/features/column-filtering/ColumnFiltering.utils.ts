@@ -106,8 +106,9 @@ export function column_getFilterValue<
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
 ) {
-  return column.table.getState().columnFilters?.find((d) => d.id === column.id)
-    ?.value
+  return column.table.options.state?.columnFilters?.find(
+    (d) => d.id === column.id,
+  )?.value
 }
 
 export function column_getFilterIndex<
@@ -120,9 +121,9 @@ export function column_getFilterIndex<
   },
 ): number {
   return (
-    column.table
-      .getState()
-      .columnFilters?.findIndex((d) => d.id === column.id) ?? -1
+    column.table.options.state?.columnFilters?.findIndex(
+      (d) => d.id === column.id,
+    ) ?? -1
   )
 }
 

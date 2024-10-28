@@ -48,7 +48,7 @@ export function table_getHeaderGroups<
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
   const { left, right } =
-    table.getState().columnPinning ?? getDefaultColumnPinningState()
+    table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
   const leafColumns = table_getVisibleLeafColumns(table)
 

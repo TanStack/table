@@ -4,6 +4,7 @@ import {
   column_getIsFirstColumn,
   column_getIsLastColumn,
   getDefaultColumnOrderState,
+  table_getOrderColumnsFn,
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './ColumnOrdering.utils'
@@ -11,12 +12,11 @@ import type { TableState } from '../../types/TableState'
 import type {
   ColumnOrderDefaultOptions,
   Column_ColumnOrdering,
-  TableState_ColumnOrdering,
   Table_ColumnOrdering,
 } from './ColumnOrdering.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
 
 /**
@@ -26,8 +26,8 @@ import type { Column } from '../../types/Column'
  */
 export const ColumnOrdering: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(
-    state: TableState<TFeatures>,
-  ): TableState<TFeatures> & TableState_ColumnOrdering => {
+    state: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       columnOrder: getDefaultColumnOrderState(),
       ...state,
@@ -38,7 +38,7 @@ export const ColumnOrdering: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
+    table: Table_Internal<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): ColumnOrderDefaultOptions => {
     return {
@@ -58,9 +58,9 @@ export const ColumnOrdering: TableFeature = {
         fn: (position) => column_getIndex(column, position),
         memoDeps: (position) => [
           position,
-          column.table.getState().columnOrder,
-          column.table.getState().columnPinning,
-          column.table.getState().grouping,
+          column.table.options.state?.columnOrder,
+          column.table.options.state?.columnPinning,
+          column.table.options.state?.grouping,
         ],
       },
       {
@@ -73,7 +73,7 @@ export const ColumnOrdering: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
+    table: Table_Internal<TFeatures, TData> &
       Partial<Table_ColumnOrdering<TFeatures, TData>>,
   ): void => {
     assignAPIs(table, [
@@ -82,6 +82,14 @@ export const ColumnOrdering: TableFeature = {
       },
       {
         fn: (defaultState) => table_resetColumnOrder(table, defaultState),
+      },
+      {
+        fn: () => table_getOrderColumnsFn(table),
+        memoDeps: () => [
+          table.options.state?.columnOrder,
+          table.options.state?.grouping,
+          table.options.groupedColumnMode,
+        ],
       },
     ])
   },

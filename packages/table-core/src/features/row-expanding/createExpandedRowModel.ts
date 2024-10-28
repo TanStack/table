@@ -17,7 +17,7 @@ export function createExpandedRowModel<
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getExpandedRowModel',
       memoDeps: () => [
-        table.getState().expanded,
+        table.options.state?.expanded,
         table.getPreExpandedRowModel(),
         table.options.paginateExpandedRows,
       ],
@@ -30,7 +30,7 @@ export function _createExpandedRowModel<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreExpandedRowModel()
-  const expanded = table.getState().expanded
+  const expanded = table.options.state?.expanded
 
   if (
     !rowModel.rows.length ||
