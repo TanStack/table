@@ -1,0 +1,172 @@
+---
+id: Table_Columns
+title: Table_Columns
+---
+
+# Interface: Table\_Columns\<TFeatures, TData\>
+
+## Type Parameters
+
+• **TFeatures** *extends* [`TableFeatures`](../type-aliases/tablefeatures.md)
+
+• **TData** *extends* [`RowData`](../type-aliases/rowdata.md)
+
+## Properties
+
+### getAllColumns()
+
+```ts
+getAllColumns: () => Column<TFeatures, TData, unknown>[];
+```
+
+Returns all columns in the table in their normalized and nested hierarchy.
+
+#### Returns
+
+[`Column`](../type-aliases/column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+
+#### Link
+
+[API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallcolumns)
+
+#### Link
+
+[Guide](https://tanstack.com/table/v8/docs/guide/tables)
+
+#### Defined in
+
+[core/columns/Columns.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/Columns.types.ts#L122)
+
+***
+
+### getAllFlatColumns()
+
+```ts
+getAllFlatColumns: () => Column<TFeatures, TData, unknown>[];
+```
+
+Returns all columns in the table flattened to a single level.
+
+#### Returns
+
+[`Column`](../type-aliases/column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+
+#### Link
+
+[API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallflatcolumns)
+
+#### Link
+
+[Guide](https://tanstack.com/table/v8/docs/guide/tables)
+
+#### Defined in
+
+[core/columns/Columns.types.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/Columns.types.ts#L128)
+
+***
+
+### getAllFlatColumnsById()
+
+```ts
+getAllFlatColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>;
+```
+
+Returns a map of all flat columns by their ID.
+
+#### Returns
+
+`Record`\<`string`, [`Column`](../type-aliases/column.md)\<`TFeatures`, `TData`, `unknown`\>\>
+
+#### Link
+
+[API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallflatcolumnsbyid)
+
+#### Link
+
+[Guide](https://tanstack.com/table/v8/docs/guide/tables)
+
+#### Defined in
+
+[core/columns/Columns.types.ts:110](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/Columns.types.ts#L110)
+
+***
+
+### getAllLeafColumns()
+
+```ts
+getAllLeafColumns: () => Column<TFeatures, TData, unknown>[];
+```
+
+Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
+
+#### Returns
+
+[`Column`](../type-aliases/column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+
+#### Link
+
+[API Docs](https://tanstack.com/table/v8/docs/api/core/table#getallleafcolumns)
+
+#### Link
+
+[Guide](https://tanstack.com/table/v8/docs/guide/tables)
+
+#### Defined in
+
+[core/columns/Columns.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/Columns.types.ts#L134)
+
+***
+
+### getColumn()
+
+```ts
+getColumn: (columnId) => undefined | Column<TFeatures, TData, unknown>;
+```
+
+Returns a single column by its ID.
+
+#### Parameters
+
+• **columnId**: `string`
+
+#### Returns
+
+`undefined` \| [`Column`](../type-aliases/column.md)\<`TFeatures`, `TData`, `unknown`\>
+
+#### Link
+
+[API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcolumn)
+
+#### Link
+
+[Guide](https://tanstack.com/table/v8/docs/guide/tables)
+
+#### Defined in
+
+[core/columns/Columns.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/Columns.types.ts#L140)
+
+***
+
+### getDefaultColumnDef()
+
+```ts
+getDefaultColumnDef: () => Partial<ColumnDef<TFeatures, TData, unknown>>;
+```
+
+Returns the default column options to use for all column defs supplied to the table.
+
+#### Returns
+
+`Partial`\<[`ColumnDef`](../type-aliases/columndef.md)\<`TFeatures`, `TData`, `unknown`\>\>
+
+#### Link
+
+[API Docs](https://tanstack.com/table/v8/docs/api/core/table#getdefaultcolumndef)
+
+#### Link
+
+[Guide](https://tanstack.com/table/v8/docs/guide/tables)
+
+#### Defined in
+
+[core/columns/Columns.types.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/Columns.types.ts#L116)
