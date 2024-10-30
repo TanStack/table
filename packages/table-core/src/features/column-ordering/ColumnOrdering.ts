@@ -21,8 +21,8 @@ import type { Column } from '../../types/Column'
 
 /**
  * The Column Ordering feature adds column ordering state and APIs to the table and column objects.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
  */
 export const ColumnOrdering: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(

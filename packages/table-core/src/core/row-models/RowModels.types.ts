@@ -24,8 +24,8 @@ export interface CreateRowModel_Core<
 > {
   /**
    * This required option is a factory for a function that computes and returns the core row model for the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   coreRowModel?: (
     table: Table<TFeatures, TData>,
@@ -45,14 +45,14 @@ export interface Table_RowModels_Core<
 > {
   /**
    * Returns the core row model before any processing has been applied.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   getCoreRowModel: () => RowModel<TFeatures, TData>
   /**
    * Returns the final model after all processing from other used features has been applied. This is the row model that is most commonly used for rendering.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowmodel)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowmodel)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   getRowModel: () => RowModel<TFeatures, TData>
 }

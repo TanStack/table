@@ -7,7 +7,8 @@ import type { TableFeatures } from '../types/TableFeatures'
  *
  * **Note:** It is recommended to use this utility statically outside of a component.
  *
- * @example ```tsx
+ * @example
+ * ```
  * import { tableFeatures, ColumnVisibility, RowPinning } from '@tanstack/react-table'
  *
  * const _features = tableFeatures({ ColumnVisibility, RowPinning });

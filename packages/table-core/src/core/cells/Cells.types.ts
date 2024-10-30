@@ -25,20 +25,20 @@ export interface Cell_CoreProperties<
 > {
   /**
    * The associated Column object for the cell.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#column)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/cells)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#column)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/cells)
    */
   column: Column<TFeatures, TData, TValue>
   /**
    * The unique ID for the cell across the entire table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#id)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/cells)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#id)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/cells)
    */
   id: string
   /**
    * The associated Row object for the cell.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#row)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/cells)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#row)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/cells)
    */
   row: Row<TFeatures, TData>
   /**
@@ -54,20 +54,20 @@ export interface Cell_Cell<
 > extends Cell_CoreProperties<TFeatures, TData, TValue> {
   /**
    * Returns the rendering context (or props) for cell-based components like cells and aggregated cells. Use these props with your framework's `flexRender` utility to render these using the template of your choice:
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#getcontext)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/cells)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#getcontext)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/cells)
    */
   getContext: () => CellContext<TFeatures, TData, TValue>
   /**
    * Returns the value for the cell, accessed via the associated column's accessor key or accessor function.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#getvalue)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/cells)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#getvalue)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/cells)
    */
   getValue: CellContext<TFeatures, TData, TValue>['getValue']
   /**
    * Renders the value for a cell the same as `getValue`, but will return the `renderFallbackValue` if no value is found.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#rendervalue)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/cells)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#rendervalue)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/cells)
    */
   renderValue: CellContext<TFeatures, TData, TValue>['renderValue']
 }
@@ -75,14 +75,14 @@ export interface Cell_Cell<
 export interface TableOptions_Cell {
   /**
    * Set this option to `true` to output cell debugging information to the console.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcells]
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcells]
+   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   debugCells?: boolean
   /**
    * Value used when the desired value is not found in the data.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#renderfallbackvalue)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#renderfallbackvalue)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   renderFallbackValue?: any
 }

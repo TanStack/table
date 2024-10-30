@@ -12,14 +12,14 @@ export interface TableState_ColumnVisibility {
 export interface TableOptions_ColumnVisibility {
   /**
    * Whether to enable column hiding. Defaults to `true`.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#enablehiding)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#enablehiding)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   enableHiding?: boolean
   /**
    * If provided, this function will be called with an `updaterFn` when `state.columnVisibility` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#oncolumnvisibilitychange)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#oncolumnvisibilitychange)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>
 }
@@ -35,50 +35,50 @@ export interface Table_ColumnVisibility<
 > {
   /**
    * Returns whether all columns are visible
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getisallcolumnsvisible)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getisallcolumnsvisible)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getIsAllColumnsVisible: () => boolean
   /**
    * Returns whether any columns are visible
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getissomecolumnsvisible)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getissomecolumnsvisible)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getIsSomeColumnsVisible: () => boolean
   /**
    * Returns a handler for toggling the visibility of all columns, meant to be bound to a `input[type=checkbox]` element.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#gettoggleallcolumnsvisibilityhandler)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#gettoggleallcolumnsvisibilityhandler)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getToggleAllColumnsVisibilityHandler: () => (event: unknown) => void
   /**
    * Returns a flat array of columns that are visible, including parent columns.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleflatcolumns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleflatcolumns)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getVisibleFlatColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Returns a flat array of leaf-node columns that are visible.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleleafcolumns)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisibleleafcolumns)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
    * Resets the column visibility state to the initial state. If `defaultState` is provided, the state will be reset to `{}`
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#resetcolumnvisibility)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#resetcolumnvisibility)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   resetColumnVisibility: (defaultState?: boolean) => void
   /**
    * Sets or updates the `state.columnVisibility` state.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#setcolumnvisibility)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#setcolumnvisibility)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   setColumnVisibility: (updater: Updater<ColumnVisibilityState>) => void
   /**
    * Toggles the visibility of all columns.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#toggleallcolumnsvisible)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#toggleallcolumnsvisible)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   toggleAllColumnsVisible: (value?: boolean) => void
 }
@@ -86,8 +86,8 @@ export interface Table_ColumnVisibility<
 export interface ColumnDef_ColumnVisibility {
   /**
    * Enables/disables column hiding for this column. Defaults to `true`.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#enablehiding)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#enablehiding)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   enableHiding?: boolean
 }
@@ -99,8 +99,8 @@ export interface Row_ColumnVisibility<
   getAllVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
    * Returns an array of cells that account for column visibility for the row.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisiblecells)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getvisiblecells)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
 }
@@ -108,26 +108,26 @@ export interface Row_ColumnVisibility<
 export interface Column_ColumnVisibility {
   /**
    * Returns whether the column can be hidden
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getcanhide)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getcanhide)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getCanHide: () => boolean
   /**
    * Returns whether the column is visible
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getisvisible)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#getisvisible)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getIsVisible: () => boolean
   /**
    * Returns a function that can be used to toggle the column visibility. This function can be used to bind to an event handler to a checkbox.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#gettogglevisibilityhandler)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#gettogglevisibilityhandler)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   getToggleVisibilityHandler: () => (event: unknown) => void
   /**
    * Toggles the visibility of the column.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#togglevisibility)
-   * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility#togglevisibility)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/column-visibility)
    */
   toggleVisibility: (value?: boolean) => void
 }

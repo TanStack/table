@@ -12,19 +12,19 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mui/icons-material": "^6.1.1",
-    "@mui/material": "^6.1.1",
+    "@mui/icons-material": "^6.1.6",
+    "@mui/material": "^6.1.6",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.0.3",
+    "@faker-js/faker": "^9.1.0",
     "@rollup/plugin-replace": "^6.0.1",
-    "@types/react": "^18.3.10",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
-    "typescript": "5.6.2",
-    "vite": "^5.4.8"
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "5.6.3",
+    "vite": "^5.4.10"
   }
 }

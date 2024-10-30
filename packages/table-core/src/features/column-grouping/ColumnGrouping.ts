@@ -34,8 +34,8 @@ import type {
 
 /**
  * The (Column) Grouping feature adds column grouping state and APIs to the table, row, column, and cell objects.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-grouping)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-grouping)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
  */
 export const ColumnGrouping: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(

@@ -11,8 +11,8 @@ import type { Table } from '../../types/Table'
 
 /**
  * The Global Faceting feature adds global faceting APIs to the table object.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
  */
 export const GlobalFaceting: TableFeature = {
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(

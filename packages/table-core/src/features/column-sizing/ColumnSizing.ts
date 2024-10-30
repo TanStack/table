@@ -34,8 +34,8 @@ import type { Column } from '../../types/Column'
  * The Column Sizing feature adds column sizing state and APIs to the table, header, and column objects.
  *
  * **Note:** This does not include column resizing. The ColumnResizing feature has been split out into its own standalone feature.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
  */
 export const ColumnSizing: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(

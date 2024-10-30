@@ -1,18 +1,26 @@
 import {
-  builtInFeatures,
   constructTable,
+  coreFeatures,
   getInitialTableState,
 } from '@tanstack/table-core'
 import { createComputed, mergeProps } from 'solid-js'
 import { createStore } from 'solid-js/store'
-import type { RowData, TableFeatures, TableOptions } from '@tanstack/table-core'
+import type {
+  RowData,
+  TableFeatures,
+  TableOptions,
+  TableState,
+  Updater,
+} from '@tanstack/table-core'
 
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(tableOptions: TableOptions<TFeatures, TData>) {
+  const _features = { ...coreFeatures, ...tableOptions._features }
+
   const [store, setStore] = createStore(
-    getInitialTableState(builtInFeatures, tableOptions.initialState),
+    getInitialTableState(_features, tableOptions.initialState),
   )
 
   const statefulOptions: TableOptions<TFeatures, TData> = {
@@ -30,11 +38,11 @@ export function createTable<
     table.setOptions((prev) => {
       return mergeProps(prev, tableOptions, {
         state: mergeProps(store, tableOptions.state || {}),
-        onStateChange: (updater: any) => {
+        onStateChange: (updater: Updater<TableState<TFeatures>>) => {
           setStore(updater)
           tableOptions.onStateChange?.(updater)
         },
-      })
+      }) as any
     })
   })
 

@@ -37,8 +37,8 @@ import type {
 
 /**
  * The Row Selection feature adds row selection state and APIs to the table and row objects.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
  
  */
 export const RowSelection: TableFeature = {

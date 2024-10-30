@@ -61,7 +61,7 @@ export function createTable<
 
 /**
  * Merges objects together while keeping their getters alive.
- * Taken from SolidJS: {@link https://github.com/solidjs/solid/blob/24abc825c0996fd2bc8c1de1491efe9a7e743aff/packages/solid/src/server/rendering.ts#L82-L115}
+ * Taken from SolidJS: {https://github.com/solidjs/solid/blob/24abc825c0996fd2bc8c1de1491efe9a7e743aff/packages/solid/src/server/rendering.ts#L82-L115}
  * */
 function mergeObjects<T>(source: T): T
 function mergeObjects<T, U>(source: T, source1: U): T & U

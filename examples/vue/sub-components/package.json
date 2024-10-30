@@ -10,15 +10,15 @@
     "test:types": "vue-tsc"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.0.3",
-    "vue": "^3.5.10",
+    "@faker-js/faker": "^9.1.0",
+    "vue": "^3.5.12",
     "@tanstack/vue-table": "^9.0.0-alpha.10"
   },
   "devDependencies": {
-    "@types/node": "^22.7.4",
+    "@types/node": "^22.8.4",
     "@vitejs/plugin-vue": "^5.1.4",
-    "typescript": "5.6.2",
-    "vite": "^5.4.8",
-    "vue-tsc": "^2.1.6"
+    "typescript": "5.6.3",
+    "vite": "^5.4.10",
+    "vue-tsc": "^2.1.10"
   }
 }

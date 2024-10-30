@@ -29,8 +29,8 @@ import type { Table } from '../../types/Table'
 
 /**
  * The (Row) Pagination feature adds pagination state and APIs to the table object.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
  */
 export const RowPagination: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(

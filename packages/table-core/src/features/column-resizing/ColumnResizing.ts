@@ -24,8 +24,8 @@ import type {
  * The Column Resizing feature adds column resizing state and APIs to the table and column objects.
  *
  * **Note:** This is dependent on the Column Sizing feature.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-resizing)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-resizing)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
  */
 export const ColumnResizing: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(

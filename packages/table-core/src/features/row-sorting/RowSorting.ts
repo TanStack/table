@@ -27,8 +27,8 @@ import type { Column } from '../../types/Column'
 
 /**
  * The (Row) Sorting feature adds sorting state and APIs to the table and column objects.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
  */
 export const RowSorting: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(

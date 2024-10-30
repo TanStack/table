@@ -33,7 +33,7 @@ export class RenderComponentConfig<TComponent extends Component<any>> {
  *   }),
  * ]
  * ```
- * @see {@link https://tanstack.com/table/latest/docs/guide/column-defs}
+ * @see {https://tanstack.com/table/latest/docs/guide/column-defs}
  */
 export const renderComponent = <TComponent extends Component<any>>(
   component: TComponent,

@@ -11,12 +11,7 @@ import {
 } from 'vue'
 import { mergeProxy } from './merge-proxy'
 import type { MaybeRef } from 'vue'
-import type {
-  RowData,
-  TableFeatures,
-  TableOptions,
-  TableState,
-} from '@tanstack/table-core'
+import type { RowData, TableFeatures, TableOptions } from '@tanstack/table-core'
 
 export * from '@tanstack/table-core'
 
@@ -55,13 +50,7 @@ function getOptionsWithReactiveData<
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  initialOptions: TableOptionsWithReactiveData<
-    TFeatures,
-    TProcessingFns,
-    TData
-  >,
-) {
+>(initialOptions: TableOptionsWithReactiveData<TFeatures, TData>) {
   const IS_REACTIVE = isRef(initialOptions.data)
 
   const resolvedOptions = mergeProxy(
@@ -107,7 +96,7 @@ export function useTable<
   const state = ref(table.initialState)
 
   watchEffect(() => {
-    table.setOptions((prev) => {
+    table.setOptions((prev: any) => {
       const stateProxy = new Proxy({} as typeof state.value, {
         get: (_, prop) => state.value[prop as keyof typeof state.value],
       })

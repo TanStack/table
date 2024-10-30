@@ -46,8 +46,8 @@ import type {
 
 /**
  * The Column Pinning feature adds column pinning state and APIs to the table, row, and column objects.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
  */
 export const ColumnPinning: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(

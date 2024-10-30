@@ -21,8 +21,8 @@ import type {
  * The Global Filtering feature adds global filtering state and APIs to the table and column objects.
  *
  * **Note:** This is dependent on the ColumnFiltering feature.
- * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering)
- * @link [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
  */
 export const GlobalFiltering: TableFeature = {
   getInitialState: <TFeatures extends TableFeatures>(

@@ -14,7 +14,7 @@ const packages = [
   },
   {
     name: 'react-table',
-    entryPoints: [resolve(__dirname, '../packages/react-table/src/index.tsx')],
+    entryPoints: [resolve(__dirname, '../packages/react-table/src/index.ts')],
     tsconfig: resolve(__dirname, '../packages/react-table/tsconfig.json'),
     outputDir: resolve(__dirname, '../docs/framework/react/reference'),
     exclude: ['packages/table-core/**/*'],

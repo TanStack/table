@@ -8,7 +8,7 @@ export function flexRender<TProps>(
   if (!Comp) return null
 
   if (typeof Comp === 'function') {
-    return createComponent(Comp, props)
+    return createComponent(Comp, props as any)
   }
 
   return Comp

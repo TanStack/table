@@ -2,7 +2,7 @@ import { untracked } from '@angular/core'
 
 /**
  * Implementation from @tanstack/angular-query
- * {@link https://github.com/TanStack/query/blob/main/packages/angular-query-experimental/src/util/lazy-init/lazy-init.ts}
+ * {https://github.com/TanStack/query/blob/main/packages/angular-query-experimental/src/util/lazy-init/lazy-init.ts}
  */
 export function lazyInit<T extends object>(initializer: () => T): T {
   let object: T | null = null
