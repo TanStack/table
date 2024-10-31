@@ -32,7 +32,7 @@ export function table_resetRowPinning<
     table,
     defaultState
       ? getDefaultRowPinningState()
-      : (table.options.initialState?.rowPinning ?? getDefaultRowPinningState()),
+      : (table.initialState.rowPinning ?? getDefaultRowPinningState()),
   )
 }
 

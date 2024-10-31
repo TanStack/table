@@ -24,15 +24,14 @@ import {
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './RowSelection.utils'
-import type { TableState } from '../../types/TableState'
+import type { Table_Internal } from '../../types/Table'
+import type { TableState_All } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
   Row_RowSelection,
   TableOptions_RowSelection,
-  Table_RowSelection,
 } from './RowSelection.types'
 
 /**
@@ -42,12 +41,12 @@ import type {
  
  */
 export const RowSelection: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
       rowSelection: getDefaultRowSelectionState(),
-      ...state,
+      ...initialState,
     }
   },
 
@@ -55,8 +54,7 @@ export const RowSelection: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowSelection<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): TableOptions_RowSelection<TFeatures, TData> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
@@ -101,8 +99,7 @@ export const RowSelection: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowSelection<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

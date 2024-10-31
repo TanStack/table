@@ -13,13 +13,13 @@ import {
   table_getRowModel,
   table_getSortedRowModel,
 } from './RowModels.utils'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 
 export const RowModels: TableFeature = {
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

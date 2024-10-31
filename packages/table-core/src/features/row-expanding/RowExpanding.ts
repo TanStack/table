@@ -16,15 +16,14 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './RowExpanding.utils'
-import type { TableState } from '../../types/TableState'
+import type { Table_Internal } from '../../types/Table'
+import type { TableState_All } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
   Row_RowExpanding,
   TableOptions_RowExpanding,
-  Table_RowExpanding,
 } from './RowExpanding.types'
 
 /**
@@ -33,12 +32,12 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/row-expanding)
  */
 export const RowExpanding: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
       expanded: getDefaultExpandedState(),
-      ...state,
+      ...initialState,
     }
   },
 
@@ -46,8 +45,7 @@ export const RowExpanding: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowExpanding<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): TableOptions_RowExpanding<TFeatures, TData> => {
     return {
       onExpandedChange: makeStateUpdater('expanded', table),
@@ -78,8 +76,7 @@ export const RowExpanding: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowExpanding<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

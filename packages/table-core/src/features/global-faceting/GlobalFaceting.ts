@@ -4,10 +4,9 @@ import {
   table_getGlobalFacetedRowModel,
   table_getGlobalFacetedUniqueValues,
 } from './GlobalFaceting.utils'
-import type { Table_GlobalFaceting } from './GlobalFaceting.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 
 /**
  * The Global Faceting feature adds global faceting APIs to the table object.
@@ -16,8 +15,7 @@ import type { Table } from '../../types/Table'
  */
 export const GlobalFaceting: TableFeature = {
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_GlobalFaceting<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

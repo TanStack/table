@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { Rows } from './Rows'
 import { constructRow } from './constructRow'
-import type { Row } from '../../types/Row'
 import type { Table } from '../../types/Table'
+import type { Row } from '../../types/Row'
 
 interface Person {
   firstName: string

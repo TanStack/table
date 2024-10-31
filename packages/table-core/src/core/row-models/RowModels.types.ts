@@ -1,3 +1,4 @@
+import type { Table } from '../../types/Table'
 import type { Table_RowModels_Faceted } from '../../features/column-faceting/ColumnFaceting.types'
 import type { Table_RowModels_Filtered } from '../../features/column-filtering/ColumnFiltering.types'
 import type { Table_RowModels_Grouped } from '../../features/column-grouping/ColumnGrouping.types'
@@ -5,7 +6,6 @@ import type { Table_RowModels_Expanded } from '../../features/row-expanding/RowE
 import type { Table_RowModels_Paginated } from '../../features/row-pagination/RowPagination.types'
 import type { Table_RowModels_Sorted } from '../../features/row-sorting/RowSorting.types'
 import type { Row } from '../../types/Row'
-import type { Table } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 

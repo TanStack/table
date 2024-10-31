@@ -1,6 +1,6 @@
+import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 import type { Header_CoreProperties } from './Headers.types'
@@ -10,7 +10,7 @@ export function constructHeader<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   column: Column<TFeatures, TData, TValue>,
   options: {
     id?: string

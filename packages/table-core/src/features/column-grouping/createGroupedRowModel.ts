@@ -12,13 +12,15 @@ import type { Row_ColumnGrouping } from './ColumnGrouping.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/RowModels.types'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
 export function createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (
+  table: Table_Internal<TFeatures, TData>,
+) => () => RowModel<TFeatures, TData> {
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
@@ -38,7 +40,7 @@ export function createGroupedRowModel<
 function _createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreGroupedRowModel()
   const grouping = table.options.state?.grouping
 
@@ -85,7 +87,7 @@ function _createGroupedRowModel<
     const columnId: string = existingGrouping[depth]!
 
     // Group the rows together for this level
-    const rowGroupsMap = groupBy(rows, columnId, table)
+    const rowGroupsMap = groupBy(rows, columnId)
 
     // Perform aggregations for each group
     const aggregatedGroupedRows = Array.from(rowGroupsMap.entries()).map(
@@ -188,7 +190,6 @@ function _createGroupedRowModel<
 function groupBy<TFeatures extends TableFeatures, TData extends RowData>(
   rows: Array<Row<TFeatures, TData>>,
   columnId: string,
-  table: Table<TFeatures, TData>,
 ) {
   const groupMap = new Map<any, Array<Row<TFeatures, TData>>>()
 

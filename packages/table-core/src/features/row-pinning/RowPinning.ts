@@ -12,15 +12,14 @@ import {
   table_resetRowPinning,
   table_setRowPinning,
 } from './RowPinning.utils'
-import type { TableState } from '../../types/TableState'
+import type { TableState_All } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
   RowPinningDefaultOptions,
   Row_RowPinning,
-  Table_RowPinning,
 } from './RowPinning.types'
 
 /**
@@ -29,12 +28,15 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
  */
 export const RowPinning: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
-      rowPinning: getDefaultRowPinningState(),
-      ...state,
+      ...initialState,
+      rowPinning: {
+        ...getDefaultRowPinningState(),
+        ...initialState.rowPinning,
+      },
     }
   },
 
@@ -42,8 +44,7 @@ export const RowPinning: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowPinning<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): RowPinningDefaultOptions => {
     return {
       onRowPinningChange: makeStateUpdater('rowPinning', table),
@@ -75,8 +76,7 @@ export const RowPinning: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowPinning<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

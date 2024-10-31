@@ -1,8 +1,8 @@
 import { column_getIsVisible } from '../../features/column-visibility/ColumnVisibility.utils'
 import { constructHeader } from './constructHeader'
+import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Column } from '../../types/Column'
@@ -14,7 +14,7 @@ export function buildHeaderGroups<
 >(
   allColumns: Array<Column<TFeatures, TData, TValue>>,
   columnsToGroup: Array<Column<TFeatures, TData, TValue>>,
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   headerFamily?: 'center' | 'left' | 'right',
 ) {
   // Find the max depth of the columns:

@@ -8,11 +8,10 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './ColumnOrdering.utils'
-import type { TableState } from '../../types/TableState'
+import type { TableState_All } from '../../types/TableState'
 import type {
   ColumnOrderDefaultOptions,
   Column_ColumnOrdering,
-  Table_ColumnOrdering,
 } from './ColumnOrdering.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -25,12 +24,12 @@ import type { Column } from '../../types/Column'
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
  */
 export const ColumnOrdering: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
       columnOrder: getDefaultColumnOrderState(),
-      ...state,
+      ...initialState,
     }
   },
 
@@ -38,8 +37,7 @@ export const ColumnOrdering: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table_Internal<TFeatures, TData> &
-      Partial<Table_ColumnOrdering<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): ColumnOrderDefaultOptions => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', table),
@@ -73,8 +71,7 @@ export const ColumnOrdering: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData> &
-      Partial<Table_ColumnOrdering<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

@@ -1,8 +1,8 @@
-import { flattenBy } from '../../utils'
+import { flattenBy, isDev } from '../../utils'
 import { constructCell } from '../cells/constructCell'
+import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 
@@ -116,7 +116,7 @@ export function table_getRowId<
   TData extends RowData,
 >(
   originalRow: TData,
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   index: number,
   parent?: Row<TFeatures, TData>,
 ) {
@@ -130,7 +130,7 @@ export function table_getRow<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   rowId: string,
   searchAll?: boolean,
 ): Row<TFeatures, TData> {
@@ -141,7 +141,7 @@ export function table_getRow<
   if (!row) {
     row = table.getCoreRowModel().rowsById[rowId]
     if (!row) {
-      if (process.env.NODE_ENV !== 'production') {
+      if (isDev) {
         throw new Error(`getRow could not find row with ID: ${rowId}`)
       }
       throw new Error()

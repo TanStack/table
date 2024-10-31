@@ -26,7 +26,9 @@ function filterRowModelFromLeafs<
   TData extends RowData,
 >(
   rowsToFilter: Array<Row<TFeatures, TData>>,
-  filterRow: (row: Row<TFeatures, TData>) => Array<Row<TFeatures, TData>>,
+  filterRow: (
+    row: Row<TFeatures, TData>,
+  ) => Array<Row<TFeatures, TData>> | undefined,
   table: Table_Internal<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
   const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []

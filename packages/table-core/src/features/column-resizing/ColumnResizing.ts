@@ -7,17 +7,15 @@ import {
   table_resetHeaderSizeInfo,
   table_setColumnResizing,
 } from './ColumnResizing.utils'
-import type { TableState } from '../../types/TableState'
+import type { TableState_All } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 import type {
   ColumnResizingDefaultOptions,
-  Column_ColumnResizing,
   Header_ColumnResizing,
-  Table_ColumnResizing,
 } from './ColumnResizing.types'
 
 /**
@@ -28,12 +26,12 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
  */
 export const ColumnResizing: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
       columnResizing: getDefaultColumnResizingState(),
-      ...state,
+      ...initialState,
     }
   },
 
@@ -41,7 +39,7 @@ export const ColumnResizing: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
+    table: Table_Internal<TFeatures, TData>,
   ): ColumnResizingDefaultOptions => {
     return {
       columnResizeMode: 'onEnd',
@@ -55,7 +53,7 @@ export const ColumnResizing: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnResizing>,
+    column: Column<TFeatures, TData, TValue>,
   ): void => {
     assignAPIs(column, [
       {
@@ -83,7 +81,7 @@ export const ColumnResizing: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> & Partial<Table_ColumnResizing>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

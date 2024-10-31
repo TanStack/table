@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { Columns } from './Columns'
 import { constructColumn } from './constructColumn'
-import type { ColumnDef } from '../../types/ColumnDef'
 import type { Table } from '../../types/Table'
+import type { ColumnDef } from '../../types/ColumnDef'
 
 describe('constructColumn', () => {
   it('should create a column with all core column APIs and properties', () => {

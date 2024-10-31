@@ -45,7 +45,7 @@ export function table_resetExpanded<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setExpanded(
     table,
-    defaultState ? {} : (table.options.initialState?.expanded ?? {}),
+    defaultState ? {} : (table.initialState.expanded ?? {}),
   )
 }
 

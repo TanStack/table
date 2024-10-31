@@ -8,6 +8,10 @@ import type { SortDirection, SortingFn, SortingState } from './RowSorting.types'
 
 // State Utils
 
+export function getDefaultSortingState(): SortingState {
+  return structuredClone([])
+}
+
 export function table_setSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -21,7 +25,7 @@ export function table_resetSorting<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setSorting(
     table,
-    defaultState ? [] : (table.options.initialState?.sorting ?? []),
+    defaultState ? [] : (table.initialState.sorting ?? []),
   )
 }
 

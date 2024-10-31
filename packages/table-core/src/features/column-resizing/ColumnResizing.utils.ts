@@ -244,8 +244,7 @@ export function table_resetHeaderSizeInfo<
     table,
     defaultState
       ? getDefaultColumnResizingState()
-      : (table.options.initialState?.columnResizing ??
-          getDefaultColumnResizingState()),
+      : (table.initialState.columnResizing ?? getDefaultColumnResizingState()),
   )
 }
 

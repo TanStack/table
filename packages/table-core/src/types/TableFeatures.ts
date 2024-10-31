@@ -6,30 +6,35 @@ import type { Header } from './Header'
 import type { Row } from './Row'
 import type { Table } from './Table'
 import type { TableOptions_All } from './TableOptions'
-import type { TableState } from './TableState'
+import type { TableState_All } from './TableState'
 
-type CoreTableFeatureName = 'Cells' | 'Columns' | 'Headers' | 'Rows' | 'Tables'
-type StockTableFeatureName =
-  | 'ColumnFaceting'
-  | 'ColumnFiltering'
-  | 'ColumnGrouping'
-  | 'ColumnOrdering'
-  | 'ColumnPinning'
-  | 'ColumnResizing'
-  | 'ColumnSizing'
-  | 'ColumnVisibility'
-  | 'GlobalFaceting'
-  | 'GlobalFiltering'
-  | 'RowExpanding'
-  | 'RowPagination'
-  | 'RowPinning'
-  | 'RowSelection'
-  | 'RowSorting'
-type TableFeatureName = CoreTableFeatureName | StockTableFeatureName
-export type CoreTableFeatures = Partial<
-  Record<CoreTableFeatureName, TableFeature>
->
-export type TableFeatures = Partial<Record<TableFeatureName, TableFeature>>
+export interface CoreTableFeatures {
+  Cells?: TableFeature
+  Columns?: TableFeature
+  Headers?: TableFeature
+  Rows?: TableFeature
+  Tables?: TableFeature
+}
+
+export interface StockTableFeatures {
+  ColumnFaceting?: TableFeature
+  ColumnFiltering?: TableFeature
+  ColumnGrouping?: TableFeature
+  ColumnOrdering?: TableFeature
+  ColumnPinning?: TableFeature
+  ColumnResizing?: TableFeature
+  ColumnSizing?: TableFeature
+  ColumnVisibility?: TableFeature
+  GlobalFaceting?: TableFeature
+  GlobalFiltering?: TableFeature
+  RowExpanding?: TableFeature
+  RowPagination?: TableFeature
+  RowPinning?: TableFeature
+  RowSelection?: TableFeature
+  RowSorting?: TableFeature
+}
+
+export interface TableFeatures extends CoreTableFeatures, StockTableFeatures {}
 
 export interface TableFeature {
   constructCellAPIs?: <
@@ -70,7 +75,7 @@ export interface TableFeature {
   >(
     table: Table<TFeatures, TData>,
   ) => Partial<TableOptions_All<TFeatures, TData>>
-  getInitialState?: <TFeatures extends TableFeatures>(
-    initialState: Partial<TableState<TFeatures>>,
-  ) => Partial<TableState<TFeatures>>
+  getInitialState?: (
+    initialState: Partial<TableState_All>,
+  ) => Partial<TableState_All>
 }

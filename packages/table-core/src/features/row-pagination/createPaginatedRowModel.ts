@@ -1,6 +1,5 @@
 import { isDev, tableMemo } from '../../utils'
 import { expandRows } from '../row-expanding/createExpandedRowModel'
-
 import { getDefaultPaginationState } from './RowPagination.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'

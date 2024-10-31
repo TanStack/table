@@ -12,17 +12,18 @@ import {
   column_getSortingFn,
   column_getToggleSortingHandler,
   column_toggleSorting,
+  getDefaultSortingState,
   table_resetSorting,
   table_setSorting,
 } from './RowSorting.utils'
-import type { TableState } from '../../types/TableState'
+import type { TableState_All } from '../../types/TableState'
 import type {
   ColumnDef_RowSorting,
   TableOptions_RowSorting,
 } from './RowSorting.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Column } from '../../types/Column'
 
 /**
@@ -31,11 +32,11 @@ import type { Column } from '../../types/Column'
  * [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
  */
 export const RowSorting: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    state: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
-      sorting: [],
+      sorting: getDefaultSortingState(),
       ...state,
     }
   },
@@ -54,7 +55,7 @@ export const RowSorting: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData>,
+    table: Table_Internal<TFeatures, TData>,
   ): TableOptions_RowSorting => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
@@ -112,7 +113,7 @@ export const RowSorting: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

@@ -6,10 +6,10 @@ import {
 } from '../../features/column-pinning/ColumnPinning.utils'
 import { table_getVisibleLeafColumns } from '../../features/column-visibility/ColumnVisibility.utils'
 import { buildHeaderGroups } from './buildHeaderGroups'
+import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Header_Header } from './Headers.types'
 
 export function header_getLeafHeaders<
@@ -46,7 +46,7 @@ export function header_getContext<
 export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const { left, right } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
@@ -76,7 +76,7 @@ export function table_getHeaderGroups<
 export function table_getFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = table.getHeaderGroups()
   return [...headerGroups].reverse()
 }
@@ -84,7 +84,7 @@ export function table_getFooterGroups<
 export function table_getFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = table.getHeaderGroups()
   return headerGroups
     .map((headerGroup) => {
@@ -96,7 +96,7 @@ export function table_getFlatHeaders<
 export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const left = table_getLeftHeaderGroups(table)
   const center = table_getCenterHeaderGroups(table)
   const right = table_getRightHeaderGroups(table)

@@ -1,6 +1,6 @@
+import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Row_CoreProperties } from './Rows.types'
 
@@ -8,7 +8,7 @@ export const constructRow = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   id: string,
   original: TData,
   rowIndex: number,

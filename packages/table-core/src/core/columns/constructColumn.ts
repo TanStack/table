@@ -1,6 +1,7 @@
+import { isDev } from '../../utils'
+import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type {
   AccessorFn,
   ColumnDef,
@@ -14,7 +15,7 @@ export function constructColumn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   columnDef: ColumnDef<TFeatures, TData, TValue>,
   depth: number,
   parent?: Column<TFeatures, TData, TValue>,
@@ -47,7 +48,7 @@ export function constructColumn<
 
         for (const key of accessorKey.split('.')) {
           result = result?.[key]
-          if (process.env.NODE_ENV !== 'production' && result === undefined) {
+          if (isDev && result === undefined) {
             console.warn(
               `"${key}" in deeply nested key "${accessorKey}" returned undefined.`,
             )
@@ -63,7 +64,7 @@ export function constructColumn<
   }
 
   if (!id) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (isDev) {
       throw new Error(
         resolvedColumnDef.accessorFn
           ? `Columns require an id when using an accessorFn`

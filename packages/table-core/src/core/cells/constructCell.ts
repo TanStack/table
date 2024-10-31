@@ -1,6 +1,6 @@
+import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
@@ -13,7 +13,7 @@ export function constructCell<
 >(
   column: Column<TFeatures, TData, TValue>,
   row: Row<TFeatures, TData>,
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
 ): Cell<TFeatures, TData, TValue> {
   const cell: Cell_CoreProperties<TFeatures, TData, TValue> = {
     column,

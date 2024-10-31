@@ -31,17 +31,16 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from './ColumnPinning.utils'
-import type { TableState } from '../../types/TableState'
+import type { TableState_All } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 import type {
   ColumnPinningDefaultOptions,
   Column_ColumnPinning,
   Row_ColumnPinning,
-  Table_ColumnPinning,
 } from './ColumnPinning.types'
 
 /**
@@ -50,12 +49,15 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
  */
 export const ColumnPinning: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
-      columnPinning: getDefaultColumnPinningState(),
-      ...state,
+      ...initialState,
+      columnPinning: {
+        ...getDefaultColumnPinningState(),
+        ...initialState.columnPinning,
+      },
     }
   },
 
@@ -63,8 +65,7 @@ export const ColumnPinning: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnPinning<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): ColumnPinningDefaultOptions => {
     return {
       onColumnPinningChange: makeStateUpdater('columnPinning', table),
@@ -126,8 +127,7 @@ export const ColumnPinning: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnPinning<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

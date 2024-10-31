@@ -16,17 +16,16 @@ import {
   table_resetColumnSizing,
   table_setColumnSizing,
 } from './ColumnSizing.utils'
-import type { TableState } from '../../types/TableState'
+import type { Table_Internal } from '../../types/Table'
+import type { TableState_All } from '../../types/TableState'
 import type {
   ColumnDef_ColumnSizing,
   ColumnSizingDefaultOptions,
   Column_ColumnSizing,
   Header_ColumnSizing,
-  Table_ColumnSizing,
 } from './ColumnSizing.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 
@@ -38,12 +37,12 @@ import type { Column } from '../../types/Column'
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
  */
 export const ColumnSizing: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
       columnSizing: getDefaultColumnSizingState(),
-      ...state,
+      ...initialState,
     }
   },
 
@@ -55,7 +54,7 @@ export const ColumnSizing: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
+    table: Table_Internal<TFeatures, TData>,
   ): ColumnSizingDefaultOptions => {
     return {
       onColumnSizingChange: makeStateUpdater('columnSizing', table),
@@ -102,13 +101,18 @@ export const ColumnSizing: TableFeature = {
   >(
     header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnSizing>,
   ): void => {
-    header.getSize = () => header_getSize(header)
-
-    header.getStart = () => header_getStart(header)
+    assignAPIs(header, [
+      {
+        fn: () => header_getSize(header),
+      },
+      {
+        fn: () => header_getStart(header),
+      },
+    ])
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> & Partial<Table_ColumnSizing>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

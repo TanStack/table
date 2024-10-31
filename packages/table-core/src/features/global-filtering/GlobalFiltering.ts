@@ -8,13 +8,12 @@ import {
 } from './GlobalFiltering.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
-import type { TableState } from '../../types/TableState'
+import type { Table_Internal } from '../../types/Table'
+import type { TableState_All } from '../../types/TableState'
 import type { Column } from '../../types/Column'
 import type {
   Column_GlobalFiltering,
   TableOptions_GlobalFiltering,
-  Table_GlobalFiltering,
 } from './GlobalFiltering.types'
 
 /**
@@ -25,12 +24,12 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
  */
 export const GlobalFiltering: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
       globalFilter: undefined,
-      ...state,
+      ...initialState,
     }
   },
 
@@ -38,8 +37,7 @@ export const GlobalFiltering: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
-      Partial<Table_GlobalFiltering<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): TableOptions_GlobalFiltering<TFeatures, TData> => {
     return {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
@@ -70,8 +68,7 @@ export const GlobalFiltering: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_GlobalFiltering<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

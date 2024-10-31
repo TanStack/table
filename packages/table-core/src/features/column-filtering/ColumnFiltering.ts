@@ -11,10 +11,10 @@ import {
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './ColumnFiltering.utils'
-import type { TableState } from '../../types/TableState'
+import type { Table_Internal } from '../../types/Table'
+import type { TableState_All } from '../../types/TableState'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 import type {
@@ -23,7 +23,6 @@ import type {
   Column_ColumnFiltering,
   Row_ColumnFiltering,
   TableOptions_ColumnFiltering,
-  Table_ColumnFiltering,
 } from './ColumnFiltering.types'
 
 /**
@@ -34,12 +33,12 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
  */
 export const ColumnFiltering: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
       columnFilters: getDefaultColumnFiltersState(),
-      ...state,
+      ...initialState,
     }
   },
 
@@ -56,8 +55,7 @@ export const ColumnFiltering: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnFiltering<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): TableOptions_ColumnFiltering<TFeatures, TData> => {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),
@@ -107,8 +105,7 @@ export const ColumnFiltering: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnFiltering<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

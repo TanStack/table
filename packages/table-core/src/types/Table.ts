@@ -96,4 +96,5 @@ export type Table_Internal<
     state?: TableState_All
     initialState?: TableState_All
   }
+  initialState: TableState_All
 }

@@ -61,6 +61,6 @@ export function table_resetGlobalFilter<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setGlobalFilter(
     table,
-    defaultState ? undefined : table.options.initialState?.globalFilter,
+    defaultState ? undefined : table.initialState.globalFilter,
   )
 }

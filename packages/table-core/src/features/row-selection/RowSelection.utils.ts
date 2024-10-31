@@ -27,7 +27,7 @@ export function table_resetRowSelection<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setRowSelection(
     table,
-    defaultState ? {} : (table.options.initialState?.rowSelection ?? {}),
+    defaultState ? {} : (table.initialState.rowSelection ?? {}),
   )
 }
 

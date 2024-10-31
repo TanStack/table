@@ -141,7 +141,7 @@ export function table_resetColumnSizing<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
-    defaultState ? {} : (table.options.initialState?.columnSizing ?? {}),
+    defaultState ? {} : (table.initialState.columnSizing ?? {}),
   )
 }
 

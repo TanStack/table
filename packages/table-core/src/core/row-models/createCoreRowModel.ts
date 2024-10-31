@@ -1,17 +1,19 @@
 import { constructRow } from '../rows/constructRow'
 import { isDev, tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/RowPagination.utils'
+import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from './RowModels.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
 export function createCoreRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
-  return (table: Table<TFeatures, TData>) =>
+>(): (
+  table: Table_Internal<TFeatures, TData>,
+) => () => RowModel<TFeatures, TData> {
+  return (table: Table_Internal<TFeatures, TData>) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getCoreRowModel',
@@ -25,7 +27,7 @@ function _createCoreRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   data: Array<TData>,
 ): {
   rows: Array<Row<TFeatures, TData>>

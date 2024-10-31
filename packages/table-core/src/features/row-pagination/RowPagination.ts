@@ -18,14 +18,11 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './RowPagination.utils'
-import type { TableState } from '../../types/TableState'
-import type {
-  PaginationDefaultOptions,
-  Table_RowPagination,
-} from './RowPagination.types'
+import type { TableState_All } from '../../types/TableState'
+import type { PaginationDefaultOptions } from './RowPagination.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 
 /**
  * The (Row) Pagination feature adds pagination state and APIs to the table object.
@@ -33,14 +30,14 @@ import type { Table } from '../../types/Table'
  * [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
  */
 export const RowPagination: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
-      ...state,
+      ...initialState,
       pagination: {
         ...getDefaultPaginationState(),
-        ...state.pagination,
+        ...initialState.pagination,
       },
     }
   },
@@ -49,8 +46,7 @@ export const RowPagination: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowPagination<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): PaginationDefaultOptions => {
     return {
       onPaginationChange: makeStateUpdater('pagination', table),
@@ -58,8 +54,7 @@ export const RowPagination: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_RowPagination<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

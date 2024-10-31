@@ -1,5 +1,6 @@
 import { isDev, tableMemo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
+import type { Table_Internal } from '../../types/Table'
 import type {
   ColumnFiltersState,
   Row_ColumnFiltering,
@@ -7,14 +8,13 @@ import type {
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/RowModels.types'
-import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 
 export function createFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(): (
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   columnId: string,
 ) => () => RowModel<TFeatures, TData> {
   return (table, columnId) =>
@@ -42,7 +42,7 @@ function _createFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   columnId: string,
   preRowModel: RowModel<TFeatures, TData>,
   columnFilters?: ColumnFiltersState,

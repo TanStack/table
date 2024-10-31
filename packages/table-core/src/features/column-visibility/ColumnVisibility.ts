@@ -21,16 +21,15 @@ import {
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
 } from './ColumnVisibility.utils'
-import type { TableState } from '../../types/TableState'
+import type { TableState_All } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 import type {
   Column_ColumnVisibility,
   Row_ColumnVisibility,
-  Table_ColumnVisibility,
   VisibilityDefaultOptions,
 } from './ColumnVisibility.types'
 
@@ -39,12 +38,12 @@ import type {
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility)
  */
 export const ColumnVisibility: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
       columnVisibility: getDefaultColumnVisibilityState(),
-      ...state,
+      ...initialState,
     }
   },
 
@@ -52,8 +51,7 @@ export const ColumnVisibility: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnVisibility<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): VisibilityDefaultOptions => {
     return {
       onColumnVisibilityChange: makeStateUpdater('columnVisibility', table),
@@ -107,8 +105,7 @@ export const ColumnVisibility: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnVisibility<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

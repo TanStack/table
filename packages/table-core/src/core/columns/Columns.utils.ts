@@ -1,8 +1,9 @@
 import { table_getOrderColumnsFn } from '../../features/column-ordering/ColumnOrdering.utils'
+import { isDev } from '../../utils'
 import { constructColumn } from './constructColumn'
+import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 import type {
   ColumnDef,
   ColumnDefResolved,
@@ -42,7 +43,7 @@ export function table_getDefaultColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
 ): Partial<ColumnDef<TFeatures, TData, unknown>> {
   return {
     header: (props) => {
@@ -70,7 +71,9 @@ export function table_getDefaultColumnDef<
 export function table_getAllColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
+>(
+  table: Table_Internal<TFeatures, TData>,
+): Array<Column<TFeatures, TData, unknown>> {
   const recurseColumns = (
     colDefs: Array<ColumnDef<TFeatures, TData, unknown>>,
     parent?: Column<TFeatures, TData, unknown>,
@@ -99,7 +102,9 @@ export function table_getAllColumns<
 export function table_getAllFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
+>(
+  table: Table_Internal<TFeatures, TData>,
+): Array<Column<TFeatures, TData, unknown>> {
   return table.getAllColumns().flatMap((column) => column.getFlatColumns())
 }
 
@@ -107,7 +112,7 @@ export function table_getAllFlatColumnsById<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
   return table.getAllFlatColumns().reduce(
     (acc, column) => {
@@ -121,7 +126,9 @@ export function table_getAllFlatColumnsById<
 export function table_getAllLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
+>(
+  table: Table_Internal<TFeatures, TData>,
+): Array<Column<TFeatures, TData, unknown>> {
   const leafColumns = table.getAllColumns().flatMap(
     (c) => c.getLeafColumns(), // recursive
   )
@@ -132,12 +139,12 @@ export function table_getColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   columnId: string,
 ): Column<TFeatures, TData, unknown> | undefined {
   const column = table.getAllFlatColumnsById()[columnId]
 
-  if (process.env.NODE_ENV !== 'production' && !column) {
+  if (isDev && !column) {
     console.warn(`[Table] Column with id '${columnId}' does not exist.`)
   }
 

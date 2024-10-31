@@ -148,7 +148,7 @@ export function table_resetGrouping<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setGrouping(
     table,
-    defaultState ? [] : (table.options.initialState?.grouping ?? []),
+    defaultState ? [] : (table.initialState.grouping ?? []),
   )
 }
 

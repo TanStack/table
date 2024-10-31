@@ -17,10 +17,10 @@ import {
   table_setGrouping,
 } from './ColumnGrouping.utils'
 import type { Row } from '../../types/Row'
-import type { TableState } from '../../types/TableState'
+import type { TableState_All } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 import type {
@@ -29,7 +29,6 @@ import type {
   Column_ColumnGrouping,
   Row_ColumnGrouping,
   TableOptions_ColumnGrouping,
-  Table_ColumnGrouping,
 } from './ColumnGrouping.types'
 
 /**
@@ -38,12 +37,12 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
  */
 export const ColumnGrouping: TableFeature = {
-  getInitialState: <TFeatures extends TableFeatures>(
-    state: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (
+    initialState: Partial<TableState_All>,
+  ): Partial<TableState_All> => {
     return {
       grouping: getDefaultGroupingState(),
-      ...state,
+      ...initialState,
     }
   },
 
@@ -62,8 +61,7 @@ export const ColumnGrouping: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): TableOptions_ColumnGrouping => {
     return {
       onGroupingChange: makeStateUpdater('grouping', table),
@@ -140,8 +138,7 @@ export const ColumnGrouping: TableFeature = {
   },
 
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> &
-      Partial<Table_ColumnGrouping<TFeatures, TData>>,
+    table: Table_Internal<TFeatures, TData>,
   ): void => {
     assignAPIs(table, [
       {

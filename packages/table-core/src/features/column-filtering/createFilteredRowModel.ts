@@ -10,7 +10,7 @@ import { column_getFilterFn } from './ColumnFiltering.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/RowModels.types'
-import type { Table } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
   ResolvedColumnFilter,
@@ -20,7 +20,9 @@ import type {
 export function createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (
+  table: Table_Internal<TFeatures, TData>,
+) => () => RowModel<TFeatures, TData> {
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
@@ -38,7 +40,7 @@ export function createFilteredRowModel<
 function _createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreFilteredRowModel()
   const { columnFilters, globalFilter } = table.options.state ?? {}
 
@@ -64,10 +66,10 @@ function _createFilteredRowModel<
       return
     }
 
-    const filterFn = column_getFilterFn(column)
+    const filterFn = column_getFilterFn(column) as any
 
     if (!filterFn) {
-      if (process.env.NODE_ENV !== 'production') {
+      if (isDev) {
         console.warn(
           `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`,
         )

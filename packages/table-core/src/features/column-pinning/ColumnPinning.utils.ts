@@ -176,8 +176,7 @@ export function table_resetColumnPinning<
     table,
     defaultState
       ? getDefaultColumnPinningState()
-      : (table.options.initialState?.columnPinning ??
-          getDefaultColumnPinningState()),
+      : (table.initialState.columnPinning ?? getDefaultColumnPinningState()),
   )
 }
 

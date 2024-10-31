@@ -1,15 +1,15 @@
 import { isDev, tableMemo } from '../../utils'
 import { column_getFacetedRowModel } from './ColumnFaceting.utils'
+import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from '../../core/row-models/RowModels.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
 
 export function createFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(): (
-  table: Table<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
   columnId: string,
 ) => () => undefined | [number, number] {
   return (table, columnId) =>
