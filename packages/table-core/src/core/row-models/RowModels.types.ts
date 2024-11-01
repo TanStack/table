@@ -36,7 +36,7 @@ export interface CachedRowModel_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  coreRowModel?: () => RowModel<TFeatures, TData>
+  coreRowModel: () => RowModel<TFeatures, TData>
 }
 
 export interface Table_RowModels_Core<

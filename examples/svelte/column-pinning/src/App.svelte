@@ -6,7 +6,6 @@
     ColumnPinningState,
     ColumnVisibilityState,
     Header,
-    HeaderGroup,
     TableOptions,
   } from '@tanstack/svelte-table'
   import {

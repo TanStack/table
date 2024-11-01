@@ -26,9 +26,6 @@ export const RowModels: TableFeature = {
         fn: () => table_getCoreRowModel(table),
       },
       {
-        fn: () => table_getRowModel(table),
-      },
-      {
         fn: () => table_getPreFilteredRowModel(table),
       },
       {
@@ -39,6 +36,12 @@ export const RowModels: TableFeature = {
       },
       {
         fn: () => table_getGroupedRowModel(table),
+      },
+      {
+        fn: () => table_getPreSortedRowModel(table),
+      },
+      {
+        fn: () => table_getSortedRowModel(table),
       },
       {
         fn: () => table_getPreExpandedRowModel(table),
@@ -53,10 +56,7 @@ export const RowModels: TableFeature = {
         fn: () => table_getPaginatedRowModel(table),
       },
       {
-        fn: () => table_getPreSortedRowModel(table),
-      },
-      {
-        fn: () => table_getSortedRowModel(table),
+        fn: () => table_getRowModel(table),
       },
     ])
   },

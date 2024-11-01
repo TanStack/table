@@ -4,7 +4,7 @@ import type {
   CoreTableFeatures,
   TableFeatures,
 } from '../../types/TableFeatures'
-import type { CachedRowModels, CreateRowModels } from '../../types/RowModel'
+import type { CachedRowModels, CreateRowModels_All } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
 
@@ -34,7 +34,7 @@ export interface TableOptions_Table<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _rowModels?: CreateRowModels<TFeatures, TData>
+  _rowModels?: CreateRowModels_All<TFeatures, TData>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ColumnDef, TableOptions } from '@tanstack/svelte-table'
+  import type { ColumnDef, } from '@tanstack/svelte-table'
   import {
     createTable,
     FlexRender,

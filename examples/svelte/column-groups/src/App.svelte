@@ -2,7 +2,6 @@
   import type { ColumnDef } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    createCoreRowModel,
     createTable,
     tableFeatures,
     tableOptions,

@@ -17,17 +17,10 @@ export function table_getCoreRowModel<
   return table._rowModels.coreRowModel()
 }
 
-export function table_getRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  return table.getPaginatedRowModel()
-}
-
 export function table_getPreFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   return table.getCoreRowModel()
 }
 
@@ -68,6 +61,29 @@ export function table_getGroupedRowModel<
   }
 
   return table._rowModels.groupedRowModel()
+}
+
+export function table_getPreSortedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+  return table.getGroupedRowModel()
+}
+
+export function table_getSortedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+  if (!table._rowModels.sortedRowModel) {
+    table._rowModels.sortedRowModel =
+      table.options._rowModels?.sortedRowModel?.(table)
+  }
+
+  if (table.options.manualSorting || !table._rowModels.sortedRowModel) {
+    return table.getPreSortedRowModel()
+  }
+
+  return table._rowModels.sortedRowModel()
 }
 
 export function table_getPreExpandedRowModel<
@@ -116,25 +132,9 @@ export function table_getPaginatedRowModel<
   return table._rowModels.paginatedRowModel()
 }
 
-export function table_getPreSortedRowModel<
+export function table_getRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  return table.getGroupedRowModel()
-}
-
-export function table_getSortedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.sortedRowModel) {
-    table._rowModels.sortedRowModel =
-      table.options._rowModels?.sortedRowModel?.(table)
-  }
-
-  if (table.options.manualSorting || !table._rowModels.sortedRowModel) {
-    return table.getPreSortedRowModel()
-  }
-
-  return table._rowModels.sortedRowModel()
+  return table.getPaginatedRowModel()
 }

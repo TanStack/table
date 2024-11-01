@@ -70,7 +70,7 @@ export type CachedRowModels<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = {
-  core?: () => RowModel<TFeatures, TData>
+  CachedRowModel_Core: () => RowModel<TFeatures, TData>
 } & UnionToIntersection<
   | ('ColumnFaceting' extends keyof TFeatures
       ? CachedRowModel_Faceted<TFeatures, TData>
