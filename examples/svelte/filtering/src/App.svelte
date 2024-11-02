@@ -1,10 +1,6 @@
 <script lang="ts">
   import { rankItem } from '@tanstack/match-sorter-utils'
-  import type {
-    ColumnDef,
-    FilterFn,
-    TableOptions,
-  } from '@tanstack/svelte-table'
+  import type { ColumnDef, FilterFn } from '@tanstack/svelte-table'
   import {
     ColumnFiltering,
     ColumnVisibility,
@@ -13,6 +9,7 @@
     createFilteredRowModel,
     createPaginatedRowModel,
     createTable,
+    isFunction,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import { type Updater } from 'svelte/store'
@@ -24,8 +21,6 @@
     GlobalFiltering,
     ColumnFiltering,
   })
-
-  let globalFilter = $state('')
 
   const fuzzyFilter: FilterFn<typeof _features, Person> = (
     row,
@@ -54,17 +49,24 @@
     },
   ]
 
+  let globalFilter = $state('')
+
   function setGlobalFilter(updater: Updater<string>) {
-    if (updater instanceof Function) {
+    if (isFunction(updater)) {
       globalFilter = updater(globalFilter)
     } else globalFilter = updater
   }
 
-  const options: TableOptions<any, Person> = {
+  const table = createTable({
     _features,
     _rowModels: {
       filteredRowModel: createFilteredRowModel(),
       paginatedRowModel: createPaginatedRowModel(),
+    },
+    _processingFns: {
+      filterFns: {
+        fuzzy: fuzzyFilter,
+      },
     },
     data: makeData(25),
     columns,
@@ -73,15 +75,10 @@
         return globalFilter
       },
     },
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
     enableMultiRowSelection: true,
-  }
-
-  const table = createTable(options)
+  })
 
   $effect(() => {
     table.setGlobalFilter(globalFilter)

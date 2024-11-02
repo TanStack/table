@@ -2,13 +2,13 @@
   import type {
     ColumnDef,
     ColumnVisibilityState,
-    TableOptions,
     Updater,
   } from '@tanstack/svelte-table'
   import {
     ColumnVisibility,
     FlexRender,
     createTable,
+    isFunction,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import './index.css'
@@ -106,12 +106,12 @@
   let columnVisibility = $state<ColumnVisibilityState>({})
 
   function setColumnVisibility(updater: Updater<ColumnVisibilityState>) {
-    if (updater instanceof Function) {
+    if (isFunction(updater)) {
       columnVisibility = updater(columnVisibility)
     } else columnVisibility = updater
   }
 
-  const options: TableOptions<typeof _features, Person> = {
+  const table = createTable({
     _features,
     _rowModels: {},
     data: defaultData,
@@ -123,9 +123,7 @@
     },
     onColumnVisibilityChange: setColumnVisibility,
     debugTable: true,
-  }
-
-  const table = createTable(options)
+  })
 </script>
 
 <div class="p-2">

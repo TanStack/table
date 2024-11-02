@@ -3,14 +3,15 @@
     ColumnDef,
     SortingState,
     TableOptions,
-    Updater,
   } from '@tanstack/svelte-table'
   import {
     FlexRender,
     RowSorting,
     createSortedRowModel,
     createTable,
+    createTableState,
     renderComponent,
+    sortingFns,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import Header from './Header.svelte'
@@ -80,18 +81,21 @@
   ]
 
   let data = $state(makeData(1_000))
-  let sorting = $state<SortingState>([])
 
-  function setSorting(updater: Updater<SortingState>) {
-    if (updater instanceof Function) {
-      sorting = updater(sorting)
-    } else sorting = updater
+  const [sorting, setSorting] = createTableState<SortingState>([])
+
+  const refreshData = () => {
+    console.info('refresh')
+    data = makeData(100_000) // stress test
   }
 
-  const options: TableOptions<typeof _features, Person> = {
+  const table = createTable({
     _features,
     _rowModels: {
       sortedRowModel: createSortedRowModel(),
+    },
+    _processingFns: {
+      sortingFns,
     },
     get data() {
       return data
@@ -99,19 +103,12 @@
     columns,
     state: {
       get sorting() {
-        return sorting
+        return sorting()
       },
     },
     onSortingChange: setSorting,
     debugTable: true,
-  }
-
-  const refreshData = () => {
-    console.info('refresh')
-    data = makeData(100_000)
-  }
-
-  const table = createTable(options)
+  })
 </script>
 
 <div class="p-2">

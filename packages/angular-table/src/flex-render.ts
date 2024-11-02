@@ -7,14 +7,13 @@ import {
   InjectionToken,
   Injector,
   Input,
-  type OnChanges,
-  type SimpleChanges,
   TemplateRef,
   Type,
   ViewContainerRef,
   inject,
   isSignal,
 } from '@angular/core'
+import type { OnChanges, SimpleChanges } from '@angular/core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string

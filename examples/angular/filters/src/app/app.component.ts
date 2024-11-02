@@ -5,8 +5,6 @@ import {
   signal,
 } from '@angular/core'
 import {
-  type ColumnDef,
-  type ColumnFiltersState,
   FlexRenderDirective,
   createCoreRowModel,
   createFacetedMinMaxValues,
@@ -16,11 +14,18 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   injectTable,
+  isFunction,
 } from '@tanstack/angular-table'
 import { FormsModule } from '@angular/forms'
 import { NgClass } from '@angular/common'
 import { FilterComponent } from './table-filter.component'
-import { type Person, makeData } from './makeData'
+import { makeData } from './makeData'
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  Updater,
+} from '@tanstack/angular-table'
+import type { Person } from './makeData'
 
 @Component({
   selector: 'app-root',
@@ -80,8 +85,8 @@ export class AppComponent {
     state: {
       columnFilters: this.columnFilters(),
     },
-    onColumnFiltersChange: (updater) => {
-      updater instanceof Function
+    onColumnFiltersChange: (updater: Updater<ColumnFiltersState>) => {
+      isFunction(updater)
         ? this.columnFilters.update(updater)
         : this.columnFilters.set(updater)
     },

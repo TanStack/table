@@ -2,6 +2,7 @@ import {
   constructTable,
   coreFeatures,
   getInitialTableState,
+  isFunction,
 } from '@tanstack/table-core'
 import type {
   RowData,
@@ -41,7 +42,7 @@ export function createTable<
       return mergeObjects(prev, tableOptions, {
         state: mergeObjects(state, tableOptions.state || {}),
         onStateChange: (updater: any) => {
-          if (updater instanceof Function) state = updater(state)
+          if (isFunction(updater)) state = updater(state)
           else state = mergeObjects(state, updater)
 
           tableOptions.onStateChange?.(updater)

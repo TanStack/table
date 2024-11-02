@@ -1,4 +1,4 @@
-import { constructTable } from '@tanstack/table-core'
+import { constructTable, isFunction } from '@tanstack/table-core'
 import {
   defineComponent,
   h,
@@ -114,7 +114,7 @@ export function useTable<
           // Similarly, we'll maintain both our internal state and any user-provided
           // state.
           onStateChange: (updater: any) => {
-            if (updater instanceof Function) {
+            if (isFunction(updater)) {
               state.value = updater(state.value)
             } else {
               state.value = updater

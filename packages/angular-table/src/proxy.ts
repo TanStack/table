@@ -1,9 +1,6 @@
-import { type Signal, computed, untracked } from '@angular/core'
-import {
-  type RowData,
-  type Table,
-  type TableFeatures,
-} from '@tanstack/table-core'
+import { computed, untracked } from '@angular/core'
+import type { Signal } from '@angular/core'
+import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 type TableSignal<
   TFeatures extends TableFeatures,

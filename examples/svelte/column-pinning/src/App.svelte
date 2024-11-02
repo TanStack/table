@@ -6,25 +6,26 @@
     ColumnPinningState,
     ColumnVisibilityState,
     Header,
-    TableOptions,
   } from '@tanstack/svelte-table'
   import {
     ColumnPinning,
     ColumnVisibility,
     FlexRender,
+    ColumnOrdering,
     RowSorting,
     createSortedRowModel,
     createTable,
+    createTableState,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import './index.css'
   import { makeData, type Person } from './makeData'
-  import { createTableState } from './state.svelte'
 
   const _features = tableFeatures({
-    RowSorting,
-    ColumnVisibility,
+    ColumnOrdering,
     ColumnPinning,
+    ColumnVisibility,
+    RowSorting,
   })
 
   const columns: ColumnDef<typeof _features, Person>[] = [
@@ -88,7 +89,13 @@
   const [columnVisibility, setColumnVisibility] =
     createTableState<ColumnVisibilityState>({})
 
-  const options: TableOptions<any, Person> = {
+  const randomizeColumns = () => {
+    table.setColumnOrder((_updater) =>
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
+    )
+  }
+
+  const table = createTable({
     _features,
     _rowModels: { sortedRowModel: createSortedRowModel() },
     get data() {
@@ -110,18 +117,10 @@
     onColumnPinningChange: setColumnPinning,
     onColumnVisibilityChange: setColumnVisibility,
     debugTable: true,
-  }
-
-  const randomizeColumns = () => {
-    table.setColumnOrder((_updater) =>
-      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
-    )
-  }
-
-  const table = createTable(options)
+  })
 </script>
 
-{#snippet headerCell(header: Header<any, Person, unknown>)}
+{#snippet headerCell(header: Header<typeof _features, Person, unknown>)}
   <th colSpan={header.colSpan}>
     <div class="whitespace-nowrap">
       {#if !header.isPlaceholder}

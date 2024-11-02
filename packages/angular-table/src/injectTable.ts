@@ -1,11 +1,13 @@
-import { type Signal, computed, signal } from '@angular/core'
+import { computed, signal } from '@angular/core'
 import {
   constructTable,
   coreFeatures,
   getInitialTableState,
+  isFunction,
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
 import { proxifyTable } from './proxy'
+import type { Signal } from '@angular/core'
 import type {
   RowData,
   Table,
@@ -52,8 +54,7 @@ export function injectTable<
         ...tableOptions,
         state: { ...tableState, ...tableOptions.state },
         onStateChange: (updater) => {
-          const value =
-            updater instanceof Function ? updater(tableState) : updater
+          const value = isFunction(updater) ? updater(tableState) : updater
           state.set(value)
           resolvedOptions.onStateChange?.(updater)
         },

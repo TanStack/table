@@ -1,5 +1,5 @@
 import * as Qwik from '@builder.io/qwik'
-import { constructTable } from '@tanstack/table-core'
+import { constructTable, isFunction } from '@tanstack/table-core'
 import type {
   RowData,
   Table,
@@ -10,9 +10,6 @@ import type {
 export * from '@tanstack/table-core'
 
 type QwikComps = Qwik.Component | Qwik.FunctionComponent
-
-const isFunction = (comp: unknown): comp is Function =>
-  typeof comp === 'function'
 
 const isQwikComponent = (comp: unknown): comp is QwikComps =>
   isFunction(comp) && comp.name === 'QwikComponent'
@@ -64,7 +61,7 @@ export function useTable<
     // Similarly, we'll maintain both our internal state and any user-provided
     // state.
     onStateChange: (updater) => {
-      state.value = updater instanceof Function ? updater(state.value) : updater
+      state.value = isFunction(updater) ? updater(state.value) : updater
       options.onStateChange?.(updater)
     },
   }))

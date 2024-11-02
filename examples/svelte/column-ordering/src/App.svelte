@@ -4,18 +4,17 @@
     ColumnDef,
     ColumnOrderState,
     ColumnVisibilityState,
-    TableOptions,
   } from '@tanstack/svelte-table'
   import {
     ColumnOrdering,
     ColumnVisibility,
     FlexRender,
     createTable,
+    createTableState,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import './index.css'
   import { makeData, type Person } from './makeData'
-  import { createTableState } from './state.svelte'
 
   const _features = tableFeatures({
     ColumnOrdering,
@@ -80,7 +79,13 @@
   const [columnVisibility, setColumnVisibility] =
     createTableState<ColumnVisibilityState>({})
 
-  const options: TableOptions<typeof _features, Person> = {
+  const randomizeColumns = () => {
+    table.setColumnOrder((_updater) =>
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
+    )
+  }
+
+  const table = createTable({
     _features,
     _rowModels: {},
     get data() {
@@ -98,15 +103,7 @@
     onColumnOrderChange: setColumnOrder,
     onColumnVisibilityChange: setColumnVisibility,
     debugTable: true,
-  }
-
-  const randomizeColumns = () => {
-    table.setColumnOrder((_updater) =>
-      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
-    )
-  }
-
-  const table = createTable(options)
+  })
 </script>
 
 <div class="p-2">

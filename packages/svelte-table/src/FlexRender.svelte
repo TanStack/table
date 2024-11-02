@@ -3,13 +3,14 @@
   generics="TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData, TContext extends HeaderContext<TFeatures, TData, TValue> | CellContext<TFeatures, TData, TValue>"
 >
   import { RenderComponentConfig } from './render-component'
-  import type {
-    CellContext,
-    CellData,
-    ColumnDefTemplate,
-    HeaderContext,
-    RowData,
-    TableFeatures,
+  import {
+    isFunction,
+    type CellContext,
+    type CellData,
+    type ColumnDefTemplate,
+    type HeaderContext,
+    type RowData,
+    type TableFeatures,
   } from '@tanstack/table-core'
 
   type Props = {
@@ -28,7 +29,7 @@
 
 {#if typeof content === 'string'}
   {content}
-{:else if content instanceof Function}
+{:else if isFunction(content)}
   {@const result = content(context as any)}
   {#if result instanceof RenderComponentConfig}
     {@render result.component(result.props)}
