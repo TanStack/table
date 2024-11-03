@@ -1,7 +1,6 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createTableHelper, flexRender } from '@tanstack/react-table'
-import type { ColumnDef } from '@tanstack/react-table'
 import './index.css'
 
 // This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
@@ -58,13 +57,14 @@ const tableHelper = createTableHelper({
   _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
   _processingFns: {}, // client-side processing functions used by the row models (sorting, filtering, etc.). Not needed in this basic example
   TData: {} as Person,
+  debugTable: true,
 })
 
 // 4. Create a helper object to help define our columns
 const { columnHelper } = tableHelper
 
 // 5. Define the columns for your table with a stable reference (in this case, defined statically outside of a react component)
-const columns = [
+const columns = columnHelper.columns([
   // accessorKey method (most common for simple use-cases)
   columnHelper.accessor('firstName', {
     cell: (info) => info.getValue(),
@@ -96,7 +96,7 @@ const columns = [
     header: 'Profile Progress',
     footer: (info) => info.column.id,
   }),
-] as Array<ColumnDef<typeof tableHelper.features, Person, unknown>>
+])
 
 function App() {
   // 6. Store data with a stable reference

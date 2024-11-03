@@ -4,6 +4,7 @@ import type {
   AccessorFn,
   AccessorFnColumnDef,
   AccessorKeyColumnDef,
+  ColumnDef,
   DisplayColumnDef,
   GroupColumnDef,
   IdentifiedColumnDef,
@@ -28,6 +29,9 @@ export type ColumnHelper<
   ) => TAccessor extends AccessorFn<TData>
     ? AccessorFnColumnDef<TFeatures, TData, TValue>
     : AccessorKeyColumnDef<TFeatures, TData, TValue>
+  columns: (
+    columns: Array<ColumnDef<TFeatures, TData, any>>,
+  ) => Array<ColumnDef<TFeatures, TData, unknown>>
   display: (
     column: DisplayColumnDef<TFeatures, TData>,
   ) => DisplayColumnDef<TFeatures, TData, unknown>
@@ -69,6 +73,8 @@ export function createColumnHelper<
             accessorKey: accessor,
           }
     },
+    columns: (columns) =>
+      columns as Array<ColumnDef<TFeatures, TData, unknown>>,
     display: (column) => column,
     group: (column) => column,
   }

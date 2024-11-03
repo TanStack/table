@@ -1,3 +1,4 @@
+import { callMemoOrStaticFn } from '../../utils'
 import { column_getIsVisible } from '../../features/column-visibility/ColumnVisibility.utils'
 import { constructHeader } from './constructHeader'
 import type { Table_Internal } from '../../types/Table'
@@ -32,7 +33,7 @@ export function buildHeaderGroups<
     maxDepth = Math.max(maxDepth, depth)
 
     columns
-      .filter((column) => column_getIsVisible(column))
+      .filter((column) => callMemoOrStaticFn(column, column_getIsVisible))
       .forEach((column) => {
         if (column.columns.length) {
           findMaxDepth(column.columns, depth + 1)
@@ -105,7 +106,7 @@ export function buildHeaderGroups<
         pendingParentHeaders.push(header)
       }
 
-      headerGroup.headers.push(headerToGroup as any) // TODO: fix this type
+      headerGroup.headers.push(headerToGroup)
       headerToGroup.headerGroup = headerGroup
     })
 
@@ -135,7 +136,7 @@ export function buildHeaderGroups<
     headers: Array<Header<TFeatures, TData, TValue>>,
   ): Array<{ colSpan: number; rowSpan: number }> => {
     const filteredHeaders = headers.filter((header) =>
-      column_getIsVisible(header.column),
+      callMemoOrStaticFn(header.column, column_getIsVisible),
     )
 
     return filteredHeaders.map((header) => {
@@ -166,7 +167,9 @@ export function buildHeaderGroups<
     })
   }
 
-  recurseHeadersForSpans(headerGroups[0]?.headers ?? ([] as any)) // TODO: fix this type
+  recurseHeadersForSpans(
+    (headerGroups[0]?.headers ?? []) as Array<Header<TFeatures, TData, TValue>>,
+  )
 
   return headerGroups
 }

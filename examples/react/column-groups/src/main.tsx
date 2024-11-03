@@ -7,7 +7,6 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import type { ColumnDef } from '@tanstack/react-table'
 
 type Person = {
   firstName: string
@@ -49,11 +48,11 @@ const _features = tableFeatures({})
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
-const columns = [
+const columns = columnHelper.columns([
   columnHelper.group({
     id: 'hello',
     header: () => <span>Hello</span>,
-    columns: [
+    columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
@@ -64,19 +63,19 @@ const columns = [
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
       }),
-    ] as Array<ColumnDef<typeof _features, Person>>,
+    ]),
   }),
   columnHelper.group({
     header: 'Info',
     footer: (props) => props.column.id,
-    columns: [
+    columns: columnHelper.columns([
       columnHelper.accessor('age', {
         header: () => 'Age',
         footer: (props) => props.column.id,
       }),
       columnHelper.group({
         header: 'More Info',
-        columns: [
+        columns: columnHelper.columns([
           columnHelper.accessor('visits', {
             header: () => <span>Visits</span>,
             footer: (props) => props.column.id,
@@ -89,11 +88,11 @@ const columns = [
             header: 'Profile Progress',
             footer: (props) => props.column.id,
           }),
-        ] as Array<ColumnDef<typeof _features, Person>>,
+        ]),
       }),
-    ] as Array<ColumnDef<typeof _features, Person>>,
+    ]),
   }),
-]
+])
 
 function App() {
   const [data, _setData] = React.useState(() => [...defaultData])
@@ -128,7 +127,7 @@ function App() {
         <tbody>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
+              {row.getAllCells().map((cell) => (
                 <td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

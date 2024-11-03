@@ -1,13 +1,13 @@
-import React, { type CSSProperties } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   ColumnOrdering,
+  ColumnSizing,
   createTableHelper,
   flexRender,
 } from '@tanstack/react-table'
 import {
   DndContext,
-  type DragEndEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -24,12 +24,14 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { makeData } from './makeData'
+import type { DragEndEvent } from '@dnd-kit/core'
+import type { CSSProperties } from 'react'
 import type { Person } from './makeData'
 import type { Cell, ColumnDef, Header } from '@tanstack/react-table'
 import './index.css'
 
 const tableHelper = createTableHelper({
-  _features: { ColumnOrdering: ColumnOrdering },
+  _features: { ColumnOrdering, ColumnSizing },
   _rowModels: {},
   TData: {} as Person,
   debugTable: true,

@@ -103,6 +103,8 @@ function App() {
     )
   }
 
+  console.log(table.getFlatHeaders())
+
   return (
     <div className="p-2">
       <div className="inline-block border border-black shadow rounded">

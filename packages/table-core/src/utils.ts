@@ -1,6 +1,6 @@
 import type { Row } from './types/Row'
 import type { Table, Table_Internal } from './types/Table'
-import type { NoInfer, RowData, Updater } from './types/type-utils'
+import type { CellData, NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState } from './types/TableState'
 import type { Column } from './types/Column'
@@ -212,7 +212,9 @@ export function assignAPIs<
   apis.forEach(({ fn, memoDeps }) => {
     const { fnKey, fnName, parentName } = getFunctionNameInfo(fn)
 
-    const debugLevel = (parentName + 's').replace(
+    const debugLevel = (
+      parentName != 'table' ? parentName + 's' : parentName
+    ).replace(
       parentName,
       parentName.charAt(0).toUpperCase() + parentName.slice(1),
     ) as 'Table' | 'Rows' | 'Columns' | 'Headers' | 'Cells'
@@ -234,19 +236,20 @@ export function assignAPIs<
 export function callMemoOrStaticFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
+  TValue extends CellData = CellData,
 >(
   obj:
     | Table<TFeatures, TData>
     | Row<TFeatures, TData>
-    | Column<TFeatures, TData>
-    | Header<TFeatures, TData>
-    | Cell<TFeatures, TData>,
+    | Column<TFeatures, TData, TValue>
+    | Header<TFeatures, TData, TValue>
+    | Cell<TFeatures, TData, TValue>,
   staticFn: AnyFunction,
-  args: Array<any>,
+  args?: Array<any>,
 ) {
   const { fnKey } = getFunctionNameInfo(staticFn)
   return (
-    ((obj as any)[fnKey] as Function | undefined)?.(...args) ??
-    staticFn(obj, ...args)
+    ((obj as any)[fnKey] as Function | undefined)?.(...(args ?? [])) ??
+    staticFn(obj, ...(args ?? []))
   )
 }
