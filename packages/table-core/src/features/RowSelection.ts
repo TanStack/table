@@ -657,9 +657,11 @@ export function isSubRowSelected<TData extends RowData>(
       const subRowChildrenSelected = isSubRowSelected(subRow, selection, table)
       if (subRowChildrenSelected === 'all') {
         someSelected = true
+        someSelectable = true
       } else if (subRowChildrenSelected === 'some') {
         someSelected = true
         allChildrenSelected = false
+        someSelectable = true
       } else {
         allChildrenSelected = false
       }
