@@ -234,7 +234,7 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = createTable<Person>({
-        enableRowSelection: (row) => row.id === '0.0.1',
+        enableRowSelection: row => row.id === '0.0.1',
         onStateChange() {},
         renderFallbackValue: '',
         data,
