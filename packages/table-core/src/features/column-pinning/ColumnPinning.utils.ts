@@ -4,6 +4,7 @@ import {
   table_getVisibleLeafColumns,
 } from '../column-visibility/ColumnVisibility.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
+import { callMemoOrStaticFn } from '../../utils'
 import type { Row } from '../../types/Row'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -346,7 +347,7 @@ export function table_getLeftLeafColumns<
   return left
     .map(
       (columnId) =>
-        table.getAllColumns().find((column) => column.id === columnId)!,
+        table.getAllLeafColumns().find((column) => column.id === columnId)!,
     )
     .filter(Boolean)
 }
@@ -360,7 +361,7 @@ export function table_getRightLeafColumns<
   return right
     .map(
       (columnId) =>
-        table.getAllColumns().find((column) => column.id === columnId)!,
+        table.getAllLeafColumns().find((column) => column.id === columnId)!,
     )
     .filter(Boolean)
 }
@@ -372,7 +373,23 @@ export function table_getCenterLeafColumns<
   const { left, right } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   const leftAndRight: Array<string> = [...left, ...right]
-  return table.getAllColumns().filter((d) => !leftAndRight.includes(d.id))
+  return table.getAllLeafColumns().filter((d) => !leftAndRight.includes(d.id))
+}
+
+export function table_getPinnedLeafColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  position: ColumnPinningPosition | 'center',
+) {
+  return !position
+    ? table.getAllLeafColumns()
+    : position === 'left'
+      ? callMemoOrStaticFn(table, table_getLeftLeafColumns)
+      : position === 'right'
+        ? callMemoOrStaticFn(table, table_getRightLeafColumns)
+        : callMemoOrStaticFn(table, table_getCenterLeafColumns)
 }
 
 // visible leaf columns
@@ -402,4 +419,20 @@ export function table_getCenterVisibleLeafColumns<
   return table_getCenterLeafColumns(table).filter((column) =>
     column_getIsVisible(column),
   )
+}
+
+export function table_getPinnedVisibleLeafColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  position?: ColumnPinningPosition | 'center',
+) {
+  return !position
+    ? callMemoOrStaticFn(table, table_getVisibleLeafColumns)
+    : position === 'left'
+      ? callMemoOrStaticFn(table, table_getLeftVisibleLeafColumns)
+      : position === 'right'
+        ? callMemoOrStaticFn(table, table_getRightVisibleLeafColumns)
+        : callMemoOrStaticFn(table, table_getCenterVisibleLeafColumns)
 }

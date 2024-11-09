@@ -1,18 +1,9 @@
-import {
-  table_getCenterVisibleLeafColumns,
-  table_getLeftVisibleLeafColumns,
-  table_getRightVisibleLeafColumns,
-} from '../column-pinning/ColumnPinning.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { Cell } from '../../types/Cell'
-import type { Column } from '../../types/Column'
-import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
-import type {
-  ColumnDef_ColumnVisibility,
-  ColumnVisibilityState,
-} from './ColumnVisibility.types'
+import type { Column_Internal } from '../../types/Column'
+import type { ColumnVisibilityState } from './ColumnVisibility.types'
 import type { Row } from '../../types/Row'
 
 export function getDefaultColumnVisibilityState(): ColumnVisibilityState {
@@ -23,12 +14,7 @@ export function column_toggleVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: Partial<ColumnDef_ColumnVisibility>
-  },
-  visible?: boolean,
-): void {
+>(column: Column_Internal<TFeatures, TData, TValue>, visible?: boolean): void {
   if (column_getCanHide(column)) {
     table_setColumnVisibility(column.table, (old) => ({
       ...old,
@@ -41,11 +27,7 @@ export function column_getIsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: Partial<ColumnDef_ColumnVisibility>
-  },
-): boolean {
+>(column: Column_Internal<TFeatures, TData, TValue>): boolean {
   const childColumns = column.columns
   return (
     (childColumns.length
@@ -58,11 +40,7 @@ export function column_getCanHide<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: Partial<ColumnDef_ColumnVisibility>
-  },
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   return (
     (column.columnDef.enableHiding ?? true) &&
     (column.table.options.enableHiding ?? true)
@@ -73,33 +51,13 @@ export function column_getToggleVisibilityHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: Partial<ColumnDef_ColumnVisibility>
-  },
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   return (e: unknown) => {
     column_toggleVisibility(
       column,
       ((e as MouseEvent).target as HTMLInputElement).checked,
     )
   }
-}
-
-export function column_getVisibleLeafColumns<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-  position?: ColumnPinningPosition | 'center',
-) {
-  return !position
-    ? table_getVisibleLeafColumns(table)
-    : position === 'center'
-      ? table_getCenterVisibleLeafColumns(table)
-      : position === 'left'
-        ? table_getLeftVisibleLeafColumns(table)
-        : table_getRightVisibleLeafColumns(table)
 }
 
 export function row_getAllVisibleCells<

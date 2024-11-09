@@ -1,4 +1,4 @@
-import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
+import { table_getPinnedVisibleLeafColumns } from '../column-pinning/ColumnPinning.utils'
 import type { GroupingState } from '../column-grouping/ColumnGrouping.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -19,7 +19,8 @@ export function column_getIndex<
   column: Column<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = column_getVisibleLeafColumns(column.table, position)
+  const { table } = column
+  const columns = table_getPinnedVisibleLeafColumns(table, position)
   return columns.findIndex((d) => d.id === column.id)
 }
 
@@ -31,7 +32,7 @@ export function column_getIsFirstColumn<
   column: Column<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = column_getVisibleLeafColumns(column.table, position)
+  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
   return columns[0]?.id === column.id
 }
 
@@ -43,7 +44,7 @@ export function column_getIsLastColumn<
   column: Column<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = column_getVisibleLeafColumns(column.table, position)
+  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
   return columns[columns.length - 1]?.id === column.id
 }
 

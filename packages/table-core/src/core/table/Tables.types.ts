@@ -54,6 +54,12 @@ export interface TableOptions_Table<
    */
   debugAll?: boolean
   /**
+   * Set this option to `true` to output cache debugging information to the console.
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcache)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
+   */
+  debugCache?: boolean
+  /**
    * Set this option to `true` to output table debugging information to the console.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugtable)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)

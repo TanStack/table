@@ -113,8 +113,6 @@ class LitTableExample extends LitElement {
       debugTable: true,
     })
 
-    console.log(table)
-
     return html`
       <table>
         <thead>

@@ -1,5 +1,5 @@
+import { callMemoOrStaticFn, isDev } from '../../utils'
 import { table_getOrderColumnsFn } from '../../features/column-ordering/ColumnOrdering.utils'
-import { isDev } from '../../utils'
 import { constructColumn } from './constructColumn'
 import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -33,7 +33,10 @@ export function column_getLeafColumns<
       (col) => col.getLeafColumns(), // recursive
     )
 
-    return table_getOrderColumnsFn(column.table)(leafColumns as any) as any
+    return callMemoOrStaticFn(
+      column.table,
+      table_getOrderColumnsFn,
+    )(leafColumns as any) as any
   }
 
   return [column]
@@ -132,7 +135,10 @@ export function table_getAllLeafColumns<
   const leafColumns = table.getAllColumns().flatMap(
     (c) => c.getLeafColumns(), // recursive
   )
-  return table_getOrderColumnsFn(table)(leafColumns)
+  return callMemoOrStaticFn(
+    table,
+    table_getOrderColumnsFn,
+  )(leafColumns as any) as any
 }
 
 export function table_getColumn<

@@ -1,5 +1,5 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
-import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
+import { assignAPIs, callMemoOrStaticFn, makeStateUpdater } from '../../utils'
+import { table_getPinnedVisibleLeafColumns } from '../column-pinning/ColumnPinning.utils'
 import {
   column_getAfter,
   column_getSize,
@@ -21,13 +21,12 @@ import type { TableState_All } from '../../types/TableState'
 import type {
   ColumnDef_ColumnSizing,
   ColumnSizingDefaultOptions,
-  Column_ColumnSizing,
   Header_ColumnSizing,
 } from './ColumnSizing.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Header } from '../../types/Header'
-import type { Column } from '../../types/Column'
+import type { Column_Internal } from '../../types/Column'
 
 /**
  * The Column Sizing feature adds column sizing state and APIs to the table, header, and column objects.
@@ -66,7 +65,7 @@ export const ColumnSizing: TableFeature = {
     TData extends RowData,
     TValue extends CellData = CellData,
   >(
-    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnSizing>,
+    column: Column_Internal<TFeatures, TData, TValue>,
   ): void => {
     assignAPIs(column, [
       {
@@ -76,7 +75,11 @@ export const ColumnSizing: TableFeature = {
         fn: (position) => column_getStart(column, position),
         memoDeps: (position) => [
           position,
-          column_getVisibleLeafColumns(column.table, position),
+          callMemoOrStaticFn(
+            column.table,
+            table_getPinnedVisibleLeafColumns,
+            position
+          ),
           column.table.options.state?.columnSizing,
         ],
       },
@@ -84,7 +87,11 @@ export const ColumnSizing: TableFeature = {
         fn: (position) => column_getAfter(column, position),
         memoDeps: (position) => [
           position,
-          column_getVisibleLeafColumns(column.table, position),
+          callMemoOrStaticFn(
+            column.table,
+            table_getPinnedVisibleLeafColumns,
+            position,
+          ),
           column.table.options.state?.columnSizing,
         ],
       },

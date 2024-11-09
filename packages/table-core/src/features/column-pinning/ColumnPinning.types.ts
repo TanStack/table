@@ -225,4 +225,16 @@ export interface Table_ColumnPinning<
    * [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
    */
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
+  /**
+   *
+   */
+  getPinnedLeafColumns: (
+    position: ColumnPinningPosition | 'center',
+  ) => Array<Column<TFeatures, TData, unknown>>
+  /**
+   *
+   */
+  getPinnedVisibleLeafColumns: (
+    position: ColumnPinningPosition | 'center',
+  ) => Array<Column<TFeatures, TData, unknown>>
 }

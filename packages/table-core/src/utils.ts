@@ -1,11 +1,7 @@
-import type { Row } from './types/Row'
-import type { Table, Table_Internal } from './types/Table'
-import type { CellData, NoInfer, RowData, Updater } from './types/type-utils'
+import type { Table_Internal } from './types/Table'
+import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState } from './types/TableState'
-import type { Column } from './types/Column'
-import type { Header } from './types/Header'
-import type { Cell } from './types/Cell'
 
 export const isDev = process.env.NODE_ENV === 'development'
 
@@ -65,23 +61,22 @@ export function flattenBy<TNode>(
 interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
   fn: (...args: NoInfer<TDeps>) => TResult
   memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
-  onAfterCompare?: () => void
+  onAfterCompare?: (depsChanged: boolean) => void
   onAfterUpdate?: (result: TResult) => void
   onBeforeCompare?: () => void
   onBeforeUpdate?: () => void
 }
 
-export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
-  options: MemoOptions<TDeps, TDepArgs, TResult>,
-): ((depArgs?: TDepArgs) => TResult) => {
-  const {
-    memoDeps,
-    fn,
-    onAfterUpdate,
-    onBeforeUpdate,
-    onBeforeCompare,
-    onAfterCompare,
-  } = options
+export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
+  fn,
+  memoDeps,
+  onAfterCompare,
+  onAfterUpdate,
+  onBeforeCompare,
+  onBeforeUpdate,
+}: MemoOptions<TDeps, TDepArgs, TResult>): ((
+  depArgs?: TDepArgs,
+) => TResult) => {
   let deps: Array<any> | undefined = []
   let result: TResult | undefined
 
@@ -92,7 +87,7 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
       !newDeps ||
       newDeps.length !== deps?.length ||
       newDeps.some((dep: any, index: number) => deps?.[index] !== dep)
-    onAfterCompare?.()
+    onAfterCompare?.(depsChanged)
 
     if (!depsChanged) {
       return result!
@@ -111,6 +106,7 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>(
 interface TableMemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>
   extends MemoOptions<TDeps, TDepArgs, TResult> {
   debug?: boolean
+  debugCache?: boolean
   fnName: string
   onAfterUpdate?: () => void
 }
@@ -125,46 +121,68 @@ const pad = (str: number | string, num: number) => {
 
 export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   debug,
+  debugCache,
   fnName,
   onAfterUpdate,
   ...memoOptions
 }: TableMemoOptions<TDeps, TDepArgs, TResult>) {
   let beforeCompareTime: number
   let afterCompareTime: number
-
   let startCalcTime: number
   let endCalcTime: number
+
+  function logTime(time: number, depsChanged: boolean) {
+    if (isDev) {
+      console.info(
+        `%c⏱ ${pad(`${time.toFixed(time < 1 ? 2 : 1)} ms`, 12)} ${depsChanged ? '(rerun)' : '(cache)'}`,
+        `font-size: .6rem; font-weight: bold; ${
+          depsChanged
+            ? `color: hsl(
+        ${Math.max(0, Math.min(120 - Math.log10(time) * 60, 120))}deg 100% 31%);`
+            : ''
+        } `,
+        fnName,
+      )
+    }
+  }
 
   const debugOptions = isDev
     ? {
         onBeforeCompare: () => {
-          if (debug) beforeCompareTime = performance.now()
+          if (debugCache) {
+            beforeCompareTime = performance.now()
+          }
         },
-        onAfterCompare: () => {
-          if (debug) afterCompareTime = performance.now()
+        onAfterCompare: (depsChanged: boolean) => {
+          if (debugCache) {
+            afterCompareTime = performance.now()
+            const compareTime =
+              Math.round((afterCompareTime - beforeCompareTime) * 1000) / 1000
+            if (!depsChanged) {
+              logTime(compareTime, depsChanged)
+            }
+          }
         },
         onBeforeUpdate: () => {
-          if (debug) startCalcTime = performance.now()
+          if (debug) {
+            startCalcTime = performance.now()
+          }
         },
         onAfterUpdate: () => {
           if (debug) {
             endCalcTime = performance.now()
-            const compareTime =
-              Math.round((afterCompareTime - beforeCompareTime) * 10000) / 10000
             const executionTime =
-              Math.round((endCalcTime - startCalcTime) * 10000) / 10000
-            const totalTime = compareTime + executionTime
-            console.info(
-              `%c⏱ ${pad(`${compareTime.toFixed(executionTime < 1 ? 2 : 1)} ms + ${executionTime.toFixed(executionTime < 1 ? 2 : 1)} ms`, 18)}`,
-              `font-size: .6rem; font-weight: bold; color: hsl(
-              ${Math.max(0, Math.min(120 - Math.log10(totalTime) * 60, 120))}deg 100% 31%);`,
-              fnName,
-            )
+              Math.round((endCalcTime - startCalcTime) * 1000) / 1000
+            logTime(executionTime, true)
           }
-          queueMicrotask(() => onAfterUpdate)
+          queueMicrotask(() => onAfterUpdate?.())
         },
       }
-    : {}
+    : {
+        onAfterUpdate: () => {
+          queueMicrotask(() => onAfterUpdate?.())
+        },
+      }
 
   return memo({
     ...memoOptions,
@@ -224,7 +242,10 @@ export function assignAPIs<
           memoDeps,
           fn,
           fnName,
-          debug: table.options.debugAll ?? table.options[`debug${debugLevel}`],
+          debug: isDev
+            ? (table.options.debugAll ?? table.options[`debug${debugLevel}`])
+            : false,
+          debugCache: isDev && table.options.debugCache,
         })
       : fn
   })
@@ -234,22 +255,16 @@ export function assignAPIs<
  * Looks to run the memoized function with the builder pattern on the object if it exists, otherwise fallback to the static method passed in.
  */
 export function callMemoOrStaticFn<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TValue extends CellData = CellData,
+  TObject extends Record<string, any>,
+  TStaticFn extends AnyFunction,
 >(
-  obj:
-    | Table<TFeatures, TData>
-    | Row<TFeatures, TData>
-    | Column<TFeatures, TData, TValue>
-    | Header<TFeatures, TData, TValue>
-    | Cell<TFeatures, TData, TValue>,
-  staticFn: AnyFunction,
-  args?: Array<any>,
-) {
+  obj: TObject,
+  staticFn: TStaticFn,
+  ...args: Parameters<TStaticFn> extends [any, ...infer Rest] ? Rest : never
+): ReturnType<TStaticFn> {
   const { fnKey } = getFunctionNameInfo(staticFn)
   return (
-    ((obj as any)[fnKey] as Function | undefined)?.(...(args ?? [])) ??
-    staticFn(obj, ...(args ?? []))
+    ((obj as any)[fnKey] as Function | undefined)?.(...args) ??
+    staticFn(obj, ...args)
   )
 }

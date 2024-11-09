@@ -1,19 +1,18 @@
 import {
   table_getCenterHeaderGroups,
   table_getLeftHeaderGroups,
+  table_getPinnedVisibleLeafColumns,
   table_getRightHeaderGroups,
 } from '../column-pinning/ColumnPinning.utils'
 import { column_getIndex } from '../column-ordering/ColumnOrdering.utils'
-import { column_getVisibleLeafColumns } from '../column-visibility/ColumnVisibility.utils'
+import { callMemoOrStaticFn } from '../../utils'
+import type { ColumnPinningPosition } from '../column-pinning/ColumnPinning.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
-import type { Column } from '../../types/Column'
-import type {
-  ColumnDef_ColumnSizing,
-  ColumnSizingState,
-} from './ColumnSizing.types'
+import type { Column_Internal } from '../../types/Column'
+import type { ColumnSizingState } from './ColumnSizing.types'
 
 export function getDefaultColumnSizingState(): ColumnSizingState {
   return structuredClone({})
@@ -31,11 +30,7 @@ export function column_getSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnSizing
-  },
-): number {
+>(column: Column_Internal<TFeatures, TData, TValue>): number {
   const defaultSizes = getDefaultColumnSizingColumnDef()
   const columnSize = column.table.options.state?.columnSizing?.[column.id]
 
@@ -53,13 +48,18 @@ export function column_getStart<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnSizing
-  },
-  position?: false | 'left' | 'right' | 'center',
+  column: Column_Internal<TFeatures, TData, TValue>,
+  position: ColumnPinningPosition | 'center',
 ): number {
-  return column_getVisibleLeafColumns(column.table, position)
-    .slice(0, column_getIndex(column, position))
+  const { table } = column
+  const visibleLeafColumns = callMemoOrStaticFn(
+    table,
+    table_getPinnedVisibleLeafColumns,
+    position,
+  )
+
+  return visibleLeafColumns
+    .slice(0, callMemoOrStaticFn(column, column_getIndex, position))
     .reduce((sum, c) => sum + column_getSize(c), 0)
 }
 
@@ -68,11 +68,18 @@ export function column_getAfter<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue>,
-  position?: false | 'left' | 'right' | 'center',
+  column: Column_Internal<TFeatures, TData, TValue>,
+  position: ColumnPinningPosition | 'center',
 ): number {
-  return column_getVisibleLeafColumns(column.table, position)
-    .slice(column_getIndex(column, position) + 1)
+  const { table } = column
+  const visibleLeafColumns = callMemoOrStaticFn(
+    table,
+    table_getPinnedVisibleLeafColumns,
+    position,
+  )
+
+  return visibleLeafColumns
+    .slice(callMemoOrStaticFn(column, column_getIndex, position) + 1)
     .reduce((sum, c) => sum + column_getSize(c), 0)
 }
 
@@ -80,7 +87,7 @@ export function column_resetSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   table_setColumnSizing(column.table, ({ [column.id]: _, ...rest }) => {
     return rest
   })

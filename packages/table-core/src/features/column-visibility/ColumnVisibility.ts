@@ -68,6 +68,11 @@ export const ColumnVisibility: TableFeature = {
     assignAPIs(column, [
       {
         fn: () => column_getIsVisible(column),
+        memoDeps: () => [
+          column.table.options.columns,
+          column.table.options.state?.columnVisibility,
+          column.columns,
+        ],
       },
       {
         fn: () => column_getCanHide(column),
