@@ -78,7 +78,7 @@ export const ColumnSizing: TableFeature = {
           callMemoOrStaticFn(
             column.table,
             table_getPinnedVisibleLeafColumns,
-            position
+            position,
           ),
           column.table.options.state?.columnSizing,
         ],
