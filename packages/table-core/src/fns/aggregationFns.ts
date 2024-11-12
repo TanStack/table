@@ -4,6 +4,9 @@ import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
 import type { AggregationFn } from '../features/column-grouping/ColumnGrouping.types'
 
+/**
+ * Aggregation function for summing up the values of a column.
+ */
 export const aggregationFn_sum: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -20,6 +23,9 @@ export const aggregationFn_sum: AggregationFn<any, any> = <
   }, 0)
 }
 
+/**
+ * Aggregation function for finding the minimum value of a column.
+ */
 export const aggregationFn_min: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -44,6 +50,9 @@ export const aggregationFn_min: AggregationFn<any, any> = <
   return minValue
 }
 
+/**
+ * Aggregation function for finding the maximum value of a column.
+ */
 export const aggregationFn_max: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -67,6 +76,9 @@ export const aggregationFn_max: AggregationFn<any, any> = <
   return maxValue
 }
 
+/**
+ * Aggregation function for finding the extent (min and max) of a column.
+ */
 export const aggregationFn_extent: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -93,6 +105,9 @@ export const aggregationFn_extent: AggregationFn<any, any> = <
   return [minValue, maxValue]
 }
 
+/**
+ * Aggregation function for finding the mean (average) of a column.
+ */
 export const aggregationFn_mean: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -115,6 +130,9 @@ export const aggregationFn_mean: AggregationFn<any, any> = <
   return
 }
 
+/**
+ * Aggregation function for finding the median value of a column.
+ */
 export const aggregationFn_median: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -139,6 +157,9 @@ export const aggregationFn_median: AggregationFn<any, any> = <
   return values.length % 2 !== 0 ? nums[mid] : (nums[mid - 1]! + nums[mid]!) / 2
 }
 
+/**
+ * Aggregation function for finding the unique values of a column.
+ */
 export const aggregationFn_unique: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -149,6 +170,9 @@ export const aggregationFn_unique: AggregationFn<any, any> = <
   return Array.from(new Set(leafRows.map((d) => d.getValue(columnId))).values())
 }
 
+/**
+ * Aggregation function for finding the count of unique values of a column.
+ */
 export const aggregationFn_uniqueCount: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -159,6 +183,9 @@ export const aggregationFn_uniqueCount: AggregationFn<any, any> = <
   return new Set(leafRows.map((d) => d.getValue(columnId))).size
 }
 
+/**
+ * Aggregation function for counting the number of rows in a column.
+ */
 export const aggregationFn_count: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,

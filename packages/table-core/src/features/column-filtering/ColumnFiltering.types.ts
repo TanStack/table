@@ -50,7 +50,7 @@ export interface FilterFn<
     row: Row<TFeatures, TData>,
     columnId: string,
     filterValue: any,
-    addMeta: (meta: FilterMeta) => void,
+    addMeta?: (meta: FilterMeta) => void,
   ): boolean
   autoRemove?: ColumnFilterAutoRemoveTestFn<TFeatures, TData>
   resolveFilterValue?: TransformFilterValueFn<TFeatures, TData>

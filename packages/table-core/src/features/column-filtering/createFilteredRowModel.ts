@@ -59,8 +59,8 @@ function _createFilteredRowModel<
   const resolvedGlobalFilters: Array<ResolvedColumnFilter<TFeatures, TData>> =
     []
 
-  columnFilters?.forEach((d) => {
-    const column = table_getColumn(table, d.id)
+  columnFilters?.forEach((columnFilter) => {
+    const column = table_getColumn(table, columnFilter.id)
 
     if (!column) {
       return
@@ -78,9 +78,10 @@ function _createFilteredRowModel<
     }
 
     resolvedColumnFilters.push({
-      id: d.id,
+      id: columnFilter.id,
       filterFn,
-      resolvedValue: filterFn.resolveFilterValue?.(d.value) ?? d.value,
+      resolvedValue:
+        filterFn.resolveFilterValue?.(columnFilter.value) ?? columnFilter.value,
     })
   })
 
@@ -105,7 +106,7 @@ function _createFilteredRowModel<
     })
   }
 
-  // Flag the prefiltered row model with each filter state
+  // Flag the pre-filtered row model with each filter state
   for (const row of rowModel.flatRows as Array<
     Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
   >) {
@@ -169,5 +170,5 @@ function _createFilteredRowModel<
   }
 
   // Filter final rows using all of the active filters
-  return filterRows(rowModel.rows as any, filterRowsImpl as any, table)
+  return filterRows(rowModel.rows, filterRowsImpl as any, table)
 }
