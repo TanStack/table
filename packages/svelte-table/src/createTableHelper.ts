@@ -1,5 +1,5 @@
 import { constructTableHelper } from '@tanstack/table-core'
-import { useTable } from './useTable'
+import { createTable } from './createTable.svelte'
 import type {
   RowData,
   Table,
@@ -13,10 +13,10 @@ export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
-  useTable: (
+  createTable: (
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
-      '_features' | '_rowModels'
+      '_features' | '_rowModels' | '_processingFns'
     >,
   ) => Table<TFeatures, TData>
 }
@@ -27,11 +27,11 @@ export function createTableHelper<
 >(
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper<TFeatures, TData> {
-  const tableHelper = constructTableHelper(useTable, tableHelperOptions)
+  const tableHelper = constructTableHelper(createTable, tableHelperOptions)
   return {
     ...tableHelper,
-    useTable: tableHelper.tableCreator,
-  } as any
+    createTable: tableHelper.tableCreator,
+  }
 }
 
 // test
@@ -47,16 +47,16 @@ export function createTableHelper<
 //   TData: {} as Person,
 // })
 
-// const columns = [
+// const columns = tableHelper.columnHelper.columns([
 //   tableHelper.columnHelper.accessor('firstName', { header: 'First Name' }),
 //   tableHelper.columnHelper.accessor('lastName', { header: 'Last Name' }),
 //   tableHelper.columnHelper.accessor('age', { header: 'Age' }),
 //   tableHelper.columnHelper.display({ header: 'Actions', id: 'actions' }),
-// ] as Array<ColumnDef<typeof tableHelper.features, Person, unknown>>
+// ])
 
 // const data: Array<Person> = []
 
-// tableHelper.useTable({
+// tableHelper.createTable({
 //   columns,
 //   data,
 // })

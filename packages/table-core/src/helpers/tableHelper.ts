@@ -30,7 +30,7 @@ export type TableHelper_Core<
   tableCreator: (
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
-      '_features' | '_rowModels'
+      '_features' | '_rowModels' | '_processingFns'
     >,
   ) => Table<TFeatures, TData>
 }

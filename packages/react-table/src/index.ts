@@ -1,5 +1,5 @@
 export * from '@tanstack/table-core'
 
-export * from './useTable'
 export * from './FlexRender'
-export * from './tableHelper'
+export * from './createTableHelper'
+export * from './useTable'
