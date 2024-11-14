@@ -43,7 +43,7 @@ export function createTableHelper<
 // }
 
 // const tableHelper = createTableHelper({
-//   _features: { RowSelection: {} },
+//   _features: { rowSelectionFeature: {} },
 //   TData: {} as Person,
 // })
 

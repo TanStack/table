@@ -4,7 +4,7 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
-import type { Cell_CoreProperties } from './Cells.types'
+import type { Cell_CoreProperties } from './cellsFeature.types'
 
 export function constructCell<
   TFeatures extends TableFeatures,

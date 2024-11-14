@@ -1,17 +1,17 @@
 import { flattenBy, isDev, tableMemo } from '../../utils'
 import { constructRow } from '../../core/rows/constructRow'
-import { table_getColumn } from '../../core/columns/Columns.utils'
-import { table_autoResetExpanded } from '../row-expanding/RowExpanding.utils'
-import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
+import { table_getColumn } from '../../core/columns/columnsFeature.utils'
+import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.utils'
+import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import {
   column_getAggregationFn,
   row_getGroupingValue,
-} from './ColumnGrouping.utils'
+} from './columnGroupingFeature.utils'
 import type { Column } from '../../types/Column'
-import type { Row_ColumnGrouping } from './ColumnGrouping.types'
+import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/RowModels.types'
+import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 

@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  ColumnFiltering,
-  RowPagination,
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   flexRender,
+  rowPaginationFeature,
   tableFeatures,
   tableOptions,
   useTable,
@@ -21,7 +21,10 @@ import type {
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({ RowPagination, ColumnFiltering })
+const _features = tableFeatures({
+  rowPaginationFeature,
+  columnFilteringFeature,
+})
 
 const options = tableOptions<typeof _features, Person>({
   _features,

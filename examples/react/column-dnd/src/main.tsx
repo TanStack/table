@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  ColumnOrdering,
-  ColumnSizing,
+  columnOrderingFeature,
+  columnSizingFeature,
   createTableHelper,
   flexRender,
 } from '@tanstack/react-table'
@@ -31,7 +31,7 @@ import type { Cell, ColumnDef, Header } from '@tanstack/react-table'
 import './index.css'
 
 const tableHelper = createTableHelper({
-  _features: { ColumnOrdering, ColumnSizing },
+  _features: { columnOrderingFeature, columnSizingFeature },
   _rowModels: {},
   TData: {} as Person,
   debugTable: true,

@@ -2,9 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  RowSorting,
   createSortedRowModel,
   flexRender,
+  rowSortingFeature,
   sortingFns,
   tableFeatures,
   useTable,
@@ -14,7 +14,7 @@ import type { ColumnDef, SortingFn, SortingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
-  RowSorting,
+  rowSortingFeature,
 })
 
 // custom sorting logic for one of our enum columns

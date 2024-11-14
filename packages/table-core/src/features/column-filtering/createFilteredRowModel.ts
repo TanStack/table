@@ -1,21 +1,21 @@
 import { isDev, tableMemo } from '../../utils'
-import { table_getColumn } from '../../core/columns/Columns.utils'
+import { table_getColumn } from '../../core/columns/columnsFeature.utils'
 import {
   column_getCanGlobalFilter,
   table_getGlobalFilterFn,
-} from '../global-filtering/GlobalFiltering.utils'
-import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
+} from '../global-filtering/globalFilteringFeature.utils'
+import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { filterRows } from './filterRowsUtils'
-import { column_getFilterFn } from './ColumnFiltering.utils'
+import { column_getFilterFn } from './columnFilteringFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/RowModels.types'
+import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
   ResolvedColumnFilter,
   Row_ColumnFiltering,
-} from './ColumnFiltering.types'
+} from './columnFilteringFeature.types'
 
 export function createFilteredRowModel<
   TFeatures extends TableFeatures,

@@ -13,11 +13,12 @@ import {
   injectTable,
 } from '@tanstack/angular-table'
 import { FilterComponent } from './filter'
-import { type Person, makeData } from './makeData'
+import { makeData } from './makeData'
 import {
   TableHeadSelectionComponent,
   TableRowSelectionComponent,
 } from './selection-column.component'
+import type { Person } from './makeData'
 import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
 import type { TemplateRef } from '@angular/core'
 

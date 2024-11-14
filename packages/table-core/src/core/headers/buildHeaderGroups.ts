@@ -1,5 +1,5 @@
 import { callMemoOrStaticFn } from '../../utils'
-import { column_getIsVisible } from '../../features/column-visibility/ColumnVisibility.utils'
+import { column_getIsVisible } from '../../features/column-visibility/columnVisibilityFeature.utils'
 import { constructHeader } from './constructHeader'
 import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'

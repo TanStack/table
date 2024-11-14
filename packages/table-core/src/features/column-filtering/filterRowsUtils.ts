@@ -1,6 +1,6 @@
 import { constructRow } from '../../core/rows/constructRow'
-import type { Row_ColumnFiltering } from './ColumnFiltering.types'
-import type { RowModel } from '../../core/row-models/RowModels.types'
+import type { Row_ColumnFiltering } from './columnFilteringFeature.types'
+import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Row } from '../../types/Row'
 import type { Table_Internal } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'

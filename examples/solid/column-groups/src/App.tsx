@@ -1,10 +1,6 @@
 import { For, createSignal } from 'solid-js'
-import {
-  type ColumnDef,
-  createTable,
-  flexRender,
-  tableFeatures,
-} from '@tanstack/solid-table'
+import { createTable, flexRender, tableFeatures } from '@tanstack/solid-table'
+import type { ColumnDef } from '@tanstack/solid-table'
 
 type Person = {
   firstName: string

@@ -2,7 +2,7 @@ import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
-import type { Row_CoreProperties } from './Rows.types'
+import type { Row_CoreProperties } from './rowsFeature.types'
 
 export const constructRow = <
   TFeatures extends TableFeatures,

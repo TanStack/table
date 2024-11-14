@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom/client'
 import { faker } from '@faker-js/faker'
 import './index.css'
 import {
-  ColumnOrdering,
-  ColumnPinning,
-  ColumnVisibility,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnVisibilityFeature,
   flexRender,
   useTable,
 } from '@tanstack/react-table'
@@ -18,7 +18,11 @@ import type {
 } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-const _features = { ColumnVisibility, ColumnPinning, ColumnOrdering }
+const _features = {
+  columnVisibilityFeature,
+  columnPinningFeature,
+  columnOrderingFeature,
+}
 
 const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {

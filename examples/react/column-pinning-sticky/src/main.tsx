@@ -1,24 +1,24 @@
-import React, { type CSSProperties } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  type Column,
-  type ColumnDef,
-  ColumnOrdering,
-  ColumnPinning,
-  ColumnVisibility,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnVisibilityFeature,
   flexRender,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
+import type { Column, ColumnDef } from '@tanstack/react-table'
+import type { CSSProperties } from 'react'
 import type { Person } from './makeData'
 import './index.css'
 
 const _features = tableFeatures({
-  ColumnVisibility,
-  ColumnPinning,
-  ColumnOrdering,
+  columnVisibilityFeature,
+  columnPinningFeature,
+  columnOrderingFeature,
 })
 
 // These are the important styles to make sticky column pinning work!

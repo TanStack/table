@@ -8,11 +8,11 @@
     Header,
   } from '@tanstack/svelte-table'
   import {
-    ColumnPinning,
-    ColumnVisibility,
+    columnPinningFeature,
+    columnVisibilityFeature,
     FlexRender,
-    ColumnOrdering,
-    RowSorting,
+    columnOrderingFeature,
+    rowSortingFeature,
     createSortedRowModel,
     createTable,
     createTableState,
@@ -22,10 +22,10 @@
   import { makeData, type Person } from './makeData'
 
   const _features = tableFeatures({
-    ColumnOrdering,
-    ColumnPinning,
-    ColumnVisibility,
-    RowSorting,
+    columnOrderingFeature,
+    columnPinningFeature,
+    columnVisibilityFeature,
+    rowSortingFeature,
   })
 
   const columns: ColumnDef<typeof _features, Person>[] = [

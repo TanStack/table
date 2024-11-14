@@ -2,10 +2,10 @@
   import { rankItem } from '@tanstack/match-sorter-utils'
   import type { ColumnDef, FilterFn } from '@tanstack/svelte-table'
   import {
-    ColumnFiltering,
-    ColumnVisibility,
+    columnFilteringFeature,
+    columnVisibilityFeature,
     FlexRender,
-    GlobalFiltering,
+    globalFilteringFeature,
     createFilteredRowModel,
     createPaginatedRowModel,
     createTable,
@@ -17,9 +17,9 @@
   import { makeData, type Person } from './makeData'
 
   const _features = tableFeatures({
-    ColumnVisibility,
-    GlobalFiltering,
-    ColumnFiltering,
+    columnVisibilityFeature,
+    globalFilteringFeature,
+    columnFilteringFeature,
   })
 
   const fuzzyFilter: FilterFn<typeof _features, Person> = (

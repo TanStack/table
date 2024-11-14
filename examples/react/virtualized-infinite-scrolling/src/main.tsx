@@ -4,10 +4,10 @@ import './index.css'
 
 // 3 TanStack Libraries!!!
 import {
-  ColumnSizing,
-  RowSorting,
+  columnSizingFeature,
   createSortedRowModel,
   flexRender,
+  rowSortingFeature,
   useTable,
 } from '@tanstack/react-table'
 import {
@@ -125,7 +125,7 @@ function App() {
   }, [fetchMoreOnBottomReached])
 
   const table = useTable({
-    _features: { ColumnSizing, RowSorting },
+    _features: { columnSizingFeature, rowSortingFeature },
     _rowModels: { sortedRowModel: createSortedRowModel() },
     data: flatData,
     columns,

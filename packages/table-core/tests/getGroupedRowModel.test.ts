@@ -4,7 +4,7 @@ import {
   ColumnDef,
   createCoreRowModel,
   createGroupedRowModel,
-  ColumnGrouping,
+  columnGroupingFeature,
 } from '../src'
 import { createColumnHelper } from '../src/helpers/columnHelper'
 import { makeData, Person } from './makeTestData'
@@ -37,7 +37,7 @@ describe('#getGroupedRowModel', () => {
     data.forEach((p) => (p.age = 123))
 
     const table = constructTable<any, Person>({
-      _features: { ColumnGrouping },
+      _features: { columnGroupingFeature },
       _rowModels: {
         groupedRowModel: createGroupedRowModel(),
       },

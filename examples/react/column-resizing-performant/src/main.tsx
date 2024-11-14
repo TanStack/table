@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  ColumnResizing,
-  ColumnSizing,
+  columnResizingFeature,
+  columnSizingFeature,
   flexRender,
   tableFeatures,
   useTable,
@@ -11,7 +11,7 @@ import { makeData } from './makeData'
 import type { ColumnDef, Table } from '@tanstack/react-table'
 import './index.css'
 
-const _features = tableFeatures({ ColumnSizing, ColumnResizing })
+const _features = tableFeatures({ columnSizingFeature, columnResizingFeature })
 
 type Person = {
   firstName: string

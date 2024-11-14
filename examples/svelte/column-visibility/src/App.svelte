@@ -5,7 +5,7 @@
     Updater,
   } from '@tanstack/svelte-table'
   import {
-    ColumnVisibility,
+    columnVisibilityFeature,
     FlexRender,
     createTable,
     isFunction,
@@ -101,7 +101,7 @@
     },
   ]
 
-  const _features = tableFeatures({ ColumnVisibility })
+  const _features = tableFeatures({ columnVisibilityFeature })
 
   let columnVisibility = $state<ColumnVisibilityState>({})
 

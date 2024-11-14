@@ -1,10 +1,14 @@
 <script lang="ts">
-  import type { Header, RowSorting } from '@tanstack/svelte-table'
+  import type { Header, rowSortingFeature } from '@tanstack/svelte-table'
   import type { Person } from './makeData'
 
   type Props = {
     label?: string
-    header: Header<{ RowSorting: typeof RowSorting }, Person, unknown>
+    header: Header<
+      { rowSortingFeature: typeof rowSortingFeature },
+      Person,
+      unknown
+    >
   }
 
   const { label, header }: Props = $props()

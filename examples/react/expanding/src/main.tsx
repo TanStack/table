@@ -1,18 +1,19 @@
-import React, { type HTMLProps } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  ColumnFiltering,
-  RowExpanding,
-  RowPagination,
-  RowSorting,
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   flexRender,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
+import type { HTMLProps } from 'react'
 import type { Person } from './makeData'
 import type {
   Column,
@@ -23,10 +24,10 @@ import type {
 import './index.css'
 
 const _features = tableFeatures({
-  ColumnFiltering,
-  RowExpanding,
-  RowPagination,
-  RowSorting,
+  columnFilteringFeature,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
 })
 
 function App() {

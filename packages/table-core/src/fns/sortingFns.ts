@@ -1,7 +1,7 @@
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
-import type { SortingFn } from '../features/row-sorting/RowSorting.types'
+import type { SortingFn } from '../features/row-sorting/rowSortingFeature.types'
 
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 

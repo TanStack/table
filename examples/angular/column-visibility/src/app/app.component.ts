@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  type OnInit,
   computed,
   signal,
 } from '@angular/core'
@@ -10,6 +9,7 @@ import {
   createCoreRowModel,
   injectTable,
 } from '@tanstack/angular-table'
+import type { OnInit } from '@angular/core'
 import type { ColumnDef, ColumnVisibilityState } from '@tanstack/angular-table'
 
 type Person = {

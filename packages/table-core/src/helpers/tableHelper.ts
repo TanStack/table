@@ -7,7 +7,7 @@ import type { TableOptions } from '../types/TableOptions'
 
 /**
  * Options for creating a table helper to share common options across multiple tables
- * Columns, data, and state are excluded from this type and reserved for only the `useTable`/`createTable` functions
+ * columnsFeature, data, and state are excluded from this type and reserved for only the `useTable`/`createTable` functions
  */
 export type TableHelperOptions<
   TFeatures extends TableFeatures,
@@ -71,7 +71,7 @@ export function constructTableHelper<
 // }
 
 // const tableHelper = constructTableHelper(constructTable, {
-//   _features: { RowSelection: {} },
+//   _features: { rowSelectionFeature: {} },
 //   _rowModels: {},
 //   TData: {} as Person,
 // })

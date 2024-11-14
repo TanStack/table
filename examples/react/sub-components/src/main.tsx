@@ -2,13 +2,18 @@ import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  RowExpanding,
   createExpandedRowModel,
   flexRender,
+  rowExpandingFeature,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef, Row, TableFeatures } from '@tanstack/react-table'
+import type {
+  ColumnDef,
+  Row,
+  RowData,
+  TableFeatures,
+} from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const columns: Array<ColumnDef<any, Person>> = [
@@ -94,7 +99,7 @@ const columns: Array<ColumnDef<any, Person>> = [
   },
 ]
 
-type TableProps<TFeatures extends TableFeatures, TData> = {
+type TableProps<TFeatures extends TableFeatures, TData extends RowData> = {
   data: Array<TData>
   columns: Array<ColumnDef<TFeatures, TData>>
   renderSubComponent: (props: {
@@ -110,7 +115,7 @@ function Table({
   renderSubComponent,
 }: TableProps<any, Person>): JSX.Element {
   const table = useTable({
-    _features: { RowExpanding },
+    _features: { rowExpandingFeature },
     _rowModels: {
       expandedRowModel: createExpandedRowModel(),
     },

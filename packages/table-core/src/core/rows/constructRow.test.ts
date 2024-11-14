@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { Rows } from './Rows'
+import { rowsFeature } from './rowsFeature'
 import { constructRow } from './constructRow'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
@@ -10,7 +10,10 @@ interface Person {
 
 describe('constructRow', () => {
   it('should create a row with all core row APIs and properties', () => {
-    const table = { _features: { Rows }, options: {} } as Table<any, Person>
+    const table = { _features: { rowsFeature }, options: {} } as Table<
+      any,
+      Person
+    >
     const id = 'test-row'
     const original = { firstName: 'Tanner' } as Person
     const rowIndex = 0

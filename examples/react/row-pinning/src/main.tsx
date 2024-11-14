@@ -1,14 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  ColumnFiltering,
-  RowExpanding,
-  RowPagination,
-  RowPinning,
+  columnFilteringFeature,
   createExpandedRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   flexRender,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowPinningFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -25,10 +25,10 @@ import type {
 import './index.css'
 
 const _features = tableFeatures({
-  RowPinning,
-  RowExpanding,
-  ColumnFiltering,
-  RowPagination,
+  rowPinningFeature,
+  rowExpandingFeature,
+  columnFilteringFeature,
+  rowPaginationFeature,
 })
 
 function App() {

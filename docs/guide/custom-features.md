@@ -58,19 +58,19 @@ This might be a bit confusing, so let's break down what each of these methods do
 
 ##### getDefaultTableOptions
 
-The `getDefaultTableOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `getDefaultTableOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
+The `getDefaultTableOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/columnSizingFeature.ts) feature, the `getDefaultTableOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
 
 <br />
 
 ##### getDefaultColumnDef
 
-The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSorting.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
+The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/rowSortingFeature.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
 
 <br />
 
 ##### getInitialState
 
-The `getInitialState` method in a table feature is responsible for setting the default state for that feature. For example, in the [Pagination](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowPagination.ts) feature, the `getInitialState` method sets the default `pageSize` state with a value of `10` and the default `pageIndex` state with a value of `0`.
+The `getInitialState` method in a table feature is responsible for setting the default state for that feature. For example, in the [Pagination](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/rowPaginationFeature.ts) feature, the `getInitialState` method sets the default `pageSize` state with a value of `10` and the default `pageIndex` state with a value of `0`.
 
 #### API Creators
 
@@ -78,31 +78,31 @@ The `getInitialState` method in a table feature is responsible for setting the d
 
 ##### constructTable
 
-The `constructTable` method in a table feature is responsible for adding methods to the `table` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSelection.ts) feature, the `constructTable` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `RowSelection` feature.
+The `constructTable` method in a table feature is responsible for adding methods to the `table` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/rowSelectionFeature.ts) feature, the `constructTable` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `rowSelectionFeature` feature.
 
 <br />
 
 ##### constructHeader
 
-The `constructHeader` method in a table feature is responsible for adding methods to the `header` instance. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnSizing.ts) feature, the `constructHeader` method adds many header instance API methods such as `getStart`, and many others. So then, when you call `header.getStart()`, you are calling a method that was added to the header instance by the `ColumnSizing` feature.
+The `constructHeader` method in a table feature is responsible for adding methods to the `header` instance. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/columnSizingFeature.ts) feature, the `constructHeader` method adds many header instance API methods such as `getStart`, and many others. So then, when you call `header.getStart()`, you are calling a method that was added to the header instance by the `columnSizingFeature` feature.
 
 <br />
 
 ##### constructColumn
 
-The `constructColumn` method in a table feature is responsible for adding methods to the `column` instance. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSorting.ts) feature, the `constructColumn` method adds many column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added to the column instance by the `RowSorting` feature.
+The `constructColumn` method in a table feature is responsible for adding methods to the `column` instance. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/rowSortingFeature.ts) feature, the `constructColumn` method adds many column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added to the column instance by the `rowSortingFeature` feature.
 
 <br />
 
 ##### constructRow
 
-The `constructRow` method in a table feature is responsible for adding methods to the `row` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/RowSelection.ts) feature, the `constructRow` method adds many row instance API methods such as `toggleSelected`, `getIsSelected`, etc. So then, when you call `row.toggleSelected()`, you are calling a method that was added to the row instance by the `RowSelection` feature.
+The `constructRow` method in a table feature is responsible for adding methods to the `row` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/rowSelectionFeature.ts) feature, the `constructRow` method adds many row instance API methods such as `toggleSelected`, `getIsSelected`, etc. So then, when you call `row.toggleSelected()`, you are calling a method that was added to the row instance by the `rowSelectionFeature` feature.
 
 <br />
 
 ##### constructCell
 
-The `constructCell` method in a table feature is responsible for adding methods to the `cell` instance. For example, in the [Column Grouping](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/ColumnGrouping.ts) feature, the `constructCell` method adds many cell instance API methods such as `getIsGrouped`, `getIsAggregated`, etc. So then, when you call `cell.getIsGrouped()`, you are calling a method that was added to the cell instance by the `ColumnGrouping` feature.
+The `constructCell` method in a table feature is responsible for adding methods to the `cell` instance. For example, in the [Column Grouping](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/columnGroupingFeature.ts) feature, the `constructCell` method adds many cell instance API methods such as `getIsGrouped`, `getIsAggregated`, etc. So then, when you call `cell.getIsGrouped()`, you are calling a method that was added to the cell instance by the `columnGroupingFeature` feature.
 
 ### Adding a Custom Feature
 

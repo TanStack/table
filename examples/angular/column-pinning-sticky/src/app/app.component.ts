@@ -1,10 +1,5 @@
 import { Component, computed, signal } from '@angular/core'
 import {
-  type Column,
-  type ColumnDef,
-  type ColumnOrderState,
-  type ColumnPinningState,
-  type ColumnVisibilityState,
   FlexRenderDirective,
   createCoreRowModel,
   injectTable,
@@ -12,6 +7,13 @@ import {
 import { faker } from '@faker-js/faker'
 import { NgStyle, NgTemplateOutlet, SlicePipe } from '@angular/common'
 import { makeData } from './makeData'
+import type {
+  Column,
+  ColumnDef,
+  ColumnOrderState,
+  ColumnPinningState,
+  ColumnVisibilityState,
+} from '@tanstack/angular-table'
 
 type Person = {
   firstName: string

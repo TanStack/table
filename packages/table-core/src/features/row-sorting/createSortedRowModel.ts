@@ -1,13 +1,16 @@
 import { isDev, tableMemo } from '../../utils'
-import { table_autoResetPageIndex } from '../row-pagination/RowPagination.utils'
-import { column_getCanSort, column_getSortingFn } from './RowSorting.utils'
+import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
+import {
+  column_getCanSort,
+  column_getSortingFn,
+} from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/RowModels.types'
+import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
-import type { SortingFn } from './RowSorting.types'
+import type { SortingFn } from './rowSortingFeature.types'
 
 export function createSortedRowModel<
   TFeatures extends TableFeatures,

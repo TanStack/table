@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  ColumnVisibility,
+  columnVisibilityFeature,
   flexRender,
   tableFeatures,
   useTable,
@@ -9,7 +9,7 @@ import {
 import type { ColumnDef } from '@tanstack/react-table'
 import './index.css'
 
-const _features = tableFeatures({ ColumnVisibility })
+const _features = tableFeatures({ columnVisibilityFeature })
 
 type Person = {
   firstName: string

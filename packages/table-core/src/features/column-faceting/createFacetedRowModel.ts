@@ -4,10 +4,10 @@ import type { Table_Internal } from '../../types/Table'
 import type {
   ColumnFiltersState,
   Row_ColumnFiltering,
-} from '../column-filtering/ColumnFiltering.types'
+} from '../column-filtering/columnFilteringFeature.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/RowModels.types'
+import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Row } from '../../types/Row'
 
 export function createFacetedRowModel<

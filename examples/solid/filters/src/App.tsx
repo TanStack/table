@@ -1,13 +1,13 @@
 import {
-  ColumnFaceting,
-  ColumnFiltering,
-  GlobalFiltering,
+  columnFacetingFeature,
+  columnFilteringFeature,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
   createTable,
   flexRender,
+  globalFilteringFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
 import { debounce } from '@solid-primitives/scheduled'
@@ -18,9 +18,9 @@ import type { Person } from './makeData'
 import type { ColumnDef, ColumnFiltersState } from '@tanstack/solid-table'
 
 const _features = tableFeatures({
-  ColumnFiltering,
-  GlobalFiltering,
-  ColumnFaceting,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  columnFacetingFeature,
 })
 
 const columns: Array<ColumnDef<typeof _features, Person>> = [

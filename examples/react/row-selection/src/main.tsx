@@ -1,24 +1,25 @@
-import React, { type HTMLProps } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-  ColumnFiltering,
-  RowPagination,
-  RowSelection,
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   flexRender,
+  rowPaginationFeature,
+  rowSelectionFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
+import type { HTMLProps } from 'react'
 import type { Person } from './makeData'
 import type { Column, ColumnDef, Table } from '@tanstack/react-table'
 import './index.css'
 
 const _features = tableFeatures({
-  RowPagination,
-  RowSelection,
-  ColumnFiltering,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  columnFilteringFeature,
 })
 
 function App() {

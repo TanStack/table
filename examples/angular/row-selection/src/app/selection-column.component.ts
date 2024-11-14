@@ -1,9 +1,6 @@
-import {
-  type CellContext,
-  type HeaderContext,
-  injectFlexRenderContext,
-} from '@tanstack/angular-table'
+import { injectFlexRenderContext } from '@tanstack/angular-table'
 import { ChangeDetectionStrategy, Component } from '@angular/core'
+import type { CellContext, HeaderContext } from '@tanstack/angular-table'
 
 @Component({
   template: `

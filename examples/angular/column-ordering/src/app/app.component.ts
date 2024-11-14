@@ -10,7 +10,8 @@ import {
   injectTable,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'
-import { type Person, makeData } from './makeData'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 import type {
   ColumnDef,
   ColumnOrderState,

@@ -1,12 +1,7 @@
 import { Directive, ElementRef, inject, input } from '@angular/core'
-import {
-  type MonoTypeOperatorFunction,
-  Observable,
-  debounceTime,
-  fromEvent,
-  switchMap,
-} from 'rxjs'
+import { Observable, debounceTime, fromEvent, switchMap } from 'rxjs'
 import { outputFromObservable, toObservable } from '@angular/core/rxjs-interop'
+import type { MonoTypeOperatorFunction } from 'rxjs'
 import type { NgZone } from '@angular/core'
 
 export function runOutsideAngular<T>(

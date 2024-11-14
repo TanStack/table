@@ -5,8 +5,8 @@ import {
   constructTable,
   createCoreRowModel,
   createPaginatedRowModel,
-  RowPinning,
-  RowPagination,
+  rowPinningFeature,
+  rowPaginationFeature,
 } from '../src'
 import { makeData, Person } from './makeTestData'
 
@@ -26,7 +26,7 @@ function generateColumns(people: Person[]): PersonColumn[] {
   })
 }
 
-describe('RowPinning', () => {
+describe('rowPinningFeature', () => {
   describe('constructTable', () => {
     describe('getTopRows', () => {
       it('should return pinned rows when keepPinnedRows is true rows are visible', () => {
@@ -34,7 +34,7 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = constructTable<any, Person>({
-          _features: { RowPinning, RowPagination },
+          _features: { rowPinningFeature, rowPaginationFeature },
           _rowModels: {
             paginatedRowModel: createPaginatedRowModel(),
           },
@@ -67,7 +67,7 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = constructTable<any, Person>({
-          _features: { RowPinning, RowPagination },
+          _features: { rowPinningFeature, rowPaginationFeature },
           _rowModels: {
             paginatedRowModel: createPaginatedRowModel(),
           },
@@ -100,7 +100,7 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = constructTable<any, Person>({
-          _features: { RowPinning, RowPagination },
+          _features: { rowPinningFeature, rowPaginationFeature },
           _rowModels: {
             paginatedRowModel: createPaginatedRowModel(),
           },
@@ -133,7 +133,7 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = constructTable<any, Person>({
-          _features: { RowPinning, RowPagination },
+          _features: { rowPinningFeature, rowPaginationFeature },
           _rowModels: {
             paginatedRowModel: createPaginatedRowModel(),
           },
@@ -165,7 +165,7 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = constructTable<any, Person>({
-          _features: { RowPinning, RowPagination },
+          _features: { rowPinningFeature, rowPaginationFeature },
           _rowModels: {
             paginatedRowModel: createPaginatedRowModel(),
           },
@@ -198,7 +198,7 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = constructTable<any, Person>({
-          _features: { RowPinning, RowPagination },
+          _features: { rowPinningFeature, rowPaginationFeature },
           _rowModels: {
             paginatedRowModel: createPaginatedRowModel(),
           },
@@ -233,7 +233,7 @@ describe('RowPinning', () => {
         const columns = generateColumns(data)
 
         const table = constructTable<any, Person>({
-          _features: { RowPinning, RowPagination },
+          _features: { rowPinningFeature, rowPaginationFeature },
           _rowModels: {
             paginatedRowModel: createPaginatedRowModel(),
           },

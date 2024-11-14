@@ -1,8 +1,8 @@
 import {
-  RowSorting,
   createSortedRowModel,
   createTable,
   flexRender,
+  rowSortingFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
 import { For, Show, createSignal } from 'solid-js'
@@ -10,7 +10,7 @@ import { makeData } from './makeData'
 import type { ColumnDef, SortingState } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ RowSorting })
+const _features = tableFeatures({ rowSortingFeature })
 
 function App() {
   const [data, setData] = createSignal(makeData(1_000))

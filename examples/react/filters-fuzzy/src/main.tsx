@@ -2,14 +2,15 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  ColumnFiltering,
-  RowPagination,
-  RowSorting,
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
   flexRender,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
   sortingFns,
   tableFeatures,
   useTable,
@@ -28,6 +29,13 @@ import type {
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
+const _features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+})
+
 // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
 const fuzzyFilter: FilterFn<typeof _features, Person> = (
   row,
@@ -39,7 +47,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
   const itemRank = rankItem(row.getValue(columnId), value)
 
   // Store the itemRank info
-  addMeta({
+  addMeta?.({
     itemRank,
   })
 
@@ -66,12 +74,6 @@ const fuzzySort: SortingFn<typeof _features, Person> = (
   // Provide an alphanumeric fallback for when the item ranks are equal
   return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
 }
-
-const _features = tableFeatures({
-  ColumnFiltering,
-  RowSorting,
-  RowPagination,
-})
 
 filterFns.fuzzyFilter = fuzzyFilter
 

@@ -9,29 +9,29 @@ import type { TableOptions_All } from './TableOptions'
 import type { TableState_All } from './TableState'
 
 export interface CoreTableFeatures {
-  Cells?: TableFeature
-  Columns?: TableFeature
-  Headers?: TableFeature
-  Rows?: TableFeature
-  Tables?: TableFeature
+  cellsFeature?: TableFeature
+  columnsFeature?: TableFeature
+  headersFeature?: TableFeature
+  rowsFeature?: TableFeature
+  tablesFeature?: TableFeature
 }
 
 export interface StockTableFeatures {
-  ColumnFaceting?: TableFeature
-  ColumnFiltering?: TableFeature
-  ColumnGrouping?: TableFeature
-  ColumnOrdering?: TableFeature
-  ColumnPinning?: TableFeature
-  ColumnResizing?: TableFeature
-  ColumnSizing?: TableFeature
-  ColumnVisibility?: TableFeature
-  GlobalFaceting?: TableFeature
-  GlobalFiltering?: TableFeature
-  RowExpanding?: TableFeature
-  RowPagination?: TableFeature
-  RowPinning?: TableFeature
-  RowSelection?: TableFeature
-  RowSorting?: TableFeature
+  columnFacetingFeature?: TableFeature
+  columnFilteringFeature?: TableFeature
+  columnGroupingFeature?: TableFeature
+  columnOrderingFeature?: TableFeature
+  columnPinningFeature?: TableFeature
+  columnResizingFeature?: TableFeature
+  columnSizingFeature?: TableFeature
+  columnVisibilityFeature?: TableFeature
+  globalFacetingFeature?: TableFeature
+  globalFilteringFeature?: TableFeature
+  rowExpandingFeature?: TableFeature
+  rowPaginationFeature?: TableFeature
+  rowPinningFeature?: TableFeature
+  rowSelectionFeature?: TableFeature
+  rowSortingFeature?: TableFeature
 }
 
 export interface TableFeatures extends CoreTableFeatures, StockTableFeatures {}

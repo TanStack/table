@@ -1,12 +1,8 @@
 <script lang="ts">
-  import type {
-    ColumnDef,
-    SortingState,
-    TableOptions,
-  } from '@tanstack/svelte-table'
+  import type { ColumnDef, SortingState } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    RowSorting,
+    rowSortingFeature,
     createSortedRowModel,
     createTable,
     createTableState,
@@ -19,7 +15,7 @@
   import { makeData, type Person } from './makeData'
 
   const _features = tableFeatures({
-    RowSorting: RowSorting,
+    rowSortingFeature,
   })
 
   const columns: ColumnDef<typeof _features, Person>[] = [

@@ -1,6 +1,6 @@
 import { isDev } from '../../utils'
 import type { CachedRowModels } from '../../types/RowModel'
-import type { Table_CoreProperties } from './Tables.types'
+import type { Table_CoreProperties } from './tablesFeature.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'

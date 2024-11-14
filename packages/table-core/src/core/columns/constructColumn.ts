@@ -8,7 +8,7 @@ import type {
   ColumnDefResolved,
 } from '../../types/ColumnDef'
 import type { Column } from '../../types/Column'
-import type { Column_CoreProperties } from './Columns.types'
+import type { Column_CoreProperties } from './columnsFeature.types'
 
 export function constructColumn<
   TFeatures extends TableFeatures,
@@ -67,8 +67,8 @@ export function constructColumn<
     if (isDev) {
       throw new Error(
         resolvedColumnDef.accessorFn
-          ? `Columns require an id when using an accessorFn`
-          : `Columns require an id when using a non-string header`,
+          ? `columnsFeature require an id when using an accessorFn`
+          : `columnsFeature require an id when using a non-string header`,
       )
     }
     throw new Error()

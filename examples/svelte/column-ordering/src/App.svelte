@@ -6,8 +6,8 @@
     ColumnVisibilityState,
   } from '@tanstack/svelte-table'
   import {
-    ColumnOrdering,
-    ColumnVisibility,
+    columnOrderingFeature,
+    columnVisibilityFeature,
     FlexRender,
     createTable,
     createTableState,
@@ -17,8 +17,8 @@
   import { makeData, type Person } from './makeData'
 
   const _features = tableFeatures({
-    ColumnOrdering,
-    ColumnVisibility,
+    columnOrderingFeature,
+    columnVisibilityFeature,
   })
 
   const columns: ColumnDef<any, Person>[] = [

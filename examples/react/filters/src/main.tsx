@@ -2,14 +2,14 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  ColumnFiltering,
-  RowPagination,
-  RowSorting,
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
   flexRender,
+  rowPaginationFeature,
+  rowSortingFeature,
   sortingFns,
   tableFeatures,
   useTable,
@@ -36,7 +36,11 @@ declare module '@tanstack/react-table' {
   }
 }
 
-const _features = tableFeatures({ ColumnFiltering, RowSorting, RowPagination })
+const _features = tableFeatures({
+  columnFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+})
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]

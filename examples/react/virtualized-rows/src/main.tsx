@@ -2,10 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  ColumnSizing,
-  RowSorting,
+  columnSizingFeature,
   createSortedRowModel,
   flexRender,
+  rowSortingFeature,
   useTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -65,7 +65,7 @@ function App() {
   const [data, _setData] = React.useState(() => makeData(50_000))
 
   const table = useTable({
-    _features: { ColumnSizing, RowSorting },
+    _features: { columnSizingFeature, rowSortingFeature },
     _rowModels: { sortedRowModel: createSortedRowModel() },
     columns,
     data,

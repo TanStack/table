@@ -1,7 +1,7 @@
-import type { TableFns_RowSorting } from '../features/row-sorting/RowSorting.types'
-import type { TableFns_ColumnGrouping } from '../features/column-grouping/ColumnGrouping.types'
+import type { TableFns_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
+import type { TableFns_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { RowData, UnionToIntersection } from './type-utils'
-import type { TableFns_ColumnFiltering } from '../features/column-filtering/ColumnFiltering.types'
+import type { TableFns_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { TableFeatures } from './TableFeatures'
 
 export type ProcessingFns<
@@ -14,13 +14,13 @@ export type ProcessingFns<
   _?: never
 } & Partial<
   UnionToIntersection<
-    | ('ColumnFiltering' extends keyof TFeatures
+    | ('columnFilteringFeature' extends keyof TFeatures
         ? TableFns_ColumnFiltering<TFeatures, TData>
         : never)
-    | ('ColumnGrouping' extends keyof TFeatures
+    | ('columnGroupingFeature' extends keyof TFeatures
         ? TableFns_ColumnGrouping<TFeatures, TData>
         : never)
-    | ('RowSorting' extends keyof TFeatures
+    | ('rowSortingFeature' extends keyof TFeatures
         ? TableFns_RowSorting<TFeatures, TData>
         : never)
   >

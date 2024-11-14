@@ -9,9 +9,9 @@ import type { TableFeatures } from '../types/TableFeatures'
  *
  * @example
  * ```
- * import { tableFeatures, ColumnVisibility, RowPinning } from '@tanstack/react-table'
+ * import { tableFeatures, columnVisibilityFeature, rowPinningFeature } from '@tanstack/react-table'
  *
- * const _features = tableFeatures({ ColumnVisibility, RowPinning });
+ * const _features = tableFeatures({ columnVisibilityFeature, rowPinningFeature });
  *
  * const table = useTable({ _features, rowModels: {}, columns, data });
  * ```
@@ -25,5 +25,5 @@ export function tableFeatures<TFeatures extends TableFeatures>(
 // test
 
 // const features = tableFeatures({
-//   RowPinning: {},
+//   rowPinningFeature: {},
 // });

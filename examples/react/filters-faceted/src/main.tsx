@@ -2,10 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  ColumnFaceting,
-  ColumnFiltering,
-  RowPagination,
-  RowSorting,
+  columnFacetingFeature,
+  columnFilteringFeature,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
@@ -14,6 +12,8 @@ import {
   createSortedRowModel,
   filterFns,
   flexRender,
+  rowPaginationFeature,
+  rowSortingFeature,
   sortingFns,
   tableFeatures,
   useTable,
@@ -30,10 +30,10 @@ import type {
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
-  ColumnFaceting,
-  ColumnFiltering,
-  RowPagination,
-  RowSorting,
+  columnFacetingFeature,
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
 })
 
 declare module '@tanstack/react-table' {

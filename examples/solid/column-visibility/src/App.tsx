@@ -1,5 +1,5 @@
 import {
-  ColumnVisibility,
+  columnVisibilityFeature,
   createTable,
   flexRender,
   tableFeatures,
@@ -43,7 +43,7 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const _features = tableFeatures({ ColumnVisibility })
+const _features = tableFeatures({ columnVisibilityFeature })
 
 const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {

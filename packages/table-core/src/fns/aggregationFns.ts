@@ -2,7 +2,7 @@ import { isNumberArray } from '../utils'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
-import type { AggregationFn } from '../features/column-grouping/ColumnGrouping.types'
+import type { AggregationFn } from '../features/column-grouping/columnGroupingFeature.types'
 
 /**
  * Aggregation function for summing up the values of a column.

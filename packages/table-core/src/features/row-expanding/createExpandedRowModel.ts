@@ -1,8 +1,8 @@
 import { isDev, tableMemo } from '../../utils'
-import { row_getIsExpanded } from './RowExpanding.utils'
+import { row_getIsExpanded } from './rowExpandingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/RowModels.types'
+import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 

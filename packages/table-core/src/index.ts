@@ -28,40 +28,40 @@ export * from './utils'
 
 // Cells
 export * from './core/cells/constructCell'
-export * from './core/cells/Cells'
-export * from './core/cells/Cells.types'
-export * from './core/cells/Cells.utils'
+export * from './core/cells/cellsFeature'
+export * from './core/cells/cellsFeature.types'
+export * from './core/cells/cellsFeature.utils'
 
 // Columns
 export * from './core/columns/constructColumn'
-export * from './core/columns/Columns'
-export * from './core/columns/Columns.types'
-export * from './core/columns/Columns.utils'
+export * from './core/columns/columnsFeature'
+export * from './core/columns/columnsFeature.types'
+export * from './core/columns/columnsFeature.utils'
 
 // Headers
 export * from './core/headers/buildHeaderGroups'
 export * from './core/headers/constructHeader'
-export * from './core/headers/Headers'
-export * from './core/headers/Headers.types'
-export * from './core/headers/Headers.utils'
+export * from './core/headers/headersFeature'
+export * from './core/headers/headersFeature.types'
+export * from './core/headers/headersFeature.utils'
 
 // Rows
 export * from './core/rows/constructRow'
-export * from './core/rows/Rows'
-export * from './core/rows/Rows.types'
-export * from './core/rows/Rows.utils'
+export * from './core/rows/rowsFeature'
+export * from './core/rows/rowsFeature.types'
+export * from './core/rows/rowsFeature.utils'
 
 // Row Models
-export * from './core/row-models/RowModels'
-export * from './core/row-models/RowModels.types'
-export * from './core/row-models/RowModels.utils'
+export * from './core/row-models/rowModelsFeature'
+export * from './core/row-models/rowModelsFeature.types'
+export * from './core/row-models/rowModelsFeature.utils'
 export * from './core/row-models/createCoreRowModel'
 
 // Tables
 export * from './core/table/constructTable'
-export * from './core/table/Tables'
-export * from './core/table/Tables.types'
-export * from './core/table/Tables.utils'
+export * from './core/table/tablesFeature'
+export * from './core/table/tablesFeature.types'
+export * from './core/table/tablesFeature.utils'
 
 /**
  * ProcessingFns
@@ -77,85 +77,85 @@ export * from './fns/sortingFns'
 
 export * from './features/stockFeatures'
 
-// ColumnFaceting
-export * from './features/column-faceting/ColumnFaceting'
-export * from './features/column-faceting/ColumnFaceting.types'
-export * from './features/column-faceting/ColumnFaceting.utils'
+// columnFacetingFeature
+export * from './features/column-faceting/columnFacetingFeature'
+export * from './features/column-faceting/columnFacetingFeature.types'
+export * from './features/column-faceting/columnFacetingFeature.utils'
 export * from './features/column-faceting/createFacetedMinMaxValues'
 export * from './features/column-faceting/createFacetedRowModel'
 export * from './features/column-faceting/createFacetedUniqueValues'
 
-// ColumnFiltering
-export * from './features/column-filtering/ColumnFiltering'
-export * from './features/column-filtering/ColumnFiltering.types'
-export * from './features/column-filtering/ColumnFiltering.utils'
+// columnFilteringFeature
+export * from './features/column-filtering/columnFilteringFeature'
+export * from './features/column-filtering/columnFilteringFeature.types'
+export * from './features/column-filtering/columnFilteringFeature.utils'
 export * from './features/column-filtering/createFilteredRowModel'
 
-// ColumnGrouping
-export * from './features/column-grouping/ColumnGrouping'
-export * from './features/column-grouping/ColumnGrouping.types'
-export * from './features/column-grouping/ColumnGrouping.utils'
+// columnGroupingFeature
+export * from './features/column-grouping/columnGroupingFeature'
+export * from './features/column-grouping/columnGroupingFeature.types'
+export * from './features/column-grouping/columnGroupingFeature.utils'
 export * from './features/column-grouping/createGroupedRowModel'
 
-// ColumnOrdering
-export * from './features/column-ordering/ColumnOrdering'
-export * from './features/column-ordering/ColumnOrdering.types'
-export * from './features/column-ordering/ColumnOrdering.utils'
+// columnOrderingFeature
+export * from './features/column-ordering/columnOrderingFeature'
+export * from './features/column-ordering/columnOrderingFeature.types'
+export * from './features/column-ordering/columnOrderingFeature.utils'
 
-// ColumnPinning
-export * from './features/column-pinning/ColumnPinning'
-export * from './features/column-pinning/ColumnPinning.types'
-export * from './features/column-pinning/ColumnPinning.utils'
+// columnPinningFeature
+export * from './features/column-pinning/columnPinningFeature'
+export * from './features/column-pinning/columnPinningFeature.types'
+export * from './features/column-pinning/columnPinningFeature.utils'
 
-// ColumnResizing
-export * from './features/column-resizing/ColumnResizing'
-export * from './features/column-resizing/ColumnResizing.types'
-export * from './features/column-resizing/ColumnResizing.utils'
+// columnResizingFeature
+export * from './features/column-resizing/columnResizingFeature'
+export * from './features/column-resizing/columnResizingFeature.types'
+export * from './features/column-resizing/columnResizingFeature.utils'
 
-// ColumnSizing
-export * from './features/column-sizing/ColumnSizing'
-export * from './features/column-sizing/ColumnSizing.types'
-export * from './features/column-sizing/ColumnSizing.utils'
+// columnSizingFeature
+export * from './features/column-sizing/columnSizingFeature'
+export * from './features/column-sizing/columnSizingFeature.types'
+export * from './features/column-sizing/columnSizingFeature.utils'
 
-// ColumnVisibility
-export * from './features/column-visibility/ColumnVisibility'
-export * from './features/column-visibility/ColumnVisibility.types'
-export * from './features/column-visibility/ColumnVisibility.utils'
+// columnVisibilityFeature
+export * from './features/column-visibility/columnVisibilityFeature'
+export * from './features/column-visibility/columnVisibilityFeature.types'
+export * from './features/column-visibility/columnVisibilityFeature.utils'
 
-// GlobalFaceting
-export * from './features/global-faceting/GlobalFaceting'
-export * from './features/global-faceting/GlobalFaceting.types'
-export * from './features/global-faceting/GlobalFaceting.utils'
+// globalFacetingFeature
+export * from './features/global-faceting/globalFacetingFeature'
+export * from './features/global-faceting/globalFacetingFeature.types'
+export * from './features/global-faceting/globalFacetingFeature.utils'
 
-// GlobalFiltering
-export * from './features/global-filtering/GlobalFiltering'
-export * from './features/global-filtering/GlobalFiltering.types'
-export * from './features/global-filtering/GlobalFiltering.utils'
+// globalFilteringFeature
+export * from './features/global-filtering/globalFilteringFeature'
+export * from './features/global-filtering/globalFilteringFeature.types'
+export * from './features/global-filtering/globalFilteringFeature.utils'
 
-// RowExpanding
-export * from './features/row-expanding/RowExpanding'
-export * from './features/row-expanding/RowExpanding.types'
-export * from './features/row-expanding/RowExpanding.utils'
+// rowExpandingFeature
+export * from './features/row-expanding/rowExpandingFeature'
+export * from './features/row-expanding/rowExpandingFeature.types'
+export * from './features/row-expanding/rowExpandingFeature.utils'
 export * from './features/row-expanding/createExpandedRowModel'
 
-// RowPagination
-export * from './features/row-pagination/RowPagination'
-export * from './features/row-pagination/RowPagination.types'
-export * from './features/row-pagination/RowPagination.utils'
+// rowPaginationFeature
+export * from './features/row-pagination/rowPaginationFeature'
+export * from './features/row-pagination/rowPaginationFeature.types'
+export * from './features/row-pagination/rowPaginationFeature.utils'
 export * from './features/row-pagination/createPaginatedRowModel'
 
-// RowPinning
-export * from './features/row-pinning/RowPinning'
-export * from './features/row-pinning/RowPinning.types'
-export * from './features/row-pinning/RowPinning.utils'
+// rowPinningFeature
+export * from './features/row-pinning/rowPinningFeature'
+export * from './features/row-pinning/rowPinningFeature.types'
+export * from './features/row-pinning/rowPinningFeature.utils'
 
-// RowSelection
-export * from './features/row-selection/RowSelection'
-export * from './features/row-selection/RowSelection.types'
-export * from './features/row-selection/RowSelection.utils'
+// rowSelectionFeature
+export * from './features/row-selection/rowSelectionFeature'
+export * from './features/row-selection/rowSelectionFeature.types'
+export * from './features/row-selection/rowSelectionFeature.utils'
 
-// RowSorting
-export * from './features/row-sorting/RowSorting'
-export * from './features/row-sorting/RowSorting.types'
-export * from './features/row-sorting/RowSorting.utils'
+// rowSortingFeature
+export * from './features/row-sorting/rowSortingFeature'
+export * from './features/row-sorting/rowSortingFeature.types'
+export * from './features/row-sorting/rowSortingFeature.utils'
 export * from './features/row-sorting/createSortedRowModel'

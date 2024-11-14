@@ -2,11 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  ColumnFiltering,
-  ColumnGrouping,
-  RowExpanding,
-  RowPagination,
-  RowSorting,
+  columnFilteringFeature,
+  columnGroupingFeature,
   createExpandedRowModel,
   createFilteredRowModel,
   createGroupedRowModel,
@@ -14,6 +11,9 @@ import {
   createSortedRowModel,
   createTableHelper,
   flexRender,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef, GroupingState } from '@tanstack/react-table'
@@ -21,11 +21,11 @@ import type { Person } from './makeData'
 
 const tableHelper = createTableHelper({
   _features: {
-    ColumnFiltering,
-    ColumnGrouping,
-    RowExpanding,
-    RowPagination,
-    RowSorting,
+    columnFilteringFeature,
+    columnGroupingFeature,
+    rowExpandingFeature,
+    rowPaginationFeature,
+    rowSortingFeature,
   },
   _rowModels: {
     filteredRowModel: createFilteredRowModel(),
@@ -150,7 +150,7 @@ function App() {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td
                       key={cell.id}
@@ -168,13 +168,9 @@ function App() {
                         // If it's a grouped cell, add an expander and row count
                         <>
                           <button
-                            {...{
-                              onClick: row.getToggleExpandedHandler(),
-                              style: {
-                                cursor: row.getCanExpand()
-                                  ? 'pointer'
-                                  : 'normal',
-                              },
+                            onClick={row.getToggleExpandedHandler()}
+                            style={{
+                              cursor: row.getCanExpand() ? 'pointer' : 'normal',
                             }}
                           >
                             {row.getIsExpanded() ? '👇' : '👉'}{' '}

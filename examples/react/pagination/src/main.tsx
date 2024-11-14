@@ -2,15 +2,15 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  ColumnFiltering,
-  RowPagination,
-  RowSorting,
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
   flexRender,
   processingFns,
+  rowPaginationFeature,
+  rowSortingFeature,
   sortingFns,
   tableFeatures,
   useTable,
@@ -25,9 +25,9 @@ import type {
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
-  ColumnFiltering,
-  RowPagination,
-  RowSorting,
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
 })
 
 const _processingFns = processingFns(_features, {

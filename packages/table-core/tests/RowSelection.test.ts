@@ -4,9 +4,9 @@ import {
   createColumnHelper,
   constructTable,
   createCoreRowModel,
-  RowSelection,
+  rowSelectionFeature,
 } from '../src'
-import * as RowSelectionUtils from '../src/features/row-selection/RowSelection.utils'
+import * as RowSelectionUtils from '../src/features/row-selection/rowSelectionFeature.utils'
 import { makeData, Person } from './makeTestData'
 
 type personKeys = keyof Person
@@ -25,14 +25,14 @@ function generateColumns(people: Person[]): PersonColumn[] {
   })
 }
 
-describe('RowSelection', () => {
+describe('rowSelectionFeature', () => {
   describe('selectRowsFn', () => {
     it('should only return rows that are selected', () => {
       const data = makeData(5)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { RowSelection },
+        _features: { rowSelectionFeature },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -62,7 +62,7 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { RowSelection },
+        _features: { rowSelectionFeature },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -92,7 +92,7 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { RowSelection },
+        _features: { rowSelectionFeature },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -161,7 +161,7 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { RowSelection },
+        _features: { rowSelectionFeature },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -187,7 +187,7 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { RowSelection },
+        _features: { rowSelectionFeature },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -216,7 +216,7 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { RowSelection },
+        _features: { rowSelectionFeature },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -247,7 +247,7 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { RowSelection },
+        _features: { rowSelectionFeature },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -278,7 +278,7 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { RowSelection },
+        _features: { rowSelectionFeature },
         _rowModels: {},
         enableRowSelection: (row) => row.index === 0, // only first row is selectable (of 2 sub-rows)
         onStateChange() {},
@@ -308,7 +308,7 @@ describe('RowSelection', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { RowSelection },
+        _features: { rowSelectionFeature },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},

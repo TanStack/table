@@ -1,5 +1,5 @@
 import { computed, ref, watchEffect } from 'vue'
-import { type PaginationState } from '@tanstack/vue-table'
+import type { PaginationState } from '@tanstack/vue-table'
 import type { Ref } from 'vue'
 
 const DEFAULT_PAGE_COUNT = -1

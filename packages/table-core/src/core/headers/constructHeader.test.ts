@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import { Headers } from './Headers'
+import { headersFeature } from './headersFeature'
 import { constructHeader } from './constructHeader'
 import type { Column } from '../../types/Column'
 import type { Table } from '../../types/Table'
 
 describe('constructHeader', () => {
   it('should create a column with all core column APIs and properties', () => {
-    const table = { _features: { Headers }, options: {} } as Table<any, any>
+    const table = { _features: { headersFeature }, options: {} } as Table<
+      any,
+      any
+    >
     const column = {
       id: 'test-column',
       columnDef: { id: 'test-column-def' },

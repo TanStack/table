@@ -1,4 +1,4 @@
-import React, { type CSSProperties } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { flexRender, useTable } from '@tanstack/react-table'
@@ -6,11 +6,9 @@ import { flexRender, useTable } from '@tanstack/react-table'
 // needed for table body level scope DnD setup
 import {
   DndContext,
-  type DragEndEvent,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
-  type UniqueIdentifier,
   closestCenter,
   useSensor,
   useSensors,
@@ -26,6 +24,8 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { makeData } from './makeData'
+import type { CSSProperties } from 'react'
+import type { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core'
 import type { Person } from './makeData'
 import type { ColumnDef, Row } from '@tanstack/react-table'
 

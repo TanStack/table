@@ -1,15 +1,15 @@
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
-import type { CellContext } from '../core/cells/Cells.types'
-import type { HeaderContext } from '../core/headers/Headers.types'
-import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/ColumnFiltering.types'
-import type { ColumnDef_ColumnGrouping } from '../features/column-grouping/ColumnGrouping.types'
-import type { ColumnDef_ColumnPinning } from '../features/column-pinning/ColumnPinning.types'
-import type { ColumnDef_ColumnResizing } from '../features/column-resizing/ColumnResizing.types'
-import type { ColumnDef_ColumnSizing } from '../features/column-sizing/ColumnSizing.types'
-import type { ColumnDef_ColumnVisibility } from '../features/column-visibility/ColumnVisibility.types'
-import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/GlobalFiltering.types'
-import type { ColumnDef_RowSorting } from '../features/row-sorting/RowSorting.types'
+import type { CellContext } from '../core/cells/cellsFeature.types'
+import type { HeaderContext } from '../core/headers/headersFeature.types'
+import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
+import type { ColumnDef_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
+import type { ColumnDef_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'
+import type { ColumnDef_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
+import type { ColumnDef_ColumnSizing } from '../features/column-sizing/columnSizingFeature.types'
+import type { ColumnDef_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
+import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
+import type { ColumnDef_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 
 export interface ColumnMeta<
   TFeatures extends TableFeatures,
@@ -68,26 +68,28 @@ export type ColumnDefBase<
   TValue extends CellData = CellData,
 > = ColumnDefBase_Core<TFeatures, TData, TValue> &
   UnionToIntersection<
-    | ('ColumnVisibility' extends keyof TFeatures
+    | ('columnVisibilityFeature' extends keyof TFeatures
         ? ColumnDef_ColumnVisibility
         : never)
-    | ('ColumnPinning' extends keyof TFeatures
+    | ('columnPinningFeature' extends keyof TFeatures
         ? ColumnDef_ColumnPinning
         : never)
-    | ('ColumnFiltering' extends keyof TFeatures
+    | ('columnFilteringFeature' extends keyof TFeatures
         ? ColumnDef_ColumnFiltering<TFeatures, TData>
         : never)
-    | ('GlobalFiltering' extends keyof TFeatures
+    | ('globalFilteringFeature' extends keyof TFeatures
         ? ColumnDef_GlobalFiltering
         : never)
-    | ('RowSorting' extends keyof TFeatures
+    | ('rowSortingFeature' extends keyof TFeatures
         ? ColumnDef_RowSorting<TFeatures, TData>
         : never)
-    | ('ColumnGrouping' extends keyof TFeatures
+    | ('columnGroupingFeature' extends keyof TFeatures
         ? ColumnDef_ColumnGrouping<TFeatures, TData, TValue>
         : never)
-    | ('ColumnSizing' extends keyof TFeatures ? ColumnDef_ColumnSizing : never)
-    | ('ColumnResizing' extends keyof TFeatures
+    | ('columnSizingFeature' extends keyof TFeatures
+        ? ColumnDef_ColumnSizing
+        : never)
+    | ('columnResizingFeature' extends keyof TFeatures
         ? ColumnDef_ColumnResizing
         : never)
   >
