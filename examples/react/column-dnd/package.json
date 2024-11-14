@@ -14,7 +14,7 @@
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@faker-js/faker": "^9.1.0",
+    "@faker-js/faker": "^9.2.0",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -25,6 +25,6 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
     "typescript": "5.6.3",
-    "vite": "^5.4.10"
+    "vite": "^5.4.11"
   }
 }

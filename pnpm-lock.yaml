@@ -9,16 +9,16 @@ importers:
   .:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@size-limit/preset-small-lib':
         specifier: ^11.1.6
         version: 11.1.6(size-limit@11.1.6)
       '@tanstack/config':
-        specifier: 0.13.4
-        version: 0.13.4(@types/node@22.9.0)(esbuild@0.24.0)(eslint@9.14.0(jiti@2.4.0))(rollup@4.26.0)(typescript@5.6.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+        specifier: 0.14.0
+        version: 0.14.0(@types/node@22.9.0)(esbuild@0.24.0)(eslint@9.14.0(jiti@2.4.0))(rollup@4.26.0)(typescript@5.6.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@testing-library/jest-dom':
-        specifier: ^6.6.2
+        specifier: ^6.6.3
         version: 6.6.3
       '@testing-library/react':
         specifier: ^16.0.1
@@ -27,10 +27,10 @@ importers:
         specifier: ^8.0.1
         version: 8.0.1
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       eslint:
-        specifier: ^9.13.0
+        specifier: ^9.14.0
         version: 9.14.0(jiti@2.4.0)
       eslint-plugin-unused-imports:
         specifier: ^4.1.4
@@ -39,17 +39,17 @@ importers:
         specifier: ^25.0.1
         version: 25.0.1
       knip:
-        specifier: ^5.34.4
+        specifier: ^5.36.7
         version: 5.36.7(@types/node@22.9.0)(typescript@5.6.3)
       nx:
-        specifier: ^20.0.6
+        specifier: ^20.1.0
         version: 20.1.0
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
       prettier-plugin-svelte:
-        specifier: ^3.2.7
-        version: 3.2.8(prettier@3.3.3)(svelte@5.1.6)
+        specifier: ^3.2.8
+        version: 3.2.8(prettier@3.3.3)(svelte@5.1.16)
       publint:
         specifier: ^0.2.12
         version: 0.2.12
@@ -66,37 +66,37 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vitest:
-        specifier: ^2.1.4
+        specifier: ^2.1.5
         version: 2.1.5(@types/node@22.9.0)(jsdom@25.0.1)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/angular/basic:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@angular/router':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -109,13 +109,13 @@ importers:
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -139,7 +139,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.4.0)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4)
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       typescript:
         specifier: 5.6.3
@@ -148,25 +148,25 @@ importers:
   examples/angular/column-ordering:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -179,13 +179,13 @@ importers:
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -209,7 +209,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.4.0)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4)
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       typescript:
         specifier: 5.6.3
@@ -218,28 +218,28 @@ importers:
   examples/angular/column-pinning:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -252,13 +252,13 @@ importers:
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -282,7 +282,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.4.0)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4)
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       typescript:
         specifier: 5.6.3
@@ -291,28 +291,28 @@ importers:
   examples/angular/column-pinning-sticky:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -325,13 +325,13 @@ importers:
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -355,7 +355,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.4.0)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4)
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       typescript:
         specifier: 5.6.3
@@ -364,25 +364,25 @@ importers:
   examples/angular/column-visibility:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -395,13 +395,13 @@ importers:
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -425,7 +425,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.4.0)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4)
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       typescript:
         specifier: 5.6.3
@@ -434,28 +434,28 @@ importers:
   examples/angular/filters:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -464,20 +464,20 @@ importers:
         specifier: ~7.8.1
         version: 7.8.1
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       zone.js:
         specifier: ~0.15.0
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -507,28 +507,28 @@ importers:
   examples/angular/grouping:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -541,13 +541,13 @@ importers:
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -571,7 +571,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.4.0)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4)
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       typescript:
         specifier: 5.6.3
@@ -580,28 +580,28 @@ importers:
   examples/angular/row-selection:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -610,20 +610,20 @@ importers:
         specifier: ~7.8.1
         version: 7.8.1
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       zone.js:
         specifier: ~0.15.0
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -653,28 +653,28 @@ importers:
   examples/angular/row-selection-signal:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/forms':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(rxjs@7.8.1)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -683,20 +683,20 @@ importers:
         specifier: ~7.8.1
         version: 7.8.1
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       zone.js:
         specifier: ~0.15.0
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -726,25 +726,25 @@ importers:
   examples/angular/signal-input:
     dependencies:
       '@angular/animations':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/common':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1)
       '@angular/compiler':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.10
@@ -757,13 +757,13 @@ importers:
         version: 0.15.0
     devDependencies:
       '@angular-devkit/build-angular':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(chokidar@3.6.0)(karma@6.4.4)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3)
       '@angular/cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(chokidar@3.6.0)
       '@angular/compiler-cli':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3)
       '@types/jasmine':
         specifier: ~5.1.4
@@ -787,7 +787,7 @@ importers:
         specifier: ~2.1.0
         version: 2.1.0(jasmine-core@5.4.0)(karma-jasmine@5.1.0(karma@6.4.4))(karma@6.4.4)
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
       typescript:
         specifier: 5.6.3
@@ -821,13 +821,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/lit/column-sizing:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/lit-table':
         specifier: ^9.0.0-alpha.10
@@ -843,13 +843,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/lit/filters:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/lit-table':
         specifier: ^9.0.0-alpha.10
@@ -865,13 +865,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/lit/row-selection:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/lit-table':
         specifier: ^9.0.0-alpha.10
@@ -887,13 +887,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/lit/sorting:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/lit-table':
         specifier: ^9.0.0-alpha.10
@@ -909,19 +909,19 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/lit/virtualized-rows:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/lit-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/lit-table
       '@tanstack/lit-virtual':
-        specifier: ^3.10.8
+        specifier: ^3.10.9
         version: 3.10.9(lit@3.2.1)
       lit:
         specifier: ^3.2.1
@@ -934,7 +934,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/qwik/basic:
@@ -944,7 +944,7 @@ importers:
         version: link:../../../packages/qwik-table
     devDependencies:
       '@builder.io/qwik':
-        specifier: ^1.9.1
+        specifier: ^1.10.0
         version: 1.10.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       serve:
         specifier: ^14.2.4
@@ -953,7 +953,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/qwik/filters:
@@ -966,10 +966,10 @@ importers:
         version: link:../../../packages/qwik-table
     devDependencies:
       '@builder.io/qwik':
-        specifier: ^1.9.1
+        specifier: ^1.10.0
         version: 1.10.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       serve:
         specifier: ^14.2.4
@@ -978,7 +978,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/qwik/row-selection:
@@ -988,10 +988,10 @@ importers:
         version: link:../../../packages/qwik-table
     devDependencies:
       '@builder.io/qwik':
-        specifier: ^1.9.1
+        specifier: ^1.10.0
         version: 1.10.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       serve:
         specifier: ^14.2.4
@@ -1000,7 +1000,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/qwik/sorting:
@@ -1010,10 +1010,10 @@ importers:
         version: link:../../../packages/qwik-table
     devDependencies:
       '@builder.io/qwik':
-        specifier: ^1.9.1
+        specifier: ^1.10.0
         version: 1.10.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       serve:
         specifier: ^14.2.4
@@ -1022,7 +1022,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/basic:
@@ -1053,7 +1053,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/basic-table-helper:
@@ -1084,7 +1084,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/column-dnd:
@@ -1102,7 +1102,7 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2(react@18.3.1)
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1130,7 +1130,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/column-groups:
@@ -1161,13 +1161,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/column-ordering:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1195,13 +1195,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/column-pinning:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1229,13 +1229,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/column-pinning-sticky:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1263,7 +1263,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/column-resizing:
@@ -1294,13 +1294,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/column-resizing-performant:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1328,7 +1328,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/column-sizing:
@@ -1359,7 +1359,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/column-visibility:
@@ -1390,13 +1390,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/custom-features:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1424,13 +1424,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/editable-data:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1458,13 +1458,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/expanding:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1492,13 +1492,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/filters:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
@@ -1529,13 +1529,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/filters-faceted:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
@@ -1566,13 +1566,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/filters-fuzzy:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
@@ -1603,13 +1603,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/full-width-resizable-table:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1637,13 +1637,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/full-width-table:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1671,13 +1671,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/fully-controlled:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1705,13 +1705,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/grouping:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1739,7 +1739,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/kitchen-sink:
@@ -1770,7 +1770,7 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(@babel/core@7.26.0)
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@rollup/plugin-replace':
         specifier: ^6.0.1
@@ -1788,7 +1788,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/material-ui-pagination:
@@ -1800,10 +1800,10 @@ importers:
         specifier: ^11.13.0
         version: 11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1)
       '@mui/icons-material':
-        specifier: ^6.1.6
+        specifier: ^6.1.7
         version: 6.1.7(@mui/material@6.1.7(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.3.12)(react@18.3.1)
       '@mui/material':
-        specifier: ^6.1.6
+        specifier: ^6.1.7
         version: 6.1.7(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@emotion/styled@11.13.0(@emotion/react@11.13.3(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react@18.3.1))(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1816,7 +1816,7 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@rollup/plugin-replace':
         specifier: ^6.0.1
@@ -1834,13 +1834,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/pagination:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1868,16 +1868,16 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/pagination-controlled:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-query':
-        specifier: ^5.59.16
+        specifier: ^5.59.20
         version: 5.59.20(react@18.3.1)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1905,16 +1905,16 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/query-router-search-params:
     dependencies:
       '@tanstack/react-query':
-        specifier: ^5.59.16
+        specifier: ^5.59.20
         version: 5.59.20(react@18.3.1)
       '@tanstack/react-router':
-        specifier: ^1.77.8
+        specifier: ^1.81.5
         version: 1.81.5(@tanstack/router-generator@1.79.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1927,13 +1927,13 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@rollup/plugin-replace':
         specifier: ^6.0.1
         version: 6.0.1(rollup@4.26.0)
       '@tanstack/router-vite-plugin':
-        specifier: ^1.77.7
+        specifier: ^1.79.0
         version: 1.79.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(webpack-sources@3.2.3)(webpack@5.94.0(esbuild@0.24.0))
       '@types/react':
         specifier: ^18.3.12
@@ -1948,7 +1948,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/row-dnd:
@@ -1966,7 +1966,7 @@ importers:
         specifier: ^3.2.2
         version: 3.2.2(react@18.3.1)
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -1994,13 +1994,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/row-pinning:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -2028,13 +2028,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/row-selection:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -2062,13 +2062,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/sorting:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -2096,13 +2096,13 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/sub-components:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
@@ -2130,19 +2130,19 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/virtualized-columns:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
-        specifier: ^3.10.8
+        specifier: ^3.10.9
         version: 3.10.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
@@ -2167,22 +2167,22 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/virtualized-infinite-scrolling:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-query':
-        specifier: ^5.59.16
+        specifier: ^5.59.20
         version: 5.59.20(react@18.3.1)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
-        specifier: ^3.10.8
+        specifier: ^3.10.9
         version: 3.10.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
@@ -2207,19 +2207,19 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/react/virtualized-rows:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
-        specifier: ^3.10.8
+        specifier: ^3.10.9
         version: 3.10.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react:
         specifier: ^18.3.1
@@ -2244,7 +2244,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/solid/basic:
@@ -2260,7 +2260,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vite-plugin-solid:
         specifier: ^2.10.2
@@ -2279,7 +2279,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vite-plugin-solid:
         specifier: ^2.10.2
@@ -2295,13 +2295,13 @@ importers:
         version: 1.9.3
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vite-plugin-solid:
         specifier: ^2.10.2
@@ -2320,7 +2320,7 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vite-plugin-solid:
         specifier: ^2.10.2
@@ -2339,13 +2339,13 @@ importers:
         version: 1.9.3
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vite-plugin-solid:
         specifier: ^2.10.2
@@ -2361,13 +2361,13 @@ importers:
         version: 1.9.3
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vite-plugin-solid:
         specifier: ^2.10.2
@@ -2380,7 +2380,7 @@ importers:
         version: 6.0.1(rollup@4.26.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0
-        version: 4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+        version: 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/svelte-table
@@ -2388,16 +2388,16 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
       svelte:
-        specifier: ^5.1.6
-        version: 5.1.6
+        specifier: ^5.1.16
+        version: 5.1.16
       svelte-check:
-        specifier: ^4.0.5
-        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.6)(typescript@5.6.3)
+        specifier: ^4.0.7
+        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3)
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/svelte/column-groups:
@@ -2407,7 +2407,7 @@ importers:
         version: 6.0.1(rollup@4.26.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0
-        version: 4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+        version: 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/svelte-table
@@ -2415,29 +2415,29 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
       svelte:
-        specifier: 5.1.6
-        version: 5.1.6
+        specifier: 5.1.16
+        version: 5.1.16
       svelte-check:
-        specifier: ^4.0.5
-        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.6)(typescript@5.6.3)
+        specifier: ^4.0.7
+        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3)
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/svelte/column-ordering:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@rollup/plugin-replace':
         specifier: ^6.0.1
         version: 6.0.1(rollup@4.26.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0
-        version: 4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+        version: 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/svelte-table
@@ -2445,29 +2445,29 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
       svelte:
-        specifier: 5.1.6
-        version: 5.1.6
+        specifier: 5.1.16
+        version: 5.1.16
       svelte-check:
-        specifier: ^4.0.5
-        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.6)(typescript@5.6.3)
+        specifier: ^4.0.7
+        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3)
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/svelte/column-pinning:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@rollup/plugin-replace':
         specifier: ^6.0.1
         version: 6.0.1(rollup@4.26.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0
-        version: 4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+        version: 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/svelte-table
@@ -2475,16 +2475,16 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
       svelte:
-        specifier: 5.1.6
-        version: 5.1.6
+        specifier: 5.1.16
+        version: 5.1.16
       svelte-check:
-        specifier: ^4.0.5
-        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.6)(typescript@5.6.3)
+        specifier: ^4.0.7
+        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3)
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/svelte/column-visibility:
@@ -2494,7 +2494,7 @@ importers:
         version: 6.0.1(rollup@4.26.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0
-        version: 4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+        version: 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/svelte-table
@@ -2502,29 +2502,29 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
       svelte:
-        specifier: 5.1.6
-        version: 5.1.6
+        specifier: 5.1.16
+        version: 5.1.16
       svelte-check:
-        specifier: ^4.0.5
-        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.6)(typescript@5.6.3)
+        specifier: ^4.0.7
+        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3)
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/svelte/filtering:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@rollup/plugin-replace':
         specifier: ^6.0.1
         version: 6.0.1(rollup@4.26.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0
-        version: 4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+        version: 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
@@ -2535,29 +2535,29 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
       svelte:
-        specifier: 5.1.6
-        version: 5.1.6
+        specifier: 5.1.16
+        version: 5.1.16
       svelte-check:
-        specifier: ^4.0.5
-        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.6)(typescript@5.6.3)
+        specifier: ^4.0.7
+        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3)
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/svelte/sorting:
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@rollup/plugin-replace':
         specifier: ^6.0.1
         version: 6.0.1(rollup@4.26.0)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0
-        version: 4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+        version: 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/svelte-table
@@ -2565,16 +2565,16 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
       svelte:
-        specifier: 5.1.6
-        version: 5.1.6
+        specifier: 5.1.16
+        version: 5.1.16
       svelte-check:
-        specifier: ^4.0.5
-        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.6)(typescript@5.6.3)
+        specifier: ^4.0.7
+        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3)
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
   examples/vue/basic:
@@ -2587,16 +2587,16 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vue-tsc:
         specifier: ^2.1.10
@@ -2605,7 +2605,7 @@ importers:
   examples/vue/column-ordering:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.10
@@ -2615,16 +2615,16 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vue-tsc:
         specifier: ^2.1.10
@@ -2633,7 +2633,7 @@ importers:
   examples/vue/column-pinning:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.10
@@ -2643,16 +2643,16 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vue-tsc:
         specifier: ^2.1.10
@@ -2661,7 +2661,7 @@ importers:
   examples/vue/filters:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.10
@@ -2671,16 +2671,16 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vue-tsc:
         specifier: ^2.1.10
@@ -2689,7 +2689,7 @@ importers:
   examples/vue/pagination:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.10
@@ -2699,16 +2699,16 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vue-tsc:
         specifier: ^2.1.10
@@ -2717,7 +2717,7 @@ importers:
   examples/vue/pagination-controlled:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.10
@@ -2727,16 +2727,16 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vue-tsc:
         specifier: ^2.1.10
@@ -2745,7 +2745,7 @@ importers:
   examples/vue/row-selection:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.10
@@ -2755,19 +2755,19 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       '@vitejs/plugin-vue-jsx':
-        specifier: ^4.0.1
+        specifier: ^4.1.0
         version: 4.1.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vue-tsc:
         specifier: ^2.1.10
@@ -2776,7 +2776,7 @@ importers:
   examples/vue/sorting:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.10
@@ -2786,16 +2786,16 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vue-tsc:
         specifier: ^2.1.10
@@ -2804,7 +2804,7 @@ importers:
   examples/vue/sub-components:
     dependencies:
       '@faker-js/faker':
-        specifier: ^9.1.0
+        specifier: ^9.2.0
         version: 9.2.0
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.10
@@ -2814,16 +2814,16 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@types/node':
-        specifier: ^22.8.4
+        specifier: ^22.9.0
         version: 22.9.0
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       typescript:
         specifier: 5.6.3
         version: 5.6.3
       vite:
-        specifier: ^5.4.10
+        specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vue-tsc:
         specifier: ^2.1.10
@@ -2835,20 +2835,20 @@ importers:
         specifier: workspace:*
         version: link:../table-core
       tslib:
-        specifier: ^2.8.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@analogjs/vite-plugin-angular':
-        specifier: ^1.9.1
+        specifier: ^1.9.3
         version: 1.9.3(@angular-devkit/build-angular@18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(ng-packagr@18.2.1(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(tslib@2.8.1)(typescript@5.6.3))(typescript@5.6.3))(@angular/build@18.2.11(@angular/compiler-cli@18.2.11(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(typescript@5.6.3))(@types/node@22.9.0)(less@4.2.0)(terser@5.31.6)(typescript@5.6.3))
       '@angular/core':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(rxjs@7.8.1)(zone.js@0.15.0)
       '@angular/platform-browser':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))
       '@angular/platform-browser-dynamic':
-        specifier: ^18.2.10
+        specifier: ^18.2.11
         version: 18.2.11(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/compiler@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(@angular/platform-browser@18.2.11(@angular/animations@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))(@angular/common@18.2.11(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0))(rxjs@7.8.1))(@angular/core@18.2.11(rxjs@7.8.1)(zone.js@0.15.0)))
       ng-packagr:
         specifier: ^18.2.1
@@ -2877,7 +2877,7 @@ importers:
         version: link:../table-core
     devDependencies:
       '@builder.io/qwik':
-        specifier: ^1.9.1
+        specifier: ^1.10.0
         version: 1.10.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
 
   packages/react-table:
@@ -2890,7 +2890,7 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@eslint-react/eslint-plugin':
-        specifier: ^1.15.2
+        specifier: ^1.16.1
         version: 1.16.1(eslint@9.14.0(jiti@2.4.0))(typescript@5.6.3)
       '@types/react':
         specifier: ^18.3.12
@@ -2945,19 +2945,19 @@ importers:
     devDependencies:
       '@sveltejs/package':
         specifier: ^2.3.7
-        version: 2.3.7(svelte@5.1.6)(typescript@5.6.3)
+        version: 2.3.7(svelte@5.1.16)(typescript@5.6.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: 4.0.0
-        version: 4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+        version: 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       eslint-plugin-svelte:
         specifier: ^2.46.0
-        version: 2.46.0(eslint@9.14.0(jiti@2.4.0))(svelte@5.1.6)
+        version: 2.46.0(eslint@9.14.0(jiti@2.4.0))(svelte@5.1.16)
       svelte:
-        specifier: 5.1.6
-        version: 5.1.6
+        specifier: 5.1.16
+        version: 5.1.16
       svelte-check:
-        specifier: ^4.0.5
-        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.6)(typescript@5.6.3)
+        specifier: ^4.0.7
+        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3)
 
   packages/table-core: {}
 
@@ -2968,10 +2968,10 @@ importers:
         version: link:../table-core
     devDependencies:
       '@vitejs/plugin-vue':
-        specifier: ^5.1.4
+        specifier: ^5.2.0
         version: 5.2.0(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))(vue@3.5.12(typescript@5.6.3))
       eslint-plugin-vue:
-        specifier: ^9.30.0
+        specifier: ^9.31.0
         version: 9.31.0(eslint@9.14.0(jiti@2.4.0))
       vue:
         specifier: ^3.5.12
@@ -5527,8 +5527,8 @@ packages:
       svelte: ^5.0.0-next.96 || ^5.0.0
       vite: ^5.0.0
 
-  '@tanstack/config@0.13.4':
-    resolution: {integrity: sha512-JATGLntcaF/K3kQC5NOBsbeZ0aAJXQ6f/x2dZzbEtP8cT9dKf2VCrWCQAYm+mtSunPJN4LQ3ZJc6jlGDNjLUvg==}
+  '@tanstack/config@0.14.0':
+    resolution: {integrity: sha512-l4c6eeowRzZ3kQ7j6o3VLpATFuvJYa9uRoq0A2J0iGYfEdF2uVRYnm53WXyGM1/XQKHHKZlr2WG3Z2675eAgeA==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -9779,8 +9779,8 @@ packages:
       svelte: ^3.55 || ^4.0.0-next.0 || ^4.0 || ^5.0.0-next.0
       typescript: ^4.9.4 || ^5.0.0
 
-  svelte@5.1.6:
-    resolution: {integrity: sha512-bYS/DpkqXk0j5UZgiNXrEjZYPRZ4Ncd87w4KUSbcZGyojA0+i/Ls9OGUjETHmdLe8RcQ0G8SX/T0PypPpAA/ew==}
+  svelte@5.1.16:
+    resolution: {integrity: sha512-QcY+om9r8+uTcSfeFuv8++ExdfwVCKeT+Y7GPSZ6rQPczvy62BMtvMoi0rScabgv+upGE5jxKjd7M4u23+AjGA==}
     engines: {node: '>=18'}
 
   svg-tags@1.0.0:
@@ -10997,7 +10997,7 @@ snapshots:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@babel/code-frame': 7.26.2
-      '@babel/generator': 7.25.0
+      '@babel/generator': 7.26.2
       '@babel/helper-compilation-targets': 7.25.9
       '@babel/helper-module-transforms': 7.26.0(@babel/core@7.25.2)
       '@babel/helpers': 7.26.0
@@ -13313,40 +13313,40 @@ snapshots:
       eslint-visitor-keys: 4.2.0
       espree: 10.3.0
 
-  '@sveltejs/package@2.3.7(svelte@5.1.6)(typescript@5.6.3)':
+  '@sveltejs/package@2.3.7(svelte@5.1.16)(typescript@5.6.3)':
     dependencies:
       chokidar: 4.0.1
       kleur: 4.1.5
       sade: 1.8.1
       semver: 7.6.3
-      svelte: 5.1.6
-      svelte2tsx: 0.7.24(svelte@5.1.6)(typescript@5.6.3)
+      svelte: 5.1.16
+      svelte2tsx: 0.7.24(svelte@5.1.16)(typescript@5.6.3)
     transitivePeerDependencies:
       - typescript
 
-  '@sveltejs/vite-plugin-svelte-inspector@3.0.1(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)))(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))':
+  '@sveltejs/vite-plugin-svelte-inspector@3.0.1(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)))(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+      '@sveltejs/vite-plugin-svelte': 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       debug: 4.3.7
-      svelte: 5.1.6
+      svelte: 5.1.16
       vite: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))':
+  '@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 3.0.1(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)))(svelte@5.1.6)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+      '@sveltejs/vite-plugin-svelte-inspector': 3.0.1(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)))(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
       debug: 4.3.7
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.12
-      svelte: 5.1.6
+      svelte: 5.1.16
       vite: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
       vitefu: 1.0.3(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
     transitivePeerDependencies:
       - supports-color
 
-  '@tanstack/config@0.13.4(@types/node@22.9.0)(esbuild@0.24.0)(eslint@9.14.0(jiti@2.4.0))(rollup@4.26.0)(typescript@5.6.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))':
+  '@tanstack/config@0.14.0(@types/node@22.9.0)(esbuild@0.24.0)(eslint@9.14.0(jiti@2.4.0))(rollup@4.26.0)(typescript@5.6.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))':
     dependencies:
       '@commitlint/parse': 19.5.0
       '@eslint/js': 9.14.0
@@ -14712,7 +14712,7 @@ snapshots:
       dom-serializer: 2.0.0
       domhandler: 5.0.3
       htmlparser2: 8.0.2
-      postcss: 8.4.41
+      postcss: 8.4.49
       postcss-media-query-parser: 0.2.3
 
   cross-spawn@5.1.0:
@@ -14729,12 +14729,12 @@ snapshots:
 
   css-loader@7.1.2(webpack@5.94.0(esbuild@0.23.0)):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.4.41)
-      postcss: 8.4.41
-      postcss-modules-extract-imports: 3.1.0(postcss@8.4.41)
-      postcss-modules-local-by-default: 4.1.0(postcss@8.4.41)
-      postcss-modules-scope: 3.2.1(postcss@8.4.41)
-      postcss-modules-values: 4.0.0(postcss@8.4.41)
+      icss-utils: 5.1.0(postcss@8.4.49)
+      postcss: 8.4.49
+      postcss-modules-extract-imports: 3.1.0(postcss@8.4.49)
+      postcss-modules-local-by-default: 4.1.0(postcss@8.4.49)
+      postcss-modules-scope: 3.2.1(postcss@8.4.49)
+      postcss-modules-values: 4.0.0(postcss@8.4.49)
       postcss-value-parser: 4.2.0
       semver: 7.6.3
     optionalDependencies:
@@ -15294,7 +15294,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-svelte@2.46.0(eslint@9.14.0(jiti@2.4.0))(svelte@5.1.6):
+  eslint-plugin-svelte@2.46.0(eslint@9.14.0(jiti@2.4.0))(svelte@5.1.16):
     dependencies:
       '@eslint-community/eslint-utils': 4.4.1(eslint@9.14.0(jiti@2.4.0))
       '@jridgewell/sourcemap-codec': 1.5.0
@@ -15307,9 +15307,9 @@ snapshots:
       postcss-safe-parser: 6.0.0(postcss@8.4.49)
       postcss-selector-parser: 6.1.2
       semver: 7.6.3
-      svelte-eslint-parser: 0.43.0(svelte@5.1.6)
+      svelte-eslint-parser: 0.43.0(svelte@5.1.16)
     optionalDependencies:
-      svelte: 5.1.6
+      svelte: 5.1.16
     transitivePeerDependencies:
       - ts-node
 
@@ -15959,9 +15959,9 @@ snapshots:
     dependencies:
       safer-buffer: 2.1.2
 
-  icss-utils@5.1.0(postcss@8.4.41):
+  icss-utils@5.1.0(postcss@8.4.49):
     dependencies:
-      postcss: 8.4.41
+      postcss: 8.4.49
 
   ieee754@1.2.1: {}
 
@@ -16157,7 +16157,7 @@ snapshots:
 
   istanbul-lib-instrument@6.0.3:
     dependencies:
-      '@babel/core': 7.25.2
+      '@babel/core': 7.26.0
       '@babel/parser': 7.26.2
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
@@ -17127,7 +17127,7 @@ snapshots:
       bl: 4.1.0
       chalk: 4.1.2
       cli-cursor: 3.1.0
-      cli-spinners: 2.6.1
+      cli-spinners: 2.9.2
       is-interactive: 1.0.0
       log-symbols: 4.1.0
       strip-ansi: 6.0.1
@@ -17351,26 +17351,26 @@ snapshots:
 
   postcss-media-query-parser@0.2.3: {}
 
-  postcss-modules-extract-imports@3.1.0(postcss@8.4.41):
+  postcss-modules-extract-imports@3.1.0(postcss@8.4.49):
     dependencies:
-      postcss: 8.4.41
+      postcss: 8.4.49
 
-  postcss-modules-local-by-default@4.1.0(postcss@8.4.41):
+  postcss-modules-local-by-default@4.1.0(postcss@8.4.49):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.4.41)
-      postcss: 8.4.41
+      icss-utils: 5.1.0(postcss@8.4.49)
+      postcss: 8.4.49
       postcss-selector-parser: 7.0.0
       postcss-value-parser: 4.2.0
 
-  postcss-modules-scope@3.2.1(postcss@8.4.41):
+  postcss-modules-scope@3.2.1(postcss@8.4.49):
     dependencies:
-      postcss: 8.4.41
+      postcss: 8.4.49
       postcss-selector-parser: 7.0.0
 
-  postcss-modules-values@4.0.0(postcss@8.4.41):
+  postcss-modules-values@4.0.0(postcss@8.4.49):
     dependencies:
-      icss-utils: 5.1.0(postcss@8.4.41)
-      postcss: 8.4.41
+      icss-utils: 5.1.0(postcss@8.4.49)
+      postcss: 8.4.49
 
   postcss-safe-parser@6.0.0(postcss@8.4.49):
     dependencies:
@@ -17406,10 +17406,10 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-svelte@3.2.8(prettier@3.3.3)(svelte@5.1.6):
+  prettier-plugin-svelte@3.2.8(prettier@3.3.3)(svelte@5.1.16):
     dependencies:
       prettier: 3.3.3
-      svelte: 5.1.6
+      svelte: 5.1.16
 
   prettier@3.3.3: {}
 
@@ -17576,7 +17576,7 @@ snapshots:
 
   regenerator-transform@0.15.2:
     dependencies:
-      '@babel/runtime': 7.25.0
+      '@babel/runtime': 7.26.0
 
   regex-parser@2.3.0: {}
 
@@ -17628,7 +17628,7 @@ snapshots:
       adjust-sourcemap-loader: 4.0.0
       convert-source-map: 1.9.0
       loader-utils: 2.0.4
-      postcss: 8.4.41
+      postcss: 8.4.49
       source-map: 0.6.1
 
   resolve@1.22.8:
@@ -18230,19 +18230,19 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@4.0.7(picomatch@4.0.2)(svelte@5.1.6)(typescript@5.6.3):
+  svelte-check@4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       chokidar: 4.0.1
       fdir: 6.4.2(picomatch@4.0.2)
       picocolors: 1.1.1
       sade: 1.8.1
-      svelte: 5.1.6
+      svelte: 5.1.16
       typescript: 5.6.3
     transitivePeerDependencies:
       - picomatch
 
-  svelte-eslint-parser@0.43.0(svelte@5.1.6):
+  svelte-eslint-parser@0.43.0(svelte@5.1.16):
     dependencies:
       eslint-scope: 7.2.2
       eslint-visitor-keys: 3.4.3
@@ -18250,16 +18250,16 @@ snapshots:
       postcss: 8.4.49
       postcss-scss: 4.0.9(postcss@8.4.49)
     optionalDependencies:
-      svelte: 5.1.6
+      svelte: 5.1.16
 
-  svelte2tsx@0.7.24(svelte@5.1.6)(typescript@5.6.3):
+  svelte2tsx@0.7.24(svelte@5.1.16)(typescript@5.6.3):
     dependencies:
       dedent-js: 1.0.1
       pascal-case: 3.1.2
-      svelte: 5.1.6
+      svelte: 5.1.16
       typescript: 5.6.3
 
-  svelte@5.1.6:
+  svelte@5.1.16:
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@jridgewell/sourcemap-codec': 1.5.0

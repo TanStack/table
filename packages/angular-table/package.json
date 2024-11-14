@@ -53,13 +53,13 @@
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*",
-    "tslib": "^2.8.0"
+    "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "^1.9.1",
-    "@angular/core": "^18.2.10",
-    "@angular/platform-browser": "^18.2.10",
-    "@angular/platform-browser-dynamic": "^18.2.10",
+    "@analogjs/vite-plugin-angular": "^1.9.3",
+    "@angular/core": "^18.2.11",
+    "@angular/platform-browser": "^18.2.11",
+    "@angular/platform-browser-dynamic": "^18.2.11",
     "ng-packagr": "^18.2.1"
   },
   "peerDependencies": {

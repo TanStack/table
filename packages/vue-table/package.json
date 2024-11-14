@@ -56,8 +56,8 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.1.4",
-    "eslint-plugin-vue": "^9.30.0",
+    "@vitejs/plugin-vue": "^5.2.0",
+    "eslint-plugin-vue": "^9.31.0",
     "vue": "^3.5.12"
   },
   "peerDependencies": {
