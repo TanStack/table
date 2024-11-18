@@ -68,15 +68,6 @@ function _createFilteredRowModel<
 
     const filterFn = column_getFilterFn(column) as any
 
-    if (!filterFn) {
-      if (isDev) {
-        console.warn(
-          `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`,
-        )
-      }
-      return
-    }
-
     resolvedColumnFilters.push({
       id: columnFilter.id,
       filterFn,

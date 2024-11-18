@@ -2,6 +2,7 @@ import { For, Show, createSignal } from 'solid-js'
 import { faker } from '@faker-js/faker'
 import {
   columnOrderingFeature,
+  columnVisibilityFeature,
   createTable,
   flexRender,
   tableFeatures,
@@ -14,7 +15,10 @@ import type {
   ColumnVisibilityState,
 } from '@tanstack/solid-table'
 
-const _features = tableFeatures({ columnOrderingFeature })
+const _features = tableFeatures({
+  columnOrderingFeature,
+  columnVisibilityFeature,
+})
 
 const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {

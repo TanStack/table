@@ -127,7 +127,7 @@ function App() {
           <For each={table.getRowModel().rows.slice(0, 10)}>
             {(row) => (
               <tr>
-                <For each={row.getVisibleCells()}>
+                <For each={row.getAllCells()}>
                   {(cell) => (
                     <td>
                       {flexRender(

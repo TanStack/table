@@ -1,11 +1,11 @@
 import {
+  columnFacetingFeature,
   columnFilteringFeature,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
   createTable,
-  filterFns,
   flexRender,
   globalFilteringFeature,
   tableFeatures,
@@ -17,9 +17,10 @@ import ColumnFilter from './ColumnFilter'
 import type { Person } from './makeData'
 import type { ColumnDef, ColumnFiltersState } from '@tanstack/solid-table'
 
-export const _features = tableFeatures({
+const _features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
+  columnFacetingFeature,
 })
 
 const columns: Array<ColumnDef<typeof _features, Person>> = [
@@ -49,7 +50,6 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
         accessorKey: 'age',
         header: () => 'Age',
         footer: (props) => props.column.id,
-        filterFn: 'inNumberRange',
       },
       {
         header: 'More Info',
@@ -58,7 +58,6 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
             footer: (props) => props.column.id,
-            filterFn: 'inNumberRange',
           },
           {
             accessorKey: 'status',
@@ -69,7 +68,6 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
             accessorKey: 'progress',
             header: 'Profile Progress',
             footer: (props) => props.column.id,
-            filterFn: 'inNumberRange',
           },
         ],
       },
@@ -94,9 +92,6 @@ function App() {
       facetedMinMaxValues: createFacetedMinMaxValues(),
       facetedUniqueValues: createFacetedUniqueValues(),
       filteredRowModel: createFilteredRowModel(),
-    },
-    _processingFns: {
-      filterFns,
     },
     get data() {
       return data()
@@ -162,7 +157,7 @@ function App() {
           <For each={table.getRowModel().rows.slice(0, 10)}>
             {(row) => (
               <tr>
-                <For each={row.getAllCells()}>
+                <For each={row.getVisibleCells()}>
                   {(cell) => (
                     <td>
                       {flexRender(

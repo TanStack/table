@@ -1,0 +1,24 @@
+{
+  "name": "tanstack-table-example-solid-filters-faceted",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint ./src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
+    "typescript": "5.6.3",
+    "vite": "^5.4.11",
+    "vite-plugin-solid": "^2.10.2"
+  },
+  "dependencies": {
+    "@solid-primitives/scheduled": "^1.4.4",
+    "@tanstack/solid-table": "^9.0.0-alpha.10",
+    "solid-js": "^1.9.3"
+  }
+}
