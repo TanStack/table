@@ -2,13 +2,13 @@
   import { rankItem } from '@tanstack/match-sorter-utils'
   import type { ColumnDef, FilterFn } from '@tanstack/svelte-table'
   import {
+    FlexRender,
     columnFilteringFeature,
     columnVisibilityFeature,
-    FlexRender,
-    globalFilteringFeature,
     createFilteredRowModel,
     createPaginatedRowModel,
     createTable,
+    globalFilteringFeature,
     isFunction,
     tableFeatures,
   } from '@tanstack/svelte-table'
@@ -32,13 +32,13 @@
     const itemRank = rankItem(row.getValue(columnId), value)
 
     // Store the itemRank info
-    addMeta({ itemRank })
+    addMeta?.({ itemRank })
 
     // Return if the item should be filtered in/out
     return itemRank.passed
   }
 
-  let columns: ColumnDef<any, Person>[] = [
+  const columns: ColumnDef<any, Person>[] = [
     {
       accessorFn: (row) => `${row.firstName} ${row.lastName}`,
       id: 'fullName',

@@ -11,10 +11,10 @@ import type { TableOptions } from '../types/TableOptions'
  */
 export type TableHelperOptions<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = any,
 > = Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'> & {
   _features: TFeatures
-  TData: TData // provide a cast for the TData type
+  TData?: TData // provide a cast for the TData type
 }
 
 /**
@@ -22,9 +22,13 @@ export type TableHelperOptions<
  */
 export type TableHelper_Core<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = any,
 > = {
   columnHelper: ColumnHelper<TFeatures, TData>
+  createColumnHelper: <TData extends RowData>() => ColumnHelper<
+    TFeatures,
+    TData
+  >
   features: TFeatures
   options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'>
   tableCreator: (
@@ -40,7 +44,7 @@ export type TableHelper_Core<
  */
 export function constructTableHelper<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = any,
 >(
   tableCreator: (
     tableOptions: TableOptions<TFeatures, TData>,
@@ -50,6 +54,7 @@ export function constructTableHelper<
   const { TData: _TData, ..._tableHelperOptions } = tableHelperOptions
   return {
     columnHelper: createColumnHelper<TFeatures, TData>(),
+    createColumnHelper,
     features: tableHelperOptions._features,
     options: _tableHelperOptions as any,
     tableCreator: (tableOptions) =>

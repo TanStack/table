@@ -11,7 +11,7 @@ import type {
 
 export type TableHelper<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
   createTable: (
     tableOptions: Omit<
@@ -23,7 +23,7 @@ export type TableHelper<
 
 export function createTableHelper<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = any,
 >(
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper<TFeatures, TData> {
@@ -31,7 +31,7 @@ export function createTableHelper<
   return {
     ...tableHelper,
     createTable: tableHelper.tableCreator,
-  }
+  } as any
 }
 
 // test
@@ -47,12 +47,12 @@ export function createTableHelper<
 //   TData: {} as Person,
 // })
 
-// const columns = tableHelper.columnHelper.columns([
+// const columns = [
 //   tableHelper.columnHelper.accessor('firstName', { header: 'First Name' }),
 //   tableHelper.columnHelper.accessor('lastName', { header: 'Last Name' }),
 //   tableHelper.columnHelper.accessor('age', { header: 'Age' }),
 //   tableHelper.columnHelper.display({ header: 'Actions', id: 'actions' }),
-// ])
+// ] as Array<ColumnDef<typeof tableHelper.features, Person, unknown>>
 
 // const data: Array<Person> = []
 

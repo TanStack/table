@@ -2266,6 +2266,25 @@ importers:
         specifier: ^2.10.2
         version: 2.10.2(@testing-library/jest-dom@6.6.3)(solid-js@1.9.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
 
+  examples/solid/basic-table-helper:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.3
+        version: 1.9.3
+    devDependencies:
+      typescript:
+        specifier: 5.6.3
+        version: 5.6.3
+      vite:
+        specifier: ^5.4.11
+        version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
+      vite-plugin-solid:
+        specifier: ^2.10.2
+        version: 2.10.2(@testing-library/jest-dom@6.6.3)(solid-js@1.9.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+
   examples/solid/column-groups:
     dependencies:
       '@tanstack/solid-table':
@@ -2374,6 +2393,33 @@ importers:
         version: 2.10.2(@testing-library/jest-dom@6.6.3)(solid-js@1.9.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
 
   examples/svelte/basic:
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.1
+        version: 6.0.1(rollup@4.26.0)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^4.0.0
+        version: 4.0.0(svelte@5.1.16)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+      '@tanstack/svelte-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/svelte-table
+      '@tsconfig/svelte':
+        specifier: ^5.0.4
+        version: 5.0.4
+      svelte:
+        specifier: ^5.1.16
+        version: 5.1.16
+      svelte-check:
+        specifier: ^4.0.7
+        version: 4.0.7(picomatch@4.0.2)(svelte@5.1.16)(typescript@5.6.3)
+      typescript:
+        specifier: 5.6.3
+        version: 5.6.3
+      vite:
+        specifier: ^5.4.11
+        version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
+
+  examples/svelte/basic-table-helper:
     devDependencies:
       '@rollup/plugin-replace':
         specifier: ^6.0.1

@@ -11,7 +11,7 @@ import type {
 
 export type TableHelper<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
   useTable: (
     tableOptions: Omit<
@@ -23,7 +23,7 @@ export type TableHelper<
 
 export function createTableHelper<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = any,
 >(
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper<TFeatures, TData> {

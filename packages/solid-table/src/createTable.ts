@@ -25,6 +25,7 @@ export function createTable<
 
   const statefulOptions: TableOptions<TFeatures, TData> = {
     ...tableOptions,
+    _features,
     state: { ...store, ...tableOptions.state },
     onStateChange: (updater) => {
       setStore(updater)

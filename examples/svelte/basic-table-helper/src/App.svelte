@@ -1,8 +1,5 @@
 <script lang="ts">
-  import {
-    createTableHelper,
-    FlexRender,
-  } from '@tanstack/svelte-table'
+  import { createTableHelper, FlexRender } from '@tanstack/svelte-table'
   import './index.css'
 
   // This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `createTable` hook and `createColumnHelper` method. You can choose to use either way.
@@ -47,15 +44,16 @@
 
   // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
   const tableHelper = createTableHelper({
-    _features: {},
+    _features: { columnSizingFeature: {} },
     _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
     _processingFns: {}, // client-side processing functions used by the row models (sorting, filtering, etc.). Not needed in this basic example
-    TData: {} as Person,
     debugTable: true,
+    // TData: {} as Person, // optionally, set the TData type for the table helper. Omit if this will be a table helper for multiple tables of all different data types
   })
 
   // 4. Create a helper object to help define our columns
-  const { columnHelper } = tableHelper
+  // const { columnHelper } = tableHelper // if TData was set in the table helper options - otherwise use the createColumnHelper method below
+  const columnHelper = tableHelper.createColumnHelper<Person>()
 
   // 5. Define the columns for your table with a stable reference (in this case, defined statically outside of a react component)
   const columns = columnHelper.columns([

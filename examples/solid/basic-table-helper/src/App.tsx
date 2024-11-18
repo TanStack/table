@@ -1,9 +1,7 @@
-import * as React from 'react'
-import ReactDOM from 'react-dom/client'
-import { createTableHelper, flexRender } from '@tanstack/react-table'
-import './index.css'
+import { createTableHelper, flexRender } from '@tanstack/solid-table'
+import { For, createSignal } from 'solid-js'
 
-// This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
+// This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `createTable` hook and `createColumnHelper` method. You can choose to use either way.
 
 // 1. Define what the shape of your data will be for each row
 type Person = {
@@ -41,23 +39,15 @@ const defaultData: Array<Person> = [
     status: 'Complicated',
     progress: 10,
   },
-  {
-    firstName: 'kevin',
-    lastName: 'vandy',
-    age: 28,
-    visits: 100,
-    status: 'Single',
-    progress: 70,
-  },
 ]
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
 const tableHelper = createTableHelper({
-  _features: {columnSizingFeature: {}},
+  _features: {},
   _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
   _processingFns: {}, // client-side processing functions used by the row models (sorting, filtering, etc.). Not needed in this basic example
+  TData: {} as Person,
   debugTable: true,
-  // TData: {} as Person, // optionally, set the TData type for the table helper. Omit if this will be a table helper for multiple tables of all different data types
 })
 
 // 4. Create a helper object to help define our columns
@@ -101,78 +91,87 @@ const columns = columnHelper.columns([
 
 function App() {
   // 6. Store data with a stable reference
-  const [data, _setData] = React.useState(() => [...defaultData])
-  const rerender = React.useReducer(() => ({}), {})[1]
+  const [data, setData] = createSignal(defaultData)
+  const rerender = () => setData(defaultData)
 
   // 7. Create the table instance with the required columns and data.
   // Features and row models are already defined in the table helper object above
-  const table = tableHelper.useTable({
+  const table = tableHelper.createTable({
     columns,
-    data,
+    get data() {
+      return data()
+    },
     // add additional table options here or in the table helper above
   })
 
-  // 8. Render your table markup from the table instance APIs
   return (
-    <div className="p-2">
+    <div class="p-2">
       <table>
         <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
+          <For each={table.getHeaderGroups()}>
+            {(headerGroup) => (
+              <tr>
+                <For each={headerGroup.headers}>
+                  {(header) => (
+                    <th>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </th>
+                  )}
+                </For>
+              </tr>
+            )}
+          </For>
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getAllCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
+          <For each={table.getRowModel().rows}>
+            {(row) => (
+              <tr>
+                <For each={row.getAllCells()}>
+                  {(cell) => (
+                    <td>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  )}
+                </For>
+              </tr>
+            )}
+          </For>
         </tbody>
         <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext(),
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
+          <For each={table.getFooterGroups()}>
+            {(footerGroup) => (
+              <tr>
+                <For each={footerGroup.headers}>
+                  {(header) => (
+                    <th>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext(),
+                          )}
+                    </th>
+                  )}
+                </For>
+              </tr>
+            )}
+          </For>
         </tfoot>
       </table>
-      <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
+      <div class="h-4" />
+      <button onClick={() => rerender()} class="border p-2">
         Rerender
       </button>
     </div>
   )
 }
 
-const rootElement = document.getElementById('root')
-if (!rootElement) throw new Error('Failed to find the root element')
-
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+export default App
