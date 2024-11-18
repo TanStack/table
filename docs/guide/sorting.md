@@ -145,11 +145,11 @@ By default, there are 6 built-in sorting functions to choose from:
 - `datetime` - Sorts by time, use this if your values are `Date` objects.
 - `basic` - Sorts using a basic/standard `a > b ? 1 : a < b ? -1 : 0` comparison. This is the fastest sorting function, but may not be the most accurate.
 
-You can also define your own custom sorting functions either as the `sortingFn` column option, or as a global sorting function using the `sortingFns` table option.
+You can also define your own custom sorting functions either as the `sortingFn` column option, or as a global sorting function using the `sortFns` table option.
 
 #### Custom Sorting Functions
 
-When defining a custom sorting function in either the `sortingFns` table option or as a `sortingFn` column option, it should have the following signature:
+When defining a custom sorting function in either the `sortFns` table option or as a `sortingFn` column option, it should have the following signature:
 
 ```tsx
 //optionally use the SortingFn to infer the parameter types
@@ -200,7 +200,7 @@ const table = useTable({
   data,
   getCoreRowModel: createCoreRowModel(),
   getSortedRowModel: createSortedRowModel(),
-  sortingFns: { //add a custom sorting function
+  sortFns: { //add a custom sorting function
     myCustomSortingFn: (rowA, rowB, columnId) => {
       return rowA.original[columnId] > rowB.original[columnId] ? 1 : rowA.original[columnId] < rowB.original[columnId] ? -1 : 0
     },

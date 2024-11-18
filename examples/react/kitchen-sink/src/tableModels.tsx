@@ -1,4 +1,4 @@
-import { sortingFns } from '@tanstack/react-table'
+import { sortFns } from '@tanstack/react-table'
 import React from 'react'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import IndeterminateCheckbox from './components/InderterminateCheckbox'
@@ -34,7 +34,7 @@ export const fuzzySort: SortingFn<any, Person> = (rowA, rowB, columnId) => {
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
 export type TableMeta = {

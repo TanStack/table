@@ -61,12 +61,12 @@ export default function Table<T extends Record<string, string | number>>({
                     {header.isPlaceholder ? null : (
                       <>
                         <div
-                          {...{
-                            className: header.column.getCanSort()
+                          className={
+                            header.column.getCanSort()
                               ? 'cursor-pointer select-none'
-                              : '',
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
+                              : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
                         >
                           {flexRender(
                             header.column.columnDef.header,

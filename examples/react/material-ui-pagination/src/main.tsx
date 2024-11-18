@@ -89,7 +89,7 @@ function App() {
 
   return (
     <>
-      <LocalTable {...{ data, columns }} />
+      <LocalTable data={data} columns={columns} />
       <hr />
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>

@@ -6,7 +6,7 @@
     createTable,
     createTableState,
     renderComponent,
-    sortingFns,
+    sortFns,
   } from '@tanstack/svelte-table'
   import Header from './Header.svelte'
   import './index.css'
@@ -86,7 +86,7 @@
       sortedRowModel: createSortedRowModel(),
     },
     _processingFns: {
-      sortingFns,
+      sortFns,
     },
     get data() {
       return data

@@ -4,11 +4,10 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
+  createTableHelper,
   flexRender,
   rowPaginationFeature,
   tableFeatures,
-  tableOptions,
-  useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type {
@@ -26,7 +25,7 @@ const _features = tableFeatures({
   columnFilteringFeature,
 })
 
-const options = tableOptions<typeof _features, Person>({
+const tableHelper = createTableHelper({
   _features,
   _rowModels: {
     filteredRowModel: createFilteredRowModel(),
@@ -41,7 +40,7 @@ declare module '@tanstack/react-table' {
 }
 
 // Give our default column cell renderer editing superpowers!
-const defaultColumn: Partial<ColumnDef<typeof options._features, Person>> = {
+const defaultColumn: Partial<ColumnDef<typeof tableHelper.features, Person>> = {
   cell: ({ getValue, row: { index }, column: { id }, table }) => {
     const initialValue = getValue()
     // We need to keep and update the state of the cell normally
@@ -87,7 +86,7 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const columns = React.useMemo<
-    Array<ColumnDef<typeof options._features, Person>>
+    Array<ColumnDef<typeof tableHelper.features, Person>>
   >(
     () => [
       {
@@ -146,8 +145,7 @@ function App() {
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
-  const table = useTable({
-    ...options,
+  const table = tableHelper.useTable({
     columns,
     data,
     defaultColumn,
@@ -206,7 +204,7 @@ function App() {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
@@ -299,8 +297,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, Person>
-  table: Table<any, Person>
+  column: Column<typeof _features, Person>
+  table: Table<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

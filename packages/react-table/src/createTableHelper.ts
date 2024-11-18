@@ -13,7 +13,7 @@ export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
-  useTable: (
+  useTable: <TData extends RowData>(
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels' | '_processingFns'
@@ -28,10 +28,7 @@ export function createTableHelper<
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper<TFeatures, TData> {
   const tableHelper = constructTableHelper(useTable, tableHelperOptions)
-  return {
-    ...tableHelper,
-    useTable: tableHelper.tableCreator,
-  } as any
+  return { ...tableHelper, useTable: tableHelper.tableCreator }
 }
 
 // test

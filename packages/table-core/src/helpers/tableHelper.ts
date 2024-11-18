@@ -12,7 +12,10 @@ import type { TableOptions } from '../types/TableOptions'
 export type TableHelperOptions<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
-> = Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'> & {
+> = Omit<
+  TableOptions<TFeatures, NoInfer<TData>>,
+  'columns' | 'data' | 'state'
+> & {
   _features: TFeatures
   TData?: TData // provide a cast for the TData type
 }
@@ -31,7 +34,7 @@ export type TableHelper_Core<
   >
   features: TFeatures
   options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'>
-  tableCreator: (
+  tableCreator: <TData extends RowData>(
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels' | '_processingFns'
@@ -58,7 +61,8 @@ export function constructTableHelper<
     features: tableHelperOptions._features,
     options: _tableHelperOptions as any,
     tableCreator: (tableOptions) =>
-      tableCreator({ ...(_tableHelperOptions as any), ...tableOptions }),
+      // @ts-expect-error - TODO: fix this
+      tableCreator({ ..._tableHelperOptions, ...tableOptions }),
   }
 }
 

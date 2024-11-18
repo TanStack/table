@@ -2,14 +2,10 @@ import { isDev, tableMemo } from '../../utils'
 import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
-import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 
-export function createFacetedUniqueValues<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(): (
-  table: Table_Internal<TFeatures, TData>,
+export function createFacetedUniqueValues<TFeatures extends TableFeatures>(): (
+  table: Table_Internal<TFeatures, any>,
   columnId: string,
 ) => () => Map<any, number> {
   return (table, columnId) =>
@@ -24,12 +20,9 @@ export function createFacetedUniqueValues<
     })
 }
 
-function _createFacetedUniqueValues<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
+function _createFacetedUniqueValues<TFeatures extends TableFeatures>(
   columnId: string,
-  facetedRowModel: RowModel<TFeatures, TData> | undefined,
+  facetedRowModel: RowModel<TFeatures, any> | undefined,
 ): Map<any, number> {
   if (!facetedRowModel) return new Map()
 

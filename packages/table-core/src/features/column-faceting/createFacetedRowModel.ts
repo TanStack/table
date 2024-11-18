@@ -5,18 +5,14 @@ import type {
   ColumnFiltersState,
   Row_ColumnFiltering,
 } from '../column-filtering/columnFilteringFeature.types'
-import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Row } from '../../types/Row'
 
-export function createFacetedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(): (
-  table: Table_Internal<TFeatures, TData>,
+export function createFacetedRowModel<TFeatures extends TableFeatures>(): (
+  table: Table_Internal<TFeatures, any>,
   columnId: string,
-) => () => RowModel<TFeatures, TData> {
+) => () => RowModel<TFeatures, any> {
   return (table, columnId) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
@@ -38,13 +34,10 @@ export function createFacetedRowModel<
     })
 }
 
-function _createFacetedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
+function _createFacetedRowModel<TFeatures extends TableFeatures>(
+  table: Table_Internal<TFeatures, any>,
   columnId: string,
-  preRowModel: RowModel<TFeatures, TData>,
+  preRowModel: RowModel<TFeatures, any>,
   columnFilters?: ColumnFiltersState,
   globalFilter?: string,
 ) {
@@ -58,7 +51,7 @@ function _createFacetedRowModel<
   ].filter(Boolean) as Array<string>
 
   const filterRowsImpl = (
-    row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
+    row: Row<TFeatures, any> & Partial<Row_ColumnFiltering<TFeatures, any>>,
   ) => {
     // Horizontally filter rows through each column
     for (const colId of filterableIds) {

@@ -11,7 +11,7 @@ import {
   processingFns,
   rowPaginationFeature,
   rowSortingFeature,
-  sortingFns,
+  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -31,7 +31,7 @@ const _features = tableFeatures({
 })
 
 const _processingFns = processingFns(_features, {
-  sortingFns,
+  sortFns,
   filterFns,
 })
 
@@ -81,12 +81,7 @@ function App() {
 
   return (
     <>
-      <MyTable
-        {...{
-          data,
-          columns,
-        }}
-      />
+      <MyTable data={data} columns={columns} />
       <hr />
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
@@ -140,12 +135,12 @@ function MyTable({
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     <div
-                      {...{
-                        className: header.column.getCanSort()
+                      className={
+                        header.column.getCanSort()
                           ? 'cursor-pointer select-none'
-                          : '',
-                        onClick: header.column.getToggleSortingHandler(),
-                      }}
+                          : ''
+                      }
+                      onClick={header.column.getToggleSortingHandler()}
                     >
                       {flexRender(
                         header.column.columnDef.header,

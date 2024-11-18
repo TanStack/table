@@ -90,7 +90,7 @@ When using fuzzy filtering with column filtering, you might also want to sort th
 
 ```typescript
 import { compareItems } from '@tanstack/match-sorter-utils'
-import { sortingFns } from '@tanstack/table'
+import { sortFns } from '@tanstack/table'
 
 const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
   let dir = 0
@@ -104,7 +104,7 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 ```
 

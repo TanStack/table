@@ -5,7 +5,7 @@
 //   createSortedRowModel,
 //   flexRender,
 //   rowSortingFeature,
-//   sortingFns,
+//   sortFns,
 //   tableFeatures,
 //   useTable,
 // } from '@tanstack/react-table'
@@ -90,7 +90,7 @@
 //   const table = useTable({
 //     _features,
 //     _processingFns: {
-//       sortingFns,
+//       sortFns,
 //     },
 //     _rowModels: {
 //       sortedRowModel: createSortedRowModel(), // client-side sorting
@@ -99,7 +99,7 @@
 //     data,
 //     debugTable: true,
 //     onSortingChange: setSorting, // optionally control sorting state in your own scope for easy access
-//     // sortingFns: {
+//     // sortFns: {
 //     //   sortStatusFn, //or provide our custom sorting function globally for all columns to be able to use
 //     // },
 //     // no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
@@ -210,7 +210,7 @@ import {
   createSortedRowModel,
   createTableHelper,
   filterFns,
-  sortingFns,
+  sortFns,
   aggregationFns,
   stockFeatures, // Import all TanStack Table Features (Just like V8 used to)
 } from '@tanstack/react-table'
@@ -225,7 +225,7 @@ export const useReactTable = createTableHelper({
     expandedRowModel: createExpandedRowModel(),
   },
   _processingFns: {
-    sortingFns,
+    sortFns,
     filterFns,
     aggregationFns,
   },

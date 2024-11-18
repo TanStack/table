@@ -126,7 +126,7 @@ To make a ranking/filtering/sorting system work with tables, `filterFn`s can opt
 Below is an example using our own `match-sorter-utils` package (a utility fork of `match-sorter`) to rank, filter, and sort the data
 
 ```tsx
-import { sortingFns } from '@tanstack/react-table'
+import { sortFns } from '@tanstack/react-table'
 import { rankItem, compareItems } from '@tanstack/match-sorter-utils'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -152,7 +152,7 @@ const fuzzySort = (rowA, rowB, columnId) => {
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 ```
 

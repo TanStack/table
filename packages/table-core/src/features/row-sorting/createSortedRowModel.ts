@@ -5,19 +5,15 @@ import {
   column_getSortingFn,
 } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
-import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { SortingFn } from './rowSortingFeature.types'
 
-export function createSortedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(): (
-  table: Table_Internal<TFeatures, TData>,
-) => () => RowModel<TFeatures, TData> {
+export function createSortedRowModel<TFeatures extends TableFeatures>(): (
+  table: Table_Internal<TFeatures, any>,
+) => () => RowModel<TFeatures, any> {
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
@@ -31,10 +27,9 @@ export function createSortedRowModel<
     })
 }
 
-function _createSortedRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+function _createSortedRowModel<TFeatures extends TableFeatures>(
+  table: Table_Internal<TFeatures, any>,
+): RowModel<TFeatures, any> {
   const preSortedRowModel = table.getPreSortedRowModel()
   const sorting = table.options.state?.sorting
 
@@ -42,7 +37,7 @@ function _createSortedRowModel<
     return preSortedRowModel
   }
 
-  const sortedFlatRows: Array<Row<TFeatures, TData>> = []
+  const sortedFlatRows: Array<Row<TFeatures, any>> = []
 
   // Filter out sortings that correspond to non existing columns
   const availableSorting = sorting.filter((sort) =>
@@ -54,13 +49,13 @@ function _createSortedRowModel<
     {
       sortUndefined?: false | -1 | 1 | 'first' | 'last'
       invertSorting?: boolean
-      sortingFn: SortingFn<TFeatures, TData>
+      sortingFn: SortingFn<TFeatures, any>
     }
   > = {}
 
   availableSorting.forEach((sortEntry) => {
     const column = table.getColumn(sortEntry.id) as
-      | Column_Internal<TFeatures, TData>
+      | Column_Internal<TFeatures, any>
       | undefined
     if (!column) return
 
@@ -71,7 +66,7 @@ function _createSortedRowModel<
     }
   })
 
-  const sortData = (rows: Array<Row<TFeatures, TData>>) => {
+  const sortData = (rows: Array<Row<TFeatures, any>>) => {
     // This will also perform a stable sorting using the row index
     // if needed.
     const sortedData = rows.map((row) => ({ ...row }))

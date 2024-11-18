@@ -154,13 +154,13 @@ function App() {
       </div>
       <div className="h-4" />
       <p className="text-sm mb-2">
-        This example using the non-split APIs. Columns are just reordered within
-        1 table instead of being split into 3 different tables.
+        This example takes advantage of the "splitting" APIs. (APIs that have
+        "left, "center", and "right" modifiers)
       </p>
-      <div className="flex">
+      <div className="flex gap-4">
         <table className="border-2 border-black">
           <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getLeftHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
@@ -218,7 +218,157 @@ function App() {
               .map((row) => {
                 return (
                   <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
+                    {row.getLeftVisibleCells().map((cell) => {
+                      return (
+                        <td key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+          </tbody>
+        </table>
+        <table className="border-2 border-black">
+          <thead>
+            {table.getCenterHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    <div className="whitespace-nowrap">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </div>
+                    {!header.isPlaceholder && header.column.getCanPin() && (
+                      <div className="flex gap-1 justify-center">
+                        {header.column.getIsPinned() !== 'left' ? (
+                          <button
+                            className="border rounded px-2"
+                            onClick={() => {
+                              header.column.pin('left')
+                            }}
+                          >
+                            {'<='}
+                          </button>
+                        ) : null}
+                        {header.column.getIsPinned() ? (
+                          <button
+                            className="border rounded px-2"
+                            onClick={() => {
+                              header.column.pin(false)
+                            }}
+                          >
+                            X
+                          </button>
+                        ) : null}
+                        {header.column.getIsPinned() !== 'right' ? (
+                          <button
+                            className="border rounded px-2"
+                            onClick={() => {
+                              header.column.pin('right')
+                            }}
+                          >
+                            {'=>'}
+                          </button>
+                        ) : null}
+                      </div>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table
+              .getRowModel()
+              .rows.slice(0, 20)
+              .map((row) => {
+                return (
+                  <tr key={row.id}>
+                    {row.getCenterVisibleCells().map((cell) => {
+                      return (
+                        <td key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+          </tbody>
+        </table>
+        <table className="border-2 border-black">
+          <thead>
+            {table.getRightHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    <div className="whitespace-nowrap">
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </div>
+                    {!header.isPlaceholder && header.column.getCanPin() && (
+                      <div className="flex gap-1 justify-center">
+                        {header.column.getIsPinned() !== 'left' ? (
+                          <button
+                            className="border rounded px-2"
+                            onClick={() => {
+                              header.column.pin('left')
+                            }}
+                          >
+                            {'<='}
+                          </button>
+                        ) : null}
+                        {header.column.getIsPinned() ? (
+                          <button
+                            className="border rounded px-2"
+                            onClick={() => {
+                              header.column.pin(false)
+                            }}
+                          >
+                            X
+                          </button>
+                        ) : null}
+                        {header.column.getIsPinned() !== 'right' ? (
+                          <button
+                            className="border rounded px-2"
+                            onClick={() => {
+                              header.column.pin('right')
+                            }}
+                          >
+                            {'=>'}
+                          </button>
+                        ) : null}
+                      </div>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table
+              .getRowModel()
+              .rows.slice(0, 20)
+              .map((row) => {
+                return (
+                  <tr key={row.id}>
+                    {row.getRightVisibleCells().map((cell) => {
                       return (
                         <td key={cell.id}>
                           {flexRender(

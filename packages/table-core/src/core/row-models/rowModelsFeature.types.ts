@@ -28,8 +28,8 @@ export interface CreateRowModel_Core<
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   coreRowModel?: (
-    table: Table<TFeatures, TData>,
-  ) => () => RowModel<TFeatures, TData>
+    table: Table<TFeatures, NoInfer<TData>>,
+  ) => () => RowModel<TFeatures, NoInfer<TData>>
 }
 
 export interface CachedRowModel_Core<

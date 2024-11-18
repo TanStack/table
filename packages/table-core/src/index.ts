@@ -69,7 +69,7 @@ export * from './core/table/tablesFeature.utils'
 
 export * from './fns/aggregationFns'
 export * from './fns/filterFns'
-export * from './fns/sortingFns'
+export * from './fns/sortFns'
 
 /**
  * Features

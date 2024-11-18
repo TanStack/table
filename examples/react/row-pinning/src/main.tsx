@@ -82,11 +82,7 @@ function App() {
         accessorKey: 'firstName',
         header: ({ table }) => (
           <>
-            <button
-              {...{
-                onClick: table.getToggleAllRowsExpandedHandler(),
-              }}
-            >
+            <button onClick={table.getToggleAllRowsExpandedHandler()}>
               {table.getIsAllRowsExpanded() ? '👇' : '👉'}
             </button>{' '}
             First Name
@@ -105,10 +101,8 @@ function App() {
             <>
               {row.getCanExpand() ? (
                 <button
-                  {...{
-                    onClick: row.getToggleExpandedHandler(),
-                    style: { cursor: 'pointer' },
-                  }}
+                  onClick={row.getToggleExpandedHandler()}
+                  style={{ cursor: 'pointer' }}
                 >
                   {row.getIsExpanded() ? '👇' : '👉'}
                 </button>

@@ -61,14 +61,12 @@ const columns: Array<ColumnDef<any, Person>> = [
     id: 'select',
     header: ({ table }) => (
       <IndeterminateCheckbox
-        {...{
-          checked: table.getIsAllRowsSelected(),
-          indeterminate: table.getIsSomeRowsSelected(),
-          onChange$: $(() => {
-            console.log('toggleAllRowsSelected')
-            table.toggleAllRowsSelected()
-          }),
-        }}
+        checked={table.getIsAllRowsSelected()}
+        indeterminate={table.getIsSomeRowsSelected()}
+        onChange$={$(() => {
+          console.log('toggleAllRowsSelected')
+          table.toggleAllRowsSelected()
+        })}
       />
     ),
     cell: ({ row, table }) => {
@@ -76,17 +74,15 @@ const columns: Array<ColumnDef<any, Person>> = [
       return (
         <div class="px-1">
           <IndeterminateCheckbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              // onChange: row.getToggleSelectedHandler(),
-              onChange$: $(() => {
-                // TODO: getting row instance from table works, but how can we call getToggleSelectedHandler() withour getting qwik qrl error?
-                const row = table.getRow(id)
-                row.toggleSelected()
-              }),
-            }}
+            checked={row.getIsSelected()}
+            disabled={!row.getCanSelect()}
+            indeterminate={row.getIsSomeSelected()}
+            // onChange: row.getToggleSelectedHandler(),
+            onChange$={$(() => {
+              // TODO: getting row instance from table works, but how can we call getToggleSelectedHandler() without getting qwik qrl error?
+              const row = table.getRow(id)
+              row.toggleSelected()
+            })}
           />
         </div>
       )

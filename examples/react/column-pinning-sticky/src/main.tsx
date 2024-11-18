@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import {
   columnOrderingFeature,
   columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
   columnVisibilityFeature,
   flexRender,
   tableFeatures,
@@ -19,12 +21,16 @@ const _features = tableFeatures({
   columnVisibilityFeature,
   columnPinningFeature,
   columnOrderingFeature,
+  columnSizingFeature,
+  columnResizingFeature,
 })
 
 // These are the important styles to make sticky column pinning work!
 // Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
 // View the index.css file for more needed styles such as border-collapse: separate
-const getCommonPinningStyles = (column: Column<any, Person>): CSSProperties => {
+const getCommonPinningStyles = (
+  column: Column<typeof _features, Person>,
+): CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
     isPinned === 'left' && column.getIsLastColumn('left')
@@ -46,7 +52,7 @@ const getCommonPinningStyles = (column: Column<any, Person>): CSSProperties => {
   }
 }
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',
     id: 'firstName',
@@ -122,11 +128,9 @@ function App() {
         <div className="px-1 border-b border-black">
           <label>
             <input
-              {...{
-                type: 'checkbox',
-                checked: table.getIsAllColumnsVisible(),
-                onChange: table.getToggleAllColumnsVisibilityHandler(),
-              }}
+              type="checkbox"
+              checked={table.getIsAllColumnsVisible()}
+              onChange={table.getToggleAllColumnsVisibilityHandler()}
             />{' '}
             Toggle All
           </label>
@@ -136,11 +140,9 @@ function App() {
             <div key={column.id} className="px-1">
               <label>
                 <input
-                  {...{
-                    type: 'checkbox',
-                    checked: column.getIsVisible(),
-                    onChange: column.getToggleVisibilityHandler(),
-                  }}
+                  type="checkbox"
+                  checked={column.getIsVisible()}
+                  onChange={column.getToggleVisibilityHandler()}
                 />{' '}
                 {column.id}
               </label>
@@ -222,14 +224,12 @@ function App() {
                         </div>
                       )}
                       <div
-                        {...{
-                          onDoubleClick: () => header.column.resetSize(),
-                          onMouseDown: header.getResizeHandler(),
-                          onTouchStart: header.getResizeHandler(),
-                          className: `resizer ${
-                            header.column.getIsResizing() ? 'isResizing' : ''
-                          }`,
-                        }}
+                        onDoubleClick={() => header.column.resetSize()}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${
+                          header.column.getIsResizing() ? 'isResizing' : ''
+                        }`}
                       />
                     </th>
                   )

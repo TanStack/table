@@ -1,6 +1,6 @@
 import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table } from '../../types/Table'
-import type { BuiltInSortingFn } from '../../fns/sortingFns'
+import type { BuiltInSortingFn } from '../../fns/sortFns'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
@@ -22,10 +22,10 @@ export interface TableFns_RowSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  sortingFns: Record<keyof SortingFns, SortingFn<TFeatures, TData>>
+  sortFns: Record<keyof SortFns, SortingFn<TFeatures, TData>>
 }
 
-export interface SortingFns {}
+export interface SortFns {}
 
 export interface SortingFn<
   TFeatures extends TableFeatures,
@@ -38,7 +38,7 @@ export interface SortingFn<
   ): number
 }
 
-export type CustomSortingFns<
+export type CustomSortFns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Record<string, SortingFn<TFeatures, TData>>
@@ -46,7 +46,7 @@ export type CustomSortingFns<
 export type SortingFnOption<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = 'auto' | keyof SortingFns | BuiltInSortingFn | SortingFn<TFeatures, TData>
+> = 'auto' | keyof SortFns | BuiltInSortingFn | SortingFn<TFeatures, TData>
 
 export interface ColumnDef_RowSorting<
   TFeatures extends TableFeatures,

@@ -60,7 +60,7 @@ export type SortingFn<TData extends AnyData> = {
 Sorting functions can be used/referenced/defined by passing the following to `columnDefinition.sortingFn`:
 
 - A `string` that references a built-in sorting function
-- A `string` that references a custom sorting functions provided via the `tableOptions.sortingFns` option
+- A `string` that references a custom sorting functions provided via the `tableOptions.sortFns` option
 - A function directly provided to the `columnDefinition.sortingFn` option
 
 The final list of sorting functions available for the `columnDef.sortingFn` use the following type:
@@ -68,8 +68,8 @@ The final list of sorting functions available for the `columnDef.sortingFn` use 
 ```tsx
 export type SortingFnOption<TData extends AnyData> =
   | 'auto'
-  | SortingFns
-  | BuiltInSortingFns
+  | SortFns
+  | BuiltInSortFns
   | SortingFn<TFeatures, TData>
 ```
 
@@ -78,7 +78,7 @@ export type SortingFnOption<TData extends AnyData> =
 ### `sortingFn`
 
 ```tsx
-sortingFn?: SortingFn | keyof SortingFns | keyof BuiltInSortingFns
+sortingFn?: SortingFn | keyof SortFns | keyof BuiltInSortFns
 ```
 
 The sorting function to use with this column.
@@ -239,10 +239,10 @@ Returns a function that can be used to toggle this column's sorting state. This 
 
 ## Table Options
 
-### `sortingFns`
+### `sortFns`
 
 ```tsx
-sortingFns?: Record<string, SortingFn>
+sortFns?: Record<string, SortingFn>
 ```
 
 This option allows you to define custom sorting functions that can be referenced in a column's `sortingFn` option by their key.
@@ -250,7 +250,7 @@ Example:
 
 ```tsx
 declare module '@tanstack/table-core' {
-  interface SortingFns {
+  interface SortFns {
     myCustomSorting: SortingFn<unknown>
   }
 }
@@ -261,7 +261,7 @@ const column = columnHelper.data('key', {
 
 const table = useTable({
   columns: [column],
-  sortingFns: {
+  sortFns: {
     myCustomSorting: (rowA: any, rowB: any, columnId: any): number =>
       rowA.getValue(columnId).value < rowB.getValue(columnId).value ? 1 : -1,
   },

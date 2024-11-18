@@ -112,11 +112,9 @@ function App() {
         <div className="px-1 border-b border-black">
           <label>
             <input
-              {...{
-                type: 'checkbox',
-                checked: table.getIsAllColumnsVisible(),
-                onChange: table.getToggleAllColumnsVisibilityHandler(),
-              }}
+              type="checkbox"
+              checked={table.getIsAllColumnsVisible()}
+              onChange={table.getToggleAllColumnsVisibilityHandler()}
             />{' '}
             Toggle All
           </label>
@@ -126,11 +124,9 @@ function App() {
             <div key={column.id} className="px-1">
               <label>
                 <input
-                  {...{
-                    type: 'checkbox',
-                    checked: column.getIsVisible(),
-                    onChange: column.getToggleVisibilityHandler(),
-                  }}
+                  type="checkbox"
+                  checked={column.getIsVisible()}
+                  onChange={column.getToggleVisibilityHandler()}
                 />{' '}
                 {column.id}
               </label>

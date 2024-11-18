@@ -28,13 +28,13 @@ export interface TableOptions_Table<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_processingFns)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _processingFns?: ProcessingFns<TFeatures, TData>
+  _processingFns?: ProcessingFns<TFeatures, NoInfer<TData>>
   /**
    * The row model options that you want to enable for the table.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _rowModels?: CreateRowModels_All<TFeatures, TData>
+  _rowModels?: CreateRowModels_All<TFeatures, NoInfer<TData>>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -80,9 +80,9 @@ export interface TableOptions_Table<
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   mergeOptions?: (
-    defaultOptions: TableOptions<TFeatures, TData>,
-    options: Partial<TableOptions<TFeatures, TData>>,
-  ) => TableOptions<TFeatures, TData>
+    defaultOptions: TableOptions<TFeatures, NoInfer<TData>>,
+    options: Partial<TableOptions<TFeatures, NoInfer<TData>>>,
+  ) => TableOptions<TFeatures, NoInfer<TData>>
   /**
    * You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#meta)

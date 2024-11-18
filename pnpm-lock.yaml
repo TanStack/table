@@ -1232,6 +1232,40 @@ importers:
         specifier: ^5.4.11
         version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
 
+  examples/react/column-pinning-split:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^9.2.0
+        version: 9.2.0
+      '@tanstack/react-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/react-table
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.1
+        version: 6.0.1(rollup@4.26.0)
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.12
+      '@types/react-dom':
+        specifier: ^18.3.1
+        version: 18.3.1
+      '@vitejs/plugin-react':
+        specifier: ^4.3.3
+        version: 4.3.3(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+      typescript:
+        specifier: 5.6.3
+        version: 5.6.3
+      vite:
+        specifier: ^5.4.11
+        version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
+
   examples/react/column-pinning-sticky:
     dependencies:
       '@faker-js/faker':
@@ -2346,6 +2380,31 @@ importers:
         version: 2.10.2(@testing-library/jest-dom@6.6.3)(solid-js@1.9.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
 
   examples/solid/filters:
+    dependencies:
+      '@solid-primitives/scheduled':
+        specifier: ^1.4.4
+        version: 1.4.4(solid-js@1.9.3)
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.3
+        version: 1.9.3
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^9.2.0
+        version: 9.2.0
+      typescript:
+        specifier: 5.6.3
+        version: 5.6.3
+      vite:
+        specifier: ^5.4.11
+        version: 5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6)
+      vite-plugin-solid:
+        specifier: ^2.10.2
+        version: 2.10.2(@testing-library/jest-dom@6.6.3)(solid-js@1.9.3)(vite@5.4.11(@types/node@22.9.0)(less@4.2.0)(sass@1.80.7)(terser@5.31.6))
+
+  examples/solid/filters-faceted:
     dependencies:
       '@solid-primitives/scheduled':
         specifier: ^1.4.4

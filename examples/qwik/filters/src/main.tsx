@@ -11,7 +11,7 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   flexRender,
-  sortingFns,
+  sortFns,
   useTable,
 } from '@tanstack/qwik-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
@@ -58,7 +58,7 @@ const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
 type Person = {
@@ -220,12 +220,12 @@ const App = component$(() => {
                     {header.isPlaceholder ? null : (
                       <>
                         <div
-                          {...{
-                            class: header.column.getCanSort()
+                          class={
+                            header.column.getCanSort()
                               ? 'cursor-pointer select-none'
-                              : '',
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
+                              : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
                         >
                           {flexRender(
                             header.column.columnDef.header,

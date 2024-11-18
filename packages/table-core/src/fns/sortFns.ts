@@ -161,7 +161,7 @@ function compareAlphanumeric(aStr: string, bStr: string) {
 
 // Exports
 
-export const sortingFns = {
+export const sortFns = {
   alphanumeric: sortingFn_alphanumeric,
   alphanumericCaseSensitive: sortingFn_alphanumericCaseSensitive,
   basic: sortingFn_basic,
@@ -170,4 +170,4 @@ export const sortingFns = {
   textCaseSensitive: sortingFn_textCaseSensitive,
 }
 
-export type BuiltInSortingFn = keyof typeof sortingFns
+export type BuiltInSortingFn = keyof typeof sortFns

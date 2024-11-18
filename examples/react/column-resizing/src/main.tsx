@@ -156,24 +156,16 @@ function App() {
         <div className="h-4" />
         <div className="text-xl">{'<table/>'}</div>
         <div className="overflow-x-auto">
-          <table
-            {...{
-              style: {
-                width: table.getCenterTotalSize(),
-              },
-            }}
-          >
+          <table style={{ width: table.getCenterTotalSize() }}>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
-                      {...{
-                        key: header.id,
-                        colSpan: header.colSpan,
-                        style: {
-                          width: header.getSize(),
-                        },
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      style={{
+                        width: header.getSize(),
                       }}
                     >
                       {header.isPlaceholder
@@ -183,29 +175,24 @@ function App() {
                             header.getContext(),
                           )}
                       <div
-                        {...{
-                          onDoubleClick: () => header.column.resetSize(),
-                          onMouseDown: header.getResizeHandler(),
-                          onTouchStart: header.getResizeHandler(),
-                          className: `resizer ${
-                            table.options.columnResizeDirection
-                          } ${
-                            header.column.getIsResizing() ? 'isResizing' : ''
-                          }`,
-                          style: {
-                            transform:
-                              columnResizeMode === 'onEnd' &&
-                              header.column.getIsResizing()
-                                ? `translateX(${
-                                    (table.options.columnResizeDirection ===
-                                    'rtl'
-                                      ? -1
-                                      : 1) *
-                                    (table.getState().columnResizing
-                                      .deltaOffset ?? 0)
-                                  }px)`
-                                : '',
-                          },
+                        onDoubleClick={() => header.column.resetSize()}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${
+                          table.options.columnResizeDirection
+                        } ${header.column.getIsResizing() ? 'isResizing' : ''}`}
+                        style={{
+                          transform:
+                            columnResizeMode === 'onEnd' &&
+                            header.column.getIsResizing()
+                              ? `translateX(${
+                                  (table.options.columnResizeDirection === 'rtl'
+                                    ? -1
+                                    : 1) *
+                                  (table.getState().columnResizing
+                                    .deltaOffset ?? 0)
+                                }px)`
+                              : '',
                         }}
                       />
                     </th>
@@ -218,11 +205,9 @@ function App() {
                 <tr key={row.id}>
                   {row.getAllCells().map((cell) => (
                     <td
-                      {...{
-                        key: cell.id,
-                        style: {
-                          width: cell.column.getSize(),
-                        },
+                      key={cell.id}
+                      style={{
+                        width: cell.column.getSize(),
                       }}
                     >
                       {flexRender(
@@ -239,30 +224,16 @@ function App() {
         <div className="h-4" />
         <div className="text-xl">{'<div/> (relative)'}</div>
         <div className="overflow-x-auto">
-          <div
-            {...{
-              className: 'divTable',
-              style: {
-                width: table.getTotalSize(),
-              },
-            }}
-          >
+          <div className="divTable" style={{ width: table.getTotalSize() }}>
             <div className="thead">
               {table.getHeaderGroups().map((headerGroup) => (
-                <div
-                  {...{
-                    key: headerGroup.id,
-                    className: 'tr',
-                  }}
-                >
+                <div key={headerGroup.id} className="tr">
                   {headerGroup.headers.map((header) => (
                     <div
-                      {...{
-                        key: header.id,
-                        className: 'th',
-                        style: {
-                          width: header.getSize(),
-                        },
+                      key={header.id}
+                      className="th"
+                      style={{
+                        width: header.getSize(),
                       }}
                     >
                       {header.isPlaceholder
@@ -272,29 +243,24 @@ function App() {
                             header.getContext(),
                           )}
                       <div
-                        {...{
-                          onDoubleClick: () => header.column.resetSize(),
-                          onMouseDown: header.getResizeHandler(),
-                          onTouchStart: header.getResizeHandler(),
-                          className: `resizer ${
-                            table.options.columnResizeDirection
-                          } ${
-                            header.column.getIsResizing() ? 'isResizing' : ''
-                          }`,
-                          style: {
-                            transform:
-                              columnResizeMode === 'onEnd' &&
-                              header.column.getIsResizing()
-                                ? `translateX(${
-                                    (table.options.columnResizeDirection ===
-                                    'rtl'
-                                      ? -1
-                                      : 1) *
-                                    (table.getState().columnResizing
-                                      .deltaOffset ?? 0)
-                                  }px)`
-                                : '',
-                          },
+                        onDoubleClick={() => header.column.resetSize()}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${
+                          table.options.columnResizeDirection
+                        } ${header.column.getIsResizing() ? 'isResizing' : ''}`}
+                        style={{
+                          transform:
+                            columnResizeMode === 'onEnd' &&
+                            header.column.getIsResizing()
+                              ? `translateX(${
+                                  (table.options.columnResizeDirection === 'rtl'
+                                    ? -1
+                                    : 1) *
+                                  (table.getState().columnResizing
+                                    .deltaOffset ?? 0)
+                                }px)`
+                              : '',
                         }}
                       />
                     </div>
@@ -302,26 +268,15 @@ function App() {
                 </div>
               ))}
             </div>
-            <div
-              {...{
-                className: 'tbody',
-              }}
-            >
+            <div className="tbody">
               {table.getRowModel().rows.map((row) => (
-                <div
-                  {...{
-                    key: row.id,
-                    className: 'tr',
-                  }}
-                >
+                <div key={row.id} className="tr">
                   {row.getAllCells().map((cell) => (
                     <div
-                      {...{
-                        key: cell.id,
-                        className: 'td',
-                        style: {
-                          width: cell.column.getSize(),
-                        },
+                      key={cell.id}
+                      className="td"
+                      style={{
+                        width: cell.column.getSize(),
                       }}
                     >
                       {flexRender(
@@ -339,34 +294,28 @@ function App() {
         <div className="text-xl">{'<div/> (absolute positioning)'}</div>
         <div className="overflow-x-auto">
           <div
-            {...{
-              className: 'divTable',
-              style: {
-                width: table.getTotalSize(),
-              },
+            className="divTable"
+            style={{
+              width: table.getTotalSize(),
             }}
           >
             <div className="thead">
               {table.getHeaderGroups().map((headerGroup) => (
                 <div
-                  {...{
-                    key: headerGroup.id,
-                    className: 'tr',
-                    style: {
-                      position: 'relative',
-                    },
+                  key={headerGroup.id}
+                  className="tr"
+                  style={{
+                    position: 'relative',
                   }}
                 >
                   {headerGroup.headers.map((header) => (
                     <div
-                      {...{
-                        key: header.id,
-                        className: 'th',
-                        style: {
-                          position: 'absolute',
-                          left: header.getStart(),
-                          width: header.getSize(),
-                        },
+                      key={header.id}
+                      className="th"
+                      style={{
+                        position: 'absolute',
+                        left: header.getStart(),
+                        width: header.getSize(),
                       }}
                     >
                       {header.isPlaceholder
@@ -376,29 +325,24 @@ function App() {
                             header.getContext(),
                           )}
                       <div
-                        {...{
-                          onDoubleClick: () => header.column.resetSize(),
-                          onMouseDown: header.getResizeHandler(),
-                          onTouchStart: header.getResizeHandler(),
-                          className: `resizer ${
-                            table.options.columnResizeDirection
-                          } ${
-                            header.column.getIsResizing() ? 'isResizing' : ''
-                          }`,
-                          style: {
-                            transform:
-                              columnResizeMode === 'onEnd' &&
-                              header.column.getIsResizing()
-                                ? `translateX(${
-                                    (table.options.columnResizeDirection ===
-                                    'rtl'
-                                      ? -1
-                                      : 1) *
-                                    (table.getState().columnResizing
-                                      .deltaOffset ?? 0)
-                                  }px)`
-                                : '',
-                          },
+                        onDoubleClick={() => header.column.resetSize()}
+                        onMouseDown={header.getResizeHandler()}
+                        onTouchStart={header.getResizeHandler()}
+                        className={`resizer ${
+                          table.options.columnResizeDirection
+                        } ${header.column.getIsResizing() ? 'isResizing' : ''}`}
+                        style={{
+                          transform:
+                            columnResizeMode === 'onEnd' &&
+                            header.column.getIsResizing()
+                              ? `translateX(${
+                                  (table.options.columnResizeDirection === 'rtl'
+                                    ? -1
+                                    : 1) *
+                                  (table.getState().columnResizing
+                                    .deltaOffset ?? 0)
+                                }px)`
+                              : '',
                         }}
                       />
                     </div>
@@ -406,31 +350,23 @@ function App() {
                 </div>
               ))}
             </div>
-            <div
-              {...{
-                className: 'tbody',
-              }}
-            >
+            <div className="tbody">
               {table.getRowModel().rows.map((row) => (
                 <div
-                  {...{
-                    key: row.id,
-                    className: 'tr',
-                    style: {
-                      position: 'relative',
-                    },
+                  key={row.id}
+                  className="tr"
+                  style={{
+                    position: 'relative',
                   }}
                 >
                   {row.getAllCells().map((cell) => (
                     <div
-                      {...{
-                        key: cell.id,
-                        className: 'td',
-                        style: {
-                          position: 'absolute',
-                          left: cell.column.getStart(),
-                          width: cell.column.getSize(),
-                        },
+                      key={cell.id}
+                      className="td"
+                      style={{
+                        position: 'absolute',
+                        left: cell.column.getStart(),
+                        width: cell.column.getSize(),
                       }}
                     >
                       {flexRender(

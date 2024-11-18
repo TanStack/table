@@ -122,12 +122,8 @@ function App() {
                         {header.column.getCanGroup() ? (
                           // If the header can be grouped, let's add a toggle
                           <button
-                            {...{
-                              onClick: header.column.getToggleGroupingHandler(),
-                              style: {
-                                cursor: 'pointer',
-                              },
-                            }}
+                            onClick={header.column.getToggleGroupingHandler()}
+                            style={{ cursor: 'pointer' }}
                           >
                             {header.column.getIsGrouped()
                               ? `🛑(${header.column.getGroupedIndex()}) `

@@ -5,12 +5,14 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  createTableHelper,
+  filterFns,
   flexRender,
   rowExpandingFeature,
   rowPaginationFeature,
+  rowSelectionFeature,
   rowSortingFeature,
-  tableFeatures,
-  useTable,
+  sortFns,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
@@ -23,34 +25,42 @@ import type {
 } from '@tanstack/react-table'
 import './index.css'
 
-const _features = tableFeatures({
-  columnFilteringFeature,
-  rowExpandingFeature,
-  rowPaginationFeature,
-  rowSortingFeature,
+const tableHelper = createTableHelper({
+  _features: {
+    columnFilteringFeature,
+    rowExpandingFeature,
+    rowPaginationFeature,
+    rowSortingFeature,
+    rowSelectionFeature,
+  },
+  _processingFns: {
+    filterFns: filterFns,
+    sortFns: sortFns,
+  },
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(),
+  },
 })
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
+  const columns = React.useMemo<
+    Array<ColumnDef<typeof tableHelper.features, Person>>
+  >(
     () => [
       {
         accessorKey: 'firstName',
         header: ({ table }) => (
           <>
             <IndeterminateCheckbox
-              {...{
-                checked: table.getIsAllRowsSelected(),
-                indeterminate: table.getIsSomeRowsSelected(),
-                onChange: table.getToggleAllRowsSelectedHandler(),
-              }}
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={table.getIsSomeRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
             />{' '}
-            <button
-              {...{
-                onClick: table.getToggleAllRowsExpandedHandler(),
-              }}
-            >
+            <button onClick={table.getToggleAllRowsExpandedHandler()}>
               {table.getIsAllRowsExpanded() ? '👇' : '👉'}
             </button>{' '}
             First Name
@@ -68,18 +78,14 @@ function App() {
           >
             <div>
               <IndeterminateCheckbox
-                {...{
-                  checked: row.getIsSelected(),
-                  indeterminate: row.getIsSomeSelected(),
-                  onChange: row.getToggleSelectedHandler(),
-                }}
+                checked={row.getIsSelected()}
+                indeterminate={row.getIsSomeSelected()}
+                onChange={row.getToggleSelectedHandler()}
               />{' '}
               {row.getCanExpand() ? (
                 <button
-                  {...{
-                    onClick: row.getToggleExpandedHandler(),
-                    style: { cursor: 'pointer' },
-                  }}
+                  onClick={row.getToggleExpandedHandler()}
+                  style={{ cursor: 'pointer' }}
                 >
                   {row.getIsExpanded() ? '👇' : '👉'}
                 </button>
@@ -103,6 +109,7 @@ function App() {
         accessorKey: 'age',
         header: () => 'Age',
         footer: (props) => props.column.id,
+        filterFn: 'between',
       },
       {
         accessorKey: 'visits',
@@ -128,13 +135,7 @@ function App() {
 
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
-  const table = useTable({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(),
-    },
+  const table = tableHelper.useTable({
     columns,
     data,
     state: {
@@ -180,7 +181,7 @@ function App() {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
@@ -278,8 +279,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof tableHelper.features, Person>
+  table: Table<typeof tableHelper.features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -293,9 +294,9 @@ function Filter({
         type="number"
         value={(columnFilterValue as [number, number] | undefined)?.[0]}
         onChange={(e) =>
-          column.setFilterValue((old: [number, number]) => [
+          column.setFilterValue((old: [number, number] | undefined) => [
             e.target.value,
-            old[1],
+            old?.[1],
           ])
         }
         placeholder={`Min`}
@@ -305,8 +306,8 @@ function Filter({
         type="number"
         value={(columnFilterValue as [number, number] | undefined)?.[1]}
         onChange={(e) =>
-          column.setFilterValue((old: [number, number]) => [
-            old[0],
+          column.setFilterValue((old: [number, number] | undefined) => [
+            old?.[0],
             e.target.value,
           ])
         }

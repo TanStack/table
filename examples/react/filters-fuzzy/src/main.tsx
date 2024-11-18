@@ -11,7 +11,7 @@ import {
   globalFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
-  sortingFns,
+  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -72,7 +72,7 @@ const fuzzySort: SortingFn<typeof _features, Person> = (
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
 filterFns.fuzzyFilter = fuzzyFilter
@@ -186,12 +186,12 @@ function App() {
                     {header.isPlaceholder ? null : (
                       <>
                         <div
-                          {...{
-                            className: header.column.getCanSort()
+                          className={
+                            header.column.getCanSort()
                               ? 'cursor-pointer select-none'
-                              : '',
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
+                              : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
                         >
                           {flexRender(
                             header.column.columnDef.header,

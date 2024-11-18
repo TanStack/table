@@ -27,10 +27,8 @@ const columns: Array<ColumnDef<any, Person>> = [
         cell: ({ row }) => {
           return row.getCanExpand() ? (
             <button
-              {...{
-                onClick: row.getToggleExpandedHandler(),
-                style: { cursor: 'pointer' },
-              }}
+              onClick={row.getToggleExpandedHandler()}
+              style={{ cursor: 'pointer' }}
             >
               {row.getIsExpanded() ? '👇' : '👉'}
             </button>

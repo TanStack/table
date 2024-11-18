@@ -143,30 +143,21 @@ function App() {
       <div className="overflow-x-auto">
         {/* Here in the <table> equivalent element (surrounds all table head and data cells), we will define our CSS variables for column sizes */}
         <div
-          {...{
-            className: 'divTable',
-            style: {
-              ...columnSizeVars, // Define column sizes on the <table> element
-              width: table.getTotalSize(),
-            },
+          className="divTable"
+          style={{
+            ...columnSizeVars, // Define column sizes on the <table> element
+            width: table.getTotalSize(),
           }}
         >
           <div className="thead">
             {table.getHeaderGroups().map((headerGroup) => (
-              <div
-                {...{
-                  key: headerGroup.id,
-                  className: 'tr',
-                }}
-              >
+              <div key={headerGroup.id} className="tr">
                 {headerGroup.headers.map((header) => (
                   <div
-                    {...{
-                      key: header.id,
-                      className: 'th',
-                      style: {
-                        width: `calc(var(--header-${header.id}-size) * 1px)`,
-                      },
+                    key={header.id}
+                    className="th"
+                    style={{
+                      width: `calc(var(--header-${header.id}-size) * 1px)`,
                     }}
                   >
                     {header.isPlaceholder
@@ -176,14 +167,12 @@ function App() {
                           header.getContext(),
                         )}
                     <div
-                      {...{
-                        onDoubleClick: () => header.column.resetSize(),
-                        onMouseDown: header.getResizeHandler(),
-                        onTouchStart: header.getResizeHandler(),
-                        className: `resizer ${
-                          header.column.getIsResizing() ? 'isResizing' : ''
-                        }`,
-                      }}
+                      onDoubleClick={() => header.column.resetSize()}
+                      onMouseDown={header.getResizeHandler()}
+                      onTouchStart={header.getResizeHandler()}
+                      className={`resizer ${
+                        header.column.getIsResizing() ? 'isResizing' : ''
+                      }`}
                     />
                   </div>
                 ))}
@@ -203,21 +192,12 @@ function App() {
 }
 
 // un-memoized normal table body component - see memoized version below
-function TableBody({ table }: { table: Table<any, Person> }) {
+function TableBody({ table }: { table: Table<typeof _features, Person> }) {
   return (
-    <div
-      {...{
-        className: 'tbody',
-      }}
-    >
+    <div className="tbody">
       {table.getRowModel().rows.map((row) => (
-        <div
-          {...{
-            key: row.id,
-            className: 'tr',
-          }}
-        >
-          {row.getVisibleCells().map((cell) => {
+        <div key={row.id} className="tr">
+          {row.getAllCells().map((cell) => {
             // simulate expensive render
             for (const _ of Array(10000)) {
               Math.random()
@@ -225,12 +205,10 @@ function TableBody({ table }: { table: Table<any, Person> }) {
 
             return (
               <div
-                {...{
-                  key: cell.id,
-                  className: 'td',
-                  style: {
-                    width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-                  },
+                key={cell.id}
+                className="td"
+                style={{
+                  width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                 }}
               >
                 {cell.renderValue<any>()}

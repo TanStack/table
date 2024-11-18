@@ -1,4 +1,4 @@
-import { reSplitAlphaNumeric, sortingFn_basic } from '../../fns/sortingFns'
+import { reSplitAlphaNumeric, sortingFn_basic } from '../../fns/sortFns'
 import { isFunction } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -42,7 +42,7 @@ export function column_getAutoSortingFn<
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
 ): SortingFn<TFeatures, TData> {
-  const sortingFns = column.table._processingFns.sortingFns as
+  const sortFns = column.table._processingFns.sortFns as
     | Record<string, SortingFn<TFeatures, TData>>
     | undefined
 
@@ -56,20 +56,20 @@ export function column_getAutoSortingFn<
     const value = row.getValue(column.id)
 
     if (Object.prototype.toString.call(value) === '[object Date]') {
-      sortingFn = sortingFns?.datetime
+      sortingFn = sortFns?.datetime
     }
 
     if (typeof value === 'string') {
       isString = true
 
       if (value.split(reSplitAlphaNumeric).length > 1) {
-        sortingFn = sortingFns?.alphanumeric
+        sortingFn = sortFns?.alphanumeric
       }
     }
   }
 
   if (isString) {
-    sortingFn = sortingFns?.text
+    sortingFn = sortFns?.text
   }
 
   return sortingFn ?? sortingFn_basic
@@ -98,7 +98,7 @@ export function column_getSortingFn<
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
 ): SortingFn<TFeatures, TData> {
-  const sortingFns = column.table._processingFns.sortingFns as
+  const sortFns = column.table._processingFns.sortFns as
     | Record<string, SortingFn<TFeatures, TData>>
     | undefined
 
@@ -106,7 +106,7 @@ export function column_getSortingFn<
     ? column.columnDef.sortingFn
     : column.columnDef.sortingFn === 'auto'
       ? column_getAutoSortingFn(column)
-      : (sortingFns?.[column.columnDef.sortingFn as string] ?? sortingFn_basic)
+      : (sortFns?.[column.columnDef.sortingFn as string] ?? sortingFn_basic)
 }
 
 export function column_toggleSorting<

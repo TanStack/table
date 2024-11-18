@@ -14,7 +14,7 @@ import {
   flexRender,
   rowPaginationFeature,
   rowSortingFeature,
-  sortingFns,
+  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -104,7 +104,7 @@ function App() {
     _features,
     _processingFns: {
       filterFns,
-      sortingFns,
+      sortFns,
     },
     _rowModels: {
       filteredRowModel: createFilteredRowModel(), // client-side filtering
@@ -137,12 +137,12 @@ function App() {
                     {header.isPlaceholder ? null : (
                       <>
                         <div
-                          {...{
-                            className: header.column.getCanSort()
+                          className={
+                            header.column.getCanSort()
                               ? 'cursor-pointer select-none'
-                              : '',
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
+                              : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
                         >
                           {flexRender(
                             header.column.columnDef.header,
