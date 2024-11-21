@@ -10,15 +10,15 @@
     "lint": "eslint ./src"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.59.20",
-    "@tanstack/react-router": "^1.81.5",
+    "@tanstack/react-query": "^5.61.0",
+    "@tanstack/react-router": "^1.82.2",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.2.0",
-    "@tanstack/router-vite-plugin": "^1.79.0",
+    "@tanstack/router-vite-plugin": "^1.81.9",
     "@rollup/plugin-replace": "^6.0.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

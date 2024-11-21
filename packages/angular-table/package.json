@@ -56,14 +56,14 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "^1.9.3",
-    "@angular/core": "^18.2.11",
-    "@angular/platform-browser": "^18.2.11",
-    "@angular/platform-browser-dynamic": "^18.2.11",
-    "ng-packagr": "^18.2.1"
+    "@analogjs/vite-plugin-angular": "^1.9.4",
+    "@angular/core": "^19.0.0",
+    "@angular/platform-browser": "^19.0.0",
+    "@angular/platform-browser-dynamic": "^19.0.0",
+    "ng-packagr": "^19.0.0"
   },
   "peerDependencies": {
-    "@angular/core": ">=17"
+    "@angular/core": ">=19"
   },
   "sideEffects": false
 }
