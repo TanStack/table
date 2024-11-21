@@ -2,12 +2,18 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFns,
   flexRender,
   functionalUpdate,
   makeStateUpdater,
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -19,6 +25,7 @@ import type {
   Table,
   TableFeature,
   TableFeatures,
+  TableState,
   Updater,
 } from '@tanstack/react-table'
 import type { Person } from './makeData'
@@ -27,40 +34,42 @@ import type { Person } from './makeData'
 
 // define types for our new feature's custom state
 export type DensityState = 'sm' | 'md' | 'lg'
-export interface DensityTableState {
+export interface TableState_Density {
   density: DensityState
 }
 
 // define types for our new feature's table options
-export interface DensityOptions {
+export interface TableOptions_Density {
   enableDensity?: boolean
   onDensityChange?: OnChangeFn<DensityState>
 }
 
 // Define types for our new feature's table APIs
-export interface DensityInstance {
+export interface Table_Density {
   setDensity: (updater: Updater<DensityState>) => void
   toggleDensity: (value?: DensityState) => void
 }
 
 // Use declaration merging to add our new feature APIs and state types to TanStack Table's existing types.
 declare module '@tanstack/react-table' {
+  // declare our new feature as a plugin
+  interface Plugins {
+    densityPlugin: TableFeature
+  }
   // merge our new feature's state with the existing table state
-  interface TableState extends DensityTableState {}
+  interface TableState_Plugins extends TableState_Density {}
   // merge our new feature's options with the existing table options
-  interface TableOptions<TFeatures extends TableFeatures, TData extends RowData>
-    extends DensityOptions {}
+  interface TableOptions_Plugins extends TableOptions_Density {}
   // merge our new feature's instance APIs with the existing table instance APIs
-  interface Table<TFeatures extends TableFeatures, TData extends RowData>
-    extends DensityInstance {}
+  interface Table_Plugins extends Table_Density {}
   // if you need to add cell instance APIs...
-  // interface Cell<TFeatures extends TableFeatures,  TData extends RowData, TValue> extends DensityCell
+  // interface Cell_Plugins extends Cell_Density {}
   // if you need to add row instance APIs...
-  // interface Row<TFeatures extends TableFeatures,  TData extends RowData> extends DensityRow
+  // interface Row_Plugins extends Row_Density {}
   // if you need to add column instance APIs...
-  // interface Column<TFeatures extends TableFeatures,  TData extends RowData, TValue> extends DensityColumn
+  // interface Column_Plugins extends Column_Density {}
   // if you need to add header instance APIs...
-  // interface Header<TFeatures extends TableFeatures,  TData extends RowData, TValue> extends DensityHeader
+  // interface Header_Plugins extends Header_Density {}
 
   // Note: declaration merging on `ColumnDef` is not possible because it is a type, not an interface.
   // But you can still use declaration merging on `ColumnDef.meta`
@@ -69,12 +78,14 @@ declare module '@tanstack/react-table' {
 // end of TS setup!
 
 // Here is all of the actual javascript code for our new feature
-export const DensityFeature: TableFeature = {
+export const densityPlugin: TableFeature = {
   // define the new feature's initial state
-  getInitialState: (state): DensityTableState => {
+  getInitialState: <TFeatures extends TableFeatures>(
+    initialState: Partial<TableState<TFeatures>>,
+  ): Partial<TableState<TFeatures>> => {
     return {
       density: 'md',
-      ...state,
+      ...initialState, // must come last
     }
   },
 
@@ -83,12 +94,12 @@ export const DensityFeature: TableFeature = {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Partial<Table<TFeatures, TData>>,
-  ): DensityOptions => {
+    table: Table<TFeatures, TData>,
+  ): TableOptions_Density => {
     return {
       enableDensity: true,
       onDensityChange: makeStateUpdater('density', table),
-    } as DensityOptions
+    } as TableOptions_Density
   },
   // if you need to add a default column definition...
   // getDefaultColumnDef: <TFeatures extends TableFeatures,  TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
@@ -96,7 +107,7 @@ export const DensityFeature: TableFeature = {
   // },
 
   // define the new feature's table instance methods
-  constructTable: <TFeatures extends TableFeatures, TData extends RowData>(
+  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table<TFeatures, TData>,
   ): void => {
     table.setDensity = (updater) => {
@@ -114,20 +125,27 @@ export const DensityFeature: TableFeature = {
     }
   },
 
-  // if you need to add row instance APIs...
-  // constructRow: <TFeatures extends TableFeatures,  TData extends RowData>(row, table): void => {},
-  // if you need to add cell instance APIs...
-  // constructCell: <TFeatures extends TableFeatures,  TData extends RowData>(cell, column, row, table): void => {},
-  // if you need to add column instance APIs...
-  // constructColumn: <TFeatures extends TableFeatures,  TData extends RowData>(column, table): void => {},
-  // if you need to add header instance APIs...
-  // constructHeader: <TFeatures extends TableFeatures,  TData extends RowData>(header, table): void => {},
+  // // if you need to add row instance APIs...
+  // constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>): void => {},
+  // // if you need to add cell instance APIs...
+  // constructCellAPIs: <TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData = CellData>(cell: Cell<TFeatures, TData, TValue>): void => {},
+  // // if you need to add column instance APIs...
+  // constructColumnAPIs: <TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData = CellData>(column: Column<TFeatures, TData, TValue>): void => {},
+  // // if you need to add header instance APIs...
+  // constructHeaderAPIs: <TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData = CellData>(header: Header<TFeatures, TData, TValue>): void => {},
 }
 // end of custom feature code
 
 // app code
+const _features = tableFeatures({
+  columnFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  densityPlugin, // pass in our plugin just like any other stock feature
+})
+
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -169,11 +187,15 @@ function App() {
   const [density, setDensity] = React.useState<DensityState>('md')
 
   const table = useTable({
-    _features: { DensityFeature }, // pass our custom feature to the table to be instantiated upon creation
+    _features,
     _rowModels: {
       filteredRowModel: createFilteredRowModel(),
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(),
+    },
+    _processingFns: {
+      filterFns,
+      sortFns,
     },
     columns,
     data,
@@ -245,7 +267,7 @@ function App() {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td
                       key={cell.id}
@@ -347,16 +369,14 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, any>
-  table: Table<any, any>
+  column: Column<typeof _features, Person>
+  table: Table<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
-
-  console.log('columnFilterValue', { columnFilterValue, table, column })
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">

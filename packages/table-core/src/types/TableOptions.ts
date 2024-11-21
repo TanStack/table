@@ -19,6 +19,8 @@ import type { TableOptions_RowSorting } from '../features/row-sorting/rowSorting
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 
+export interface TableOptions_Plugins {}
+
 export interface TableOptions_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -26,7 +28,8 @@ export interface TableOptions_Core<
     TableOptions_Cell,
     TableOptions_Columns<TFeatures, TData>,
     TableOptions_Rows<TFeatures, TData>,
-    TableOptions_Headers {}
+    TableOptions_Headers,
+    TableOptions_Plugins {}
 
 export type TableOptions<
   TFeatures extends TableFeatures,

@@ -30,10 +30,14 @@ import type {
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 
+export interface CreateRowModel_Plugins {}
+export interface CachedRowModel_Plugins {}
+
 export type CreateRowModels<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = CreateRowModel_Core<TFeatures, TData> &
+  CreateRowModel_Plugins &
   UnionToIntersection<
     | ('columnFacetingFeature' extends keyof TFeatures
         ? CreateRowModel_Faceted<TFeatures, TData>
@@ -64,7 +68,8 @@ export type CreateRowModels_All<
   CreateRowModel_Filtered<TFeatures, TData> &
   CreateRowModel_Grouped<TFeatures, TData> &
   CreateRowModel_Paginated<TFeatures, TData> &
-  CreateRowModel_Sorted<TFeatures, TData>
+  CreateRowModel_Sorted<TFeatures, TData> &
+  CreateRowModel_Plugins
 
 export type CachedRowModels<
   TFeatures extends TableFeatures,
@@ -90,7 +95,8 @@ export type CachedRowModels<
   | ('rowSortingFeature' extends keyof TFeatures
       ? CachedRowModel_Sorted<TFeatures, TData>
       : never)
->
+> &
+  CachedRowModel_Plugins
 
 export type CachedRowModel_All<
   TFeatures extends TableFeatures,
@@ -102,5 +108,6 @@ export type CachedRowModel_All<
     CachedRowModel_Filtered<TFeatures, TData> &
     CachedRowModel_Grouped<TFeatures, TData> &
     CachedRowModel_Paginated<TFeatures, TData> &
-    CachedRowModel_Sorted<TFeatures, TData>
+    CachedRowModel_Sorted<TFeatures, TData> &
+    CachedRowModel_Plugins
 >

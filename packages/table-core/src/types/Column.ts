@@ -13,11 +13,20 @@ import type { Column_ColumnVisibility } from '../features/column-visibility/colu
 import type { Column_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
 import type { Column_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 
+export interface Column_Plugins {}
+
+export interface Column_Core<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue = unknown,
+> extends Column_Column<TFeatures, TData, TValue>,
+    Column_Plugins {}
+
 export type Column<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
-> = Column_Column<TFeatures, TData, TValue> &
+> = Column_Core<TFeatures, TData, TValue> &
   UnionToIntersection<
     | ('columnFacetingFeature' extends keyof TFeatures
         ? Column_ColumnFaceting<TFeatures, TData>

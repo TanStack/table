@@ -3,9 +3,13 @@ import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
 import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
 
-export function createFacetedMinMaxValues<TFeatures extends TableFeatures>(): (
-  table: Table_Internal<TFeatures, any>,
+export function createFacetedMinMaxValues<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(): (
+  table: Table_Internal<TFeatures, TData>,
   columnId: string,
 ) => () => undefined | [number, number] {
   return (table, columnId) =>
@@ -20,9 +24,12 @@ export function createFacetedMinMaxValues<TFeatures extends TableFeatures>(): (
     })
 }
 
-function _createFacetedMinMaxValues<TFeatures extends TableFeatures>(
+function _createFacetedMinMaxValues<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(
   columnId: string,
-  facetedRowModel?: RowModel<TFeatures, any>,
+  facetedRowModel?: RowModel<TFeatures, TData>,
 ): undefined | [number, number] {
   if (!facetedRowModel) return undefined
 

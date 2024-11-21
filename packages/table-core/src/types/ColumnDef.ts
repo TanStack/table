@@ -11,6 +11,8 @@ import type { ColumnDef_ColumnVisibility } from '../features/column-visibility/c
 import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
 import type { ColumnDef_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 
+export interface ColumnDef_Plugins {}
+
 export interface ColumnMeta<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -55,7 +57,7 @@ interface ColumnDefBase_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-> {
+> extends ColumnDef_Plugins {
   getUniqueValues?: AccessorFn<TData, Array<unknown>>
   footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
   cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>

@@ -4,10 +4,14 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
+import type { RowData } from '../../types/type-utils'
 
-export function createExpandedRowModel<TFeatures extends TableFeatures>(): (
-  table: Table_Internal<TFeatures, any>,
-) => () => RowModel<TFeatures, any> {
+export function createExpandedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(): (
+  table: Table_Internal<TFeatures, TData>,
+) => () => RowModel<TFeatures, TData> {
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
@@ -21,9 +25,10 @@ export function createExpandedRowModel<TFeatures extends TableFeatures>(): (
     })
 }
 
-export function _createExpandedRowModel<TFeatures extends TableFeatures>(
-  table: Table_Internal<TFeatures, any>,
-): RowModel<TFeatures, any> {
+function _createExpandedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreExpandedRowModel()
   const expanded = table.options.state?.expanded
 
@@ -42,12 +47,13 @@ export function _createExpandedRowModel<TFeatures extends TableFeatures>(
   return expandRows(rowModel)
 }
 
-export function expandRows<TFeatures extends TableFeatures>(
-  rowModel: RowModel<TFeatures, any>,
-) {
-  const expandedRows: Array<Row<TFeatures, any>> = []
+export function expandRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(rowModel: RowModel<TFeatures, TData>): RowModel<TFeatures, TData> {
+  const expandedRows: Array<Row<TFeatures, TData>> = []
 
-  const handleRow = (row: Row<TFeatures, any>) => {
+  const handleRow = (row: Row<TFeatures, TData>) => {
     expandedRows.push(row)
 
     if (row.subRows.length && row_getIsExpanded(row)) {

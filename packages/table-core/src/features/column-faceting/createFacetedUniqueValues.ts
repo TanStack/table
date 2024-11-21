@@ -3,9 +3,13 @@ import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
 
-export function createFacetedUniqueValues<TFeatures extends TableFeatures>(): (
-  table: Table_Internal<TFeatures, any>,
+export function createFacetedUniqueValues<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(): (
+  table: Table_Internal<TFeatures, TData>,
   columnId: string,
 ) => () => Map<any, number> {
   return (table, columnId) =>
@@ -20,9 +24,12 @@ export function createFacetedUniqueValues<TFeatures extends TableFeatures>(): (
     })
 }
 
-function _createFacetedUniqueValues<TFeatures extends TableFeatures>(
+function _createFacetedUniqueValues<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(
   columnId: string,
-  facetedRowModel: RowModel<TFeatures, any> | undefined,
+  facetedRowModel: RowModel<TFeatures, TData> | undefined,
 ): Map<any, number> {
   if (!facetedRowModel) return new Map()
 

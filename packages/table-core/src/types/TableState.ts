@@ -14,52 +14,50 @@ import type { TableState_RowSelection } from '../features/row-selection/rowSelec
 import type { TableState_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { TableFeatures } from './TableFeatures'
 
-export type TableState<TFeatures extends TableFeatures> = {
-  /**
-   * @deprecated
-   */
-  _?: never
-} & UnionToIntersection<
-  | ('columnFilteringFeature' extends keyof TFeatures
-      ? TableState_ColumnFiltering
-      : never)
-  | ('columnGroupingFeature' extends keyof TFeatures
-      ? TableState_ColumnGrouping
-      : never)
-  | ('columnOrderingFeature' extends keyof TFeatures
-      ? TableState_ColumnOrdering
-      : never)
-  | ('columnPinningFeature' extends keyof TFeatures
-      ? TableState_ColumnPinning
-      : never)
-  | ('columnResizingFeature' extends keyof TFeatures
-      ? TableState_ColumnResizing
-      : never)
-  | ('columnSizingFeature' extends keyof TFeatures
-      ? TableState_ColumnSizing
-      : never)
-  | ('columnVisibilityFeature' extends keyof TFeatures
-      ? TableState_ColumnVisibility
-      : never)
-  | ('globalFilteringFeature' extends keyof TFeatures
-      ? TableState_GlobalFiltering
-      : never)
-  | ('rowExpandingFeature' extends keyof TFeatures
-      ? TableState_RowExpanding
-      : never)
-  | ('rowPaginationFeature' extends keyof TFeatures
-      ? TableState_RowPagination
-      : never)
-  | ('rowPinningFeature' extends keyof TFeatures
-      ? TableState_RowPinning
-      : never)
-  | ('rowSelectionFeature' extends keyof TFeatures
-      ? TableState_RowSelection
-      : never)
-  | ('rowSortingFeature' extends keyof TFeatures
-      ? TableState_RowSorting
-      : never)
->
+export interface TableState_Plugins {}
+
+export type TableState<TFeatures extends TableFeatures> = TableState_Plugins &
+  UnionToIntersection<
+    | ('columnFilteringFeature' extends keyof TFeatures
+        ? TableState_ColumnFiltering
+        : never)
+    | ('columnGroupingFeature' extends keyof TFeatures
+        ? TableState_ColumnGrouping
+        : never)
+    | ('columnOrderingFeature' extends keyof TFeatures
+        ? TableState_ColumnOrdering
+        : never)
+    | ('columnPinningFeature' extends keyof TFeatures
+        ? TableState_ColumnPinning
+        : never)
+    | ('columnResizingFeature' extends keyof TFeatures
+        ? TableState_ColumnResizing
+        : never)
+    | ('columnSizingFeature' extends keyof TFeatures
+        ? TableState_ColumnSizing
+        : never)
+    | ('columnVisibilityFeature' extends keyof TFeatures
+        ? TableState_ColumnVisibility
+        : never)
+    | ('globalFilteringFeature' extends keyof TFeatures
+        ? TableState_GlobalFiltering
+        : never)
+    | ('rowExpandingFeature' extends keyof TFeatures
+        ? TableState_RowExpanding
+        : never)
+    | ('rowPaginationFeature' extends keyof TFeatures
+        ? TableState_RowPagination
+        : never)
+    | ('rowPinningFeature' extends keyof TFeatures
+        ? TableState_RowPinning
+        : never)
+    | ('rowSelectionFeature' extends keyof TFeatures
+        ? TableState_RowSelection
+        : never)
+    | ('rowSortingFeature' extends keyof TFeatures
+        ? TableState_RowSorting
+        : never)
+  >
 
 export type TableState_All = Partial<
   TableState_ColumnFiltering &

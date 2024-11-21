@@ -13,10 +13,14 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
+import type { RowData } from '../../types/type-utils'
 
-export function createGroupedRowModel<TFeatures extends TableFeatures>(): (
-  table: Table_Internal<TFeatures, any>,
-) => () => RowModel<TFeatures, any> {
+export function createGroupedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(): (
+  table: Table_Internal<TFeatures, TData>,
+) => () => RowModel<TFeatures, TData> {
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
@@ -33,9 +37,10 @@ export function createGroupedRowModel<TFeatures extends TableFeatures>(): (
     })
 }
 
-function _createGroupedRowModel<TFeatures extends TableFeatures>(
-  table: Table_Internal<TFeatures, any>,
-): RowModel<TFeatures, any> {
+function _createGroupedRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreGroupedRowModel()
   const grouping = table.options.state?.grouping
 
@@ -52,13 +57,13 @@ function _createGroupedRowModel<TFeatures extends TableFeatures>(
     table_getColumn(table, columnId),
   )
 
-  const groupedFlatRows: Array<Row<TFeatures, any>> &
+  const groupedFlatRows: Array<Row<TFeatures, TData>> &
     Partial<Row_ColumnGrouping> = []
-  const groupedRowsById: Record<string, Row<TFeatures, any>> = {}
+  const groupedRowsById: Record<string, Row<TFeatures, TData>> = {}
 
   // Recursively group the data
   const groupUpRecursively = (
-    rows: Array<Row<TFeatures, any>>,
+    rows: Array<Row<TFeatures, TData>>,
     depth = 0,
     parentId?: string,
   ) => {
@@ -110,7 +115,7 @@ function _createGroupedRowModel<TFeatures extends TableFeatures>(
           depth,
           undefined,
           parentId,
-        ) as Row<TFeatures, any> & Partial<Row_ColumnGrouping>
+        ) as Row<TFeatures, TData> & Partial<Row_ColumnGrouping>
 
         Object.assign(row, {
           groupingColumnId: columnId,
@@ -139,7 +144,7 @@ function _createGroupedRowModel<TFeatures extends TableFeatures>(
             // Aggregate the values
             const column = table.getColumn(colId)
             const aggregateFn = column_getAggregationFn(
-              column as Column<TFeatures, any, unknown>,
+              column as Column<TFeatures, TData, unknown>,
             )
 
             if (!row._groupingValuesCache) row._groupingValuesCache = {}
@@ -182,11 +187,11 @@ function _createGroupedRowModel<TFeatures extends TableFeatures>(
   }
 }
 
-function groupBy<TFeatures extends TableFeatures>(
-  rows: Array<Row<TFeatures, any>>,
+function groupBy<TFeatures extends TableFeatures, TData extends RowData = any>(
+  rows: Array<Row<TFeatures, TData>>,
   columnId: string,
 ) {
-  const groupMap = new Map<any, Array<Row<TFeatures, any>>>()
+  const groupMap = new Map<any, Array<Row<TFeatures, TData>>>()
 
   return rows.reduce((map, row) => {
     const resKey = `${row_getGroupingValue(row, columnId)}`

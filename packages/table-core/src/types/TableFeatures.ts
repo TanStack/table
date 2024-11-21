@@ -34,7 +34,12 @@ export interface StockTableFeatures {
   rowSortingFeature?: TableFeature
 }
 
-export interface TableFeatures extends CoreTableFeatures, StockTableFeatures {}
+export interface Plugins {}
+
+export interface TableFeatures
+  extends CoreTableFeatures,
+    StockTableFeatures,
+    Plugins {}
 
 export interface TableFeature {
   constructCellAPIs?: <

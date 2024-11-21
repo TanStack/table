@@ -9,10 +9,19 @@ import type { Row_RowExpanding } from '../features/row-expanding/rowExpandingFea
 import type { Row_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { Row_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 
+export interface Row_Plugins {}
+
+export interface Row_Core<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> extends Row_Row<TFeatures, TData>,
+    Row_Plugins {}
+
 export type Row<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Row_Row<TFeatures, TData> &
+> = Row_Core<TFeatures, TData> &
+  Row_Plugins &
   UnionToIntersection<
     | ('columnFilteringFeature' extends keyof TFeatures
         ? Row_ColumnFiltering<TFeatures, TData>

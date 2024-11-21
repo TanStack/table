@@ -7,6 +7,7 @@ import {
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { filterRows } from './filterRowsUtils'
 import { column_getFilterFn } from './columnFilteringFeature.utils'
+import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
@@ -16,9 +17,12 @@ import type {
   Row_ColumnFiltering,
 } from './columnFilteringFeature.types'
 
-export function createFilteredRowModel<TFeatures extends TableFeatures>(): (
-  table: Table_Internal<TFeatures, any>,
-) => () => RowModel<TFeatures, any> {
+export function createFilteredRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(): (
+  table: Table_Internal<TFeatures, TData>,
+) => () => RowModel<TFeatures, TData> {
   return (table) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
@@ -33,15 +37,16 @@ export function createFilteredRowModel<TFeatures extends TableFeatures>(): (
     })
 }
 
-function _createFilteredRowModel<TFeatures extends TableFeatures>(
-  table: Table_Internal<TFeatures, any>,
-): RowModel<TFeatures, any> {
+function _createFilteredRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData = any,
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreFilteredRowModel()
   const { columnFilters, globalFilter } = table.options.state ?? {}
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
     for (const row of rowModel.flatRows as Array<
-      Row<TFeatures, any> & Partial<Row_ColumnFiltering<TFeatures, any>>
+      Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
     >) {
       row.columnFilters = {}
       row.columnFiltersMeta = {}
@@ -49,8 +54,10 @@ function _createFilteredRowModel<TFeatures extends TableFeatures>(
     return rowModel
   }
 
-  const resolvedColumnFilters: Array<ResolvedColumnFilter<TFeatures, any>> = []
-  const resolvedGlobalFilters: Array<ResolvedColumnFilter<TFeatures, any>> = []
+  const resolvedColumnFilters: Array<ResolvedColumnFilter<TFeatures, TData>> =
+    []
+  const resolvedGlobalFilters: Array<ResolvedColumnFilter<TFeatures, TData>> =
+    []
 
   columnFilters?.forEach((columnFilter) => {
     const column = table_getColumn(table, columnFilter.id)
@@ -92,7 +99,7 @@ function _createFilteredRowModel<TFeatures extends TableFeatures>(
 
   // Flag the pre-filtered row model with each filter state
   for (const row of rowModel.flatRows as Array<
-    Row<TFeatures, any> & Partial<Row_ColumnFiltering<TFeatures, any>>
+    Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
   >) {
     row.columnFilters = {}
 
@@ -142,7 +149,7 @@ function _createFilteredRowModel<TFeatures extends TableFeatures>(
   }
 
   const filterRowsImpl = (
-    row: Row<TFeatures, any> & Row_ColumnFiltering<TFeatures, any>,
+    row: Row<TFeatures, TData> & Row_ColumnFiltering<TFeatures, TData>,
   ) => {
     // Horizontally filter rows through each column
     for (const columnId of filterableIds) {
