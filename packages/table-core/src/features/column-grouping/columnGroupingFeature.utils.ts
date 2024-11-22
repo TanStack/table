@@ -98,7 +98,7 @@ export function column_getAutoAggregationFn<
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
 ) {
-  const aggregationFns = column.table._processingFns.aggregationFns as
+  const aggregationFns = column.table._rowModelFns.aggregationFns as
     | Record<string, AggregationFn<TFeatures, TData>>
     | undefined
 
@@ -124,7 +124,7 @@ export function column_getAggregationFn<
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
 ) {
-  const aggregationFns = column.table._processingFns.aggregationFns as
+  const aggregationFns = column.table._rowModelFns.aggregationFns as
     | Record<string, AggregationFn<TFeatures, TData>>
     | undefined
 

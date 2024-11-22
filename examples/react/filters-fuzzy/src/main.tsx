@@ -66,8 +66,8 @@ const fuzzySort: SortingFn<typeof _features, Person> = (
   // Only sort by rank if the column has ranking information
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
-      rowA.columnFiltersMeta[columnId].itemRank,
-      rowB.columnFiltersMeta[columnId].itemRank,
+      rowA.columnFiltersMeta[columnId].itemRank!,
+      rowB.columnFiltersMeta[columnId].itemRank!,
     )
   }
 
@@ -131,7 +131,7 @@ function App() {
 
   const table = useTable<typeof _features, Person>({
     _features,
-    _processingFns: {
+    _rowModelFns: {
       filterFns,
     },
     _rowModels: {

@@ -130,7 +130,7 @@ const table = useTable({
 })
 ```
 
-### Sorting ProcessingFns
+### Sorting RowModelFns
 
 The default sorting function for all columns is inferred from the data type of the column. However, it can be useful to define the exact sorting function that you want to use for a specific column, especially if any of your data is nullable or not a standard data type.
 

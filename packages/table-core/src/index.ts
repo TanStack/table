@@ -64,7 +64,7 @@ export * from './core/table/tablesFeature.types'
 export * from './core/table/tablesFeature.utils'
 
 /**
- * ProcessingFns
+ * RowModelFns
  */
 
 export * from './fns/aggregationFns'

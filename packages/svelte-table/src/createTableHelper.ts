@@ -16,7 +16,7 @@ export type TableHelper<
   createTable: (
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
-      '_features' | '_rowModels' | '_processingFns'
+      '_features' | '_rowModels' | '_rowModelFns'
     >,
   ) => Table<TFeatures, TData>
 }

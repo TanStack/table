@@ -42,7 +42,7 @@ export function column_getAutoSortingFn<
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
 ): SortingFn<TFeatures, TData> {
-  const sortFns = column.table._processingFns.sortFns as
+  const sortFns = column.table._rowModelFns.sortFns as
     | Record<string, SortingFn<TFeatures, TData>>
     | undefined
 
@@ -98,7 +98,7 @@ export function column_getSortingFn<
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
 ): SortingFn<TFeatures, TData> {
-  const sortFns = column.table._processingFns.sortFns as
+  const sortFns = column.table._rowModelFns.sortFns as
     | Record<string, SortingFn<TFeatures, TData>>
     | undefined
 

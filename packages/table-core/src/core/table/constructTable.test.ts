@@ -13,7 +13,7 @@ describe('constructTable', () => {
     expect(table).toBeDefined()
     // core table properties
     expect(table).toHaveProperty('_features')
-    expect(table).toHaveProperty('_processingFns')
+    expect(table).toHaveProperty('_rowModelFns')
     expect(table).toHaveProperty('_rowModels')
     expect(table).toHaveProperty('initialState')
     expect(table).toHaveProperty('options')

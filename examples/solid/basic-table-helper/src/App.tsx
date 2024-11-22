@@ -45,7 +45,7 @@ const defaultData: Array<Person> = [
 const tableHelper = createTableHelper({
   _features: {},
   _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
-  _processingFns: {}, // client-side processing functions used by the row models (sorting, filtering, etc.). Not needed in this basic example
+  _rowModelFns: {}, // client-side processing functions used by the row models (sorting, filtering, etc.). Not needed in this basic example
   TData: {} as Person,
   debugTable: true,
 })

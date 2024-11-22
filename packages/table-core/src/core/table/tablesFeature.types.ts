@@ -1,4 +1,4 @@
-import type { ProcessingFns } from '../../types/ProcessingFns'
+import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
 import type {
   CoreTableFeatures,
@@ -24,11 +24,11 @@ export interface TableOptions_Table<
    */
   _features: TFeatures
   /**
-   * The processing functions that are used to process the data by features.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_processingFns)
+   * The row model processing functions that are used to process the data by features.
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowModelFns)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _processingFns?: ProcessingFns<TFeatures, NoInfer<TData>>
+  _rowModelFns?: RowModelFns<TFeatures, NoInfer<TData>>
   /**
    * The row model options that you want to enable for the table.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
@@ -115,11 +115,11 @@ export interface Table_CoreProperties<
    */
   _features: CoreTableFeatures & TFeatures
   /**
-   * The processing functions that are used to process the data by features.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_processingFns)
+   * The row model processing functions that are used to process the data by features.
+   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowModelFns)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _processingFns: ProcessingFns<TFeatures, TData>
+  _rowModelFns: RowModelFns<TFeatures, TData>
   /**
    * The row models that are enabled for the table.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)

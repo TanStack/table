@@ -1,6 +1,6 @@
 import type { Table_RowModels } from '../core/row-models/rowModelsFeature.types'
 import type { CachedRowModel_All, CreateRowModels_All } from './RowModel'
-import type { ProcessingFns_All } from './ProcessingFns'
+import type { RowModelFns_All } from './RowModelFns'
 import type { TableState_All } from './TableState'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
@@ -96,8 +96,8 @@ export type Table_Internal<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Table<TFeatures, TData> & {
-  _processingFns: ProcessingFns_All<TFeatures, TData>
   _rowModels: CachedRowModel_All<TFeatures, TData>
+  _rowModelFns: RowModelFns_All<TFeatures, TData>
   options: TableOptions_All<TFeatures, TData> & {
     _rowModels?: CreateRowModels_All<TFeatures, TData>
     state?: TableState_All

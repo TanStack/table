@@ -85,7 +85,7 @@
     _rowModels: {
       sortedRowModel: createSortedRowModel(),
     },
-    _processingFns: {
+    _rowModelFns: {
       sortFns,
     },
     get data() {

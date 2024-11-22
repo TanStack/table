@@ -8,7 +8,7 @@ import {
   createSortedRowModel,
   filterFns,
   flexRender,
-  processingFns,
+  rowModelFns,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -30,7 +30,7 @@ const _features = tableFeatures({
   rowSortingFeature,
 })
 
-const _processingFns = processingFns(_features, {
+const _rowModelFns = rowModelFns(_features, {
   sortFns,
   filterFns,
 })
@@ -107,7 +107,7 @@ function MyTable({
 
   const table = useTable({
     _features,
-    _processingFns,
+    _rowModelFns,
     _rowModels: {
       sortedRowModel: createSortedRowModel(),
       filteredRowModel: createFilteredRowModel(),

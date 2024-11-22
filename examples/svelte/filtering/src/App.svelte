@@ -63,7 +63,7 @@
       filteredRowModel: createFilteredRowModel(),
       paginatedRowModel: createPaginatedRowModel(),
     },
-    _processingFns: {
+    _rowModelFns: {
       filterFns: {
         fuzzy: fuzzyFilter,
       },

@@ -193,7 +193,7 @@ function App() {
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(),
     },
-    _processingFns: {
+    _rowModelFns: {
       filterFns,
       sortFns,
     },

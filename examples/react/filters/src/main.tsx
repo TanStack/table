@@ -109,7 +109,7 @@ function App() {
       sortedRowModel: createSortedRowModel(),
       paginatedRowModel: createPaginatedRowModel(),
     },
-    _processingFns: {
+    _rowModelFns: {
       filterFns, // client side filtering
       sortFns,
     },

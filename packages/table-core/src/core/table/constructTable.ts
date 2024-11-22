@@ -27,7 +27,7 @@ export function constructTable<
     console.info('Constructing Table Instance...')
   }
 
-  const { _features = {} as TFeatures, _processingFns = {} } = options
+  const { _features = {} as TFeatures, _rowModelFns = {} } = options
 
   const featuresList: Array<TableFeature> = Object.values(_features)
 
@@ -41,8 +41,8 @@ export function constructTable<
 
   const coreInstance: Table_CoreProperties<TFeatures, TData> = {
     _features, // features get stored here immediately
-    _processingFns, // processing functions get stored here
     _rowModels: {} as CachedRowModels<TFeatures, TData>, // row models get cached here later
+    _rowModelFns, // row model processing functions get stored here
     options: {
       ...defaultOptions,
       ...options,

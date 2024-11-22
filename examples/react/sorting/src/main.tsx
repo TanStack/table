@@ -89,7 +89,7 @@
 
 //   const table = useTable({
 //     _features,
-//     _processingFns: {
+//     _rowModelFns: {
 //       sortFns,
 //     },
 //     _rowModels: {
@@ -224,7 +224,7 @@ export const useReactTable = createTableHelper({
     groupedRowModel: createGroupedRowModel(),
     expandedRowModel: createExpandedRowModel(),
   },
-  _processingFns: {
+  _rowModelFns: {
     sortFns,
     filterFns,
     aggregationFns,

@@ -102,7 +102,7 @@ function App() {
 
   const table = useTable({
     _features,
-    _processingFns: {
+    _rowModelFns: {
       filterFns,
       sortFns,
     },

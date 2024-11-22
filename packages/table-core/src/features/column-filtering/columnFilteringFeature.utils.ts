@@ -19,7 +19,7 @@ export function column_getAutoFilterFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column<TFeatures, TData, TValue>) {
-  const filterFns = column.table._processingFns.filterFns as
+  const filterFns = column.table._rowModelFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
 
@@ -60,7 +60,7 @@ export function column_getFilterFn<
   },
 ): FilterFn<TFeatures, TData> | undefined {
   let filterFn = null
-  const filterFns = column.table._processingFns.filterFns as
+  const filterFns = column.table._rowModelFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
   filterFn = isFunction(column.columnDef.filterFn)

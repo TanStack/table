@@ -95,7 +95,7 @@ function App() {
       facetedUniqueValues: createFacetedUniqueValues(),
       filteredRowModel: createFilteredRowModel(),
     },
-    _processingFns: {
+    _rowModelFns: {
       filterFns,
     },
     get data() {

@@ -33,7 +33,7 @@ const tableHelper = createTableHelper({
     rowSortingFeature,
     rowSelectionFeature,
   },
-  _processingFns: {
+  _rowModelFns: {
     filterFns: filterFns,
     sortFns: sortFns,
   },

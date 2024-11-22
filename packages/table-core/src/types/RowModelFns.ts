@@ -4,12 +4,12 @@ import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFns_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { TableFeatures } from './TableFeatures'
 
-export interface ProcessingFns_Plugins {}
+export interface RowModelFns_Plugins {}
 
-export type ProcessingFns<
+export type RowModelFns<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = ProcessingFns_Plugins &
+> = RowModelFns_Plugins &
   Partial<
     UnionToIntersection<
       | ('columnFilteringFeature' extends keyof TFeatures
@@ -24,7 +24,7 @@ export type ProcessingFns<
     >
   >
 
-export type ProcessingFns_All<
+export type RowModelFns_All<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Partial<
