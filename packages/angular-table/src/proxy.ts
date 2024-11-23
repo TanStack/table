@@ -84,7 +84,6 @@ export function proxifyTableV2<
         return Reflect.get(target, property)
       }
       const table = untracked(tableSignal)
-      // @ts-expect-error Typescript
       return (target[property] = table[property])
     },
     has(_, prop) {

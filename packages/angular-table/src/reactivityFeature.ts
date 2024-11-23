@@ -71,7 +71,6 @@ export const reactivityFeature: TableFeature = {
 
   constructRowAPIs(row) {
     const rowId = row.id
-    console.log(row.table.options.debugReactivity)
     makePropsReactive(row.table._signalNotifier, row, {
       skipProperty(property) {
         return false
@@ -116,5 +115,5 @@ export function makePropsReactive(
       })
     }
   }
-  console.groupEnd()
+  options.enableDebug && console.groupEnd()
 }

@@ -9,7 +9,6 @@ import {
   FlexRenderComponent,
   FlexRenderDirective,
   columnFilteringFeature,
-  createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   injectTable,
@@ -56,7 +55,6 @@ export class AppComponent {
         return new FlexRenderComponent(TableHeadSelectionComponent)
       },
       cell: () => {
-        console.log('row seletion cell')
         return new FlexRenderComponent(TableRowSelectionComponent)
       },
     },
@@ -151,7 +149,6 @@ export class AppComponent {
   readonly rowSelectionLength = computed(
     () => Object.keys(this.rowSelection()).length,
   )
-
   onPageInputChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement
     const page = inputElement.value ? Number(inputElement.value) - 1 : 0

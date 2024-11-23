@@ -1,5 +1,5 @@
 import type { Signal } from '@angular/core'
-import { computed, inject, Injector, signal } from '@angular/core'
+import { computed, signal } from '@angular/core'
 import type {
   RowData,
   Table,
@@ -23,7 +23,6 @@ export function injectTable<
 >(
   options: () => NoInfer<TableOptions<TFeatures, TData>>,
 ): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
-  const injector = inject(Injector)
   return lazyInit(() => {
     const features = () => {
       return {
