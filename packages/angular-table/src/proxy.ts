@@ -19,8 +19,8 @@ export function proxifyTable<
     apply() {
       return tableSignal()
     },
-    get(target, property: keyof Table<TFeatures, TData>): any {
-      if (target[property]) {
+    get(target, property): any {
+      if (typeof property === 'string' && target[property]) {
         return target[property]
       }
       const table = untracked(tableSignal)
@@ -29,6 +29,7 @@ export function proxifyTable<
        * excluding handlers as they do not retain any reactive value
        */
       if (
+        typeof property === 'string' &&
         property.startsWith('get') &&
         !property.endsWith('Handler') &&
         !property.endsWith('Model')
@@ -43,11 +44,11 @@ export function proxifyTable<
           return target[property]
         }
       }
-      // @ts-expect-error
       return (target[property] = table[property])
     },
-    has(_, prop: keyof Table<TFeatures, TData>) {
-      return !!untracked(tableSignal)[prop]
+    has(_, prop) {
+      const t = untracked(tableSignal)
+      return !!Reflect.get(tableSignal, prop)
     },
     ownKeys() {
       return Reflect.ownKeys(untracked(tableSignal))
