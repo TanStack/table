@@ -1,15 +1,28 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core'
 import {
   FlexRenderDirective,
+  columnVisibilityFeature,
   createCoreRowModel,
   createExpandedRowModel,
   createFilteredRowModel,
   createGroupedRowModel,
   createPaginatedRowModel,
+  createTableHelper,
   injectTable,
+  rowPaginationFeature,
 } from '@tanstack/angular-table'
 import type { ColumnDef, PaginationState } from '@tanstack/angular-table'
 import type { Person } from '../makeData'
+
+const tableHelper = createTableHelper({
+  _features: {
+    rowPaginationFeature,
+    columnVisibilityFeature,
+  },
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+  },
+})
 
 @Component({
   selector: 'app-person-table',
@@ -37,7 +50,7 @@ export class PersonTableComponent {
     },
   ]
 
-  table = injectTable(() => {
+  readonly table = tableHelper.injectTable(() => {
     return {
       data: this.data(),
       columns: this.columns,
@@ -49,11 +62,6 @@ export class PersonTableComponent {
           ? this.pagination.update(updaterOrValue)
           : this.pagination.set(updaterOrValue)
       },
-      getExpandedRowModel: createExpandedRowModel(),
-      getGroupedRowModel: createGroupedRowModel(),
-      getCoreRowModel: createCoreRowModel(),
-      getPaginatedRowModel: createPaginatedRowModel(),
-      getFilteredRowModel: createFilteredRowModel(),
       debugTable: true,
     }
   })

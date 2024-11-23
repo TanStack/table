@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common'
 import { Component, input } from '@angular/core'
 import type { OnInit } from '@angular/core'
-import type { Column, Table } from '@tanstack/angular-table'
+import type { Column, RowData, Table } from '@tanstack/angular-table'
 
 @Component({
   selector: 'app-table-filter',
@@ -39,10 +39,10 @@ import type { Column, Table } from '@tanstack/angular-table'
   standalone: true,
   imports: [CommonModule],
 })
-export class FilterComponent<T> implements OnInit {
+export class FilterComponent<T extends RowData> implements OnInit {
   column = input.required<Column<any, any>>()
 
-  table = input.required<Table<T>>()
+  table = input.required<Table<any, T>>()
 
   columnType!: string
 

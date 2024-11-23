@@ -2,16 +2,15 @@ import { describe, expect, test, vi } from 'vitest'
 import {
   ChangeDetectionStrategy,
   Component,
-  
   computed,
   effect,
   input,
-  signal
+  signal,
 } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { lazyInit } from '../src/lazy-signal-initializer'
 import { flushQueue, setFixtureSignalInputs } from './test-utils'
-import type {WritableSignal} from '@angular/core';
+import type { WritableSignal } from '@angular/core'
 
 describe('lazyInit', () => {
   test('should init lazily in next tick when not accessing manually', async () => {
@@ -52,7 +51,7 @@ describe('lazyInit', () => {
 
   test('should init lazily and only once', async () => {
     const initCallFn = vi.fn()
-    const registerDataValue = vi.fn<[number]>()
+    const registerDataValue = vi.fn<(arg0: number) => void>()
 
     let value!: { data: WritableSignal<number> }
     const outerSignal = signal(0)
@@ -85,7 +84,7 @@ describe('lazyInit', () => {
     await flushQueue()
 
     expect(initCallFn).toHaveBeenCalledTimes(1)
-    expect(registerDataValue).toHaveBeenCalledTimes(2)
+    expect(registerDataValue).toHaveBeenCalledTimes(1)
   })
 
   test('should support required signal input', async () => {

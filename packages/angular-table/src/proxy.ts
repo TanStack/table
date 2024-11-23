@@ -22,7 +22,11 @@ export function proxifyTable<
 
   return new Proxy(internalState, {
     apply() {
-      return tableSignal()
+      const signal = untracked(tableSignal)
+      const impl = signal.options.enableExperimentalReactivity
+        ? proxyTargetImplementation.experimental
+        : proxyTargetImplementation.default
+      return impl.apply()
     },
     get(target, property, receiver): any {
       const signal = untracked(tableSignal)
@@ -77,13 +81,14 @@ export function toComputed<
         void signal()
         return fn()
       },
-      { equal: () => false, debugName },
+      { debugName },
     )
   }
 
   const computedCache: Record<string, Signal<unknown>> = {}
 
-  return (...argsArray: Array<any>) => {
+  return (arg0: any, ...otherArgs: Array<any>) => {
+    const argsArray = [arg0, ...otherArgs]
     const serializedArgs = serializeArgs(...argsArray)
     if (computedCache.hasOwnProperty(serializedArgs)) {
       return computedCache[serializedArgs]?.()
@@ -115,18 +120,42 @@ function getDefaultProxyHandler<
       return tableSignal()
     },
     get(target, property, receiver): any {
-      if (typeof property === 'string' && Reflect.has(target, property)) {
+      if (Reflect.has(target, property)) {
         return Reflect.get(target, property)
       }
       const table = untracked(tableSignal)
-      return (target[property] = table[property])
+      /**
+       * Attempt to convert all accessors into computed ones,
+       * excluding handlers as they do not retain any reactive value
+       */
+      if (
+        typeof property === 'string' &&
+        property.startsWith('get') &&
+        !property.endsWith('Handler') &&
+        !property.endsWith('Model')
+      ) {
+        const maybeFn = table[property as keyof typeof target] as
+          | Function
+          | never
+        if (typeof maybeFn === 'function') {
+          Object.defineProperty(target, property, {
+            value: toComputed(tableSignal, maybeFn),
+            configurable: true,
+            enumerable: true,
+          })
+          return target[property as keyof typeof target]
+        }
+      }
+      return ((target as any)[property] = (table as any)[property])
     },
     has(_, prop) {
-      const t = untracked(tableSignal)
-      return !!Reflect.get(tableSignal, prop)
+      return (
+        Reflect.has(untracked(tableSignal), prop) ||
+        Reflect.has(tableSignal, prop)
+      )
     },
     ownKeys() {
-      return Reflect.ownKeys(untracked(tableSignal))
+      return [...Reflect.ownKeys(untracked(tableSignal))]
     },
     getOwnPropertyDescriptor() {
       return {
@@ -146,15 +175,17 @@ function getExperimentalProxyHandler<
       return tableSignal()
     },
     get(target, property, receiver): any {
-      if (typeof property === 'string' && Reflect.has(target, property)) {
+      if (Reflect.has(target, property)) {
         return Reflect.get(target, property)
       }
       const table = untracked(tableSignal)
-      return (target[property] = table[property])
+      return ((target as any)[property] = (table as any)[property])
     },
-    has(_, prop) {
-      const t = untracked(tableSignal)
-      return !!Reflect.get(tableSignal, prop)
+    has(_, property) {
+      return (
+        Reflect.has(untracked(tableSignal), property) ||
+        Reflect.has(tableSignal, property)
+      )
     },
     ownKeys() {
       return Reflect.ownKeys(untracked(tableSignal))

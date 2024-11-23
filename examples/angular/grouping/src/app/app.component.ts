@@ -7,12 +7,16 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
+  columnFilteringFeature,
+  columnGroupingFeature,
   createCoreRowModel,
   createExpandedRowModel,
   createFilteredRowModel,
   createGroupedRowModel,
   createPaginatedRowModel,
   injectTable,
+  rowExpandingFeature,
+  rowPaginationFeature,
   tableOptions,
 } from '@tanstack/angular-table'
 import { columns } from './columns'
@@ -28,35 +32,47 @@ import type { GroupingState, Updater } from '@tanstack/angular-table'
 })
 export class AppComponent {
   title = 'grouping'
-  data = signal(makeData(10000))
-  grouping = signal<GroupingState>([])
+  readonly data = signal(makeData(10000))
+  readonly grouping = signal<GroupingState>([])
 
-  stringifiedGrouping = computed(() => JSON.stringify(this.grouping(), null, 2))
-
-  tableOptions = computed(() =>
-    tableOptions({
-      data: this.data(),
-      columns: columns,
-      state: {
-        grouping: this.grouping(),
-      },
-      onGroupingChange: (updaterOrValue: Updater<GroupingState>) => {
-        const groupingState =
-          typeof updaterOrValue === 'function'
-            ? updaterOrValue([...this.grouping()])
-            : updaterOrValue
-        this.grouping.set(groupingState)
-      },
-      getExpandedRowModel: createExpandedRowModel(),
-      getGroupedRowModel: createGroupedRowModel(),
-      getCoreRowModel: createCoreRowModel(),
-      getPaginatedRowModel: createPaginatedRowModel(),
-      getFilteredRowModel: createFilteredRowModel(),
-      debugTable: true,
-    }),
+  readonly stringifiedGrouping = computed(() =>
+    JSON.stringify(this.grouping(), null, 2),
   )
 
-  table = injectTable(this.tableOptions)
+  readonly table = injectTable(() => ({
+    data: this.data(),
+    columns: columns,
+    enableExperimentalReactivity: true,
+    initialState: {
+      pagination: { pageSize: 20, pageIndex: 0 },
+    },
+    state: {
+      grouping: this.grouping(),
+    },
+    _features: {
+      columnGroupingFeature,
+      rowPaginationFeature,
+      columnFilteringFeature,
+      rowExpandingFeature,
+    },
+    _rowModels: {
+      // @ts-expect-error Fix type
+      groupedRowModel: createGroupedRowModel(),
+      // @ts-expect-error Fix type
+      expandedRowModel: createExpandedRowModel(),
+      // @ts-expect-error Fix type
+      paginatedRowModel: createPaginatedRowModel(),
+      // @ts-expect-error Fix type
+      filteredRowModel: createFilteredRowModel(),
+    },
+    onGroupingChange: (updaterOrValue: Updater<GroupingState>) => {
+      const groupingState =
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue([...this.grouping()])
+          : updaterOrValue
+      this.grouping.set(groupingState)
+    },
+  }))
 
   onPageInputChange(event: any): void {
     const page = event.target.value ? Number(event.target.value) - 1 : 0

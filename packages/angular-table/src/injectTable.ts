@@ -78,7 +78,7 @@ export function injectTable<
       },
     )
 
-    table._setRootNotifier?.(tableSignal as unknown as Signal<Table<any, any>>)
+    table._setRootNotifier?.(tableSignal as any)
 
     // proxify Table instance to provide ability for consumer to listen to any table state changes
     return proxifyTable(tableSignal)

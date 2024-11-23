@@ -1,5 +1,5 @@
-import { Component,  ViewChild, input } from '@angular/core'
-import {  TestBed } from '@angular/core/testing'
+import { Component, ViewChild, input } from '@angular/core'
+import { TestBed } from '@angular/core/testing'
 import { createColumnHelper } from '@tanstack/table-core'
 import { describe, expect, test } from 'vitest'
 import {
@@ -8,8 +8,8 @@ import {
   injectFlexRenderContext,
 } from '../src/flex-render'
 import { setFixtureSignalInput, setFixtureSignalInputs } from './test-utils'
-import type {ComponentFixture} from '@angular/core/testing';
-import type {TemplateRef} from '@angular/core';
+import type { ComponentFixture } from '@angular/core/testing'
+import type { TemplateRef } from '@angular/core'
 
 interface Data {
   id: string
@@ -20,7 +20,7 @@ interface Data {
 }
 
 describe('FlexRenderDirective', () => {
-  const helper = createColumnHelper<Data>()
+  const helper = createColumnHelper<{}, Data>()
 
   test('should render primitives', async () => {
     const fixture = TestBed.createComponent(TestRenderComponent)

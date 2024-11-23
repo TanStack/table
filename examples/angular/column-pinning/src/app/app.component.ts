@@ -6,8 +6,12 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnVisibilityFeature,
   createCoreRowModel,
   injectTable,
+  rowPinningFeature,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'
 import { NgTemplateOutlet, SlicePipe } from '@angular/common'
@@ -91,12 +95,21 @@ export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(5000))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
-  readonly columnPinning = signal<ColumnPinningState>({})
+  readonly columnPinning = signal<ColumnPinningState>({
+    left: [],
+    right: [],
+  })
   readonly split = signal(false)
 
   table = injectTable(() => ({
     data: this.data(),
+    _features: {
+      columnPinningFeature,
+      columnOrderingFeature,
+      columnVisibilityFeature,
+    },
     columns: defaultColumns,
+    enableExperimentalReactivity: true,
     state: {
       columnVisibility: this.columnVisibility(),
       columnOrder: this.columnOrder(),
@@ -117,7 +130,6 @@ export class AppComponent {
         ? this.columnPinning.update(updaterOrValue)
         : this.columnPinning.set(updaterOrValue)
     },
-    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

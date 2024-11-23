@@ -60,6 +60,7 @@
     "@angular/core": "^19.0.0",
     "@angular/platform-browser": "^19.0.0",
     "@angular/platform-browser-dynamic": "^19.0.0",
+    "@vitest/ui": "^2.1.5",
     "ng-packagr": "^19.0.0"
   },
   "peerDependencies": {

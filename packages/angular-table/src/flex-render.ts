@@ -14,7 +14,12 @@ import {
   inject,
   isSignal,
 } from '@angular/core'
-import type { EffectRef, OnChanges, SimpleChanges } from '@angular/core'
+import type {
+  DoCheck,
+  EffectRef,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core'
 import type { Table } from '@tanstack/table-core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
@@ -31,7 +36,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
 })
 export class FlexRenderDirective<TProps extends NonNullable<unknown>>
-  implements OnChanges
+  implements OnChanges, DoCheck
 {
   @Input({ required: true, alias: 'flexRender' })
   content:
@@ -47,6 +52,10 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   @Input({ required: false, alias: 'flexRenderInjector' })
   injector: Injector = inject(Injector)
 
+  ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
+
+  experimentalReactivity = false
+
   constructor(
     @Inject(ViewContainerRef)
     private readonly viewContainerRef: ViewContainerRef,
@@ -54,12 +63,26 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     private readonly templateRef: TemplateRef<any>,
   ) {}
 
-  ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
+  ngDoCheck(): void {
+    if (
+      this.experimentalReactivity === false &&
+      this.ref instanceof ComponentRef
+    ) {
+      this.ref.injector.get(ChangeDetectorRef).markForCheck()
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes['content']) {
       return
     }
+
+    if ('table' in this.props) {
+      this.experimentalReactivity =
+        (this.props.table as Partial<Table<any, any>>).options
+          ?.enableExperimentalReactivity ?? false
+    }
+
     this.render()
   }
 
