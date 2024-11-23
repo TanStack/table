@@ -80,7 +80,10 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
     accessorFn: (row) => Number(row.age), // accessorFn used to transform the data
     id: 'age',
     header: () => 'Age',
-    cell: (info) => info.renderValue(),
+    cell: (info) => {
+      console.log('info test value')
+      return info.renderValue()
+    },
   },
   {
     accessorKey: 'visits',

@@ -14,13 +14,8 @@ import {
   inject,
   isSignal,
 } from '@angular/core'
-import type {
-  DoCheck,
-  EffectRef,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core'
-import { Table } from '@tanstack/table-core'
+import type { EffectRef, OnChanges, SimpleChanges } from '@angular/core'
+import type { Table } from '@tanstack/table-core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
@@ -64,9 +59,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   effect?: EffectRef
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.ref instanceof ComponentRef) {
-      this.ref.injector.get(ChangeDetectorRef).markForCheck()
-    }
     if (!changes['content']) {
       return
     }
@@ -85,15 +77,16 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       this.ref = this.renderContent(content)
     }
 
-    // TODO: improve this!!
+    if (this.effect) {
+      this.effect.destroy()
+    }
+    // TODO: wip, must improve this. All cell/rows/header should a have their own notifier listener
     this.effect = effect(
       () => {
         const props = this.props
-
         if (this.ref instanceof ComponentRef) {
           this.ref.injector.get(ChangeDetectorRef).markForCheck()
         }
-
         if ('table' in props) {
           const table = props.table as Table<any, any>
           table._signalNotifier()

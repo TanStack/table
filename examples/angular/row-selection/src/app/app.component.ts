@@ -56,6 +56,7 @@ export class AppComponent {
         return new FlexRenderComponent(TableHeadSelectionComponent)
       },
       cell: () => {
+        console.log('row seletion cell')
         return new FlexRenderComponent(TableRowSelectionComponent)
       },
     },
