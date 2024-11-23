@@ -8,10 +8,14 @@ import {
 import {
   FlexRenderComponent,
   FlexRenderDirective,
+  columnFilteringFeature,
   createCoreRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   injectTable,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { FormsModule } from '@angular/forms'
 import { FilterComponent } from './filter'
@@ -23,6 +27,12 @@ import {
 import type { Person } from './makeData'
 import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
 import type { TemplateRef } from '@angular/core'
+
+const features = tableFeatures({
+  rowPaginationFeature,
+  rowSelectionFeature,
+  columnFilteringFeature,
+})
 
 @Component({
   selector: 'app-root',
@@ -39,7 +49,7 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: Array<ColumnDef<any, Person>> = [
+  readonly columns: Array<ColumnDef<typeof features, Person>> = [
     {
       id: 'select',
       header: () => {
@@ -101,9 +111,23 @@ export class AppComponent {
     },
   ]
 
+  readonly tableFeatures = tableFeatures({
+    rowPaginationFeature,
+    rowSelectionFeature,
+    columnFilteringFeature,
+  })
+
   table = injectTable(() => ({
     data: this.data(),
+    _features: features,
+    // @ts-expect-error Fix types
     columns: this.columns,
+    _rowModels: {
+      // @ts-expect-error Fix types
+      filteredRowModel: createFilteredRowModel(),
+      // @ts-expect-error Fix types
+      paginatedRowModel: createPaginatedRowModel(),
+    },
     state: {
       rowSelection: this.rowSelection(),
     },
@@ -116,9 +140,6 @@ export class AppComponent {
           : updaterOrValue,
       )
     },
-    getCoreRowModel: createCoreRowModel(),
-    getFilteredRowModel: createFilteredRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
     debugTable: true,
   }))
 

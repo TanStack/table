@@ -13,7 +13,7 @@ import {
   inject,
   isSignal,
 } from '@angular/core'
-import type { OnChanges, SimpleChanges } from '@angular/core'
+import type { DoCheck, OnChanges, SimpleChanges } from '@angular/core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
@@ -29,7 +29,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
 })
 export class FlexRenderDirective<TProps extends NonNullable<unknown>>
-  implements OnChanges
+  implements OnChanges, DoCheck
 {
   @Input({ required: true, alias: 'flexRender' })
   content:
@@ -53,6 +53,14 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   ) {}
 
   ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
+
+  ngDoCheck(): void {
+    // TODO: currently this fixed the propagation of state when using flexRender with custom FlexRenderComponentProps
+    // TODO: test with custom reactive feature
+    if (this.ref instanceof ComponentRef) {
+      this.ref.injector.get(ChangeDetectorRef).markForCheck()
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.ref instanceof ComponentRef) {
@@ -83,15 +91,19 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return this.renderStringContent()
     }
     if (content instanceof TemplateRef) {
-      return this.viewContainerRef.createEmbeddedView(
+      this.ref = this.viewContainerRef.createEmbeddedView(
         content,
         this.getTemplateRefContext(),
       )
+      return this.ref
     } else if (content instanceof FlexRenderComponent) {
-      return this.renderComponent(content)
+      this.ref = this.renderComponent(content)
+      return this.ref
     } else if (content instanceof Type) {
-      return this.renderCustomComponent(content)
+      this.ref = this.renderCustomComponent(content)
+      return this.ref
     } else {
+      this.ref = null
       return null
     }
   }
