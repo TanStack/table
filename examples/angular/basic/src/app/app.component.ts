@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
-import { RouterOutlet } from '@angular/router'
 import {
   FlexRenderDirective,
-  createCoreRowModel,
   injectTable,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import type { ColumnDef } from '@tanstack/angular-table'
 
@@ -81,18 +80,22 @@ const defaultColumns: Array<ColumnDef<any, Person>> = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FlexRenderDirective],
+  imports: [FlexRenderDirective],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  data = signal<Array<Person>>(defaultData)
+  readonly data = signal<Array<Person>>(defaultData)
+
+  readonly tableFeatures = tableFeatures({})
 
   table = injectTable(() => ({
+    _features: this.tableFeatures, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
+    _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
     data: this.data(),
     columns: defaultColumns,
-    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
+    // other options here
   }))
 
   rerender() {
