@@ -1,12 +1,4 @@
-import type { Signal } from '@angular/core'
 import { computed, signal } from '@angular/core'
-import type {
-  RowData,
-  Table,
-  TableFeatures,
-  TableOptions,
-  TableState,
-} from '@tanstack/table-core'
 import {
   constructTable,
   coreFeatures,
@@ -14,14 +6,22 @@ import {
   isFunction,
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
-import { proxifyTableV2 } from './proxy'
+import { proxifyTable } from './proxy'
 import { reactivityFeature } from './reactivityFeature'
+import type {
+  RowData,
+  Table,
+  TableFeatures,
+  TableOptions,
+  TableState,
+} from '@tanstack/table-core'
+import type { Signal } from '@angular/core'
 
 export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  options: () => NoInfer<TableOptions<TFeatures, TData>>,
+  options: () => TableOptions<TFeatures, TData>,
 ): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
   return lazyInit(() => {
     const features = () => {
@@ -68,7 +68,7 @@ export function injectTable<
     })
 
     // convert table instance to signal for proxify to listen to any table state and options changes
-    const tableNotifier = computed(
+    const tableSignal = computed(
       () => {
         table.setOptions(updatedOptions())
         return table
@@ -78,9 +78,9 @@ export function injectTable<
       },
     )
 
-    table._setNotifier(tableNotifier)
+    table._setNotifier(tableSignal as unknown as Signal<Table<any, any>>)
 
     // proxify Table instance to provide ability for consumer to listen to any table state changes
-    return proxifyTableV2(tableNotifier) as any
+    return proxifyTable(tableSignal)
   })
 }

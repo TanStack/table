@@ -1,26 +1,30 @@
-import type { Signal } from '@angular/core'
 import { computed, signal } from '@angular/core'
-import { type TableFeature } from '@tanstack/table-core'
 import { toComputed } from './proxy'
+import type { Signal } from '@angular/core'
+import type { Table, TableFeature } from '@tanstack/table-core'
 
 declare module '@tanstack/table-core' {
   interface TableOptions_Plugins {
     debugReactivity?: boolean
+
+    enableExperimentalReactivity?: boolean
   }
 
   interface Table_Plugins {
     _signalNotifier: Signal<unknown>
     _notify: () => void
-    _setNotifier: (signal: Signal<unknown>) => void
-    debugReactivity?: boolean
+    _setNotifier: (signal: Signal<Table<any, any>>) => void
   }
 }
 
 export const reactivityFeature: TableFeature = {
   getDefaultTableOptions(table) {
-    return { debugReactivity: false }
+    return { enableExperimentalReactivity: false }
   },
   constructTableAPIs: (table) => {
+    if (!table.options.enableExperimentalReactivity) {
+      return
+    }
     const internalNotifier = signal<Signal<any> | null>(null)
 
     table._signalNotifier = computed(() => internalNotifier()?.(), {
@@ -40,6 +44,9 @@ export const reactivityFeature: TableFeature = {
   },
 
   constructCellAPIs(cell) {
+    if (!cell.table.options.enableExperimentalReactivity) {
+      return
+    }
     makePropsReactive(cell.table._signalNotifier, cell, {
       skipProperty(property) {
         return false
@@ -50,6 +57,9 @@ export const reactivityFeature: TableFeature = {
   },
 
   constructColumnAPIs(column) {
+    if (!column.table.options.enableExperimentalReactivity) {
+      return
+    }
     makePropsReactive(column.table._signalNotifier, column, {
       skipProperty(property) {
         return false
@@ -60,6 +70,9 @@ export const reactivityFeature: TableFeature = {
   },
 
   constructHeaderAPIs(header) {
+    if (!header.table.options.enableExperimentalReactivity) {
+      return
+    }
     makePropsReactive(header.table._signalNotifier, header, {
       skipProperty(property) {
         return false
@@ -70,6 +83,9 @@ export const reactivityFeature: TableFeature = {
   },
 
   constructRowAPIs(row) {
+    if (!row.table.options.enableExperimentalReactivity) {
+      return
+    }
     const rowId = row.id
     makePropsReactive(row.table._signalNotifier, row, {
       skipProperty(property) {
