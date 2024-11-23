@@ -10,10 +10,17 @@ import {
   TemplateRef,
   Type,
   ViewContainerRef,
+  effect,
   inject,
   isSignal,
 } from '@angular/core'
-import type { DoCheck, OnChanges, SimpleChanges } from '@angular/core'
+import type {
+  DoCheck,
+  EffectRef,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core'
+import { Table } from '@tanstack/table-core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
@@ -54,12 +61,14 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
 
+  effect?: EffectRef
+
   ngDoCheck(): void {
     // TODO: currently this fixed the propagation of state when using flexRender with custom FlexRenderComponentProps
     // TODO: test with custom reactive feature
-    if (this.ref instanceof ComponentRef) {
-      this.ref.injector.get(ChangeDetectorRef).markForCheck()
-    }
+    // if (this.ref instanceof ComponentRef) {
+    // this.ref.injector.get(ChangeDetectorRef).markForCheck()
+    // }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -77,13 +86,29 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     const { content, props } = this
     if (content === null || content === undefined) {
       this.ref = null
-      return
     }
     if (typeof content === 'function') {
-      return this.renderContent(content(props))
+      this.ref = this.renderContent(content(props))
     } else {
-      return this.renderContent(content)
+      this.ref = this.renderContent(content)
     }
+
+    // TODO: improve this!!
+    this.effect = effect(
+      () => {
+        const props = this.props
+
+        if (this.ref instanceof ComponentRef) {
+          this.ref.injector.get(ChangeDetectorRef).markForCheck()
+        }
+
+        if ('table' in props) {
+          const table = props.table as Table<any, any>
+          table._signalNotifier()
+        }
+      },
+      { injector: this.injector },
+    )
   }
 
   private renderContent(content: FlexRenderContent<TProps>) {
@@ -91,19 +116,15 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return this.renderStringContent()
     }
     if (content instanceof TemplateRef) {
-      this.ref = this.viewContainerRef.createEmbeddedView(
+      return this.viewContainerRef.createEmbeddedView(
         content,
         this.getTemplateRefContext(),
       )
-      return this.ref
     } else if (content instanceof FlexRenderComponent) {
-      this.ref = this.renderComponent(content)
-      return this.ref
+      return this.renderComponent(content)
     } else if (content instanceof Type) {
-      this.ref = this.renderCustomComponent(content)
-      return this.ref
+      return this.renderCustomComponent(content)
     } else {
-      this.ref = null
       return null
     }
   }

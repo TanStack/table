@@ -1,4 +1,4 @@
-import { computed, signal } from '@angular/core'
+import { computed, signal, untracked } from '@angular/core'
 import {
   constructTable,
   coreFeatures,
@@ -7,14 +7,23 @@ import {
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
 import { proxifyTable } from './proxy'
+import { reactivityFeature } from './reactivityFeature'
 import type { Signal } from '@angular/core'
 import type {
   RowData,
   Table,
+  TableFeature,
   TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
+
+declare module '@tanstack/table-core' {
+  interface Table_Plugins {
+    _signalNotifier: Signal<{}>
+    _notify: () => void
+  }
+}
 
 export function injectTable<
   TFeatures extends TableFeatures,
@@ -28,6 +37,7 @@ export function injectTable<
       _features: {
         ...coreFeatures,
         ...options()._features,
+        reactivityFeature,
       },
     }
 
@@ -57,6 +67,7 @@ export function injectTable<
           const value = isFunction(updater) ? updater(tableState) : updater
           state.set(value)
           resolvedOptions.onStateChange?.(updater)
+          table._notify()
         },
       }
     })
@@ -65,6 +76,7 @@ export function injectTable<
     const tableSignal = computed(
       () => {
         table.setOptions(updatedOptions())
+        untracked(() => table._notify())
         return table
       },
       {
