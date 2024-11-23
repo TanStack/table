@@ -1,4 +1,12 @@
-import { computed, signal, untracked } from '@angular/core'
+import type { Signal } from '@angular/core'
+import { computed, inject, Injector, signal } from '@angular/core'
+import type {
+  RowData,
+  Table,
+  TableFeatures,
+  TableOptions,
+  TableState,
+} from '@tanstack/table-core'
 import {
   constructTable,
   coreFeatures,
@@ -6,50 +14,37 @@ import {
   isFunction,
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
-import { proxifyTable } from './proxy'
+import { proxifyTableV2 } from './proxy'
 import { reactivityFeature } from './reactivityFeature'
-import type { Signal } from '@angular/core'
-import type {
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-  TableOptions,
-  TableState,
-} from '@tanstack/table-core'
-
-declare module '@tanstack/table-core' {
-  interface Table_Plugins {
-    _signalNotifier: Signal<{}>
-    _notify: () => void
-  }
-}
 
 export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  options: () => TableOptions<TFeatures, TData>,
+  options: () => NoInfer<TableOptions<TFeatures, TData>>,
 ): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
+  const injector = inject(Injector)
   return lazyInit(() => {
-    const resolvedOptions = {
-      ...options(),
-      _features: {
+    const features = () => {
+      return {
         ...coreFeatures,
         ...options()._features,
         reactivityFeature,
-      },
+      }
     }
-
-    const table = constructTable(resolvedOptions)
 
     // By default, manage table state here using the table's initial state
     const state = signal<TableState<TFeatures>>(
-      getInitialTableState(
-        resolvedOptions._features,
-        resolvedOptions.initialState,
-      ),
+      getInitialTableState(features(), options().initialState),
     )
+
+    const resolvedOptions: TableOptions<TFeatures, TData> = {
+      ...options(),
+      _features: features(),
+      state: { ...state(), ...options().state },
+    }
+
+    const table = constructTable(resolvedOptions)
 
     // Compose table options using computed.
     // This is to allow `tableSignal` to listen and set table option
@@ -58,25 +53,25 @@ export function injectTable<
       const tableState = state()
       // listen to input options changed
       const tableOptions = options()
+
       return {
         ...table.options,
         ...resolvedOptions,
         ...tableOptions,
+        _features: features(),
         state: { ...tableState, ...tableOptions.state },
         onStateChange: (updater) => {
           const value = isFunction(updater) ? updater(tableState) : updater
           state.set(value)
           resolvedOptions.onStateChange?.(updater)
-          table._notify()
         },
       }
     })
 
     // convert table instance to signal for proxify to listen to any table state and options changes
-    const tableSignal = computed(
+    const tableNotifier = computed(
       () => {
         table.setOptions(updatedOptions())
-        untracked(() => table._notify())
         return table
       },
       {
@@ -84,7 +79,9 @@ export function injectTable<
       },
     )
 
+    table._setNotifier(tableNotifier)
+
     // proxify Table instance to provide ability for consumer to listen to any table state changes
-    return proxifyTable(tableSignal)
+    return proxifyTableV2(tableNotifier) as any
   })
 }

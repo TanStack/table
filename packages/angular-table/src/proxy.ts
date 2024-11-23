@@ -7,6 +7,11 @@ type TableSignal<
   TData extends RowData,
 > = Table<TFeatures, TData> & Signal<Table<TFeatures, TData>>
 
+/**
+ * @deprecated
+ * @param tableSignal
+ * @returns
+ */
 export function proxifyTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -62,6 +67,42 @@ export function proxifyTable<
   })
 }
 
+export function proxifyTableV2<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  tableSignal: Signal<Table<TFeatures, TData>>,
+): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
+  const internalState = tableSignal as TableSignal<TFeatures, TData>
+
+  return new Proxy(internalState, {
+    apply() {
+      return tableSignal()
+    },
+    get(target, property): any {
+      if (typeof property === 'string' && Reflect.has(target, property)) {
+        return Reflect.get(target, property)
+      }
+      const table = untracked(tableSignal)
+      // @ts-expect-error Typescript
+      return (target[property] = table[property])
+    },
+    has(_, prop) {
+      const t = untracked(tableSignal)
+      return !!Reflect.get(tableSignal, prop)
+    },
+    ownKeys() {
+      return Reflect.ownKeys(untracked(tableSignal))
+    },
+    getOwnPropertyDescriptor() {
+      return {
+        enumerable: true,
+        configurable: true,
+      }
+    },
+  })
+}
+
 /**
  * Here we'll handle all type of accessors:
  * - 0 argument -> e.g. table.getCanNextPage())
@@ -73,16 +114,19 @@ export function proxifyTable<
  * we'll wrap all accessors into a cached function wrapping a computed
  * that return it's value based on the given parameters
  */
-function toComputed<TFeatures extends TableFeatures, TData extends RowData>(
-  signal: Signal<Table<TFeatures, TData>>,
-  fn: Function,
-) {
+export function toComputed<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(signal: Signal<Table<TFeatures, TData>>, fn: Function, debugName?: string) {
   const hasArgs = fn.length > 0
   if (!hasArgs) {
-    return computed(() => {
-      void signal()
-      return fn()
-    })
+    return computed(
+      () => {
+        void signal()
+        return fn()
+      },
+      { equal: () => false, debugName },
+    )
   }
 
   const computedCache: Record<string, Signal<unknown>> = {}
@@ -92,10 +136,13 @@ function toComputed<TFeatures extends TableFeatures, TData extends RowData>(
     if (computedCache.hasOwnProperty(serializedArgs)) {
       return computedCache[serializedArgs]?.()
     }
-    const computedSignal = computed(() => {
-      void signal()
-      return fn(...argsArray)
-    })
+    const computedSignal = computed(
+      () => {
+        void signal()
+        return fn(...argsArray)
+      },
+      { debugName },
+    )
 
     computedCache[serializedArgs] = computedSignal
 

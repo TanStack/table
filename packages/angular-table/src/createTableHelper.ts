@@ -14,7 +14,7 @@ export type TableHelper<
   TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
   injectTable: (
-    tableOptions: Omit<
+    tableOptions: () => Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels' | '_rowModelFns'
     >,

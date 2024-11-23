@@ -56,8 +56,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
 
-  effect?: EffectRef
-
   ngOnChanges(changes: SimpleChanges) {
     if (!changes['content']) {
       return
@@ -76,24 +74,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     } else {
       this.ref = this.renderContent(content)
     }
-
-    if (this.effect) {
-      this.effect.destroy()
-    }
-    // TODO: wip, must improve this. All cell/rows/header should a have their own notifier listener
-    this.effect = effect(
-      () => {
-        const props = this.props
-        if (this.ref instanceof ComponentRef) {
-          this.ref.injector.get(ChangeDetectorRef).markForCheck()
-        }
-        if ('table' in props) {
-          const table = props.table as Table<any, any>
-          table._signalNotifier()
-        }
-      },
-      { injector: this.injector },
-    )
   }
 
   private renderContent(content: FlexRenderContent<TProps>) {
