@@ -23,21 +23,24 @@ export function createTable<
     getInitialTableState(_features, tableOptions.initialState),
   )
 
-  const statefulOptions: TableOptions<TFeatures, TData> = {
-    ...tableOptions,
+  const statefulOptions = mergeProps(tableOptions, {
     _features,
     state: { ...store, ...tableOptions.state },
+    mergeOptions(defaultOptions, options) {
+      return mergeProps(defaultOptions, options)
+    },
     onStateChange: (updater) => {
       setStore(updater)
       tableOptions.onStateChange?.(updater)
     },
-  }
+  } as TableOptions<TFeatures, TData>) as TableOptions<TFeatures, TData>
 
   const table = constructTable<TFeatures, TData>(statefulOptions)
 
   createComputed(() => {
     table.setOptions((prev) => {
       return mergeProps(prev, tableOptions, {
+        _features: { ...coreFeatures, ...tableOptions._features },
         state: mergeProps(store, tableOptions.state || {}),
         onStateChange: (updater: Updater<TableState<TFeatures>>) => {
           setStore(updater)
