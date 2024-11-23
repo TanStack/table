@@ -7,7 +7,7 @@ import {
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
 import { proxifyTable } from './proxy'
-import { reactivityFeature } from './reactivityFeature'
+import { reactivityFeature } from './reactivity'
 import type {
   RowData,
   Table,
@@ -78,7 +78,7 @@ export function injectTable<
       },
     )
 
-    table._setNotifier(tableSignal as unknown as Signal<Table<any, any>>)
+    table._setRootNotifier?.(tableSignal as unknown as Signal<Table<any, any>>)
 
     // proxify Table instance to provide ability for consumer to listen to any table state changes
     return proxifyTable(tableSignal)

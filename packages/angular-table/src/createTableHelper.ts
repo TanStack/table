@@ -13,12 +13,12 @@ export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
-  injectTable: (
+  injectTable: <TInferData extends TData>(
     tableOptions: () => Omit<
-      TableOptions<TFeatures, TData>,
+      TableOptions<TFeatures, TInferData>,
       '_features' | '_rowModels' | '_rowModelFns'
     >,
-  ) => Table<TFeatures, TData>
+  ) => Table<TFeatures, TInferData>
 }
 
 export function createTableHelper<

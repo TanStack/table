@@ -11,7 +11,7 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
-  injectTable,
+  createTableHelper,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,
@@ -27,10 +27,17 @@ import type { Person } from './makeData'
 import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
 import type { TemplateRef } from '@angular/core'
 
-const features = tableFeatures({
-  rowPaginationFeature,
-  rowSelectionFeature,
-  columnFilteringFeature,
+const tableHelper = createTableHelper({
+  _features: {
+    rowPaginationFeature,
+    rowSelectionFeature,
+    columnFilteringFeature,
+  },
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+  },
+  debugTable: true,
 })
 
 @Component({
@@ -48,85 +55,72 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: Array<ColumnDef<typeof features, Person>> = [
-    {
-      id: 'select',
-      header: () => {
-        return new FlexRenderComponent(TableHeadSelectionComponent)
+  readonly columns: Array<ColumnDef<(typeof tableHelper)['features'], Person>> =
+    [
+      {
+        id: 'select',
+        header: () => {
+          return new FlexRenderComponent(TableHeadSelectionComponent)
+        },
+        cell: () => {
+          return new FlexRenderComponent(TableRowSelectionComponent)
+        },
       },
-      cell: () => {
-        return new FlexRenderComponent(TableRowSelectionComponent)
+      {
+        header: 'Name',
+        footer: (props) => props.column.id,
+        columns: [
+          {
+            accessorKey: 'firstName',
+            cell: (info) => info.getValue(),
+            footer: (props) => props.column.id,
+            header: 'First name',
+          },
+          {
+            accessorFn: (row) => row.lastName,
+            id: 'lastName',
+            cell: (info) => info.getValue(),
+            header: () => 'Last Name',
+            footer: (props) => props.column.id,
+          },
+        ],
       },
-    },
-    {
-      header: 'Name',
-      footer: (props) => props.column.id,
-      columns: [
-        {
-          accessorKey: 'firstName',
-          cell: (info) => info.getValue(),
-          footer: (props) => props.column.id,
-          header: 'First name',
-        },
-        {
-          accessorFn: (row) => row.lastName,
-          id: 'lastName',
-          cell: (info) => info.getValue(),
-          header: () => 'Last Name',
-          footer: (props) => props.column.id,
-        },
-      ],
-    },
-    {
-      header: 'Info',
-      footer: (props) => props.column.id,
-      columns: [
-        {
-          accessorKey: 'age',
-          header: () => this.ageHeaderCell(),
-          footer: (props) => props.column.id,
-        },
-        {
-          header: 'More Info',
-          columns: [
-            {
-              accessorKey: 'visits',
-              header: () => 'Visits',
-              footer: (props) => props.column.id,
-            },
-            {
-              accessorKey: 'status',
-              header: 'Status',
-              footer: (props) => props.column.id,
-            },
-            {
-              accessorKey: 'progress',
-              header: 'Profile Progress',
-              footer: (props) => props.column.id,
-            },
-          ],
-        },
-      ],
-    },
-  ]
+      {
+        header: 'Info',
+        footer: (props) => props.column.id,
+        columns: [
+          {
+            accessorKey: 'age',
+            header: () => this.ageHeaderCell(),
+            footer: (props) => props.column.id,
+          },
+          {
+            header: 'More Info',
+            columns: [
+              {
+                accessorKey: 'visits',
+                header: () => 'Visits',
+                footer: (props) => props.column.id,
+              },
+              {
+                accessorKey: 'status',
+                header: 'Status',
+                footer: (props) => props.column.id,
+              },
+              {
+                accessorKey: 'progress',
+                header: 'Profile Progress',
+                footer: (props) => props.column.id,
+              },
+            ],
+          },
+        ],
+      },
+    ]
 
-  readonly tableFeatures = tableFeatures({
-    rowPaginationFeature,
-    rowSelectionFeature,
-    columnFilteringFeature,
-  })
-
-  table = injectTable(() => ({
+  table = tableHelper.injectTable(() => ({
     data: this.data(),
-    _features: features,
-    // @ts-expect-error Fix types
     columns: this.columns,
-    _rowModels: {
-      // @ts-expect-error Fix types
-      filteredRowModel: createFilteredRowModel(),
-      // @ts-expect-error Fix types
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     state: {
       rowSelection: this.rowSelection(),
     },
@@ -139,7 +133,6 @@ export class AppComponent {
           : updaterOrValue,
       )
     },
-    debugTable: true,
   }))
 
   readonly stringifiedRowSelection = computed(() =>
