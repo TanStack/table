@@ -36,7 +36,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
 })
 export class FlexRenderDirective<TProps extends NonNullable<unknown>>
-  implements OnChanges, DoCheck
+  implements OnChanges
 {
   @Input({ required: true, alias: 'flexRender' })
   content:
@@ -62,14 +62,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
 
   effect?: EffectRef
-
-  ngDoCheck(): void {
-    // TODO: currently this fixed the propagation of state when using flexRender with custom FlexRenderComponentProps
-    // TODO: test with custom reactive feature
-    // if (this.ref instanceof ComponentRef) {
-    // this.ref.injector.get(ChangeDetectorRef).markForCheck()
-    // }
-  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.ref instanceof ComponentRef) {
