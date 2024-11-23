@@ -2,15 +2,16 @@ import { describe, expect, test, vi } from 'vitest'
 import {
   ChangeDetectionStrategy,
   Component,
-  type WritableSignal,
+  
   computed,
   effect,
   input,
-  signal,
+  signal
 } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { lazyInit } from '../src/lazy-signal-initializer'
 import { flushQueue, setFixtureSignalInputs } from './test-utils'
+import type {WritableSignal} from '@angular/core';
 
 describe('lazyInit', () => {
   test('should init lazily in next tick when not accessing manually', async () => {

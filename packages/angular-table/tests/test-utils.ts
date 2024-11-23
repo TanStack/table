@@ -1,5 +1,5 @@
-import type { InputSignal } from '@angular/core'
 import { SIGNAL, signalSetFn } from '@angular/core/primitives/signals'
+import type { InputSignal } from '@angular/core'
 import type { ComponentFixture } from '@angular/core/testing'
 
 type ToSignalInputUpdatableMap<T> = {
