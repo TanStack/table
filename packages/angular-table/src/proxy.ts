@@ -44,8 +44,7 @@ export function proxifyTable<
           return (target as any)[property]
         }
       }
-      // @ts-expect-error
-      return (target[property] = table[property])
+      return ((target as any)[property] = (table as any)[property])
     },
     has(_, prop) {
       return Reflect.has(untracked(tableSignal), prop)
