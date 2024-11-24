@@ -6,6 +6,8 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
+  columnOrderingFeature,
+  columnVisibilityFeature,
   createCoreRowModel,
   injectTable,
 } from '@tanstack/angular-table'
@@ -84,12 +86,15 @@ export class AppComponent {
 
   readonly table = injectTable(() => ({
     data: this.data(),
+    _features: {
+      columnVisibilityFeature,
+      columnOrderingFeature,
+    },
     columns: defaultColumns,
     state: {
       columnOrder: this.columnOrder(),
       columnVisibility: this.columnVisibility(),
     },
-    getCoreRowModel: createCoreRowModel(),
     onColumnVisibilityChange: (updaterOrValue) => {
       typeof updaterOrValue === 'function'
         ? this.columnVisibility.update(updaterOrValue)

@@ -20,8 +20,9 @@
 
                 @if (header.column.getCanFilter()) {
                   <div>
+                    <!-- TODO fix type -->
                     <app-table-filter
-                      [column]="header.column"
+                      [column]="$any(header.column)"
                       [table]="table"
                     />
                   </div>

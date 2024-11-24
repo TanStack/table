@@ -7,10 +7,13 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
-  createCoreRowModel,
+  columnFilteringFeature,
+  columnVisibilityFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   injectTable,
+  rowPaginationFeature,
+  rowSelectionFeature,
 } from '@tanstack/angular-table'
 import { FilterComponent } from './filter'
 import { makeData } from './makeData'
@@ -97,6 +100,16 @@ export class AppComponent {
 
   table = injectTable(() => ({
     data: this.data(),
+    _features: {
+      rowSelectionFeature,
+      rowPaginationFeature,
+      columnFilteringFeature,
+      columnVisibilityFeature,
+    },
+    _rowModels: {
+      filteredRowModel: createFilteredRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
+    },
     columns: this.columns,
     state: {
       rowSelection: this.rowSelection(),
@@ -110,9 +123,6 @@ export class AppComponent {
           : updaterOrValue,
       )
     },
-    getCoreRowModel: createCoreRowModel(),
-    getFilteredRowModel: createFilteredRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
     debugTable: true,
   }))
 

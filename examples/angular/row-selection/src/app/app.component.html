@@ -20,8 +20,9 @@
 
                 @if (header.column.getCanFilter()) {
                   <div>
+                    <!-- TODO: fix type -->
                     <app-table-filter
-                      [column]="header.column"
+                      [column]="$any(header.column)"
                       [table]="table"
                     />
                   </div>
@@ -35,7 +36,7 @@
     <tbody>
       @for (row of table.getRowModel().rows; track row.id) {
         <tr>
-          @for (cell of row.getVisibleCells(); track cell.id) {
+          @for (cell of row.getAllCells(); track cell.id) {
             <td>
               <ng-container
                 *flexRender="

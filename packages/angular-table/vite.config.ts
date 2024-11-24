@@ -9,5 +9,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./tests/test-setup.ts'],
     globals: true,
+    typecheck: {
+      enabled: true,
+      tsconfig: './tsconfig.json',
+    },
   },
 })

@@ -7,39 +7,51 @@ import {
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
 import { proxifyTable } from './proxy'
-import type { Signal } from '@angular/core'
 import type {
+  CreateRowModels_All,
   RowData,
   Table,
   TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
+import type { Signal } from '@angular/core'
+
+export type AngularTableOptions<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = Omit<TableOptions<TFeatures, TData>, '_rowModels'> & {
+  _rowModels: CreateRowModels_All<TFeatures, TData>
+  // TODO: no exported
+  // _rowModelsFns: RowModelFns<TFeatures, TData>
+}
 
 export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  options: () => TableOptions<TFeatures, TData>,
+  options: () => AngularTableOptions<TFeatures, TData>,
 ): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
   return lazyInit(() => {
-    const resolvedOptions = {
-      ...options(),
-      _features: {
+    const features = () => {
+      return {
         ...coreFeatures,
         ...options()._features,
-      },
+      }
     }
-
-    const table = constructTable(resolvedOptions)
 
     // By default, manage table state here using the table's initial state
     const state = signal<TableState<TFeatures>>(
-      getInitialTableState(
-        resolvedOptions._features,
-        resolvedOptions.initialState,
-      ),
+      getInitialTableState(features(), options().initialState),
     )
+
+    const resolvedOptions: TableOptions<TFeatures, TData> = {
+      ...options(),
+      _features: features(),
+      state: { ...state(), ...options().state },
+    } as TableOptions<TFeatures, TData>
+
+    const table = constructTable(resolvedOptions)
 
     // Compose table options using computed.
     // This is to allow `tableSignal` to listen and set table option
@@ -48,10 +60,12 @@ export function injectTable<
       const tableState = state()
       // listen to input options changed
       const tableOptions = options()
+
       return {
         ...table.options,
         ...resolvedOptions,
         ...tableOptions,
+        _features: features(),
         state: { ...tableState, ...tableOptions.state },
         onStateChange: (updater) => {
           const value = isFunction(updater) ? updater(tableState) : updater

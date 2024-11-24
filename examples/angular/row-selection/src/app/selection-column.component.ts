@@ -18,7 +18,10 @@ import type { CellContext, HeaderContext } from '@tanstack/angular-table'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHeadSelectionComponent<T> {
-  context = injectFlexRenderContext<HeaderContext<T, unknown>>()
+  context = injectFlexRenderContext<
+    // @ts-expect-error TODO: Should fix types
+    HeaderContext<{ rowSelectionFeature: {} }, T, unknown>
+  >()
 }
 
 @Component({
@@ -36,5 +39,7 @@ export class TableHeadSelectionComponent<T> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowSelectionComponent<T> {
-  context = injectFlexRenderContext<CellContext<T, unknown>>()
+  context =
+    // @ts-expect-error TODO: Should fix types
+    injectFlexRenderContext<CellContext<{ rowSelectionFeature: {} }, unknown>>()
 }

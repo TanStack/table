@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core'
-import type { Row, Table } from '@tanstack/angular-table'
+import type { Row, RowData, Table } from '@tanstack/angular-table'
 
 @Component({
   template: `
@@ -16,7 +16,7 @@ import type { Row, Table } from '@tanstack/angular-table'
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadSelectionComponent<T> {
+export class TableHeadSelectionComponent<T extends RowData> {
   // Your component should also reflect the fields you use as props in flexRenderer directive.
   // Define the fields as input you want to use in your component
   // ie. In this case, you are passing HeaderContext object as props in flexRenderer directive.
@@ -25,7 +25,7 @@ export class TableHeadSelectionComponent<T> {
 
   // column = input.required<Column<T, unknown>>()
   // header = input.required<Header<T, unknown>>()
-  table = input.required<Table<T>>()
+  table = input.required<Table<any, T>>()
 }
 
 @Component({
@@ -42,6 +42,6 @@ export class TableHeadSelectionComponent<T> {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowSelectionComponent<T> {
-  row = input.required<Row<T>>()
+export class TableRowSelectionComponent<T extends RowData> {
+  row = input.required<Row<any, T>>()
 }
