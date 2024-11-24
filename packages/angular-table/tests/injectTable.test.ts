@@ -1,9 +1,13 @@
 import { describe, expect, test } from 'vitest'
 import { Component, input, isSignal, signal, untracked } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { createCoreRowModel, injectTable } from '../src/injectTable'
-import { setSignalInputs } from './test-utils'
-import type { ColumnDef, Table } from '../src/injectTable'
+import { ColumnDef, stockFeatures } from '@tanstack/table-core'
+import { injectTable } from '../src/injectTable'
+import {
+  experimentalReactivity_testShouldBeComputedProperty,
+  setSignalInputs,
+  testShouldBeComputedProperty,
+} from './test-utils'
 
 describe('injectTable', () => {
   test('should render with required signal inputs', () => {
@@ -17,8 +21,8 @@ describe('injectTable', () => {
 
       table = injectTable(() => ({
         data: this.data(),
+        _features: stockFeatures,
         columns: [],
-        getCoreRowModel: createCoreRowModel(),
       }))
     }
 
@@ -39,8 +43,8 @@ describe('injectTable', () => {
     ]
     const table = injectTable(() => ({
       data: data(),
+      _features: stockFeatures,
       columns: columns,
-      getCoreRowModel: createCoreRowModel(),
       getRowId: (row) => row.id,
     }))
     const tablePropertyKeys = Object.keys(table())
@@ -50,7 +54,7 @@ describe('injectTable', () => {
     })
 
     test('supports "in" operator', () => {
-      expect('getCoreRowModel' in table).toBe(true)
+      expect('_features' in table).toBe(true)
       expect('options' in table).toBe(true)
       expect('notFound' in table).toBe(false)
     })
@@ -71,21 +75,3 @@ describe('injectTable', () => {
     })
   })
 })
-
-const testShouldBeComputedProperty = (
-  table: Table<any, any>,
-  propertyName: string,
-) => {
-  if (propertyName.endsWith('Handler') || propertyName.endsWith('Model')) {
-    return false
-  }
-
-  if (propertyName.startsWith('get')) {
-    // Only properties with no arguments are computed
-    const fn = table[propertyName as keyof Table<any, any>]
-    // Cannot test if is lazy computed since we return the unwrapped value
-    return fn instanceof Function && fn.length === 0
-  }
-
-  return false
-}

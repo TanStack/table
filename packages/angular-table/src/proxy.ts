@@ -19,9 +19,9 @@ export function proxifyTable<
     apply() {
       return tableSignal()
     },
-    get(target, property: keyof Table<TFeatures, TData>): any {
-      if (target[property]) {
-        return target[property]
+    get(target, property): any {
+      if (Reflect.has(target, property)) {
+        return Reflect.get(target, property)
       }
       const table = untracked(tableSignal)
       /**
@@ -29,25 +29,25 @@ export function proxifyTable<
        * excluding handlers as they do not retain any reactive value
        */
       if (
+        typeof property === 'string' &&
         property.startsWith('get') &&
         !property.endsWith('Handler') &&
         !property.endsWith('Model')
       ) {
-        const maybeFn = table[property] as Function | never
+        const maybeFn = (table as any)[property] as Function | never
         if (typeof maybeFn === 'function') {
           Object.defineProperty(target, property, {
             value: toComputed(tableSignal, maybeFn),
             configurable: true,
             enumerable: true,
           })
-          return target[property]
+          return (target as any)[property]
         }
       }
-      // @ts-expect-error
-      return (target[property] = table[property])
+      return ((target as any)[property] = (table as any)[property])
     },
-    has(_, prop: keyof Table<TFeatures, TData>) {
-      return !!untracked(tableSignal)[prop]
+    has(_, prop) {
+      return Reflect.has(untracked(tableSignal), prop)
     },
     ownKeys() {
       return Reflect.ownKeys(untracked(tableSignal))

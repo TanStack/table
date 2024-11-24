@@ -8,10 +8,13 @@ import {
 import {
   FlexRenderComponent,
   FlexRenderDirective,
-  createCoreRowModel,
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
-  injectTable,
+  createTableHelper,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { FormsModule } from '@angular/forms'
 import { FilterComponent } from './filter'
@@ -23,6 +26,19 @@ import {
 import type { Person } from './makeData'
 import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
 import type { TemplateRef } from '@angular/core'
+
+const tableHelper = createTableHelper({
+  _features: {
+    rowPaginationFeature,
+    rowSelectionFeature,
+    columnFilteringFeature,
+  },
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+  },
+  debugTable: true,
+})
 
 @Component({
   selector: 'app-root',
@@ -39,69 +55,70 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: Array<ColumnDef<any, Person>> = [
-    {
-      id: 'select',
-      header: () => {
-        return new FlexRenderComponent(TableHeadSelectionComponent)
+  readonly columns: Array<ColumnDef<(typeof tableHelper)['features'], Person>> =
+    [
+      {
+        id: 'select',
+        header: () => {
+          return new FlexRenderComponent(TableHeadSelectionComponent)
+        },
+        cell: () => {
+          return new FlexRenderComponent(TableRowSelectionComponent)
+        },
       },
-      cell: () => {
-        return new FlexRenderComponent(TableRowSelectionComponent)
+      {
+        header: 'Name',
+        footer: (props) => props.column.id,
+        columns: [
+          {
+            accessorKey: 'firstName',
+            cell: (info) => info.getValue(),
+            footer: (props) => props.column.id,
+            header: 'First name',
+          },
+          {
+            accessorFn: (row) => row.lastName,
+            id: 'lastName',
+            cell: (info) => info.getValue(),
+            header: () => 'Last Name',
+            footer: (props) => props.column.id,
+          },
+        ],
       },
-    },
-    {
-      header: 'Name',
-      footer: (props) => props.column.id,
-      columns: [
-        {
-          accessorKey: 'firstName',
-          cell: (info) => info.getValue(),
-          footer: (props) => props.column.id,
-          header: 'First name',
-        },
-        {
-          accessorFn: (row) => row.lastName,
-          id: 'lastName',
-          cell: (info) => info.getValue(),
-          header: () => 'Last Name',
-          footer: (props) => props.column.id,
-        },
-      ],
-    },
-    {
-      header: 'Info',
-      footer: (props) => props.column.id,
-      columns: [
-        {
-          accessorKey: 'age',
-          header: () => this.ageHeaderCell(),
-          footer: (props) => props.column.id,
-        },
-        {
-          header: 'More Info',
-          columns: [
-            {
-              accessorKey: 'visits',
-              header: () => 'Visits',
-              footer: (props) => props.column.id,
-            },
-            {
-              accessorKey: 'status',
-              header: 'Status',
-              footer: (props) => props.column.id,
-            },
-            {
-              accessorKey: 'progress',
-              header: 'Profile Progress',
-              footer: (props) => props.column.id,
-            },
-          ],
-        },
-      ],
-    },
-  ]
+      {
+        header: 'Info',
+        footer: (props) => props.column.id,
+        columns: [
+          {
+            accessorKey: 'age',
+            header: () => this.ageHeaderCell(),
+            footer: (props) => props.column.id,
+          },
+          {
+            header: 'More Info',
+            columns: [
+              {
+                accessorKey: 'visits',
+                header: () => 'Visits',
+                footer: (props) => props.column.id,
+              },
+              {
+                accessorKey: 'status',
+                header: 'Status',
+                footer: (props) => props.column.id,
+              },
+              {
+                accessorKey: 'progress',
+                header: 'Profile Progress',
+                footer: (props) => props.column.id,
+              },
+            ],
+          },
+        ],
+      },
+    ]
 
-  table = injectTable(() => ({
+  table = tableHelper.injectTable(() => ({
     data: this.data(),
     columns: this.columns,
     state: {
@@ -116,10 +133,6 @@ export class AppComponent {
           : updaterOrValue,
       )
     },
-    getCoreRowModel: createCoreRowModel(),
-    getFilteredRowModel: createFilteredRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
-    debugTable: true,
   }))
 
   readonly stringifiedRowSelection = computed(() =>
@@ -129,7 +142,6 @@ export class AppComponent {
   readonly rowSelectionLength = computed(
     () => Object.keys(this.rowSelection()).length,
   )
-
   onPageInputChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement
     const page = inputElement.value ? Number(inputElement.value) - 1 : 0

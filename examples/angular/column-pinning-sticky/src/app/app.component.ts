@@ -1,6 +1,11 @@
 import { Component, computed, signal } from '@angular/core'
 import {
   FlexRenderDirective,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
   createCoreRowModel,
   injectTable,
 } from '@tanstack/angular-table'
@@ -74,7 +79,7 @@ const defaultColumns: Array<ColumnDef<any, Person>> = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FlexRenderDirective, SlicePipe, NgTemplateOutlet, NgStyle],
+  imports: [FlexRenderDirective, NgStyle],
   templateUrl: './app.component.html',
 })
 export class AppComponent {
@@ -82,17 +87,26 @@ export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(30))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
-  readonly columnPinning = signal<ColumnPinningState>({})
+  readonly columnPinning = signal<ColumnPinningState>({
+    left: [],
+    right: [],
+  })
   readonly split = signal(false)
 
   table = injectTable(() => ({
     data: this.data(),
+    _features: {
+      columnPinningFeature,
+      columnVisibilityFeature,
+      columnSizingFeature,
+      columnOrderingFeature,
+      columnResizingFeature,
+    },
     columns: this.columns(),
-    getCoreRowModel: createCoreRowModel(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
-    columnResizeMode: 'onChange',
+    columnResizeMode: 'onChange' as const,
   }))
 
   stringifiedColumnPinning = computed(() => {

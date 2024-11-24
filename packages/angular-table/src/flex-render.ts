@@ -13,7 +13,8 @@ import {
   inject,
   isSignal,
 } from '@angular/core'
-import type { OnChanges, SimpleChanges } from '@angular/core'
+import type { DoCheck, OnChanges, SimpleChanges } from '@angular/core'
+import type { Table } from '@tanstack/table-core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
@@ -29,7 +30,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
 })
 export class FlexRenderDirective<TProps extends NonNullable<unknown>>
-  implements OnChanges
+  implements OnChanges, DoCheck
 {
   @Input({ required: true, alias: 'flexRender' })
   content:
@@ -45,6 +46,8 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   @Input({ required: false, alias: 'flexRenderInjector' })
   injector: Injector = inject(Injector)
 
+  ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
+
   constructor(
     @Inject(ViewContainerRef)
     private readonly viewContainerRef: ViewContainerRef,
@@ -52,12 +55,13 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     private readonly templateRef: TemplateRef<any>,
   ) {}
 
-  ref?: ComponentRef<unknown> | EmbeddedViewRef<unknown> | null = null
-
-  ngOnChanges(changes: SimpleChanges) {
+  ngDoCheck(): void {
     if (this.ref instanceof ComponentRef) {
       this.ref.injector.get(ChangeDetectorRef).markForCheck()
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
     if (!changes['content']) {
       return
     }
@@ -69,12 +73,11 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     const { content, props } = this
     if (content === null || content === undefined) {
       this.ref = null
-      return
     }
     if (typeof content === 'function') {
-      return this.renderContent(content(props))
+      this.ref = this.renderContent(content(props))
     } else {
-      return this.renderContent(content)
+      this.ref = this.renderContent(content)
     }
   }
 

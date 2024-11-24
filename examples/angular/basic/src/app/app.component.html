@@ -24,7 +24,7 @@
     <tbody>
       @for (row of table.getRowModel().rows; track row.id) {
         <tr>
-          @for (cell of row.getVisibleCells(); track cell.id) {
+          @for (cell of row.getAllCells(); track cell.id) {
             <td>
               <ng-container
                 *flexRender="
