@@ -108,9 +108,7 @@ export class AppComponent {
       columnVisibilityFeature,
     },
     _rowModels: {
-      // @ts-expect-error Fix type
       filteredRowModel: createFilteredRowModel(),
-      // @ts-expect-error Fix type
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns: this.columns,

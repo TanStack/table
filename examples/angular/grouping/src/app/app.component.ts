@@ -56,13 +56,9 @@ export class AppComponent {
       rowExpandingFeature,
     },
     _rowModels: {
-      // @ts-expect-error Fix type
       groupedRowModel: createGroupedRowModel(),
-      // @ts-expect-error Fix type
       expandedRowModel: createExpandedRowModel(),
-      // @ts-expect-error Fix type
       paginatedRowModel: createPaginatedRowModel(),
-      // @ts-expect-error Fix type
       filteredRowModel: createFilteredRowModel(),
     },
     onGroupingChange: (updaterOrValue: Updater<GroupingState>) => {

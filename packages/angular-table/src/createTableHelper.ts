@@ -1,4 +1,5 @@
-import { constructTableHelper } from './createTableHelperCore'
+import { Signal } from '@angular/core'
+import { constructTableHelper } from './constructTableHelper'
 import { injectTable } from './injectTable'
 import type {
   RowData,
@@ -27,7 +28,12 @@ export function createTableHelper<
 >(
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper<TFeatures, TData> {
-  const tableHelper = constructTableHelper(injectTable, tableHelperOptions)
+  const tableHelper = constructTableHelper(
+    injectTable as unknown as (
+      tableOptions: () => TableOptions<TFeatures, TData>,
+    ) => Table<TFeatures, TData> & Signal<Table<TFeatures, TData>>,
+    tableHelperOptions,
+  )
   return {
     ...tableHelper,
     injectTable: tableHelper.tableCreator,
