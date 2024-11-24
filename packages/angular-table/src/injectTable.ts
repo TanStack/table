@@ -21,7 +21,7 @@ export type AngularTableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Omit<TableOptions<TFeatures, TData>, '_rowModels'> & {
-  _rowModels: CreateRowModels_All<TFeatures, TData>
+  _rowModels?: CreateRowModels_All<TFeatures, TData>
   // TODO: no exported
   // _rowModelsFns: RowModelFns<TFeatures, TData>
 }
