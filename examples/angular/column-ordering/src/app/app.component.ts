@@ -20,11 +20,6 @@ import type {
   ColumnVisibilityState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
-  columnVisibilityFeature,
-  columnOrderingFeature,
-})
-
 const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
@@ -77,6 +72,11 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
+const _features = tableFeatures({
+  columnVisibilityFeature,
+  columnOrderingFeature,
+})
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -91,12 +91,13 @@ export class AppComponent {
 
   readonly table = injectTable(() => ({
     _features,
-    columns: defaultColumns,
     data: this.data(),
+    columns: defaultColumns,
     state: {
       columnOrder: this.columnOrder(),
       columnVisibility: this.columnVisibility(),
     },
+    enableExperimentalReactivity: true,
     onColumnVisibilityChange: (updaterOrValue) => {
       typeof updaterOrValue === 'function'
         ? this.columnVisibility.update(updaterOrValue)

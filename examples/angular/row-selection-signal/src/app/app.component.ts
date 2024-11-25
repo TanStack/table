@@ -113,6 +113,17 @@ export class AppComponent {
       paginatedRowModel: createPaginatedRowModel(),
     },
     data: this.data(),
+    enableExperimentalReactivity: true,
+    _features: {
+      rowSelectionFeature,
+      rowPaginationFeature,
+      columnFilteringFeature,
+      columnVisibilityFeature,
+    },
+    _rowModels: {
+      filteredRowModel: createFilteredRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
+    },
     columns: this.columns,
     state: {
       rowSelection: this.rowSelection(),

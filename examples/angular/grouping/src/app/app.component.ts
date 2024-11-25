@@ -54,6 +54,7 @@ export class AppComponent {
       paginatedRowModel: createPaginatedRowModel(),
       filteredRowModel: createFilteredRowModel(),
     },
+    enableExperimentalReactivity: true,
     data: this.data(),
     columns,
     initialState: {

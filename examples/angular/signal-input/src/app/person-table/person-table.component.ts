@@ -52,6 +52,7 @@ export class PersonTableComponent {
       state: {
         pagination: this.pagination(),
       },
+      enableExperimentalReactivity: true,
       onPaginationChange: (updaterOrValue) => {
         typeof updaterOrValue === 'function'
           ? this.pagination.update(updaterOrValue)

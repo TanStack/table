@@ -115,6 +115,7 @@ export class AppComponent {
       columnOrder: this.columnOrder(),
       columnPinning: this.columnPinning(),
     },
+    enableExperimentalReactivity: true,
     onColumnVisibilityChange: (updaterOrValue) => {
       typeof updaterOrValue === 'function'
         ? this.columnVisibility.update(updaterOrValue)

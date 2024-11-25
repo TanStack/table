@@ -102,6 +102,7 @@ export class AppComponent {
     },
     columns: this.columns(),
     data: this.data(),
+    enableExperimentalReactivity: true,
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
