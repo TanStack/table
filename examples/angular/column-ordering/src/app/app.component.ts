@@ -9,6 +9,7 @@ import {
   columnOrderingFeature,
   columnVisibilityFeature,
   injectTable,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
