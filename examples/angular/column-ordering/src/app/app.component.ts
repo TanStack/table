@@ -8,8 +8,8 @@ import {
   FlexRenderDirective,
   columnOrderingFeature,
   columnVisibilityFeature,
-  createCoreRowModel,
   injectTable,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
@@ -20,7 +20,12 @@ import type {
   ColumnVisibilityState,
 } from '@tanstack/angular-table'
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  columnVisibilityFeature,
+  columnOrderingFeature,
+})
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -85,12 +90,9 @@ export class AppComponent {
   readonly columnOrder = signal<ColumnOrderState>([])
 
   readonly table = injectTable(() => ({
-    data: this.data(),
-    _features: {
-      columnVisibilityFeature,
-      columnOrderingFeature,
-    },
+    _features,
     columns: defaultColumns,
+    data: this.data(),
     state: {
       columnOrder: this.columnOrder(),
       columnVisibility: this.columnVisibility(),

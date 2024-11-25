@@ -6,11 +6,10 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
-  createCoreRowModel,
   injectTable,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'
-import { NgStyle, NgTemplateOutlet, SlicePipe } from '@angular/common'
+import { NgStyle } from '@angular/common'
 import { makeData } from './makeData'
 import type {
   Column,
@@ -94,15 +93,15 @@ export class AppComponent {
   readonly split = signal(false)
 
   table = injectTable(() => ({
-    data: this.data(),
     _features: {
-      columnPinningFeature,
-      columnVisibilityFeature,
-      columnSizingFeature,
       columnOrderingFeature,
+      columnPinningFeature,
       columnResizingFeature,
+      columnSizingFeature,
+      columnVisibilityFeature,
     },
     columns: this.columns(),
+    data: this.data(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

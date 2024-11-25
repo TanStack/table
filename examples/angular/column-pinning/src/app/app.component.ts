@@ -9,9 +9,8 @@ import {
   columnOrderingFeature,
   columnPinningFeature,
   columnVisibilityFeature,
-  createCoreRowModel,
   injectTable,
-  rowPinningFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'
 import { NgTemplateOutlet, SlicePipe } from '@angular/common'
@@ -32,7 +31,13 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  columnPinningFeature,
+  columnOrderingFeature,
+  columnVisibilityFeature,
+})
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -102,13 +107,9 @@ export class AppComponent {
   readonly split = signal(false)
 
   table = injectTable(() => ({
-    data: this.data(),
-    _features: {
-      columnPinningFeature,
-      columnOrderingFeature,
-      columnVisibilityFeature,
-    },
+    _features,
     columns: defaultColumns,
+    data: this.data(),
     state: {
       columnVisibility: this.columnVisibility(),
       columnOrder: this.columnOrder(),

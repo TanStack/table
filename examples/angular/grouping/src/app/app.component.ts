@@ -9,19 +9,26 @@ import {
   FlexRenderDirective,
   columnFilteringFeature,
   columnGroupingFeature,
-  createCoreRowModel,
   createExpandedRowModel,
   createFilteredRowModel,
   createGroupedRowModel,
   createPaginatedRowModel,
   injectTable,
+  isFunction,
   rowExpandingFeature,
   rowPaginationFeature,
-  tableOptions,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { columns } from './columns'
 import { makeData } from './makeData'
 import type { GroupingState, Updater } from '@tanstack/angular-table'
+
+export const _features = tableFeatures({
+  columnGroupingFeature,
+  rowPaginationFeature,
+  columnFilteringFeature,
+  rowExpandingFeature,
+})
 
 @Component({
   selector: 'app-root',
@@ -40,31 +47,25 @@ export class AppComponent {
   )
 
   readonly table = injectTable(() => ({
-    data: this.data(),
-    columns: columns,
-    initialState: {
-      pagination: { pageSize: 20, pageIndex: 0 },
-    },
-    state: {
-      grouping: this.grouping(),
-    },
-    _features: {
-      columnGroupingFeature,
-      rowPaginationFeature,
-      columnFilteringFeature,
-      rowExpandingFeature,
-    },
+    _features,
     _rowModels: {
       groupedRowModel: createGroupedRowModel(),
       expandedRowModel: createExpandedRowModel(),
       paginatedRowModel: createPaginatedRowModel(),
       filteredRowModel: createFilteredRowModel(),
     },
+    data: this.data(),
+    columns,
+    initialState: {
+      pagination: { pageSize: 20, pageIndex: 0 },
+    },
+    state: {
+      grouping: this.grouping(),
+    },
     onGroupingChange: (updaterOrValue: Updater<GroupingState>) => {
-      const groupingState =
-        typeof updaterOrValue === 'function'
-          ? updaterOrValue([...this.grouping()])
-          : updaterOrValue
+      const groupingState = isFunction(updaterOrValue)
+        ? updaterOrValue([...this.grouping()])
+        : updaterOrValue
       this.grouping.set(groupingState)
     },
   }))

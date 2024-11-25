@@ -6,8 +6,10 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
+  columnVisibilityFeature,
   createCoreRowModel,
   injectTable,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import type { OnInit } from '@angular/core'
 import type { ColumnDef, ColumnVisibilityState } from '@tanstack/angular-table'
@@ -20,6 +22,10 @@ type Person = {
   status: string
   progress: number
 }
+
+const _features = tableFeatures({
+  columnVisibilityFeature,
+})
 
 const defaultData: Array<Person> = [
   {
@@ -48,7 +54,7 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -112,8 +118,9 @@ export class AppComponent implements OnInit {
   readonly columnVisibility = signal<ColumnVisibilityState>({})
 
   table = injectTable(() => ({
-    data: this.data(),
+    _features,
     columns: defaultColumns,
+    data: this.data(),
     state: {
       columnVisibility: this.columnVisibility(),
     },
