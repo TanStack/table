@@ -14,7 +14,6 @@ import {
   createTableHelper,
   rowPaginationFeature,
   rowSelectionFeature,
-  tableFeatures,
 } from '@tanstack/angular-table'
 import { FormsModule } from '@angular/forms'
 import { FilterComponent } from './filter'
@@ -29,9 +28,9 @@ import type { TemplateRef } from '@angular/core'
 
 const tableHelper = createTableHelper({
   _features: {
+    columnFilteringFeature,
     rowPaginationFeature,
     rowSelectionFeature,
-    columnFilteringFeature,
   },
   _rowModels: {
     filteredRowModel: createFilteredRowModel(),

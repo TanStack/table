@@ -13,6 +13,7 @@ export interface CoreTableFeatures {
   columnsFeature?: TableFeature
   headersFeature?: TableFeature
   rowsFeature?: TableFeature
+  rowModelsFeature?: TableFeature
   tablesFeature?: TableFeature
 }
 

@@ -13,7 +13,7 @@ export type TableHelperOptions<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 > = Omit<
-  TableOptions<TFeatures, NoInfer<TData>>,
+  TableOptions<NoInfer<TFeatures>, NoInfer<TData>>,
   'columns' | 'data' | 'state'
 > & {
   _features: TFeatures

@@ -1,3 +1,4 @@
+import type { _features } from './app.component'
 import type { ColumnDef } from '@tanstack/angular-table'
 
 export type Person = {
@@ -10,7 +11,7 @@ export type Person = {
   subRows?: Array<Person>
 }
 
-export const columns: Array<ColumnDef<any, Person>> = [
+export const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     columns: [

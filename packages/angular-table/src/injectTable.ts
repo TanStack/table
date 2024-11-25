@@ -1,4 +1,12 @@
+import type { Signal } from '@angular/core'
 import { computed, signal } from '@angular/core'
+import type {
+  RowData,
+  Table,
+  TableFeatures,
+  TableOptions,
+  TableState,
+} from '@tanstack/table-core'
 import {
   constructTable,
   coreFeatures,
@@ -8,30 +16,12 @@ import {
 import { lazyInit } from './lazy-signal-initializer'
 import { proxifyTable } from './proxy'
 import { reactivityFeature } from './reactivity'
-import type {
-  CreateRowModels_All,
-  RowData,
-  Table,
-  TableFeatures,
-  TableOptions,
-  TableState,
-} from '@tanstack/table-core'
-import type { Signal } from '@angular/core'
-
-export type AngularTableOptions<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = Omit<TableOptions<TFeatures, TData>, '_rowModels'> & {
-  _rowModels?: CreateRowModels_All<TFeatures, TData>
-  // TODO: no exported
-  // _rowModelsFns: RowModelFns<TFeatures, TData>
-}
 
 export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  options: () => AngularTableOptions<TFeatures, TData>,
+  options: () => TableOptions<TFeatures, TData>,
 ): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
   return lazyInit(() => {
     const features = () => {

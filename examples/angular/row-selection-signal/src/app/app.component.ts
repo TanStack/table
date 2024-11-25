@@ -14,6 +14,7 @@ import {
   injectTable,
   rowPaginationFeature,
   rowSelectionFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { FilterComponent } from './filter'
 import { makeData } from './makeData'
@@ -24,6 +25,13 @@ import {
 import type { Person } from './makeData'
 import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
 import type { TemplateRef } from '@angular/core'
+
+const _features = tableFeatures({
+  columnFilteringFeature,
+  columnVisibilityFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+})
 
 @Component({
   selector: 'app-root',
@@ -40,7 +48,7 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: Array<ColumnDef<any, Person>> = [
+  readonly columns: Array<ColumnDef<typeof _features, Person>> = [
     {
       id: 'select',
       header: () => TableHeadSelectionComponent<Person>,
@@ -99,6 +107,11 @@ export class AppComponent {
   ]
 
   table = injectTable(() => ({
+    _features,
+    _rowModels: {
+      filteredRowModel: createFilteredRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
+    },
     data: this.data(),
     enableExperimentalReactivity: true,
     _features: {

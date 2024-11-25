@@ -6,6 +6,8 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
+  columnFacetingFeature,
+  columnFilteringFeature,
   createCoreRowModel,
   createFacetedMinMaxValues,
   createFacetedRowModel,
@@ -15,6 +17,9 @@ import {
   createSortedRowModel,
   injectTable,
   isFunction,
+  rowPaginationFeature,
+  rowSortingFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { FormsModule } from '@angular/forms'
 import { NgClass } from '@angular/common'
@@ -27,6 +32,13 @@ import type {
 } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
+export const _features = tableFeatures({
+  columnFilteringFeature,
+  columnFacetingFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+})
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -38,7 +50,7 @@ export class AppComponent {
   readonly columnFilters = signal<ColumnFiltersState>([])
   readonly data = signal(makeData(5000))
 
-  readonly columns: Array<ColumnDef<any, Person>> = [
+  readonly columns: Array<ColumnDef<typeof _features, Person>> = [
     {
       accessorKey: 'firstName',
       cell: (info) => info.getValue(),
@@ -79,7 +91,8 @@ export class AppComponent {
     },
   ]
 
-  table = injectTable<any, Person>(() => ({
+  table = injectTable<typeof _features, Person>(() => ({
+    _features,
     columns: this.columns,
     data: this.data(),
     state: {

@@ -1,24 +1,18 @@
+import type { DoCheck, OnChanges, SimpleChanges } from '@angular/core'
 import {
   ChangeDetectorRef,
   ComponentRef,
   Directive,
   EmbeddedViewRef,
   Inject,
+  inject,
   InjectionToken,
   Injector,
   Input,
+  isSignal,
   TemplateRef,
   Type,
   ViewContainerRef,
-  effect,
-  inject,
-  isSignal,
-} from '@angular/core'
-import type {
-  DoCheck,
-  EffectRef,
-  OnChanges,
-  SimpleChanges,
 } from '@angular/core'
 import type { Table } from '@tanstack/table-core'
 
@@ -64,10 +58,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   ) {}
 
   ngDoCheck(): void {
-    if (
-      this.experimentalReactivity === false &&
-      this.ref instanceof ComponentRef
-    ) {
+    if (!this.experimentalReactivity && this.ref instanceof ComponentRef) {
       this.ref.injector.get(ChangeDetectorRef).markForCheck()
     }
   }

@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common'
 import { Component, computed, input } from '@angular/core'
 import { DebouncedInputDirective } from './debounced-input.directive'
+import type { _features } from './app.component'
+import type { Person } from './makeData'
 import type {
   CellData,
   Column,
@@ -90,13 +92,10 @@ declare module '@tanstack/angular-table' {
   standalone: true,
   imports: [CommonModule, DebouncedInputDirective],
 })
-export class FilterComponent<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  column = input.required<Column<any, any>>()
+export class FilterComponent {
+  column = input.required<Column<typeof _features, Person>>()
 
-  table = input.required<Table<TFeatures, TData>>()
+  table = input.required<Table<typeof _features, Person>>()
 
   readonly filterVariant = computed(() => {
     return (this.column().columnDef.meta ?? {}).filterVariant
