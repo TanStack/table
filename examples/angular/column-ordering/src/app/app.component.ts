@@ -71,6 +71,11 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
+const _features = tableFeatures({
+  columnVisibilityFeature,
+  columnOrderingFeature,
+})
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -84,17 +89,14 @@ export class AppComponent {
   readonly columnOrder = signal<ColumnOrderState>([])
 
   readonly table = injectTable(() => ({
+    _features,
     data: this.data(),
-    _features: {
-      columnVisibilityFeature,
-      columnOrderingFeature,
-    },
     columns: defaultColumns,
-    data: this.data(),
     state: {
       columnOrder: this.columnOrder(),
       columnVisibility: this.columnVisibility(),
     },
+    enableExperimentalReactivity: true,
     onColumnVisibilityChange: (updaterOrValue) => {
       typeof updaterOrValue === 'function'
         ? this.columnVisibility.update(updaterOrValue)
