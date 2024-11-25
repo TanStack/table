@@ -87,6 +87,7 @@ export function toComputed<
 
   const computedCache: Record<string, Signal<unknown>> = {}
 
+  // Declare at least a static argument in order to detect fns `length` > 0
   return (arg0: any, ...otherArgs: Array<any>) => {
     const argsArray = [arg0, ...otherArgs]
     const serializedArgs = serializeArgs(...argsArray)
