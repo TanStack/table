@@ -40,7 +40,7 @@ export type TableHelper_Core<
   tableCreator: <TData extends RowData>(
     tableOptions: () => Omit<
       TableOptions<TFeatures, TData>,
-      '_features' | '_rowModels' 
+      '_features' | '_rowModels'
     >,
   ) => Table<TFeatures, TData>
 }
