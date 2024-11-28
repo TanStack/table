@@ -33,14 +33,10 @@ const tableHelper = createTableHelper({
     rowSortingFeature,
     rowSelectionFeature,
   },
-  _rowModelFns: {
-    filterFns: filterFns,
-    sortFns: sortFns,
-  },
   _rowModels: {
-    filteredRowModel: createFilteredRowModel(),
+    filteredRowModel: createFilteredRowModel({ filterFns }),
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(),
+    sortedRowModel: createSortedRowModel({ sortFns }),
   },
 })
 

@@ -16,7 +16,7 @@ export type TableHelper<
   useTable: <TData extends RowData>(
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
-      '_features' | '_rowModels' | '_rowModelFns'
+      '_features' | '_rowModels' 
     >,
   ) => Table<TFeatures, TData>
 }

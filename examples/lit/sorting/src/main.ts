@@ -9,9 +9,9 @@ import {
   flexRender,
 } from '@tanstack/lit-table'
 import { Person, makeData } from './makeData'
-import type { ColumnDef, SortingFn, SortingState } from '@tanstack/lit-table'
+import type { ColumnDef, SortFn, SortingState } from '@tanstack/lit-table'
 
-const sortStatusFn: SortingFn<any, Person> = (rowA, rowB, _columnId) => {
+const sortStatusFn: SortFn<any, Person> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
@@ -45,7 +45,7 @@ const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'status',
     header: 'Status',
-    sortingFn: sortStatusFn, // use our custom sorting function for this enum column
+    sortFn: sortStatusFn, // use our custom sorting function for this enum column
   },
   {
     accessorKey: 'progress',
@@ -60,7 +60,7 @@ const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'createdAt',
     header: 'Created At',
-    // sortingFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
+    // sortFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
   },
 ]
 

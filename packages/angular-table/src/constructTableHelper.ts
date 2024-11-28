@@ -10,7 +10,7 @@ import type { Signal } from '@angular/core'
 
 /**
  * Options for creating a table helper to share common options across multiple tables
- * columnsFeature, data, and state are excluded from this type and reserved for only the `useTable`/`createTable` functions
+ * coreColumnsFeature, data, and state are excluded from this type and reserved for only the `useTable`/`createTable` functions
  */
 export type TableHelperOptions<
   TFeatures extends TableFeatures,
@@ -40,7 +40,7 @@ export type TableHelper_Core<
   tableCreator: <TData extends RowData>(
     tableOptions: () => Omit<
       TableOptions<TFeatures, TData>,
-      '_features' | '_rowModels' | '_rowModelFns'
+      '_features' | '_rowModels' 
     >,
   ) => Table<TFeatures, TData>
 }

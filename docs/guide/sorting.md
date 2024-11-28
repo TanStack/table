@@ -134,7 +134,7 @@ const table = useTable({
 
 The default sorting function for all columns is inferred from the data type of the column. However, it can be useful to define the exact sorting function that you want to use for a specific column, especially if any of your data is nullable or not a standard data type.
 
-You can determine a custom sorting function on a per-column basis using the `sortingFn` column option.
+You can determine a custom sorting function on a per-column basis using the `sortFn` column option.
 
 By default, there are 6 built-in sorting functions to choose from:
 
@@ -145,20 +145,20 @@ By default, there are 6 built-in sorting functions to choose from:
 - `datetime` - Sorts by time, use this if your values are `Date` objects.
 - `basic` - Sorts using a basic/standard `a > b ? 1 : a < b ? -1 : 0` comparison. This is the fastest sorting function, but may not be the most accurate.
 
-You can also define your own custom sorting functions either as the `sortingFn` column option, or as a global sorting function using the `sortFns` table option.
+You can also define your own custom sorting functions either as the `sortFn` column option, or as a global sorting function using the `sortFns` table option.
 
 #### Custom Sorting Functions
 
-When defining a custom sorting function in either the `sortFns` table option or as a `sortingFn` column option, it should have the following signature:
+When defining a custom sorting function in either the `sortFns` table option or as a `sortFn` column option, it should have the following signature:
 
 ```tsx
-//optionally use the SortingFn to infer the parameter types
-const myCustomSortingFn: SortingFn<TFeatures, TData> = (rowA: Row<TFeatures, TData>, rowB: Row<TFeatures, TData>, columnId: string) => {
+//optionally use the SortFn to infer the parameter types
+const myCustomSortFn: SortFn<TFeatures, TData> = (rowA: Row<TFeatures, TData>, rowB: Row<TFeatures, TData>, columnId: string) => {
   return //-1, 0, or 1 - access any row data using rowA.original and rowB.original
 }
 ```
 
-> Note: The comparison function does not need to take whether or not the column is in descending or ascending order into account. The row models will take of that logic. `sortingFn` functions only need to provide a consistent comparison.
+> Note: The comparison function does not need to take whether or not the column is in descending or ascending order into account. The row models will take of that logic. `sortFn` functions only need to provide a consistent comparison.
 
 Every sorting function receives 2 rows and a column ID and are expected to compare the two rows using the column ID to return `-1`, `0`, or `1` in ascending order. Here's a cheat sheet:
 
@@ -173,23 +173,23 @@ const columns = [
   {
     header: () => 'Name',
     accessorKey: 'name',
-    sortingFn: 'alphanumeric', // use built-in sorting function by name
+    sortFn: 'alphanumeric', // use built-in sorting function by name
   },
   {
     header: () => 'Age',
     accessorKey: 'age',
-    sortingFn: 'myCustomSortingFn', // use custom global sorting function
+    sortFn: 'myCustomSortFn', // use custom global sorting function
   },
   {
     header: () => 'Birthday',
     accessorKey: 'birthday',
-    sortingFn: 'datetime', // recommended for date columns
+    sortFn: 'datetime', // recommended for date columns
   },
   {
     header: () => 'Profile',
     accessorKey: 'profile',
     // use custom sorting function directly
-    sortingFn: (rowA, rowB, columnId) => {
+    sortFn: (rowA, rowB, columnId) => {
       return rowA.original.someProperty - rowB.original.someProperty
     },
   }
@@ -201,7 +201,7 @@ const table = useTable({
   getCoreRowModel: createCoreRowModel(),
   getSortedRowModel: createSortedRowModel(),
   sortFns: { //add a custom sorting function
-    myCustomSortingFn: (rowA, rowB, columnId) => {
+    myCustomSortFn: (rowA, rowB, columnId) => {
       return rowA.original[columnId] > rowB.original[columnId] ? 1 : rowA.original[columnId] < rowB.original[columnId] ? -1 : 0
     },
   },
@@ -408,8 +408,8 @@ There are a lot of sorting related APIs that you can use to hook up to your UI o
 - `column.getNextSortingOrder` - Useful for showing which direction the column will sort by next. (asc/desc/clear in a tooltip/menu item/aria-label or something)
 - `column.getFirstSortDir` - Useful for showing which direction the column will sort by first. (asc/desc in a tooltip/menu item/aria-label or something)
 - `column.getAutoSortDir` - Determines whether the first sorting direction will be ascending or descending for a column.
-- `column.getAutoSortingFn` - Used internally to find the default sorting function for a column if none is specified.
-- `column.getSortingFn` - Returns the exact sorting function being used for a column.
+- `column.getAutoSortFn` - Used internally to find the default sorting function for a column if none is specified.
+- `column.getSortFn` - Returns the exact sorting function being used for a column.
 
 - `column.getCanMultiSort` - Useful for enabling/disabling the multi-sorting UI for a column.
 - `column.getSortIndex` - Useful for showing a badge or indicator of the column's sort order in a multi-sort scenario. i.e. whether or not it is the first, second, third, etc. column to be sorted.

@@ -57,7 +57,7 @@ const columns: Array<ColumnDef<any, Person>> = [
     accessorKey: 'createdAt',
     header: 'Created At',
     cell: (info) => info.getValue<Date>().toLocaleDateString(),
-    // sortingFn: 'datetime' (inferred from the data)
+    // sortFn: 'datetime' (inferred from the data)
   },
 ]
 

@@ -12,12 +12,12 @@ import {
   table_getPreSortedRowModel,
   table_getRowModel,
   table_getSortedRowModel,
-} from './rowModelsFeature.utils'
+} from './coreRowModelsFeature.utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 
-export const rowModelsFeature: TableFeature = {
+export const coreRowModelsFeature: TableFeature = {
   constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table_Internal<TFeatures, TData>,
   ): void => {

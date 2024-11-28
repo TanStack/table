@@ -2,14 +2,14 @@ import { assignAPIs, makeStateUpdater } from '../../utils'
 import {
   column_clearSorting,
   column_getAutoSortDir,
-  column_getAutoSortingFn,
+  column_getAutoSortFn,
   column_getCanMultiSort,
   column_getCanSort,
   column_getFirstSortDir,
   column_getIsSorted,
   column_getNextSortingOrder,
+  column_getSortFn,
   column_getSortIndex,
-  column_getSortingFn,
   column_getToggleSortingHandler,
   column_toggleSorting,
   getDefaultSortingState,
@@ -46,7 +46,7 @@ export const rowSortingFeature: TableFeature = {
     TData extends RowData,
   >(): ColumnDef_RowSorting<TFeatures, TData> => {
     return {
-      sortingFn: 'auto',
+      sortFn: 'auto',
       sortUndefined: 1,
     }
   },
@@ -74,13 +74,13 @@ export const rowSortingFeature: TableFeature = {
   ): void => {
     assignAPIs(column, [
       {
-        fn: () => column_getAutoSortingFn(column),
+        fn: () => column_getAutoSortFn(column),
       },
       {
         fn: () => column_getAutoSortDir(column),
       },
       {
-        fn: () => column_getSortingFn(column),
+        fn: () => column_getSortFn(column),
       },
       {
         fn: (desc, multi) => column_toggleSorting(column, desc, multi),

@@ -3,12 +3,12 @@ import {
   cell_getContext,
   cell_getValue,
   cell_renderValue,
-} from './cellsFeature.utils'
+} from './coreCellsFeature.utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Cell } from '../../types/Cell'
 
-export const cellsFeature: TableFeature = {
+export const coreCellsFeature: TableFeature = {
   constructCellAPIs: <
     TFeatures extends TableFeatures,
     TData extends RowData,

@@ -1,7 +1,7 @@
 import { isDev, tableMemo } from '../../utils'
 import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
 import type { Table_Internal } from '../../types/Table'
-import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 

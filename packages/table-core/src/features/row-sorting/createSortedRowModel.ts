@@ -1,25 +1,29 @@
 import { isDev, tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
-import {
-  column_getCanSort,
-  column_getSortingFn,
-} from './rowSortingFeature.utils'
+import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
-import type { SortingFn } from './rowSortingFeature.types'
+import type { SortFn, SortFns } from './rowSortingFeature.types'
 import type { RowData } from '../../types/type-utils'
 
 export function createSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(): (
+>({
+  sortFns,
+}:
+  | {
+      sortFns?: Record<keyof SortFns, SortFn<TFeatures, TData>>
+    }
+  | undefined = {}): (
   table: Table_Internal<TFeatures, TData>,
 ) => () => RowModel<TFeatures, TData> {
-  return (table) =>
-    tableMemo({
+  return (table) => {
+    if (!table._rowModelFns.sortFns) table._rowModelFns.sortFns = sortFns
+    return tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getSortedRowModel',
       memoDeps: () => [
@@ -29,6 +33,7 @@ export function createSortedRowModel<
       fn: () => _createSortedRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
     })
+  }
 }
 
 function _createSortedRowModel<
@@ -46,7 +51,7 @@ function _createSortedRowModel<
 
   // Filter out sortings that correspond to non existing columns
   const availableSorting = sorting.filter((sort) =>
-    column_getCanSort(table.getColumn(sort.id)!),
+    column_getCanSort(table.getColumn(sort.id) as Column_Internal<TFeatures, TData>),
   )
 
   const columnInfoById: Record<
@@ -54,7 +59,7 @@ function _createSortedRowModel<
     {
       sortUndefined?: false | -1 | 1 | 'first' | 'last'
       invertSorting?: boolean
-      sortingFn: SortingFn<TFeatures, TData>
+      sortFn: SortFn<TFeatures, TData>
     }
   > = {}
 
@@ -67,7 +72,7 @@ function _createSortedRowModel<
     columnInfoById[sortEntry.id] = {
       sortUndefined: column.columnDef.sortUndefined,
       invertSorting: column.columnDef.invertSorting,
-      sortingFn: column_getSortingFn(column),
+      sortFn: column_getSortFn(column),
     }
   })
 
@@ -105,7 +110,7 @@ function _createSortedRowModel<
         }
 
         if (sortInt === 0) {
-          sortInt = columnInfo.sortingFn(rowA, rowB, sortEntry.id)
+          sortInt = columnInfo.sortFn(rowA, rowB, sortEntry.id)
         }
 
         // If sorting is non-zero, take care of desc and inversion

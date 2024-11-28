@@ -8,6 +8,7 @@
     createFilteredRowModel,
     createPaginatedRowModel,
     createTable,
+    filterFns,
     globalFilteringFeature,
     isFunction,
     tableFeatures,
@@ -60,13 +61,10 @@
   const table = createTable({
     _features,
     _rowModels: {
-      filteredRowModel: createFilteredRowModel(),
+      filteredRowModel: createFilteredRowModel({
+        filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+      }),
       paginatedRowModel: createPaginatedRowModel(),
-    },
-    _rowModelFns: {
-      filterFns: {
-        fuzzy: fuzzyFilter,
-      },
     },
     data: makeData(25),
     columns,

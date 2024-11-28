@@ -3,7 +3,7 @@ import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
-import type { Header_CoreProperties } from './headersFeature.types'
+import type { Header_CoreProperties } from './coreHeadersFeature.types'
 
 export function constructHeader<
   TFeatures extends TableFeatures,

@@ -50,35 +50,35 @@ Every sorting function receives 2 rows and a column ID and are expected to compa
 This is the type signature for every sorting function:
 
 ```tsx
-export type SortingFn<TData extends AnyData> = {
+export type SortFn<TData extends AnyData> = {
   (rowA: Row<TFeatures, TData>, rowB: Row<TFeatures, TData>, columnId: string): number
 }
 ```
 
 #### Using Sorting Functions
 
-Sorting functions can be used/referenced/defined by passing the following to `columnDefinition.sortingFn`:
+Sorting functions can be used/referenced/defined by passing the following to `columnDefinition.sortFn`:
 
 - A `string` that references a built-in sorting function
 - A `string` that references a custom sorting functions provided via the `tableOptions.sortFns` option
-- A function directly provided to the `columnDefinition.sortingFn` option
+- A function directly provided to the `columnDefinition.sortFn` option
 
-The final list of sorting functions available for the `columnDef.sortingFn` use the following type:
+The final list of sorting functions available for the `columnDef.sortFn` use the following type:
 
 ```tsx
-export type SortingFnOption<TData extends AnyData> =
+export type SortFnOption<TData extends AnyData> =
   | 'auto'
   | SortFns
   | BuiltInSortFns
-  | SortingFn<TFeatures, TData>
+  | SortFn<TFeatures, TData>
 ```
 
 ## Column Def Options
 
-### `sortingFn`
+### `sortFn`
 
 ```tsx
-sortingFn?: SortingFn | keyof SortFns | keyof BuiltInSortFns
+sortFn?: SortFn | keyof SortFns | keyof BuiltInSortFns
 ```
 
 The sorting function to use with this column.
@@ -141,10 +141,10 @@ sortUndefined?: 'first' | 'last' | false | -1 | 1 // defaults to 1
 
 ## Column API
 
-### `getAutoSortingFn`
+### `getAutoSortFn`
 
 ```tsx
-getAutoSortingFn: () => SortingFn<TFeatures, TData>
+getAutoSortFn: () => SortFn<TFeatures, TData>
 ```
 
 Returns a sorting function automatically inferred based on the columns values.
@@ -157,10 +157,10 @@ getAutoSortDir: () => SortDirection
 
 Returns a sort direction automatically inferred based on the columns values.
 
-### `getSortingFn`
+### `getSortFn`
 
 ```tsx
-getSortingFn: () => SortingFn<TFeatures, TData>
+getSortFn: () => SortFn<TFeatures, TData>
 ```
 
 Returns the resolved sorting function to be used for this column
@@ -242,21 +242,21 @@ Returns a function that can be used to toggle this column's sorting state. This 
 ### `sortFns`
 
 ```tsx
-sortFns?: Record<string, SortingFn>
+sortFns?: Record<string, SortFn>
 ```
 
-This option allows you to define custom sorting functions that can be referenced in a column's `sortingFn` option by their key.
+This option allows you to define custom sorting functions that can be referenced in a column's `sortFn` option by their key.
 Example:
 
 ```tsx
 declare module '@tanstack/table-core' {
   interface SortFns {
-    myCustomSorting: SortingFn<unknown>
+    myCustomSorting: SortFn<unknown>
   }
 }
 
 const column = columnHelper.data('key', {
-  sortingFn: 'myCustomSorting',
+  sortFn: 'myCustomSorting',
 })
 
 const table = useTable({

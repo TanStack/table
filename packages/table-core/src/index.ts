@@ -28,40 +28,40 @@ export * from './utils'
 
 // Cells
 export * from './core/cells/constructCell'
-export * from './core/cells/cellsFeature'
-export * from './core/cells/cellsFeature.types'
-export * from './core/cells/cellsFeature.utils'
+export * from './core/cells/coreCellsFeature'
+export * from './core/cells/coreCellsFeature.types'
+export * from './core/cells/coreCellsFeature.utils'
 
 // Columns
 export * from './core/columns/constructColumn'
-export * from './core/columns/columnsFeature'
-export * from './core/columns/columnsFeature.types'
-export * from './core/columns/columnsFeature.utils'
+export * from './core/columns/coreColumnsFeature'
+export * from './core/columns/coreColumnsFeature.types'
+export * from './core/columns/coreColumnsFeature.utils'
 
 // Headers
 export * from './core/headers/buildHeaderGroups'
 export * from './core/headers/constructHeader'
-export * from './core/headers/headersFeature'
-export * from './core/headers/headersFeature.types'
-export * from './core/headers/headersFeature.utils'
+export * from './core/headers/coreHeadersFeature'
+export * from './core/headers/coreHeadersFeature.types'
+export * from './core/headers/coreHeadersFeature.utils'
 
 // Rows
 export * from './core/rows/constructRow'
-export * from './core/rows/rowsFeature'
-export * from './core/rows/rowsFeature.types'
-export * from './core/rows/rowsFeature.utils'
+export * from './core/rows/coreRowsFeature'
+export * from './core/rows/coreRowsFeature.types'
+export * from './core/rows/coreRowsFeature.utils'
 
 // Row Models
-export * from './core/row-models/rowModelsFeature'
-export * from './core/row-models/rowModelsFeature.types'
-export * from './core/row-models/rowModelsFeature.utils'
+export * from './core/row-models/coreRowModelsFeature'
+export * from './core/row-models/coreRowModelsFeature.types'
+export * from './core/row-models/coreRowModelsFeature.utils'
 export * from './core/row-models/createCoreRowModel'
 
 // Tables
 export * from './core/table/constructTable'
-export * from './core/table/tablesFeature'
-export * from './core/table/tablesFeature.types'
-export * from './core/table/tablesFeature.utils'
+export * from './core/table/coreTablesFeature'
+export * from './core/table/coreTablesFeature.types'
+export * from './core/table/coreTablesFeature.utils'
 
 /**
  * RowModelFns

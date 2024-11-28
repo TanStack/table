@@ -7,7 +7,7 @@ import type {
   Updater,
 } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 
@@ -105,7 +105,7 @@ export interface Column_ColumnFiltering<
    * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getautofilterfn)
    * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
    */
-  getAutoFilterFn: () => FilterFn<TFeatures, TData> | undefined
+  getAutoFilterFn: () => FilterFn<TFeatures, TData>
   /**
    * Returns whether or not the column can be **column** filtered.
    * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getcanfilter)
@@ -117,7 +117,7 @@ export interface Column_ColumnFiltering<
    * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getfilterfn)
    * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
    */
-  getFilterFn: () => FilterFn<TFeatures, TData> | undefined
+  getFilterFn: () => FilterFn<TFeatures, TData>
   /**
    * Returns the index (including `-1`) of the column filter in the table's `state.columnFilters` array.
    * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#getfilterindex)
@@ -206,10 +206,7 @@ export interface TableOptions_ColumnFiltering<
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
 }
 
-export interface Table_ColumnFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
+export interface Table_ColumnFiltering<> {
   /**
    * Resets the **columnFilters** state to `initialState.columnFilters`, or `true` can be passed to force a default blank state reset to `[]`.
    * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#resetcolumnfilters)
@@ -217,23 +214,11 @@ export interface Table_ColumnFiltering<
    */
   resetColumnFilters: (defaultState?: boolean) => void
   /**
-   * Resets the **globalFilter** state to `initialState.globalFilter`, or `true` can be passed to force a default blank state reset to `undefined`.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#resetglobalfilter)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
-   */
-  resetGlobalFilter: (defaultState?: boolean) => void
-  /**
    * Sets or updates the `state.columnFilters` state.
    * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#setcolumnfilters)
    * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
    */
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
-  /**
-   * Sets or updates the `state.globalFilter` state.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#setglobalfilter)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
-   */
-  setGlobalFilter: (updater: Updater<any>) => void
 }
 
 export interface Table_RowModels_Filtered<

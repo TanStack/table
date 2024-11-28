@@ -13,9 +13,8 @@ import { rowPaginationFeature } from './row-pagination/rowPaginationFeature'
 import { rowPinningFeature } from './row-pinning/rowPinningFeature'
 import { rowSelectionFeature } from './row-selection/rowSelectionFeature'
 import { rowSortingFeature } from './row-sorting/rowSortingFeature'
-import type { StockTableFeatures } from '../types/TableFeatures'
 
-export const stockFeatures: StockTableFeatures = {
+export const stockFeatures = {
   columnFacetingFeature,
   columnFilteringFeature,
   columnGroupingFeature,
@@ -31,4 +30,6 @@ export const stockFeatures: StockTableFeatures = {
   rowPinningFeature,
   rowSelectionFeature,
   rowSortingFeature,
-}
+} as const
+
+export type StockTableFeatures = typeof stockFeatures

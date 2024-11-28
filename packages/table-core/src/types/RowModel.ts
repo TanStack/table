@@ -14,7 +14,7 @@ import type {
   CachedRowModel_Core,
   CreateRowModel_Core,
   RowModel,
-} from '../core/row-models/rowModelsFeature.types'
+} from '../core/row-models/coreRowModelsFeature.types'
 import type {
   CachedRowModel_Expanded,
   CreateRowModel_Expanded,

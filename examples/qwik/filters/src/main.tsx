@@ -19,7 +19,7 @@ import type {
   Column,
   ColumnFiltersState,
   FilterFn,
-  SortingFn,
+  SortFn,
   Table,
 } from '@tanstack/qwik-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
@@ -46,7 +46,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed
 }
 
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<any> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -121,14 +121,14 @@ const columns = [
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
-        sortingFn: fuzzySort,
+        sortFn: fuzzySort,
       }),
       columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
         id: 'fullName',
         header: 'Full Name',
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
-        sortingFn: fuzzySort,
+        sortFn: fuzzySort,
       }),
     ],
   }),

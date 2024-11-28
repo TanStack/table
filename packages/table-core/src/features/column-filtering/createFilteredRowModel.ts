@@ -1,5 +1,5 @@
 import { isDev, tableMemo } from '../../utils'
-import { table_getColumn } from '../../core/columns/columnsFeature.utils'
+import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import {
   column_getCanGlobalFilter,
   table_getGlobalFilterFn,
@@ -9,10 +9,12 @@ import { filterRows } from './filterRowsUtils'
 import { column_getFilterFn } from './columnFilteringFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
+  FilterFn,
+  FilterFns,
   ResolvedColumnFilter,
   Row_ColumnFiltering,
 } from './columnFilteringFeature.types'
@@ -20,11 +22,18 @@ import type {
 export function createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(): (
+>({
+  filterFns,
+}:
+  | {
+      filterFns?: Record<keyof FilterFns, FilterFn<TFeatures, TData>>
+    }
+  | undefined = {}): (
   table: Table_Internal<TFeatures, TData>,
 ) => () => RowModel<TFeatures, TData> {
-  return (table) =>
-    tableMemo({
+  return (table) => {
+    if (!table._rowModelFns.filterFns) table._rowModelFns.filterFns = filterFns
+    return tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getFilteredRowModel',
       memoDeps: () => [
@@ -35,6 +44,7 @@ export function createFilteredRowModel<
       fn: () => _createFilteredRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
     })
+  }
 }
 
 function _createFilteredRowModel<
@@ -66,7 +76,7 @@ function _createFilteredRowModel<
       return
     }
 
-    const filterFn = column_getFilterFn(column) as any
+    const filterFn = column_getFilterFn(column)
 
     resolvedColumnFilters.push({
       id: columnFilter.id,

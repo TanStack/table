@@ -23,7 +23,7 @@ import type {
   ColumnDef,
   ColumnFiltersState,
   FilterFn,
-  SortingFn,
+  SortFn,
 } from '@tanstack/react-table'
 
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
@@ -56,11 +56,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
 }
 
 // Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-const fuzzySort: SortingFn<typeof _features, Person> = (
-  rowA,
-  rowB,
-  columnId,
-) => {
+const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -120,7 +116,7 @@ function App() {
         cell: (info) => info.getValue(),
         filterFn: 'fuzzy', // using our custom fuzzy filter function
         // filterFn: fuzzyFilter, //or just define with the function
-        sortingFn: fuzzySort, // sort by fuzzy rank (falls back to alphanumeric)
+        sortFn: fuzzySort, // sort by fuzzy rank (falls back to alphanumeric)
       },
     ],
     [],
@@ -131,19 +127,15 @@ function App() {
 
   const table = useTable<typeof _features, Person>({
     _features,
-    _rowModelFns: {
-      filterFns,
-    },
     _rowModels: {
-      filteredRowModel: createFilteredRowModel(),
+      filteredRowModel: createFilteredRowModel({
+        filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+      }),
       paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(),
+      sortedRowModel: createSortedRowModel({ sortFns }),
     },
     columns,
     data,
-    filterFns: {
-      fuzzy: fuzzyFilter, // define as a filter function that can be used in column definitions
-    },
     state: {
       columnFilters,
       globalFilter,

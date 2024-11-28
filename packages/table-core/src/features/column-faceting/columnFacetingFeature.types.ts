@@ -1,12 +1,25 @@
 import type { Table } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 
 export interface Column_ColumnFaceting<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> {}
+> {
+  /**
+   * A function that **computes and returns** a min/max tuple derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
+   */
+  getFacetedMinMaxValues: () => undefined | [number, number]
+  /**
+   * A function that **computes and returns** a row model with all other column filters applied, excluding its own filter. Useful for displaying faceted result counts.
+   */
+  getFacetedRowModel: () => RowModel<TFeatures, TData>
+  /**
+   * A function that **computes and returns** a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
+   */
+  getFacetedUniqueValues: () => Map<any, number>
+}
 
 export interface Table_RowModels_Faceted<
   TFeatures extends TableFeatures,

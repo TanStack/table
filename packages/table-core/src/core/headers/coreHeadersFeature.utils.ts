@@ -10,7 +10,7 @@ import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Header_Header } from './headersFeature.types'
+import type { Header_Header } from './coreHeadersFeature.types'
 
 export function header_getLeafHeaders<
   TFeatures extends TableFeatures,

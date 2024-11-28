@@ -92,7 +92,7 @@ When using fuzzy filtering with column filtering, you might also want to sort th
 import { compareItems } from '@tanstack/match-sorter-utils'
 import { sortFns } from '@tanstack/table'
 
-const fuzzySort: SortingFn<any> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<any> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information

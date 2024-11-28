@@ -102,14 +102,10 @@ function App() {
 
   const table = useTable({
     _features,
-    _rowModelFns: {
-      filterFns,
-      sortFns,
-    },
     _rowModels: {
-      filteredRowModel: createFilteredRowModel(), // client-side filtering
+      filteredRowModel: createFilteredRowModel({ filterFns }), // client-side filtering
       paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(),
+      sortedRowModel: createSortedRowModel({ sortFns }),
       facetedRowModel: createFacetedRowModel(), // client-side faceting
       facetedMinMaxValues: createFacetedMinMaxValues(), // generate min/max values for range filter
       facetedUniqueValues: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete

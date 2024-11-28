@@ -1,6 +1,6 @@
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
-import type { Row_Row } from '../core/rows/rowsFeature.types'
+import type { Row_Row } from '../core/rows/coreRowsFeature.types'
 import type { Row_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { Row_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { Row_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'

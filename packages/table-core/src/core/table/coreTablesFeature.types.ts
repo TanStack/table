@@ -1,9 +1,7 @@
+import type { CoreTableFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
-import type {
-  CoreTableFeatures,
-  TableFeatures,
-} from '../../types/TableFeatures'
+import type { TableFeatures } from '../../types/TableFeatures'
 import type { CachedRowModels, CreateRowModels_All } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
@@ -24,12 +22,6 @@ export interface TableOptions_Table<
    */
   _features: TFeatures
   /**
-   * The row model processing functions that are used to process the data by features.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowModelFns)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  _rowModelFns?: RowModelFns<TFeatures, TData>
-  /**
    * The row model options that you want to enable for the table.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
@@ -42,7 +34,7 @@ export interface TableOptions_Table<
    */
   autoResetAll?: boolean
   /**
-   * The data for the table to display. This array should match the type you provided to `table.setRowType<...>`. columnsFeature can access this data via string/index or a functional accessor. When the `data` option changes reference, the table will reprocess the data.
+   * The data for the table to display. This array should match the type you provided to `table.setRowType<...>`. coreColumnsFeature can access this data via string/index or a functional accessor. When the `data` option changes reference, the table will reprocess the data.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#data)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
@@ -113,7 +105,7 @@ export interface Table_CoreProperties<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _features: CoreTableFeatures & TFeatures
+  _features: Partial<CoreTableFeatures> & TFeatures
   /**
    * The row model processing functions that are used to process the data by features.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowModelFns)

@@ -1,5 +1,5 @@
 import { isFunction } from '../../utils'
-import { table_getColumn } from '../../core/columns/columnsFeature.utils'
+import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'

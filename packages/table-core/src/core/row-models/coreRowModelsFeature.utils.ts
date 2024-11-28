@@ -2,7 +2,7 @@ import { createCoreRowModel } from './createCoreRowModel'
 import type { Table_Internal } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
-import type { RowModel } from './rowModelsFeature.types'
+import type { RowModel } from './coreRowModelsFeature.types'
 
 export function table_getCoreRowModel<
   TFeatures extends TableFeatures,

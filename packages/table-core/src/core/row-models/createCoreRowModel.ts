@@ -2,7 +2,7 @@ import { constructRow } from '../rows/constructRow'
 import { isDev, tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/rowPaginationFeature.utils'
 import type { Table_Internal } from '../../types/Table'
-import type { RowModel } from './rowModelsFeature.types'
+import type { RowModel } from './coreRowModelsFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 

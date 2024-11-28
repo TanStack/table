@@ -1,7 +1,7 @@
 import type { ColumnDefBase_All } from './ColumnDef'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
-import type { Column_Column } from '../core/columns/columnsFeature.types'
+import type { Column_Column } from '../core/columns/coreColumnsFeature.types'
 import type { Column_ColumnFaceting } from '../features/column-faceting/columnFacetingFeature.types'
 import type { Column_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { Column_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'

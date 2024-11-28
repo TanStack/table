@@ -1,4 +1,4 @@
-import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table } from '../../types/Table'
 import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
 import type {

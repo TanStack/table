@@ -1,6 +1,6 @@
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
-import type { Header_Header } from '../core/headers/headersFeature.types'
+import type { Header_Header } from '../core/headers/coreHeadersFeature.types'
 import type { Header_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 import type { Header_ColumnSizing } from '../features/column-sizing/columnSizingFeature.types'
 

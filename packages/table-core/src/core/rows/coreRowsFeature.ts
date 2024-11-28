@@ -10,13 +10,13 @@ import {
   row_renderValue,
   table_getRow,
   table_getRowId,
-} from './rowsFeature.utils'
+} from './coreRowsFeature.utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 
-export const rowsFeature: TableFeature = {
+export const coreRowsFeature: TableFeature = {
   constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
     row: Row<TFeatures, TData>,
   ): void => {

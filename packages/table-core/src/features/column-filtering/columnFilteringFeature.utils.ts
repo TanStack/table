@@ -58,7 +58,7 @@ export function column_getFilterFn<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
-): FilterFn<TFeatures, TData> | undefined {
+): FilterFn<TFeatures, TData> {
   let filterFn = null
   const filterFns = column.table._rowModelFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>

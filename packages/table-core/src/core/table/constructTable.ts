@@ -1,6 +1,7 @@
 import { isDev } from '../../utils'
+import type { RowModelFns } from '../../types/RowModelFns'
 import type { CachedRowModels } from '../../types/RowModel'
-import type { Table_CoreProperties } from './tablesFeature.types'
+import type { Table_CoreProperties } from './coreTablesFeature.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
@@ -23,13 +24,16 @@ export function constructTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(options: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
-  if (isDev && (options.debugAll || options.debugTable)) {
-    console.info('Constructing Table Instance...')
-  }
-
-  const { _features = {} as TFeatures, _rowModelFns = {} } = options
+  const { _features = {} as TFeatures } = options
 
   const featuresList: Array<TableFeature> = Object.values(_features)
+
+  if (isDev && (options.debugAll || options.debugTable)) {
+    console.info(
+      'Constructing Table Instance with feature list:',
+      Object.keys(_features),
+    )
+  }
 
   const table = {} as unknown as Table<TFeatures, TData>
 
@@ -42,7 +46,7 @@ export function constructTable<
   const coreInstance: Table_CoreProperties<TFeatures, TData> = {
     _features, // features get stored here immediately
     _rowModels: {} as CachedRowModels<TFeatures, TData>, // row models get cached here later
-    _rowModelFns, // row model processing functions get stored here
+    _rowModelFns: {} as RowModelFns<TFeatures, TData>, // row model processing functions get stored here
     options: {
       ...defaultOptions,
       ...options,

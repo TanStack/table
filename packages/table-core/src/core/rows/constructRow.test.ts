@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { rowsFeature } from './rowsFeature'
+import { coreRowsFeature } from './coreRowsFeature'
 import { constructRow } from './constructRow'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
@@ -10,7 +10,7 @@ interface Person {
 
 describe('constructRow', () => {
   it('should create a row with all core row APIs and properties', () => {
-    const table = { _features: { rowsFeature }, options: {} } as Table<
+    const table = { _features: { coreRowsFeature }, options: {} } as Table<
       any,
       Person
     >

@@ -93,10 +93,7 @@ function App() {
       facetedRowModel: createFacetedRowModel(),
       facetedMinMaxValues: createFacetedMinMaxValues(),
       facetedUniqueValues: createFacetedUniqueValues(),
-      filteredRowModel: createFilteredRowModel(),
-    },
-    _rowModelFns: {
-      filterFns,
+      filteredRowModel: createFilteredRowModel({ filterFns }),
     },
     get data() {
       return data()

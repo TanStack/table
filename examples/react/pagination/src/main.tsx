@@ -30,11 +30,6 @@ const _features = tableFeatures({
   rowSortingFeature,
 })
 
-const _rowModelFns = rowModelFns(_features, {
-  sortFns,
-  filterFns,
-})
-
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -107,10 +102,9 @@ function MyTable({
 
   const table = useTable({
     _features,
-    _rowModelFns,
     _rowModels: {
-      sortedRowModel: createSortedRowModel(),
-      filteredRowModel: createFilteredRowModel(),
+      sortedRowModel: createSortedRowModel({ sortFns }),
+      filteredRowModel: createFilteredRowModel({ filterFns }),
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,

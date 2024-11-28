@@ -6,7 +6,7 @@ import type {
   Row_ColumnFiltering,
 } from '../column-filtering/columnFilteringFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 

@@ -1,4 +1,4 @@
-import type { HeaderGroup_Header } from '../core/headers/headersFeature.types'
+import type { HeaderGroup_Header } from '../core/headers/coreHeadersFeature.types'
 import type { TableFeatures } from './TableFeatures'
 import type { RowData } from './type-utils'
 

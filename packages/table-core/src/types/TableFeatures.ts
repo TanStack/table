@@ -1,3 +1,4 @@
+import type { CoreTableFeatures } from '../core/coreFeatures'
 import type { CellData, RowData } from './type-utils'
 import type { ColumnDefBase_All } from './ColumnDef'
 import type { Cell } from './Cell'
@@ -7,40 +8,14 @@ import type { Row } from './Row'
 import type { Table } from './Table'
 import type { TableOptions_All } from './TableOptions'
 import type { TableState_All } from './TableState'
-
-export interface CoreTableFeatures {
-  cellsFeature?: TableFeature
-  columnsFeature?: TableFeature
-  headersFeature?: TableFeature
-  rowsFeature?: TableFeature
-  rowModelsFeature?: TableFeature
-  tablesFeature?: TableFeature
-}
-
-export interface StockTableFeatures {
-  columnFacetingFeature?: TableFeature
-  columnFilteringFeature?: TableFeature
-  columnGroupingFeature?: TableFeature
-  columnOrderingFeature?: TableFeature
-  columnPinningFeature?: TableFeature
-  columnResizingFeature?: TableFeature
-  columnSizingFeature?: TableFeature
-  columnVisibilityFeature?: TableFeature
-  globalFacetingFeature?: TableFeature
-  globalFilteringFeature?: TableFeature
-  rowExpandingFeature?: TableFeature
-  rowPaginationFeature?: TableFeature
-  rowPinningFeature?: TableFeature
-  rowSelectionFeature?: TableFeature
-  rowSortingFeature?: TableFeature
-}
+import type { StockTableFeatures } from '../features/stockFeatures'
 
 export interface Plugins {}
 
 export interface TableFeatures
-  extends CoreTableFeatures,
-    StockTableFeatures,
-    Plugins {}
+  extends Partial<CoreTableFeatures>,
+    Partial<StockTableFeatures>,
+    Partial<Plugins> {}
 
 export interface TableFeature {
   constructCellAPIs?: <

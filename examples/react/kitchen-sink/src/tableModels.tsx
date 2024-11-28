@@ -4,7 +4,7 @@ import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import IndeterminateCheckbox from './components/InderterminateCheckbox'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
-import type { ColumnDef, FilterFn, SortingFn } from '@tanstack/react-table'
+import type { ColumnDef, FilterFn, SortFn } from '@tanstack/react-table'
 
 export const fuzzyFilter: FilterFn<any, Person> = (
   row,
@@ -22,7 +22,7 @@ export const fuzzyFilter: FilterFn<any, Person> = (
   return itemRank.passed
 }
 
-export const fuzzySort: SortingFn<any, Person> = (rowA, rowB, columnId) => {
+export const fuzzySort: SortFn<any, Person> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -111,7 +111,7 @@ export const columns: Array<ColumnDef<any, Person>> = [
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
         filterFn: fuzzyFilter,
-        sortingFn: fuzzySort,
+        sortFn: fuzzySort,
       },
     ],
   },

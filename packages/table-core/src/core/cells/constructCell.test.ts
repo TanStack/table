@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { constructCell } from './constructCell'
-import { cellsFeature } from './cellsFeature'
+import { coreCellsFeature } from './coreCellsFeature'
 import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 import type { Table } from '../../types/Table'
@@ -9,7 +9,7 @@ describe('constructCell', () => {
   it('should populate the cell with all core cell APIs and properties', () => {
     const column = { id: 'test-column' } as Column<any, any>
     const row = { id: 'test-row' } as Row<any, any>
-    const table = { _features: { cellsFeature }, options: {} } as Table<
+    const table = { _features: { coreCellsFeature }, options: {} } as Table<
       any,
       any
     >

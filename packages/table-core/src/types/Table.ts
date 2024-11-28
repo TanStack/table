@@ -1,13 +1,13 @@
-import type { Table_RowModels } from '../core/row-models/rowModelsFeature.types'
+import type { Table_RowModels } from '../core/row-models/coreRowModelsFeature.types'
 import type { CachedRowModel_All, CreateRowModels_All } from './RowModel'
 import type { RowModelFns_All } from './RowModelFns'
 import type { TableState_All } from './TableState'
 import type { RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
-import type { Table_Columns } from '../core/columns/columnsFeature.types'
-import type { Table_Headers } from '../core/headers/headersFeature.types'
-import type { Table_Rows } from '../core/rows/rowsFeature.types'
-import type { Table_Table } from '../core/table/tablesFeature.types'
+import type { Table_Columns } from '../core/columns/coreColumnsFeature.types'
+import type { Table_Headers } from '../core/headers/coreHeadersFeature.types'
+import type { Table_Rows } from '../core/rows/coreRowsFeature.types'
+import type { Table_Table } from '../core/table/coreTablesFeature.types'
 import type { Table_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { Table_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { Table_ColumnOrdering } from '../features/column-ordering/columnOrderingFeature.types'
@@ -49,7 +49,7 @@ export type Table<
 > = Table_Core<TFeatures, TData> &
   UnionToIntersection<
     | ('columnFilteringFeature' extends keyof TFeatures
-        ? Table_ColumnFiltering<TFeatures, TData>
+        ? Table_ColumnFiltering
         : never)
     | ('columnGroupingFeature' extends keyof TFeatures
         ? Table_ColumnGrouping<TFeatures, TData>

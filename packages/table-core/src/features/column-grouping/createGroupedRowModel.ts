@@ -1,6 +1,6 @@
 import { flattenBy, isDev, tableMemo } from '../../utils'
 import { constructRow } from '../../core/rows/constructRow'
-import { table_getColumn } from '../../core/columns/columnsFeature.utils'
+import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import {
@@ -8,9 +8,13 @@ import {
   row_getGroupingValue,
 } from './columnGroupingFeature.utils'
 import type { Column } from '../../types/Column'
-import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
+import type {
+  AggregationFn,
+  AggregationFns,
+  Row_ColumnGrouping,
+} from './columnGroupingFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { RowModel } from '../../core/row-models/rowModelsFeature.types'
+import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
@@ -18,11 +22,22 @@ import type { RowData } from '../../types/type-utils'
 export function createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(): (
+>({
+  aggregationFns,
+}:
+  | {
+      aggregationFns?: Record<
+        keyof AggregationFns,
+        AggregationFn<TFeatures, TData>
+      >
+    }
+  | undefined = {}): (
   table: Table_Internal<TFeatures, TData>,
 ) => () => RowModel<TFeatures, TData> {
-  return (table) =>
-    tableMemo({
+  return (table) => {
+    if (!table._rowModelFns.aggregationFns)
+      table._rowModelFns.aggregationFns = aggregationFns
+    return tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getGroupedRowModel',
       memoDeps: () => [
@@ -35,6 +50,7 @@ export function createGroupedRowModel<
         table_autoResetPageIndex(table)
       },
     })
+  }
 }
 
 function _createGroupedRowModel<
@@ -84,7 +100,7 @@ function _createGroupedRowModel<
       })
     }
 
-    const columnId: string = existingGrouping[depth]!
+    const columnId = existingGrouping[depth] as string
 
     // Group the rows together for this level
     const rowGroupsMap = groupBy(rows, columnId)

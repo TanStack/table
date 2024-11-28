@@ -17,7 +17,7 @@ export type TableHelper<
   injectTable: <TInferData extends TData>(
     tableOptions: () => Omit<
       TableOptions<TFeatures, TInferData>,
-      '_features' | '_rowModels' | '_rowModelFns'
+      '_features' | '_rowModels' 
     >,
   ) => Table<TFeatures, TInferData>
 }

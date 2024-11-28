@@ -1,4 +1,4 @@
-import { reSplitAlphaNumeric, sortingFn_basic } from '../../fns/sortFns'
+import { reSplitAlphaNumeric, sortFn_basic } from '../../fns/sortFns'
 import { isFunction } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -6,7 +6,7 @@ import type { Table_Internal } from '../../types/Table'
 import type { Column_Internal } from '../../types/Column'
 import type {
   SortDirection,
-  SortingFn,
+  SortFn,
   SortingState,
 } from './rowSortingFeature.types'
 
@@ -35,18 +35,16 @@ export function table_resetSorting<
 
 // Column Utils
 
-export function column_getAutoSortingFn<
+export function column_getAutoSortFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-): SortingFn<TFeatures, TData> {
+>(column: Column_Internal<TFeatures, TData, TValue>): SortFn<TFeatures, TData> {
   const sortFns = column.table._rowModelFns.sortFns as
-    | Record<string, SortingFn<TFeatures, TData>>
+    | Record<string, SortFn<TFeatures, TData>>
     | undefined
 
-  let sortingFn: SortingFn<TFeatures, TData> | undefined
+  let sortFn: SortFn<TFeatures, TData> | undefined
 
   const firstRows = column.table.getFilteredRowModel().flatRows.slice(10)
 
@@ -56,23 +54,23 @@ export function column_getAutoSortingFn<
     const value = row.getValue(column.id)
 
     if (Object.prototype.toString.call(value) === '[object Date]') {
-      sortingFn = sortFns?.datetime
+      sortFn = sortFns?.datetime
     }
 
     if (typeof value === 'string') {
       isString = true
 
       if (value.split(reSplitAlphaNumeric).length > 1) {
-        sortingFn = sortFns?.alphanumeric
+        sortFn = sortFns?.alphanumeric
       }
     }
   }
 
   if (isString) {
-    sortingFn = sortFns?.text
+    sortFn = sortFns?.text
   }
 
-  return sortingFn ?? sortingFn_basic
+  return sortFn ?? sortFn_basic
 }
 
 export function column_getAutoSortDir<
@@ -91,22 +89,20 @@ export function column_getAutoSortDir<
   return 'desc'
 }
 
-export function column_getSortingFn<
+export function column_getSortFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-): SortingFn<TFeatures, TData> {
+>(column: Column_Internal<TFeatures, TData, TValue>): SortFn<TFeatures, TData> {
   const sortFns = column.table._rowModelFns.sortFns as
-    | Record<string, SortingFn<TFeatures, TData>>
+    | Record<string, SortFn<TFeatures, TData>>
     | undefined
 
-  return isFunction(column.columnDef.sortingFn)
-    ? column.columnDef.sortingFn
-    : column.columnDef.sortingFn === 'auto'
-      ? column_getAutoSortingFn(column)
-      : (sortFns?.[column.columnDef.sortingFn as string] ?? sortingFn_basic)
+  return isFunction(column.columnDef.sortFn)
+    ? column.columnDef.sortFn
+    : column.columnDef.sortFn === 'auto'
+      ? column_getAutoSortFn(column)
+      : (sortFns?.[column.columnDef.sortFn as string] ?? sortFn_basic)
 }
 
 export function column_toggleSorting<
