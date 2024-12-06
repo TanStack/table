@@ -37,7 +37,7 @@ function isExoticComponent(component: any) {
 export function flexRender<TProps extends object>(
   Comp: Renderable<TProps>,
   props: TProps,
-): React.ReactNode | JSX.Element {
+): React.ReactNode | React.JSX.Element {
   return !Comp ? null : isReactComponent<TProps>(Comp) ? (
     <Comp {...props} />
   ) : (

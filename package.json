@@ -48,26 +48,26 @@
     }
   ],
   "devDependencies": {
-    "@faker-js/faker": "^9.2.0",
+    "@faker-js/faker": "^9.3.0",
     "@size-limit/preset-small-lib": "^11.1.6",
-    "@tanstack/config": "0.14.0",
+    "@tanstack/config": "0.14.2",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.0.1",
+    "@testing-library/react": "^16.1.0",
     "@testing-library/react-hooks": "^8.0.1",
-    "@types/node": "^22.9.1",
-    "eslint": "^9.15.0",
+    "@types/node": "^22.10.1",
+    "eslint": "^9.16.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "jsdom": "^25.0.1",
-    "knip": "^5.37.1",
-    "nx": "^20.1.2",
-    "prettier": "^3.3.3",
-    "prettier-plugin-svelte": "^3.3.1",
+    "knip": "^5.39.2",
+    "nx": "^20.2.0",
+    "prettier": "^3.4.2",
+    "prettier-plugin-svelte": "^3.3.2",
     "publint": "^0.2.12",
     "rimraf": "^6.0.1",
     "sherif": "^1.0.2",
     "size-limit": "^11.1.6",
     "typescript": "5.6.3",
-    "vite": "^5.4.11",
-    "vitest": "^2.1.5"
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8"
   }
 }

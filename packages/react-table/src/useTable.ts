@@ -18,7 +18,7 @@ import type {
 function useTableRef<TFeatures extends TableFeatures, TData extends RowData>(
   options: TableOptions<TFeatures, TData>,
 ): Table<TFeatures, TData> {
-  const tableRef = useRef<Table<TFeatures, TData>>()
+  const tableRef = useRef<Table<TFeatures, TData>>(null)
 
   if (!tableRef.current) {
     tableRef.current = constructTable(options)

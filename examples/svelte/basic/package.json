@@ -12,12 +12,12 @@
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.1",
-    "@sveltejs/vite-plugin-svelte": "^4.0.1",
+    "@sveltejs/vite-plugin-svelte": "^5.0.1",
     "@tanstack/svelte-table": "^9.0.0-alpha.10",
     "@tsconfig/svelte": "^5.0.4",
-    "svelte": "^5.2.7",
-    "svelte-check": "^4.0.9",
+    "svelte": "^5.8.1",
+    "svelte-check": "^4.1.1",
     "typescript": "5.6.3",
-    "vite": "^5.4.11"
+    "vite": "^6.0.3"
   }
 }
