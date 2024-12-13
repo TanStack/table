@@ -76,7 +76,7 @@ export function ActionButtons<T extends RowData>({
           <input
             type="number"
             min="1"
-            max={table.getPageCount()}
+            max={pageCount}
             defaultValue={pageIndex + 1}
             onChange={e => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
