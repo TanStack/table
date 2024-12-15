@@ -66,5 +66,5 @@ export function useTable<
     },
   }))
 
-  return table.instance!
+  return table.instance! as Table<TFeatures, TData>
 }

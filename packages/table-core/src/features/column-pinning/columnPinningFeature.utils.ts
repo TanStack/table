@@ -5,6 +5,7 @@ import {
 } from '../column-visibility/columnVisibilityFeature.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import { callMemoOrStaticFn } from '../../utils'
+import type { Cell } from '../../types/Cell'
 import type { Row } from '../../types/Row'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -139,7 +140,7 @@ export function row_getLeftVisibleCells<
     .filter(Boolean)
     .map((d) => ({ ...d, position: 'left' }))
 
-  return cells
+  return cells as Array<Cell<TFeatures, TData>>
 }
 
 export function row_getRightVisibleCells<
@@ -154,7 +155,7 @@ export function row_getRightVisibleCells<
     .filter(Boolean)
     .map((d) => ({ ...d, position: 'right' }))
 
-  return cells
+  return cells as Array<Cell<TFeatures, TData>>
 }
 
 // Table APIs

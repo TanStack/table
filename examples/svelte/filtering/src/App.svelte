@@ -39,7 +39,7 @@
     return itemRank.passed
   }
 
-  const columns: ColumnDef<any, Person>[] = [
+  const columns: ColumnDef<typeof _features, Person>[] = [
     {
       accessorFn: (row) => `${row.firstName} ${row.lastName}`,
       id: 'fullName',
@@ -75,7 +75,6 @@
     },
     onGlobalFilterChange: setGlobalFilter,
     globalFilterFn: fuzzyFilter,
-    enableMultiRowSelection: true,
   })
 
   $effect(() => {

@@ -11,15 +11,15 @@ import {
   table_getRow,
   table_getRowId,
 } from './coreRowsFeature.utils'
-import type { Table_Internal } from '../../types/Table'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Row } from '../../types/Row'
 
-export const coreRowsFeature: TableFeature = {
-  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData>,
-  ): void => {
+import type { TableFeature } from '../../types/TableFeatures'
+
+export const coreRowsFeature: TableFeature<{
+  // Row: Row_Row<TableFeatures, RowData>
+  // TableOptions: TableOptions_Rows<TableFeatures, RowData>
+  // Table: Table_Rows<TableFeatures, RowData>
+}> = {
+  constructRowAPIs: (row) => {
     assignAPIs(row, [
       {
         fn: () => row_getAllCellsByColumnId(row),
@@ -50,9 +50,7 @@ export const coreRowsFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: (row, index, parent) => table_getRowId(row, table, index, parent),

@@ -21,11 +21,8 @@ import type {
   Column,
   ColumnDef,
   OnChangeFn,
-  RowData,
   Table,
   TableFeature,
-  TableFeatures,
-  TableState,
   Updater,
 } from '@tanstack/react-table'
 import type { Person } from './makeData'
@@ -50,39 +47,14 @@ export interface Table_Density {
   toggleDensity: (value?: DensityState) => void
 }
 
-// Use declaration merging to add our new feature APIs and state types to TanStack Table's existing types.
-declare module '@tanstack/react-table' {
-  // declare our new feature as a plugin
-  interface Plugins {
-    densityPlugin: TableFeature
-  }
-  // merge our new feature's state with the existing table state
-  interface TableState_Plugins extends TableState_Density {}
-  // merge our new feature's options with the existing table options
-  interface TableOptions_Plugins extends TableOptions_Density {}
-  // merge our new feature's instance APIs with the existing table instance APIs
-  interface Table_Plugins extends Table_Density {}
-  // if you need to add cell instance APIs...
-  // interface Cell_Plugins extends Cell_Density {}
-  // if you need to add row instance APIs...
-  // interface Row_Plugins extends Row_Density {}
-  // if you need to add column instance APIs...
-  // interface Column_Plugins extends Column_Density {}
-  // if you need to add header instance APIs...
-  // interface Header_Plugins extends Header_Density {}
-
-  // Note: declaration merging on `ColumnDef` is not possible because it is a type, not an interface.
-  // But you can still use declaration merging on `ColumnDef.meta`
-}
-
-// end of TS setup!
-
 // Here is all of the actual javascript code for our new feature
-export const densityPlugin: TableFeature = {
+export const densityPlugin: TableFeature<{
+  Table: Table_Density
+  TableOptions: TableOptions_Density
+  TableState: TableState_Density
+}> = {
   // define the new feature's initial state
-  getInitialState: <TFeatures extends TableFeatures>(
-    initialState: Partial<TableState<TFeatures>>,
-  ): Partial<TableState<TFeatures>> => {
+  getInitialState: (initialState) => {
     return {
       density: 'md',
       ...initialState, // must come last
@@ -90,16 +62,11 @@ export const densityPlugin: TableFeature = {
   },
 
   // define the new feature's default options
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TData>,
-  ): TableOptions_Density => {
+  getDefaultTableOptions: (table) => {
     return {
       enableDensity: true,
       onDensityChange: makeStateUpdater('density', table),
-    } as TableOptions_Density
+    }
   },
   // if you need to add a default column definition...
   // getDefaultColumnDef: <TFeatures extends TableFeatures,  TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
@@ -107,9 +74,7 @@ export const densityPlugin: TableFeature = {
   // },
 
   // define the new feature's table instance methods
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     table.setDensity = (updater) => {
       const safeUpdater: Updater<DensityState> = (old) => {
         const newState = functionalUpdate(updater, old)

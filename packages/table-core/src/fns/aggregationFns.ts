@@ -12,8 +12,8 @@ export const aggregationFn_sum: AggregationFn<any, any> = <
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<TFeatures, TData>>,
-  childRows: Array<Row<TFeatures, TData>>,
+  _leafRows: Array<Row<any, any>>,
+  childRows: Array<Row<any, any>>,
 ) => {
   // It's faster to just add the aggregations together instead of
   // process leaf nodes individually
@@ -31,17 +31,18 @@ export const aggregationFn_min: AggregationFn<any, any> = <
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<TFeatures, TData>>,
-  childRows: Array<Row<TFeatures, TData>>,
+  _leafRows: Array<Row<any, any>>,
+  childRows: Array<Row<any, any>>,
 ) => {
   let minValue: number | undefined
 
   childRows.forEach((row) => {
-    const value = row.getValue<number | null>(columnId)
+    const value = row.getValue(columnId)
 
     if (
       value != null &&
-      (minValue! > value || (minValue === undefined && value >= value))
+      typeof value === 'number' &&
+      (minValue === undefined || value < minValue)
     ) {
       minValue = value
     }
@@ -58,16 +59,17 @@ export const aggregationFn_max: AggregationFn<any, any> = <
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<TFeatures, TData>>,
-  childRows: Array<Row<TFeatures, TData>>,
+  _leafRows: Array<Row<any, any>>,
+  childRows: Array<Row<any, any>>,
 ) => {
   let maxValue: number | undefined
 
   childRows.forEach((row) => {
-    const value = row.getValue<number | null>(columnId)
+    const value = row.getValue(columnId)
     if (
       value != null &&
-      (maxValue! < value || (maxValue === undefined && value >= value))
+      typeof value === 'number' &&
+      (maxValue === undefined || value > maxValue)
     ) {
       maxValue = value
     }
@@ -84,17 +86,17 @@ export const aggregationFn_extent: AggregationFn<any, any> = <
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<TFeatures, TData>>,
-  childRows: Array<Row<TFeatures, TData>>,
+  _leafRows: Array<Row<any, any>>,
+  childRows: Array<Row<any, any>>,
 ) => {
   let minValue: number | undefined
   let maxValue: number | undefined
 
   childRows.forEach((row) => {
-    const value = row.getValue<number | null>(columnId)
-    if (value != null) {
+    const value = row.getValue(columnId)
+    if (value != null && typeof value === 'number') {
       if (minValue === undefined) {
-        if (value >= value) minValue = maxValue = value
+        minValue = maxValue = value
       } else {
         if (minValue > value) minValue = value
         if (maxValue! < value) maxValue = value
@@ -113,15 +115,22 @@ export const aggregationFn_mean: AggregationFn<any, any> = <
   TData extends RowData,
 >(
   columnId: string,
-  leafRows: Array<Row<TFeatures, TData>>,
+  leafRows: Array<Row<any, any>>,
 ) => {
   let count = 0
   let sumValue = 0
 
   leafRows.forEach((row) => {
-    let value = row.getValue<number | null>(columnId)
-    if (value != null && (value = +value) >= value) {
-      ++count, (sumValue += value)
+    const value = row.getValue(columnId)
+    if (value != null && typeof value === 'number') {
+      ++count
+      sumValue += value
+    } else if (value != null) {
+      const numValue = +value
+      if (!Number.isNaN(numValue)) {
+        ++count
+        sumValue += numValue
+      }
     }
   })
 
@@ -138,7 +147,7 @@ export const aggregationFn_median: AggregationFn<any, any> = <
   TData extends RowData,
 >(
   columnId: string,
-  leafRows: Array<Row<TFeatures, TData>>,
+  leafRows: Array<Row<any, any>>,
 ) => {
   if (!leafRows.length) {
     return
@@ -165,7 +174,7 @@ export const aggregationFn_unique: AggregationFn<any, any> = <
   TData extends RowData,
 >(
   columnId: string,
-  leafRows: Array<Row<TFeatures, TData>>,
+  leafRows: Array<Row<any, any>>,
 ) => {
   return Array.from(new Set(leafRows.map((d) => d.getValue(columnId))).values())
 }
@@ -178,7 +187,7 @@ export const aggregationFn_uniqueCount: AggregationFn<any, any> = <
   TData extends RowData,
 >(
   columnId: string,
-  leafRows: Array<Row<TFeatures, TData>>,
+  leafRows: Array<Row<any, any>>,
 ) => {
   return new Set(leafRows.map((d) => d.getValue(columnId))).size
 }
@@ -191,7 +200,7 @@ export const aggregationFn_count: AggregationFn<any, any> = <
   TData extends RowData,
 >(
   _columnId: string,
-  leafRows: Array<Row<TFeatures, TData>>,
+  leafRows: Array<Row<any, any>>,
 ) => {
   return leafRows.length
 }

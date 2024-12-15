@@ -77,6 +77,12 @@ export type TableOptions<
         : never)
   >
 
+// export type TableOptions<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+// > = TableOptions_Core<TFeatures, TData> &
+//   ExtractFeatureTypes<TFeatures, 'TableOptions'>
+
 export type TableOptions_All<
   TFeatures extends TableFeatures,
   TData extends RowData,

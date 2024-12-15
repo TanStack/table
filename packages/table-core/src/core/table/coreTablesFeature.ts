@@ -5,14 +5,13 @@ import {
   table_setOptions,
   table_setState,
 } from './coreTablesFeature.utils'
-import type { Table_Internal } from '../../types/Table'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature } from '../../types/TableFeatures'
 
-export const coreTablesFeature: TableFeature = {
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+export const coreTablesFeature: TableFeature<{
+  // Table: Table_Table<TableFeatures, RowData>
+  // TableOptions: TableOptions_Table<TableFeatures, RowData>
+}> = {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: () => table_getState(table),

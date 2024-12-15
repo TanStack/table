@@ -1,7 +1,3 @@
-import type { ColumnDefBase_All } from './ColumnDef'
-import type { RowData, UnionToIntersection } from './type-utils'
-import type { TableFeatures } from './TableFeatures'
-import type { Column_Column } from '../core/columns/coreColumnsFeature.types'
 import type { Column_ColumnFaceting } from '../features/column-faceting/columnFacetingFeature.types'
 import type { Column_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { Column_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
@@ -12,6 +8,10 @@ import type { Column_ColumnSizing } from '../features/column-sizing/columnSizing
 import type { Column_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
 import type { Column_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
 import type { Column_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
+import type { Column_Column } from '../core/columns/coreColumnsFeature.types'
+import type { TableFeatures } from './TableFeatures'
+import type { RowData, UnionToIntersection } from './type-utils'
+import type { ColumnDefBase_All } from './ColumnDef'
 
 export interface Column_Plugins {}
 
@@ -59,6 +59,13 @@ export type Column<
         ? Column_RowSorting<TFeatures, TData>
         : never)
   >
+
+//   export type Column<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+//   TValue = unknown,
+// > = Column_Core<TFeatures, TData, TValue> &
+//   ExtractFeatureTypes<TFeatures, 'Column'>
 
 export type Column_Internal<
   TFeatures extends TableFeatures,

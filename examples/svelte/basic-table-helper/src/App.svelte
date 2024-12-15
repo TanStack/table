@@ -46,7 +46,6 @@
   const tableHelper = createTableHelper({
     _features: { columnSizingFeature: {} },
     _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
-
     debugTable: true,
     // TData: {} as Person, // optionally, set the TData type for the table helper. Omit if this will be a table helper for multiple tables of all different data types
   })

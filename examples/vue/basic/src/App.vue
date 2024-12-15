@@ -4,6 +4,7 @@ import {
   createCoreRowModel,
   useTable,
   createColumnHelper,
+  tableFeatures,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 
@@ -43,7 +44,9 @@ const defaultData: Person[] = [
   },
 ]
 
-const columnHelper = createColumnHelper<any, Person>()
+const _features = tableFeatures({})
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
 
 const columns = [
   columnHelper.group({

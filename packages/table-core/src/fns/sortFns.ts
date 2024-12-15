@@ -9,8 +9,8 @@ export const sortFn_alphanumeric: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
   columnId: string,
 ) => {
   return compareAlphanumeric(
@@ -23,8 +23,8 @@ export const sortFn_alphanumericCaseSensitive: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
   columnId: string,
 ) => {
   return compareAlphanumeric(
@@ -39,8 +39,8 @@ export const sortFn_text: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
   columnId: string,
 ) => {
   return compareBasic(
@@ -55,8 +55,8 @@ export const sortFn_textCaseSensitive: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
   columnId: string,
 ) => {
   return compareBasic(
@@ -69,12 +69,12 @@ export const sortFn_datetime: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
   columnId: string,
 ) => {
-  const a = rowA.getValue<Date>(columnId)
-  const b = rowB.getValue<Date>(columnId)
+  const a: number | string = rowA.getValue(columnId)
+  const b: number | string = rowB.getValue(columnId)
 
   // Can handle nullish values
   // Use > and < because == (and ===) doesn't work with
@@ -86,8 +86,8 @@ export const sortFn_basic: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
   columnId: string,
 ) => {
   return compareBasic(rowA.getValue(columnId), rowB.getValue(columnId))

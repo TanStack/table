@@ -21,7 +21,7 @@
     columnVisibilityFeature,
   })
 
-  const columns: ColumnDef<any, Person>[] = [
+  const columns: ColumnDef<typeof _features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,

@@ -24,14 +24,13 @@ import {
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './rowSelectionFeature.utils'
-import type { Table_Internal } from '../../types/Table'
-import type { TableState_All } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Row } from '../../types/Row'
 import type {
   Row_RowSelection,
   TableOptions_RowSelection,
+  TableState_RowSelection,
+  Table_RowSelection,
 } from './rowSelectionFeature.types'
 
 /**
@@ -40,36 +39,29 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
  
  */
-export const rowSelectionFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const rowSelectionFeature: TableFeature<{
+  Row: Row_RowSelection
+  Table: Table_RowSelection<TableFeatures, RowData>
+  TableOptions: TableOptions_RowSelection<TableFeatures, RowData>
+  TableState: TableState_RowSelection
+}> = {
+  getInitialState: (initialState) => {
     return {
       rowSelection: getDefaultRowSelectionState(),
       ...initialState,
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): TableOptions_RowSelection<TFeatures, TData> => {
+  getDefaultTableOptions: (table) => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
       enableRowSelection: true,
       enableMultiRowSelection: true,
       enableSubRowSelection: true,
-      // enableGroupingRowSelection: false,
-      // isAdditiveSelectEvent: (e: unknown) => !!e.metaKey,
-      // isInclusiveSelectEvent: (e: unknown) => !!e.shiftKey,
     }
   },
 
-  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> & Partial<Row_RowSelection>,
-  ): void => {
+  constructRowAPIs: (row) => {
     assignAPIs(row, [
       {
         fn: (value, opts) => row_toggleSelected(row, value, opts),
@@ -98,9 +90,7 @@ export const rowSelectionFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: (updater) => table_setRowSelection(table, updater),

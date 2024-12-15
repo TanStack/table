@@ -5,22 +5,16 @@ import {
   column_getFacetedUniqueValues,
 } from './columnFacetingFeature.utils'
 import type { Column_ColumnFaceting } from './columnFacetingFeature.types'
-import type { CellData, RowData } from '../../types/type-utils'
+import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Column } from '../../types/Column'
 
 /**
  * The Column Faceting feature adds column faceting APIs to the column objects.
  */
-export const columnFacetingFeature: TableFeature = {
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue> &
-      Partial<Column_ColumnFaceting<TFeatures, TData>>,
-  ): void => {
+export const columnFacetingFeature: TableFeature<{
+  Column: Column_ColumnFaceting<TableFeatures, RowData>
+}> = {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: () => column_getFacetedMinMaxValues(column, column.table),

@@ -8,49 +8,40 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './columnOrderingFeature.utils'
-import type { TableState_All } from '../../types/TableState'
+import type { RowData } from '../../types/type-utils'
 import type {
-  ColumnOrderDefaultOptions,
   Column_ColumnOrdering,
+  TableOptions_ColumnOrdering,
+  TableState_ColumnOrdering,
+  Table_ColumnOrdering,
 } from './columnOrderingFeature.types'
-import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { Column } from '../../types/Column'
 
 /**
  * The Column Ordering feature adds column ordering state and APIs to the table and column objects.
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering)
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
  */
-export const columnOrderingFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const columnOrderingFeature: TableFeature<{
+  Column: Column_ColumnOrdering
+  Table: Table_ColumnOrdering<TableFeatures, RowData>
+  TableOptions: TableOptions_ColumnOrdering
+  TableState: TableState_ColumnOrdering
+}> = {
+  getInitialState: (initialState) => {
     return {
       columnOrder: getDefaultColumnOrderState(),
       ...initialState,
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): ColumnOrderDefaultOptions => {
+  getDefaultTableOptions: (table) => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', table),
     }
   },
 
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnOrdering>,
-  ): void => {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: (position) => column_getIndex(column, position),
@@ -70,9 +61,7 @@ export const columnOrderingFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: (updater) => table_setColumnOrder(table, updater),

@@ -21,50 +21,43 @@ import {
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
 } from './columnVisibilityFeature.utils'
-import type { TableState_All } from '../../types/TableState'
-import type { CellData, RowData } from '../../types/type-utils'
+import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { Row } from '../../types/Row'
-import type { Column } from '../../types/Column'
 import type {
+  ColumnDef_ColumnVisibility,
   Column_ColumnVisibility,
   Row_ColumnVisibility,
-  VisibilityDefaultOptions,
+  TableOptions_ColumnVisibility,
+  TableState_ColumnVisibility,
+  Table_ColumnVisibility,
 } from './columnVisibilityFeature.types'
 
 /**
  * The Column Visibility feature adds column visibility state and APIs to the table, row, and column objects.
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility)
  */
-export const columnVisibilityFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const columnVisibilityFeature: TableFeature<{
+  ColumnDef: ColumnDef_ColumnVisibility
+  Column: Column_ColumnVisibility
+  Row: Row_ColumnVisibility<TableFeatures, RowData>
+  Table: Table_ColumnVisibility<TableFeatures, RowData>
+  TableOptions: TableOptions_ColumnVisibility
+  TableState: TableState_ColumnVisibility
+}> = {
+  getInitialState: (initialState) => {
     return {
       columnVisibility: getDefaultColumnVisibilityState(),
       ...initialState,
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): VisibilityDefaultOptions => {
+  getDefaultTableOptions: (table) => {
     return {
       onColumnVisibilityChange: makeStateUpdater('columnVisibility', table),
     }
   },
 
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnVisibility>,
-  ): void => {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: () => column_getIsVisible(column),
@@ -86,10 +79,7 @@ export const columnVisibilityFeature: TableFeature = {
     ])
   },
 
-  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> &
-      Partial<Row_ColumnVisibility<TFeatures, TData>>,
-  ): void => {
+  constructRowAPIs: (row) => {
     assignAPIs(row, [
       {
         fn: () => row_getAllVisibleCells(row),
@@ -109,9 +99,7 @@ export const columnVisibilityFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: () => table_getVisibleFlatColumns(table),

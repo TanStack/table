@@ -50,9 +50,7 @@ export const filterFn_includesStringSensitive: FilterFn<any, any> = <
   columnId: string,
   filterValue: string,
 ) => {
-  return Boolean(
-    row.getValue<string | null>(columnId)?.toString().includes(filterValue),
-  )
+  return Boolean(row.getValue(columnId)?.toString().includes(filterValue))
 }
 
 filterFn_includesStringSensitive.autoRemove = (val: any) => testFalsy(val)
@@ -70,7 +68,7 @@ export const filterFn_includesString: FilterFn<any, any> = <
 ) => {
   return Boolean(
     row
-      .getValue<string | null>(columnId)
+      .getValue(columnId)
       ?.toString()
       .toLowerCase()
       .includes(filterValue.toString().toLowerCase()),
@@ -91,7 +89,7 @@ export const filterFn_equalsString: FilterFn<any, any> = <
   filterValue: string,
 ) => {
   return (
-    row.getValue<string | null>(columnId)?.toString().toLowerCase() ===
+    row.getValue(columnId)?.toString().toLowerCase() ===
     filterValue.toLowerCase()
   )
 }
@@ -111,13 +109,18 @@ export const filterFn_greaterThan: FilterFn<any, any> = <
   columnId: string,
   filterValue: Date | number | string,
 ) => {
-  return !isNaN(+filterValue) &&
-    !isNaN(+row.getValue<number | string>(columnId))
-    ? +(row.getValue<number | string | null>(columnId) ?? 0) > +filterValue
-    : (row.getValue<number | string | null>(columnId) ?? '')
-        .toString()
-        .toLowerCase()
-        .trim() > filterValue.toString().toLowerCase().trim()
+  const rowValue = row.getValue(columnId)
+  const numericRowValue =
+    rowValue === null || rowValue === undefined ? 0 : +rowValue
+  const numericFilterValue = +filterValue
+
+  if (!isNaN(numericFilterValue) && !isNaN(numericRowValue)) {
+    return numericRowValue > numericFilterValue
+  }
+
+  const stringValue = (rowValue ?? '').toString().toLowerCase().trim()
+  const stringFilterValue = filterValue.toString().toLowerCase().trim()
+  return stringValue > stringFilterValue
 }
 
 filterFn_greaterThan.resolveFilterValue = (val: any) => testFalsy(val)
@@ -152,13 +155,18 @@ export const filterFn_lessThan: FilterFn<any, any> = <
   columnId: string,
   filterValue: Date | number | string,
 ) => {
-  return !isNaN(+filterValue) &&
-    !isNaN(+row.getValue<number | string>(columnId))
-    ? +(row.getValue<number | string | null>(columnId) ?? 0) < +filterValue
-    : (row.getValue<number | string | null>(columnId) ?? '')
-        .toString()
-        .toLowerCase()
-        .trim() < filterValue.toString().toLowerCase().trim()
+  const rowValue = row.getValue(columnId)
+  const numericRowValue =
+    rowValue === null || rowValue === undefined ? 0 : +rowValue
+  const numericFilterValue = +filterValue
+
+  if (!isNaN(numericFilterValue) && !isNaN(numericRowValue)) {
+    return numericRowValue < numericFilterValue
+  }
+
+  const stringValue = (rowValue ?? '').toString().toLowerCase().trim()
+  const stringFilterValue = filterValue.toString().toLowerCase().trim()
+  return stringValue < stringFilterValue
 }
 
 filterFn_lessThan.resolveFilterValue = (val: any) => testFalsy(val)
@@ -187,7 +195,10 @@ filterFn_lessThanOrEqualTo.resolveFilterValue = (val: any) => testFalsy(val)
 /**
  * Filter function for checking if a number or a string is between two given values.
  */
-const filterFn_between: FilterFn<any, any> = (
+const filterFn_between: FilterFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
   row: Row<any, any>,
   columnId: string,
   filterValues: [number | string, number | string],
@@ -205,7 +216,10 @@ filterFn_between.autoRemove = (val: any) => !val
 /**
  * Filter function for checking if a number or a string is between two given values or equal to them.
  */
-const filterFn_betweenInclusive: FilterFn<any, any> = (
+const filterFn_betweenInclusive: FilterFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
   row: Row<any, any>,
   columnId: string,
   filterValues: [number | string, number | string],
@@ -233,7 +247,7 @@ export const filterFn_inNumberRange: FilterFn<any, any> = <
 ) => {
   const [min, max] = filterValue
 
-  const rowValue = row.getValue<number>(columnId)
+  const rowValue: number = row.getValue(columnId)
   return rowValue >= min && rowValue <= max
 }
 
@@ -241,9 +255,9 @@ filterFn_inNumberRange.resolveFilterValue = (val: [any, any]) => {
   const [unsafeMin, unsafeMax] = val
 
   const parsedMin =
-    typeof unsafeMin !== 'number' ? parseFloat(unsafeMin as string) : unsafeMin
+    typeof unsafeMin !== 'number' ? parseFloat(unsafeMin) : unsafeMin
   const parsedMax =
-    typeof unsafeMax !== 'number' ? parseFloat(unsafeMax as string) : unsafeMax
+    typeof unsafeMax !== 'number' ? parseFloat(unsafeMax) : unsafeMax
 
   let min =
     unsafeMin === null || Number.isNaN(parsedMin) ? -Infinity : parsedMin
@@ -274,7 +288,9 @@ export const filterFn_arrIncludes: FilterFn<any, any> = <
   columnId: string,
   filterValue: unknown,
 ) => {
-  return row.getValue<Array<unknown>>(columnId).includes(filterValue)
+  const value = row.getValue<Array<unknown>>(columnId)
+  if (!Array.isArray(value)) return false
+  return value.includes(filterValue)
 }
 
 filterFn_arrIncludes.autoRemove = (val: any) => testFalsy(val) || !val?.length
@@ -290,9 +306,9 @@ export const filterFn_arrIncludesAll: FilterFn<any, any> = <
   columnId: string,
   filterValue: Array<unknown>,
 ) => {
-  return !filterValue.some(
-    (val) => !row.getValue<Array<unknown>>(columnId).includes(val),
-  )
+  const value = row.getValue<Array<unknown>>(columnId)
+  if (!Array.isArray(value)) return false
+  return !filterValue.some((val) => !value.includes(val))
 }
 
 filterFn_arrIncludesAll.autoRemove = (val: any) =>
@@ -309,9 +325,9 @@ export const filterFn_arrIncludesSome: FilterFn<any, any> = <
   columnId: string,
   filterValue: Array<unknown>,
 ) => {
-  return filterValue.some((val) =>
-    row.getValue<Array<unknown>>(columnId).includes(val),
-  )
+  const value = row.getValue<Array<unknown>>(columnId)
+  if (!Array.isArray(value)) return false
+  return filterValue.some((val) => value.includes(val))
 }
 
 filterFn_arrIncludesSome.autoRemove = (val: any) =>

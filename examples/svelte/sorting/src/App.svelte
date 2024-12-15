@@ -5,8 +5,10 @@
     createSortedRowModel,
     createTable,
     createTableState,
+    rowSortingFeature,
     renderComponent,
     sortFns,
+    tableFeatures,
   } from '@tanstack/svelte-table'
   import Header from './Header.svelte'
   import './index.css'

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Header, rowSortingFeature } from '@tanstack/svelte-table'
+  import type { Header } from '@tanstack/svelte-table'
   import type { Person } from './makeData'
   import type { _features } from './tableHelper.svelte'
 

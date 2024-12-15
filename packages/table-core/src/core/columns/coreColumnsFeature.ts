@@ -9,19 +9,15 @@ import {
   table_getColumn,
   table_getDefaultColumnDef,
 } from './coreColumnsFeature.utils'
-import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { Column } from '../../types/Column'
 
-export const coreColumnsFeature: TableFeature = {
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue>,
-  ) => {
+import type { TableFeature } from '../../types/TableFeatures'
+
+export const coreColumnsFeature: TableFeature<{
+  // Column: Column_Column<TableFeatures, RowData, CellData>
+  // Table: Table_Columns<TableFeatures, RowData>
+  // TableOptions: TableOptions_Columns<TableFeatures, RowData>
+}> = {
+  constructColumnAPIs: (column) => {
     const { table } = column
     assignAPIs(column, [
       {
@@ -40,9 +36,7 @@ export const coreColumnsFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ) => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: () => table_getDefaultColumnDef(table),

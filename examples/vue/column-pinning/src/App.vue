@@ -4,6 +4,9 @@ import {
   FlexRender,
   createCoreRowModel,
   useTable,
+  columnPinningFeature,
+  tableFeatures,
+  columnVisibilityFeature,
 } from '@tanstack/vue-table'
 import type {
   Column,
@@ -16,7 +19,12 @@ import { faker } from '@faker-js/faker'
 
 const data = ref(makeData(5000))
 
-const columnHelper = createColumnHelper<any, Person>()
+const _features = tableFeatures({
+  columnPinningFeature,
+  columnVisibilityFeature,
+})
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
 
 const columns = ref([
   columnHelper.group({
@@ -116,7 +124,7 @@ const randomizeColumns = () => {
   )
 }
 
-function toggleColumnVisibility(column: Column<any, any>) {
+function toggleColumnVisibility(column: Column<typeof _features, Person>) {
   columnVisibility.value = {
     ...columnVisibility.value,
     [column.id]: !column.getIsVisible(),

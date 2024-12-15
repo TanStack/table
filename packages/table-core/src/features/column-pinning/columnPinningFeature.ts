@@ -31,16 +31,15 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from './columnPinningFeature.utils'
-import type { TableState_All } from '../../types/TableState'
-import type { CellData, RowData } from '../../types/type-utils'
+import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { Row } from '../../types/Row'
-import type { Column } from '../../types/Column'
 import type {
-  ColumnPinningDefaultOptions,
+  ColumnDef_ColumnPinning,
   Column_ColumnPinning,
   Row_ColumnPinning,
+  TableOptions_ColumnPinning,
+  TableState_ColumnPinning,
+  Table_ColumnPinning,
 } from './columnPinningFeature.types'
 
 /**
@@ -48,10 +47,15 @@ import type {
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning)
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
  */
-export const columnPinningFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const columnPinningFeature: TableFeature<{
+  Column: Column_ColumnPinning
+  ColumnDef: ColumnDef_ColumnPinning
+  Row: Row_ColumnPinning<TableFeatures, RowData>
+  Table: Table_ColumnPinning<TableFeatures, RowData>
+  TableOptions: TableOptions_ColumnPinning
+  TableState: TableState_ColumnPinning
+}> = {
+  getInitialState: (initialState) => {
     return {
       ...initialState,
       columnPinning: {
@@ -61,24 +65,13 @@ export const columnPinningFeature: TableFeature = {
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): ColumnPinningDefaultOptions => {
+  getDefaultTableOptions: (table) => {
     return {
       onColumnPinningChange: makeStateUpdater('columnPinning', table),
     }
   },
 
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue> & Partial<Column_ColumnPinning>,
-  ): void => {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: (position) => column_pin(column, position),
@@ -95,9 +88,7 @@ export const columnPinningFeature: TableFeature = {
     ])
   },
 
-  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> & Partial<Row_ColumnPinning<TFeatures, TData>>,
-  ): void => {
+  constructRowAPIs: (row) => {
     assignAPIs(row, [
       {
         fn: () => row_getCenterVisibleCells(row),
@@ -126,9 +117,7 @@ export const columnPinningFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: (updater) => table_setColumnPinning(table, updater),

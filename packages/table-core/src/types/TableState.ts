@@ -59,6 +59,9 @@ export type TableState<TFeatures extends TableFeatures> = TableState_Plugins &
         : never)
   >
 
+// export type TableState<TFeatures extends TableFeatures> = TableState_Plugins &
+//   ExtractFeatureTypes<TFeatures, 'TableState'>
+
 export type TableState_All = Partial<
   TableState_ColumnFiltering &
     TableState_ColumnGrouping &

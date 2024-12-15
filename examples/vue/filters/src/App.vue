@@ -2,17 +2,21 @@
 import {
   ColumnFiltersState,
   FlexRender,
+  columnFilteringFeature,
   createColumnHelper,
   createCoreRowModel,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
+  globalFilteringFeature,
+  tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
 import Filter from './Filter.vue'
+
 type Person = {
   firstName: string
   lastName: string
@@ -21,6 +25,7 @@ type Person = {
   status: string
   progress: number
 }
+
 const defaultData: Person[] = [
   {
     firstName: 'tanner',
@@ -47,7 +52,13 @@ const defaultData: Person[] = [
     progress: 10,
   },
 ]
-const columnHelper = createColumnHelper<any, Person>()
+
+const _features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+})
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
 const columns = [
   columnHelper.group({
     header: 'Name',

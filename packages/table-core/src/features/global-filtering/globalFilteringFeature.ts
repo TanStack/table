@@ -6,14 +6,14 @@ import {
   table_resetGlobalFilter,
   table_setGlobalFilter,
 } from './globalFilteringFeature.utils'
-import type { CellData, RowData } from '../../types/type-utils'
+import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { TableState_All } from '../../types/TableState'
-import type { Column } from '../../types/Column'
 import type {
+  ColumnDef_GlobalFiltering,
   Column_GlobalFiltering,
   TableOptions_GlobalFiltering,
+  TableState_GlobalFiltering,
+  Table_GlobalFiltering,
 } from './globalFilteringFeature.types'
 
 /**
@@ -23,22 +23,21 @@ import type {
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering)
  * [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
  */
-export const globalFilteringFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const globalFilteringFeature: TableFeature<{
+  Column: Column_GlobalFiltering
+  ColumnDef: ColumnDef_GlobalFiltering
+  Table: Table_GlobalFiltering<TableFeatures, RowData>
+  TableOptions: TableOptions_GlobalFiltering<TableFeatures, RowData>
+  TableState: TableState_GlobalFiltering
+}> = {
+  getInitialState: (initialState) => {
     return {
       globalFilter: undefined,
       ...initialState,
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): TableOptions_GlobalFiltering<TFeatures, TData> => {
+  getDefaultTableOptions: (table) => {
     return {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       globalFilterFn: 'auto',
@@ -53,13 +52,7 @@ export const globalFilteringFeature: TableFeature = {
     }
   },
 
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue> & Partial<Column_GlobalFiltering>,
-  ): void => {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: () => column_getCanGlobalFilter(column),
@@ -67,9 +60,7 @@ export const globalFilteringFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: () => table_getGlobalAutoFilterFn(),

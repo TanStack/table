@@ -4,19 +4,19 @@ import {
   table_getGlobalFacetedRowModel,
   table_getGlobalFacetedUniqueValues,
 } from './globalFacetingFeature.utils'
+import type { Table_GlobalFaceting } from './globalFacetingFeature.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
 
 /**
  * The Global Faceting feature adds global faceting APIs to the table object.
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting)
  * [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
  */
-export const globalFacetingFeature: TableFeature = {
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+export const globalFacetingFeature: TableFeature<{
+  Table: Table_GlobalFaceting<TableFeatures, RowData>
+}> = {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: () => table_getGlobalFacetedMinMaxValues(table),

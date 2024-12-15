@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-ignore - Svelte mount types not properly recognized
 import { mount } from 'svelte'
 import App from './App.svelte'
 

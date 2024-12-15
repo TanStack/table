@@ -16,14 +16,13 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './rowExpandingFeature.utils'
-import type { Table_Internal } from '../../types/Table'
-import type { TableState_All } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Row } from '../../types/Row'
 import type {
   Row_RowExpanding,
   TableOptions_RowExpanding,
+  TableState_RowExpanding,
+  Table_RowExpanding,
 } from './rowExpandingFeature.types'
 
 /**
@@ -31,31 +30,27 @@ import type {
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/row-expanding)
  * [Guide](https://tanstack.com/table/v8/docs/guide/row-expanding)
  */
-export const rowExpandingFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const rowExpandingFeature: TableFeature<{
+  Row: Row_RowExpanding
+  Table: Table_RowExpanding<TableFeatures, RowData>
+  TableOptions: TableOptions_RowExpanding<TableFeatures, RowData>
+  TableState: TableState_RowExpanding
+}> = {
+  getInitialState: (initialState) => {
     return {
       expanded: getDefaultExpandedState(),
       ...initialState,
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): TableOptions_RowExpanding<TFeatures, TData> => {
+  getDefaultTableOptions: (table) => {
     return {
       onExpandedChange: makeStateUpdater('expanded', table),
       paginateExpandedRows: true,
     }
   },
 
-  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> & Partial<Row_RowExpanding>,
-  ): void => {
+  constructRowAPIs: (row) => {
     assignAPIs(row, [
       {
         fn: (expanded) => row_toggleExpanded(row, expanded),
@@ -75,9 +70,7 @@ export const rowExpandingFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: () => table_autoResetExpanded(table),

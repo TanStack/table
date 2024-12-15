@@ -1,7 +1,7 @@
+import type { Cell_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { Cell_Cell } from '../core/cells/coreCellsFeature.types'
-import type { Cell_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 
 export interface Cell_Plugins {}
 
@@ -22,3 +22,9 @@ export type Cell<
       ? Cell_ColumnGrouping
       : never
   >
+
+// export type Cell<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+//   TValue extends CellData = CellData,
+// > = Cell_Core<TFeatures, TData, TValue> & ExtractFeatureTypes<TFeatures, 'Cell'>

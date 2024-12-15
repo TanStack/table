@@ -3,6 +3,7 @@ import { toComputed } from './proxy'
 import type { Signal } from '@angular/core'
 import type { Table, TableFeature } from '@tanstack/table-core'
 
+// TODO: remove this once we have a better way to define plugins
 declare module '@tanstack/table-core' {
   interface TableOptions_Plugins {
     enableExperimentalReactivity?: boolean
@@ -14,7 +15,19 @@ declare module '@tanstack/table-core' {
   }
 }
 
-export const reactivityFeature: TableFeature = {
+interface TableOptions_Reactivity {
+  enableExperimentalReactivity?: boolean
+}
+
+interface Table_Reactivity {
+  _rootNotifier?: Signal<Table<any, any>>
+  _setRootNotifier?: (signal: Signal<Table<any, any>>) => void
+}
+
+export const reactivityFeature: TableFeature<{
+  TableOptions: TableOptions_Reactivity
+  Table: Table_Reactivity
+}> = {
   getDefaultTableOptions(table) {
     return { enableExperimentalReactivity: false }
   },

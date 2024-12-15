@@ -16,47 +16,43 @@ import {
   table_resetSorting,
   table_setSorting,
 } from './rowSortingFeature.utils'
-import type { TableState_All } from '../../types/TableState'
 import type {
   ColumnDef_RowSorting,
+  Column_RowSorting,
   TableOptions_RowSorting,
+  TableState_RowSorting,
+  Table_RowSorting,
 } from './rowSortingFeature.types'
-import type { CellData, RowData } from '../../types/type-utils'
+import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { Column } from '../../types/Column'
 
 /**
  * The (Row) Sorting feature adds sorting state and APIs to the table and column objects.
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting)
  * [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
  */
-export const rowSortingFeature: TableFeature = {
-  getInitialState: (
-    state: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const rowSortingFeature: TableFeature<{
+  Column: Column_RowSorting<TableFeatures, RowData>
+  ColumnDef: ColumnDef_RowSorting<TableFeatures, RowData>
+  Table: Table_RowSorting<TableFeatures, RowData>
+  TableOptions: TableOptions_RowSorting
+  TableState: TableState_RowSorting
+}> = {
+  getInitialState: (initialState) => {
     return {
       sorting: getDefaultSortingState(),
-      ...state,
+      ...initialState,
     }
   },
 
-  getDefaultColumnDef: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(): ColumnDef_RowSorting<TFeatures, TData> => {
+  getDefaultColumnDef: () => {
     return {
       sortFn: 'auto',
       sortUndefined: 1,
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): TableOptions_RowSorting => {
+  getDefaultTableOptions: (table) => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
       isMultiSortEvent: (e: unknown) => {
@@ -65,13 +61,7 @@ export const rowSortingFeature: TableFeature = {
     }
   },
 
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue>,
-  ): void => {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: () => column_getAutoSortFn(column),
@@ -112,9 +102,7 @@ export const rowSortingFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: (updater) => table_setSorting(table, updater),

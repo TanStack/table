@@ -26,7 +26,7 @@ export function constructTable<
 >(options: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
   const { _features = {} as TFeatures } = options
 
-  const featuresList: Array<TableFeature> = Object.values(_features)
+  const featuresList: Array<TableFeature<{}>> = Object.values(_features)
 
   if (isDev && (options.debugAll || options.debugTable)) {
     console.info(

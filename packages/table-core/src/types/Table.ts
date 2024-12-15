@@ -1,13 +1,3 @@
-import type { Table_RowModels } from '../core/row-models/coreRowModelsFeature.types'
-import type { CachedRowModel_All, CreateRowModels_All } from './RowModel'
-import type { RowModelFns_All } from './RowModelFns'
-import type { TableState_All } from './TableState'
-import type { RowData, UnionToIntersection } from './type-utils'
-import type { TableFeatures } from './TableFeatures'
-import type { Table_Columns } from '../core/columns/coreColumnsFeature.types'
-import type { Table_Headers } from '../core/headers/coreHeadersFeature.types'
-import type { Table_Rows } from '../core/rows/coreRowsFeature.types'
-import type { Table_Table } from '../core/table/coreTablesFeature.types'
 import type { Table_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { Table_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { Table_ColumnOrdering } from '../features/column-ordering/columnOrderingFeature.types'
@@ -23,6 +13,16 @@ import type { Table_RowPinning } from '../features/row-pinning/rowPinningFeature
 import type { Table_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { Table_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { TableOptions_All } from './TableOptions'
+import type { Table_Table } from '../core/table/coreTablesFeature.types'
+import type { Table_Rows } from '../core/rows/coreRowsFeature.types'
+import type { Table_Headers } from '../core/headers/coreHeadersFeature.types'
+import type { Table_Columns } from '../core/columns/coreColumnsFeature.types'
+import type { TableFeatures } from './TableFeatures'
+import type { RowData, UnionToIntersection } from './type-utils'
+import type { TableState_All } from './TableState'
+import type { RowModelFns_All } from './RowModelFns'
+import type { CachedRowModel_All, CreateRowModels_All } from './RowModel'
+import type { Table_RowModels } from '../core/row-models/coreRowModelsFeature.types'
 
 export interface Table_Plugins {}
 
@@ -91,6 +91,11 @@ export type Table<
         ? Table_RowSorting<TFeatures, TData>
         : never)
   >
+
+// export type Table<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+// > = Table_Core<TFeatures, TData> & ExtractFeatureTypes<TFeatures, 'Table'>
 
 export type Table_Internal<
   TFeatures extends TableFeatures,

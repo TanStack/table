@@ -16,19 +16,16 @@ import {
   table_resetGrouping,
   table_setGrouping,
 } from './columnGroupingFeature.utils'
-import type { Row } from '../../types/Row'
-import type { TableState_All } from '../../types/TableState'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { Cell } from '../../types/Cell'
-import type { Column } from '../../types/Column'
 import type {
   Cell_ColumnGrouping,
   ColumnDef_ColumnGrouping,
   Column_ColumnGrouping,
   Row_ColumnGrouping,
   TableOptions_ColumnGrouping,
+  TableState_ColumnGrouping,
+  Table_ColumnGrouping,
 } from './columnGroupingFeature.types'
 
 /**
@@ -36,46 +33,37 @@ import type {
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-grouping)
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
  */
-export const columnGroupingFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const columnGroupingFeature: TableFeature<{
+  Cell: Cell_ColumnGrouping
+  Column: Column_ColumnGrouping<TableFeatures, RowData>
+  ColumnDef: ColumnDef_ColumnGrouping<TableFeatures, RowData, CellData>
+  Row: Row_ColumnGrouping
+  Table: Table_ColumnGrouping<TableFeatures, RowData>
+  TableOptions: TableOptions_ColumnGrouping
+  TableState: TableState_ColumnGrouping
+}> = {
+  getInitialState: (initialState) => {
     return {
       grouping: getDefaultGroupingState(),
       ...initialState,
     }
   },
 
-  getDefaultColumnDef: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(): ColumnDef_ColumnGrouping<TFeatures, TData, TValue> => {
+  getDefaultColumnDef: () => {
     return {
-      aggregatedCell: (props) => props.getValue()?.toString?.() ?? null,
+      aggregatedCell: ({ getValue }: any) => getValue()?.toString?.() ?? null,
       aggregationFn: 'auto',
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): TableOptions_ColumnGrouping => {
+  getDefaultTableOptions: (table) => {
     return {
       onGroupingChange: makeStateUpdater('grouping', table),
       groupedColumnMode: 'reorder',
     }
   },
 
-  constructCellAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue,
-  >(
-    cell: Cell<TFeatures, TData, TValue> & Partial<Cell_ColumnGrouping>,
-  ): void => {
+  constructCellAPIs: (cell) => {
     assignAPIs(cell, [
       {
         fn: () => cell_getIsGrouped(cell),
@@ -89,14 +77,7 @@ export const columnGroupingFeature: TableFeature = {
     ])
   },
 
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue> &
-      Partial<Column_ColumnGrouping<TFeatures, TData>>,
-  ): void => {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: () => column_toggleGrouping(column),
@@ -122,9 +103,7 @@ export const columnGroupingFeature: TableFeature = {
     ])
   },
 
-  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>,
-  ): void => {
+  constructRowAPIs: (row) => {
     row._groupingValuesCache = {}
 
     assignAPIs(row, [
@@ -137,9 +116,7 @@ export const columnGroupingFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: (updater) => table_setGrouping(table, updater),

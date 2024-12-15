@@ -11,18 +11,15 @@ import {
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './columnFilteringFeature.utils'
-import type { Table_Internal } from '../../types/Table'
-import type { TableState_All } from '../../types/TableState'
-import type { CellData, RowData, Updater } from '../../types/type-utils'
+import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Row } from '../../types/Row'
-import type { Column } from '../../types/Column'
 import type {
   ColumnDef_ColumnFiltering,
-  ColumnFiltersState,
   Column_ColumnFiltering,
   Row_ColumnFiltering,
   TableOptions_ColumnFiltering,
+  TableState_ColumnFiltering,
+  Table_ColumnFiltering,
 } from './columnFilteringFeature.types'
 
 /**
@@ -32,46 +29,36 @@ import type {
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering)
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
  */
-export const columnFilteringFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const columnFilteringFeature: TableFeature<{
+  Column: Column_ColumnFiltering<TableFeatures, RowData>
+  ColumnDef: ColumnDef_ColumnFiltering<TableFeatures, RowData>
+  Row: Row_ColumnFiltering<TableFeatures, RowData>
+  Table: Table_ColumnFiltering
+  TableOptions: TableOptions_ColumnFiltering<TableFeatures, RowData>
+  TableState: TableState_ColumnFiltering
+}> = {
+  getInitialState: (initialState) => {
     return {
       columnFilters: getDefaultColumnFiltersState(),
       ...initialState,
     }
   },
 
-  getDefaultColumnDef: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(): ColumnDef_ColumnFiltering<TFeatures, TData> => {
+  getDefaultColumnDef: () => {
     return {
       filterFn: 'auto',
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): TableOptions_ColumnFiltering<TFeatures, TData> => {
+  getDefaultTableOptions: (table) => {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),
       filterFromLeafRows: false,
       maxLeafRowFilterDepth: 100,
-    } as TableOptions_ColumnFiltering<TFeatures, TData>
+    }
   },
 
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue> &
-      Partial<Column_ColumnFiltering<TFeatures, TData>>,
-  ): void => {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: () => column_getAutoFilterFn(column),
@@ -97,20 +84,15 @@ export const columnFilteringFeature: TableFeature = {
     ])
   },
 
-  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
-  ): void => {
+  constructRowAPIs: (row) => {
     row.columnFilters = {}
     row.columnFiltersMeta = {}
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
-        fn: (updater: Updater<ColumnFiltersState>) =>
-          table_setColumnFilters(table, updater),
+        fn: (updater) => table_setColumnFilters(table, updater),
       },
       {
         fn: (defaultState) => table_resetColumnFilters(table, defaultState),

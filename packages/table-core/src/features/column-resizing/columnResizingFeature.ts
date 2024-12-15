@@ -7,15 +7,13 @@ import {
   table_resetHeaderSizeInfo,
   table_setColumnResizing,
 } from './columnResizingFeature.utils'
-import type { TableState_All } from '../../types/TableState'
-import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { Header } from '../../types/Header'
-import type { Column } from '../../types/Column'
+import type { TableFeature } from '../../types/TableFeatures'
 import type {
-  ColumnResizingDefaultOptions,
+  Column_ColumnResizing,
   Header_ColumnResizing,
+  TableOptions_ColumnResizing,
+  TableState_ColumnResizing,
+  Table_ColumnResizing,
 } from './columnResizingFeature.types'
 
 /**
@@ -25,22 +23,21 @@ import type {
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-resizing)
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
  */
-export const columnResizingFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const columnResizingFeature: TableFeature<{
+  Column: Column_ColumnResizing
+  Header: Header_ColumnResizing
+  Table: Table_ColumnResizing
+  TableOptions: TableOptions_ColumnResizing
+  TableState: TableState_ColumnResizing
+}> = {
+  getInitialState: (initialState) => {
     return {
       columnResizing: getDefaultColumnResizingState(),
       ...initialState,
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): ColumnResizingDefaultOptions => {
+  getDefaultTableOptions: (table) => {
     return {
       columnResizeMode: 'onEnd',
       columnResizeDirection: 'ltr',
@@ -48,13 +45,7 @@ export const columnResizingFeature: TableFeature = {
     }
   },
 
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column<TFeatures, TData, TValue>,
-  ): void => {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: () => column_getCanResize(column),
@@ -65,13 +56,7 @@ export const columnResizingFeature: TableFeature = {
     ])
   },
 
-  constructHeaderAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnResizing>,
-  ): void => {
+  constructHeaderAPIs: (header) => {
     assignAPIs(header, [
       {
         fn: (_contextDocument) =>
@@ -80,9 +65,7 @@ export const columnResizingFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: (updater) => table_setColumnResizing(table, updater),

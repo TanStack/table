@@ -12,19 +12,15 @@ import {
   table_getHeaderGroups,
   table_getLeafHeaders,
 } from './coreHeadersFeature.utils'
-import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { Header } from '../../types/Header'
 
-export const coreHeadersFeature: TableFeature = {
-  constructHeaderAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    header: Header<TFeatures, TData, TValue>,
-  ): void => {
+import type { TableFeature } from '../../types/TableFeatures'
+
+export const coreHeadersFeature: TableFeature<{
+  // Header: Header_Header<TableFeatures, RowData, CellData>
+  // Table: Table_Headers<TableFeatures, RowData>
+  // TableOptions: TableOptions_Headers
+}> = {
+  constructHeaderAPIs: (header) => {
     assignAPIs(header, [
       {
         fn: () => header_getLeafHeaders(header),
@@ -37,9 +33,7 @@ export const coreHeadersFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: () => table_getHeaderGroups(table),

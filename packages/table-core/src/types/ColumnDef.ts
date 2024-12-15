@@ -96,6 +96,13 @@ export type ColumnDefBase<
         : never)
   >
 
+//   export type ColumnDefBase<
+//   TFeatures extends TableFeatures,
+//   TData extends RowData,
+//   TValue extends CellData = CellData,
+// > = ColumnDefBase_Core<TFeatures, TData, TValue> &
+//   ExtractFeatureTypes<TFeatures, 'ColumnDef'>
+
 export type ColumnDefBase_All<
   TFeatures extends TableFeatures,
   TData extends RowData,

@@ -18,21 +18,25 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './rowPaginationFeature.utils'
-import type { TableState_All } from '../../types/TableState'
-import type { PaginationDefaultOptions } from './rowPaginationFeature.types'
+import type {
+  TableOptions_RowPagination,
+  TableState_RowPagination,
+  Table_RowPagination,
+} from './rowPaginationFeature.types'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
 
 /**
  * The (Row) Pagination feature adds pagination state and APIs to the table object.
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination)
  * [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
  */
-export const rowPaginationFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const rowPaginationFeature: TableFeature<{
+  Table: Table_RowPagination<TableFeatures, RowData>
+  TableOptions: TableOptions_RowPagination
+  TableState: TableState_RowPagination
+}> = {
+  getInitialState: (initialState) => {
     return {
       ...initialState,
       pagination: {
@@ -42,20 +46,13 @@ export const rowPaginationFeature: TableFeature = {
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): PaginationDefaultOptions => {
+  getDefaultTableOptions: (table) => {
     return {
       onPaginationChange: makeStateUpdater('pagination', table),
     }
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: () => table_autoResetPageIndex(table),

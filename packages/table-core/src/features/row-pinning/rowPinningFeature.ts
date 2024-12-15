@@ -12,14 +12,13 @@ import {
   table_resetRowPinning,
   table_setRowPinning,
 } from './rowPinningFeature.utils'
-import type { TableState_All } from '../../types/TableState'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
-import type { Row } from '../../types/Row'
 import type {
-  RowPinningDefaultOptions,
   Row_RowPinning,
+  TableOptions_RowPinning,
+  TableState_RowPinning,
+  Table_RowPinning,
 } from './rowPinningFeature.types'
 
 /**
@@ -27,10 +26,13 @@ import type {
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning)
  * [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
  */
-export const rowPinningFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const rowPinningFeature: TableFeature<{
+  Row: Row_RowPinning
+  Table: Table_RowPinning<TableFeatures, RowData>
+  TableOptions: TableOptions_RowPinning<TableFeatures, RowData>
+  TableState: TableState_RowPinning
+}> = {
+  getInitialState: (initialState) => {
     return {
       ...initialState,
       rowPinning: {
@@ -40,20 +42,13 @@ export const rowPinningFeature: TableFeature = {
     }
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): RowPinningDefaultOptions => {
+  getDefaultTableOptions: (table) => {
     return {
       onRowPinningChange: makeStateUpdater('rowPinning', table),
     }
   },
 
-  constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData> & Partial<Row_RowPinning>,
-  ): void => {
+  constructRowAPIs: (row) => {
     assignAPIs(row, [
       {
         fn: () => row_getCanPin(row),
@@ -75,9 +70,7 @@ export const rowPinningFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: (updater) => table_setRowPinning(table, updater),

@@ -16,17 +16,15 @@ import {
   table_resetColumnSizing,
   table_setColumnSizing,
 } from './columnSizingFeature.utils'
-import type { Table_Internal } from '../../types/Table'
-import type { TableState_All } from '../../types/TableState'
 import type {
   ColumnDef_ColumnSizing,
-  ColumnSizingDefaultOptions,
+  Column_ColumnSizing,
   Header_ColumnSizing,
+  TableOptions_ColumnSizing,
+  TableState_ColumnSizing,
+  Table_ColumnSizing,
 } from './columnSizingFeature.types'
-import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Header } from '../../types/Header'
-import type { Column_Internal } from '../../types/Column'
+import type { TableFeature } from '../../types/TableFeatures'
 
 /**
  * The Column Sizing feature adds column sizing state and APIs to the table, header, and column objects.
@@ -35,38 +33,32 @@ import type { Column_Internal } from '../../types/Column'
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing)
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
  */
-export const columnSizingFeature: TableFeature = {
-  getInitialState: (
-    initialState: Partial<TableState_All>,
-  ): Partial<TableState_All> => {
+export const columnSizingFeature: TableFeature<{
+  ColumnDef: ColumnDef_ColumnSizing
+  Column: Column_ColumnSizing
+  Header: Header_ColumnSizing
+  Table: Table_ColumnSizing
+  TableOptions: TableOptions_ColumnSizing
+  TableState: TableState_ColumnSizing
+}> = {
+  getInitialState: (initialState) => {
     return {
       columnSizing: getDefaultColumnSizingState(),
       ...initialState,
     }
   },
 
-  getDefaultColumnDef: (): ColumnDef_ColumnSizing => {
+  getDefaultColumnDef: () => {
     return getDefaultColumnSizingColumnDef()
   },
 
-  getDefaultTableOptions: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table_Internal<TFeatures, TData>,
-  ): ColumnSizingDefaultOptions => {
+  getDefaultTableOptions: (table) => {
     return {
       onColumnSizingChange: makeStateUpdater('columnSizing', table),
     }
   },
 
-  constructColumnAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    column: Column_Internal<TFeatures, TData, TValue>,
-  ): void => {
+  constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
         fn: () => column_getSize(column),
@@ -101,13 +93,7 @@ export const columnSizingFeature: TableFeature = {
     ])
   },
 
-  constructHeaderAPIs: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  >(
-    header: Header<TFeatures, TData, TValue> & Partial<Header_ColumnSizing>,
-  ): void => {
+  constructHeaderAPIs: (header) => {
     assignAPIs(header, [
       {
         fn: () => header_getSize(header),
@@ -118,9 +104,7 @@ export const columnSizingFeature: TableFeature = {
     ])
   },
 
-  constructTableAPIs: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
-  ): void => {
+  constructTableAPIs: (table) => {
     assignAPIs(table, [
       {
         fn: (updater) => table_setColumnSizing(table, updater),
