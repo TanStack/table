@@ -132,7 +132,7 @@ How you apply these size styles to your markup is up to you, but it is pretty co
   key={header.id}
   colSpan={header.colSpan}
   style={{ width: `${header.getSize()}px` }}
->
+/>
 ```
 
 Though, as discussed in the [advanced column resizing performance section](#advanced-column-resizing-performance), you may want to consider using CSS variables to apply column sizes to your markup.
