@@ -4,6 +4,8 @@ import './index.css'
 import {
   createPaginatedRowModel,
   flexRender,
+  rowPaginationFeature,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -18,7 +20,11 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  rowPaginationFeature,
+})
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -80,6 +86,7 @@ function App() {
 
   // Create the table and pass your options
   const table = useTable({
+    _features,
     _rowModels: {
       paginatedRowModel: createPaginatedRowModel(),
     },

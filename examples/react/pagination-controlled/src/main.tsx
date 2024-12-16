@@ -7,20 +7,26 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 import './index.css'
-import { flexRender, useTable } from '@tanstack/react-table'
+import {
+  flexRender,
+  rowPaginationFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
 import { fetchData } from './fetchData'
 import type { ColumnDef, PaginationState } from '@tanstack/react-table'
-
-//
-
 import type { Person } from './fetchData'
 
 const queryClient = new QueryClient()
 
+const _features = tableFeatures({
+  rowPaginationFeature,
+})
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         header: 'Name',
@@ -89,7 +95,7 @@ function App() {
   const defaultData = React.useMemo(() => [], [])
 
   const table = useTable({
-    _features: {},
+    _features,
     _rowModels: {},
     columns,
     data: dataQuery.data?.rows ?? defaultData,
@@ -132,7 +138,7 @@ function App() {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(

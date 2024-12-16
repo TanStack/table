@@ -7,8 +7,8 @@ import {
 import {
   FlexRenderDirective,
   columnVisibilityFeature,
-  createCoreRowModel,
   injectTable,
+  isFunction,
   tableFeatures,
 } from '@tanstack/angular-table'
 import type { OnInit } from '@angular/core'
@@ -124,12 +124,10 @@ export class AppComponent implements OnInit {
     state: {
       columnVisibility: this.columnVisibility(),
     },
-    getCoreRowModel: createCoreRowModel(),
     onColumnVisibilityChange: (updaterOrValue) => {
-      const visibilityState =
-        typeof updaterOrValue === 'function'
-          ? updaterOrValue(this.columnVisibility())
-          : updaterOrValue
+      const visibilityState = isFunction(updaterOrValue)
+        ? updaterOrValue(this.columnVisibility())
+        : updaterOrValue
       this.columnVisibility.set(visibilityState)
     },
     debugTable: true,

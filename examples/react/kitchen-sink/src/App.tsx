@@ -86,9 +86,9 @@ export const App = () => {
 
   const table = useTable({
     _rowModels: {
-      filteredRowModel: createFilteredRowModel(),
+      filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(),
+      sortedRowModel: createSortedRowModel(sortFns),
       groupedRowModel: createGroupedRowModel(),
       facetedRowModel: createFacetedRowModel(),
       facetedMinMaxValues: createFacetedMinMaxValues(),

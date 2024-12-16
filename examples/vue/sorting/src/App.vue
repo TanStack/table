@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  createCoreRowModel,
+  rowSortingFeature,
   useTable,
   SortingState,
   createColumnHelper,
   createSortedRowModel,
+  sortFns,
+  tableFeatures,
+  isFunction,
+  Updater,
 } from '@tanstack/vue-table'
 import { h, ref } from 'vue'
 import { makeData, Person } from './makeData'
 
-const columnHelper = createColumnHelper<any, Person>()
+const _features = tableFeatures({
+  rowSortingFeature,
+})
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
 
 const columns = [
   columnHelper.group({
@@ -77,6 +85,10 @@ const rerender = () => {
 const sorting = ref<SortingState>([])
 
 const table = useTable({
+  _features,
+  _rowModels: {
+    sortedRowModel: createSortedRowModel(sortFns),
+  },
   get data() {
     return data.value
   },
@@ -86,14 +98,11 @@ const table = useTable({
       return sorting.value
     },
   },
-  onSortingChange: (updaterOrValue) => {
-    sorting.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(sorting.value)
-        : updaterOrValue
+  onSortingChange: (updaterOrValue: Updater<SortingState>) => {
+    sorting.value = isFunction(updaterOrValue)
+      ? updaterOrValue(sorting.value)
+      : updaterOrValue
   },
-  getCoreRowModel: createCoreRowModel(),
-  getSortedRowModel: createSortedRowModel(),
   debugTable: true,
 })
 </script>
@@ -133,7 +142,7 @@ const table = useTable({
 
       <tbody>
         <tr v-for="row in table.getRowModel().rows.slice(0, 10)" :key="row.id">
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+          <td v-for="cell in row.getAllCells()" :key="cell.id">
             <FlexRender
               :render="cell.column.columnDef.cell"
               :props="cell.getContext()"

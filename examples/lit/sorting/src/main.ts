@@ -4,9 +4,11 @@ import { repeat } from 'lit/directives/repeat.js'
 import { state } from 'lit/decorators/state.js'
 import {
   TableController,
-  createCoreRowModel,
   createSortedRowModel,
   flexRender,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
 } from '@tanstack/lit-table'
 import { Person, makeData } from './makeData'
 import type { ColumnDef, SortFn, SortingState } from '@tanstack/lit-table'
@@ -18,7 +20,11 @@ const sortStatusFn: SortFn<any, Person> = (rowA, rowB, _columnId) => {
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  rowSortingFeature,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -75,6 +81,10 @@ class LitTableExample extends LitElement {
 
   protected render() {
     const table = this.tableController.table({
+      _features,
+      _rowModels: {
+        sortedRowModel: createSortedRowModel(sortFns),
+      },
       columns,
       data,
       state: {
@@ -87,8 +97,6 @@ class LitTableExample extends LitElement {
           this._sorting = updaterOrValue
         }
       },
-      getSortedRowModel: createSortedRowModel(),
-      getCoreRowModel: createCoreRowModel(),
     })
 
     return html`

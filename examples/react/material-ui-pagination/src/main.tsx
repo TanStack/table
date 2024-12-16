@@ -110,7 +110,7 @@ function LocalTable({
 }) {
   const table = useTable({
     _rowModels: {
-      filteredRowModel: createFilteredRowModel(),
+      filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,

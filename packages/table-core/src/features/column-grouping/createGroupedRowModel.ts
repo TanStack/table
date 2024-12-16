@@ -22,16 +22,9 @@ import type { RowData } from '../../types/type-utils'
 export function createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->({
-  aggregationFns,
-}:
-  | {
-      aggregationFns?: Record<
-        keyof AggregationFns,
-        AggregationFn<TFeatures, TData>
-      >
-    }
-  | undefined = {}): (
+>(
+  aggregationFns: Record<keyof AggregationFns, AggregationFn<TFeatures, TData>>,
+): (
   table: Table_Internal<TFeatures, TData>,
 ) => () => RowModel<TFeatures, TData> {
   return (table) => {

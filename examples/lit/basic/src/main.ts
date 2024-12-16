@@ -5,7 +5,6 @@ import {
   ColumnDef,
   TableController,
   flexRender,
-  rowSortingFeature,
   tableFeatures,
 } from '@tanstack/lit-table'
 import install from '@twind/with-web-components'
@@ -24,9 +23,7 @@ type Person = {
 }
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
-const _features = tableFeatures({
-  rowSortingFeature: rowSortingFeature,
-})
+const _features = tableFeatures({})
 
 // const columnHelper = createColumnHelper<typeof _features, Person>()
 

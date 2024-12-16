@@ -90,7 +90,7 @@ function App() {
   const table = useTable({
     _features,
     _rowModels: {
-      sortedRowModel: createSortedRowModel({ sortFns }), // client-side sorting
+      sortedRowModel: createSortedRowModel(sortFns), // client-side sorting
     },
     columns,
     data,

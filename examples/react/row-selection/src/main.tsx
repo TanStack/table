@@ -4,6 +4,7 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
+  filterFns,
   flexRender,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -109,7 +110,7 @@ function App() {
   const table = useTable({
     _features,
     _rowModels: {
-      filteredRowModel: createFilteredRowModel(),
+      filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,

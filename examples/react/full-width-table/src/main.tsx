@@ -4,16 +4,22 @@ import './index.css'
 import {
   createPaginatedRowModel,
   flexRender,
+  rowPaginationFeature,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef, PaginationState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
+const _features = tableFeatures({
+  rowPaginationFeature,
+})
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         header: 'Name',
@@ -72,6 +78,7 @@ function App() {
   })
 
   const table = useTable({
+    _features,
     _rowModels: {
       paginatedRowModel: createPaginatedRowModel(),
     },

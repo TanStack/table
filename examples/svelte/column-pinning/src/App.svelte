@@ -17,6 +17,7 @@
     createTable,
     createTableState,
     tableFeatures,
+    sortFns,
   } from '@tanstack/svelte-table'
   import './index.css'
   import { makeData, type Person } from './makeData'
@@ -97,7 +98,9 @@
 
   const table = createTable({
     _features,
-    _rowModels: { sortedRowModel: createSortedRowModel() },
+    _rowModels: {
+      sortedRowModel: createSortedRowModel(sortFns),
+    },
     get data() {
       return data
     },

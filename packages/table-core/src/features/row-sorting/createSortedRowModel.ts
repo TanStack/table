@@ -12,13 +12,9 @@ import type { RowData } from '../../types/type-utils'
 export function createSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->({
-  sortFns,
-}:
-  | {
-      sortFns?: Record<keyof SortFns, SortFn<TFeatures, TData>>
-    }
-  | undefined = {}): (
+>(
+  sortFns: Record<keyof SortFns, SortFn<TFeatures, TData>>,
+): (
   table: Table_Internal<TFeatures, TData>,
 ) => () => RowModel<TFeatures, TData> {
   return (table) => {

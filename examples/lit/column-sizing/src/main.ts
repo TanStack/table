@@ -5,12 +5,19 @@ import { state } from 'lit/decorators/state.js'
 import {
   ColumnDef,
   TableController,
-  createCoreRowModel,
+  columnResizingFeature,
+  columnSizingFeature,
   flexRender,
+  tableFeatures,
 } from '@tanstack/lit-table'
 import { Person, makeData } from './makeData'
 
-const columns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  columnSizingFeature,
+  columnResizingFeature,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -40,7 +47,6 @@ const columns: Array<ColumnDef<any, Person>> = [
   {
     accessorKey: 'rank',
     header: 'Rank',
-    invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
   },
   {
     accessorKey: 'createdAt',
@@ -57,11 +63,12 @@ class LitTableExample extends LitElement {
 
   protected render() {
     const table = this.tableController.table({
+      _features,
+      _rowModels: {},
       data,
       columns,
       columnResizeMode: 'onChange',
       columnResizeDirection: 'ltr',
-      getCoreRowModel: createCoreRowModel(),
       debugTable: true,
       debugHeaders: true,
       debugColumns: true,

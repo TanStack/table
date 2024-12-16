@@ -3,6 +3,7 @@ import {
   createTable,
   flexRender,
   rowSortingFeature,
+  sortFns,
   tableFeatures,
 } from '@tanstack/solid-table'
 import { For, Show, createSignal } from 'solid-js'
@@ -72,7 +73,7 @@ function App() {
   const table = createTable({
     _features,
     _rowModels: {
-      sortedRowModel: createSortedRowModel(),
+      sortedRowModel: createSortedRowModel(sortFns),
     },
     get data() {
       return data()

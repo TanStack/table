@@ -104,7 +104,7 @@ const table = useTable({
   columns,
   data,
   getCoreRowModel: createCoreRowModel(),
-  //getSortedRowModel: createSortedRowModel(), //not needed for manual sorting
+  //getSortedRowModel: createSortedRowModel(sortFns), //not needed for manual sorting
   manualSorting: true, //use pre-sorted row model instead of sorted row model
   state: {
     sorting,
@@ -126,7 +126,7 @@ const table = useTable({
   columns,
   data,
   getCoreRowModel: createCoreRowModel(),
-  getSortedRowModel: createSortedRowModel(), //provide a sorting row model
+  getSortedRowModel: createSortedRowModel(sortFns), //provide a sorting row model
 })
 ```
 
@@ -199,7 +199,7 @@ const table = useTable({
   columns,
   data,
   getCoreRowModel: createCoreRowModel(),
-  getSortedRowModel: createSortedRowModel(),
+  getSortedRowModel: createSortedRowModel(sortFns),
   sortFns: { //add a custom sorting function
     myCustomSortFn: (rowA, rowB, columnId) => {
       return rowA.original[columnId] > rowB.original[columnId] ? 1 : rowA.original[columnId] < rowB.original[columnId] ? -1 : 0

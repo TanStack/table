@@ -3,11 +3,16 @@ import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
   TableController,
-  createCoreRowModel,
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFns,
   flexRender,
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
 import type {
@@ -20,7 +25,13 @@ import type {
 } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const columns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -149,9 +160,14 @@ class LitTableExample extends LitElement {
 
   protected render(): unknown {
     const table = this.tableController.table({
+      _features,
+      _rowModels: {
+        filteredRowModel: createFilteredRowModel(filterFns),
+        paginatedRowModel: createPaginatedRowModel(),
+        sortedRowModel: createSortedRowModel(sortFns),
+      },
       data,
       columns,
-      filterFns: {},
       state: {
         columnFilters: this._columnFilters,
       },
@@ -162,10 +178,6 @@ class LitTableExample extends LitElement {
           this._columnFilters = updater
         }
       },
-      getCoreRowModel: createCoreRowModel(),
-      getFilteredRowModel: createFilteredRowModel(), // client side filtering
-      getSortedRowModel: createSortedRowModel(),
-      getPaginatedRowModel: createPaginatedRowModel(),
       debugTable: true,
       debugHeaders: true,
       debugColumns: false,

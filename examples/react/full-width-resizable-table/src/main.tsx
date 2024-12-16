@@ -1,12 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { flexRender, useTable } from '@tanstack/react-table'
+import {
+  columnResizingFeature,
+  columnSizingFeature,
+  flexRender,
+  rowPaginationFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-const columns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  columnSizingFeature,
+  columnResizingFeature,
+  rowPaginationFeature,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -62,6 +75,7 @@ function App() {
   const data = React.useMemo(() => makeData(20), [])
 
   const table = useTable({
+    _features,
     _rowModels: {},
     columns,
     data,

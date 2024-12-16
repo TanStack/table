@@ -2,16 +2,21 @@ import '@builder.io/qwik/qwikloader.js'
 import { $, component$, render, useSignal } from '@builder.io/qwik'
 import './index.css'
 import {
+  columnFacetingFeature,
+  columnFilteringFeature,
   createColumnHelper,
-  createCoreRowModel,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFns,
   flexRender,
+  rowPaginationFeature,
+  rowSortingFeature,
   sortFns,
+  tableFeatures,
   useTable,
 } from '@tanstack/qwik-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
@@ -26,19 +31,19 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 declare module '@tanstack/qwik-table' {
   interface FilterFns {
-    fuzzy: FilterFn<unknown>
+    fuzzy: FilterFn<any, any>
   }
   interface FilterMeta {
     itemRank: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+const fuzzyFilter: FilterFn<any, any> = (row, columnId, value, addMeta) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value)
 
   // Store the itemRank info
-  addMeta({
+  addMeta?.({
     itemRank,
   })
 
@@ -46,7 +51,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<any> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<any, any> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -105,9 +110,16 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const columnHelper = createColumnHelper<Person>()
+const _features = tableFeatures({
+  columnFacetingFeature,
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+})
 
-const columns = [
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
   columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
@@ -159,13 +171,25 @@ const columns = [
       }),
     ],
   }),
-]
+])
 
 const App = component$(() => {
   const columnFilters = useSignal<ColumnFiltersState>([])
   const globalFilter = useSignal<string | null>('')
 
   const table = useTable({
+    _features,
+    _rowModels: {
+      facetedMinMaxValues: createFacetedMinMaxValues(),
+      facetedRowModel: createFacetedRowModel(),
+      facetedUniqueValues: createFacetedUniqueValues(),
+      filteredRowModel: createFilteredRowModel({
+        ...filterFns,
+        fuzzy: fuzzyFilter,
+      }),
+      paginatedRowModel: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel(sortFns),
+    },
     data: defaultData,
     columns,
     enableSorting: true,
@@ -186,13 +210,6 @@ const App = component$(() => {
       globalFilter.value = updated
     },
     globalFilterFn: fuzzyFilter,
-    getCoreRowModel: createCoreRowModel(),
-    getFilteredRowModel: createFilteredRowModel(),
-    getSortedRowModel: createSortedRowModel(),
-    getPaginatedRowModel: createPaginatedRowModel(),
-    getFacetedRowModel: createFacetedRowModel(),
-    getFacetedUniqueValues: createFacetedUniqueValues(),
-    getFacetedMinMaxValues: createFacetedMinMaxValues(),
     debugTable: true,
     debugHeaders: true,
     debugColumns: false,

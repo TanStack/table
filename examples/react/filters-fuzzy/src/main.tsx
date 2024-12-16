@@ -71,8 +71,6 @@ const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-filterFns.fuzzyFilter = fuzzyFilter
-
 declare module '@tanstack/react-table' {
   // add fuzzy filter to the filterFns
   interface FilterFns {
@@ -129,10 +127,11 @@ function App() {
     _features,
     _rowModels: {
       filteredRowModel: createFilteredRowModel({
-        filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+        ...filterFns,
+        fuzzy: fuzzyFilter,
       }),
       paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel({ sortFns }),
+      sortedRowModel: createSortedRowModel(sortFns),
     },
     columns,
     data,

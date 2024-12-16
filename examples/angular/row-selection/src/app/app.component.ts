@@ -12,6 +12,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHelper,
+  filterFns,
   rowPaginationFeature,
   rowSelectionFeature,
 } from '@tanstack/angular-table'
@@ -33,7 +34,7 @@ const tableHelper = createTableHelper({
     rowSelectionFeature,
   },
   _rowModels: {
-    filteredRowModel: createFilteredRowModel(),
+    filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
   debugTable: true,
@@ -54,68 +55,67 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: Array<ColumnDef<(typeof tableHelper)['features'], Person>> =
-    [
-      {
-        id: 'select',
-        header: () => {
-          return new FlexRenderComponent(TableHeadSelectionComponent)
+  readonly columns: Array<ColumnDef<typeof tableHelper.features, Person>> = [
+    {
+      id: 'select',
+      header: () => {
+        return new FlexRenderComponent(TableHeadSelectionComponent)
+      },
+      cell: () => {
+        return new FlexRenderComponent(TableRowSelectionComponent)
+      },
+    },
+    {
+      header: 'Name',
+      footer: (props) => props.column.id,
+      columns: [
+        {
+          accessorKey: 'firstName',
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+          header: 'First name',
         },
-        cell: () => {
-          return new FlexRenderComponent(TableRowSelectionComponent)
+        {
+          accessorFn: (row) => row.lastName,
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => 'Last Name',
+          footer: (props) => props.column.id,
         },
-      },
-      {
-        header: 'Name',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            cell: (info) => info.getValue(),
-            footer: (props) => props.column.id,
-            header: 'First name',
-          },
-          {
-            accessorFn: (row) => row.lastName,
-            id: 'lastName',
-            cell: (info) => info.getValue(),
-            header: () => 'Last Name',
-            footer: (props) => props.column.id,
-          },
-        ],
-      },
-      {
-        header: 'Info',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => this.ageHeaderCell(),
-            footer: (props) => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => 'Visits',
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: (props) => props.column.id,
-              },
-            ],
-          },
-        ],
-      },
-    ]
+      ],
+    },
+    {
+      header: 'Info',
+      footer: (props) => props.column.id,
+      columns: [
+        {
+          accessorKey: 'age',
+          header: () => this.ageHeaderCell(),
+          footer: (props) => props.column.id,
+        },
+        {
+          header: 'More Info',
+          columns: [
+            {
+              accessorKey: 'visits',
+              header: () => 'Visits',
+              footer: (props) => props.column.id,
+            },
+            {
+              accessorKey: 'status',
+              header: 'Status',
+              footer: (props) => props.column.id,
+            },
+            {
+              accessorKey: 'progress',
+              header: 'Profile Progress',
+              footer: (props) => props.column.id,
+            },
+          ],
+        },
+      ],
+    },
+  ]
 
   table = tableHelper.injectTable(() => ({
     data: this.data(),

@@ -2,19 +2,23 @@
 import type { Column, Table } from '@tanstack/vue-table'
 import { computed, PropType } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
+import { _features, Person } from './App.vue'
+
 const props = defineProps({
   column: {
-    type: Object as PropType<Column<any, unknown>>,
+    type: Object as PropType<Column<typeof _features, Person>>,
     required: true,
   },
   table: {
-    type: Object as PropType<Table<any>>,
+    type: Object as PropType<Table<typeof _features, Person>>,
     required: true,
   },
 })
+
 const firstValue = computed(() =>
   props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id),
 )
+
 const columnFilterValue = computed(() => props.column.getFilterValue())
 const sortedUniqueValues = computed(() =>
   typeof firstValue.value === 'number'

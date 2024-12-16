@@ -90,7 +90,7 @@ class MyComponent extends LitElement {
           this._sorting = updaterOrValue
         }
       },
-      getSortedRowModel: createSortedRowModel(),
+      getSortedRowModel: createSortedRowModel(sortFns),
       getCoreRowModel: createCoreRowModel(),
     })
 
@@ -118,7 +118,7 @@ render() {
     columns,
     data,
     getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel()
+    getSortedRowModel: createSortedRowModel(sortFns)
   })
   const state = { ...table.initialState, ...this._tableState };
   table.setOptions(prev => ({
@@ -160,7 +160,7 @@ render() {
         this._sorting = updaterOrValue
       }
     },
-    getSortedRowModel: createSortedRowModel(),
+    getSortedRowModel: createSortedRowModel(sortFns),
     getCoreRowModel: createCoreRowModel(),
   })
 

@@ -5,6 +5,7 @@ import {
   createExpandedRowModel,
   flexRender,
   rowExpandingFeature,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
@@ -16,7 +17,11 @@ import type {
 } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-const columns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  rowExpandingFeature,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -111,9 +116,9 @@ function Table({
   data,
   getRowCanExpand,
   renderSubComponent,
-}: TableProps<any, Person>): JSX.Element {
+}: TableProps<typeof _features, Person>): React.JSX.Element {
   const table = useTable({
-    _features: { rowExpandingFeature },
+    _features,
     _rowModels: {
       expandedRowModel: createExpandedRowModel(),
     },
@@ -152,7 +157,7 @@ function Table({
               <Fragment key={row.id}>
                 <tr>
                   {/* first row is a normal row */}
-                  {row.getVisibleCells().map((cell) => {
+                  {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
                         {flexRender(
@@ -166,7 +171,7 @@ function Table({
                 {row.getIsExpanded() && (
                   <tr>
                     {/* 2nd row is a custom 1 cell row */}
-                    <td colSpan={row.getVisibleCells().length}>
+                    <td colSpan={row.getAllCells().length}>
                       {renderSubComponent({ row })}
                     </td>
                   </tr>
@@ -182,7 +187,11 @@ function Table({
   )
 }
 
-const renderSubComponent = ({ row }: { row: Row<any, Person> }) => {
+const renderSubComponent = ({
+  row,
+}: {
+  row: Row<typeof _features, Person>
+}) => {
   return (
     <pre style={{ fontSize: '10px' }}>
       <code>{JSON.stringify(row.original, null, 2)}</code>

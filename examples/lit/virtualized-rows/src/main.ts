@@ -3,9 +3,11 @@ import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
   TableController,
-  createCoreRowModel,
+  columnSizingFeature,
   createSortedRowModel,
   flexRender,
+  sortFns,
+  tableFeatures,
 } from '@tanstack/lit-table'
 import { styleMap } from 'lit/directives/style-map.js'
 import { Ref, createRef, ref } from 'lit/directives/ref.js'
@@ -13,7 +15,11 @@ import { VirtualizerController } from '@tanstack/lit-virtual'
 import { Person, makeData } from './makeData.ts'
 import type { ColumnDef } from '@tanstack/lit-table'
 
-const columns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  columnSizingFeature,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -77,10 +83,12 @@ class LitTableExample extends LitElement {
 
   protected render(): unknown {
     const table = this.tableController.table({
+      _features,
+      _rowModels: {
+        sortedRowModel: createSortedRowModel(sortFns),
+      },
       columns,
       data,
-      getSortedRowModel: createSortedRowModel(),
-      getCoreRowModel: createCoreRowModel(),
     })
     const { rows } = table.getRowModel()
 

@@ -6,6 +6,7 @@ import {
   createFacetedUniqueValues,
   createFilteredRowModel,
   createTable,
+  filterFns,
   flexRender,
   globalFilteringFeature,
   tableFeatures,
@@ -17,7 +18,7 @@ import ColumnFilter from './ColumnFilter'
 import type { Person } from './makeData'
 import type { ColumnDef, ColumnFiltersState } from '@tanstack/solid-table'
 
-const _features = tableFeatures({
+export const _features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   columnFacetingFeature,
@@ -91,7 +92,7 @@ function App() {
       facetedRowModel: createFacetedRowModel(),
       facetedMinMaxValues: createFacetedMinMaxValues(),
       facetedUniqueValues: createFacetedUniqueValues(),
-      filteredRowModel: createFilteredRowModel(),
+      filteredRowModel: createFilteredRowModel(filterFns),
     },
     get data() {
       return data()
@@ -157,7 +158,7 @@ function App() {
           <For each={table.getRowModel().rows.slice(0, 10)}>
             {(row) => (
               <tr>
-                <For each={row.getVisibleCells()}>
+                <For each={row.getAllCells()}>
                   {(cell) => (
                     <td>
                       {flexRender(

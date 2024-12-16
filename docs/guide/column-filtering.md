@@ -54,7 +54,7 @@ const table = useTable({
   data,
   columns,
   getCoreRowModel: createCoreRowModel(),
-  // getFilteredRowModel: createFilteredRowModel(), // not needed for manual server-side filtering
+  // getFilteredRowModel: createFilteredRowModel(filterFns), // not needed for manual server-side filtering
   manualFiltering: true,
 })
 ```
@@ -72,7 +72,7 @@ const table = useTable({
   data,
   columns,
   getCoreRowModel: createCoreRowModel(),
-  getFilteredRowModel: createFilteredRowModel(), // needed for client-side filtering
+  getFilteredRowModel: createFilteredRowModel(filterFns), // needed for client-side filtering
 })
 ```
 
@@ -216,7 +216,7 @@ const table = useTable({
   columns,
   data,
   getCoreRowModel: createCoreRowModel(),
-  getFilteredRowModel: createFilteredRowModel(),
+  getFilteredRowModel: createFilteredRowModel(filterFns),
   filterFns: { // add a custom global filter function
     myCustomFilterFn: (row, columnId, filterValue) => { // defined inline here
       return // true or false based on your custom logic
@@ -296,7 +296,7 @@ const table = useTable({
   columns,
   data,
   getCoreRowModel: createCoreRowModel(),
-  getFilteredRowModel: createFilteredRowModel(),
+  getFilteredRowModel: createFilteredRowModel(filterFns),
   getExpandedRowModel: createExpandedRowModel(),
   filterFromLeafRows: true, // filter and search through sub-rows
 })
@@ -313,7 +313,7 @@ const table = useTable({
   columns,
   data,
   getCoreRowModel: createCoreRowModel(),
-  getFilteredRowModel: createFilteredRowModel(),
+  getFilteredRowModel: createFilteredRowModel(filterFns),
   getExpandedRowModel: createExpandedRowModel(),
   maxLeafRowFilterDepth: 0, // only filter root level parent rows out
 })

@@ -52,10 +52,10 @@ const table = useTable({
   getFacetedMinMaxValues: getFacetedMinMaxValues(),
   getFacetedRowModel: createFacetedRowModel(),
   getFacetedUniqueValues: getFacetedUniqueValues(),
-  getFilteredRowModel: createFilteredRowModel(),
+  getFilteredRowModel: createFilteredRowModel(filterFns),
   getGroupedRowModel: createGroupedRowModel(),
   getPaginatedRowModel: createPaginatedRowModel(),
-  getSortedRowModel: createSortedRowModel(),
+  getSortedRowModel: createSortedRowModel(sortFns),
 })
 ```
 

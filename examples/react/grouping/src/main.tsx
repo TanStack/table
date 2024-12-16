@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
+  aggregationFns,
   columnFilteringFeature,
   columnGroupingFeature,
   createExpandedRowModel,
@@ -10,10 +11,12 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   createTableHelper,
+  filterFns,
   flexRender,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
+  sortFns,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { ColumnDef, GroupingState } from '@tanstack/react-table'
@@ -28,10 +31,10 @@ const tableHelper = createTableHelper({
     rowSortingFeature,
   },
   _rowModels: {
-    filteredRowModel: createFilteredRowModel(),
+    filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(),
-    groupedRowModel: createGroupedRowModel(),
+    sortedRowModel: createSortedRowModel(sortFns),
+    groupedRowModel: createGroupedRowModel(aggregationFns),
     expandedRowModel: createExpandedRowModel(),
   },
   TData: {} as Person,
@@ -73,7 +76,7 @@ function App() {
         accessorKey: 'visits',
         header: () => <span>Visits</span>,
         aggregationFn: 'sum',
-        // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+        aggregatedCell: ({ getValue }) => getValue<number>().toLocaleString(),
       },
       {
         accessorKey: 'status',

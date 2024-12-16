@@ -2,14 +2,17 @@
 import {
   ColumnFiltersState,
   FlexRender,
+  Updater,
+  columnFacetingFeature,
   columnFilteringFeature,
   createColumnHelper,
-  createCoreRowModel,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
+  filterFns,
   globalFilteringFeature,
+  isFunction,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
@@ -17,7 +20,7 @@ import { ref } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
 import Filter from './Filter.vue'
 
-type Person = {
+export type Person = {
   firstName: string
   lastName: string
   age: number
@@ -53,12 +56,14 @@ const defaultData: Person[] = [
   },
 ]
 
-const _features = tableFeatures({
+export const _features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
+  columnFacetingFeature,
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
+
 const columns = [
   columnHelper.group({
     header: 'Name',
@@ -110,7 +115,15 @@ const rerender = () => {
 }
 const columnFilters = ref<ColumnFiltersState>([])
 const globalFilter = ref('')
+
 const table = useTable({
+  _features,
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel(filterFns),
+    facetedRowModel: createFacetedRowModel(),
+    facetedMinMaxValues: createFacetedMinMaxValues(),
+    facetedUniqueValues: createFacetedUniqueValues(),
+  },
   get data() {
     return data.value
   },
@@ -123,23 +136,16 @@ const table = useTable({
       return globalFilter.value
     },
   },
-  onColumnFiltersChange: (updaterOrValue) => {
-    columnFilters.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(columnFilters.value)
-        : updaterOrValue
+  onColumnFiltersChange: (updaterOrValue: Updater<ColumnFiltersState>) => {
+    columnFilters.value = isFunction(updaterOrValue)
+      ? updaterOrValue(columnFilters.value)
+      : updaterOrValue
   },
-  onGlobalFilterChange: (updaterOrValue) => {
-    globalFilter.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(globalFilter.value)
-        : updaterOrValue
+  onGlobalFilterChange: (updaterOrValue: Updater<string>) => {
+    globalFilter.value = isFunction(updaterOrValue)
+      ? updaterOrValue(globalFilter.value)
+      : updaterOrValue
   },
-  getCoreRowModel: createCoreRowModel(),
-  getFilteredRowModel: createFilteredRowModel(),
-  getFacetedRowModel: createFacetedRowModel(),
-  getFacetedUniqueValues: createFacetedUniqueValues(),
-  getFacetedMinMaxValues: createFacetedMinMaxValues(),
 })
 </script>
 
@@ -180,7 +186,7 @@ const table = useTable({
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+          <td v-for="cell in row.getAllCells()" :key="cell.id">
             <FlexRender
               :render="cell.column.columnDef.cell"
               :props="cell.getContext()"

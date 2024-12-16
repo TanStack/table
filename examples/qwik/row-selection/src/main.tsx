@@ -2,11 +2,16 @@ import '@builder.io/qwik/qwikloader.js'
 import { $, component$, render, useSignal } from '@builder.io/qwik'
 import './index.css'
 import {
+  columnFilteringFeature,
   createColumnHelper,
-  createCoreRowModel,
   createFilteredRowModel,
   createSortedRowModel,
+  filterFns,
   flexRender,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
   useTable,
 } from '@tanstack/qwik-table'
 import type { ColumnDef } from '@tanstack/qwik-table'
@@ -55,75 +60,86 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const columnHelper = createColumnHelper<any, Person>()
-const columns: Array<ColumnDef<any, Person>> = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <IndeterminateCheckbox
-        checked={table.getIsAllRowsSelected()}
-        indeterminate={table.getIsSomeRowsSelected()}
-        onChange$={$(() => {
-          console.log('toggleAllRowsSelected')
-          table.toggleAllRowsSelected()
-        })}
-      />
-    ),
-    cell: ({ row, table }) => {
-      const { id } = row
-      return (
-        <div class="px-1">
-          <IndeterminateCheckbox
-            checked={row.getIsSelected()}
-            disabled={!row.getCanSelect()}
-            indeterminate={row.getIsSomeSelected()}
-            // onChange: row.getToggleSelectedHandler(),
-            onChange$={$(() => {
-              // TODO: getting row instance from table works, but how can we call getToggleSelectedHandler() without getting qwik qrl error?
-              const row = table.getRow(id)
-              row.toggleSelected()
-            })}
-          />
-        </div>
-      )
+const _features = tableFeatures({
+  columnFilteringFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+})
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns: Array<ColumnDef<typeof _features, Person>> =
+  columnHelper.columns([
+    {
+      id: 'select',
+      header: ({ table }) => (
+        <IndeterminateCheckbox
+          checked={table.getIsAllRowsSelected()}
+          indeterminate={table.getIsSomeRowsSelected()}
+          onChange$={$(() => {
+            console.log('toggleAllRowsSelected')
+            table.toggleAllRowsSelected()
+          })}
+        />
+      ),
+      cell: ({ row, table }) => {
+        const { id } = row
+        return (
+          <div class="px-1">
+            <IndeterminateCheckbox
+              checked={row.getIsSelected()}
+              disabled={!row.getCanSelect()}
+              indeterminate={row.getIsSomeSelected()}
+              // onChange: row.getToggleSelectedHandler(),
+              onChange$={$(() => {
+                // TODO: getting row instance from table works, but how can we call getToggleSelectedHandler() without getting qwik qrl error?
+                const row = table.getRow(id)
+                row.toggleSelected()
+              })}
+            />
+          </div>
+        )
+      },
     },
-  },
-  columnHelper.accessor('firstName', {
-    cell: (info) => info.getValue(),
-    footer: (props) => props.column.id,
-  }),
-  columnHelper.accessor((row) => row.lastName, {
-    id: 'lastName',
-    cell: (info) => info.getValue(),
-    header: () => <span>Last Name</span>,
-    footer: (props) => props.column.id,
-  }),
-  columnHelper.accessor('age', {
-    header: () => 'Age',
-    footer: (props) => props.column.id,
-  }),
-  columnHelper.accessor('visits', {
-    header: () => <span>Visits</span>,
-    footer: (props) => props.column.id,
-  }),
-  columnHelper.accessor('status', {
-    header: 'Status',
-    footer: (props) => props.column.id,
-  }),
-  columnHelper.accessor('progress', {
-    header: 'Profile Progress',
-    footer: (props) => props.column.id,
-  }),
-]
+    columnHelper.accessor('firstName', {
+      cell: (info) => info.getValue(),
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor((row) => row.lastName, {
+      id: 'lastName',
+      cell: (info) => info.getValue(),
+      header: () => <span>Last Name</span>,
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('age', {
+      header: () => 'Age',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('visits', {
+      header: () => <span>Visits</span>,
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('status', {
+      header: 'Status',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('progress', {
+      header: 'Profile Progress',
+      footer: (props) => props.column.id,
+    }),
+  ])
 
 const App = component$(() => {
   const rowSelection = useSignal({})
 
   const table = useTable({
+    _features,
+    _rowModels: {
+      sortedRowModel: createSortedRowModel(sortFns),
+      filteredRowModel: createFilteredRowModel(filterFns),
+    },
     columns,
     data: defaultData,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
     enableSorting: true,
     onRowSelectionChange: (updater) => {
       rowSelection.value =
@@ -132,7 +148,6 @@ const App = component$(() => {
     state: {
       rowSelection: rowSelection.value,
     },
-    getFilteredRowModel: createFilteredRowModel(),
     enableRowSelection: true,
   })
 
@@ -171,7 +186,7 @@ const App = component$(() => {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
+                {row.getAllCells().map((cell) => (
                   <td key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

@@ -2,9 +2,11 @@ import '@builder.io/qwik/qwikloader.js'
 import { $, component$, render, useSignal } from '@builder.io/qwik'
 import './index.css'
 import {
-  createCoreRowModel,
   createSortedRowModel,
   flexRender,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
   useTable,
 } from '@tanstack/qwik-table'
 import { makeData } from './makeData'
@@ -19,7 +21,11 @@ type Person = {
   progress: number
 }
 
-const columns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  rowSortingFeature,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -57,7 +63,7 @@ const columns: Array<ColumnDef<any, Person>> = [
     accessorKey: 'createdAt',
     header: 'Created At',
     cell: (info) => info.getValue<Date>().toLocaleDateString(),
-    // sortFn: 'datetime' (inferred from the data)
+    sortFn: 'datetime',
   },
 ]
 
@@ -67,10 +73,12 @@ const App = component$(() => {
   const sorting = useSignal<SortingState>([])
 
   const table = useTable({
+    _features,
+    _rowModels: {
+      sortedRowModel: createSortedRowModel(sortFns),
+    },
     columns,
     data: data.value,
-    getCoreRowModel: createCoreRowModel(),
-    getSortedRowModel: createSortedRowModel(),
     enableSorting: true,
     state: {
       sorting: sorting.value,
@@ -136,7 +144,7 @@ const App = component$(() => {
             .map((row) => {
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => {
+                  {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
                         {flexRender(

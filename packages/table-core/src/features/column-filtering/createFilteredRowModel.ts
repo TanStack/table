@@ -22,13 +22,9 @@ import type {
 export function createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->({
-  filterFns,
-}:
-  | {
-      filterFns?: Record<keyof FilterFns, FilterFn<TFeatures, TData>>
-    }
-  | undefined = {}): (
+>(
+  filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>,
+): (
   table: Table_Internal<TFeatures, TData>,
 ) => () => RowModel<TFeatures, TData> {
   return (table) => {

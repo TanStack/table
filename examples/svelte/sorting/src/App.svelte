@@ -85,7 +85,7 @@
   const table = createTable({
     _features,
     _rowModels: {
-      sortedRowModel: createSortedRowModel({ sortFns }),
+      sortedRowModel: createSortedRowModel(sortFns),
     },
     get data() {
       return data

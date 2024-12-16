@@ -3,8 +3,8 @@ import { component$, render } from '@builder.io/qwik'
 import './index.css'
 import {
   createColumnHelper,
-  createCoreRowModel,
   flexRender,
+  tableFeatures,
   useTable,
 } from '@tanstack/qwik-table'
 
@@ -52,9 +52,11 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const columnHelper = createColumnHelper<any, Person>()
+const _features = tableFeatures({})
 
-const columns = [
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
@@ -82,14 +84,14 @@ const columns = [
     header: 'Profile Progress',
     footer: (info) => info.column.id,
   }),
-]
+])
 
 const App = component$(() => {
   const table = useTable({
+    _features,
+    _rowModels: {},
     columns,
     data: defaultData,
-    getCoreRowModel: createCoreRowModel(),
-    enableSorting: true,
   })
 
   return (
@@ -114,7 +116,7 @@ const App = component$(() => {
         <tbody>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
+              {row.getAllCells().map((cell) => (
                 <td key={cell.id}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

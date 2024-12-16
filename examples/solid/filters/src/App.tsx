@@ -1,4 +1,5 @@
 import {
+  columnFacetingFeature,
   columnFilteringFeature,
   createFacetedMinMaxValues,
   createFacetedRowModel,
@@ -20,6 +21,7 @@ import type { ColumnDef, ColumnFiltersState } from '@tanstack/solid-table'
 export const _features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
+  columnFacetingFeature,
 })
 
 const columns: Array<ColumnDef<typeof _features, Person>> = [
@@ -93,7 +95,7 @@ function App() {
       facetedRowModel: createFacetedRowModel(),
       facetedMinMaxValues: createFacetedMinMaxValues(),
       facetedUniqueValues: createFacetedUniqueValues(),
-      filteredRowModel: createFilteredRowModel({ filterFns }),
+      filteredRowModel: createFilteredRowModel(filterFns),
     },
     get data() {
       return data()

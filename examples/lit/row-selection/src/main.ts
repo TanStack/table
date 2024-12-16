@@ -3,16 +3,26 @@ import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
   TableController,
-  createCoreRowModel,
+  columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
+  filterFns,
   flexRender,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const columns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  rowSelectionFeature,
+  columnFilteringFeature,
+  rowPaginationFeature,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     id: 'select',
     header: ({ table }) => html`
@@ -78,9 +88,13 @@ class LitTableExample extends LitElement {
 
   protected render(): unknown {
     const table = this.tableController.table({
+      _features,
+      _rowModels: {
+        filteredRowModel: createFilteredRowModel(filterFns),
+        paginatedRowModel: createPaginatedRowModel(),
+      },
       data,
       columns,
-      filterFns: {},
       state: {
         rowSelection: this._rowSelection,
       },
@@ -92,9 +106,6 @@ class LitTableExample extends LitElement {
           this._rowSelection = updaterOrValue
         }
       },
-      getCoreRowModel: createCoreRowModel(),
-      getFilteredRowModel: createFilteredRowModel(),
-      getPaginatedRowModel: createPaginatedRowModel(),
       debugTable: true,
     })
 

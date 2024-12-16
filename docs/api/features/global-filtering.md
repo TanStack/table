@@ -196,7 +196,7 @@ Example:
 ```tsx
 import { getFilteredRowModel } from '@tanstack/[adapter]-table'
 
-  getFilteredRowModel: createFilteredRowModel(),
+  getFilteredRowModel: createFilteredRowModel(filterFns),
 })
 ```
 

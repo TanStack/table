@@ -11,6 +11,7 @@ import {
   columnVisibilityFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
+  filterFns,
   injectTable,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -109,22 +110,12 @@ export class AppComponent {
   table = injectTable(() => ({
     _features,
     _rowModels: {
-      filteredRowModel: createFilteredRowModel(),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
-    data: this.data(),
-    enableExperimentalReactivity: true,
-    _features: {
-      rowSelectionFeature,
-      rowPaginationFeature,
-      columnFilteringFeature,
-      columnVisibilityFeature,
-    },
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(),
+      filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns: this.columns,
+    data: this.data(),
+    enableExperimentalReactivity: true,
     state: {
       rowSelection: this.rowSelection(),
     },

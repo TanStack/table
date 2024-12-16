@@ -6,6 +6,7 @@ import {
   createSortedRowModel,
   flexRender,
   rowSortingFeature,
+  sortFns,
   useTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -23,7 +24,7 @@ function App() {
 
   const table = useTable({
     _features: { columnSizingFeature, rowSortingFeature },
-    _rowModels: { sortedRowModel: createSortedRowModel() },
+    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
     debugTable: true,

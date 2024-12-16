@@ -7,12 +7,14 @@ import {
 } from '@angular/core'
 import {
   FlexRenderDirective,
+  aggregationFns,
   columnFilteringFeature,
   columnGroupingFeature,
   createExpandedRowModel,
   createFilteredRowModel,
   createGroupedRowModel,
   createPaginatedRowModel,
+  filterFns,
   injectTable,
   isFunction,
   rowExpandingFeature,
@@ -49,10 +51,10 @@ export class AppComponent {
   readonly table = injectTable(() => ({
     _features,
     _rowModels: {
-      groupedRowModel: createGroupedRowModel(),
+      groupedRowModel: createGroupedRowModel(aggregationFns),
       expandedRowModel: createExpandedRowModel(),
       paginatedRowModel: createPaginatedRowModel(),
-      filteredRowModel: createFilteredRowModel(),
+      filteredRowModel: createFilteredRowModel(filterFns),
     },
     enableExperimentalReactivity: true,
     data: this.data(),

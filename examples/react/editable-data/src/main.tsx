@@ -5,6 +5,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHelper,
+  filterFns,
   flexRender,
   rowPaginationFeature,
   tableFeatures,
@@ -28,7 +29,7 @@ const _features = tableFeatures({
 const tableHelper = createTableHelper({
   _features,
   _rowModels: {
-    filteredRowModel: createFilteredRowModel(),
+    filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
 })

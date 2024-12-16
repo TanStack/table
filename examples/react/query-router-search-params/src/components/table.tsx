@@ -1,4 +1,12 @@
-import { flexRender, useTable } from '@tanstack/react-table'
+import {
+  columnFilteringFeature,
+  flexRender,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table'
 import { DebouncedInput } from './debouncedInput'
 import type {
   ColumnDef,
@@ -9,19 +17,26 @@ import type {
 } from '@tanstack/react-table'
 import type { Filters } from '../api/types'
 
+export const _features = tableFeatures({
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+})
+
 export const DEFAULT_PAGE_INDEX = 0
 export const DEFAULT_PAGE_SIZE = 10
 
-type Props<T extends Record<string, string | number>> = {
-  data: Array<T>
-  columns: Array<ColumnDef<T>>
+type Props<TData extends Record<string, string | number>> = {
+  data: Array<TData>
+  columns: Array<ColumnDef<typeof _features, TData>>
   pagination: PaginationState
   paginationOptions: Pick<
     TableOptions_RowPagination,
     'onPaginationChange' | 'rowCount'
   >
-  filters: Filters<T>
-  onFilterChange: (dataFilters: Partial<T>) => void
+  filters: Filters<TData>
+  onFilterChange: (dataFilters: Partial<TData>) => void
   sorting: SortingState
   onSortingChange: OnChangeFn<SortingState>
 }
@@ -37,7 +52,8 @@ export default function Table<T extends Record<string, string | number>>({
   sorting,
 }: Props<T>) {
   const table = useTable({
-    _rowModels: {},
+    _features,
+    _rowModels: {}, // no client-side row models since we're doing server-side sorting, filtering, and pagination
     columns,
     data,
     manualFiltering: true,
@@ -108,7 +124,7 @@ export default function Table<T extends Record<string, string | number>>({
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+                {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
                       {flexRender(
