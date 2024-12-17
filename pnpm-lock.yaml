@@ -1058,7 +1058,7 @@ importers:
   examples/react/basic:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1089,7 +1089,7 @@ importers:
   examples/react/bootstrap:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       bootstrap:
         specifier: ^5.3.3
@@ -1150,7 +1150,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1181,7 +1181,7 @@ importers:
   examples/react/column-groups:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1215,7 +1215,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1249,7 +1249,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1283,7 +1283,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1317,7 +1317,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1348,7 +1348,7 @@ importers:
   examples/react/column-sizing:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1379,7 +1379,7 @@ importers:
   examples/react/column-visibility:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1413,7 +1413,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1447,7 +1447,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1481,7 +1481,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1518,7 +1518,7 @@ importers:
         specifier: ^8.19.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1555,7 +1555,7 @@ importers:
         specifier: ^8.19.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1592,7 +1592,7 @@ importers:
         specifier: ^8.19.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1626,7 +1626,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1660,7 +1660,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1694,7 +1694,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1728,7 +1728,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1768,7 +1768,7 @@ importers:
         specifier: ^8.19.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1820,7 +1820,7 @@ importers:
         specifier: ^5.15.21
         version: 5.15.21(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react@18.3.1))(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1857,7 +1857,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1894,7 +1894,7 @@ importers:
         specifier: ^5.49.0
         version: 5.49.0(react@18.3.1)
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1931,7 +1931,7 @@ importers:
         specifier: ^1.43.2
         version: 1.43.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -1983,7 +1983,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -2017,7 +2017,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -2051,7 +2051,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -2085,7 +2085,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -2119,7 +2119,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       react:
         specifier: ^18.3.1
@@ -2153,7 +2153,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.8.1
@@ -2193,7 +2193,7 @@ importers:
         specifier: ^5.49.0
         version: 5.49.0(react@18.3.1)
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.8.1
@@ -2230,7 +2230,7 @@ importers:
         specifier: ^8.4.1
         version: 8.4.1
       '@tanstack/react-table':
-        specifier: ^8.20.5
+        specifier: ^8.20.6
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.8.1
@@ -6717,6 +6717,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@10.1.0:
