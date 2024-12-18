@@ -267,7 +267,7 @@ describe('rowPinningFeature', () => {
               pageIndex: 0,
             },
             rowPinning: {
-              top: ['1', '3', '7'],
+              top: ['1', '3'],
               bottom: ['2', '4'],
             },
           },
