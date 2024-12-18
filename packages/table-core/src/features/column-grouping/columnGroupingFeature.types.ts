@@ -18,7 +18,7 @@ export interface TableState_ColumnGrouping {
   grouping: GroupingState
 }
 
-export interface TableFns_ColumnGrouping<
+export interface RowModelFns_ColumnGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

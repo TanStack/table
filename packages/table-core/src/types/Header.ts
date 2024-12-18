@@ -1,8 +1,8 @@
 import type { Header_ColumnSizing } from '../features/column-sizing/columnSizingFeature.types'
+import type { Header_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { TableFeatures } from './TableFeatures'
 import type { Header_Header } from '../core/headers/coreHeadersFeature.types'
-import type { Header_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 
 export interface Header_Plugins {}
 
@@ -27,7 +27,7 @@ export type Header<
         : never)
   >
 
-//   export type Header<
+// export type Header<
 //   TFeatures extends TableFeatures,
 //   TData extends RowData,
 //   TValue extends CellData = CellData,

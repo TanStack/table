@@ -16,17 +16,19 @@ import {
   table_resetGrouping,
   table_setGrouping,
 } from './columnGroupingFeature.utils'
-import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type {
-  Cell_ColumnGrouping,
-  ColumnDef_ColumnGrouping,
-  Column_ColumnGrouping,
-  Row_ColumnGrouping,
-  TableOptions_ColumnGrouping,
-  TableState_ColumnGrouping,
-  Table_ColumnGrouping,
-} from './columnGroupingFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
+// import type {
+//   CachedRowModel_Grouped,
+//   Cell_ColumnGrouping,
+//   ColumnDef_ColumnGrouping,
+//   Column_ColumnGrouping,
+//   CreateRowModel_Grouped,
+//   RowModelFns_ColumnGrouping,
+//   Row_ColumnGrouping,
+//   TableOptions_ColumnGrouping,
+//   TableState_ColumnGrouping,
+//   Table_ColumnGrouping,
+// } from './columnGroupingFeature.types'
 
 /**
  * The (Column) Grouping feature adds column grouping state and APIs to the table, row, column, and cell objects.
@@ -34,13 +36,16 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
  */
 export const columnGroupingFeature: TableFeature<{
-  Cell: Cell_ColumnGrouping
-  Column: Column_ColumnGrouping<TableFeatures, RowData>
-  ColumnDef: ColumnDef_ColumnGrouping<TableFeatures, RowData, CellData>
-  Row: Row_ColumnGrouping
-  Table: Table_ColumnGrouping<TableFeatures, RowData>
-  TableOptions: TableOptions_ColumnGrouping
-  TableState: TableState_ColumnGrouping
+  // CachedRowModel: CachedRowModel_Grouped<TableFeatures, RowData>
+  // Cell: Cell_ColumnGrouping
+  // Column: Column_ColumnGrouping<TableFeatures, RowData>
+  // ColumnDef: ColumnDef_ColumnGrouping<TableFeatures, RowData, CellData>
+  // CreateRowModels: CreateRowModel_Grouped<TableFeatures, RowData>
+  // Row: Row_ColumnGrouping
+  // RowModelFns: RowModelFns_ColumnGrouping<TableFeatures, RowData>
+  // Table: Table_ColumnGrouping<TableFeatures, RowData>
+  // TableOptions: TableOptions_ColumnGrouping
+  // TableState: TableState_ColumnGrouping
 }> = {
   getInitialState: (initialState) => {
     return {
@@ -104,7 +109,7 @@ export const columnGroupingFeature: TableFeature<{
   },
 
   constructRowAPIs: (row) => {
-    row._groupingValuesCache = {}
+    ;(row as any)._groupingValuesCache = {}
 
     assignAPIs(row, [
       {

@@ -18,13 +18,14 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './rowPaginationFeature.utils'
-import type {
-  TableOptions_RowPagination,
-  TableState_RowPagination,
-  Table_RowPagination,
-} from './rowPaginationFeature.types'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+// import type {
+//   CachedRowModel_Paginated,
+//   CreateRowModel_Paginated,
+//   TableOptions_RowPagination,
+//   TableState_RowPagination,
+//   Table_RowPagination,
+// } from './rowPaginationFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
 
 /**
  * The (Row) Pagination feature adds pagination state and APIs to the table object.
@@ -32,9 +33,11 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
  * [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
  */
 export const rowPaginationFeature: TableFeature<{
-  Table: Table_RowPagination<TableFeatures, RowData>
-  TableOptions: TableOptions_RowPagination
-  TableState: TableState_RowPagination
+  // CachedRowModel: CachedRowModel_Paginated<TableFeatures, RowData>
+  // CreateRowModels: CreateRowModel_Paginated<TableFeatures, RowData>
+  // Table: Table_RowPagination<TableFeatures, RowData>
+  // TableOptions: TableOptions_RowPagination
+  // TableState: TableState_RowPagination
 }> = {
   getInitialState: (initialState) => {
     return {

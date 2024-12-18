@@ -18,10 +18,12 @@ export interface RowModel<
   rowsById: Record<string, Row<TFeatures, TData>>
 }
 
+export interface CreateRowModel_Plugins {}
+
 export interface CreateRowModel_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> {
+> extends CreateRowModel_Plugins {
   /**
    * This required option is a factory for a function that computes and returns the core row model for the table.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getcorerowmodel)
@@ -32,10 +34,12 @@ export interface CreateRowModel_Core<
   ) => () => RowModel<TFeatures, TData>
 }
 
+export interface CachedRowModel_Plugins {}
+
 export interface CachedRowModel_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> {
+> extends CachedRowModel_Plugins {
   coreRowModel: () => RowModel<TFeatures, TData>
 }
 

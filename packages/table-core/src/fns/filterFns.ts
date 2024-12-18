@@ -12,7 +12,7 @@ export const filterFn_equals: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -28,7 +28,7 @@ export const filterFn_weakEquals: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -46,7 +46,7 @@ export const filterFn_includesStringSensitive: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: string,
 ) => {
@@ -62,7 +62,7 @@ export const filterFn_includesString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: string,
 ) => {
@@ -84,7 +84,7 @@ export const filterFn_equalsString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: string,
 ) => {
@@ -105,7 +105,7 @@ export const filterFn_greaterThan: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: Date | number | string,
 ) => {
@@ -132,13 +132,13 @@ export const filterFn_greaterThanOrEqualTo: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: Date | number | string,
 ) => {
   return (
-    filterFn_greaterThan(row, columnId, filterValue) ||
-    filterFn_equals(row, columnId, filterValue)
+    filterFn_greaterThan(row as any, columnId, filterValue) ||
+    filterFn_equals(row as any, columnId, filterValue)
   )
 }
 
@@ -151,7 +151,7 @@ export const filterFn_lessThan: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: Date | number | string,
 ) => {
@@ -178,13 +178,13 @@ export const filterFn_lessThanOrEqualTo: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: Date | number | string,
 ) => {
   return (
-    filterFn_lessThan(row, columnId, filterValue) ||
-    filterFn_equals(row, columnId, filterValue)
+    filterFn_lessThan(row as any, columnId, filterValue) ||
+    filterFn_equals(row as any, columnId, filterValue)
   )
 }
 
@@ -199,17 +199,17 @@ const filterFn_between: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValues: [number | string, number | string],
 ): boolean =>
   ((['', undefined] as Array<any>).includes(filterValues[0]) ||
-    filterFn_greaterThan(row, columnId, filterValues[0])) &&
+    filterFn_greaterThan(row as any, columnId, filterValues[0])) &&
   ((!isNaN(+filterValues[0]) &&
     !isNaN(+filterValues[1]) &&
     +filterValues[0] > +filterValues[1]) ||
     (['', undefined] as Array<any>).includes(filterValues[1]) ||
-    filterFn_lessThan(row, columnId, filterValues[1]))
+    filterFn_lessThan(row as any, columnId, filterValues[1]))
 
 filterFn_between.autoRemove = (val: any) => !val
 
@@ -220,17 +220,17 @@ const filterFn_betweenInclusive: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValues: [number | string, number | string],
 ): boolean =>
   ((['', undefined] as Array<any>).includes(filterValues[0]) ||
-    filterFn_greaterThanOrEqualTo(row, columnId, filterValues[0])) &&
+    filterFn_greaterThanOrEqualTo(row as any, columnId, filterValues[0])) &&
   ((!isNaN(+filterValues[0]) &&
     !isNaN(+filterValues[1]) &&
     +filterValues[0] > +filterValues[1]) ||
     (['', undefined] as Array<any>).includes(filterValues[1]) ||
-    filterFn_lessThanOrEqualTo(row, columnId, filterValues[1]))
+    filterFn_lessThanOrEqualTo(row as any, columnId, filterValues[1]))
 
 filterFn_betweenInclusive.autoRemove = (val: any) => !val
 
@@ -241,7 +241,7 @@ export const filterFn_inNumberRange: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: [number, number],
 ) => {
@@ -284,7 +284,7 @@ export const filterFn_arrIncludes: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -302,7 +302,7 @@ export const filterFn_arrIncludesAll: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: Array<unknown>,
 ) => {
@@ -321,7 +321,7 @@ export const filterFn_arrIncludesSome: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<any, any>,
+  row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: Array<unknown>,
 ) => {

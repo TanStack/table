@@ -35,7 +35,7 @@ export interface ResolvedColumnFilter<
   resolvedValue: unknown
 }
 
-export interface TableFns_ColumnFiltering<
+export interface RowModelFns_ColumnFiltering<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

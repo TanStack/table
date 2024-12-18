@@ -4,15 +4,16 @@ import {
   column_getFacetedRowModel,
   column_getFacetedUniqueValues,
 } from './columnFacetingFeature.utils'
-import type { Column_ColumnFaceting } from './columnFacetingFeature.types'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature } from '../../types/TableFeatures'
+// import type { CachedRowModel_Faceted, Column_ColumnFaceting, CreateRowModel_Faceted } from './columnFacetingFeature.types'
 
 /**
  * The Column Faceting feature adds column faceting APIs to the column objects.
  */
 export const columnFacetingFeature: TableFeature<{
-  Column: Column_ColumnFaceting<TableFeatures, RowData>
+  // Column: Column_ColumnFaceting<TableFeatures, RowData>
+  // CreateRowModels: CreateRowModel_Faceted<TableFeatures, RowData>
+  // CachedRowModel: CachedRowModel_Faceted<TableFeatures, RowData>
 }> = {
   constructColumnAPIs: (column) => {
     assignAPIs(column, [

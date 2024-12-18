@@ -6,15 +6,14 @@ import {
   table_resetGlobalFilter,
   table_setGlobalFilter,
 } from './globalFilteringFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type {
-  ColumnDef_GlobalFiltering,
-  Column_GlobalFiltering,
-  TableOptions_GlobalFiltering,
-  TableState_GlobalFiltering,
-  Table_GlobalFiltering,
-} from './globalFilteringFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
+// import type {
+//   ColumnDef_GlobalFiltering,
+//   Column_GlobalFiltering,
+//   TableOptions_GlobalFiltering,
+//   TableState_GlobalFiltering,
+//   Table_GlobalFiltering,
+// } from './globalFilteringFeature.types'
 
 /**
  * The Global Filtering feature adds global filtering state and APIs to the table and column objects.
@@ -24,11 +23,11 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
  */
 export const globalFilteringFeature: TableFeature<{
-  Column: Column_GlobalFiltering
-  ColumnDef: ColumnDef_GlobalFiltering
-  Table: Table_GlobalFiltering<TableFeatures, RowData>
-  TableOptions: TableOptions_GlobalFiltering<TableFeatures, RowData>
-  TableState: TableState_GlobalFiltering
+  // Column: Column_GlobalFiltering
+  // ColumnDef: ColumnDef_GlobalFiltering
+  // Table: Table_GlobalFiltering<TableFeatures, RowData>
+  // TableOptions: TableOptions_GlobalFiltering<TableFeatures, RowData>
+  // TableState: TableState_GlobalFiltering
 }> = {
   getInitialState: (initialState) => {
     return {

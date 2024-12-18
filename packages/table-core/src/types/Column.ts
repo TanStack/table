@@ -60,7 +60,7 @@ export type Column<
         : never)
   >
 
-//   export type Column<
+// export type Column<
 //   TFeatures extends TableFeatures,
 //   TData extends RowData,
 //   TValue = unknown,

@@ -18,7 +18,7 @@ export interface TableState_RowSorting {
   sorting: SortingState
 }
 
-export interface TableFns_RowSorting<
+export interface RowModelFns_RowSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

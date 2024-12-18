@@ -72,7 +72,7 @@ function _createFilteredRowModel<
       return
     }
 
-    const filterFn = column_getFilterFn(column)
+    const filterFn = column_getFilterFn(column)!
 
     resolvedColumnFilters.push({
       id: columnFilter.id,

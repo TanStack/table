@@ -31,16 +31,15 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from './columnPinningFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type {
-  ColumnDef_ColumnPinning,
-  Column_ColumnPinning,
-  Row_ColumnPinning,
-  TableOptions_ColumnPinning,
-  TableState_ColumnPinning,
-  Table_ColumnPinning,
-} from './columnPinningFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
+// import type {
+//   ColumnDef_ColumnPinning,
+//   Column_ColumnPinning,
+//   Row_ColumnPinning,
+//   TableOptions_ColumnPinning,
+//   TableState_ColumnPinning,
+//   Table_ColumnPinning,
+// } from './columnPinningFeature.types'
 
 /**
  * The Column Pinning feature adds column pinning state and APIs to the table, row, and column objects.
@@ -48,12 +47,12 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
  */
 export const columnPinningFeature: TableFeature<{
-  Column: Column_ColumnPinning
-  ColumnDef: ColumnDef_ColumnPinning
-  Row: Row_ColumnPinning<TableFeatures, RowData>
-  Table: Table_ColumnPinning<TableFeatures, RowData>
-  TableOptions: TableOptions_ColumnPinning
-  TableState: TableState_ColumnPinning
+  // Column: Column_ColumnPinning
+  // ColumnDef: ColumnDef_ColumnPinning
+  // Row: Row_ColumnPinning<TableFeatures, RowData>
+  // Table: Table_ColumnPinning<TableFeatures, RowData>
+  // TableOptions: TableOptions_ColumnPinning
+  // TableState: TableState_ColumnPinning
 }> = {
   getInitialState: (initialState) => {
     return {

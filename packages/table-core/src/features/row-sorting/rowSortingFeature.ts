@@ -16,15 +16,17 @@ import {
   table_resetSorting,
   table_setSorting,
 } from './rowSortingFeature.utils'
-import type {
-  ColumnDef_RowSorting,
-  Column_RowSorting,
-  TableOptions_RowSorting,
-  TableState_RowSorting,
-  Table_RowSorting,
-} from './rowSortingFeature.types'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+// import type {
+//   CachedRowModel_Sorted,
+//   ColumnDef_RowSorting,
+//   Column_RowSorting,
+//   CreateRowModel_Sorted,
+//   RowModelFns_RowSorting,
+//   TableOptions_RowSorting,
+//   TableState_RowSorting,
+//   Table_RowSorting,
+// } from './rowSortingFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
 
 /**
  * The (Row) Sorting feature adds sorting state and APIs to the table and column objects.
@@ -32,11 +34,14 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
  * [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
  */
 export const rowSortingFeature: TableFeature<{
-  Column: Column_RowSorting<TableFeatures, RowData>
-  ColumnDef: ColumnDef_RowSorting<TableFeatures, RowData>
-  Table: Table_RowSorting<TableFeatures, RowData>
-  TableOptions: TableOptions_RowSorting
-  TableState: TableState_RowSorting
+  // CachedRowModel: CachedRowModel_Sorted<TableFeatures, RowData>
+  // Column: Column_RowSorting<TableFeatures, RowData>
+  // ColumnDef: ColumnDef_RowSorting<TableFeatures, RowData>
+  // CreateRowModels: CreateRowModel_Sorted<TableFeatures, RowData>
+  // RowModelFns: RowModelFns_RowSorting<TableFeatures, RowData>
+  // Table: Table_RowSorting<TableFeatures, RowData>
+  // TableOptions: TableOptions_RowSorting
+  // TableState: TableState_RowSorting
 }> = {
   getInitialState: (initialState) => {
     return {

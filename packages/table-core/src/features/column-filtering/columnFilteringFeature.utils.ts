@@ -1,5 +1,4 @@
 import { functionalUpdate, isDev, isFunction } from '../../utils'
-import { filterFn_weakEquals } from '../../fns/filterFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -58,7 +57,7 @@ export function column_getFilterFn<
   column: Column<TFeatures, TData, TValue> & {
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
-): FilterFn<TFeatures, TData> {
+): FilterFn<TFeatures, TData> | undefined {
   let filterFn = null
   const filterFns = column.table._rowModelFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
@@ -69,13 +68,10 @@ export function column_getFilterFn<
       ? column_getAutoFilterFn(column)
       : filterFns?.[column.columnDef.filterFn as string]
 
-  if (!filterFn) {
-    if (isDev) {
-      console.warn(
-        `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}. Using default filterFn: 'weakEquals'`,
-      )
-    }
-    filterFn = filterFn_weakEquals
+  if (isDev && !filterFn) {
+    console.warn(
+      `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`,
+    )
   }
 
   return filterFn

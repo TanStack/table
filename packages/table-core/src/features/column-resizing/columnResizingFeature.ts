@@ -8,13 +8,13 @@ import {
   table_setColumnResizing,
 } from './columnResizingFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
-import type {
-  Column_ColumnResizing,
-  Header_ColumnResizing,
-  TableOptions_ColumnResizing,
-  TableState_ColumnResizing,
-  Table_ColumnResizing,
-} from './columnResizingFeature.types'
+// import type {
+//   Column_ColumnResizing,
+//   Header_ColumnResizing,
+//   TableOptions_ColumnResizing,
+//   TableState_ColumnResizing,
+//   Table_ColumnResizing,
+// } from './columnResizingFeature.types'
 
 /**
  * The Column Resizing feature adds column resizing state and APIs to the table and column objects.
@@ -24,11 +24,11 @@ import type {
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
  */
 export const columnResizingFeature: TableFeature<{
-  Column: Column_ColumnResizing
-  Header: Header_ColumnResizing
-  Table: Table_ColumnResizing
-  TableOptions: TableOptions_ColumnResizing
-  TableState: TableState_ColumnResizing
+  // Column: Column_ColumnResizing
+  // Header: Header_ColumnResizing
+  // Table: Table_ColumnResizing
+  // TableOptions: TableOptions_ColumnResizing
+  // TableState: TableState_ColumnResizing
 }> = {
   getInitialState: (initialState) => {
     return {

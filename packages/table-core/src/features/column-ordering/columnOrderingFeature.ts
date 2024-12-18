@@ -8,14 +8,13 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './columnOrderingFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type {
-  Column_ColumnOrdering,
-  TableOptions_ColumnOrdering,
-  TableState_ColumnOrdering,
-  Table_ColumnOrdering,
-} from './columnOrderingFeature.types'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+// import type {
+//   Column_ColumnOrdering,
+//   TableOptions_ColumnOrdering,
+//   TableState_ColumnOrdering,
+//   Table_ColumnOrdering,
+// } from './columnOrderingFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
 
 /**
  * The Column Ordering feature adds column ordering state and APIs to the table and column objects.
@@ -23,10 +22,10 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
  */
 export const columnOrderingFeature: TableFeature<{
-  Column: Column_ColumnOrdering
-  Table: Table_ColumnOrdering<TableFeatures, RowData>
-  TableOptions: TableOptions_ColumnOrdering
-  TableState: TableState_ColumnOrdering
+  // Column: Column_ColumnOrdering
+  // Table: Table_ColumnOrdering<TableFeatures, RowData>
+  // TableOptions: TableOptions_ColumnOrdering
+  // TableState: TableState_ColumnOrdering
 }> = {
   getInitialState: (initialState) => {
     return {

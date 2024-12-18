@@ -54,7 +54,7 @@ export function buildHeaderGroups<
       depth,
       id: [headerFamily, `${depth}`].filter(Boolean).join('_'),
       headers: [],
-    }
+    } as any
 
     // The parent columns we're going to scan next
     const pendingParentHeaders: Array<Header<TFeatures, TData, TValue>> = []

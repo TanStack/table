@@ -26,11 +26,15 @@ export type ExtractFeatureTypes<
 >
 
 interface FeatureConstructors {
+  CachedRowModel?: any
   Cell?: any
   Column?: any
   ColumnDef?: any
+  CreateRowModels?: any
   Header?: any
+  HeaderGroup?: any
   Row?: any
+  RowModelFns?: any
   Table?: any
   TableOptions?: any
   TableState?: any
