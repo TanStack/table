@@ -1,24 +1,26 @@
 import { describe, expect, it } from 'vitest'
 import {
-  ColumnDef,
-  createColumnHelper,
   constructTable,
-  createCoreRowModel,
+  coreFeatures,
+  createColumnHelper,
   rowSelectionFeature,
 } from '../src'
 import * as RowSelectionUtils from '../src/features/row-selection/rowSelectionFeature.utils'
-import { makeData, Person } from './makeTestData'
+import { makeData } from './makeTestData'
+import type { Person } from './makeTestData'
+import type { ColumnDef } from '../src'
 
 type personKeys = keyof Person
-type PersonColumn = ColumnDef<
-  any,
-  Person,
-  string | number | Person[] | undefined
->
+type PersonColumn = ColumnDef<any, Person, any>
 
-function generateColumns(people: Person[]): PersonColumn[] {
+function generateColumns(people: Array<Person>): Array<PersonColumn> {
   const columnHelper = createColumnHelper<any, Person>()
   const person = people[0]
+
+  if (!person) {
+    return []
+  }
+
   return Object.keys(person).map((key) => {
     const typedKey = key as personKeys
     return columnHelper.accessor(typedKey, { id: typedKey })
@@ -32,7 +34,7 @@ describe('rowSelectionFeature', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { rowSelectionFeature },
+        _features: { rowSelectionFeature, ...coreFeatures },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -49,7 +51,7 @@ describe('rowSelectionFeature', () => {
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelectionUtils.selectRowsFn(table, rowModel)
+      const result = RowSelectionUtils.selectRowsFn(rowModel)
 
       expect(result.rows.length).toBe(2)
       expect(result.flatRows.length).toBe(2)
@@ -62,7 +64,7 @@ describe('rowSelectionFeature', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { rowSelectionFeature },
+        _features: { rowSelectionFeature, ...coreFeatures },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -79,9 +81,9 @@ describe('rowSelectionFeature', () => {
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelectionUtils.selectRowsFn(table, rowModel)
+      const result = RowSelectionUtils.selectRowsFn(rowModel)
 
-      expect(result.rows[0].subRows.length).toBe(1)
+      expect(result.rows[0]?.subRows?.length).toBe(1)
       expect(result.flatRows.length).toBe(2)
       expect(result.rowsById).toHaveProperty('0')
       expect(result.rowsById).toHaveProperty('0.0')
@@ -92,7 +94,7 @@ describe('rowSelectionFeature', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { rowSelectionFeature },
+        _features: { rowSelectionFeature, ...coreFeatures },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -106,7 +108,7 @@ describe('rowSelectionFeature', () => {
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelectionUtils.selectRowsFn(table, rowModel)
+      const result = RowSelectionUtils.selectRowsFn(rowModel)
 
       expect(result.rows.length).toBe(0)
       expect(result.flatRows.length).toBe(0)
@@ -115,53 +117,89 @@ describe('rowSelectionFeature', () => {
   })
   describe('isRowSelected', () => {
     it('should return true if the row id exists in selection and is set to true', () => {
-      const row = { id: '123', data: {} } as any
-      const selection: Record<string, boolean> = {
-        '123': true,
-        '456': false,
-      }
-
-      const result = RowSelectionUtils.isRowSelected(row, selection)
-      expect(result).toEqual(true)
-    })
-
-    it('should return false if the row id exists in selection and is set to false', () => {
-      const row = { id: '456', data: {} } as any
-      const selection: Record<string, boolean> = {
-        '123': true,
-        '456': false,
-      }
-
-      const result = RowSelectionUtils.isRowSelected(row, selection)
-      expect(result).toEqual(false)
-    })
-
-    it('should return false if the row id does not exist in selection', () => {
-      const row = { id: '789', data: {} } as any
-      const selection: Record<string, boolean> = {
-        '123': true,
-        '456': false,
-      }
-
-      const result = RowSelectionUtils.isRowSelected(row, selection)
-      expect(result).toEqual(false)
-    })
-
-    it('should return false if selection is an empty object', () => {
-      const row = { id: '789', data: {} } as any
-      const selection: Record<string, boolean> = {}
-
-      const result = RowSelectionUtils.isRowSelected(row, selection)
-      expect(result).toEqual(false)
-    })
-  })
-  describe('isSubRowSelected', () => {
-    it('should return false if there are no sub-rows', () => {
       const data = makeData(3)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { rowSelectionFeature },
+        _features: { rowSelectionFeature, ...coreFeatures },
+        _rowModels: {},
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        state: {
+          rowSelection: {
+            '123': true,
+            '456': false,
+          },
+        },
+        columns,
+      })
+
+      const row = { id: '123', data: {}, table } as any
+
+      const result = RowSelectionUtils.isRowSelected(row)
+      expect(result).toEqual(true)
+    })
+
+    it('should return false if the row id exists in selection and is set to false', () => {
+      const data = makeData(3)
+      const columns = generateColumns(data)
+
+      const table = constructTable<any, Person>({
+        _features: { rowSelectionFeature, ...coreFeatures },
+        _rowModels: {},
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        state: {
+          rowSelection: {
+            '123': true,
+            '456': false,
+          },
+        },
+        columns,
+      })
+
+      const row = { id: '456', data: {}, table } as any
+
+      const result = RowSelectionUtils.isRowSelected(row)
+      expect(result).toEqual(false)
+    })
+
+    it('should return false if the row id does not exist in selection', () => {
+      const data = makeData(3)
+      const columns = generateColumns(data)
+
+      const table = constructTable<any, Person>({
+        _features: { rowSelectionFeature, ...coreFeatures },
+        _rowModels: {},
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        state: {
+          rowSelection: {
+            '123': true,
+            '456': false,
+          },
+        },
+        columns,
+      })
+
+      const row = { id: '789', data: {}, table } as any
+
+      const result = RowSelectionUtils.isRowSelected(row)
+      expect(result).toEqual(false)
+    })
+
+    it('should return false if selection is an empty object', () => {
+      const data = makeData(3)
+      const columns = generateColumns(data)
+
+      const table = constructTable<any, Person>({
+        _features: { rowSelectionFeature, ...coreFeatures },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -171,13 +209,31 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const firstRow = table.getCoreRowModel().rows[0]
+      const row = { id: '789', data: {}, table } as any
 
-      const result = RowSelectionUtils.isSubRowSelected(
-        firstRow,
-        table.getState().rowSelection,
-        table,
-      )
+      const result = RowSelectionUtils.isRowSelected(row)
+      expect(result).toEqual(false)
+    })
+  })
+  describe('isSubRowSelected', () => {
+    it('should return false if there are no sub-rows', () => {
+      const data = makeData(3)
+      const columns = generateColumns(data)
+
+      const table = constructTable<any, Person>({
+        _features: { rowSelectionFeature, ...coreFeatures },
+        _rowModels: {},
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        state: {},
+        columns,
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]!
+
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
 
       expect(result).toEqual(false)
     })
@@ -187,7 +243,7 @@ describe('rowSelectionFeature', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { rowSelectionFeature },
+        _features: { rowSelectionFeature, ...coreFeatures },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -200,13 +256,9 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const firstRow = table.getCoreRowModel().rows[0]
+      const firstRow = table.getCoreRowModel().rows[0]!
 
-      const result = RowSelectionUtils.isSubRowSelected(
-        firstRow,
-        table.getState().rowSelection,
-        table,
-      )
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
 
       expect(result).toEqual(false)
     })
@@ -216,7 +268,7 @@ describe('rowSelectionFeature', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { rowSelectionFeature },
+        _features: { rowSelectionFeature, ...coreFeatures },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -231,13 +283,9 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const firstRow = table.getCoreRowModel().rows[0]
+      const firstRow = table.getCoreRowModel().rows[0]!
 
-      const result = RowSelectionUtils.isSubRowSelected(
-        firstRow,
-        table.getState().rowSelection,
-        table,
-      )
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
 
       expect(result).toEqual('some')
     })
@@ -247,7 +295,7 @@ describe('rowSelectionFeature', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { rowSelectionFeature },
+        _features: { rowSelectionFeature, ...coreFeatures },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -263,13 +311,9 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const firstRow = table.getCoreRowModel().rows[0]
+      const firstRow = table.getCoreRowModel().rows[0]!
 
-      const result = RowSelectionUtils.isSubRowSelected(
-        firstRow,
-        table.getState().rowSelection,
-        table,
-      )
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
 
       expect(result).toEqual('all')
     })
@@ -278,7 +322,7 @@ describe('rowSelectionFeature', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { rowSelectionFeature },
+        _features: { rowSelectionFeature, ...coreFeatures },
         _rowModels: {},
         enableRowSelection: (row) => row.index === 0, // only first row is selectable (of 2 sub-rows)
         onStateChange() {},
@@ -293,13 +337,9 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const firstRow = table.getCoreRowModel().rows[0]
+      const firstRow = table.getCoreRowModel().rows[0]!
 
-      const result = RowSelectionUtils.isSubRowSelected(
-        firstRow,
-        table.getState().rowSelection,
-        table,
-      )
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
 
       expect(result).toEqual('all')
     })
@@ -308,7 +348,7 @@ describe('rowSelectionFeature', () => {
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
-        _features: { rowSelectionFeature },
+        _features: { rowSelectionFeature, ...coreFeatures },
         _rowModels: {},
         enableRowSelection: true,
         onStateChange() {},
@@ -323,13 +363,9 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const firstRow = table.getCoreRowModel().rows[0]
+      const firstRow = table.getCoreRowModel().rows[0]!
 
-      const result = RowSelectionUtils.isSubRowSelected(
-        firstRow,
-        table.getState().rowSelection,
-        table,
-      )
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
 
       expect(result).toEqual('some')
     })
