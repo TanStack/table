@@ -48,15 +48,17 @@ describe('table methods', () => {
     })
 
     it('should reset to initial state when defaultState is false', () => {
-      const table = createRowPinningTable()
-
       const initialState = {
         top: [ROW[0]],
         bottom: [ROW[1]],
       }
+      const table = createRowPinningTable({
+        _features: {},
+        initialState: {
+          rowPinning: initialState,
+        },
+      })
 
-      // Setup initial state in table
-      table.initialState.rowPinning = initialState
       table.setRowPinning({
         top: [ROW[2]],
         bottom: [],
