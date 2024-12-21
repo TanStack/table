@@ -1,9 +1,11 @@
 {
   "name": "table",
-  "namespace": "@tanstack",
   "private": true,
-  "repository": "https://github.com/tanstack/table.git",
-  "packageManager": "pnpm@9.3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tanstack/query.git"
+  },
+  "packageManager": "pnpm@9.15.0",
   "type": "module",
   "scripts": {
     "build": "nx affected --targets=build --exclude=examples/** && size-limit",
@@ -52,8 +54,6 @@
     "@size-limit/preset-small-lib": "^11.1.6",
     "@tanstack/config": "0.14.2",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.1.0",
-    "@testing-library/react-hooks": "^8.0.1",
     "@types/node": "^22.10.1",
     "eslint": "^9.16.0",
     "eslint-plugin-unused-imports": "^4.1.4",
@@ -67,7 +67,7 @@
     "sherif": "^1.0.2",
     "size-limit": "^11.1.6",
     "typescript": "5.6.3",
-    "vite": "^6.0.3",
+    "vite": "^5.4.11",
     "vitest": "^2.1.8"
   }
 }

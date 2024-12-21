@@ -1,4 +1,4 @@
-import type { Updater } from '@tanstack/svelte-table'
+import type { Updater } from '@tanstack/table-core'
 
 export function createTableState<TState>(
   initialValue: TState,
