@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common'
 import { Component, input } from '@angular/core'
 import type { OnInit } from '@angular/core'
 import type { Column, RowData, Table } from '@tanstack/angular-table'
 
 @Component({
-    selector: 'app-table-filter',
-    template: ` @if (columnType) {
+  selector: 'app-table-filter',
+  template: ` @if (columnType) {
     @if (columnType == 'number') {
       <div class="flex space-x-2">
         <input
@@ -36,7 +35,6 @@ import type { Column, RowData, Table } from '@tanstack/angular-table'
       />
     }
   }`,
-    imports: [CommonModule]
 })
 export class FilterComponent<T extends RowData> implements OnInit {
   column = input.required<Column<any, any>>()

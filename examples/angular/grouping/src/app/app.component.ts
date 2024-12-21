@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   Component,
@@ -35,7 +34,7 @@ export const _features = tableFeatures({
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FlexRenderDirective, CommonModule],
+  imports: [FlexRenderDirective],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
