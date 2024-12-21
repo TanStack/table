@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { getFunctionNameInfo } from './utils'
+import { getFunctionNameInfo } from '../../src/utils'
+
+// TODO: add unit tests for rest of utils
 
 describe('getFunctionNameInfo', () => {
   it('should correctly parse a function with a standard name', () => {

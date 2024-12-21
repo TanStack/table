@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { coreHeadersFeature } from './coreHeadersFeature'
-import { constructHeader } from './constructHeader'
-import type { Column } from '../../types/Column'
-import type { Table } from '../../types/Table'
+import { coreHeadersFeature } from '../../../../src/core/headers/coreHeadersFeature'
+import { constructHeader } from '../../../../src/core/headers/constructHeader'
+import type { Column } from '../../../../src/types/Column'
+import type { Table } from '../../../../src/types/Table'
 
 describe('constructHeader', () => {
   it('should create a column with all core column APIs and properties', () => {
