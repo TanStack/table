@@ -51,12 +51,12 @@
   },
   "devDependencies": {
     "@sveltejs/package": "^2.3.7",
-    "@sveltejs/vite-plugin-svelte": "5.0.1",
+    "@sveltejs/vite-plugin-svelte": "^5.0.1",
     "eslint-plugin-svelte": "^2.46.1",
-    "svelte": "5.8.1",
+    "svelte": "^5.8.1",
     "svelte-check": "^4.1.1"
   },
   "peerDependencies": {
-    "svelte": "^5.0.0-next.260"
+    "svelte": "^5.0.0"
   }
 }
