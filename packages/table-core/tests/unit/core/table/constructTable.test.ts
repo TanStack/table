@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { stockFeatures } from '../../features/stockFeatures'
-import { constructTable } from './constructTable'
+import { constructTable, coreFeatures } from '../../../../src'
 
 describe('constructTable', () => {
   it('should create a table with all core table APIs and properties', () => {
     const table = constructTable({
-      _features: stockFeatures,
+      _features: {
+        ...coreFeatures,
+      },
       columns: [],
       data: [],
     })
@@ -37,7 +38,6 @@ describe('constructTable', () => {
     expect(table).toHaveProperty('getRow')
 
     // table APIs
-    expect(table).toHaveProperty('_queue')
     expect(table).toHaveProperty('getCoreRowModel')
     expect(table).toHaveProperty('getRowModel')
     expect(table).toHaveProperty('getState')

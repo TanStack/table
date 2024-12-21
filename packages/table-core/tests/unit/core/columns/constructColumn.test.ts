@@ -1,15 +1,17 @@
 import { describe, expect, it } from 'vitest'
-import { coreColumnsFeature } from './coreColumnsFeature'
-import { constructColumn } from './constructColumn'
-import type { Table } from '../../types/Table'
-import type { ColumnDef } from '../../types/ColumnDef'
+import { coreColumnsFeature } from '../../../../src/core/columns/coreColumnsFeature'
+import { constructColumn } from '../../../../src/core/columns/constructColumn'
+import { constructTable } from '../../../../src'
+import type { ColumnDef } from '../../../../src/types/ColumnDef'
 
 describe('constructColumn', () => {
   it('should create a column with all core column APIs and properties', () => {
-    const table = { _features: { coreColumnsFeature }, options: {} } as Table<
-      any,
-      any
-    >
+    const table = constructTable({
+      _features: { coreColumnsFeature },
+      columns: [] as Array<any>,
+      data: [] as Array<any>,
+    })
+
     const columnDef = {
       id: 'test-column',
       accessorKey: 'test-accessor-key',

@@ -5,11 +5,13 @@ import {
   constructTable,
   coreFeatures,
   createGroupedRowModel,
-} from '../src'
-import { createColumnHelper } from '../src/helpers/columnHelper'
-import { makeData } from './makeTestData'
-import type { Person } from './makeTestData'
-import type { ColumnDef } from '../src'
+} from '../../../../src'
+import { createColumnHelper } from '../../../../src/helpers/columnHelper'
+import { makeData } from '../../../fixtures/data/makeData'
+import type { Person } from '../../../fixtures/data/types'
+import type { ColumnDef } from '../../../../src'
+
+// TODO: bring up to new test structure
 
 type personKeys = keyof Person
 type PersonColumn = ColumnDef<any, Person, any>

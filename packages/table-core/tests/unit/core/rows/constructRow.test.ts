@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { coreRowsFeature } from './coreRowsFeature'
-import { constructRow } from './constructRow'
-import type { Table } from '../../types/Table'
-import type { Row } from '../../types/Row'
+import { coreRowsFeature } from '../../../../src/core/rows/coreRowsFeature'
+import { constructRow } from '../../../../src/core/rows/constructRow'
+import type { Table } from '../../../../src/types/Table'
+import type { Row } from '../../../../src/types/Row'
 
 interface Person {
   firstName: string
