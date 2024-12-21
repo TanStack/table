@@ -6,8 +6,8 @@ import {
   rowSelectionFeature,
 } from '../../../../src'
 import * as RowSelectionUtils from '../../../../src/features/row-selection/rowSelectionFeature.utils'
-import { makeData } from '../../../makeTestData'
-import type { Person } from '../../../makeTestData'
+import { makeData } from '../../../fixtures/data/makeData'
+import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef } from '../../../../src'
 
 // TODO: bring up to new test structure
