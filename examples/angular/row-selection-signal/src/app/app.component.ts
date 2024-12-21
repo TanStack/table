@@ -35,11 +35,10 @@ const _features = tableFeatures({
 })
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [FilterComponent, FlexRenderDirective],
-  templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    imports: [FilterComponent, FlexRenderDirective],
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   private readonly rowSelection = signal<RowSelectionState>({})

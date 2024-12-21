@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "grouping": {
+    "row-selection": {
       "cli": {
         "cache": {
           "enabled": false
@@ -46,7 +46,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/grouping",
+            "outputPath": "dist/row-selection",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -84,10 +84,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "grouping:build:production"
+              "buildTarget": "row-selection:build:production"
             },
             "development": {
-              "buildTarget": "grouping:build:development"
+              "buildTarget": "row-selection:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -95,7 +95,7 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "grouping:build"
+            "buildTarget": "row-selection:build"
           }
         }
       }

@@ -4,11 +4,10 @@ import { PersonTableComponent } from './person-table/person-table.component'
 import type { PaginationState } from '@tanstack/angular-table'
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [PersonTableComponent],
-  templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    imports: [PersonTableComponent],
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   data = signal(makeData(10000))
