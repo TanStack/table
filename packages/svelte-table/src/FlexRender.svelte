@@ -2,15 +2,15 @@
   lang="ts"
   generics="TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData, TContext extends HeaderContext<TFeatures, TData, TValue> | CellContext<TFeatures, TData, TValue>"
 >
+  import { isFunction } from '@tanstack/table-core'
   import { RenderComponentConfig } from './render-component'
-  import {
-    isFunction,
-    type CellContext,
-    type CellData,
-    type ColumnDefTemplate,
-    type HeaderContext,
-    type RowData,
-    type TableFeatures,
+  import type {
+    CellContext,
+    CellData,
+    ColumnDefTemplate,
+    HeaderContext,
+    RowData,
+    TableFeatures,
   } from '@tanstack/table-core'
 
   type Props = {
