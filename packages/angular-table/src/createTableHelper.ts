@@ -1,6 +1,6 @@
-import { Signal } from '@angular/core'
 import { constructTableHelper } from './constructTableHelper'
 import { injectTable } from './injectTable'
+import type { Signal } from '@angular/core'
 import type {
   RowData,
   Table,

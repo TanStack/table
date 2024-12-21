@@ -22,7 +22,7 @@ interface Data {
 describe('FlexRenderDirective', () => {
   const helper = createColumnHelper<{}, Data>()
 
-  test('should render primitives', async () => {
+  test('should render primitives', () => {
     const fixture = TestBed.createComponent(TestRenderComponent)
 
     // Null
