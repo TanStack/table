@@ -33,7 +33,7 @@ const newPerson = (): Person => {
   }
 }
 
-export function makeData(...lens: Array<number>) {
+export function makeData(...lens: Array<number>): Array<Person> {
   const makeDataLevel = (depth = 0): Array<Person> => {
     const len = lens[depth]
     return range(len).map((d): Person => {

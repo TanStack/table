@@ -79,7 +79,6 @@ const _features = tableFeatures({
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [FlexRenderDirective],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

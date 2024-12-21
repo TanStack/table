@@ -77,7 +77,6 @@ const defaultColumns: Array<ColumnDef<any, Person>> = [
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [FlexRenderDirective, NgStyle],
   templateUrl: './app.component.html',
 })

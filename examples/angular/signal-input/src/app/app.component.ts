@@ -5,7 +5,6 @@ import type { PaginationState } from '@tanstack/angular-table'
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [PersonTableComponent],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

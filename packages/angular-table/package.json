@@ -57,9 +57,9 @@
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^1.10.1",
-    "@angular/core": "^19.0.3",
-    "@angular/platform-browser": "^19.0.3",
-    "@angular/platform-browser-dynamic": "^19.0.3",
+    "@angular/core": "^19.0.5",
+    "@angular/platform-browser": "^19.0.5",
+    "@angular/platform-browser-dynamic": "^19.0.5",
     "@vitest/ui": "^2.1.8",
     "ng-packagr": "^19.0.1"
   },

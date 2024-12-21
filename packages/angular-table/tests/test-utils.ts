@@ -1,7 +1,6 @@
 import { SIGNAL, signalSetFn } from '@angular/core/primitives/signals'
 import type { InputSignal } from '@angular/core'
 import type { ComponentFixture } from '@angular/core/testing'
-import { Table } from '@tanstack/table-core'
 
 type ToSignalInputUpdatableMap<T> = {
   [K in keyof T as T[K] extends InputSignal<any>

@@ -91,7 +91,6 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [FlexRenderDirective, SlicePipe, NgTemplateOutlet],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

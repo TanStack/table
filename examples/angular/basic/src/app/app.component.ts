@@ -79,7 +79,6 @@ const defaultColumns: Array<ColumnDef<any, Person>> = [
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [FlexRenderDirective],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

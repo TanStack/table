@@ -15,6 +15,7 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
+  globalFacetingFeature,
   injectTable,
   isFunction,
   rowPaginationFeature,
@@ -42,7 +43,6 @@ export const _features = tableFeatures({
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [FilterComponent, FlexRenderDirective, FormsModule, NgClass],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,6 +102,7 @@ export class AppComponent {
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(sortFns),
     },
+    // enableExperimentalReactivity: true,
     columns: this.columns,
     data: this.data(),
     state: {

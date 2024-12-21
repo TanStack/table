@@ -23,7 +23,6 @@ const tableHelper = createTableHelper({
   selector: 'app-person-table',
   templateUrl: 'person-table.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true,
   imports: [FlexRenderDirective],
 })
 export class PersonTableComponent {

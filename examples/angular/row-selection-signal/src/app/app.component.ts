@@ -36,7 +36,6 @@ const _features = tableFeatures({
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [FilterComponent, FlexRenderDirective],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

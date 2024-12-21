@@ -32,7 +32,7 @@ describe('lazyInit', () => {
     expect(mockFn).toHaveBeenCalled()
   })
 
-  test('should init eagerly accessing manually', async () => {
+  test('should init eagerly accessing manually', () => {
     const mockFn = vi.fn()
 
     TestBed.runInInjectionContext(() => {

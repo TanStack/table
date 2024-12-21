@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common'
 import { Component, computed, input } from '@angular/core'
 import { DebouncedInputDirective } from './debounced-input.directive'
 import type { _features } from './app.component'
@@ -89,8 +88,7 @@ declare module '@tanstack/angular-table' {
       <div class="h-1"></div>
     }
   `,
-  standalone: true,
-  imports: [CommonModule, DebouncedInputDirective],
+  imports: [DebouncedInputDirective],
 })
 export class FilterComponent {
   column = input.required<Column<typeof _features, Person>>()

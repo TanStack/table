@@ -1,19 +1,19 @@
-import type { DoCheck, OnChanges, SimpleChanges } from '@angular/core'
 import {
   ChangeDetectorRef,
   ComponentRef,
   Directive,
   EmbeddedViewRef,
   Inject,
-  inject,
   InjectionToken,
   Injector,
   Input,
-  isSignal,
   TemplateRef,
   Type,
   ViewContainerRef,
+  inject,
+  isSignal,
 } from '@angular/core'
+import type { DoCheck, OnChanges, SimpleChanges } from '@angular/core'
 import type { Table } from '@tanstack/table-core'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
