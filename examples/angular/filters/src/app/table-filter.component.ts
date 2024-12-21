@@ -89,7 +89,6 @@ declare module '@tanstack/angular-table' {
       <div class="h-1"></div>
     }
   `,
-  standalone: true,
   imports: [CommonModule, DebouncedInputDirective],
 })
 export class FilterComponent {

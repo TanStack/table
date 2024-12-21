@@ -58,6 +58,7 @@ export class AppComponent {
     },
     enableExperimentalReactivity: true,
     data: this.data(),
+    // @ts-expect-error Fix this type
     columns,
     initialState: {
       pagination: { pageSize: 20, pageIndex: 0 },

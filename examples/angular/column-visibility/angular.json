@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "column-pinning-sticky": {
+    "column-visibility": {
       "cli": {
         "cache": {
           "enabled": false
@@ -46,7 +46,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/column-pinning-sticky",
+            "outputPath": "dist/column-visibility",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -84,10 +84,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "column-pinning-sticky:build:production"
+              "buildTarget": "column-visibility:build:production"
             },
             "development": {
-              "buildTarget": "column-pinning-sticky:build:development"
+              "buildTarget": "column-visibility:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -95,7 +95,7 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "column-pinning-sticky:build"
+            "buildTarget": "column-visibility:build"
           }
         }
       }
