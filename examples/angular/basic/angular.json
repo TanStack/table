@@ -11,7 +11,7 @@
       },
       "projectType": "application",
       "schematics": {
-          "@schematics/angular:component": {
+        "@schematics/angular:component": {
           "inlineTemplate": true,
           "inlineStyle": true,
           "skipTests": true,

@@ -78,10 +78,10 @@ const _features = tableFeatures({
 })
 
 @Component({
-    selector: 'app-root',
-    imports: [FlexRenderDirective],
-    templateUrl: './app.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-root',
+  imports: [FlexRenderDirective],
+  templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(20))

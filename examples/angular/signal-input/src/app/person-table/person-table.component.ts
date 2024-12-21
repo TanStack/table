@@ -20,10 +20,10 @@ const tableHelper = createTableHelper({
 })
 
 @Component({
-    selector: 'app-person-table',
-    templateUrl: 'person-table.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FlexRenderDirective]
+  selector: 'app-person-table',
+  templateUrl: 'person-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FlexRenderDirective],
 })
 export class PersonTableComponent {
   readonly data = input.required<Array<Person>>()
