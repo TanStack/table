@@ -76,10 +76,9 @@ const defaultColumns: Array<ColumnDef<any, Person>> = [
 ]
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [FlexRenderDirective, NgStyle],
-  templateUrl: './app.component.html',
+    selector: 'app-root',
+    imports: [FlexRenderDirective, NgStyle],
+    templateUrl: './app.component.html'
 })
 export class AppComponent {
   readonly columns = signal([...defaultColumns])

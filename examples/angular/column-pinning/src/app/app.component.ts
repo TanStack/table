@@ -90,11 +90,10 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 ]
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [FlexRenderDirective, SlicePipe, NgTemplateOutlet],
-  templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    imports: [FlexRenderDirective, SlicePipe, NgTemplateOutlet],
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(5000))
