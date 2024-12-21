@@ -107,11 +107,10 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 ]
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [FlexRenderDirective],
-  templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    imports: [FlexRenderDirective],
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
   data = signal<Array<Person>>([])
