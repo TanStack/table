@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +14,7 @@ import {
   createFilteredRowModel,
   createGroupedRowModel,
   createPaginatedRowModel,
+  createTableHelper,
   filterFns,
   injectTable,
   isFunction,
@@ -21,7 +23,7 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 import { columns } from './columns'
-import { makeData } from './makeData'
+import { makeData, Person } from './makeData'
 import type { GroupingState, Updater } from '@tanstack/angular-table'
 
 export const _features = tableFeatures({
@@ -31,10 +33,20 @@ export const _features = tableFeatures({
   rowExpandingFeature,
 })
 
+const tableHelper = createTableHelper<typeof _features, Person>({
+  _features,
+  _rowModels: {
+    groupedRowModel: createGroupedRowModel(aggregationFns),
+    expandedRowModel: createExpandedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    filteredRowModel: createFilteredRowModel(filterFns),
+  },
+})
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FlexRenderDirective],
+  imports: [FlexRenderDirective, CommonModule],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -47,18 +59,10 @@ export class AppComponent {
     JSON.stringify(this.grouping(), null, 2),
   )
 
-  readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {
-      groupedRowModel: createGroupedRowModel(aggregationFns),
-      expandedRowModel: createExpandedRowModel(),
-      paginatedRowModel: createPaginatedRowModel(),
-      filteredRowModel: createFilteredRowModel(filterFns),
-    },
+  readonly table = tableHelper.injectTable(() => ({
     enableExperimentalReactivity: true,
     data: this.data(),
-    // @ts-expect-error Fix this type
-    columns,
+    columns: columns,
     initialState: {
       pagination: { pageSize: 20, pageIndex: 0 },
     },
