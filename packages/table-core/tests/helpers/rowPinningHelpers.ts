@@ -3,9 +3,9 @@ import { getDefaultRowPinningState } from '../../src/features/row-pinning/rowPin
 
 import { rowPinningFeature } from '../../src'
 import {
-  createTestTableWithData,
-  createTestTableWithDataAndState,
-} from './createTestTable'
+  generateTestTableWithData,
+  generateTestTableWithDataAndState,
+} from './generateTestTable'
 import type { RowPinningState, TableOptions } from '../../src'
 import type { Person } from '../fixtures/data/types'
 
@@ -13,7 +13,7 @@ export function createTableWithPinningState(
   rowCount = 10,
   pinningState?: RowPinningState,
 ) {
-  const table = createTestTableWithData(rowCount)
+  const table = generateTestTableWithData(rowCount)
   if (pinningState) {
     table.options.state = {
       rowPinning: pinningState,
@@ -28,7 +28,7 @@ export function createTableWithPinningState(
 
 export function createTableWithMockOnPinningChange(rowCount = 10) {
   const onRowPinningChangeMock = vi.fn()
-  const table = createTestTableWithData(rowCount)
+  const table = generateTestTableWithData(rowCount)
   table.options.onRowPinningChange = onRowPinningChangeMock
   return { table, onRowPinningChangeMock }
 }
@@ -40,7 +40,7 @@ export function createRowPinningTable(
   >,
   lengths: Array<number> | number = 10,
 ) {
-  const table = createTestTableWithDataAndState(lengths, {
+  const table = generateTestTableWithDataAndState(lengths, {
     enableRowPinning: true,
     initialState: {
       rowPinning: {

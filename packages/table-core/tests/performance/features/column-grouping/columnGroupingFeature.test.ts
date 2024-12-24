@@ -7,7 +7,7 @@ import {
   createGroupedRowModel,
 } from '../../../../src'
 import { createColumnHelper } from '../../../../src/helpers/columnHelper'
-import { makeData } from '../../../fixtures/data/makeData'
+import { generateTestData } from '../../../fixtures/data/generateTestData'
 import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef } from '../../../../src'
 
@@ -32,7 +32,7 @@ function generateColumns(people: Array<Person>): Array<PersonColumn> {
 
 describe('#getGroupedRowModel', () => {
   it('groups 50k rows and 3 grouped columns with clustered data in less than 5 seconds', () => {
-    const data = makeData(50000)
+    const data = generateTestData(50000)
     const columns = generateColumns(data)
     const grouping = ['firstName', 'lastName', 'age']
     const start = new Date()

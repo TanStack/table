@@ -12,7 +12,7 @@ import {
   table_resetRowPinning,
   table_setRowPinning,
 } from '../../../../src/features/row-pinning/rowPinningFeature.utils'
-import { createTestTableWithData } from '../../../helpers/createTestTable'
+import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
 import {
   createTableWithMockOnPinningChange,
@@ -79,7 +79,7 @@ describe('table_setRowPinning', () => {
   })
 
   it('should handle undefined onRowPinningChange without error', () => {
-    const table = createTestTableWithData(DEFAULT_ROW_COUNT)
+    const table = generateTestTableWithData(DEFAULT_ROW_COUNT)
 
     expect(() => {
       table_setRowPinning(table, EMPTY_PINNING_STATE)
@@ -171,7 +171,7 @@ describe('table_getIsSomeRowsPinned', () => {
 
 describe('table_getTopRows and table_getBottomRows', () => {
   it('should return empty arrays when no rows are pinned', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = {
       rowPinning: getDefaultRowPinningState(),
     }
@@ -181,7 +181,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
   })
 
   it('should return pinned rows with position property', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     const row0 = table.getRow('0', true)
     const row1 = table.getRow('1', true)
 
@@ -203,7 +203,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
   })
 
   it('should handle keepPinnedRows=false by only returning visible rows', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.keepPinnedRows = false
 
     // Setup a row model with only some rows visible
@@ -232,7 +232,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
   })
 
   it('should handle keepPinnedRows=true by returning all pinned rows regardless of visibility', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.keepPinnedRows = true
 
     // Setup a row model with only some rows visible
@@ -261,7 +261,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
   })
 
   it('should handle undefined state', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = undefined
 
     expect(table_getTopRows(table)).toEqual([])
@@ -271,7 +271,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
 
 describe('table_getCenterRows', () => {
   it('should return all rows when no rows are pinned', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = {
       rowPinning: getDefaultRowPinningState(),
     }
@@ -283,7 +283,7 @@ describe('table_getCenterRows', () => {
   })
 
   it('should return only unpinned rows when some rows are pinned', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     const allRows = table.getRowModel().rows
 
     table.options.state = {
@@ -302,7 +302,7 @@ describe('table_getCenterRows', () => {
   })
 
   it('should handle undefined state', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     const allRows = table.getRowModel().rows
     table.options.state = undefined
 
@@ -314,14 +314,14 @@ describe('table_getCenterRows', () => {
 
 describe('row_getCanPin', () => {
   it('should return true when enableRowPinning is undefined', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     const row = table.getRow('0')
 
     expect(row_getCanPin(row)).toBe(true)
   })
 
   it('should return false when enableRowPinning is false', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.enableRowPinning = false
 
     const row = table.getRow('0')
@@ -330,7 +330,7 @@ describe('row_getCanPin', () => {
   })
 
   it('should return true when enableRowPinning is true', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.enableRowPinning = true
 
     const row = table.getRow('0')
@@ -340,7 +340,7 @@ describe('row_getCanPin', () => {
 
   it('should use enableRowPinning function when provided', () => {
     const enableRowPinning = vi.fn((row) => row.id === '1')
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
 
     table.options.enableRowPinning = enableRowPinning
 
@@ -355,7 +355,7 @@ describe('row_getCanPin', () => {
 
 describe('row_getIsPinned', () => {
   it('should return false when no rows are pinned', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = {
       rowPinning: getDefaultRowPinningState(),
     }
@@ -365,7 +365,7 @@ describe('row_getIsPinned', () => {
   })
 
   it('should return "top" when row is pinned to top', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = {
       rowPinning: {
         top: [ROW[0]],
@@ -378,7 +378,7 @@ describe('row_getIsPinned', () => {
   })
 
   it('should return "bottom" when row is pinned to bottom', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = {
       rowPinning: {
         top: [],
@@ -391,7 +391,7 @@ describe('row_getIsPinned', () => {
   })
 
   it('should handle undefined state', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = undefined
 
     const row = table.getRow('0')
@@ -401,7 +401,7 @@ describe('row_getIsPinned', () => {
 
 describe('row_getPinnedIndex', () => {
   it('should return -1 when row is not pinned', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = {
       rowPinning: getDefaultRowPinningState(),
     }
@@ -411,7 +411,7 @@ describe('row_getPinnedIndex', () => {
   })
 
   it('should return correct index for top pinned rows', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = {
       rowPinning: {
         top: [ROW[0], ROW[1], ROW[2]],
@@ -425,7 +425,7 @@ describe('row_getPinnedIndex', () => {
   })
 
   it('should return correct index for bottom pinned rows', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = {
       rowPinning: {
         top: [],
@@ -439,7 +439,7 @@ describe('row_getPinnedIndex', () => {
   })
 
   it('should handle undefined state', () => {
-    const table = createTestTableWithData(10)
+    const table = generateTestTableWithData(10)
     table.options.state = undefined
 
     const row = table.getRow('0')

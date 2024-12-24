@@ -50,7 +50,9 @@ export const filterFn_includesStringSensitive: FilterFn<any, any> = <
   columnId: string,
   filterValue: string,
 ) => {
-  return Boolean(row.getValue(columnId)?.toString().includes(filterValue))
+  return Boolean(
+    row.getValue(columnId)?.toString().includes(filterValue.toString()),
+  )
 }
 
 filterFn_includesStringSensitive.autoRemove = (val: any) => testFalsy(val)
@@ -95,6 +97,22 @@ export const filterFn_equalsString: FilterFn<any, any> = <
 }
 
 filterFn_equalsString.autoRemove = (val: any) => testFalsy(val)
+
+/**
+ * Filter function for checking if a string is exactly equal to a given string. (Case-sensitive)
+ */
+export const filterFn_equalsStringSensitive: FilterFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  columnId: string,
+  filterValue: string,
+) => {
+  return row.getValue(columnId)?.toString() === filterValue
+}
+
+filterFn_equalsStringSensitive.autoRemove = (val: any) => testFalsy(val)
 
 // Number filters
 
@@ -278,6 +296,20 @@ filterFn_inNumberRange.autoRemove = (val: any) =>
 // Array filters
 
 /**
+ * Filter function for checking if an array has a given value.
+ */
+export const filterFn_arrHas: FilterFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  columnId: string,
+  filterValue: Array<unknown>,
+) => {
+  return filterValue.some((val) => row.getValue<unknown>(columnId) === val)
+}
+
+/**
  * Filter function for checking if an array includes a given value.
  */
 export const filterFn_arrIncludes: FilterFn<any, any> = <
@@ -286,11 +318,13 @@ export const filterFn_arrIncludes: FilterFn<any, any> = <
 >(
   row: Row<TFeatures, TData>,
   columnId: string,
-  filterValue: unknown,
+  filterValue: Array<unknown>,
 ) => {
-  const value = row.getValue<Array<unknown>>(columnId)
-  if (!Array.isArray(value)) return false
-  return value.includes(filterValue)
+  return filterValue.some((val) =>
+    (row.getValue<unknown>(columnId) as Array<unknown> | string).includes(
+      val as any,
+    ),
+  )
 }
 
 filterFn_arrIncludes.autoRemove = (val: any) => testFalsy(val) || !val?.length
@@ -338,6 +372,7 @@ filterFn_arrIncludesSome.autoRemove = (val: any) =>
 export const filterFns = {
   arrIncludes: filterFn_arrIncludes,
   arrIncludesAll: filterFn_arrIncludesAll,
+  arrHas: filterFn_arrHas,
   arrIncludesSome: filterFn_arrIncludesSome,
   between: filterFn_between,
   betweenInclusive: filterFn_betweenInclusive,

@@ -6,7 +6,7 @@ import {
   rowSelectionFeature,
 } from '../../../../src'
 import * as RowSelectionUtils from '../../../../src/features/row-selection/rowSelectionFeature.utils'
-import { makeData } from '../../../fixtures/data/makeData'
+import { generateTestData } from '../../../fixtures/data/generateTestData'
 import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef } from '../../../../src'
 
@@ -32,7 +32,7 @@ function generateColumns(people: Array<Person>): Array<PersonColumn> {
 describe('rowSelectionFeature', () => {
   describe('selectRowsFn', () => {
     it('should only return rows that are selected', () => {
-      const data = makeData(5)
+      const data = generateTestData(5)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -62,7 +62,7 @@ describe('rowSelectionFeature', () => {
     })
 
     it('should recurse into subRows and only return selected subRows', () => {
-      const data = makeData(3, 2) // assuming 3 parent rows with 2 sub-rows each
+      const data = generateTestData(3, 2) // assuming 3 parent rows with 2 sub-rows each
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -92,7 +92,7 @@ describe('rowSelectionFeature', () => {
     })
 
     it('should return an empty list if no rows are selected', () => {
-      const data = makeData(5)
+      const data = generateTestData(5)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -119,7 +119,7 @@ describe('rowSelectionFeature', () => {
   })
   describe('isRowSelected', () => {
     it('should return true if the row id exists in selection and is set to true', () => {
-      const data = makeData(3)
+      const data = generateTestData(3)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -145,7 +145,7 @@ describe('rowSelectionFeature', () => {
     })
 
     it('should return false if the row id exists in selection and is set to false', () => {
-      const data = makeData(3)
+      const data = generateTestData(3)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -171,7 +171,7 @@ describe('rowSelectionFeature', () => {
     })
 
     it('should return false if the row id does not exist in selection', () => {
-      const data = makeData(3)
+      const data = generateTestData(3)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -197,7 +197,7 @@ describe('rowSelectionFeature', () => {
     })
 
     it('should return false if selection is an empty object', () => {
-      const data = makeData(3)
+      const data = generateTestData(3)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -219,7 +219,7 @@ describe('rowSelectionFeature', () => {
   })
   describe('isSubRowSelected', () => {
     it('should return false if there are no sub-rows', () => {
-      const data = makeData(3)
+      const data = generateTestData(3)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -241,7 +241,7 @@ describe('rowSelectionFeature', () => {
     })
 
     it('should return false if no sub-rows are selected', () => {
-      const data = makeData(3, 2)
+      const data = generateTestData(3, 2)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -266,7 +266,7 @@ describe('rowSelectionFeature', () => {
     })
 
     it('should return some if some sub-rows are selected', () => {
-      const data = makeData(3, 2)
+      const data = generateTestData(3, 2)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -293,7 +293,7 @@ describe('rowSelectionFeature', () => {
     })
 
     it('should return all if all sub-rows are selected', () => {
-      const data = makeData(3, 2)
+      const data = generateTestData(3, 2)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -320,7 +320,7 @@ describe('rowSelectionFeature', () => {
       expect(result).toEqual('all')
     })
     it('should return all if all selectable sub-rows are selected', () => {
-      const data = makeData(3, 2)
+      const data = generateTestData(3, 2)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({
@@ -346,7 +346,7 @@ describe('rowSelectionFeature', () => {
       expect(result).toEqual('all')
     })
     it('should return some when some nested sub-rows are selected', () => {
-      const data = makeData(3, 2, 2)
+      const data = generateTestData(3, 2, 2)
       const columns = generateColumns(data)
 
       const table = constructTable<any, Person>({

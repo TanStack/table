@@ -24,7 +24,7 @@ function createPerson(): Person {
  *                 e.g. makeData(3, 2) creates 3 parent rows with 2 sub-rows each
  * @returns An array of Person objects with optional nested subRows based on the provided lengths
  */
-export function makeData(...lengths: Array<number>) {
+export function generateTestData(...lengths: Array<number>) {
   const makeDataLevel = (depth = 0): Array<Person> => {
     const len = lengths[depth]
 
@@ -39,4 +39,36 @@ export function makeData(...lengths: Array<number>) {
   }
 
   return makeDataLevel()
+}
+
+export function getStaticTestData() {
+  return [
+    {
+      id: '1',
+      firstName: 'John',
+      lastName: 'Doe',
+      age: 30,
+      visits: 100,
+      progress: 50,
+      status: 'relationship',
+    },
+    {
+      id: '2',
+      firstName: 'Jane',
+      lastName: 'Smith',
+      age: 25,
+      visits: 200,
+      progress: 75,
+      status: 'complicated',
+    },
+    {
+      id: '3',
+      firstName: 'Alice',
+      lastName: 'Johnson',
+      age: 35,
+      visits: 150,
+      progress: 60,
+      status: 'single',
+    },
+  ] as const satisfies Array<Person>
 }

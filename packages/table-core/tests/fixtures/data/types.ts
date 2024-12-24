@@ -1,7 +1,11 @@
-import type { ColumnDef } from '../../../src'
+import type { ColumnDef, TableFeatures } from '../../../src'
 
 export type PersonKeys = keyof Person
-export type PersonColumn = ColumnDef<any, Person, any>
+export type PersonColumn<TFeatures extends TableFeatures> = ColumnDef<
+  TFeatures,
+  Person,
+  any
+>
 
 export type Person = {
   id: string
