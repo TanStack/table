@@ -185,21 +185,33 @@ describe('Filter Functions', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
         const filterValue = 'John'
-        const result = filterFn_equalsStringSensitive(row as any, columnId, filterValue)
+        const result = filterFn_equalsStringSensitive(
+          row as any,
+          columnId,
+          filterValue,
+        )
         expect(result).toBe(true)
       })
       it('should not match case-insensitive exact strings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
         const filterValue = 'john'
-        const result = filterFn_equalsStringSensitive(row as any, columnId, filterValue)
+        const result = filterFn_equalsStringSensitive(
+          row as any,
+          columnId,
+          filterValue,
+        )
         expect(result).toBe(false)
       })
       it('should not match partial strings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
         const filterValue = 'ohn'
-        const result = filterFn_equalsStringSensitive(row as any, columnId, filterValue)
+        const result = filterFn_equalsStringSensitive(
+          row as any,
+          columnId,
+          filterValue,
+        )
         expect(result).toBe(false)
       })
     })
