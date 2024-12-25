@@ -6,7 +6,12 @@ import type { Person } from '../fixtures/data/types'
 
 export function generateTestTableWithData<TFeatures extends TableFeatures>(
   lengths: Array<number> | number = 10,
-  options?: Omit<TableOptions<TFeatures, Person>, 'data' | 'columns'>,
+  options?: Omit<
+    TableOptions<TFeatures, Person>,
+    'data' | 'columns' | '_features'
+  > & {
+    _features?: TableFeatures
+  },
 ) {
   const lengthsArray = Array.isArray(lengths) ? lengths : [lengths]
   const data = generateTestData(...lengthsArray)
