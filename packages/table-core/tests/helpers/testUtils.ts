@@ -1,5 +1,4 @@
 import type { vi } from 'vitest'
-import type { RowPinningState } from '../../src'
 import type { Person } from '../fixtures/data/types'
 
 export const createArrayOfNumbers = (length: number) => {
