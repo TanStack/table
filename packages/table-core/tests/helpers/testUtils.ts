@@ -1,5 +1,4 @@
 import type { vi } from 'vitest'
-import type { RowPinningState } from '../../src'
 import type { Person } from '../fixtures/data/types'
 
 export const createArrayOfNumbers = (length: number) => {
@@ -13,10 +12,7 @@ export const getPeopleIds = (
   return people.map((person, index) => (usePersonId ? person.id : `${index}`))
 }
 
-export function getUpdaterResult(
-  mock: ReturnType<typeof vi.fn>,
-  input: RowPinningState,
-) {
+export function getUpdaterResult(mock: ReturnType<typeof vi.fn>, input: any) {
   const updaterFn = mock.mock.calls[0]?.[0]
   return updaterFn?.(input)
 }
