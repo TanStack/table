@@ -18,6 +18,10 @@
     "react",
     "vue",
     "solid",
+    "svelte",
+    "qwik",
+    "lit",
+    "angular",
     "table",
     "table-core",
     "datagrid"

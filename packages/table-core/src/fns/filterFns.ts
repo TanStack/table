@@ -173,18 +173,7 @@ export const filterFn_lessThan: FilterFn<any, any> = <
   columnId: string,
   filterValue: Date | number | string,
 ) => {
-  const rowValue = row.getValue(columnId)
-  const numericRowValue =
-    rowValue === null || rowValue === undefined ? 0 : +rowValue
-  const numericFilterValue = +filterValue
-
-  if (!isNaN(numericFilterValue) && !isNaN(numericRowValue)) {
-    return numericRowValue < numericFilterValue
-  }
-
-  const stringValue = (rowValue ?? '').toString().toLowerCase().trim()
-  const stringFilterValue = filterValue.toString().toLowerCase().trim()
-  return stringValue < stringFilterValue
+  return !filterFn_greaterThanOrEqualTo(row as any, columnId, filterValue)
 }
 
 filterFn_lessThan.resolveFilterValue = (val: any) => testFalsy(val)
@@ -200,10 +189,7 @@ export const filterFn_lessThanOrEqualTo: FilterFn<any, any> = <
   columnId: string,
   filterValue: Date | number | string,
 ) => {
-  return (
-    filterFn_lessThan(row as any, columnId, filterValue) ||
-    filterFn_equals(row as any, columnId, filterValue)
-  )
+  return !filterFn_greaterThan(row as any, columnId, filterValue)
 }
 
 filterFn_lessThanOrEqualTo.resolveFilterValue = (val: any) => testFalsy(val)

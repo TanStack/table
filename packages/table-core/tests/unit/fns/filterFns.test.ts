@@ -5,8 +5,12 @@ import {
   filterFn_equals,
   filterFn_equalsString,
   filterFn_equalsStringSensitive,
+  filterFn_greaterThan,
+  filterFn_greaterThanOrEqualTo,
   filterFn_includesString,
   filterFn_includesStringSensitive,
+  filterFn_lessThan,
+  filterFn_lessThanOrEqualTo,
   filterFn_weakEquals,
 } from '../../../src'
 import { getStaticTestData } from '../../fixtures/data/generateTestData'
@@ -99,7 +103,7 @@ describe('Filter Functions', () => {
       it('should not match different case substrings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'john'
+        const filterValue = 'john' // lowercase
         const result = filterFn_includesStringSensitive(
           row as any,
           columnId,
@@ -124,7 +128,7 @@ describe('Filter Functions', () => {
       it('should match case-insensitive substrings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'john'
+        const filterValue = 'John'
         const result = filterFn_includesString(
           row as any,
           columnId,
@@ -135,7 +139,7 @@ describe('Filter Functions', () => {
       it('should match different case substrings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'john'
+        const filterValue = 'john' // lowercase
         const result = filterFn_includesString(
           row as any,
           columnId,
@@ -167,7 +171,7 @@ describe('Filter Functions', () => {
       it('should match case-insensitive exact strings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'john'
+        const filterValue = 'john' // lowercase
         const result = filterFn_equalsString(row as any, columnId, filterValue)
         expect(result).toBe(true)
       })
@@ -213,6 +217,298 @@ describe('Filter Functions', () => {
           filterValue,
         )
         expect(result).toBe(false)
+      })
+    })
+  })
+
+  describe('Number Filters', () => {
+    describe('filterFn_greaterThan', () => {
+      it('should match greater than values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 29
+        const result = filterFn_greaterThan(row as any, columnId, filterValue)
+        expect(result).toBe(true)
+      })
+      it('should not match equal values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 30
+        const result = filterFn_greaterThan(row as any, columnId, filterValue)
+        expect(result).toBe(false)
+      })
+      it('should not match less than values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 31
+        const result = filterFn_greaterThan(row as any, columnId, filterValue)
+        expect(result).toBe(false)
+      })
+      it('should match strings greater than numbers', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = '29'
+        const result = filterFn_greaterThan(row as any, columnId, filterValue)
+        expect(result).toBe(true)
+      })
+      it('should not match strings less than numbers', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = '31'
+        const result = filterFn_greaterThan(row as any, columnId, filterValue)
+        expect(result).toBe(false)
+      })
+      it('should match strings greater than other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'a'
+        const result = filterFn_greaterThan(row as any, columnId, filterValue)
+        expect(result).toBe(true)
+      })
+      it('should not match strings less than other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'z'
+        const result = filterFn_greaterThan(row as any, columnId, filterValue)
+        expect(result).toBe(false)
+      })
+      it('should not match strings equal to other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'John'
+        const result = filterFn_greaterThan(row as any, columnId, filterValue)
+        expect(result).toBe(false)
+      })
+    })
+    describe('filterFn_greaterThanOrEqualTo', () => {
+      it('should match greater than values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 29
+        const result = filterFn_greaterThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
+      })
+      it('should match equal values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 30
+        const result = filterFn_greaterThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
+      })
+      it('should not match less than values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 31
+        const result = filterFn_greaterThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(false)
+      })
+      it('should match strings greater than to numbers', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = '29'
+        const result = filterFn_greaterThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
+      })
+      it('should not match strings less than numbers', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = '31'
+        const result = filterFn_greaterThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(false)
+      })
+      it('should match strings greater than other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'a'
+        const result = filterFn_greaterThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
+      })
+      it('should not match strings less than other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'z'
+        const result = filterFn_greaterThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(false)
+      })
+      it('should match strings equal to other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'John'
+        const result = filterFn_greaterThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
+      })
+    })
+    describe('filterFn_lessThan', () => {
+      it('should match less than values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 31
+        const result = filterFn_lessThan(row as any, columnId, filterValue)
+        expect(result).toBe(true)
+      })
+      it('should not match equal values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 30
+        const result = filterFn_lessThan(row as any, columnId, filterValue)
+        expect(result).toBe(false)
+      })
+      it('should not match greater than values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 29
+        const result = filterFn_lessThan(row as any, columnId, filterValue)
+        expect(result).toBe(false)
+      })
+      it('should match strings less than numbers', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = '31'
+        const result = filterFn_lessThan(row as any, columnId, filterValue)
+        expect(result).toBe(true)
+      })
+      it('should match strings less than other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'z'
+        const result = filterFn_lessThan(row as any, columnId, filterValue)
+        expect(result).toBe(true)
+      })
+      it('should not match strings equal to other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'John'
+        const result = filterFn_lessThan(row as any, columnId, filterValue)
+        expect(result).toBe(false)
+      })
+      it('should not match strings greater than other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'a'
+        const result = filterFn_lessThan(row as any, columnId, filterValue)
+        expect(result).toBe(false)
+      })
+    })
+    describe('filterFn_lessThanOrEqualTo', () => {
+      it('should match less than values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 31
+        const result = filterFn_lessThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
+      })
+      it('should match equal values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 30
+        const result = filterFn_lessThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
+      })
+      it('should not match greater than values', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = 29
+        const result = filterFn_lessThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(false)
+      })
+      it('should match strings less than to numbers', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = '31'
+        const result = filterFn_lessThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
+      })
+      it('should not match strings greater than numbers', () => {
+        const row = mockRows[0]!
+        const columnId = 'age' // number value 30
+        const filterValue = '29'
+        const result = filterFn_lessThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(false)
+      })
+      it('should match strings less than to other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'z'
+        const result = filterFn_lessThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
+      })
+      it('should not match strings greater than other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'a'
+        const result = filterFn_lessThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(false)
+      })
+      it('should match strings equal to other strings', () => {
+        const row = mockRows[0]!
+        const columnId = 'firstName' // 'John'
+        const filterValue = 'John'
+        const result = filterFn_lessThanOrEqualTo(
+          row as any,
+          columnId,
+          filterValue,
+        )
+        expect(result).toBe(true)
       })
     })
   })
