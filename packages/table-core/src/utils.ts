@@ -108,6 +108,7 @@ interface TableMemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>
   debug?: boolean
   debugCache?: boolean
   fnName: string
+  objectId?: string
   onAfterUpdate?: () => void
 }
 
@@ -123,6 +124,7 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   debug,
   debugCache,
   fnName,
+  objectId,
   onAfterUpdate,
   ...memoOptions
 }: TableMemoOptions<TDeps, TDepArgs, TResult>) {
@@ -130,18 +132,28 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   let afterCompareTime: number
   let startCalcTime: number
   let endCalcTime: number
+  let isFirstRun = true
 
   function logTime(time: number, depsChanged: boolean) {
     if (isDev) {
+      const runType = isFirstRun
+        ? '(1st run)'
+        : depsChanged
+          ? '(rerun)'
+          : '(cache)'
+      isFirstRun = false
+
       console.info(
-        `%c⏱ ${pad(`${time.toFixed(time < 1 ? 2 : 1)} ms`, 12)} ${depsChanged ? '(rerun)' : '(cache)'}`,
+        `%c⏱ ${pad(`${time.toFixed(time < 1 ? 2 : 1)} ms`, 12)} %c${runType}%c ${fnName}%c ${objectId ?? ''}`,
         `font-size: .6rem; font-weight: bold; ${
           depsChanged
             ? `color: hsl(
         ${Math.max(0, Math.min(120 - Math.log10(time) * 60, 120))}deg 100% 31%);`
             : ''
         } `,
-        fnName,
+        'color: #FF69B4',
+        'color: gray',
+        'color: #87CEEB',
       )
     }
   }
@@ -242,6 +254,7 @@ export function assignAPIs<
           memoDeps,
           fn,
           fnName,
+          objectId: obj.id,
           debug: isDev
             ? (table.options.debugAll ?? table.options[`debug${debugLevel}`])
             : false,
@@ -264,7 +277,6 @@ export function callMemoOrStaticFn<
 ): ReturnType<TStaticFn> {
   const { fnKey } = getFunctionNameInfo(staticFn)
   return (
-    ((obj as any)[fnKey] as Function | undefined)?.(...args) ??
-    staticFn(obj, ...args)
+    (obj[fnKey] as Function | undefined)?.(...args) ?? staticFn(obj, ...args)
   )
 }

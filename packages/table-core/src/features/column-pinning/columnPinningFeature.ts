@@ -1,4 +1,4 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import { assignAPIs, callMemoOrStaticFn, makeStateUpdater } from '../../utils'
 import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
 import {
   column_getCanPin,
@@ -132,7 +132,7 @@ export const columnPinningFeature: TableFeature<{
         fn: () => table_getLeftHeaderGroups(table),
         memoDeps: () => [
           table.getAllColumns(),
-          table_getVisibleLeafColumns(table),
+          callMemoOrStaticFn(table, table_getVisibleLeafColumns),
           table.options.state?.columnPinning?.left,
         ],
       },
@@ -140,7 +140,7 @@ export const columnPinningFeature: TableFeature<{
         fn: () => table_getCenterHeaderGroups(table),
         memoDeps: () => [
           table.getAllColumns(),
-          table_getVisibleLeafColumns(table),
+          callMemoOrStaticFn(table, table_getVisibleLeafColumns),
           table.options.state?.columnPinning,
         ],
       },
@@ -148,48 +148,54 @@ export const columnPinningFeature: TableFeature<{
         fn: () => table_getRightHeaderGroups(table),
         memoDeps: () => [
           table.getAllColumns(),
-          table_getVisibleLeafColumns(table),
+          callMemoOrStaticFn(table, table_getVisibleLeafColumns),
           table.options.state?.columnPinning?.right,
         ],
       },
       // footer groups
       {
         fn: () => table_getLeftFooterGroups(table),
-        memoDeps: () => [table_getLeftHeaderGroups(table)],
+        memoDeps: () => [callMemoOrStaticFn(table, table_getLeftHeaderGroups)],
       },
       {
         fn: () => table_getCenterFooterGroups(table),
-        memoDeps: () => [table_getCenterHeaderGroups(table)],
+        memoDeps: () => [
+          callMemoOrStaticFn(table, table_getCenterHeaderGroups),
+        ],
       },
       {
         fn: () => table_getRightFooterGroups(table),
-        memoDeps: () => [table_getRightHeaderGroups(table)],
+        memoDeps: () => [callMemoOrStaticFn(table, table_getRightHeaderGroups)],
       },
       // flat headers
       {
         fn: () => table_getLeftFlatHeaders(table),
-        memoDeps: () => [table_getLeftHeaderGroups(table)],
+        memoDeps: () => [callMemoOrStaticFn(table, table_getLeftHeaderGroups)],
       },
       {
         fn: () => table_getRightFlatHeaders(table),
-        memoDeps: () => [table_getRightHeaderGroups(table)],
+        memoDeps: () => [callMemoOrStaticFn(table, table_getRightHeaderGroups)],
       },
       {
         fn: () => table_getCenterFlatHeaders(table),
-        memoDeps: () => [table_getCenterHeaderGroups(table)],
+        memoDeps: () => [
+          callMemoOrStaticFn(table, table_getCenterHeaderGroups),
+        ],
       },
       // leaf headers
       {
         fn: () => table_getLeftLeafHeaders(table),
-        memoDeps: () => [table_getLeftHeaderGroups(table)],
+        memoDeps: () => [callMemoOrStaticFn(table, table_getLeftHeaderGroups)],
       },
       {
         fn: () => table_getRightLeafHeaders(table),
-        memoDeps: () => [table_getRightHeaderGroups(table)],
+        memoDeps: () => [callMemoOrStaticFn(table, table_getRightHeaderGroups)],
       },
       {
         fn: () => table_getCenterLeafHeaders(table),
-        memoDeps: () => [table_getCenterHeaderGroups(table)],
+        memoDeps: () => [
+          callMemoOrStaticFn(table, table_getCenterHeaderGroups),
+        ],
       },
       // leaf columns
       {

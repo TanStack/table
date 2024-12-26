@@ -1,4 +1,5 @@
 import { row_getIsAllParentsExpanded } from '../row-expanding/rowExpandingFeature.utils'
+import { callMemoOrStaticFn } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -144,8 +145,8 @@ export function row_getPinnedIndex<
 
   const visiblePinnedRowIds = (
     position === 'top'
-      ? table_getTopRows(row.table)
-      : table_getBottomRows(row.table)
+      ? callMemoOrStaticFn(row.table, table_getTopRows)
+      : callMemoOrStaticFn(row.table, table_getBottomRows)
   ).map(({ id }) => id)
 
   return visiblePinnedRowIds.indexOf(row.id)

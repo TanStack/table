@@ -5,12 +5,14 @@ import {
   table_getRightHeaderGroups,
 } from '../../features/column-pinning/columnPinningFeature.utils'
 import { table_getVisibleLeafColumns } from '../../features/column-visibility/columnVisibilityFeature.utils'
+import { callMemoOrStaticFn } from '../../utils'
 import { buildHeaderGroups } from './buildHeaderGroups'
 import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Header_Header } from './coreHeadersFeature.types'
+import type { Column } from '../../types/Column'
 
 export function header_getLeafHeaders<
   TFeatures extends TableFeatures,
@@ -50,7 +52,10 @@ export function table_getHeaderGroups<
   const { left, right } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
-  const leafColumns = table_getVisibleLeafColumns(table)
+  const leafColumns = callMemoOrStaticFn(
+    table,
+    table_getVisibleLeafColumns,
+  ) as unknown as Array<Column<TFeatures, TData, unknown>>
 
   const leftColumns = left
     .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
@@ -97,9 +102,9 @@ export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const left = table_getLeftHeaderGroups(table)
-  const center = table_getCenterHeaderGroups(table)
-  const right = table_getRightHeaderGroups(table)
+  const left = callMemoOrStaticFn(table, table_getLeftHeaderGroups)
+  const center = callMemoOrStaticFn(table, table_getCenterHeaderGroups)
+  const right = callMemoOrStaticFn(table, table_getRightHeaderGroups)
 
   return [
     ...(left[0]?.headers ?? []),

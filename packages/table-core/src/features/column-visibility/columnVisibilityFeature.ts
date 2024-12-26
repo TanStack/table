@@ -1,4 +1,4 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import { assignAPIs, callMemoOrStaticFn, makeStateUpdater } from '../../utils'
 import {
   row_getCenterVisibleCells,
   row_getLeftVisibleCells,
@@ -90,9 +90,9 @@ export const columnVisibilityFeature: TableFeature<{
       {
         fn: (left, center, right) => row_getVisibleCells(left, center, right),
         memoDeps: () => [
-          row_getLeftVisibleCells(row),
-          row_getCenterVisibleCells(row),
-          row_getRightVisibleCells(row),
+          callMemoOrStaticFn(row, row_getLeftVisibleCells),
+          callMemoOrStaticFn(row, row_getCenterVisibleCells),
+          callMemoOrStaticFn(row, row_getRightVisibleCells),
         ],
       },
     ])

@@ -1,4 +1,4 @@
-import { assignAPIs } from '../../utils'
+import { assignAPIs, callMemoOrStaticFn } from '../../utils'
 import {
   table_getCenterHeaderGroups,
   table_getLeftHeaderGroups,
@@ -56,9 +56,9 @@ export const coreHeadersFeature: TableFeature<{
       {
         fn: () => table_getLeafHeaders(table),
         memoDeps: () => [
-          table_getLeftHeaderGroups(table),
-          table_getCenterHeaderGroups(table),
-          table_getRightHeaderGroups(table),
+          callMemoOrStaticFn(table, table_getLeftHeaderGroups),
+          callMemoOrStaticFn(table, table_getCenterHeaderGroups),
+          callMemoOrStaticFn(table, table_getRightHeaderGroups),
         ],
       },
     ])

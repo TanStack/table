@@ -77,7 +77,6 @@ export const rowPaginationFeature: TableFeature<{
       },
       {
         fn: () => table_getPageCount(table),
-        memoDeps: () => [table_getPageCount(table)],
       },
       {
         fn: (defaultState) => table_resetPageSize(table, defaultState),

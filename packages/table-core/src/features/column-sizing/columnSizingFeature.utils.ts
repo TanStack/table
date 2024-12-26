@@ -168,9 +168,12 @@ export function table_getLeftTotalSize<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
-    table_getLeftHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
-      return sum + header_getSize(header)
-    }, 0) ?? 0
+    callMemoOrStaticFn(table, table_getLeftHeaderGroups)[0]?.headers.reduce(
+      (sum, header) => {
+        return sum + header_getSize(header)
+      },
+      0,
+    ) ?? 0
   )
 }
 
@@ -179,9 +182,12 @@ export function table_getCenterTotalSize<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
-    table_getCenterHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
-      return sum + header_getSize(header)
-    }, 0) ?? 0
+    callMemoOrStaticFn(table, table_getCenterHeaderGroups)[0]?.headers.reduce(
+      (sum, header) => {
+        return sum + header_getSize(header)
+      },
+      0,
+    ) ?? 0
   )
 }
 
@@ -190,8 +196,11 @@ export function table_getRightTotalSize<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
-    table_getRightHeaderGroups(table)[0]?.headers.reduce((sum, header) => {
-      return sum + header_getSize(header)
-    }, 0) ?? 0
+    callMemoOrStaticFn(table, table_getRightHeaderGroups)[0]?.headers.reduce(
+      (sum, header) => {
+        return sum + header_getSize(header)
+      },
+      0,
+    ) ?? 0
   )
 }
