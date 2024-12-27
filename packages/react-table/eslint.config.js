@@ -1,7 +1,7 @@
 // @ts-check
 
 import pluginReact from '@eslint-react/eslint-plugin'
-//// @ts-expect-error
+// @ts-expect-error
 // import pluginReactCompiler from 'eslint-plugin-react-compiler'
 import pluginReactHooks from 'eslint-plugin-react-hooks'
 import rootConfig from '../../eslint.config.js'

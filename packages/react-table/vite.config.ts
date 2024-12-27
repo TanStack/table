@@ -10,7 +10,7 @@ const config = defineConfig({
     dir: './tests',
     watch: false,
     environment: 'jsdom',
-    setupFiles: ['./tests/test-setup.ts'],
+    // setupFiles: ['./tests/test-setup.ts'],
     globals: true,
   },
 })

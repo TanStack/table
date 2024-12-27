@@ -24,7 +24,7 @@
     "target": "ES2020"
   },
   "include": [
-    "prettier.config.cjs",
+    "prettier.config.js",
     "scripts",
     "eslint.config.js",
     "vitest.workspace.js"

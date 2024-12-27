@@ -132,29 +132,32 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   let afterCompareTime: number
   let startCalcTime: number
   let endCalcTime: number
-  let isFirstRun = true
+  let runCount = 0
 
   function logTime(time: number, depsChanged: boolean) {
     if (isDev) {
-      const runType = isFirstRun
-        ? '(1st run)'
-        : depsChanged
-          ? '(rerun)'
-          : '(cache)'
-      isFirstRun = false
+      const runType =
+        runCount === 0
+          ? '(1st run)'
+          : depsChanged
+            ? '(rerun #' + runCount + ')'
+            : '(cache)'
+      runCount++
 
-      console.info(
-        `%c⏱ ${pad(`${time.toFixed(time < 1 ? 2 : 1)} ms`, 12)} %c${runType}%c ${fnName}%c ${objectId ?? ''}`,
+      console.groupCollapsed(
+        `%c⏱ ${pad(`${time.toFixed(1)} ms`, 12)} %c${runType}%c ${fnName}%c ${objectId ? `(${fnName.split('.')[0]}Id: ${objectId})` : ''}`,
         `font-size: .6rem; font-weight: bold; ${
           depsChanged
             ? `color: hsl(
         ${Math.max(0, Math.min(120 - Math.log10(time) * 60, 120))}deg 100% 31%);`
             : ''
         } `,
-        'color: #FF69B4',
-        'color: gray',
+        `color: ${runCount < 2 ? '#FF00FF' : '#FF1493'}`,
+        'color: #666',
         'color: #87CEEB',
       )
+      console.trace()
+      console.groupEnd()
     }
   }
 
@@ -169,7 +172,7 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
           if (debugCache) {
             afterCompareTime = performance.now()
             const compareTime =
-              Math.round((afterCompareTime - beforeCompareTime) * 1000) / 1000
+              Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
             if (!depsChanged) {
               logTime(compareTime, depsChanged)
             }
@@ -184,7 +187,7 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
           if (debug) {
             endCalcTime = performance.now()
             const executionTime =
-              Math.round((endCalcTime - startCalcTime) * 1000) / 1000
+              Math.round((endCalcTime - startCalcTime) * 100) / 100
             logTime(executionTime, true)
           }
           queueMicrotask(() => onAfterUpdate?.())
