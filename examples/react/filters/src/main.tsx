@@ -20,6 +20,7 @@ import type {
   Column,
   ColumnDef,
   ColumnFiltersState,
+  ExtractFeatureTypes,
   RowData,
   TableFeatures,
 } from '@tanstack/react-table'
@@ -41,6 +42,8 @@ const _features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
 })
+
+type TestType = ExtractFeatureTypes<typeof _features, 'Column'>
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
