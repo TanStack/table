@@ -27,7 +27,7 @@ export const coreRowsFeature: TableFeature<{
       },
       {
         fn: () => row_getAllCells(row),
-        memoDeps: () => [row.table.getAllLeafColumns()],
+        memoDeps: () => [row._table.getAllLeafColumns()],
       },
       {
         fn: () => row_getLeafRows(row),

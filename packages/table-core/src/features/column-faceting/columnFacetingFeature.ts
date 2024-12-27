@@ -18,13 +18,13 @@ export const columnFacetingFeature: TableFeature<{
   constructColumnAPIs: (column) => {
     assignAPIs(column, [
       {
-        fn: () => column_getFacetedMinMaxValues(column, column.table),
+        fn: () => column_getFacetedMinMaxValues(column, column._table),
       },
       {
-        fn: () => column_getFacetedRowModel(column, column.table),
+        fn: () => column_getFacetedRowModel(column, column._table),
       },
       {
-        fn: () => column_getFacetedUniqueValues(column, column.table),
+        fn: () => column_getFacetedUniqueValues(column, column._table),
       },
     ])
   },

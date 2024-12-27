@@ -49,9 +49,9 @@ export interface Column_CoreProperties<
    */
   parent?: Column<TFeatures, TData, TValue>
   /**
-   * @deprecated Reference to the table instance.
+   * Reference to the parent table instance.
    */
-  table: Table_Internal<TFeatures, TData>
+  _table: Table_Internal<TFeatures, TData>
 }
 
 export interface Column_Column<

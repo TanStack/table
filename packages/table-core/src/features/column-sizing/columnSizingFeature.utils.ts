@@ -32,7 +32,7 @@ export function column_getSize<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): number {
   const defaultSizes = getDefaultColumnSizingColumnDef()
-  const columnSize = column.table.options.state?.columnSizing?.[column.id]
+  const columnSize = column._table.options.state?.columnSizing?.[column.id]
 
   return Math.min(
     Math.max(
@@ -51,7 +51,7 @@ export function column_getStart<
   column: Column_Internal<TFeatures, TData, TValue>,
   position: ColumnPinningPosition | 'center',
 ): number {
-  const { table } = column
+  const { _table: table } = column
   const visibleLeafColumns = callMemoOrStaticFn(
     table,
     table_getPinnedVisibleLeafColumns,
@@ -71,7 +71,7 @@ export function column_getAfter<
   column: Column_Internal<TFeatures, TData, TValue>,
   position: ColumnPinningPosition | 'center',
 ): number {
-  const { table } = column
+  const { _table: table } = column
   const visibleLeafColumns = callMemoOrStaticFn(
     table,
     table_getPinnedVisibleLeafColumns,
@@ -88,7 +88,7 @@ export function column_resetSize<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  table_setColumnSizing(column.table, ({ [column.id]: _, ...rest }) => {
+  table_setColumnSizing(column._table, ({ [column.id]: _, ...rest }) => {
     return rest
   })
 }

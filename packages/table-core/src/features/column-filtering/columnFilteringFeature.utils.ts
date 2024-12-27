@@ -18,11 +18,11 @@ export function column_getAutoFilterFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column<TFeatures, TData, TValue>) {
-  const filterFns = column.table._rowModelFns.filterFns as
+  const filterFns = column._table._rowModelFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
 
-  const firstRow = column.table.getCoreRowModel().flatRows[0]
+  const firstRow = column._table.getCoreRowModel().flatRows[0]
 
   const value = firstRow ? firstRow.getValue(column.id) : undefined
 
@@ -59,7 +59,7 @@ export function column_getFilterFn<
   },
 ): FilterFn<TFeatures, TData> | undefined {
   let filterFn = null
-  const filterFns = column.table._rowModelFns.filterFns as
+  const filterFns = column._table._rowModelFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
   filterFn = isFunction(column.columnDef.filterFn)
@@ -88,8 +88,8 @@ export function column_getCanFilter<
 ) {
   return (
     (column.columnDef.enableColumnFilter ?? true) &&
-    (column.table.options.enableColumnFilters ?? true) &&
-    (column.table.options.enableFilters ?? true) &&
+    (column._table.options.enableColumnFilters ?? true) &&
+    (column._table.options.enableFilters ?? true) &&
     !!column.accessorFn
   )
 }
@@ -115,7 +115,7 @@ export function column_getFilterValue<
     columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   },
 ) {
-  return column.table.options.state?.columnFilters?.find(
+  return column._table.options.state?.columnFilters?.find(
     (d) => d.id === column.id,
   )?.value
 }
@@ -130,7 +130,7 @@ export function column_getFilterIndex<
   },
 ): number {
   return (
-    column.table.options.state?.columnFilters?.findIndex(
+    column._table.options.state?.columnFilters?.findIndex(
       (d) => d.id === column.id,
     ) ?? -1
   )
@@ -146,7 +146,7 @@ export function column_setFilterValue<
   },
   value: any,
 ) {
-  table_setColumnFilters(column.table, (old) => {
+  table_setColumnFilters(column._table, (old) => {
     const filterFn = column_getFilterFn(column)
     const previousFilter = old.find((d) => d.id === column.id)
 

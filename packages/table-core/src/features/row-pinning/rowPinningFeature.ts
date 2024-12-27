@@ -58,8 +58,8 @@ export const rowPinningFeature: TableFeature<{
       {
         fn: () => row_getPinnedIndex(row),
         memoDeps: () => [
-          row.table.getRowModel().rows,
-          row.table.options.state?.rowPinning,
+          row._table.getRowModel().rows,
+          row._table.options.state?.rowPinning,
         ],
       },
       {

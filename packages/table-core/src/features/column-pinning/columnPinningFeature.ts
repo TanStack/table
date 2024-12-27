@@ -93,24 +93,24 @@ export const columnPinningFeature: TableFeature<{
         fn: () => row_getCenterVisibleCells(row),
         memoDeps: () => [
           row.getAllCells(),
-          row.table.options.state?.columnPinning,
-          row.table.options.state?.columnVisibility,
+          row._table.options.state?.columnPinning,
+          row._table.options.state?.columnVisibility,
         ],
       },
       {
         fn: () => row_getLeftVisibleCells(row),
         memoDeps: () => [
           row.getAllCells(),
-          row.table.options.state?.columnPinning?.left,
-          row.table.options.state?.columnVisibility,
+          row._table.options.state?.columnPinning?.left,
+          row._table.options.state?.columnVisibility,
         ],
       },
       {
         fn: () => row_getRightVisibleCells(row),
         memoDeps: () => [
           row.getAllCells(),
-          row.table.options.state?.columnPinning?.right,
-          row.table.options.state?.columnVisibility,
+          row._table.options.state?.columnPinning?.right,
+          row._table.options.state?.columnVisibility,
         ],
       },
     ])

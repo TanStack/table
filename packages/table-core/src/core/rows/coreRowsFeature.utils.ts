@@ -14,7 +14,7 @@ export function row_getValue<
     return row._valuesCache[columnId]
   }
 
-  const column = row.table.getColumn(columnId)
+  const column = row._table.getColumn(columnId)
 
   if (!column?.accessorFn) {
     return undefined
@@ -33,7 +33,7 @@ export function row_getUniqueValues<
     return row._uniqueValuesCache[columnId]
   }
 
-  const column = row.table.getColumn(columnId)
+  const column = row._table.getColumn(columnId)
 
   if (!column?.accessorFn) {
     return undefined
@@ -56,7 +56,7 @@ export function row_renderValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, columnId: string) {
-  return row.getValue(columnId) ?? row.table.options.renderFallbackValue
+  return row.getValue(columnId) ?? row._table.options.renderFallbackValue
 }
 
 export function row_getLeafRows<
@@ -70,7 +70,7 @@ export function row_getParentRow<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  return row.parentId ? row.table.getRow(row.parentId, true) : undefined
+  return row.parentId ? row._table.getRow(row.parentId, true) : undefined
 }
 
 export function row_getParentRows<
@@ -93,8 +93,8 @@ export function row_getAllCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
-  return row.table.getAllLeafColumns().map((column) => {
-    return constructCell(column, row, row.table)
+  return row._table.getAllLeafColumns().map((column) => {
+    return constructCell(column, row, row._table)
   })
 }
 

@@ -16,7 +16,7 @@ export function column_getCanGlobalFilter<
     columnDef: ColumnDefBase_All<TFeatures, TData, TValue>
   },
 ): boolean {
-  const { table } = column
+  const { _table: table } = column
   return (
     (column.columnDef.enableGlobalFilter ?? true) &&
     (table.options.enableGlobalFilter ?? true) &&

@@ -129,9 +129,9 @@ export interface Header_CoreProperties<
    */
   subHeaders: Array<Header<TFeatures, TData, TValue>>
   /**
-   * @deprecated Reference to the table instance.
+   * Reference to the parent table instance.
    */
-  table: Table<TFeatures, TData>
+  _table: Table<TFeatures, TData>
 }
 
 export interface Header_Header<

@@ -22,7 +22,7 @@ export function column_toggleGrouping<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column<TFeatures, TData, TValue>) {
-  table_setGrouping(column.table, (old) => {
+  table_setGrouping(column._table, (old) => {
     // Find any existing grouping for this column
     if (old.includes(column.id)) {
       return old.filter((d) => d !== column.id)
@@ -43,7 +43,7 @@ export function column_getCanGroup<
 ) {
   return (
     (column.columnDef.enableGrouping ?? true) &&
-    (column.table.options.enableGrouping ?? true) &&
+    (column._table.options.enableGrouping ?? true) &&
     (!!column.accessorFn || !!column.columnDef.getGroupingValue)
   )
 }
@@ -57,7 +57,7 @@ export function column_getIsGrouped<
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
 ): boolean {
-  return !!column.table.options.state?.grouping?.includes(column.id)
+  return !!column._table.options.state?.grouping?.includes(column.id)
 }
 
 export function column_getGroupedIndex<
@@ -69,7 +69,7 @@ export function column_getGroupedIndex<
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
 ): number {
-  return column.table.options.state?.grouping?.indexOf(column.id) ?? -1
+  return column._table.options.state?.grouping?.indexOf(column.id) ?? -1
 }
 
 export function column_getToggleGroupingHandler<
@@ -98,11 +98,11 @@ export function column_getAutoAggregationFn<
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
 ) {
-  const aggregationFns = column.table._rowModelFns.aggregationFns as
+  const aggregationFns = column._table._rowModelFns.aggregationFns as
     | Record<string, AggregationFn<TFeatures, TData>>
     | undefined
 
-  const firstRow = column.table.getCoreRowModel().flatRows[0]
+  const firstRow = column._table.getCoreRowModel().flatRows[0]
 
   const value = firstRow?.getValue(column.id)
 
@@ -124,7 +124,7 @@ export function column_getAggregationFn<
     columnDef: Partial<ColumnDef_ColumnGrouping<TFeatures, TData>>
   },
 ) {
-  const aggregationFns = column.table._rowModelFns.aggregationFns as
+  const aggregationFns = column._table._rowModelFns.aggregationFns as
     | Record<string, AggregationFn<TFeatures, TData>>
     | undefined
 
@@ -167,7 +167,7 @@ export function row_getGroupingValue<
     return row._groupingValuesCache[columnId]
   }
 
-  const column = table_getColumn(row.table, columnId) as Column<
+  const column = table_getColumn(row._table, columnId) as Column<
     TFeatures,
     TData
   > & {

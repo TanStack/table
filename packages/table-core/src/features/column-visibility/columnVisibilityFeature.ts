@@ -61,8 +61,8 @@ export const columnVisibilityFeature: TableFeature<{
       {
         fn: () => column_getIsVisible(column),
         memoDeps: () => [
-          column.table.options.columns,
-          column.table.options.state?.columnVisibility,
+          column._table.options.columns,
+          column._table.options.state?.columnVisibility,
           column.columns,
         ],
       },
@@ -84,7 +84,7 @@ export const columnVisibilityFeature: TableFeature<{
         fn: () => row_getAllVisibleCells(row),
         memoDeps: () => [
           row.getAllCells(),
-          row.table.options.state?.columnVisibility,
+          row._table.options.state?.columnVisibility,
         ],
       },
       {

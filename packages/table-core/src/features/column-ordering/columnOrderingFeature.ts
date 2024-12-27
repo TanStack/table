@@ -46,9 +46,9 @@ export const columnOrderingFeature: TableFeature<{
         fn: (position) => column_getIndex(column, position),
         memoDeps: (position) => [
           position,
-          column.table.options.state?.columnOrder,
-          column.table.options.state?.columnPinning,
-          column.table.options.state?.grouping,
+          column._table.options.state?.columnOrder,
+          column._table.options.state?.columnPinning,
+          column._table.options.state?.grouping,
         ],
       },
       {

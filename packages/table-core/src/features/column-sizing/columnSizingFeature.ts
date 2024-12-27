@@ -68,11 +68,11 @@ export const columnSizingFeature: TableFeature<{
         memoDeps: (position) => [
           position,
           callMemoOrStaticFn(
-            column.table,
+            column._table,
             table_getPinnedVisibleLeafColumns,
             position,
           ),
-          column.table.options.state?.columnSizing,
+          column._table.options.state?.columnSizing,
         ],
       },
       {
@@ -80,11 +80,11 @@ export const columnSizingFeature: TableFeature<{
         memoDeps: (position) => [
           position,
           callMemoOrStaticFn(
-            column.table,
+            column._table,
             table_getPinnedVisibleLeafColumns,
             position,
           ),
-          column.table.options.state?.columnSizing,
+          column._table.options.state?.columnSizing,
         ],
       },
       {

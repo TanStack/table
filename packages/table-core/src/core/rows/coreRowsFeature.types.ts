@@ -53,9 +53,9 @@ export interface Row_CoreProperties<
    */
   subRows: Array<Row<TFeatures, TData>>
   /**
-   * @deprecated Reference to the table instance.
+   * Reference to the parent table instance.
    */
-  table: Table_Internal<TFeatures, TData>
+  _table: Table_Internal<TFeatures, TData>
 }
 
 export interface Row_Row<TFeatures extends TableFeatures, TData extends RowData>

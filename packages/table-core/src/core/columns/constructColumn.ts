@@ -81,7 +81,7 @@ export function constructColumn<
     depth,
     id: `${String(id)}`,
     parent: parent,
-    table,
+    _table: table,
   }
 
   for (const feature of Object.values(table._features)) {

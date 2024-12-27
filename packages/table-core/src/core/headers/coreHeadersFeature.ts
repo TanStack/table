@@ -24,11 +24,11 @@ export const coreHeadersFeature: TableFeature<{
     assignAPIs(header, [
       {
         fn: () => header_getLeafHeaders(header),
-        memoDeps: () => [header.column.table.options.columns],
+        memoDeps: () => [header.column._table.options.columns],
       },
       {
         fn: () => header_getContext(header),
-        memoDeps: () => [header.column.table.options.columns],
+        memoDeps: () => [header.column._table.options.columns],
       },
     ])
   },

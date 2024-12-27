@@ -52,48 +52,48 @@ export const reactivityFeature: TableFeature<{
 
   constructCellAPIs(cell) {
     if (
-      !cell.table.options.enableExperimentalReactivity ||
-      !cell.table._rootNotifier
+      !cell._table.options.enableExperimentalReactivity ||
+      !cell._table._rootNotifier
     ) {
       return
     }
-    setReactiveProps(cell.table._rootNotifier, cell, {
+    setReactiveProps(cell._table._rootNotifier, cell, {
       skipProperty: skipBaseProperties,
     })
   },
 
   constructColumnAPIs(column) {
     if (
-      !column.table.options.enableExperimentalReactivity ||
-      !column.table._rootNotifier
+      !column._table.options.enableExperimentalReactivity ||
+      !column._table._rootNotifier
     ) {
       return
     }
-    setReactiveProps(column.table._rootNotifier, column, {
+    setReactiveProps(column._table._rootNotifier, column, {
       skipProperty: skipBaseProperties,
     })
   },
 
   constructHeaderAPIs(header) {
     if (
-      !header.table.options.enableExperimentalReactivity ||
-      !header.table._rootNotifier
+      !header._table.options.enableExperimentalReactivity ||
+      !header._table._rootNotifier
     ) {
       return
     }
-    setReactiveProps(header.table._rootNotifier, header, {
+    setReactiveProps(header._table._rootNotifier, header, {
       skipProperty: skipBaseProperties,
     })
   },
 
   constructRowAPIs(row) {
     if (
-      !row.table.options.enableExperimentalReactivity ||
-      !row.table._rootNotifier
+      !row._table.options.enableExperimentalReactivity ||
+      !row._table._rootNotifier
     ) {
       return
     }
-    setReactiveProps(row.table._rootNotifier, row, {
+    setReactiveProps(row._table._rootNotifier, row, {
       skipProperty: skipBaseProperties,
     })
   },

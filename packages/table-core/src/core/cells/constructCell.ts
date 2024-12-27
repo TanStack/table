@@ -19,7 +19,7 @@ export function constructCell<
     column,
     id: `${row.id}_${column.id}`,
     row,
-    table,
+    _table: table,
   }
 
   for (const feature of Object.values(table._features)) {

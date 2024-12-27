@@ -17,7 +17,7 @@ export function column_toggleVisibility<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>, visible?: boolean): void {
   if (column_getCanHide(column)) {
-    table_setColumnVisibility(column.table, (old) => ({
+    table_setColumnVisibility(column._table, (old) => ({
       ...old,
       [column.id]: visible ?? !callMemoOrStaticFn(column, column_getIsVisible),
     }))
@@ -35,7 +35,7 @@ export function column_getIsVisible<
       ? childColumns.some((childColumn) =>
           callMemoOrStaticFn(childColumn, column_getIsVisible),
         )
-      : column.table.options.state?.columnVisibility?.[column.id]) ?? true
+      : column._table.options.state?.columnVisibility?.[column.id]) ?? true
   )
 }
 
@@ -46,7 +46,7 @@ export function column_getCanHide<
 >(column: Column_Internal<TFeatures, TData, TValue>) {
   return (
     (column.columnDef.enableHiding ?? true) &&
-    (column.table.options.enableHiding ?? true)
+    (column._table.options.enableHiding ?? true)
   )
 }
 

@@ -31,7 +31,7 @@ export function constructHeader<
     placeholderId: options.placeholderId,
     rowSpan: 0,
     subHeaders: [],
-    table,
+    _table: table,
   }
 
   for (const feature of Object.values(table._features)) {

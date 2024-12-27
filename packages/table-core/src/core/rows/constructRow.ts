@@ -25,7 +25,7 @@ export const constructRow = <
     original,
     parentId,
     subRows: subRows ?? [],
-    table,
+    _table: table,
   }
 
   for (const feature of Object.values(table._features)) {
