@@ -11,18 +11,19 @@ import {
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './columnFilteringFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Filtered,
-//   ColumnDef_ColumnFiltering,
-//   Column_ColumnFiltering,
-//   CreateRowModel_Filtered,
-//   RowModelFns_ColumnFiltering,
-//   Row_ColumnFiltering,
-//   TableOptions_ColumnFiltering,
-//   TableState_ColumnFiltering,
-//   Table_ColumnFiltering,
-// } from './columnFilteringFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type {
+  CachedRowModel_Filtered,
+  ColumnDef_ColumnFiltering,
+  Column_ColumnFiltering,
+  CreateRowModel_Filtered,
+  RowModelFns_ColumnFiltering,
+  Row_ColumnFiltering,
+  TableOptions_ColumnFiltering,
+  TableState_ColumnFiltering,
+  Table_ColumnFiltering,
+} from './columnFilteringFeature.types'
 
 /**
  * The Column Filtering feature adds column filtering state and APIs to the table, row, and column objects.
@@ -32,15 +33,15 @@ import type { TableFeature } from '../../types/TableFeatures'
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
  */
 export const columnFilteringFeature: TableFeature<{
-  // CachedRowModel: CachedRowModel_Filtered<TableFeatures, RowData>
-  // Column: Column_ColumnFiltering<TableFeatures, RowData>
-  // ColumnDef: ColumnDef_ColumnFiltering<TableFeatures, RowData>
-  // CreateRowModels: CreateRowModel_Filtered<TableFeatures, RowData>
-  // Row: Row_ColumnFiltering<TableFeatures, RowData>
-  // RowModelFns: RowModelFns_ColumnFiltering<TableFeatures, RowData>
-  // Table: Table_ColumnFiltering
-  // TableOptions: TableOptions_ColumnFiltering<TableFeatures, RowData>
-  // TableState: TableState_ColumnFiltering
+  CachedRowModel: CachedRowModel_Filtered<TableFeatures, RowData>
+  Column: Column_ColumnFiltering<TableFeatures, RowData>
+  ColumnDef: ColumnDef_ColumnFiltering<TableFeatures, RowData>
+  CreateRowModels: CreateRowModel_Filtered<TableFeatures, RowData>
+  Row: Row_ColumnFiltering<TableFeatures, RowData>
+  RowModelFns: RowModelFns_ColumnFiltering<TableFeatures, RowData>
+  Table: Table_ColumnFiltering
+  TableOptions: TableOptions_ColumnFiltering<TableFeatures, RowData>
+  TableState: TableState_ColumnFiltering
 }> = {
   getInitialState: (initialState) => {
     return {

@@ -16,15 +16,16 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './rowExpandingFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Expanded,
-//   CreateRowModel_Expanded,
-//   Row_RowExpanding,
-//   TableOptions_RowExpanding,
-//   TableState_RowExpanding,
-//   Table_RowExpanding,
-// } from './rowExpandingFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type {
+  CachedRowModel_Expanded,
+  CreateRowModel_Expanded,
+  Row_RowExpanding,
+  TableOptions_RowExpanding,
+  TableState_RowExpanding,
+  Table_RowExpanding,
+} from './rowExpandingFeature.types'
 
 /**
  * The Row Expanding feature adds row expanding state and APIs to the table and row objects.
@@ -32,12 +33,12 @@ import type { TableFeature } from '../../types/TableFeatures'
  * [Guide](https://tanstack.com/table/v8/docs/guide/row-expanding)
  */
 export const rowExpandingFeature: TableFeature<{
-  // CachedRowModel: CachedRowModel_Expanded<TableFeatures, RowData>
-  // CreateRowModels: CreateRowModel_Expanded<TableFeatures, RowData>
-  // Row: Row_RowExpanding
-  // Table: Table_RowExpanding<TableFeatures, RowData>
-  // TableOptions: TableOptions_RowExpanding<TableFeatures, RowData>
-  // TableState: TableState_RowExpanding
+  CachedRowModel: CachedRowModel_Expanded<TableFeatures, RowData>
+  CreateRowModels: CreateRowModel_Expanded<TableFeatures, RowData>
+  Row: Row_RowExpanding
+  Table: Table_RowExpanding<TableFeatures, RowData>
+  TableOptions: TableOptions_RowExpanding<TableFeatures, RowData>
+  TableState: TableState_RowExpanding
 }> = {
   getInitialState: (initialState) => {
     return {

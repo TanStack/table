@@ -12,13 +12,14 @@ import {
   table_resetRowPinning,
   table_setRowPinning,
 } from './rowPinningFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
-// import type {
-//   Row_RowPinning,
-//   TableOptions_RowPinning,
-//   TableState_RowPinning,
-//   Table_RowPinning,
-// } from './rowPinningFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type {
+  Row_RowPinning,
+  TableOptions_RowPinning,
+  TableState_RowPinning,
+  Table_RowPinning,
+} from './rowPinningFeature.types'
 
 /**
  * The Row Pinning feature adds row pinning state and APIs to the table and row objects.
@@ -26,10 +27,10 @@ import type { TableFeature } from '../../types/TableFeatures'
  * [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
  */
 export const rowPinningFeature: TableFeature<{
-  // Row: Row_RowPinning
-  // Table: Table_RowPinning<TableFeatures, RowData>
-  // TableOptions: TableOptions_RowPinning<TableFeatures, RowData>
-  // TableState: TableState_RowPinning
+  Row: Row_RowPinning
+  Table: Table_RowPinning<TableFeatures, RowData>
+  TableOptions: TableOptions_RowPinning<TableFeatures, RowData>
+  TableState: TableState_RowPinning
 }> = {
   getInitialState: (initialState) => {
     return {
