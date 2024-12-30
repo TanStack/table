@@ -49,10 +49,10 @@ type Person = {
   id: number
   name: string
   age: number
-  children: Person[]
+  children?: Person[] | undefined
 }
 
-const data: Person =  [
+const data: Person[] =  [
   { id: 1, 
   name: 'John', 
   age: 30, 
