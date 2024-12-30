@@ -104,7 +104,7 @@ export type CachedRowModels<
 
 export type CachedRowModel_All<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = any,
 > = Partial<
   CachedRowModel_Core<TFeatures, TData> &
     CachedRowModel_Expanded<TFeatures, TData> &

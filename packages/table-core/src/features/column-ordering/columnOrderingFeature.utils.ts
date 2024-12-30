@@ -51,14 +51,17 @@ export function column_getIsLastColumn<
 export function table_setColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: Updater<ColumnOrderState>) {
+>(
+  table: Table_Internal<TFeatures, Array<TData>>,
+  updater: Updater<ColumnOrderState>,
+) {
   table.options.onColumnOrderChange?.(updater)
 }
 
 export function table_resetColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, Array<TData>>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
     defaultState ? [] : (table.initialState.columnOrder ?? []),
@@ -68,7 +71,7 @@ export function table_resetColumnOrder<
 export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, Array<TData>>) {
   const { columnOrder = [] } = table.options.state ?? {}
 
   return (columns: Array<Column<TFeatures, TData, unknown>>) => {
@@ -108,7 +111,7 @@ export function orderColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
   leafColumns: Array<Column<TFeatures, TData, unknown>>,
 ) {
   const grouping = table.options.state?.grouping ?? ([] as GroupingState)

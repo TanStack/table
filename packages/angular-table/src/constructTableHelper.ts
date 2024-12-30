@@ -14,13 +14,13 @@ import type { Signal } from '@angular/core'
  */
 export type TableHelperOptions<
   TFeatures extends TableFeatures,
-  TData extends RowData = any,
+  TDataList extends Array<RowData> = Array<any>,
 > = Omit<
-  TableOptions<TFeatures, NoInfer<TData>>,
+  TableOptions<TFeatures, NoInfer<TDataList>>,
   'columns' | 'data' | 'state'
 > & {
   _features: TFeatures
-  TData?: TData // provide a cast for the TData type
+  TData?: TDataList[number] // provide a cast for the TData type
 }
 
 /**
@@ -31,15 +31,15 @@ export type TableHelper_Core<
   TData extends RowData = any,
 > = {
   columnHelper: ColumnHelper<TFeatures, TData>
-  createColumnHelper: <TData extends RowData>() => ColumnHelper<
-    TFeatures,
-    TData
-  >
+  createColumnHelper: () => ColumnHelper<TFeatures, TData>
   features: TFeatures
-  options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'>
-  tableCreator: <TData extends RowData>(
+  options: Omit<
+    TableOptions<TFeatures, Array<TData>>,
+    'columns' | 'data' | 'state'
+  >
+  tableCreator: (
     tableOptions: () => Omit<
-      TableOptions<TFeatures, TData>,
+      TableOptions<TFeatures, Array<TData>>,
       '_features' | '_rowModels'
     >,
   ) => Table<TFeatures, TData>
@@ -50,16 +50,17 @@ export type TableHelper_Core<
  */
 export function constructTableHelper<
   TFeatures extends TableFeatures,
-  TData extends RowData = any,
+  TDataList extends Array<RowData> = Array<any>,
 >(
   tableCreator: (
-    tableOptions: () => TableOptions<TFeatures, TData>,
-  ) => Table<TFeatures, TData> & Signal<Table<TFeatures, TData>>,
-  tableHelperOptions: TableHelperOptions<TFeatures, TData>,
-): TableHelper_Core<TFeatures, TData> {
+    tableOptions: () => TableOptions<TFeatures, TDataList>,
+  ) => Table<TFeatures, TDataList[number]> &
+    Signal<Table<TFeatures, TDataList[number]>>,
+  tableHelperOptions: TableHelperOptions<TFeatures, TDataList>,
+): TableHelper_Core<TFeatures, TDataList[number]> {
   const { TData: _TData, ..._tableHelperOptions } = tableHelperOptions
   return {
-    columnHelper: createColumnHelper<TFeatures, TData>(),
+    columnHelper: createColumnHelper<TFeatures, TDataList[number]>(),
     createColumnHelper,
     features: tableHelperOptions._features,
     options: _tableHelperOptions as any,

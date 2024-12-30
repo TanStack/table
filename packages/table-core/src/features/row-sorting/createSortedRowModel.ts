@@ -11,11 +11,11 @@ import type { RowData } from '../../types/type-utils'
 
 export function createSortedRowModel<
   TFeatures extends TableFeatures,
-  TData extends RowData = any,
+  TData extends RowData,
 >(
   sortFns: Record<keyof SortFns, SortFn<TFeatures, TData>>,
 ): (
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
 ) => () => RowModel<TFeatures, TData> {
   return (table) => {
     if (!table._rowModelFns.sortFns) table._rowModelFns.sortFns = sortFns
@@ -35,7 +35,7 @@ export function createSortedRowModel<
 function _createSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   const preSortedRowModel = table.getPreSortedRowModel()
   const sorting = table.options.state?.sorting
 

@@ -136,7 +136,7 @@ export function table_setColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
   updater: Updater<ColumnSizingState>,
 ) {
   table.options.onColumnSizingChange?.(updater)
@@ -145,7 +145,7 @@ export function table_setColumnSizing<
 export function table_resetColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, Array<TData>>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
     defaultState ? {} : (table.initialState.columnSizing ?? {}),
@@ -155,7 +155,7 @@ export function table_resetColumnSizing<
 export function table_getTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, Array<TData>>) {
   return (
     table.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
       return sum + header_getSize(header)
@@ -166,7 +166,7 @@ export function table_getTotalSize<
 export function table_getLeftTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, Array<TData>>) {
   return (
     callMemoOrStaticFn(table, table_getLeftHeaderGroups)[0]?.headers.reduce(
       (sum: number, header: Header<TFeatures, TData>) => {
@@ -180,7 +180,7 @@ export function table_getLeftTotalSize<
 export function table_getCenterTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, Array<TData>>) {
   return (
     callMemoOrStaticFn(table, table_getCenterHeaderGroups)[0]?.headers.reduce(
       (sum: number, header: Header<TFeatures, TData>) => {
@@ -194,7 +194,7 @@ export function table_getCenterTotalSize<
 export function table_getRightTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures, Array<TData>>) {
   return (
     callMemoOrStaticFn(table, table_getRightHeaderGroups)[0]?.headers.reduce(
       (sum: number, header: Header<TFeatures, TData>) => {

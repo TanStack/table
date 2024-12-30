@@ -241,7 +241,7 @@ export function assignAPIs<
   obj: TObject extends Record<string, infer U> ? U : never, // table, row, cell, column, header
   apis: Array<API<TDeps, NoInfer<TDepArgs>>>,
 ): void {
-  const table = (obj._table ?? obj) as Table_Internal<TFeatures, TData>
+  const table = (obj._table ?? obj) as Table_Internal<TFeatures, Array<TData>>
   apis.forEach(({ fn, memoDeps }) => {
     const { fnKey, fnName, parentName } = getFunctionNameInfo(fn)
 

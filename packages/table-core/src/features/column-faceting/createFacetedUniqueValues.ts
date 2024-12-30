@@ -9,7 +9,7 @@ export function createFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
   columnId: string,
 ) => () => Map<any, number> {
   return (table, columnId) =>

@@ -19,14 +19,17 @@ export function getDefaultSortingState(): SortingState {
 export function table_setSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: Updater<SortingState>) {
+>(
+  table: Table_Internal<TFeatures, Array<TData>>,
+  updater: Updater<SortingState>,
+) {
   table.options.onSortingChange?.(updater)
 }
 
 export function table_resetSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, Array<TData>>, defaultState?: boolean) {
   table_setSorting(
     table,
     defaultState ? [] : (table.initialState.sorting ?? []),

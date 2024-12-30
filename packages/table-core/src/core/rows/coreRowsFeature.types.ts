@@ -55,7 +55,7 @@ export interface Row_CoreProperties<
   /**
    * Reference to the parent table instance.
    */
-  _table: Table_Internal<TFeatures, TData>
+  _table: Table_Internal<TFeatures, Array<TData>>
 }
 
 export interface Row_Row<TFeatures extends TableFeatures, TData extends RowData>

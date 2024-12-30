@@ -16,7 +16,7 @@ import type {
  * Creates a table instance and caches it in a ref so that it will only be constructed once.
  */
 function useTableRef<TFeatures extends TableFeatures, TData extends RowData>(
-  options: TableOptions<TFeatures, TData>,
+  options: TableOptions<TFeatures, Array<TData>>,
 ): Table<TFeatures, TData> {
   const tableRef = useRef<Table<TFeatures, TData>>(null)
 
@@ -34,14 +34,16 @@ function useTableRef<TFeatures extends TableFeatures, TData extends RowData>(
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
+>(
+  tableOptions: TableOptions<TFeatures, Array<TData>>,
+): Table<TFeatures, TData> {
   const _features = { ...coreFeatures, ...tableOptions._features }
 
   const [state, setState] = useState<TableState<TFeatures>>(() =>
     getInitialTableState(_features, tableOptions.initialState),
   )
 
-  const statefulOptions: TableOptions<TFeatures, TData> = {
+  const statefulOptions: TableOptions<TFeatures, Array<TData>> = {
     ...tableOptions,
     _features,
     state: { ...state, ...tableOptions.state },

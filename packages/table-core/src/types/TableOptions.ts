@@ -23,11 +23,11 @@ export interface TableOptions_Plugins {}
 
 export interface TableOptions_Core<
   TFeatures extends TableFeatures,
-  TData extends RowData,
-> extends TableOptions_Table<TFeatures, TData>,
+  TDataList extends Array<RowData>,
+> extends TableOptions_Table<TFeatures, TDataList>,
     TableOptions_Cell,
-    TableOptions_Columns<TFeatures, TData>,
-    TableOptions_Rows<TFeatures, TData>,
+    TableOptions_Columns<TFeatures, TDataList[number]>,
+    TableOptions_Rows<TFeatures, TDataList[number]>,
     TableOptions_Headers,
     TableOptions_Plugins {}
 
@@ -79,26 +79,26 @@ export interface TableOptions_Core<
 
 export type TableOptions<
   TFeatures extends TableFeatures,
-  TData extends RowData,
-> = TableOptions_Core<TFeatures, TData> &
+  TDataList extends Array<RowData>,
+> = TableOptions_Core<TFeatures, TDataList> &
   ExtractFeatureTypes<TFeatures, 'TableOptions'>
 
 export type TableOptions_All<
   TFeatures extends TableFeatures,
-  TData extends RowData,
-> = TableOptions_Core<TFeatures, TData> &
+  TDataList extends Array<RowData>,
+> = TableOptions_Core<TFeatures, TDataList> &
   Partial<
-    TableOptions_ColumnFiltering<TFeatures, TData> &
+    TableOptions_ColumnFiltering<TFeatures, TDataList[number]> &
       TableOptions_ColumnGrouping &
       TableOptions_ColumnOrdering &
       TableOptions_ColumnPinning &
       TableOptions_ColumnResizing &
       TableOptions_ColumnSizing &
       TableOptions_ColumnVisibility &
-      TableOptions_GlobalFiltering<TFeatures, TData> &
-      TableOptions_RowExpanding<TFeatures, TData> &
+      TableOptions_GlobalFiltering<TFeatures, TDataList[number]> &
+      TableOptions_RowExpanding<TFeatures, TDataList[number]> &
       TableOptions_RowPagination &
-      TableOptions_RowPinning<TFeatures, TData> &
-      TableOptions_RowSelection<TFeatures, TData> &
+      TableOptions_RowPinning<TFeatures, TDataList[number]> &
+      TableOptions_RowSelection<TFeatures, TDataList[number]> &
       TableOptions_RowSorting
   >

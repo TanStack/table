@@ -7,7 +7,7 @@ import type { RowModel } from './coreRowModelsFeature.types'
 export function table_getCoreRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   if (!table._rowModels.coreRowModel) {
     table._rowModels.coreRowModel =
       table.options._rowModels?.coreRowModel?.(table) ??
@@ -20,14 +20,14 @@ export function table_getCoreRowModel<
 export function table_getPreFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   return table.getCoreRowModel()
 }
 
 export function table_getFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   if (!table._rowModels.filteredRowModel) {
     table._rowModels.filteredRowModel =
       table.options._rowModels?.filteredRowModel?.(table)
@@ -43,14 +43,14 @@ export function table_getFilteredRowModel<
 export function table_getPreGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   return table.getFilteredRowModel()
 }
 
 export function table_getGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   if (!table._rowModels.groupedRowModel) {
     table._rowModels.groupedRowModel =
       table.options._rowModels?.groupedRowModel?.(table)
@@ -66,14 +66,14 @@ export function table_getGroupedRowModel<
 export function table_getPreSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   return table.getGroupedRowModel()
 }
 
 export function table_getSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   if (!table._rowModels.sortedRowModel) {
     table._rowModels.sortedRowModel =
       table.options._rowModels?.sortedRowModel?.(table)
@@ -89,14 +89,14 @@ export function table_getSortedRowModel<
 export function table_getPreExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   return table.getSortedRowModel()
 }
 
 export function table_getExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   if (!table._rowModels.expandedRowModel) {
     table._rowModels.expandedRowModel =
       table.options._rowModels?.expandedRowModel?.(table)
@@ -112,14 +112,14 @@ export function table_getExpandedRowModel<
 export function table_getPrePaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   return table.getExpandedRowModel()
 }
 
 export function table_getPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   if (!table._rowModels.paginatedRowModel) {
     table._rowModels.paginatedRowModel =
       table.options._rowModels?.paginatedRowModel?.(table)
@@ -135,6 +135,6 @@ export function table_getPaginatedRowModel<
 export function table_getRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   return table.getPaginatedRowModel()
 }

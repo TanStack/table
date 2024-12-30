@@ -13,7 +13,7 @@ export interface TableMeta<
 
 export interface TableOptions_Table<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TDataList extends Array<RowData>,
 > {
   /**
    * The features that you want to enable for the table.
@@ -26,7 +26,10 @@ export interface TableOptions_Table<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _rowModels?: CreateRowModels_All<TFeatures, TData>
+  _rowModels?: CreateRowModels_All<
+    TFeatures,
+    TDataList[number] extends never ? TDataList[number] : RowData
+  >
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -38,7 +41,7 @@ export interface TableOptions_Table<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#data)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  data: Array<TData>
+  data: TDataList
   /**
    * Set this option to `true` to output all debugging information to the console.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugall)
@@ -72,15 +75,15 @@ export interface TableOptions_Table<
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   mergeOptions?: (
-    defaultOptions: TableOptions<TFeatures, TData>,
-    options: Partial<TableOptions<TFeatures, TData>>,
-  ) => TableOptions<TFeatures, TData>
+    defaultOptions: TableOptions<TFeatures, Array<TDataList[number]>>,
+    options: Partial<TableOptions<TFeatures, Array<TDataList[number]>>>,
+  ) => TableOptions<TFeatures, Array<TDataList[number]>>
   /**
    * You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#meta)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  meta?: TableMeta<TFeatures, TData>
+  meta?: TableMeta<TFeatures, TDataList[number]>
   /**
    * The `onStateChange` option can be used to optionally listen to state changes within the table.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#onstatechange)
@@ -129,7 +132,7 @@ export interface Table_CoreProperties<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#options)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  options: TableOptions<TFeatures, TData>
+  options: TableOptions<TFeatures, Array<TData>>
 }
 
 export interface Table_Table<
@@ -153,7 +156,9 @@ export interface Table_Table<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#setoptions)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  setOptions: (newOptions: Updater<TableOptions<TFeatures, TData>>) => void
+  setOptions: (
+    newOptions: Updater<TableOptions<TFeatures, Array<TData>>>,
+  ) => void
   /**
    * Call this function to update the table state.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#setstate)

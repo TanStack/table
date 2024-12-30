@@ -11,7 +11,7 @@ export function createPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
 ) => () => RowModel<TFeatures, TData> {
   return (table) =>
     tableMemo({
@@ -31,7 +31,7 @@ export function createPaginatedRowModel<
 function _createPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
   const prePaginatedRowModel = table.getPrePaginatedRowModel()
   const pagination = table.options.state?.pagination
 

@@ -230,7 +230,7 @@ export function table_setColumnResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
   updater: Updater<columnResizingState>,
 ) {
   table.options.onColumnResizingChange?.(updater)
@@ -239,7 +239,7 @@ export function table_setColumnResizing<
 export function table_resetHeaderSizeInfo<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, Array<TData>>, defaultState?: boolean) {
   table_setColumnResizing(
     table,
     defaultState

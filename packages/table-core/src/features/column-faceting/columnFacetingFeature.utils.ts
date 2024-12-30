@@ -10,7 +10,7 @@ export function column_getFacetedMinMaxValues<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
 ): () => [number, number] | undefined {
   return (
     table.options._rowModels?.facetedMinMaxValues?.(table, column.id) ??
@@ -24,7 +24,7 @@ export function column_getFacetedRowModel<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue> | undefined,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
 ): () => RowModel<TFeatures, TData> {
   return (
     table.options._rowModels?.facetedRowModel?.(table, column?.id ?? '') ??
@@ -38,7 +38,7 @@ export function column_getFacetedUniqueValues<
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue>,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
 ): () => Map<any, number> {
   return (
     table.options._rowModels?.facetedUniqueValues?.(table, column.id) ??

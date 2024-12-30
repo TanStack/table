@@ -14,7 +14,7 @@ export function createFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
   columnId: string,
 ) => () => RowModel<TFeatures, TData> {
   return (table, columnId) =>
@@ -42,7 +42,7 @@ function _createFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
   columnId: string,
   preRowModel: RowModel<TFeatures, TData>,
   columnFilters?: ColumnFiltersState,

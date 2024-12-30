@@ -8,7 +8,7 @@ import type { TableState } from '../../types/TableState'
 export function table_reset<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): void {
+>(table: Table_Internal<TFeatures, Array<TData>>): void {
   table.setState(table.initialState)
 }
 
@@ -16,8 +16,8 @@ export function table_mergeOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
-  newOptions: TableOptions<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
+  newOptions: TableOptions<TFeatures, Array<TData>>,
 ) {
   if (table.options.mergeOptions) {
     return table.options.mergeOptions(table.options, newOptions)
@@ -33,8 +33,8 @@ export function table_setOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
-  updater: Updater<TableOptions<TFeatures, TData>>,
+  table: Table_Internal<TFeatures, Array<TData>>,
+  updater: Updater<TableOptions<TFeatures, Array<TData>>>,
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
   table.options = table_mergeOptions(table, newOptions)
@@ -43,14 +43,14 @@ export function table_setOptions<
 export function table_getInitialState<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): TableState<TFeatures> {
+>(table: Table_Internal<TFeatures, Array<TData>>): TableState<TFeatures> {
   return structuredClone(table.initialState)
 }
 
 export function table_getState<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): TableState<TFeatures> {
+>(table: Table_Internal<TFeatures, Array<TData>>): TableState<TFeatures> {
   return table.options.state as TableState<TFeatures>
 }
 
@@ -58,7 +58,7 @@ export function table_setState<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table_Internal<TFeatures, Array<TData>>,
   updater: Updater<TableState<TFeatures>>,
 ): void {
   table.options.onStateChange?.(updater)
