@@ -1,9 +1,6 @@
 import './index.css'
 
-import {
-  createColumnHelper,
-  getCoreRowModel,
-} from '@tanstack/table-core'
+import { createColumnHelper, getCoreRowModel } from '@tanstack/table-core'
 
 import { flexRender, useTable } from './useTable'
 
@@ -76,7 +73,6 @@ const columns = [
 ]
 
 const renderTable = () => {
-
   // Create table elements
   const tableElement = document.createElement('table')
   const theadElement = document.createElement('thead')
@@ -88,38 +84,41 @@ const renderTable = () => {
   tableElement.appendChild(tfootElement)
 
   // Render table headers
-  table.getHeaderGroups().forEach((headerGroup) => {
+  table.getHeaderGroups().forEach(headerGroup => {
     const trElement = document.createElement('tr')
-    headerGroup.headers.forEach((header) => {
+    headerGroup.headers.forEach(header => {
       const thElement = document.createElement('th')
       thElement.innerHTML = header.isPlaceholder
         ? ''
         : flexRender(header.column.columnDef.header, header.getContext())
-        trElement.appendChild(thElement)
+      trElement.appendChild(thElement)
     })
     theadElement.appendChild(trElement)
   })
 
   // Render table rows
-  table.getRowModel().rows.forEach((row) => {
+  table.getRowModel().rows.forEach(row => {
     const trElement = document.createElement('tr')
-    row.getVisibleCells().forEach((cell) => {
+    row.getVisibleCells().forEach(cell => {
       const tdElement = document.createElement('td')
-      tdElement.innerHTML = flexRender(cell.column.columnDef.cell, cell.getContext())
+      tdElement.innerHTML = flexRender(
+        cell.column.columnDef.cell,
+        cell.getContext()
+      )
       trElement.appendChild(tdElement)
     })
     tbodyElement.appendChild(trElement)
   })
 
   // Render table footers
-  table.getFooterGroups().forEach((footerGroup) => {
+  table.getFooterGroups().forEach(footerGroup => {
     const trElement = document.createElement('tr')
-    footerGroup.headers.forEach((header) => {
+    footerGroup.headers.forEach(header => {
       const thElement = document.createElement('th')
       thElement.innerHTML = header.isPlaceholder
         ? ''
         : flexRender(header.column.columnDef.footer, header.getContext())
-        trElement.appendChild(thElement)
+      trElement.appendChild(thElement)
     })
     tfootElement.appendChild(trElement)
   })

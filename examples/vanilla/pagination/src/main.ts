@@ -45,7 +45,6 @@ const columns = [
 ]
 
 const renderTable = () => {
-
   // Create table elements
   const tableElement = document.createElement('table')
   const theadElement = document.createElement('thead')
@@ -57,17 +56,20 @@ const renderTable = () => {
   tableElement.appendChild(tbodyElement)
 
   // Render table headers
-  table.getHeaderGroups().forEach((headerGroup) => {
+  table.getHeaderGroups().forEach(headerGroup => {
     const trElement = document.createElement('tr')
-    headerGroup.headers.forEach((header) => {
+    headerGroup.headers.forEach(header => {
       const thElement = document.createElement('th')
       thElement.colSpan = header.colSpan
       const divElement = document.createElement('div')
-      divElement.classList.add('w-36', ...(header.column.getCanSort() ? ['cursor-pointer', 'select-none'] : []))
-      divElement.onclick = (e) => header.column.getToggleSortingHandler()?.(e),
-      divElement.innerHTML = header.isPlaceholder
-        ? ''
-        : flexRender(header.column.columnDef.header, header.getContext())
+      divElement.classList.add(
+        'w-36',
+        ...(header.column.getCanSort() ? ['cursor-pointer', 'select-none'] : [])
+      )
+      ;(divElement.onclick = e => header.column.getToggleSortingHandler()?.(e)),
+        (divElement.innerHTML = header.isPlaceholder
+          ? ''
+          : flexRender(header.column.columnDef.header, header.getContext()))
       divElement.innerHTML +=
         {
           asc: ' 🔼',
@@ -80,11 +82,14 @@ const renderTable = () => {
   })
 
   // Render table rows
-  table.getRowModel().rows.forEach((row) => {
+  table.getRowModel().rows.forEach(row => {
     const trElement = document.createElement('tr')
-    row.getVisibleCells().forEach((cell) => {
+    row.getVisibleCells().forEach(cell => {
       const tdElement = document.createElement('td')
-      tdElement.innerHTML = flexRender(cell.column.columnDef.cell, cell.getContext())
+      tdElement.innerHTML = flexRender(
+        cell.column.columnDef.cell,
+        cell.getContext()
+      )
       trElement.appendChild(tdElement)
     })
     tbodyElement.appendChild(trElement)
@@ -101,7 +106,7 @@ const renderTable = () => {
   firstPageButton.innerHTML = '<<'
   firstPageButton.onclick = () => table.firstPage()
   paginationElement.appendChild(firstPageButton)
-  
+
   // Render pagination previous page button
   const prevPageButton = document.createElement('button')
   prevPageButton.classList.add('border', 'rounded', 'p-1')
@@ -140,9 +145,11 @@ const renderTable = () => {
   paginationPageInput.type = 'number'
   paginationPageInput.min = String(1)
   paginationPageInput.max = String(table.getPageCount())
-  paginationPageInput.defaultValue = String(table.getState().pagination.pageIndex + 1)
+  paginationPageInput.defaultValue = String(
+    table.getState().pagination.pageIndex + 1
+  )
   paginationPageInput.classList.add('border', 'p-1', 'rounded', 'w-16')
-  paginationPageInput.oninput = (e) => {
+  paginationPageInput.oninput = e => {
     const target = e.target as HTMLInputElement
     const page = target.value ? Number(target.value) - 1 : 0
     table.setPageIndex(page)
@@ -153,11 +160,11 @@ const renderTable = () => {
   // Render pagiantion page size
   const paginationPageSizeSelect = document.createElement('select')
   paginationPageSizeSelect.value = String(table.getState().pagination.pageSize)
-  paginationPageSizeSelect.onchange = (e) => {
+  paginationPageSizeSelect.onchange = e => {
     const target = e.target as HTMLSelectElement
     table.setPageSize(Number(target.value))
   }
-  [10, 20, 30, 40, 50].map(pageSize => {
+  ;[10, 20, 30, 40, 50].map(pageSize => {
     const option = document.createElement('option')
     option.value = String(pageSize)
     option.selected = table.getState().pagination.pageSize === pageSize
