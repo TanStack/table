@@ -728,6 +728,10 @@
             {
               "to": "framework/vue/examples/filters",
               "label": "Column Filters"
+            },
+            {
+              "to": "framework/vue/examples/virtualized-rows",
+              "label": "Virtualized Rows"
             }
           ]
         },
