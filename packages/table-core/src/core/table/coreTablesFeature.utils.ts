@@ -17,7 +17,7 @@ export function table_mergeOptions<
   TData extends RowData,
 >(
   table: Table_Internal<TFeatures, TData>,
-  newOptions: TableOptions<TFeatures, Array<TData>>,
+  newOptions: TableOptions<TFeatures, TData>,
 ) {
   if (table.options.mergeOptions) {
     return table.options.mergeOptions(table.options, newOptions)
@@ -34,7 +34,7 @@ export function table_setOptions<
   TData extends RowData,
 >(
   table: Table_Internal<TFeatures, TData>,
-  updater: Updater<TableOptions<TFeatures, Array<TData>>>,
+  updater: Updater<TableOptions<TFeatures, TData>>,
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
   // any used to override type error with looser options available with _rowModels

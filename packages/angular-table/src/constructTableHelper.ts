@@ -33,13 +33,10 @@ export type TableHelper_Core<
   columnHelper: ColumnHelper<TFeatures, TData>
   createColumnHelper: () => ColumnHelper<TFeatures, TData>
   features: TFeatures
-  options: Omit<
-    TableOptions<TFeatures, Array<TData>>,
-    'columns' | 'data' | 'state'
-  >
+  options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'>
   tableCreator: (
     tableOptions: () => Omit<
-      TableOptions<TFeatures, Array<TData>>,
+      TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
     >,
   ) => Table<TFeatures, TData>
@@ -50,17 +47,16 @@ export type TableHelper_Core<
  */
 export function constructTableHelper<
   TFeatures extends TableFeatures,
-  TDataList extends Array<RowData> = Array<any>,
+  TData extends RowData = any,
 >(
   tableCreator: (
-    tableOptions: () => TableOptions<TFeatures, TDataList>,
-  ) => Table<TFeatures, TDataList[number]> &
-    Signal<Table<TFeatures, TDataList[number]>>,
-  tableHelperOptions: TableHelperOptions<TFeatures, TDataList>,
-): TableHelper_Core<TFeatures, TDataList[number]> {
+    tableOptions: () => TableOptions<TFeatures, TData>,
+  ) => Table<TFeatures, TData> & Signal<Table<TFeatures, TData>>,
+  tableHelperOptions: TableHelperOptions<TFeatures, Array<TData>>,
+): TableHelper_Core<TFeatures, TData> {
   const { TData: _TData, ..._tableHelperOptions } = tableHelperOptions
   return {
-    columnHelper: createColumnHelper<TFeatures, TDataList[number]>(),
+    columnHelper: createColumnHelper<TFeatures, TData>(),
     createColumnHelper,
     features: tableHelperOptions._features,
     options: _tableHelperOptions as any,

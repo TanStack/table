@@ -33,13 +33,10 @@ export type TableHelper_Core<
     TData
   >
   features: TFeatures
-  options: Omit<
-    TableOptions<TFeatures, Array<TData>>,
-    'columns' | 'data' | 'state'
-  >
+  options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'>
   tableCreator: <TData extends RowData>(
     tableOptions: Omit<
-      TableOptions<TFeatures, Array<TData>>,
+      TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
     >,
   ) => Table<TFeatures, TData>
@@ -53,7 +50,7 @@ export function constructTableHelper<
   TData extends RowData = any,
 >(
   tableCreator: (
-    tableOptions: TableOptions<TFeatures, Array<TData>>,
+    tableOptions: TableOptions<TFeatures, TData>,
   ) => Table<TFeatures, TData>,
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper_Core<TFeatures, TData> {

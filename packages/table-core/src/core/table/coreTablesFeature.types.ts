@@ -75,9 +75,9 @@ export interface TableOptions_Table<
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   mergeOptions?: (
-    defaultOptions: TableOptions<TFeatures, Array<TDataList[number]>>,
-    options: Partial<TableOptions<TFeatures, Array<TDataList[number]>>>,
-  ) => TableOptions<TFeatures, Array<TDataList[number]>>
+    defaultOptions: TableOptions<TFeatures, TDataList[number]>,
+    options: Partial<TableOptions<TFeatures, TDataList[number]>>,
+  ) => TableOptions<TFeatures, TDataList[number]>
   /**
    * You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#meta)
@@ -132,7 +132,7 @@ export interface Table_CoreProperties<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#options)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  options: TableOptions<TFeatures, Array<TData>>
+  options: TableOptions<TFeatures, TData>
 }
 
 export interface Table_Table<
@@ -156,9 +156,7 @@ export interface Table_Table<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#setoptions)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  setOptions: (
-    newOptions: Updater<TableOptions<TFeatures, Array<TData>>>,
-  ) => void
+  setOptions: (newOptions: Updater<TableOptions<TFeatures, TData>>) => void
   /**
    * Call this function to update the table state.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#setstate)

@@ -21,7 +21,7 @@ export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  options: () => TableOptions<TFeatures, Array<TData>>,
+  options: () => TableOptions<TFeatures, TData>,
 ): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
   return lazyInit(() => {
     const features = () => {

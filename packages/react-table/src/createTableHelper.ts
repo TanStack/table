@@ -15,7 +15,7 @@ export type TableHelper<
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
   useTable: (
     tableOptions: Omit<
-      TableOptions<TFeatures, Array<TData>>,
+      TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
     >,
   ) => Table<TFeatures, TData>

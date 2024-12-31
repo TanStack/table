@@ -77,6 +77,12 @@ export interface TableOptions_Core<
 //         : never)
 //   >
 
+export type TableOptions_Internal<
+  TFeatures extends TableFeatures,
+  TDataList extends Array<RowData>,
+> = TableOptions_Core<TFeatures, TDataList> &
+  ExtractFeatureTypes<TFeatures, 'TableOptions'>
+
 export type TableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
