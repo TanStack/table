@@ -6,4 +6,5 @@ packages:
   - 'examples/react/*'
   - 'examples/solid/*'
   - 'examples/svelte/*'
+  - 'examples/vanilla/*'
   - 'examples/vue/*'
