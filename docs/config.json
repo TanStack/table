@@ -730,6 +730,15 @@
               "label": "Column Filters"
             }
           ]
+        },
+        {
+          "label": "vanilla",
+          "children": [
+            {
+              "to": "framework/vanilla/examples/basic",
+              "label": "Basic"
+            }
+          ]
         }
       ]
     }
