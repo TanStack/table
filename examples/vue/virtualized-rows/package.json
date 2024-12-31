@@ -9,16 +9,16 @@
     "test:types": "vue-tsc"
   },
   "dependencies": {
-    "@tanstack/vue-table": "^8.20.5",
+    "@tanstack/vue-table": "^9.0.0-alpha.10",
     "@tanstack/vue-virtual": "^3.10.8",
-    "vue": "^3.5.11"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9",
-    "@types/node": "^20.14.9",
-    "@vitejs/plugin-vue": "^5.1.4",
-    "typescript": "5.6.2",
-    "vite": "^5.4.8",
-    "vue-tsc": "^2.1.6"
+    "@faker-js/faker": "^9.3.0",
+    "@types/node": "^22.10.1",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "typescript": "5.6.3",
+    "vite": "^5.4.11",
+    "vue-tsc": "^2.1.10"
   }
 }
