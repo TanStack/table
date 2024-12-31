@@ -741,6 +741,10 @@
             {
               "to": "framework/vanilla/examples/basic",
               "label": "Basic"
+            },
+            {
+              "to": "framework/vanilla/examples/pagination",
+              "label": "Pagination"
             }
           ]
         }
