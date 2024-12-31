@@ -98,10 +98,10 @@ function App() {
       {
         accessorKey: 'firstName',
         cell: (info) => info.getValue(),
-        filterFn: 'includesStringSensitive', // note: normal non-fuzzy filter column
+        filterFn: 'includesStringSensitive', //note: normal non-fuzzy filter column - case sensitive
       },
       {
-        accessorFn: (row) => row.lastName, // note: normal non-fuzzy filter column - case sensitive
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,

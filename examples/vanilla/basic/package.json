@@ -1,0 +1,21 @@
+{
+  "name": "tanstack-table-example-vanilla-basic",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.1",
+    "@types/node": "^22.10.1",
+    "typescript": "5.6.3",
+    "vite": "^5.4.11"
+  },
+  "dependencies": {
+    "@tanstack/table-core": "^9.0.0-alpha.10",
+    "nanostores": "^0.11.3"
+  }
+}
