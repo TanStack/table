@@ -37,7 +37,7 @@ const columns = [
   columnHelper.accessor('age', {
     header: () => 'Age',
     cell: info => info.renderValue(),
-     // This column will sort in descending order by default since it is a number column
+    // This column will sort in descending order by default since it is a number column
   }),
   columnHelper.accessor('visits', {
     header: () => '<span>Visits</span>',
@@ -98,18 +98,21 @@ const renderTable = () => {
   })
 
   // Render table rows
-  table.getRowModel().rows.slice(0, 10).forEach(row => {
-    const trElement = document.createElement('tr')
-    row.getVisibleCells().forEach(cell => {
-      const tdElement = document.createElement('td')
-      tdElement.innerHTML = flexRender(
-        cell.column.columnDef.cell,
-        cell.getContext()
-      )
-      trElement.appendChild(tdElement)
+  table
+    .getRowModel()
+    .rows.slice(0, 10)
+    .forEach(row => {
+      const trElement = document.createElement('tr')
+      row.getVisibleCells().forEach(cell => {
+        const tdElement = document.createElement('td')
+        tdElement.innerHTML = flexRender(
+          cell.column.columnDef.cell,
+          cell.getContext()
+        )
+        trElement.appendChild(tdElement)
+      })
+      tbodyElement.appendChild(trElement)
     })
-    tbodyElement.appendChild(trElement)
-  })
 
   // Render table state info
   const stateInfoElement = document.createElement('pre')
