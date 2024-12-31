@@ -138,17 +138,14 @@ export function column_getAggregationFn<
 export function table_setGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, Array<TData>>,
-  updater: Updater<GroupingState>,
-) {
+>(table: Table_Internal<TFeatures, TData>, updater: Updater<GroupingState>) {
   table.options.onGroupingChange?.(updater)
 }
 
 export function table_resetGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setGrouping(
     table,
     defaultState ? [] : (table.initialState.grouping ?? []),

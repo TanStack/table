@@ -82,8 +82,7 @@ export type ConstructTableAPIs<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>> &
-    Partial<TConstructors['Table']>,
+  table: Table_Internal<TFeatures, TData> & Partial<TConstructors['Table']>,
 ) => void
 
 export type GetDefaultColumnDef<TConstructors extends FeatureConstructors> = <
@@ -95,8 +94,7 @@ export type GetDefaultColumnDef<TConstructors extends FeatureConstructors> = <
 
 export type GetDefaultTableOptions<TConstructors extends FeatureConstructors> =
   <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, Array<TData>> &
-      Partial<TConstructors['Table']>,
+    table: Table_Internal<TFeatures, TData> & Partial<TConstructors['Table']>,
   ) => Partial<TableOptions_All<TFeatures, Array<TData>>> &
     Partial<TConstructors['TableOptions']>
 

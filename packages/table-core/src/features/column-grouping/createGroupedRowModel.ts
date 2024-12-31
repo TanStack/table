@@ -25,7 +25,7 @@ export function createGroupedRowModel<
 >(
   aggregationFns: Record<keyof AggregationFns, AggregationFn<TFeatures, TData>>,
 ): (
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ) => () => RowModel<TFeatures, TData> {
   return (table) => {
     if (!table._rowModelFns.aggregationFns)
@@ -49,7 +49,7 @@ export function createGroupedRowModel<
 function _createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreGroupedRowModel()
   const grouping = table.options.state?.grouping
 

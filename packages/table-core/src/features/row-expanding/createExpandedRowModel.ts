@@ -10,7 +10,7 @@ export function createExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ) => () => RowModel<TFeatures, TData> {
   return (table) =>
     tableMemo({
@@ -28,7 +28,7 @@ export function createExpandedRowModel<
 function _createExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreExpandedRowModel()
   const expanded = table.options.state?.expanded
 

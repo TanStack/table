@@ -14,7 +14,7 @@ export function getDefaultExpandedState(): ExpandedState {
 export function table_autoResetExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   if (
     table.options.autoResetAll ??
     table.options.autoResetExpanded ??
@@ -27,17 +27,14 @@ export function table_autoResetExpanded<
 export function table_setExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, Array<TData>>,
-  updater: Updater<ExpandedState>,
-) {
+>(table: Table_Internal<TFeatures, TData>, updater: Updater<ExpandedState>) {
   table.options.onExpandedChange?.(updater)
 }
 
 export function table_toggleAllRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>, expanded?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, expanded?: boolean) {
   if (expanded ?? !table_getIsAllRowsExpanded(table)) {
     table_setExpanded(table, true)
   } else {
@@ -48,7 +45,7 @@ export function table_toggleAllRowsExpanded<
 export function table_resetExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setExpanded(
     table,
     defaultState ? {} : (table.initialState.expanded ?? {}),
@@ -58,7 +55,7 @@ export function table_resetExpanded<
 export function table_getCanSomeRowsExpand<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return table
     .getPrePaginatedRowModel()
     .flatRows.some((row) => row_getCanExpand(row))
@@ -67,7 +64,7 @@ export function table_getCanSomeRowsExpand<
 export function table_getToggleAllRowsExpandedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return (e: unknown) => {
     ;(e as any).persist?.()
     table_toggleAllRowsExpanded(table)
@@ -77,7 +74,7 @@ export function table_getToggleAllRowsExpandedHandler<
 export function table_getIsSomeRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const expanded = table.options.state?.expanded ?? {}
   return expanded === true || Object.values(expanded).some(Boolean)
 }
@@ -85,7 +82,7 @@ export function table_getIsSomeRowsExpanded<
 export function table_getIsAllRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const expanded = table.options.state?.expanded ?? {}
 
   // If expanded is true, save some cycles and return true
@@ -109,7 +106,7 @@ export function table_getIsAllRowsExpanded<
 export function table_getExpandedDepth<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   let maxDepth = 0
 
   const rowIds =

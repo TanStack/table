@@ -22,7 +22,7 @@ export function table_setRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   updater: Updater<RowPinningState>,
 ): void {
   table.options.onRowPinningChange?.(updater)
@@ -31,10 +31,7 @@ export function table_setRowPinning<
 export function table_resetRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, Array<TData>>,
-  defaultState?: boolean,
-): void {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean): void {
   table_setRowPinning(
     table,
     defaultState
@@ -49,7 +46,7 @@ export function table_getIsSomeRowsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   position?: RowPinningPosition,
 ): boolean {
   const rowPinning = table.options.state?.rowPinning
@@ -64,7 +61,7 @@ function table_getPinnedRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   position: 'top' | 'bottom',
 ): Array<Row<TFeatures, TData>> {
   const visibleRows = table.getRowModel().rows
@@ -89,27 +86,21 @@ function table_getPinnedRows<
 export function table_getTopRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, Array<TData>>,
-): Array<Row<TFeatures, TData>> {
+>(table: Table_Internal<TFeatures, TData>): Array<Row<TFeatures, TData>> {
   return table_getPinnedRows(table, 'top')
 }
 
 export function table_getBottomRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, Array<TData>>,
-): Array<Row<TFeatures, TData>> {
+>(table: Table_Internal<TFeatures, TData>): Array<Row<TFeatures, TData>> {
   return table_getPinnedRows(table, 'bottom')
 }
 
 export function table_getCenterRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, Array<TData>>,
-): Array<Row<TFeatures, TData>> {
+>(table: Table_Internal<TFeatures, TData>): Array<Row<TFeatures, TData>> {
   const { top, bottom } =
     table.options.state?.rowPinning ?? getDefaultRowPinningState()
   const allRows = table.getRowModel().rows

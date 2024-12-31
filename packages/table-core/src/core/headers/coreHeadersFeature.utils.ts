@@ -48,7 +48,7 @@ export function header_getContext<
 export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const { left, right } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
@@ -81,7 +81,7 @@ export function table_getHeaderGroups<
 export function table_getFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = table.getHeaderGroups()
   return [...headerGroups].reverse()
 }
@@ -89,7 +89,7 @@ export function table_getFooterGroups<
 export function table_getFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = table.getHeaderGroups()
   return headerGroups
     .map((headerGroup) => {
@@ -101,7 +101,7 @@ export function table_getFlatHeaders<
 export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const left = callMemoOrStaticFn(table, table_getLeftHeaderGroups)
   const center = callMemoOrStaticFn(table, table_getCenterHeaderGroups)
   const right = callMemoOrStaticFn(table, table_getRightHeaderGroups)

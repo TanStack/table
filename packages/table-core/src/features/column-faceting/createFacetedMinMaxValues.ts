@@ -9,7 +9,7 @@ export function createFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   columnId: string,
 ) => () => undefined | [number, number] {
   return (table, columnId) =>

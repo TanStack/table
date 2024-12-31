@@ -85,12 +85,12 @@ export type Table<
 
 export type Table_Internal<
   TFeatures extends TableFeatures,
-  TDataList extends Array<RowData> = Array<any>,
-> = Table<TFeatures, TDataList[number]> & {
-  _rowModels: CachedRowModel_All<TFeatures, TDataList[number]>
-  _rowModelFns: RowModelFns_All<TFeatures, TDataList[number]>
-  options: TableOptions_All<TFeatures, TDataList> & {
-    _rowModels?: CreateRowModels_All<TFeatures, TDataList[number]>
+  TData extends RowData = any,
+> = Table<TFeatures, TData> & {
+  _rowModels: CachedRowModel_All<TFeatures, TData>
+  _rowModelFns: RowModelFns_All<TFeatures, TData>
+  options: TableOptions_All<TFeatures, Array<TData>> & {
+    _rowModels?: CreateRowModels_All<TFeatures, TData>
     state?: TableState_All
     initialState?: TableState_All
   }

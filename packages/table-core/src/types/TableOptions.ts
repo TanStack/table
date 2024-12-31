@@ -79,8 +79,8 @@ export interface TableOptions_Core<
 
 export type TableOptions<
   TFeatures extends TableFeatures,
-  TDataList extends Array<RowData>,
-> = TableOptions_Core<TFeatures, TDataList> &
+  TData extends RowData,
+> = TableOptions_Core<TFeatures, Array<TData>> &
   ExtractFeatureTypes<TFeatures, 'TableOptions'>
 
 export type TableOptions_All<

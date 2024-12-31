@@ -12,7 +12,7 @@ export function filterRows<
 >(
   rows: Array<Row<TFeatures, TData>>,
   filterRowImpl: (row: Row<TFeatures, TData>) => any,
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ) {
   if (table.options.filterFromLeafRows) {
     return filterRowModelFromLeafs(rows, filterRowImpl, table)
@@ -29,7 +29,7 @@ function filterRowModelFromLeafs<
   filterRow: (
     row: Row<TFeatures, TData>,
   ) => Array<Row<TFeatures, TData>> | undefined,
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
   const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
   const newFilteredRowsById: Record<string, Row<TFeatures, TData>> = {}
@@ -101,7 +101,7 @@ function filterRowModelFromRoot<
 >(
   rowsToFilter: Array<Row<TFeatures, TData>>,
   filterRow: (row: Row<TFeatures, TData>) => any,
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
   const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
   const newFilteredRowsById: Record<string, Row<TFeatures, TData>> = {}

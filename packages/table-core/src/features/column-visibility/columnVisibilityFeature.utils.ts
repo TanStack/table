@@ -86,7 +86,7 @@ export function row_getVisibleCells<
 export function table_getVisibleFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return table
     .getAllFlatColumns()
     .filter((column) => callMemoOrStaticFn(column, column_getIsVisible))
@@ -95,7 +95,7 @@ export function table_getVisibleFlatColumns<
 export function table_getVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return table
     .getAllLeafColumns()
     .filter((column) => callMemoOrStaticFn(column, column_getIsVisible))
@@ -105,7 +105,7 @@ export function table_setColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnVisibilityState>,
 ) {
   table.options.onColumnVisibilityChange?.(updater)
@@ -114,7 +114,7 @@ export function table_setColumnVisibility<
 export function table_resetColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnVisibility(
     table,
     defaultState ? {} : (table.initialState.columnVisibility ?? {}),
@@ -124,7 +124,7 @@ export function table_resetColumnVisibility<
 export function table_toggleAllColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>, value?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, value?: boolean) {
   value = value ?? !table_getIsAllColumnsVisible(table)
 
   table_setColumnVisibility(
@@ -142,7 +142,7 @@ export function table_toggleAllColumnsVisible<
 export function table_getIsAllColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return !table
     .getAllLeafColumns()
     .some((column) => !callMemoOrStaticFn(column, column_getIsVisible))
@@ -151,7 +151,7 @@ export function table_getIsAllColumnsVisible<
 export function table_getIsSomeColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return table
     .getAllLeafColumns()
     .some((column) => callMemoOrStaticFn(column, column_getIsVisible))
@@ -160,7 +160,7 @@ export function table_getIsSomeColumnsVisible<
 export function table_getToggleAllColumnsVisibilityHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return (e: unknown) => {
     table_toggleAllColumnsVisible(
       table,

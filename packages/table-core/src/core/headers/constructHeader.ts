@@ -10,7 +10,7 @@ export function constructHeader<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   column: Column<TFeatures, TData, TValue>,
   options: {
     id?: string

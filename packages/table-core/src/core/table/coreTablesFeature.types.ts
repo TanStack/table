@@ -28,7 +28,7 @@ export interface TableOptions_Table<
    */
   _rowModels?: CreateRowModels_All<
     TFeatures,
-    TDataList[number] extends never ? TDataList[number] : RowData
+    NoInfer<TDataList[number]> | RowData
   >
   /**
    * Set this option to override any of the `autoReset...` feature options.

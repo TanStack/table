@@ -13,7 +13,7 @@ export function constructCell<
 >(
   column: Column<TFeatures, TData, TValue>,
   row: Row<TFeatures, TData>,
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ): Cell<TFeatures, TData, TValue> {
   const cell: Cell_CoreProperties<TFeatures, TData, TValue> = {
     column,

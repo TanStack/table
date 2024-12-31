@@ -25,7 +25,7 @@ export function createFilteredRowModel<
 >(
   filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>,
 ): (
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ) => () => RowModel<TFeatures, TData> {
   return (table) => {
     if (!table._rowModelFns.filterFns) table._rowModelFns.filterFns = filterFns
@@ -46,7 +46,7 @@ export function createFilteredRowModel<
 function _createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, Array<TData>>): RowModel<TFeatures, TData> {
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreFilteredRowModel()
   const { columnFilters, globalFilter } = table.options.state ?? {}
 

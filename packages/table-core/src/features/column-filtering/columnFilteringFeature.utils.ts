@@ -182,7 +182,7 @@ export function table_setColumnFilters<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnFiltersState>,
 ) {
   const leafColumns = table.getAllLeafColumns()
@@ -209,7 +209,7 @@ export function table_setColumnFilters<
 export function table_resetColumnFilters<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnFilters(
     table,
     defaultState ? [] : (table.initialState.columnFilters ?? []),

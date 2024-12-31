@@ -116,7 +116,7 @@ export function table_getRowId<
   TData extends RowData,
 >(
   originalRow: TData,
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   index: number,
   parent?: Row<TFeatures, TData>,
 ) {
@@ -130,7 +130,7 @@ export function table_getRow<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   rowId: string,
   searchAll?: boolean,
 ): Row<TFeatures, TData> {

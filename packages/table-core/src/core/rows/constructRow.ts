@@ -8,7 +8,7 @@ export const constructRow = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   id: string,
   original: TData,
   rowIndex: number,

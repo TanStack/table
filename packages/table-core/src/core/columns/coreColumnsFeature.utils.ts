@@ -46,7 +46,7 @@ export function table_getDefaultColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ): Partial<ColumnDef<TFeatures, TData, unknown>> {
   return {
     header: (props) => {
@@ -75,7 +75,7 @@ export function table_getAllColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ): Array<Column<TFeatures, TData, unknown>> {
   const recurseColumns = (
     colDefs: Array<ColumnDef<TFeatures, TData, unknown>>,
@@ -106,7 +106,7 @@ export function table_getAllFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ): Array<Column<TFeatures, TData, unknown>> {
   return table.getAllColumns().flatMap((column) => column.getFlatColumns())
 }
@@ -115,7 +115,7 @@ export function table_getAllFlatColumnsById<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
   return table.getAllFlatColumns().reduce(
     (acc, column) => {
@@ -130,7 +130,7 @@ export function table_getAllLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ): Array<Column<TFeatures, TData, unknown>> {
   const leafColumns = table.getAllColumns().flatMap(
     (c) => c.getLeafColumns(), // recursive
@@ -145,7 +145,7 @@ export function table_getColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   columnId: string,
 ): Column<TFeatures, TData, unknown> | undefined {
   const column = table.getAllFlatColumnsById()[columnId]

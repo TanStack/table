@@ -15,7 +15,7 @@ export function constructColumn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   columnDef: ColumnDef<TFeatures, TData, TValue>,
   depth: number,
   parent?: Column<TFeatures, TData, TValue>,

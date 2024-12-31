@@ -163,7 +163,7 @@ export function table_setColumnPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnPinningState>,
 ) {
   table.options.onColumnPinningChange?.(updater)
@@ -172,7 +172,7 @@ export function table_setColumnPinning<
 export function table_resetColumnPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>, defaultState?: boolean) {
+>(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnPinning(
     table,
     defaultState
@@ -184,10 +184,7 @@ export function table_resetColumnPinning<
 export function table_getIsSomeColumnsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, Array<TData>>,
-  position?: ColumnPinningPosition,
-) {
+>(table: Table_Internal<TFeatures, TData>, position?: ColumnPinningPosition) {
   const pinningState = table.options.state?.columnPinning
 
   if (!position) {
@@ -201,7 +198,7 @@ export function table_getIsSomeColumnsPinned<
 export function table_getLeftHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const allColumns = table.getAllColumns()
   const leafColumns = callMemoOrStaticFn(
     table,
@@ -220,7 +217,7 @@ export function table_getLeftHeaderGroups<
 export function table_getRightHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const allColumns = table.getAllColumns()
   const leafColumns = callMemoOrStaticFn(
     table,
@@ -240,7 +237,7 @@ export function table_getCenterHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
 ): Array<HeaderGroup<TFeatures, TData>> {
   const allColumns = table.getAllColumns()
   let leafColumns = callMemoOrStaticFn(
@@ -262,7 +259,7 @@ export function table_getCenterHeaderGroups<
 export function table_getLeftFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = callMemoOrStaticFn(table, table_getLeftHeaderGroups)
   return [...headerGroups].reverse()
 }
@@ -270,7 +267,7 @@ export function table_getLeftFooterGroups<
 export function table_getRightFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = callMemoOrStaticFn(table, table_getRightHeaderGroups)
   return [...headerGroups].reverse()
 }
@@ -278,7 +275,7 @@ export function table_getRightFooterGroups<
 export function table_getCenterFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = callMemoOrStaticFn(table, table_getCenterHeaderGroups)
   return [...headerGroups].reverse()
 }
@@ -288,7 +285,7 @@ export function table_getCenterFooterGroups<
 export function table_getLeftFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const leftHeaderGroups = callMemoOrStaticFn(table, table_getLeftHeaderGroups)
   return leftHeaderGroups
     .map((headerGroup) => {
@@ -300,7 +297,7 @@ export function table_getLeftFlatHeaders<
 export function table_getRightFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const rightHeaderGroups = callMemoOrStaticFn(
     table,
     table_getRightHeaderGroups,
@@ -315,7 +312,7 @@ export function table_getRightFlatHeaders<
 export function table_getCenterFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const centerHeaderGroups = callMemoOrStaticFn(
     table,
     table_getCenterHeaderGroups,
@@ -332,7 +329,7 @@ export function table_getCenterFlatHeaders<
 export function table_getLeftLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(table, table_getLeftFlatHeaders).filter(
     (header) => !header.subHeaders.length,
   )
@@ -341,7 +338,7 @@ export function table_getLeftLeafHeaders<
 export function table_getRightLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(table, table_getRightFlatHeaders).filter(
     (header) => !header.subHeaders.length,
   )
@@ -350,7 +347,7 @@ export function table_getRightLeafHeaders<
 export function table_getCenterLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(table, table_getCenterFlatHeaders).filter(
     (header) => !header.subHeaders.length,
   )
@@ -361,7 +358,7 @@ export function table_getCenterLeafHeaders<
 export function table_getLeftLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const { left } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   return left
@@ -375,7 +372,7 @@ export function table_getLeftLeafColumns<
 export function table_getRightLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const { right } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   return right
@@ -389,7 +386,7 @@ export function table_getRightLeafColumns<
 export function table_getCenterLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   const { left, right } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   const leftAndRight: Array<string> = [...left, ...right]
@@ -400,7 +397,7 @@ export function table_getPinnedLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   position: ColumnPinningPosition | 'center',
 ) {
   return !position
@@ -417,7 +414,7 @@ export function table_getPinnedLeafColumns<
 export function table_getLeftVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(table, table_getLeftLeafColumns).filter((column) =>
     callMemoOrStaticFn(column, column_getIsVisible),
   )
@@ -426,7 +423,7 @@ export function table_getLeftVisibleLeafColumns<
 export function table_getRightVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(table, table_getRightLeafColumns).filter((column) =>
     callMemoOrStaticFn(column, column_getIsVisible),
   )
@@ -435,7 +432,7 @@ export function table_getRightVisibleLeafColumns<
 export function table_getCenterVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, Array<TData>>) {
+>(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(table, table_getCenterLeafColumns).filter(
     (column) => callMemoOrStaticFn(column, column_getIsVisible),
   )
@@ -445,7 +442,7 @@ export function table_getPinnedVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, Array<TData>>,
+  table: Table_Internal<TFeatures, TData>,
   position?: ColumnPinningPosition | 'center',
 ) {
   return !position
