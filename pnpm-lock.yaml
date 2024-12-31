@@ -2647,6 +2647,9 @@ importers:
         specifier: ^0.11.3
         version: 0.11.3
     devDependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
       '@rollup/plugin-replace':
         specifier: ^5.0.7
         version: 5.0.7(rollup@4.29.1)
