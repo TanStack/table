@@ -104,13 +104,13 @@ function App() {
 
   const table = useTable({
     _features,
-    data,
-    columns,
     _rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns), // client side filtering
       sortedRowModel: createSortedRowModel(sortFns), // client side sorting
       paginatedRowModel: createPaginatedRowModel(),
     },
+    columns,
+    data,
     state: {
       columnFilters,
     },

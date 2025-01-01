@@ -34,7 +34,7 @@ export interface TableOptions_Table<
    */
   autoResetAll?: boolean
   /**
-   * The data for the table to display. This array should match the type you provided to `table.setRowType<...>`. coreColumnsFeature can access this data via string/index or a functional accessor. When the `data` option changes reference, the table will reprocess the data.
+   * The data for the table to display. When the `data` option changes reference, the table will reprocess the data.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#data)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
