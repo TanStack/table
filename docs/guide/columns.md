@@ -4,7 +4,7 @@ title: Columns Guide
 
 ## API
 
-[Header API](../../api/core/column)
+[Column API](../../api/core/column)
 
 ## Columns Guide
 
