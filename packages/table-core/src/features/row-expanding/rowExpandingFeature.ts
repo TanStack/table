@@ -61,18 +61,23 @@ export const rowExpandingFeature: TableFeature<RowExpandingFeatureConstructors> 
       assignAPIs(row, [
         {
           fn: (expanded) => row_toggleExpanded(row, expanded),
+          fnName: 'row_toggleExpanded',
         },
         {
           fn: () => row_getIsExpanded(row),
+          fnName: 'row_getIsExpanded',
         },
         {
           fn: () => row_getCanExpand(row),
+          fnName: 'row_getCanExpand',
         },
         {
           fn: () => row_getIsAllParentsExpanded(row),
+          fnName: 'row_getIsAllParentsExpanded',
         },
         {
           fn: () => row_getToggleExpandedHandler(row),
+          fnName: 'row_getToggleExpandedHandler',
         },
       ])
     },
@@ -81,30 +86,39 @@ export const rowExpandingFeature: TableFeature<RowExpandingFeatureConstructors> 
       assignAPIs(table, [
         {
           fn: () => table_autoResetExpanded(table),
+          fnName: 'table_autoResetExpanded',
         },
         {
           fn: (updater) => table_setExpanded(table, updater),
+          fnName: 'table_setExpanded',
         },
         {
           fn: (expanded) => table_toggleAllRowsExpanded(table, expanded),
+          fnName: 'table_toggleAllRowsExpanded',
         },
         {
           fn: (defaultState) => table_resetExpanded(table, defaultState),
+          fnName: 'table_resetExpanded',
         },
         {
           fn: () => table_getCanSomeRowsExpand(table),
+          fnName: 'table_getCanSomeRowsExpand',
         },
         {
           fn: () => table_getToggleAllRowsExpandedHandler(table),
+          fnName: 'table_getToggleAllRowsExpandedHandler',
         },
         {
           fn: () => table_getIsSomeRowsExpanded(table),
+          fnName: 'table_getIsSomeRowsExpanded',
         },
         {
           fn: () => table_getIsAllRowsExpanded(table),
+          fnName: 'table_getIsAllRowsExpanded',
         },
         {
           fn: () => table_getExpandedDepth(table),
+          fnName: 'table_getExpandedDepth',
         },
       ])
     },

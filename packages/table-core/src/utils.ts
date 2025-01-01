@@ -208,18 +208,14 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
 interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
   fn: (...args: any) => any
   memoDeps?: (depArgs?: any) => [...any] | undefined
+  fnName: string
 }
 
 /**
  * Assumes that a function name is in the format of `parentName_fnKey` and returns the `fnKey` and `fnName` in the format of `parentName.fnKey`.
  */
-export function getFunctionNameInfo(fn: AnyFunction) {
-  const rawName = fn.name
-  const name =
-    rawName != 'fn'
-      ? rawName
-      : (fn.toString().match(/\s*(\w+)\s*\(/)?.[1] as `${string}_${string}`)
-  const [parentName, fnKey] = name.split('_')
+export function getFunctionNameInfo(staticFnName: string) {
+  const [parentName, fnKey] = staticFnName.split('_')
   const fnName = `${parentName}.${fnKey}`
   return { fnKey, fnName, parentName } as {
     fnKey: string
@@ -242,8 +238,8 @@ export function assignAPIs<
   apis: Array<API<TDeps, NoInfer<TDepArgs>>>,
 ): void {
   const table = (obj._table ?? obj) as Table_Internal<TFeatures, TData>
-  apis.forEach(({ fn, memoDeps }) => {
-    const { fnKey, fnName, parentName } = getFunctionNameInfo(fn)
+  apis.forEach(({ fn, memoDeps, fnName: staticFnName }) => {
+    const { fnKey, fnName, parentName } = getFunctionNameInfo(staticFnName)
 
     const debugLevel = (
       parentName != 'table' ? parentName + 's' : parentName
@@ -275,10 +271,10 @@ export function callMemoOrStaticFn<
   TStaticFn extends AnyFunction,
 >(
   obj: TObject,
+  fnKey: string,
   staticFn: TStaticFn,
   ...args: Parameters<TStaticFn> extends [any, ...infer Rest] ? Rest : never
 ): ReturnType<TStaticFn> {
-  const { fnKey } = getFunctionNameInfo(staticFn)
   return (
     (obj[fnKey] as Function | undefined)?.(...args) ?? staticFn(obj, ...args)
   )

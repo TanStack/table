@@ -24,39 +24,51 @@ export const coreRowModelsFeature: TableFeature<{
     assignAPIs(table, [
       {
         fn: () => table_getCoreRowModel(table),
+        fnName: 'table_getCoreRowModel',
       },
       {
         fn: () => table_getPreFilteredRowModel(table),
+        fnName: 'table_getPreFilteredRowModel',
       },
       {
         fn: () => table_getFilteredRowModel(table),
+        fnName: 'table_getFilteredRowModel',
       },
       {
         fn: () => table_getPreGroupedRowModel(table),
+        fnName: 'table_getPreGroupedRowModel',
       },
       {
         fn: () => table_getGroupedRowModel(table),
+        fnName: 'table_getGroupedRowModel',
       },
       {
         fn: () => table_getPreSortedRowModel(table),
+        fnName: 'table_getPreSortedRowModel',
       },
       {
         fn: () => table_getSortedRowModel(table),
+        fnName: 'table_getSortedRowModel',
       },
       {
         fn: () => table_getPreExpandedRowModel(table),
+        fnName: 'table_getPreExpandedRowModel',
       },
       {
         fn: () => table_getExpandedRowModel(table),
+        fnName: 'table_getExpandedRowModel',
       },
       {
         fn: () => table_getPrePaginatedRowModel(table),
+        fnName: 'table_getPrePaginatedRowModel',
       },
       {
         fn: () => table_getPaginatedRowModel(table),
+        fnName: 'table_getPaginatedRowModel',
       },
       {
         fn: () => table_getRowModel(table),
+        fnName: 'table_getRowModel',
       },
     ])
   },

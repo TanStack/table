@@ -24,10 +24,12 @@ export const coreHeadersFeature: TableFeature<{
     assignAPIs(header, [
       {
         fn: () => header_getLeafHeaders(header),
+        fnName: 'header_getLeafHeaders',
         memoDeps: () => [header.column._table.options.columns],
       },
       {
         fn: () => header_getContext(header),
+        fnName: 'header_getContext',
         memoDeps: () => [header.column._table.options.columns],
       },
     ])
@@ -37,6 +39,7 @@ export const coreHeadersFeature: TableFeature<{
     assignAPIs(table, [
       {
         fn: () => table_getHeaderGroups(table),
+        fnName: 'table_getHeaderGroups',
         memoDeps: () => [
           table.options.columns,
           table.options.state?.columnOrder,
@@ -47,18 +50,21 @@ export const coreHeadersFeature: TableFeature<{
       },
       {
         fn: () => table_getFooterGroups(table),
+        fnName: 'table_getFooterGroups',
         memoDeps: () => [table.getHeaderGroups()],
       },
       {
         fn: () => table_getFlatHeaders(table),
+        fnName: 'table_getFlatHeaders',
         memoDeps: () => [table.getHeaderGroups()],
       },
       {
         fn: () => table_getLeafHeaders(table),
+        fnName: 'table_getLeafHeaders',
         memoDeps: () => [
-          callMemoOrStaticFn(table, table_getLeftHeaderGroups),
-          callMemoOrStaticFn(table, table_getCenterHeaderGroups),
-          callMemoOrStaticFn(table, table_getRightHeaderGroups),
+          callMemoOrStaticFn(table, 'getLeftHeaderGroups', table_getLeftHeaderGroups),
+          callMemoOrStaticFn(table, 'getCenterHeaderGroups', table_getCenterHeaderGroups),
+          callMemoOrStaticFn(table, 'getRightHeaderGroups', table_getRightHeaderGroups),
         ],
       },
     ])

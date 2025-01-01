@@ -67,27 +67,35 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
       assignAPIs(row, [
         {
           fn: (value, opts) => row_toggleSelected(row, value, opts),
+          fnName: 'row_toggleSelected',
         },
         {
           fn: () => row_getIsSelected(row),
+          fnName: 'row_getIsSelected',
         },
         {
           fn: () => row_getIsSomeSelected(row),
+          fnName: 'row_getIsSomeSelected',
         },
         {
           fn: () => row_getIsAllSubRowsSelected(row),
+          fnName: 'row_getIsAllSubRowsSelected',
         },
         {
           fn: () => row_getCanSelect(row),
+          fnName: 'row_getCanSelect',
         },
         {
           fn: () => row_getCanSelectSubRows(row),
+          fnName: 'row_getCanSelectSubRows',
         },
         {
           fn: () => row_getCanMultiSelect(row),
+          fnName: 'row_getCanMultiSelect',
         },
         {
           fn: () => row_getToggleSelectedHandler(row),
+          fnName: 'row_getToggleSelectedHandler',
         },
       ])
     },
@@ -96,21 +104,27 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
       assignAPIs(table, [
         {
           fn: (updater) => table_setRowSelection(table, updater),
+          fnName: 'table_setRowSelection',
         },
         {
           fn: (defaultState) => table_resetRowSelection(table, defaultState),
+          fnName: 'table_resetRowSelection',
         },
         {
           fn: (value) => table_toggleAllRowsSelected(table, value),
+          fnName: 'table_toggleAllRowsSelected',
         },
         {
           fn: (value) => table_toggleAllPageRowsSelected(table, value),
+          fnName: 'table_toggleAllPageRowsSelected',
         },
         {
           fn: () => table_getPreSelectedRowModel(table),
+          fnName: 'table_getPreSelectedRowModel',
         },
         {
           fn: () => table_getSelectedRowModel(table),
+          fnName: 'table_getSelectedRowModel',
           memoDeps: () => [
             table.options.state?.rowSelection,
             table.getCoreRowModel(),
@@ -118,6 +132,7 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
         },
         {
           fn: () => table_getFilteredSelectedRowModel(table),
+          fnName: 'table_getFilteredSelectedRowModel',
           memoDeps: () => [
             table.options.state?.rowSelection,
             table.getFilteredRowModel(),
@@ -125,6 +140,7 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
         },
         {
           fn: () => table_getGroupedSelectedRowModel(table),
+          fnName: 'table_getGroupedSelectedRowModel',
           memoDeps: () => [
             table.options.state?.rowSelection,
             table.getSortedRowModel(),
@@ -132,21 +148,27 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
         },
         {
           fn: () => table_getIsAllRowsSelected(table),
+          fnName: 'table_getIsAllRowsSelected',
         },
         {
           fn: () => table_getIsAllPageRowsSelected(table),
+          fnName: 'table_getIsAllPageRowsSelected',
         },
         {
           fn: () => table_getIsSomeRowsSelected(table),
+          fnName: 'table_getIsSomeRowsSelected',
         },
         {
           fn: () => table_getIsSomePageRowsSelected(table),
+          fnName: 'table_getIsSomePageRowsSelected',
         },
         {
           fn: () => table_getToggleAllRowsSelectedHandler(table),
+          fnName: 'table_getToggleAllRowsSelectedHandler',
         },
         {
           fn: () => table_getToggleAllPageRowsSelectedHandler(table),
+          fnName: 'table_getToggleAllPageRowsSelectedHandler',
         },
       ])
     },

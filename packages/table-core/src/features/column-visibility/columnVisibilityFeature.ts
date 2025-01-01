@@ -64,6 +64,7 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
       assignAPIs(column, [
         {
           fn: () => column_getIsVisible(column),
+          fnName: 'column_getIsVisible',
           memoDeps: () => [
             column._table.options.columns,
             column._table.options.state?.columnVisibility,
@@ -72,12 +73,15 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
         },
         {
           fn: () => column_getCanHide(column),
+          fnName: 'column_getCanHide',
         },
         {
           fn: () => column_getToggleVisibilityHandler(column),
+          fnName: 'column_getToggleVisibilityHandler',
         },
         {
           fn: (visible) => column_toggleVisibility(column, visible),
+          fnName: 'column_toggleVisibility',
         },
       ])
     },
@@ -86,6 +90,7 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
       assignAPIs(row, [
         {
           fn: () => row_getAllVisibleCells(row),
+          fnName: 'row_getAllVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
             row._table.options.state?.columnVisibility,
@@ -93,10 +98,23 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
         },
         {
           fn: (left, center, right) => row_getVisibleCells(left, center, right),
+          fnName: 'row_getVisibleCells',
           memoDeps: () => [
-            callMemoOrStaticFn(row, row_getLeftVisibleCells),
-            callMemoOrStaticFn(row, row_getCenterVisibleCells),
-            callMemoOrStaticFn(row, row_getRightVisibleCells),
+            callMemoOrStaticFn(
+              row,
+              'getLeftVisibleCells',
+              row_getLeftVisibleCells,
+            ),
+            callMemoOrStaticFn(
+              row,
+              'getCenterVisibleCells',
+              row_getCenterVisibleCells,
+            ),
+            callMemoOrStaticFn(
+              row,
+              'getRightVisibleCells',
+              row_getRightVisibleCells,
+            ),
           ],
         },
       ])
@@ -106,6 +124,7 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
       assignAPIs(table, [
         {
           fn: () => table_getVisibleFlatColumns(table),
+          fnName: 'table_getVisibleFlatColumns',
           memoDeps: () => [
             table.options.state?.columnVisibility,
             table.options.columns,
@@ -113,6 +132,7 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
         },
         {
           fn: () => table_getVisibleLeafColumns(table),
+          fnName: 'table_getVisibleLeafColumns',
           memoDeps: () => [
             table.options.state?.columnVisibility,
             table.options.columns,
@@ -120,22 +140,28 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
         },
         {
           fn: (updater) => table_setColumnVisibility(table, updater),
+          fnName: 'table_setColumnVisibility',
         },
         {
           fn: (defaultState) =>
             table_resetColumnVisibility(table, defaultState),
+          fnName: 'table_resetColumnVisibility',
         },
         {
           fn: (value) => table_toggleAllColumnsVisible(table, value),
+          fnName: 'table_toggleAllColumnsVisible',
         },
         {
           fn: () => table_getIsAllColumnsVisible(table),
+          fnName: 'table_getIsAllColumnsVisible',
         },
         {
           fn: () => table_getIsSomeColumnsVisible(table),
+          fnName: 'table_getIsSomeColumnsVisible',
         },
         {
           fn: () => table_getToggleAllColumnsVisibilityHandler(table),
+          fnName: 'table_getToggleAllColumnsVisibilityHandler',
         },
       ])
     },

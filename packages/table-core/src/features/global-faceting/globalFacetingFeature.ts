@@ -23,12 +23,15 @@ export const globalFacetingFeature: TableFeature<GlobalFacetingFeatureConstructo
       assignAPIs(table, [
         {
           fn: () => table_getGlobalFacetedMinMaxValues(table),
+          fnName: 'table_getGlobalFacetedMinMaxValues',
         },
         {
           fn: () => table_getGlobalFacetedRowModel(table),
+          fnName: 'table_getGlobalFacetedRowModel',
         },
         {
           fn: () => table_getGlobalFacetedUniqueValues(table),
+          fnName: 'table_getGlobalFacetedUniqueValues',
         },
       ])
     },

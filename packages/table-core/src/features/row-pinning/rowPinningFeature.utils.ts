@@ -145,8 +145,8 @@ export function row_getPinnedIndex<
 
   const visiblePinnedRowIds = (
     position === 'top'
-      ? callMemoOrStaticFn(row._table, table_getTopRows)
-      : callMemoOrStaticFn(row._table, table_getBottomRows)
+      ? callMemoOrStaticFn(row._table, 'getTopRows', table_getTopRows)
+      : callMemoOrStaticFn(row._table, 'getBottomRows', table_getBottomRows)
   ).map(({ id }) => id)
 
   return visiblePinnedRowIds.indexOf(row.id)
@@ -164,7 +164,7 @@ export function row_pin<TFeatures extends TableFeatures, TData extends RowData>(
   const parentRowIds = includeParentRows
     ? row.getParentRows().map(({ id }) => id)
     : []
-  const rowIds = new Set([...parentRowIds, row.id, ...leafRowIds])
+  const rowIds: Set<string> = new Set([...parentRowIds, row.id, ...leafRowIds])
 
   table_setRowPinning(row._table, (old) => {
     if (position === 'bottom') {

@@ -14,12 +14,15 @@ export const coreCellsFeature: TableFeature<{
     assignAPIs(cell, [
       {
         fn: () => cell_getValue(cell),
+        fnName: 'cell_getValue',
       },
       {
         fn: () => cell_renderValue(cell),
+        fnName: 'cell_renderValue',
       },
       {
         fn: () => cell_getContext(cell),
+        fnName: 'cell_getContext',
         memoDeps: () => [cell],
       },
     ])

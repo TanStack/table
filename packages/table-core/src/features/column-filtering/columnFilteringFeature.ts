@@ -71,24 +71,31 @@ export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstruc
       assignAPIs(column, [
         {
           fn: () => column_getAutoFilterFn(column),
+          fnName: 'column_getAutoFilterFn',
         },
         {
           fn: () => column_getFilterFn(column),
+          fnName: 'column_getFilterFn',
         },
         {
           fn: () => column_getCanFilter(column),
+          fnName: 'column_getCanFilter',
         },
         {
           fn: () => column_getIsFiltered(column),
+          fnName: 'column_getIsFiltered',
         },
         {
           fn: () => column_getFilterValue(column),
+          fnName: 'column_getFilterValue',
         },
         {
           fn: () => column_getFilterIndex(column),
+          fnName: 'column_getFilterIndex',
         },
         {
           fn: (value) => column_setFilterValue(column, value),
+          fnName: 'column_setFilterValue',
         },
       ])
     },
@@ -102,9 +109,11 @@ export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstruc
       assignAPIs(table, [
         {
           fn: (updater) => table_setColumnFilters(table, updater),
+          fnName: 'table_setColumnFilters',
         },
         {
           fn: (defaultState) => table_resetColumnFilters(table, defaultState),
+          fnName: 'table_resetColumnFilters',
         },
       ])
     },

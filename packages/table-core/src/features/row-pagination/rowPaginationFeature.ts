@@ -63,54 +63,71 @@ export const rowPaginationFeature: TableFeature<RowPaginationFeatureConstructors
       assignAPIs(table, [
         {
           fn: () => table_autoResetPageIndex(table),
+          fnName: 'table_autoResetPageIndex',
         },
         {
           fn: (updater) => table_setPagination(table, updater),
+          fnName: 'table_setPagination',
         },
         {
           fn: (defaultState) => table_resetPagination(table, defaultState),
+          fnName: 'table_resetPagination',
         },
         {
           fn: (updater) => table_setPageIndex(table, updater),
+          fnName: 'table_setPageIndex',
         },
         {
           fn: (defaultState) => table_resetPageIndex(table, defaultState),
+          fnName: 'table_resetPageIndex',
         },
         {
           fn: (updater) => table_setPageSize(table, updater),
+          fnName: 'table_setPageSize',
         },
         {
           fn: () => table_getPageCount(table),
+          fnName: 'table_getPageCount',
         },
         {
           fn: (defaultState) => table_resetPageSize(table, defaultState),
+          fnName: 'table_resetPageSize',
         },
         {
           fn: () => table_getPageOptions(table),
+          fnName: 'table_getPageOptions',
         },
         {
           fn: () => table_getCanPreviousPage(table),
+          fnName: 'table_getCanPreviousPage',
         },
         {
           fn: () => table_getCanNextPage(table),
+          fnName: 'table_getCanNextPage',
         },
         {
           fn: () => table_previousPage(table),
+          fnName: 'table_previousPage',
         },
         {
           fn: () => table_nextPage(table),
+          fnName: 'table_nextPage',
         },
         {
           fn: () => table_firstPage(table),
+          fnName: 'table_firstPage',
         },
         {
           fn: () => table_lastPage(table),
+          fnName: 'table_lastPage',
         },
         {
           fn: () => table_getPageCount(table),
+          fnName: 'table_getPageCount',
         },
         {
           fn: () => table_getRowCount(table),
+          fnName: 'table_getRowCount',
         },
       ])
     },

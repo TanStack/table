@@ -81,7 +81,6 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
     id: 'age',
     header: () => 'Age',
     cell: (info) => {
-      console.log('info test value')
       return info.renderValue()
     },
   },

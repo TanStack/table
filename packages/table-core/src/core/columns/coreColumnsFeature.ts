@@ -22,10 +22,12 @@ export const coreColumnsFeature: TableFeature<{
     assignAPIs(column, [
       {
         fn: () => column_getFlatColumns(column),
+        fnName: 'column_getFlatColumns',
         memoDeps: () => [table.options.columns],
       },
       {
         fn: () => column_getLeafColumns(column),
+        fnName: 'column_getLeafColumns',
         memoDeps: () => [
           table.options.state?.columnOrder,
           table.options.state?.grouping,
@@ -40,22 +42,27 @@ export const coreColumnsFeature: TableFeature<{
     assignAPIs(table, [
       {
         fn: () => table_getDefaultColumnDef(table),
+        fnName: 'table_getDefaultColumnDef',
         memoDeps: () => [table.options.defaultColumn],
       },
       {
         fn: () => table_getAllColumns(table),
+        fnName: 'table_getAllColumns',
         memoDeps: () => [table.options.columns],
       },
       {
         fn: () => table_getAllFlatColumns(table),
+        fnName: 'table_getAllFlatColumns',
         memoDeps: () => [table.options.columns],
       },
       {
         fn: () => table_getAllFlatColumnsById(table),
+        fnName: 'table_getAllFlatColumnsById',
         memoDeps: () => [table.options.columns],
       },
       {
         fn: () => table_getAllLeafColumns(table),
+        fnName: 'table_getAllLeafColumns',
         memoDeps: () => [
           table.options.state?.columnOrder,
           table.options.state?.grouping,
@@ -65,6 +72,7 @@ export const coreColumnsFeature: TableFeature<{
       },
       {
         fn: (columnId) => table_getColumn(table, columnId),
+        fnName: 'table_getColumn',
       },
     ])
   },

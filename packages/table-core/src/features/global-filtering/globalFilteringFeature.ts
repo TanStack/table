@@ -59,6 +59,7 @@ export const globalFilteringFeature: TableFeature<GlobalFilteringFeatureConstruc
       assignAPIs(column, [
         {
           fn: () => column_getCanGlobalFilter(column),
+          fnName: 'column_getCanGlobalFilter',
         },
       ])
     },
@@ -67,15 +68,19 @@ export const globalFilteringFeature: TableFeature<GlobalFilteringFeatureConstruc
       assignAPIs(table, [
         {
           fn: () => table_getGlobalAutoFilterFn(),
+          fnName: 'table_getGlobalAutoFilterFn',
         },
         {
           fn: () => table_getGlobalFilterFn(table),
+          fnName: 'table_getGlobalFilterFn',
         },
         {
           fn: (updater) => table_setGlobalFilter(table, updater),
+          fnName: 'table_setGlobalFilter',
         },
         {
           fn: (defaultState) => table_resetGlobalFilter(table, defaultState),
+          fnName: 'table_resetGlobalFilter',
         },
       ])
     },

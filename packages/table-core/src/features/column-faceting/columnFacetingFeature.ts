@@ -27,12 +27,15 @@ export const columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructo
       assignAPIs(column, [
         {
           fn: () => column_getFacetedMinMaxValues(column, column._table),
+          fnName: 'column_getFacetedMinMaxValues',
         },
         {
           fn: () => column_getFacetedRowModel(column, column._table),
+          fnName: 'column_getFacetedRowModel',
         },
         {
           fn: () => column_getFacetedUniqueValues(column, column._table),
+          fnName: 'column_getFacetedUniqueValues',
         },
       ])
     },

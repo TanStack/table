@@ -1,7 +1,13 @@
 import { constructTable, coreFeatures } from '../../src'
 import { generateTestColumnDefs } from '../fixtures/data/generateTestColumnDefs'
 import { generateTestData } from '../fixtures/data/generateTestData'
-import type { Row, TableFeatures, TableOptions, TableState } from '../../src'
+import type {
+  Row,
+  Table,
+  TableFeatures,
+  TableOptions,
+  TableState,
+} from '../../src'
 import type { Person } from '../fixtures/data/types'
 
 export function generateTestTableWithData<TFeatures extends TableFeatures>(
@@ -12,7 +18,7 @@ export function generateTestTableWithData<TFeatures extends TableFeatures>(
   > & {
     _features?: TableFeatures
   },
-) {
+): Table<TFeatures, Person> {
   const lengthsArray = Array.isArray(lengths) ? lengths : [lengths]
   const data = generateTestData(...lengthsArray)
   const columns = generateTestColumnDefs<TFeatures>(data)
@@ -32,7 +38,7 @@ export function generateTestTableWithData<TFeatures extends TableFeatures>(
 export function generateTestTableFromData<TFeatures extends TableFeatures>(
   data: Array<Person>,
   options?: Omit<TableOptions<TFeatures, Person>, 'data' | 'columns'>,
-) {
+): Table<TFeatures, Person> {
   const columns = generateTestColumnDefs<TFeatures>(data)
   return constructTable({
     data,
@@ -53,7 +59,7 @@ export function generateTestTableWithDataAndState<
     TableOptions<TFeatures, Person>,
     'data' | 'columns' | 'onStateChange'
   >,
-) {
+): Table<TFeatures, Person> {
   const lengthsArray = Array.isArray(lengths) ? lengths : [lengths]
   const data = generateTestData(...lengthsArray)
   const columns = generateTestColumnDefs<TFeatures>(data)
@@ -89,7 +95,7 @@ export function generateTestTableWithStateFromData<
     TableOptions<TFeatures, Person>,
     'data' | 'columns' | 'onStateChange'
   >,
-) {
+): Table<TFeatures, Person> {
   const columns = generateTestColumnDefs<TFeatures>(data)
   let state = { ...options?.initialState } as TableState<TFeatures>
 

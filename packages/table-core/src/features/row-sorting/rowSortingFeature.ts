@@ -73,39 +73,51 @@ export const rowSortingFeature: TableFeature<RowSortingFeatureConstructors> = {
     assignAPIs(column, [
       {
         fn: () => column_getAutoSortFn(column),
+        fnName: 'column.getAutoSortFn',
       },
       {
         fn: () => column_getAutoSortDir(column),
+        fnName: 'column.getAutoSortDir',
       },
       {
         fn: () => column_getSortFn(column),
+        fnName: 'column_getSortFn',
       },
       {
         fn: (desc, multi) => column_toggleSorting(column, desc, multi),
+        fnName: 'column_toggleSorting',
       },
       {
         fn: () => column_getFirstSortDir(column),
+        fnName: 'column_getFirstSortDir',
       },
       {
         fn: (multi) => column_getNextSortingOrder(column, multi),
+        fnName: 'column_getNextSortingOrder',
       },
       {
         fn: () => column_getCanSort(column),
+        fnName: 'column_getCanSort',
       },
       {
         fn: () => column_getCanMultiSort(column),
+        fnName: 'column_getCanMultiSort',
       },
       {
         fn: () => column_getIsSorted(column),
+        fnName: 'column_getIsSorted',
       },
       {
         fn: () => column_getSortIndex(column),
+        fnName: 'column_getSortIndex',
       },
       {
         fn: () => column_clearSorting(column),
+        fnName: 'column_clearSorting',
       },
       {
         fn: () => column_getToggleSortingHandler(column),
+        fnName: 'column_getToggleSortingHandler',
       },
     ])
   },
@@ -114,9 +126,11 @@ export const rowSortingFeature: TableFeature<RowSortingFeatureConstructors> = {
     assignAPIs(table, [
       {
         fn: (updater) => table_setSorting(table, updater),
+        fnName: 'table_setSorting',
       },
       {
         fn: (defaultState) => table_resetSorting(table, defaultState),
+        fnName: 'table_resetSorting',
       },
     ])
   },

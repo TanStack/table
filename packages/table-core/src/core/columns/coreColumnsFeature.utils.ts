@@ -35,6 +35,7 @@ export function column_getLeafColumns<
 
     return callMemoOrStaticFn(
       column._table,
+      'getOrderColumns',
       table_getOrderColumnsFn,
     )(leafColumns as any) as any
   }
@@ -137,6 +138,7 @@ export function table_getAllLeafColumns<
   )
   return callMemoOrStaticFn(
     table,
+    'getOrderColumns',
     table_getOrderColumnsFn,
   )(leafColumns as any) as any
 }

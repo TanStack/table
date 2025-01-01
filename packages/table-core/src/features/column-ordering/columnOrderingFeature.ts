@@ -48,6 +48,7 @@ export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructo
       assignAPIs(column, [
         {
           fn: (position) => column_getIndex(column, position),
+          fnName: 'column_getIndex',
           memoDeps: (position) => [
             position,
             column._table.options.state?.columnOrder,
@@ -57,9 +58,11 @@ export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructo
         },
         {
           fn: (position) => column_getIsFirstColumn(column, position),
+          fnName: 'column_getIsFirstColumn',
         },
         {
           fn: (position) => column_getIsLastColumn(column, position),
+          fnName: 'column_getIsLastColumn',
         },
       ])
     },
@@ -68,12 +71,15 @@ export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructo
       assignAPIs(table, [
         {
           fn: (updater) => table_setColumnOrder(table, updater),
+          fnName: 'table_setColumnOrder',
         },
         {
           fn: (defaultState) => table_resetColumnOrder(table, defaultState),
+          fnName: 'table_resetColumnOrder',
         },
         {
           fn: () => table_getOrderColumnsFn(table),
+          fnName: 'table_getOrderColumnsFn',
           memoDeps: () => [
             table.options.state?.columnOrder,
             table.options.state?.grouping,

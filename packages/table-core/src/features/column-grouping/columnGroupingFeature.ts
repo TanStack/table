@@ -76,12 +76,15 @@ export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructo
       assignAPIs(cell, [
         {
           fn: () => cell_getIsGrouped(cell),
+          fnName: 'cell_getIsGrouped',
         },
         {
           fn: () => cell_getIsPlaceholder(cell),
+          fnName: 'cell_getIsPlaceholder',
         },
         {
           fn: () => cell_getIsAggregated(cell),
+          fnName: 'cell_getIsAggregated',
         },
       ])
     },
@@ -90,24 +93,31 @@ export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructo
       assignAPIs(column, [
         {
           fn: () => column_toggleGrouping(column),
+          fnName: 'column_toggleGrouping',
         },
         {
           fn: () => column_getCanGroup(column),
+          fnName: 'column_getCanGroup',
         },
         {
           fn: () => column_getIsGrouped(column),
+          fnName: 'column_getIsGrouped',
         },
         {
           fn: () => column_getGroupedIndex(column),
+          fnName: 'column_getGroupedIndex',
         },
         {
           fn: () => column_getToggleGroupingHandler(column),
+          fnName: 'column_getToggleGroupingHandler',
         },
         {
           fn: () => column_getAutoAggregationFn(column),
+          fnName: 'column_getAutoAggregationFn',
         },
         {
           fn: () => column_getAggregationFn(column),
+          fnName: 'column_getAggregationFn',
         },
       ])
     },
@@ -118,9 +128,11 @@ export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructo
       assignAPIs(row, [
         {
           fn: () => row_getIsGrouped(row),
+          fnName: 'row_getIsGrouped',
         },
         {
           fn: (columnId) => row_getGroupingValue(row, columnId),
+          fnName: 'row_getGroupingValue',
         },
       ])
     },
@@ -129,9 +141,11 @@ export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructo
       assignAPIs(table, [
         {
           fn: (updater) => table_setGrouping(table, updater),
+          fnName: 'table_setGrouping',
         },
         {
           fn: (defaultState) => table_resetGrouping(table, defaultState),
+          fnName: 'table_resetGrouping',
         },
       ])
     },

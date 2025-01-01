@@ -33,7 +33,9 @@ export function buildHeaderGroups<
     maxDepth = Math.max(maxDepth, depth)
 
     columns
-      .filter((column) => callMemoOrStaticFn(column, column_getIsVisible))
+      .filter((column) =>
+        callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
+      )
       .forEach((column) => {
         if (column.columns.length) {
           findMaxDepth(column.columns, depth + 1)
@@ -136,7 +138,11 @@ export function buildHeaderGroups<
     headers: Array<Header<TFeatures, TData, TValue>>,
   ): Array<{ colSpan: number; rowSpan: number }> => {
     const filteredHeaders = headers.filter((header) =>
-      callMemoOrStaticFn(header.column, column_getIsVisible),
+      callMemoOrStaticFn(
+        header.column,
+        'getIsVisible',
+        column_getIsVisible,
+      ),
     )
 
     return filteredHeaders.map((header) => {

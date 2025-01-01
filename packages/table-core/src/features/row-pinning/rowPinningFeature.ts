@@ -54,12 +54,15 @@ export const rowPinningFeature: TableFeature<RowPinningFeatureConstructors> = {
     assignAPIs(row, [
       {
         fn: () => row_getCanPin(row),
+        fnName: 'row_getCanPin',
       },
       {
         fn: () => row_getIsPinned(row),
+        fnName: 'row_getIsPinned',
       },
       {
         fn: () => row_getPinnedIndex(row),
+        fnName: 'row_getPinnedIndex',
         memoDeps: () => [
           row._table.getRowModel().rows,
           row._table.options.state?.rowPinning,
@@ -68,6 +71,7 @@ export const rowPinningFeature: TableFeature<RowPinningFeatureConstructors> = {
       {
         fn: (position, includeLeafRows, includeParentRows) =>
           row_pin(row, position, includeLeafRows, includeParentRows),
+        fnName: 'row_pin',
       },
     ])
   },
@@ -76,15 +80,19 @@ export const rowPinningFeature: TableFeature<RowPinningFeatureConstructors> = {
     assignAPIs(table, [
       {
         fn: (updater) => table_setRowPinning(table, updater),
+        fnName: 'table_setRowPinning',
       },
       {
         fn: (defaultState) => table_resetRowPinning(table, defaultState),
+        fnName: 'table_resetRowPinning',
       },
       {
         fn: (position) => table_getIsSomeRowsPinned(table, position),
+        fnName: 'table_getIsSomeRowsPinned',
       },
       {
         fn: () => table_getTopRows(table),
+        fnName: 'table_getTopRows',
         memoDeps: () => [
           table.getRowModel().rows,
           table.options.state?.rowPinning?.top,
@@ -92,6 +100,7 @@ export const rowPinningFeature: TableFeature<RowPinningFeatureConstructors> = {
       },
       {
         fn: () => table_getBottomRows(table),
+        fnName: 'table_getBottomRows',
         memoDeps: () => [
           table.getRowModel().rows,
           table.options.state?.rowPinning?.bottom,
@@ -99,6 +108,7 @@ export const rowPinningFeature: TableFeature<RowPinningFeatureConstructors> = {
       },
       {
         fn: () => table_getCenterRows(table),
+        fnName: 'table_getCenterRows',
         memoDeps: () => [
           table.getRowModel().rows,
           table.options.state?.rowPinning,

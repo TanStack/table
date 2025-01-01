@@ -5,33 +5,23 @@ import { getFunctionNameInfo } from '../../src/utils'
 
 describe('utils', () => {
   describe('getFunctionNameInfo', () => {
-    it('should correctly parse a function with a standard name', () => {
-      function table_getRowModel() {}
-      const result = getFunctionNameInfo(table_getRowModel)
+    it('should correctly parse a function name with underscore separator', () => {
+      const result = getFunctionNameInfo('table_getRowModel')
+
       expect(result).toEqual({
+        parentName: 'table',
         fnKey: 'getRowModel',
         fnName: 'table.getRowModel',
-        parentName: 'table',
       })
     })
 
-    it('should handle anonymous functions with a name assigned', () => {
-      const row_getCells = function () {}
-      const result = getFunctionNameInfo(row_getCells)
-      expect(result).toEqual({
-        fnKey: 'getCells',
-        fnName: 'row.getCells',
-        parentName: 'row',
-      })
-    })
+    it('should handle different parent names', () => {
+      const result = getFunctionNameInfo('column_getWidth')
 
-    it('should parse arrow functions with a name', () => {
-      const column_getIsVisible = () => {}
-      const result = getFunctionNameInfo(column_getIsVisible)
       expect(result).toEqual({
-        fnKey: 'getIsVisible',
-        fnName: 'column.getIsVisible',
         parentName: 'column',
+        fnKey: 'getWidth',
+        fnName: 'column.getWidth',
       })
     })
   })
