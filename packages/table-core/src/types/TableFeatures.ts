@@ -1,4 +1,4 @@
-import type { CoreTableFeatures } from '../core/coreFeatures'
+import type { CoreFeatures } from '../core/coreFeatures'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { ColumnDefBase_All } from './ColumnDef'
 import type { Cell } from './Cell'
@@ -8,7 +8,7 @@ import type { Row } from './Row'
 import type { Table_Internal } from './Table'
 import type { TableOptions_All } from './TableOptions'
 import type { TableState_All } from './TableState'
-import type { StockTableFeatures } from '../features/stockFeatures'
+import type { StockFeatures } from '../features/stockFeatures'
 
 export type ExtractFeatureTypes<
   TFeatures extends TableFeatures,
@@ -43,8 +43,8 @@ interface FeatureConstructors {
 export interface Plugins {}
 
 export interface TableFeatures
-  extends Partial<CoreTableFeatures>,
-    Partial<StockTableFeatures>,
+  extends Partial<CoreFeatures>,
+    Partial<StockFeatures>,
     Partial<Plugins> {}
 
 export type ConstructCellAPIs<TConstructors extends FeatureConstructors> = <

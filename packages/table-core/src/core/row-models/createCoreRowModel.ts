@@ -5,11 +5,15 @@ import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from './coreRowModelsFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
+import type { RowData } from '../../types/type-utils'
 
-export function createCoreRowModel<TFeatures extends TableFeatures>(): (
-  table: Table_Internal<TFeatures, any>,
-) => () => RowModel<TFeatures, any> {
-  return (table: Table_Internal<TFeatures, any>) =>
+export function createCoreRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): (
+  table: Table_Internal<TFeatures, TData>,
+) => () => RowModel<TFeatures, TData> {
+  return (table: Table_Internal<TFeatures, TData>) =>
     tableMemo({
       debug: isDev && (table.options.debugAll ?? table.options.debugTable),
       fnName: 'table.getCoreRowModel',
@@ -19,26 +23,29 @@ export function createCoreRowModel<TFeatures extends TableFeatures>(): (
     })
 }
 
-function _createCoreRowModel<TFeatures extends TableFeatures>(
-  table: Table_Internal<TFeatures, any>,
-  data: Array<any>,
+function _createCoreRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  data: Array<TData>,
 ): {
-  rows: Array<Row<TFeatures, any>>
-  flatRows: Array<Row<TFeatures, any>>
-  rowsById: Record<string, Row<TFeatures, any>>
+  rows: Array<Row<TFeatures, TData>>
+  flatRows: Array<Row<TFeatures, TData>>
+  rowsById: Record<string, Row<TFeatures, TData>>
 } {
-  const rowModel: RowModel<TFeatures, any> = {
+  const rowModel: RowModel<TFeatures, TData> = {
     rows: [],
     flatRows: [],
     rowsById: {},
   }
 
   const accessRows = (
-    originalRows: Array<any>,
+    originalRows: Array<TData>,
     depth = 0,
-    parentRow?: Row<TFeatures, any>,
-  ): Array<Row<TFeatures, any>> => {
-    const rows = [] as Array<Row<TFeatures, any>>
+    parentRow?: Row<TFeatures, TData>,
+  ): Array<Row<TFeatures, TData>> => {
+    const rows = [] as Array<Row<TFeatures, TData>>
 
     for (let i = 0; i < originalRows.length; i++) {
       const originalRow = originalRows[i]!

@@ -14,7 +14,25 @@ import { rowPinningFeature } from './row-pinning/rowPinningFeature'
 import { rowSelectionFeature } from './row-selection/rowSelectionFeature'
 import { rowSortingFeature } from './row-sorting/rowSortingFeature'
 
-export const stockFeatures = {
+export interface StockFeatures {
+  columnFacetingFeature: typeof columnFacetingFeature
+  columnFilteringFeature: typeof columnFilteringFeature
+  columnGroupingFeature: typeof columnGroupingFeature
+  columnOrderingFeature: typeof columnOrderingFeature
+  columnPinningFeature: typeof columnPinningFeature
+  columnResizingFeature: typeof columnResizingFeature
+  columnSizingFeature: typeof columnSizingFeature
+  columnVisibilityFeature: typeof columnVisibilityFeature
+  globalFacetingFeature: typeof globalFacetingFeature
+  globalFilteringFeature: typeof globalFilteringFeature
+  rowExpandingFeature: typeof rowExpandingFeature
+  rowPaginationFeature: typeof rowPaginationFeature
+  rowPinningFeature: typeof rowPinningFeature
+  rowSelectionFeature: typeof rowSelectionFeature
+  rowSortingFeature: typeof rowSortingFeature
+}
+
+export const stockFeatures: StockFeatures = {
   columnFacetingFeature,
   columnFilteringFeature,
   columnGroupingFeature,
@@ -30,6 +48,4 @@ export const stockFeatures = {
   rowPinningFeature,
   rowSelectionFeature,
   rowSortingFeature,
-} as const
-
-export type StockTableFeatures = typeof stockFeatures
+}

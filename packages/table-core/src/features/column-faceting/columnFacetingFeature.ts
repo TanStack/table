@@ -12,25 +12,28 @@ import type {
 } from './columnFacetingFeature.types'
 import type { RowData } from '../../types/type-utils'
 
-/**
- * The Column Faceting feature adds column faceting APIs to the column objects.
- */
-export const columnFacetingFeature: TableFeature<{
+interface ColumnFacetingFeatureConstructors {
   Column: Column_ColumnFaceting<TableFeatures, RowData>
   CreateRowModels: CreateRowModel_Faceted<TableFeatures, RowData>
   CachedRowModel: CachedRowModel_Faceted<TableFeatures, RowData>
-}> = {
-  constructColumnAPIs: (column) => {
-    assignAPIs(column, [
-      {
-        fn: () => column_getFacetedMinMaxValues(column, column._table),
-      },
-      {
-        fn: () => column_getFacetedRowModel(column, column._table),
-      },
-      {
-        fn: () => column_getFacetedUniqueValues(column, column._table),
-      },
-    ])
-  },
 }
+
+/**
+ * The Column Faceting feature adds column faceting APIs to the column objects.
+ */
+export const columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructors> =
+  {
+    constructColumnAPIs: (column) => {
+      assignAPIs(column, [
+        {
+          fn: () => column_getFacetedMinMaxValues(column, column._table),
+        },
+        {
+          fn: () => column_getFacetedRowModel(column, column._table),
+        },
+        {
+          fn: () => column_getFacetedUniqueValues(column, column._table),
+        },
+      ])
+    },
+  }

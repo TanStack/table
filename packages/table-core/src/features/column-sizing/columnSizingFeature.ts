@@ -26,6 +26,15 @@ import type {
 } from './columnSizingFeature.types'
 import type { TableFeature } from '../../types/TableFeatures'
 
+interface ColumnSizingFeatureConstructors {
+  ColumnDef: ColumnDef_ColumnSizing
+  Column: Column_ColumnSizing
+  Header: Header_ColumnSizing
+  Table: Table_ColumnSizing
+  TableOptions: TableOptions_ColumnSizing
+  TableState: TableState_ColumnSizing
+}
+
 /**
  * The Column Sizing feature adds column sizing state and APIs to the table, header, and column objects.
  *
@@ -33,97 +42,91 @@ import type { TableFeature } from '../../types/TableFeatures'
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing)
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
  */
-export const columnSizingFeature: TableFeature<{
-  ColumnDef: ColumnDef_ColumnSizing
-  Column: Column_ColumnSizing
-  Header: Header_ColumnSizing
-  Table: Table_ColumnSizing
-  TableOptions: TableOptions_ColumnSizing
-  TableState: TableState_ColumnSizing
-}> = {
-  getInitialState: (initialState) => {
-    return {
-      columnSizing: getDefaultColumnSizingState(),
-      ...initialState,
-    }
-  },
+export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> =
+  {
+    getInitialState: (initialState) => {
+      return {
+        columnSizing: getDefaultColumnSizingState(),
+        ...initialState,
+      }
+    },
 
-  getDefaultColumnDef: () => {
-    return getDefaultColumnSizingColumnDef()
-  },
+    getDefaultColumnDef: () => {
+      return getDefaultColumnSizingColumnDef()
+    },
 
-  getDefaultTableOptions: (table) => {
-    return {
-      onColumnSizingChange: makeStateUpdater('columnSizing', table),
-    }
-  },
+    getDefaultTableOptions: (table) => {
+      return {
+        onColumnSizingChange: makeStateUpdater('columnSizing', table),
+      }
+    },
 
-  constructColumnAPIs: (column) => {
-    assignAPIs(column, [
-      {
-        fn: () => column_getSize(column),
-      },
-      {
-        fn: (position) => column_getStart(column, position),
-        memoDeps: (position) => [
-          position,
-          callMemoOrStaticFn(
-            column._table,
-            table_getPinnedVisibleLeafColumns,
+    constructColumnAPIs: (column) => {
+      assignAPIs(column, [
+        {
+          fn: () => column_getSize(column),
+        },
+        {
+          fn: (position) => column_getStart(column, position),
+          memoDeps: (position) => [
             position,
-          ),
-          column._table.options.state?.columnSizing,
-        ],
-      },
-      {
-        fn: (position) => column_getAfter(column, position),
-        memoDeps: (position) => [
-          position,
-          callMemoOrStaticFn(
-            column._table,
-            table_getPinnedVisibleLeafColumns,
+            callMemoOrStaticFn(
+              column._table,
+              table_getPinnedVisibleLeafColumns,
+              position,
+            ),
+            column._table.options.state?.columnSizing,
+          ],
+        },
+        {
+          fn: (position) => column_getAfter(column, position),
+          memoDeps: (position) => [
             position,
-          ),
-          column._table.options.state?.columnSizing,
-        ],
-      },
-      {
-        fn: () => column_resetSize(column),
-      },
-    ])
-  },
+            callMemoOrStaticFn(
+              column._table,
+              table_getPinnedVisibleLeafColumns,
+              position,
+            ),
+            column._table.options.state?.columnSizing,
+          ],
+        },
+        {
+          fn: () => column_resetSize(column),
+        },
+      ])
+    },
 
-  constructHeaderAPIs: (header) => {
-    assignAPIs(header, [
-      {
-        fn: () => header_getSize(header),
-      },
-      {
-        fn: () => header_getStart(header),
-      },
-    ])
-  },
+    constructHeaderAPIs: (header) => {
+      assignAPIs(header, [
+        {
+          fn: () => header_getSize(header),
+        },
+        {
+          fn: () => header_getStart(header),
+        },
+      ])
+    },
 
-  constructTableAPIs: (table) => {
-    assignAPIs(table, [
-      {
-        fn: (updater) => table_setColumnSizing(table, updater),
-      },
-      {
-        fn: (defaultState) => table_resetColumnSizing(table, defaultState),
-      },
-      {
-        fn: () => table_getTotalSize(table),
-      },
-      {
-        fn: () => table_getLeftTotalSize(table),
-      },
-      {
-        fn: () => table_getCenterTotalSize(table),
-      },
-      {
-        fn: () => table_getRightTotalSize(table),
-      },
-    ])
-  },
-}
+    constructTableAPIs: (table) => {
+      assignAPIs(table, [
+        {
+          fn: (updater) => table_setColumnSizing(table, updater),
+        },
+        {
+          fn: (defaultState) => table_resetColumnSizing(table, defaultState),
+        },
+        {
+          fn: () => table_getTotalSize(table),
+        },
+        {
+          fn: () => table_getLeftTotalSize(table),
+        },
+        {
+          fn: () => table_getCenterTotalSize(table),
+        },
+        {
+          fn: () => table_getRightTotalSize(table),
+        },
+      ])
+    },
+  }

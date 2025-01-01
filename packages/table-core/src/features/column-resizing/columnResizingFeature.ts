@@ -16,6 +16,14 @@ import type {
   Table_ColumnResizing,
 } from './columnResizingFeature.types'
 
+interface ColumnResizingFeatureConstructors {
+  Column: Column_ColumnResizing
+  Header: Header_ColumnResizing
+  Table: Table_ColumnResizing
+  TableOptions: TableOptions_ColumnResizing
+  TableState: TableState_ColumnResizing
+}
+
 /**
  * The Column Resizing feature adds column resizing state and APIs to the table and column objects.
  *
@@ -23,56 +31,51 @@ import type {
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-resizing)
  * [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
  */
-export const columnResizingFeature: TableFeature<{
-  Column: Column_ColumnResizing
-  Header: Header_ColumnResizing
-  Table: Table_ColumnResizing
-  TableOptions: TableOptions_ColumnResizing
-  TableState: TableState_ColumnResizing
-}> = {
-  getInitialState: (initialState) => {
-    return {
-      columnResizing: getDefaultColumnResizingState(),
-      ...initialState,
-    }
-  },
+export const columnResizingFeature: TableFeature<ColumnResizingFeatureConstructors> =
+  {
+    getInitialState: (initialState) => {
+      return {
+        columnResizing: getDefaultColumnResizingState(),
+        ...initialState,
+      }
+    },
 
-  getDefaultTableOptions: (table) => {
-    return {
-      columnResizeMode: 'onEnd',
-      columnResizeDirection: 'ltr',
-      onColumnResizingChange: makeStateUpdater('columnResizing', table),
-    }
-  },
+    getDefaultTableOptions: (table) => {
+      return {
+        columnResizeMode: 'onEnd',
+        columnResizeDirection: 'ltr',
+        onColumnResizingChange: makeStateUpdater('columnResizing', table),
+      }
+    },
 
-  constructColumnAPIs: (column) => {
-    assignAPIs(column, [
-      {
-        fn: () => column_getCanResize(column),
-      },
-      {
-        fn: () => column_getIsResizing(column),
-      },
-    ])
-  },
+    constructColumnAPIs: (column) => {
+      assignAPIs(column, [
+        {
+          fn: () => column_getCanResize(column),
+        },
+        {
+          fn: () => column_getIsResizing(column),
+        },
+      ])
+    },
 
-  constructHeaderAPIs: (header) => {
-    assignAPIs(header, [
-      {
-        fn: (_contextDocument) =>
-          header_getResizeHandler(header, _contextDocument),
-      },
-    ])
-  },
+    constructHeaderAPIs: (header) => {
+      assignAPIs(header, [
+        {
+          fn: (_contextDocument) =>
+            header_getResizeHandler(header, _contextDocument),
+        },
+      ])
+    },
 
-  constructTableAPIs: (table) => {
-    assignAPIs(table, [
-      {
-        fn: (updater) => table_setColumnResizing(table, updater),
-      },
-      {
-        fn: (defaultState) => table_resetHeaderSizeInfo(table, defaultState),
-      },
-    ])
-  },
-}
+    constructTableAPIs: (table) => {
+      assignAPIs(table, [
+        {
+          fn: (updater) => table_setColumnResizing(table, updater),
+        },
+        {
+          fn: (defaultState) => table_resetHeaderSizeInfo(table, defaultState),
+        },
+      ])
+    },
+  }

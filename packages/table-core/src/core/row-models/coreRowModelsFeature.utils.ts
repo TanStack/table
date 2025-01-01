@@ -11,7 +11,7 @@ export function table_getCoreRowModel<
   if (!table._rowModels.coreRowModel) {
     table._rowModels.coreRowModel =
       table.options._rowModels?.coreRowModel?.(table) ??
-      createCoreRowModel<TFeatures>()(table)
+      createCoreRowModel<TFeatures, TData>()(table)
   }
 
   return table._rowModels.coreRowModel()

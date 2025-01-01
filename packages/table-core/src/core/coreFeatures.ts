@@ -14,4 +14,4 @@ export const coreFeatures = {
   coreTablesFeature,
 } as const
 
-export type CoreTableFeatures = typeof coreFeatures
+export type CoreFeatures = typeof coreFeatures

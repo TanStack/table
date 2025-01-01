@@ -1,8 +1,8 @@
-import type { CoreTableFeatures } from '../coreFeatures'
+import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
-import type { RowData, Updater } from '../../types/type-utils'
+import type { NoInfer, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { CachedRowModels, CreateRowModels_All } from '../../types/RowModel'
+import type { CachedRowModels, CreateRowModels } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
 
@@ -26,10 +26,7 @@ export interface TableOptions_Table<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowmodels)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _rowModels?: CreateRowModels_All<
-    TFeatures,
-    NoInfer<TDataList[number]> | RowData
-  >
+  _rowModels?: CreateRowModels<TFeatures, NoInfer<TDataList[number]> | RowData>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#autoresetall)
@@ -108,7 +105,7 @@ export interface Table_CoreProperties<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _features: Partial<CoreTableFeatures> & TFeatures
+  _features: Partial<CoreFeatures> & TFeatures
   /**
    * The row model processing functions that are used to process the data by features.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowModelFns)

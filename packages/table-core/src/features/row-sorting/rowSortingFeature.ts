@@ -29,12 +29,7 @@ import type {
 } from './rowSortingFeature.types'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 
-/**
- * The (Row) Sorting feature adds sorting state and APIs to the table and column objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting)
- * [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
- */
-export const rowSortingFeature: TableFeature<{
+interface RowSortingFeatureConstructors {
   CachedRowModel: CachedRowModel_Sorted<TableFeatures, RowData>
   Column: Column_RowSorting<TableFeatures, RowData>
   ColumnDef: ColumnDef_RowSorting<TableFeatures, RowData>
@@ -43,7 +38,14 @@ export const rowSortingFeature: TableFeature<{
   Table: Table_RowSorting<TableFeatures, RowData>
   TableOptions: TableOptions_RowSorting
   TableState: TableState_RowSorting
-}> = {
+}
+
+/**
+ * The (Row) Sorting feature adds sorting state and APIs to the table and column objects.
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
+ */
+export const rowSortingFeature: TableFeature<RowSortingFeatureConstructors> = {
   getInitialState: (initialState) => {
     return {
       sorting: getDefaultSortingState(),

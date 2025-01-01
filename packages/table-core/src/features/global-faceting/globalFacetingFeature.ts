@@ -8,25 +8,28 @@ import type { RowData } from '../../types/type-utils'
 import type { Table_GlobalFaceting } from './globalFacetingFeature.types'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 
+interface GlobalFacetingFeatureConstructors {
+  Table: Table_GlobalFaceting<TableFeatures, RowData>
+}
+
 /**
  * The Global Faceting feature adds global faceting APIs to the table object.
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting)
  * [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
  */
-export const globalFacetingFeature: TableFeature<{
-  Table: Table_GlobalFaceting<TableFeatures, RowData>
-}> = {
-  constructTableAPIs: (table) => {
-    assignAPIs(table, [
-      {
-        fn: () => table_getGlobalFacetedMinMaxValues(table),
-      },
-      {
-        fn: () => table_getGlobalFacetedRowModel(table),
-      },
-      {
-        fn: () => table_getGlobalFacetedUniqueValues(table),
-      },
-    ])
-  },
-}
+export const globalFacetingFeature: TableFeature<GlobalFacetingFeatureConstructors> =
+  {
+    constructTableAPIs: (table) => {
+      assignAPIs(table, [
+        {
+          fn: () => table_getGlobalFacetedMinMaxValues(table),
+        },
+        {
+          fn: () => table_getGlobalFacetedRowModel(table),
+        },
+        {
+          fn: () => table_getGlobalFacetedUniqueValues(table),
+        },
+      ])
+    },
+  }
