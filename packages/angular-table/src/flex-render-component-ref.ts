@@ -1,14 +1,14 @@
 import {
+  ChangeDetectorRef,
   ComponentRef,
   inject,
   Injectable,
   Injector,
   KeyValueDiffer,
   KeyValueDiffers,
-  Type,
   ViewContainerRef,
 } from '@angular/core'
-import { FlexRenderComponent, FlexRenderComponentProps } from './flex-render'
+import { FlexRenderComponent } from './flex-render'
 
 @Injectable()
 export class FlexRenderComponentFactory {
@@ -37,19 +37,19 @@ export class FlexRenderComponentFactory {
  * @internal
  */
 export class FlexRenderComponentRef<T> {
-  keyValueDiffers: KeyValueDiffers
-  keyValueDiffer: KeyValueDiffer<any, any>
+  readonly #keyValueDiffersFactory: KeyValueDiffers
+  #keyValueDiffer: KeyValueDiffer<any, any>
 
   constructor(
     readonly componentRef: ComponentRef<T>,
     readonly componentData: FlexRenderComponent<T>,
     readonly componentInjector: Injector
   ) {
-    this.keyValueDiffers = componentInjector.get(KeyValueDiffers)
-    this.keyValueDiffer = this.keyValueDiffers
+    this.#keyValueDiffersFactory = componentInjector.get(KeyValueDiffers)
+    this.#keyValueDiffer = this.#keyValueDiffersFactory
       .find(this.componentData.inputs ?? {})
       .create()
-    this.keyValueDiffer.diff(this.componentData.inputs ?? {})
+    this.#keyValueDiffer.diff(this.componentData.inputs ?? {})
   }
 
   get component() {
@@ -64,7 +64,7 @@ export class FlexRenderComponentRef<T> {
    * Get component inputs diff by the given item
    */
   diff(item: FlexRenderComponent<T>) {
-    return this.keyValueDiffer.diff(item.inputs ?? {})
+    return this.#keyValueDiffer.diff(item.inputs ?? {})
   }
 
   /**
@@ -92,6 +92,10 @@ export class FlexRenderComponentRef<T> {
     changes.forEachRemovedItem(item => {
       this.setInput(item.key, undefined)
     })
+  }
+
+  markAsDirty(): void {
+    this.componentRef.injector.get(ChangeDetectorRef).markForCheck()
   }
 
   setInputs(inputs: Record<string, unknown>) {

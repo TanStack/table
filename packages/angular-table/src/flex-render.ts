@@ -16,7 +16,6 @@ import {
   Type,
   ViewContainerRef,
   inject,
-  isSignal,
   reflectComponentType,
   runInInjectionContext,
 } from '@angular/core'
@@ -79,7 +78,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       this.#isFirstRender = false
       return
     }
-    this.rerender()
+    this.#checkChanges()
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -90,7 +89,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   render() {
-    console.log('Trigger render')
     this.viewContainerRef.clear()
     const { content, props } = this
     if (content === null || content === undefined) {
@@ -104,67 +102,55 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     this.#lastContentChecked = resolvedContent
   }
 
-  rerender(): void {
-    const { props } = this
-    const currentContent = this.#getContentValue(props)
-
-    if (this.#lastContentChecked !== currentContent) {
-      // Every time the component is checked for changes,
-      // we manually have to check if the given cell value differs, as the user passes only a reference to the header/row cell definition.
-      const currentContentType = this.#getContentType(currentContent)
-      const previousContentType = this.#getContentType(this.#lastContentChecked)
-
-      if (currentContentType !== previousContentType) {
-        this.render()
+  #checkChanges(): void {
+    const currentContent = this.#getContentValue(this.props)
+    if (Object.is(this.#lastContentChecked, currentContent)) {
+      this.#lastContentChecked = currentContent
+      // NOTE: currently this is like having a component with ChangeDetectionStrategy.Default.
+      // In this case updating input values is just a noop since the instance of the context properties (table, cell, etc...) doesn't change,
+      // but marking the view as dirty allows to re-evaluate all function invocation on the component template.
+      if (this.ref instanceof FlexRenderComponentRef) {
+        this.ref.markAsDirty()
       }
+    }
 
-      switch (currentContentType) {
-        case 'object':
-        case 'templateRef':
-        case 'component':
-        case 'primitive': {
-          // Basically a noop. Currently in all of these cases, if the given instance differs than the previous one,
-          // we don't need any manual update since this type of content is rendered
-          // with an EmbeddedViewRef with a proxy as context, then every time the root component is checked for changes,
-          // the getter will be revaluated.
-          break
-        }
-        case 'flexRenderComponent': {
-          if (currentContent instanceof FlexRenderComponent) {
-            // the given content instance will always have a different reference that previous one,
-            // then in that case instead of recreating the entire view, we will only update what changes
-            if (
-              this.ref instanceof FlexRenderComponentRef &&
-              this.ref.eq(currentContent)
-            ) {
-              this.ref.update(currentContent)
-            }
-            break
-          }
-        }
+    // When the content reference (or value, for primitive values) differs, we need to detect the `type` of the
+    // new content in order to apply a specific update strategy.
+    const contentInfo = this.#getContentInfo(currentContent)
+    const previousContentInfo = this.#getContentInfo(this.#lastContentChecked)
+    if (contentInfo.kind !== previousContentInfo.kind) {
+      this.#lastContentChecked = currentContent
+      this.render()
+      return
+    }
+
+    switch (contentInfo.kind) {
+      case 'object':
+      case 'templateRef':
+      case 'primitive': {
+        // Basically a no-op. Currently in all of those cases, we don't need to do any manual update
+        // since this type of content is rendered with an EmbeddedViewRef with a proxy as a context,
+        // then every time the root component is checked for changes, the getter will be revaluated.
+        break
       }
-
-      if (
-        currentContentType === 'primitive' &&
-        previousContentType === 'primitive'
-      ) {
-        // Basically a noop. Primitive content doesn't need any manual update since that type of content it's rendered with an EmbebbedViewRef with
-        // a getter as a context, then it will be revaluated during change detection cycle.
-      } else if (
-        currentContentType === 'flexRenderComponent' &&
-        previousContentType === 'flexRenderComponent' &&
-        currentContent instanceof FlexRenderComponent
-      ) {
-        // New FlexRenderComponent will always have a different reference that previous one,
+      case 'component': {
+        // Here updating the instance input values is a no-op since the instance of the context properties (table, cell, etc...) doesn't change,
+        // but marking the view as dirty allows to re-evaluate all invokation in the component template.
+        if (this.ref instanceof FlexRenderComponentRef) {
+          this.ref.componentRef.changeDetectorRef.markForCheck()
+        }
+        break
+      }
+      case 'flexRenderComponent': {
+        // the given content instance will always have a different reference that previous one,
         // then in that case instead of recreating the entire view, we will only update what changes
         if (
           this.ref instanceof FlexRenderComponentRef &&
-          this.ref.eq(currentContent)
+          this.ref.eq(contentInfo.content)
         ) {
-          this.ref.update(currentContent)
+          this.ref.update(contentInfo.content)
         }
-      } else {
-        this.render()
+        break
       }
     }
 
@@ -216,7 +202,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       parent: injector ?? this.injector,
       providers: [{ provide: FlexRenderComponentProps, useValue: proxy }],
     })
-
     const ref = this.#flexRenderComponentFactory.createComponent(
       flexRenderComponent,
       componentInjector
@@ -224,27 +209,18 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     if (inputs) {
       ref.setInputs(inputs)
     }
-
     return ref
   }
 
   private renderCustomComponent(
     component: Type<unknown>
-  ): ComponentRef<unknown> {
-    const componentRef = this.viewContainerRef.createComponent(component, {
-      injector: this.injector,
-    })
-    for (const prop in this.props) {
-      // Only signal based input can be added here
-      if (
-        componentRef.instance?.hasOwnProperty(prop) &&
-        // @ts-ignore - unknown error
-        isSignal(componentRef.instance[prop])
-      ) {
-        componentRef.setInput(prop, this.props[prop])
-      }
-    }
-    return componentRef
+  ): FlexRenderComponentRef<unknown> {
+    const ref = this.#flexRenderComponentFactory.createComponent(
+      new FlexRenderComponent(component, this.props),
+      this.injector
+    )
+    ref.setInputs({ ...this.props })
+    return ref
   }
 
   private getTemplateRefContext() {
@@ -263,43 +239,37 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       : runInInjectionContext(this.injector, () => content(context))
   }
 
-  #getContentType(
-    content: FlexRenderContent<TProps>
-  ):
-    | 'primitive'
-    | 'flexRenderComponent'
-    | 'component'
-    | 'templateRef'
-    | 'object'
-    | null {
-    if (content === null || content === undefined) {
-      return null
-    }
-    const type = typeof content
-    const isPrimitive =
-      type === 'string' ||
-      type === 'number' ||
-      type === 'boolean' ||
-      type === 'bigint' ||
-      type === 'symbol'
-    if (isPrimitive) {
-      return 'primitive'
-    }
-    let currentType:
-      | 'object'
-      | 'flexRenderComponent'
-      | 'component'
-      | 'templateRef' = 'object'
-    if (type === 'object') {
-      if (content instanceof FlexRenderComponent) {
-        currentType = 'flexRenderComponent'
-      } else if (content instanceof TemplateRef) {
-        currentType = 'templateRef'
-      } else if (content instanceof Type) {
-        currentType = 'component'
+  #getContentInfo(content: FlexRenderContent<TProps>):
+    | { kind: 'null' }
+    | {
+        kind: 'primitive'
+        content: string | number | bigint | symbol
       }
+    | { kind: 'flexRenderComponent'; content: FlexRenderComponent<unknown> }
+    | { kind: 'templateRef'; content: TemplateRef<unknown> }
+    | { kind: 'component'; content: Type<unknown> }
+    | { kind: 'object'; content: unknown } {
+    if (content === null || content === undefined) {
+      return { kind: 'null' }
     }
-    return currentType
+    if (
+      typeof content === 'string' ||
+      typeof content === 'number' ||
+      typeof content === 'boolean' ||
+      typeof content === 'bigint' ||
+      typeof content === 'symbol'
+    ) {
+      return { kind: 'primitive', content }
+    }
+    if (content instanceof FlexRenderComponent) {
+      return { kind: 'flexRenderComponent', content }
+    } else if (content instanceof TemplateRef) {
+      return { kind: 'templateRef', content }
+    } else if (content instanceof Type) {
+      return { kind: 'component', content }
+    } else {
+      return { kind: 'object', content }
+    }
   }
 }
 
