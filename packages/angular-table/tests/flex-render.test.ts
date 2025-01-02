@@ -3,11 +3,11 @@ import { TestBed, type ComponentFixture } from '@angular/core/testing'
 import { createColumnHelper } from '@tanstack/table-core'
 import { describe, expect, test } from 'vitest'
 import {
-  FlexRenderComponent,
   FlexRenderDirective,
   injectFlexRenderContext,
 } from '../src/flex-render'
 import { setFixtureSignalInput, setFixtureSignalInputs } from './test-utils'
+import { FlexRenderComponent } from '../src/flex-render/flex-render-component'
 
 interface Data {
   id: string
