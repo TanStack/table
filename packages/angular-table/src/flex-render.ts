@@ -114,6 +114,36 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       const currentContentType = this.#getContentType(currentContent)
       const previousContentType = this.#getContentType(this.#lastContentChecked)
 
+      if (currentContentType !== previousContentType) {
+        this.render()
+      }
+
+      switch (currentContentType) {
+        case 'object':
+        case 'templateRef':
+        case 'component':
+        case 'primitive': {
+          // Basically a noop. Currently in all of these cases, if the given instance differs than the previous one,
+          // we don't need any manual update since this type of content is rendered
+          // with an EmbeddedViewRef with a proxy as context, then every time the root component is checked for changes,
+          // the getter will be revaluated.
+          break
+        }
+        case 'flexRenderComponent': {
+          if (currentContent instanceof FlexRenderComponent) {
+            // the given content instance will always have a different reference that previous one,
+            // then in that case instead of recreating the entire view, we will only update what changes
+            if (
+              this.ref instanceof FlexRenderComponentRef &&
+              this.ref.eq(currentContent)
+            ) {
+              this.ref.update(currentContent)
+            }
+            break
+          }
+        }
+      }
+
       if (
         currentContentType === 'primitive' &&
         previousContentType === 'primitive'
@@ -235,7 +265,13 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   #getContentType(
     content: FlexRenderContent<TProps>
-  ): 'primitive' | 'flexRenderComponent' | 'component' | 'object' | null {
+  ):
+    | 'primitive'
+    | 'flexRenderComponent'
+    | 'component'
+    | 'templateRef'
+    | 'object'
+    | null {
     if (content === null || content === undefined) {
       return null
     }
@@ -249,11 +285,17 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     if (isPrimitive) {
       return 'primitive'
     }
-    let currentType: 'object' | 'flexRenderComponent' | 'component' = 'object'
+    let currentType:
+      | 'object'
+      | 'flexRenderComponent'
+      | 'component'
+      | 'templateRef' = 'object'
     if (type === 'object') {
       if (content instanceof FlexRenderComponent) {
         currentType = 'flexRenderComponent'
-      } else if (content instanceof TemplateRef || content instanceof Type) {
+      } else if (content instanceof TemplateRef) {
+        currentType = 'templateRef'
+      } else if (content instanceof Type) {
         currentType = 'component'
       }
     }
