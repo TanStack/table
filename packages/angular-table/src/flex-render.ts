@@ -134,7 +134,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
         // Here updating the instance input values is a no-op since the instance of the context properties (table, cell, etc...) doesn't change,
         // but marking the view as dirty allows to re-evaluate all invokation in the component template.
         if (this.ref instanceof FlexRenderComponentRef) {
-          this.ref.componentRef.changeDetectorRef.markForCheck()
+          this.ref.markAsDirty()
         }
         break
       }
