@@ -1,28 +1,29 @@
 import {
-  ComponentMirror,
-  ComponentRef,
   Directive,
   DoCheck,
   EmbeddedViewRef,
   Inject,
-  InjectionToken,
   Injector,
   Input,
-  InputSignal,
   OnChanges,
-  OutputEmitterRef,
   SimpleChanges,
   TemplateRef,
   Type,
   ViewContainerRef,
   inject,
-  reflectComponentType,
   runInInjectionContext,
 } from '@angular/core'
+import { FlexRenderComponentProps } from './flex-render/context'
+import { FlexRenderComponent } from './flex-render/flex-render-component'
 import {
   FlexRenderComponentFactory,
   FlexRenderComponentRef,
-} from './flex-render-component-ref'
+} from './flex-render/flex-render-component-ref'
+
+export {
+  type FlexRenderComponentProps,
+  injectFlexRenderContext,
+} from './flex-render/context'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
@@ -55,11 +56,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   @Input({ required: false, alias: 'flexRenderInjector' })
   injector: Injector = inject(Injector)
 
-  ref?:
-    | FlexRenderComponentRef<any>
-    | ComponentRef<unknown>
-    | EmbeddedViewRef<unknown>
-    | null = null
+  ref?: FlexRenderComponentRef<any> | EmbeddedViewRef<unknown> | null = null
 
   #isFirstRender = true
   #lastContentChecked: FlexRenderContent<TProps> | null = null
@@ -271,46 +268,4 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return { kind: 'object', content }
     }
   }
-}
-
-type Inputs<T> = {
-  [K in keyof T as T[K] extends InputSignal<infer R>
-    ? K
-    : never]: T[K] extends InputSignal<infer R> ? R : never
-}
-
-type Outputs<T> = {
-  [K in keyof T as T[K] extends OutputEmitterRef<infer R>
-    ? K
-    : never]: T[K] extends OutputEmitterRef<infer R> ? (v: R) => void : never
-}
-
-export class FlexRenderComponent<TComponent = any> {
-  readonly mirror: ComponentMirror<TComponent>
-  readonly allowedInputNames: string[] = []
-
-  constructor(
-    readonly component: Type<TComponent>,
-    readonly inputs?: Inputs<TComponent>,
-    readonly injector?: Injector
-  ) {
-    const mirror = reflectComponentType(component)
-    if (!mirror) {
-      throw new Error(
-        `[@tanstack-table/angular] The provided symbol is not a component`
-      )
-    }
-    this.mirror = mirror
-    for (const input of this.mirror.inputs) {
-      this.allowedInputNames.push(input.propName)
-    }
-  }
-}
-
-export const FlexRenderComponentProps = new InjectionToken<
-  NonNullable<unknown>
->('[@tanstack/angular-table] Flex render component context props')
-
-export function injectFlexRenderContext<T extends NonNullable<unknown>>(): T {
-  return inject<T>(FlexRenderComponentProps)
 }

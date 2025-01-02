@@ -8,7 +8,7 @@ import {
   KeyValueDiffers,
   ViewContainerRef,
 } from '@angular/core'
-import { FlexRenderComponent } from './flex-render'
+import { FlexRenderComponent } from './flex-render-component'
 
 @Injectable()
 export class FlexRenderComponentFactory {
@@ -33,9 +33,6 @@ export class FlexRenderComponentFactory {
   }
 }
 
-/**
- * @internal
- */
 export class FlexRenderComponentRef<T> {
   readonly #keyValueDiffersFactory: KeyValueDiffers
   #keyValueDiffer: KeyValueDiffer<any, any>
