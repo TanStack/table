@@ -7,6 +7,8 @@ export type Person = {
   visits: number
   progress: number
   status: 'relationship' | 'complicated' | 'single'
+  rank: number
+  createdAt: Date
   subRows?: Array<Person>
 }
 
@@ -30,6 +32,8 @@ const newPerson = (): Person => {
       'complicated',
       'single',
     ])[0],
+    rank: faker.number.int(100),
+    createdAt: faker.date.anytime(),
   }
 }
 
