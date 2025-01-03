@@ -52,7 +52,14 @@ export type ConstructCellAPIs<TConstructors extends FeatureConstructors> = <
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  cell: Cell<TFeatures, TData, TValue> & TConstructors['Cell'],
+  cell: Cell<TFeatures, TData, TValue> &
+    TConstructors['Cell'] & {
+      row: Row<TFeatures, TData> & TConstructors['Row']
+      column: Column<TFeatures, TData, TValue> &
+        TConstructors['Column'] & {
+          columnDef: Partial<TConstructors['ColumnDef']>
+        }
+    },
 ) => void
 
 export type ConstructColumnAPIs<TConstructors extends FeatureConstructors> = <
@@ -60,7 +67,10 @@ export type ConstructColumnAPIs<TConstructors extends FeatureConstructors> = <
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & TConstructors['Column'],
+  column: Column<TFeatures, TData, TValue> &
+    TConstructors['Column'] & {
+      columnDef: Partial<TConstructors['ColumnDef']>
+    },
 ) => void
 
 export type ConstructHeaderAPIs<TConstructors extends FeatureConstructors> = <
@@ -68,7 +78,13 @@ export type ConstructHeaderAPIs<TConstructors extends FeatureConstructors> = <
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  header: Header<TFeatures, TData, TValue> & TConstructors['Header'],
+  header: Header<TFeatures, TData, TValue> &
+    TConstructors['Header'] & {
+      column: Column<TFeatures, TData, TValue> &
+        TConstructors['Column'] & {
+          columnDef: Partial<TConstructors['ColumnDef']>
+        }
+    },
 ) => void
 
 export type ConstructRowAPIs<TConstructors extends FeatureConstructors> = <
@@ -82,7 +98,10 @@ export type ConstructTableAPIs<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData> & Partial<TConstructors['Table']>,
+  table: Table_Internal<TFeatures, TData> &
+    Partial<TConstructors['Table']> & {
+      options: Partial<TConstructors['TableOptions']>
+    },
 ) => void
 
 export type GetDefaultColumnDef<TConstructors extends FeatureConstructors> = <
