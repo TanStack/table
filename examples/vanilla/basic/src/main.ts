@@ -1,8 +1,6 @@
 import './index.css'
-
-import { createColumnHelper, getCoreRowModel } from '@tanstack/table-core'
-
-import { flexRender, useTable } from './useTable'
+import { createColumnHelper, tableFeatures } from '@tanstack/table-core'
+import { createTable, flexRender } from './createTable'
 
 type Person = {
   firstName: string
@@ -13,7 +11,7 @@ type Person = {
   progress: number
 }
 
-const data: Person[] = [
+const data: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -40,9 +38,11 @@ const data: Person[] = [
   },
 ]
 
-const columnHelper = createColumnHelper<Person>()
+const _features = tableFeatures({})
 
-const columns = [
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
@@ -70,7 +70,7 @@ const columns = [
     header: 'Profile Progress',
     footer: (info) => info.column.id,
   }),
-]
+])
 
 const renderTable = () => {
   // Create table elements
@@ -99,7 +99,7 @@ const renderTable = () => {
   // Render table rows
   table.getRowModel().rows.forEach((row) => {
     const trElement = document.createElement('tr')
-    row.getVisibleCells().forEach((cell) => {
+    row.getAllCells().forEach((cell) => {
       const tdElement = document.createElement('td')
       tdElement.innerHTML = flexRender(
         cell.column.columnDef.cell,
@@ -129,10 +129,12 @@ const renderTable = () => {
   wrapperElement.appendChild(tableElement)
 }
 
-const table = useTable<Person>({
-  data,
+const table = createTable({
+  _features,
+  _rowModels: {},
   columns,
-  getCoreRowModel: getCoreRowModel(),
+  data,
+  debugAll: true,
 })
 
 renderTable()

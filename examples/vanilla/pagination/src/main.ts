@@ -2,19 +2,28 @@ import './index.css'
 
 import {
   createColumnHelper,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
 } from '@tanstack/table-core'
-
-import { makeData, Person } from './makeData'
-import { flexRender, useTable } from './useTable'
+import { makeData } from './makeData'
+import { createTable, flexRender } from './createTable'
+import type { Person } from './makeData'
+import type { Table } from '@tanstack/table-core'
 
 const data = makeData(100000)
 
-const columnHelper = createColumnHelper<Person>()
+const _features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+})
 
-const columns = [
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
@@ -42,9 +51,9 @@ const columns = [
     header: 'Profile Progress',
     footer: (info) => info.column.id,
   }),
-]
+])
 
-const renderTable = () => {
+const renderTable = (table: Table<typeof _features, Person>) => {
   // Create table elements
   const tableElement = document.createElement('table')
   const theadElement = document.createElement('thead')
@@ -87,7 +96,7 @@ const renderTable = () => {
   // Render table rows
   table.getRowModel().rows.forEach((row) => {
     const trElement = document.createElement('tr')
-    row.getVisibleCells().forEach((cell) => {
+    row.getAllCells().forEach((cell) => {
       const tdElement = document.createElement('td')
       tdElement.innerHTML = flexRender(
         cell.column.columnDef.cell,
@@ -195,11 +204,17 @@ const renderTable = () => {
   wrapperElement.appendChild(stateInfoElement)
 }
 
-const table = useTable<Person>({
+const table = createTable({
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(sortFns),
+  },
   data,
   columns,
   initialState: {
     pagination: {
+      pageIndex: 0,
       pageSize: 10,
     },
     sorting: [
@@ -209,10 +224,8 @@ const table = useTable<Person>({
       },
     ],
   },
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
-  getSortedRowModel: getSortedRowModel(),
-  onStateChange: () => renderTable(),
+  onStateChange: () => renderTable(table),
+  debugTable: true,
 })
 
-renderTable()
+renderTable(table)
