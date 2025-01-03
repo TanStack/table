@@ -1,17 +1,27 @@
 import { computed, signal } from '@angular/core'
 import { toComputed } from './proxy'
 import type { Signal } from '@angular/core'
-import type { Table, TableFeature } from '@tanstack/table-core'
+import type {
+  RowData,
+  Table,
+  TableFeature,
+  TableFeatures,
+} from '@tanstack/table-core'
 
-// TODO: remove this once we have a better way to define plugins
 declare module '@tanstack/table-core' {
-  interface TableOptions_Plugins {
+  interface TableOptions_Plugins<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > {
     enableExperimentalReactivity?: boolean
   }
 
-  interface Table_Plugins {
-    _rootNotifier?: Signal<Table<any, any>>
-    _setRootNotifier?: (signal: Signal<Table<any, any>>) => void
+  interface Table_Plugins<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > {
+    _rootNotifier?: Signal<Table<TFeatures, TData>>
+    _setRootNotifier?: (signal: Signal<Table<TFeatures, TData>>) => void
   }
 }
 

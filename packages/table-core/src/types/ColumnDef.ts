@@ -11,7 +11,15 @@ import type { ColumnDef_ColumnVisibility } from '../features/column-visibility/c
 import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
 import type { ColumnDef_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 
-export interface ColumnDef_Plugins {}
+/**
+ * Use this interface as a target for declaration merging to add your own plugin properties.
+ * Note: This will affect the types of all tables in your project.
+ */
+export interface ColumnDef_Plugins<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {}
 
 export interface ColumnMeta<
   TFeatures extends TableFeatures,
@@ -57,51 +65,20 @@ interface ColumnDefBase_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-> extends ColumnDef_Plugins {
+> {
   getUniqueValues?: AccessorFn<TData, Array<unknown>>
   footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
   cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
   meta?: ColumnMeta<TFeatures, TData, TValue>
 }
 
-// export type ColumnDefBase<
-//   TFeatures extends TableFeatures,
-//   TData extends RowData,
-//   TValue extends CellData = CellData,
-// > = ColumnDefBase_Core<TFeatures, TData, TValue> &
-//   UnionToIntersection<
-//     | ('columnVisibilityFeature' extends keyof TFeatures
-//         ? ColumnDef_ColumnVisibility
-//         : never)
-//     | ('columnPinningFeature' extends keyof TFeatures
-//         ? ColumnDef_ColumnPinning
-//         : never)
-//     | ('columnFilteringFeature' extends keyof TFeatures
-//         ? ColumnDef_ColumnFiltering<TFeatures, TData>
-//         : never)
-//     | ('globalFilteringFeature' extends keyof TFeatures
-//         ? ColumnDef_GlobalFiltering
-//         : never)
-//     | ('rowSortingFeature' extends keyof TFeatures
-//         ? ColumnDef_RowSorting<TFeatures, TData>
-//         : never)
-//     | ('columnGroupingFeature' extends keyof TFeatures
-//         ? ColumnDef_ColumnGrouping<TFeatures, TData, TValue>
-//         : never)
-//     | ('columnSizingFeature' extends keyof TFeatures
-//         ? ColumnDef_ColumnSizing
-//         : never)
-//     | ('columnResizingFeature' extends keyof TFeatures
-//         ? ColumnDef_ColumnResizing
-//         : never)
-//   >
-
 export type ColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
 > = ColumnDefBase_Core<TFeatures, TData, TValue> &
-  ExtractFeatureTypes<TFeatures, 'ColumnDef'>
+  ExtractFeatureTypes<TFeatures, 'ColumnDef'> &
+  ColumnDef_Plugins<TFeatures, TData, TValue>
 
 export type ColumnDefBase_All<
   TFeatures extends TableFeatures,

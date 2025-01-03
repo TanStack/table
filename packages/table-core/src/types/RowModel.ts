@@ -29,36 +29,21 @@ import type {
 import type { RowData } from './type-utils'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 
-// export type CreateRowModels<
-//   TFeatures extends TableFeatures,
-//   TData extends RowData,
-// > = CreateRowModel_Core<TFeatures, TData> &
-//   UnionToIntersection<
-//     | ('columnFacetingFeature' extends keyof TFeatures
-//         ? CreateRowModel_Faceted<TFeatures, TData>
-//         : never)
-//     | ('columnFilteringFeature' extends keyof TFeatures
-//         ? CreateRowModel_Filtered<TFeatures, TData>
-//         : never)
-//     | ('rowExpandingFeature' extends keyof TFeatures
-//         ? CreateRowModel_Expanded<TFeatures, TData>
-//         : never)
-//     | ('columnGroupingFeature' extends keyof TFeatures
-//         ? CreateRowModel_Grouped<TFeatures, TData>
-//         : never)
-//     | ('rowPaginationFeature' extends keyof TFeatures
-//         ? CreateRowModel_Paginated<TFeatures, TData>
-//         : never)
-//     | ('rowSortingFeature' extends keyof TFeatures
-//         ? CreateRowModel_Sorted<TFeatures, TData>
-//         : never)
-//   >
+/**
+ * Use this interface as a target for declaration merging to add your own plugin properties.
+ * Note: This will affect the types of all tables in your project.
+ */
+export interface CreateRowModels_Plugins<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {}
 
 export type CreateRowModels<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = CreateRowModel_Core<TFeatures, TData> &
-  ExtractFeatureTypes<TFeatures, 'CreateRowModels'>
+  ExtractFeatureTypes<TFeatures, 'CreateRowModels'> &
+  CreateRowModels_Plugins<TFeatures, TData>
 
 export type CreateRowModels_All<
   TFeatures extends TableFeatures,
@@ -71,36 +56,16 @@ export type CreateRowModels_All<
   CreateRowModel_Paginated<TFeatures, TData> &
   CreateRowModel_Sorted<TFeatures, TData>
 
-// export type CachedRowModels<
-//   TFeatures extends TableFeatures,
-//   TData extends RowData,
-// > = {
-//   CachedRowModel_Core: () => RowModel<TFeatures, TData>
-// } & UnionToIntersection<
-//   | ('columnFacetingFeature' extends keyof TFeatures
-//       ? CachedRowModel_Faceted<TFeatures, TData>
-//       : never)
-//   | ('columnFilteringFeature' extends keyof TFeatures
-//       ? CachedRowModel_Filtered<TFeatures, TData>
-//       : never)
-//   | ('rowExpandingFeature' extends keyof TFeatures
-//       ? CachedRowModel_Expanded<TFeatures, TData>
-//       : never)
-//   | ('columnGroupingFeature' extends keyof TFeatures
-//       ? CachedRowModel_Grouped<TFeatures, TData>
-//       : never)
-//   | ('rowPaginationFeature' extends keyof TFeatures
-//       ? CachedRowModel_Paginated<TFeatures, TData>
-//       : never)
-//   | ('rowSortingFeature' extends keyof TFeatures
-//       ? CachedRowModel_Sorted<TFeatures, TData>
-//       : never)
-// >
+export interface CachedRowModels_Plugins<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {}
 
 export type CachedRowModels<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = ExtractFeatureTypes<TFeatures, 'CachedRowModel'>
+> = ExtractFeatureTypes<TFeatures, 'CachedRowModel'> &
+  CachedRowModels_Plugins<TFeatures, TData>
 
 export type CachedRowModel_All<
   TFeatures extends TableFeatures,

@@ -9,7 +9,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableOptions_Internal,
   TableState,
 } from '@tanstack/table-core'
 
@@ -35,9 +34,7 @@ function useTableRef<TFeatures extends TableFeatures, TData extends RowData>(
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  tableOptions: TableOptions_Internal<TFeatures, Array<TData>>,
-): Table<TFeatures, TData> {
+>(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
   const _features = { ...coreFeatures, ...tableOptions._features }
 
   const [state, setState] = useState<TableState<TFeatures>>(() =>

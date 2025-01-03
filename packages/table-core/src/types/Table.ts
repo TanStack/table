@@ -10,7 +10,14 @@ import type { RowModelFns_All } from './RowModelFns'
 import type { CachedRowModel_All, CreateRowModels_All } from './RowModel'
 import type { Table_RowModels } from '../core/row-models/coreRowModelsFeature.types'
 
-export interface Table_Plugins {}
+/**
+ * Use this interface as a target for declaration merging to add your own plugin properties.
+ * Note: This will affect the types of all tables in your project.
+ */
+export interface Table_Plugins<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {}
 
 /**
  * The core table object that only includes the core table functionality such as column, header, row, and table APIS.
@@ -23,65 +30,17 @@ export type Table_Core<
   Table_Columns<TFeatures, TData> &
   Table_Rows<TFeatures, TData> &
   Table_RowModels<TFeatures, TData> &
-  Table_Headers<TFeatures, TData> &
-  Table_Plugins
+  Table_Headers<TFeatures, TData>
 
 /**
  * The table object that includes both the core table functionality and the features that are enabled via the `_features` table option.
  */
-// export type Table<
-//   TFeatures extends TableFeatures,
-//   TData extends RowData,
-// > = Table_Core<TFeatures, TData> &
-//   UnionToIntersection<
-//     | ('columnFilteringFeature' extends keyof TFeatures
-//         ? Table_ColumnFiltering
-//         : never)
-//     | ('columnGroupingFeature' extends keyof TFeatures
-//         ? Table_ColumnGrouping<TFeatures, TData>
-//         : never)
-//     | ('columnOrderingFeature' extends keyof TFeatures
-//         ? Table_ColumnOrdering<TFeatures, TData>
-//         : never)
-//     | ('columnPinningFeature' extends keyof TFeatures
-//         ? Table_ColumnPinning<TFeatures, TData>
-//         : never)
-//     | ('columnResizingFeature' extends keyof TFeatures
-//         ? Table_ColumnResizing
-//         : never)
-//     | ('columnSizingFeature' extends keyof TFeatures
-//         ? Table_ColumnSizing
-//         : never)
-//     | ('columnVisibilityFeature' extends keyof TFeatures
-//         ? Table_ColumnVisibility<TFeatures, TData>
-//         : never)
-//     | ('globalFacetingFeature' extends keyof TFeatures
-//         ? Table_GlobalFaceting<TFeatures, TData>
-//         : never)
-//     | ('globalFilteringFeature' extends keyof TFeatures
-//         ? Table_GlobalFiltering<TFeatures, TData>
-//         : never)
-//     | ('rowExpandingFeature' extends keyof TFeatures
-//         ? Table_RowExpanding<TFeatures, TData>
-//         : never)
-//     | ('rowPaginationFeature' extends keyof TFeatures
-//         ? Table_RowPagination<TFeatures, TData>
-//         : never)
-//     | ('rowPinningFeature' extends keyof TFeatures
-//         ? Table_RowPinning<TFeatures, TData>
-//         : never)
-//     | ('rowSelectionFeature' extends keyof TFeatures
-//         ? Table_RowSelection<TFeatures, TData>
-//         : never)
-//     | ('rowSortingFeature' extends keyof TFeatures
-//         ? Table_RowSorting<TFeatures, TData>
-//         : never)
-//   >
-
 export type Table<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Table_Core<TFeatures, TData> & ExtractFeatureTypes<TFeatures, 'Table'>
+> = Table_Core<TFeatures, TData> &
+  ExtractFeatureTypes<TFeatures, 'Table'> &
+  Table_Plugins<TFeatures, TData>
 
 export type Table_Internal<
   TFeatures extends TableFeatures,
