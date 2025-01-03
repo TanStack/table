@@ -138,11 +138,7 @@ export function buildHeaderGroups<
     headers: Array<Header<TFeatures, TData, TValue>>,
   ): Array<{ colSpan: number; rowSpan: number }> => {
     const filteredHeaders = headers.filter((header) =>
-      callMemoOrStaticFn(
-        header.column,
-        'getIsVisible',
-        column_getIsVisible,
-      ),
+      callMemoOrStaticFn(header.column, 'getIsVisible', column_getIsVisible),
     )
 
     return filteredHeaders.map((header) => {

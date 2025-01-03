@@ -62,9 +62,21 @@ export const coreHeadersFeature: TableFeature<{
         fn: () => table_getLeafHeaders(table),
         fnName: 'table_getLeafHeaders',
         memoDeps: () => [
-          callMemoOrStaticFn(table, 'getLeftHeaderGroups', table_getLeftHeaderGroups),
-          callMemoOrStaticFn(table, 'getCenterHeaderGroups', table_getCenterHeaderGroups),
-          callMemoOrStaticFn(table, 'getRightHeaderGroups', table_getRightHeaderGroups),
+          callMemoOrStaticFn(
+            table,
+            'getLeftHeaderGroups',
+            table_getLeftHeaderGroups,
+          ),
+          callMemoOrStaticFn(
+            table,
+            'getCenterHeaderGroups',
+            table_getCenterHeaderGroups,
+          ),
+          callMemoOrStaticFn(
+            table,
+            'getRightHeaderGroups',
+            table_getRightHeaderGroups,
+          ),
         ],
       },
     ])

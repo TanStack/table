@@ -100,7 +100,7 @@ export const densityPlugin: TableFeature<DensityPluginConstructors> = {
   // constructColumnAPIs: (column) => {},
 
   // if you need to add header instance APIs...
-  // constructHeaderAPIs: (header) => {}, 
+  // constructHeaderAPIs: (header) => {},
 }
 // end of custom feature code
 
