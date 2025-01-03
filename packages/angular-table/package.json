@@ -57,6 +57,7 @@
     "@angular/core": "^17.3.9",
     "@angular/platform-browser": "^17.3.9",
     "@angular/platform-browser-dynamic": "^17.3.9",
+    "typescript": "5.4.5",
     "ng-packagr": "^17.3.0"
   },
   "peerDependencies": {
