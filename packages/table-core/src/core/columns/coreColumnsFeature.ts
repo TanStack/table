@@ -9,7 +9,6 @@ import {
   table_getColumn,
   table_getDefaultColumnDef,
 } from './coreColumnsFeature.utils'
-
 import type { TableFeature } from '../../types/TableFeatures'
 
 export const coreColumnsFeature: TableFeature<{
