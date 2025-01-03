@@ -37,7 +37,7 @@ const tableHelper = createTableHelper({
     groupedRowModel: createGroupedRowModel(aggregationFns),
     expandedRowModel: createExpandedRowModel(),
   },
-  TData: {} as Person,
+  TData: [] as Array<Person>,
 })
 
 function App() {
