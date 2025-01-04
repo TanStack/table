@@ -87,9 +87,12 @@ export class FlexRenderTemplateView extends FlexRenderView<
   }
 
   override dirtyCheck() {
-    // Basically a no-op. Currently in all of those cases, we don't need to do any manual update
-    // since this type of content is rendered with an EmbeddedViewRef with a proxy as a context,
-    // then every time the root component is checked for changes, the getter will be re-evaluated.
+    // Basically a no-op. When the view is created via EmbeddedViewRef, we don't need to do any manual update
+    // since this type of content has a proxy as a context, then every time the root component is checked for changes,
+    // the property getter will be re-evaluated.
+    //
+    // If in a future we need to manually mark the view as dirty, just uncomment next line
+    // this.view.markForCheck()
   }
 }
 
@@ -110,13 +113,16 @@ export class FlexRenderComponentView extends FlexRenderView<
   override dirtyCheck() {
     switch (this.content.kind) {
       case 'component': {
+        // Component context is currently valuated with the cell context. Since it's reference
+        // shouldn't change, we force mark the component as dirty in order to re-evaluate function invocation in view.
+        // NOTE: this should behave like having a component with ChangeDetectionStrategy.Default
         this.view.markAsDirty()
         break
       }
       case 'flexRenderComponent': {
-        // the given content instance will always have a different reference that previous one,
-        // then in that case instead of recreating the entire view, we will only update what changes
-        if (this.view.eq(this.content.content)) {
+        // Given context instance will always have a different reference than the previous one,
+        // so instead of recreating the entire view, we will only update the current view
+        if (this.view.eqType(this.content.content)) {
           this.view.update(this.content.content)
         }
         break

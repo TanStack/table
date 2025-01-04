@@ -73,7 +73,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('changes', changes)
     if (changes['content']) {
       this.renderFlags |= FlexRenderFlags.ContentChanged
     }
@@ -101,7 +100,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     const contentToRender = this.#getContentValue(this.props)
 
     if (contentToRender.kind === 'null' || !this.renderView) {
-      this.renderFlags = FlexRenderFlags.Creation
+      this.renderFlags |= FlexRenderFlags.Creation
     } else {
       this.renderView.setContent(contentToRender.content)
       const previousContentInfo = this.renderView.previousContent

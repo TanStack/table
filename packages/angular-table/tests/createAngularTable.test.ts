@@ -7,7 +7,7 @@ import {
 } from '../src/index'
 import { Component, input, isSignal, signal, untracked } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { setSignalInputs } from './test-utils'
+import { setFixtureSignalInputs } from './test-utils'
 
 describe('createAngularTable', () => {
   test('should render with required signal inputs', () => {
@@ -27,7 +27,7 @@ describe('createAngularTable', () => {
     }
 
     const fixture = TestBed.createComponent(FakeComponent)
-    setSignalInputs(fixture.componentInstance, {
+    setFixtureSignalInputs(fixture, {
       data: [],
     })
 

@@ -68,7 +68,7 @@ export class FlexRenderComponentRef<T> {
    *
    * @param compare Whether the current ref component instance is the same as the given one
    */
-  eq(compare: FlexRenderComponent<T>): boolean {
+  eqType(compare: FlexRenderComponent<T>): boolean {
     return compare.component === this.component
   }
 
@@ -76,7 +76,7 @@ export class FlexRenderComponentRef<T> {
    * Tries to update current component refs input by the new given content component.
    */
   update(content: FlexRenderComponent<T>) {
-    const eq = this.eq(content)
+    const eq = this.eqType(content)
     if (!eq) return
     const changes = this.diff(content)
     if (!changes) return
