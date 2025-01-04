@@ -1,15 +1,20 @@
+/**
+ * Flags used to manage and optimize the rendering lifecycle of content of the cell,
+ * while using FlexRenderDirective.
+ */
 export enum FlexRenderFlags {
   /**
-   * Whether the view has not been created yet or the current view will be cleared during the update phase.
+   * Indicates that the view is being created for the first time or will be cleared during the next update phase.
+   * This is the initial state and will transition after the first ngDoCheck.
    */
   Creation = 1 << 0,
   /**
-   * Whether the view is not dirty.
+   * Represents a state where the view is not dirty, meaning no changes require rendering updates.
    */
   Pristine = 1 << 1,
   /**
-   * Indicates that the `content` property has changed or the view need a complete re-rendering.
-   * When this flag is enabled, the view is recreated from scratch after clearing the previous one.
+   * Represents a state where the `content` property has been modified or the view requires a complete re-render.
+   * When this flag is enabled, the view is cleared and recreated from scratch.
    */
   ContentChanged = 1 << 2,
   /**
@@ -21,11 +26,11 @@ export enum FlexRenderFlags {
    */
   PropsReferenceChanged = 1 << 3,
   /**
-   * Indicates the current rendered view has to be dirty checked.
+   * Indicates that the current rendered view needs to be checked for changes.
    */
   DirtyCheck = 1 << 4,
   /**
-   * Whether a signal changed into the current content
+   * Indicates that a signal within the `content(props)` result has changed
    */
   DirtySignal = 1 << 5,
 }

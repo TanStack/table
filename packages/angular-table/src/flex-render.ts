@@ -12,6 +12,7 @@ import {
   SimpleChanges,
   TemplateRef,
   Type,
+  untracked,
   ViewContainerRef,
 } from '@angular/core'
 import { FlexRenderComponentProps } from './flex-render/context'
@@ -94,16 +95,14 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
     // TODO: Optimization for V9?. We could check for signal changes when
     //  we have a way to detect here whether the table state changes
-    // if (
-    //   !(
-    //     (this.renderFlags & FlexRenderFlags.DirtySignal) |
-    //     FlexRenderFlags.PropsReferenceChanged
-    //   )
-    // ) {
+    // const isChanged =
+    //   this.renderFlags &
+    //   (FlexRenderFlags.DirtySignal | FlexRenderFlags.PropsReferenceChanged)
+    // if (!isChanged) {
     //   return
     // }
 
-    const contentToRender = this.#getContentValue(this.props)
+    const contentToRender = untracked(() => this.#getContentValue(this.props))
 
     if (contentToRender.kind === 'null' || !this.renderView) {
       this.renderFlags |= FlexRenderFlags.Creation
@@ -155,18 +154,17 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     this.renderView = this.#renderViewByContent(resolvedContent)
 
     if (typeof this.content === 'function') {
+      let firstRender = true
       const effectRef = effect(
         () => {
-          void resolvedContent.reactiveValue()
-          if (this.renderFlags & FlexRenderFlags.Pristine) {
-            this.renderFlags &= ~FlexRenderFlags.Pristine
+          resolvedContent.computedContent()
+          if (firstRender) {
+            firstRender = true
             return
           }
           this.renderFlags |= FlexRenderFlags.DirtySignal
         },
-        {
-          injector: this.injector,
-        }
+        { injector: this.injector }
       )
       if (this.renderView) {
         this.renderView.onDestroy(() => {
@@ -254,16 +252,13 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   #getContentValue(context: TProps) {
     const content = this.content
-    const result =
-      typeof content !== 'function'
+    const computedContent = computed(() => {
+      return typeof content !== 'function'
         ? content
         : runInInjectionContext(this.injector, () => content(context))
-    return Object.assign(mapToFlexRenderTypedContent(result), {
-      reactiveValue: computed(() =>
-        typeof content !== 'function'
-          ? content
-          : runInInjectionContext(this.injector, () => content(context))
-      ),
+    })
+    return Object.assign(mapToFlexRenderTypedContent(computedContent()), {
+      computedContent,
     })
   }
 }
