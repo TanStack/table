@@ -26,7 +26,7 @@ const columns = columnHelper.columns([
     footer: (props) => props.column.id,
   }),
   columnHelper.accessor((row) => row.lastName, {
-    id: 'lastName', 
+    id: 'lastName',
     cell: (info) => info.getValue(),
     header: () => h('span', 'Last Name'),
     footer: (props) => props.column.id,
