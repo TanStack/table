@@ -3,9 +3,7 @@ import packageJson from './package.json'
 import angular from '@analogjs/vite-plugin-angular'
 import path from 'node:path'
 
-const tsconfig = path.join(import.meta.dirname, 'tsconfig.test.json')
-
-const angularPlugin = angular({ tsconfig, jit: true })
+const angularPlugin = angular({ tsconfig: 'tsconfig.test.json', jit: true })
 
 export default defineConfig({
   plugins: [

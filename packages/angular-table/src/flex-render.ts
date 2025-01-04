@@ -1,28 +1,32 @@
 import {
   Directive,
   DoCheck,
-  EmbeddedViewRef,
   Inject,
+  inject,
   Injector,
   Input,
   OnChanges,
+  runInInjectionContext,
   SimpleChanges,
   TemplateRef,
   Type,
   ViewContainerRef,
-  inject,
-  runInInjectionContext,
 } from '@angular/core'
 import { FlexRenderComponentProps } from './flex-render/context'
+import { FlexRenderFlags } from './flex-render/flags'
 import { FlexRenderComponent } from './flex-render/flex-render-component'
+import { FlexRenderComponentFactory } from './flex-render/flex-render-component-ref'
 import {
-  FlexRenderComponentFactory,
-  FlexRenderComponentRef,
-} from './flex-render/flex-render-component-ref'
+  FlexRenderComponentView,
+  FlexRenderTemplateView,
+  type FlexRenderTypedContent,
+  FlexRenderView,
+  mapToFlexRenderTypedContent,
+} from './flex-render/view'
 
 export {
-  type FlexRenderComponentProps,
   injectFlexRenderContext,
+  type FlexRenderComponentProps,
 } from './flex-render/context'
 
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
@@ -32,6 +36,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | FlexRenderComponent<TProps>
   | TemplateRef<{ $implicit: TProps }>
   | null
+  | Record<string, any>
   | undefined
 
 @Directive({
@@ -56,12 +61,9 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   @Input({ required: false, alias: 'flexRenderInjector' })
   injector: Injector = inject(Injector)
 
-  ref?: FlexRenderComponentRef<any> | EmbeddedViewRef<unknown> | null = null
-
-  #isFirstRender = true
-  lastContentChecked: FlexRenderContent<TProps> | null = null
-
   readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
+  renderFlags = FlexRenderFlags.Creation
+  renderView: FlexRenderView<any> | null = null
 
   constructor(
     @Inject(ViewContainerRef)
@@ -70,138 +72,124 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     private readonly templateRef: TemplateRef<any>
   ) {}
 
-  ngDoCheck(): void {
-    if (this.#isFirstRender) {
-      this.#isFirstRender = false
-      return
-    }
-    this.#checkChanges({ propsReferenceChanged: false })
-  }
-
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes['content']) {
-      if (changes['props'] && this.lastContentChecked) {
-        this.#checkChanges({ propsReferenceChanged: true })
-        this.#isFirstRender = true
-        return
-      }
-      return
+    if (changes['content']) {
+      this.renderFlags |= FlexRenderFlags.ContentChanged
     }
-
-    this.render()
+    if (!changes['content'] && changes['props']) {
+      this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
+    }
+    this.checkView()
   }
 
-  render() {
-    this.viewContainerRef.clear()
-    const { content, props } = this
-    if (content === null || content === undefined) {
-      this.ref = null
-      this.lastContentChecked = null
+  ngDoCheck(): void {
+    if (this.renderFlags & FlexRenderFlags.Creation) {
+      // On the initial render, the view is created during the `ngOnChanges` hook.
+      // Since `ngDoCheck` is called immediately afterward, there's no need to check for changes in this phase.
+      this.renderFlags &= ~FlexRenderFlags.Creation
       return
     }
 
-    const resolvedContent = this.#getContentValue(props)
-    this.ref = this.renderContent(resolvedContent)
-    this.lastContentChecked = resolvedContent
+    if (
+      this.renderFlags &
+      (FlexRenderFlags.PropsReferenceChanged | FlexRenderFlags.ContentChanged)
+    ) {
+      return
+    }
+
+    const contentToRender = this.#getContentValue(this.props)
+    if (contentToRender.kind === 'null' || !this.renderView) {
+      // Whether the content is null or view has not been rendered, we set contentChanged
+      // flag in order to re-initialize everything via the `render` method;
+      this.renderFlags |= FlexRenderFlags.ContentChanged
+    } else {
+      this.renderView.setContent(contentToRender.content)
+      const previousContentInfo = this.renderView.previousContent
+
+      this.renderFlags |=
+        contentToRender.kind === previousContentInfo.kind
+          ? FlexRenderFlags.DirtyCheck
+          : FlexRenderFlags.ContentChanged
+    }
+
+    this.checkView()
   }
 
-  #checkChanges(options: { propsReferenceChanged: boolean }): void {
-    const currentContent = this.#getContentValue(this.props)
-    const { propsReferenceChanged } = options
-
-    if (Object.is(this.lastContentChecked, currentContent)) {
-      this.lastContentChecked = currentContent
-
-      // NOTE: currently this is like having a component with ChangeDetectionStrategy.Default.
-      // In this case updating input values is just a noop since the instance of the context properties (table, cell, etc...) doesn't change,
-      // but marking the view as dirty allows to re-evaluate all function invocation on the component template.
-      if (this.ref instanceof FlexRenderComponentRef) {
-        if (propsReferenceChanged) {
-          this.ref.setInputs(this.props)
-        }
-        this.ref.markAsDirty()
-      }
-      return
-    }
-
-    // When the content reference (or value, for primitive values) differs, we need to detect the `type` of the
-    // new content in order to apply a specific update strategy.
-    const contentInfo = this.#getContentInfo(currentContent)
-    const previousContentInfo = this.#getContentInfo(this.lastContentChecked)
-    if (contentInfo.kind !== previousContentInfo.kind) {
-      this.lastContentChecked = currentContent
+  checkView() {
+    if (this.renderFlags & FlexRenderFlags.ContentChanged) {
       this.render()
       return
     }
 
-    switch (contentInfo.kind) {
-      case 'object':
-      case 'templateRef':
-      case 'primitive': {
-        // Basically a no-op. Currently in all of those cases, we don't need to do any manual update
-        // since this type of content is rendered with an EmbeddedViewRef with a proxy as a context,
-        // then every time the root component is checked for changes, the getter will be revaluated.
-        break
-      }
-      case 'component': {
-        // Here updating the instance input values is a no-op since the instance of the context properties (table, cell, etc...) doesn't change,
-        // but marking the view as dirty allows to re-evaluate all invokation in the component template.
-        if (this.ref instanceof FlexRenderComponentRef) {
-          this.ref.markAsDirty()
-        }
-        break
-      }
-      case 'flexRenderComponent': {
-        // the given content instance will always have a different reference that previous one,
-        // then in that case instead of recreating the entire view, we will only update what changes
-        if (
-          this.ref instanceof FlexRenderComponentRef &&
-          this.ref.eq(contentInfo.content)
-        ) {
-          this.ref.update(contentInfo.content)
-        }
-        break
-      }
+    if (this.renderFlags & FlexRenderFlags.PropsReferenceChanged) {
+      if (this.renderView) this.renderView.updateProps(this.props)
+      this.renderFlags &= ~FlexRenderFlags.PropsReferenceChanged
+      return
     }
 
-    this.lastContentChecked = currentContent
+    if (this.renderFlags & FlexRenderFlags.DirtyCheck) {
+      if (this.renderView) this.renderView.dirtyCheck()
+      this.renderFlags &= ~FlexRenderFlags.DirtyCheck
+    }
   }
 
-  private renderContent(content: FlexRenderContent<TProps>) {
-    if (typeof content === 'string' || typeof content === 'number') {
-      return this.renderStringContent()
+  render() {
+    this.viewContainerRef.clear()
+    const resolvedContent = this.#getContentValue(this.props)
+    if (resolvedContent.kind === 'null') {
+      this.renderView = null
+      return
     }
-    if (content instanceof TemplateRef) {
-      return this.viewContainerRef.createEmbeddedView(
-        content,
-        this.getTemplateRefContext()
-      )
-    } else if (content instanceof FlexRenderComponent) {
-      return this.renderComponent(content)
-    } else if (content instanceof Type) {
-      return this.renderCustomComponent(content)
+    this.renderView = this.#renderViewByContent(resolvedContent)
+    this.renderFlags &= ~(
+      FlexRenderFlags.ContentChanged | FlexRenderFlags.PropsReferenceChanged
+    )
+  }
+
+  #renderViewByContent(
+    content: FlexRenderTypedContent
+  ): FlexRenderView<any> | null {
+    if (content.kind === 'primitive') {
+      return this.#renderStringContent()
+    } else if (content.kind === 'templateRef') {
+      return this.#renderTemplateRefContent(content.content)
+    } else if (content.kind === 'flexRenderComponent') {
+      return this.#renderComponent(content.content)
+    } else if (content.kind === 'component') {
+      return this.#renderCustomComponent(content.content)
     } else {
       return null
     }
   }
 
-  private renderStringContent(): EmbeddedViewRef<unknown> {
+  #renderStringContent(): FlexRenderTemplateView {
     const context = () => {
       return typeof this.content === 'string' ||
         typeof this.content === 'number'
         ? this.content
         : this.content?.(this.props)
     }
-    return this.viewContainerRef.createEmbeddedView(this.templateRef, {
+    const ref = this.viewContainerRef.createEmbeddedView(this.templateRef, {
       get $implicit() {
         return context()
       },
     })
+    return new FlexRenderTemplateView(context(), ref)
   }
 
-  private renderComponent(
+  #renderTemplateRefContent(content: TemplateRef<any>): FlexRenderTemplateView {
+    const latestContext = () => this.props
+    const view = this.viewContainerRef.createEmbeddedView(content, {
+      get $implicit() {
+        return latestContext()
+      },
+    })
+    return new FlexRenderTemplateView(content, view)
+  }
+
+  #renderComponent(
     flexRenderComponent: FlexRenderComponent
-  ): FlexRenderComponentRef<unknown> {
+  ): FlexRenderComponentView {
     const { inputs, injector } = flexRenderComponent
 
     const getContext = () => this.props
@@ -212,73 +200,31 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       parent: injector ?? this.injector,
       providers: [{ provide: FlexRenderComponentProps, useValue: proxy }],
     })
-    const ref = this.#flexRenderComponentFactory.createComponent(
+    const view = this.#flexRenderComponentFactory.createComponent(
       flexRenderComponent,
       componentInjector
     )
     if (inputs) {
-      ref.setInputs(inputs)
+      view.setInputs(inputs)
     }
-    return ref
+    return new FlexRenderComponentView(flexRenderComponent, view)
   }
 
-  private renderCustomComponent(
-    component: Type<unknown>
-  ): FlexRenderComponentRef<unknown> {
-    const ref = this.#flexRenderComponentFactory.createComponent(
+  #renderCustomComponent(component: Type<unknown>): FlexRenderComponentView {
+    const view = this.#flexRenderComponentFactory.createComponent(
       new FlexRenderComponent(component, this.props),
       this.injector
     )
-    ref.setInputs({ ...this.props })
-    return ref
-  }
-
-  private getTemplateRefContext() {
-    const getContext = () => this.props
-    return {
-      get $implicit() {
-        return getContext()
-      },
-    }
+    view.setInputs({ ...this.props })
+    return new FlexRenderComponentView(component, view)
   }
 
   #getContentValue(context: TProps) {
     const content = this.content
-    return typeof content !== 'function'
-      ? content
-      : runInInjectionContext(this.injector, () => content(context))
-  }
-
-  #getContentInfo(content: FlexRenderContent<TProps>):
-    | { kind: 'null' }
-    | {
-        kind: 'primitive'
-        content: string | number | bigint | symbol
-      }
-    | { kind: 'flexRenderComponent'; content: FlexRenderComponent<unknown> }
-    | { kind: 'templateRef'; content: TemplateRef<unknown> }
-    | { kind: 'component'; content: Type<unknown> }
-    | { kind: 'object'; content: unknown } {
-    if (content === null || content === undefined) {
-      return { kind: 'null' }
-    }
-    if (
-      typeof content === 'string' ||
-      typeof content === 'number' ||
-      typeof content === 'boolean' ||
-      typeof content === 'bigint' ||
-      typeof content === 'symbol'
-    ) {
-      return { kind: 'primitive', content }
-    }
-    if (content instanceof FlexRenderComponent) {
-      return { kind: 'flexRenderComponent', content }
-    } else if (content instanceof TemplateRef) {
-      return { kind: 'templateRef', content }
-    } else if (content instanceof Type) {
-      return { kind: 'component', content }
-    } else {
-      return { kind: 'object', content }
-    }
+    const result =
+      typeof content !== 'function'
+        ? content
+        : runInInjectionContext(this.injector, () => content(context))
+    return mapToFlexRenderTypedContent(result)
   }
 }
