@@ -24,4 +24,8 @@ export enum FlexRenderFlags {
    * Indicates the current rendered view has to be dirty checked.
    */
   DirtyCheck = 1 << 4,
+  /**
+   * Whether a signal changed into the current content
+   */
+  DirtySignal = 1 << 5,
 }

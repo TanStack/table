@@ -70,6 +70,8 @@ export abstract class FlexRenderView<
   abstract updateProps(props: Record<string, any>): void
 
   abstract dirtyCheck(): void
+
+  abstract onDestroy(callback: Function): void
 }
 
 export class FlexRenderTemplateView extends FlexRenderView<
@@ -93,6 +95,10 @@ export class FlexRenderTemplateView extends FlexRenderView<
     //
     // If in a future we need to manually mark the view as dirty, just uncomment next line
     // this.view.markForCheck()
+  }
+
+  override onDestroy(callback: Function) {
+    this.view.onDestroy(callback)
   }
 }
 
@@ -129,5 +135,9 @@ export class FlexRenderComponentView extends FlexRenderView<
         break
       }
     }
+  }
+
+  override onDestroy(callback: Function) {
+    this.view.componentRef.onDestroy(callback)
   }
 }

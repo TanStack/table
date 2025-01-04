@@ -1,6 +1,8 @@
 import {
+  computed,
   Directive,
   DoCheck,
+  effect,
   Inject,
   inject,
   Injector,
@@ -90,6 +92,17 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return
     }
 
+    // TODO: Optimization for V9?. We could check for signal changes when
+    //  we have a way to detect here whether the table state changes
+    // if (
+    //   !(
+    //     (this.renderFlags & FlexRenderFlags.DirtySignal) |
+    //     FlexRenderFlags.PropsReferenceChanged
+    //   )
+    // ) {
+    //   return
+    // }
+
     const contentToRender = this.#getContentValue(this.props)
 
     if (contentToRender.kind === 'null' || !this.renderView) {
@@ -102,6 +115,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       if (contentToRender.kind !== previousContentInfo.kind) {
         this.renderFlags |= FlexRenderFlags.ContentChanged
       }
+      this.renderFlags &= ~FlexRenderFlags.Pristine
     }
 
     this.checkView()
@@ -123,19 +137,46 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
     if (this.renderFlags & FlexRenderFlags.DirtyCheck) {
       if (this.renderView) this.renderView.dirtyCheck()
-      this.renderFlags = FlexRenderFlags.Pristine
+      this.renderFlags &= ~(
+        FlexRenderFlags.DirtyCheck | FlexRenderFlags.DirtySignal
+      )
     }
   }
 
   render() {
     this.viewContainerRef.clear()
     const resolvedContent = this.#getContentValue(this.props)
+
     if (resolvedContent.kind === 'null') {
       this.renderView = null
       return
     }
+
     this.renderView = this.#renderViewByContent(resolvedContent)
-    this.renderFlags = FlexRenderFlags.Pristine
+
+    if (typeof this.content === 'function') {
+      const effectRef = effect(
+        () => {
+          void resolvedContent.reactiveValue()
+          if (this.renderFlags & FlexRenderFlags.Pristine) {
+            this.renderFlags &= ~FlexRenderFlags.Pristine
+            return
+          }
+          this.renderFlags |= FlexRenderFlags.DirtySignal
+        },
+        {
+          injector: this.injector,
+        }
+      )
+      if (this.renderView) {
+        this.renderView.onDestroy(() => {
+          effectRef.destroy()
+        })
+      }
+    }
+
+    this.renderFlags |= FlexRenderFlags.Pristine
+    this.renderFlags &= ~FlexRenderFlags.ContentChanged
   }
 
   #renderViewByContent(
@@ -217,6 +258,12 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       typeof content !== 'function'
         ? content
         : runInInjectionContext(this.injector, () => content(context))
-    return mapToFlexRenderTypedContent(result)
+    return Object.assign(mapToFlexRenderTypedContent(result), {
+      reactiveValue: computed(() =>
+        typeof content !== 'function'
+          ? content
+          : runInInjectionContext(this.injector, () => content(context))
+      ),
+    })
   }
 }

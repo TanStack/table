@@ -235,13 +235,12 @@ export function createTestTable(
 }
 
 @Component({
-  template: `<span>{{ status }}</span> `,
+  template: `<span>{{ status() }}</span> `,
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class TestBadgeComponent {
   readonly context = injectFlexRenderContext<CellContext<TestData, any>>()
 
-  @Input({ required: true })
-  readonly status!: string
+  readonly status = input.required<string>()
 }
