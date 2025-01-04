@@ -3,33 +3,14 @@ import {
   ColumnFiltersState,
   FlexRender,
   Updater,
-  columnFacetingFeature,
-  columnFilteringFeature,
-  createColumnHelper,
-  createFacetedMinMaxValues,
-  createFacetedRowModel,
-  createFacetedUniqueValues,
-  createFilteredRowModel,
-  filterFns,
-  globalFilteringFeature,
   isFunction,
-  tableFeatures,
-  useTable,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
 import Filter from './Filter.vue'
+import { Person, tableHelper } from './tableHelper'
 
-export type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',
@@ -56,59 +37,56 @@ const defaultData: Person[] = [
   },
 ]
 
-export const _features = tableFeatures({
-  columnFilteringFeature,
-  globalFilteringFeature,
-  columnFacetingFeature,
-})
+const { columnHelper } = tableHelper
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columns = ref(
+  columnHelper.columns([
+    columnHelper.group({
+      header: 'Name',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => 'Last Name',
+          footer: (props) => props.column.id,
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      header: 'Info',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.group({
+          header: 'More Info',
+          columns: columnHelper.columns([
+            columnHelper.accessor('visits', {
+              header: () => 'Visits',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('status', {
+              header: 'Status',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('progress', {
+              header: 'Profile Progress',
+              footer: (props) => props.column.id,
+            }),
+          ]),
+        }),
+      ]),
+    }),
+  ]),
+)
 
-const columns = [
-  columnHelper.group({
-    header: 'Name',
-    footer: (props) => props.column.id,
-    columns: [
-      columnHelper.accessor('firstName', {
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      }),
-      columnHelper.accessor((row) => row.lastName, {
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => 'Last Name',
-        footer: (props) => props.column.id,
-      }),
-    ],
-  }),
-  columnHelper.group({
-    header: 'Info',
-    footer: (props) => props.column.id,
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-      }),
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => 'Visits',
-            footer: (props) => props.column.id,
-          }),
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: (props) => props.column.id,
-          }),
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: (props) => props.column.id,
-          }),
-        ],
-      }),
-    ],
-  }),
-]
 const data = ref(defaultData)
 const rerender = () => {
   data.value = defaultData
@@ -116,18 +94,13 @@ const rerender = () => {
 const columnFilters = ref<ColumnFiltersState>([])
 const globalFilter = ref('')
 
-const table = useTable({
-  _features,
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    facetedRowModel: createFacetedRowModel(),
-    facetedMinMaxValues: createFacetedMinMaxValues(),
-    facetedUniqueValues: createFacetedUniqueValues(),
-  },
+const table = tableHelper.useTable({
   get data() {
     return data.value
   },
-  columns,
+  get columns() {
+    return columns.value
+  },
   state: {
     get columnFilters() {
       return columnFilters.value

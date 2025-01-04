@@ -2,12 +2,18 @@
 import { ref } from 'vue'
 import {
   FlexRender,
-  createCoreRowModel,
   useTable,
   createColumnHelper,
   PaginationState,
+  rowPaginationFeature,
+  tableFeatures,
+  Updater,
 } from '@tanstack/vue-table'
 import useService from './useService'
+
+const _features = tableFeatures({
+  rowPaginationFeature,
+})
 
 type Post = {
   userId: number
@@ -19,12 +25,12 @@ type Post = {
 const INITIAL_PAGE_INDEX = 0
 const INITIAL_PAGE_SIZE = 10
 
-const columnHelper = createColumnHelper<Post>()
+const columnHelper = createColumnHelper<typeof _features, Post>()
 
-const columns = [
+const columns = columnHelper.columns([
   columnHelper.accessor('id', { header: 'Post ID' }),
   columnHelper.accessor('title', { header: 'Title' }),
-]
+])
 
 const pageSizes = [10, 20, 30, 40, 50]
 
@@ -38,6 +44,8 @@ const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 const { data, isLoading, pageCount } = useService(pagination)
 
 const table = useTable({
+  _features,
+  _rowModels: {}, // no client-side row models since we're using server-side pagination
   get data() {
     return data.value ?? []
   },
@@ -49,7 +57,7 @@ const table = useTable({
     pagination: pagination.value,
   },
   manualPagination: true,
-  onPaginationChange: (updater) => {
+  onPaginationChange: (updater: Updater<PaginationState>) => {
     if (typeof updater === 'function') {
       setPagination(
         updater({
@@ -61,7 +69,6 @@ const table = useTable({
       setPagination(updater)
     }
   },
-  getCoreRowModel: createCoreRowModel(),
   debugTable: true,
 })
 
@@ -109,7 +116,7 @@ function handlePageSizeChange(e: any) {
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+          <td v-for="cell in row.getAllCells()" :key="cell.id">
             <FlexRender
               :render="cell.column.columnDef.cell"
               :props="cell.getContext()"

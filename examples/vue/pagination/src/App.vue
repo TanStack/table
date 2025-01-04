@@ -1,75 +1,88 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  createCoreRowModel,
-  createPaginatedRowModel,
-  useTable,
   createColumnHelper,
+  createPaginatedRowModel,
+  rowPaginationFeature,
+  tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 import { makeData, Person } from './makeData'
 
+const _features = tableFeatures({
+  rowPaginationFeature,
+})
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
 const INITIAL_PAGE_INDEX = 0
 
 const defaultData = makeData(100)
-const columnHelper = createColumnHelper<any, Person>()
 const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 const pageSizes = [10, 20, 30, 40, 50]
 const data = ref(defaultData)
 
-const columns = [
-  columnHelper.group({
-    header: 'Name',
-    footer: (props) => props.column.id,
-    columns: [
-      columnHelper.accessor('firstName', {
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      }),
-      columnHelper.accessor((row) => row.lastName, {
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => 'Last Name',
-        footer: (props) => props.column.id,
-      }),
-    ],
-  }),
-  columnHelper.group({
-    header: 'Info',
-    footer: (props) => props.column.id,
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-      }),
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => 'Visits',
-            footer: (props) => props.column.id,
-          }),
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: (props) => props.column.id,
-          }),
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: (props) => props.column.id,
-          }),
-        ],
-      }),
-    ],
-  }),
-]
+const columns = ref(
+  columnHelper.columns([
+    columnHelper.group({
+      header: 'Name',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => 'Last Name',
+          footer: (props) => props.column.id,
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      header: 'Info',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.group({
+          header: 'More Info',
+          columns: columnHelper.columns([
+            columnHelper.accessor('visits', {
+              header: () => 'Visits',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('status', {
+              header: 'Status',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('progress', {
+              header: 'Profile Progress',
+              footer: (props) => props.column.id,
+            }),
+          ]),
+        }),
+      ]),
+    }),
+  ]),
+)
 
 const table = useTable({
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+  },
   get data() {
     return data.value
   },
-  columns,
-  getCoreRowModel: createCoreRowModel(),
-  getPaginatedRowModel: createPaginatedRowModel(),
+  get columns() {
+    return columns.value
+  },
+  debugTable: true,
 })
 
 function rerender() {
@@ -110,7 +123,7 @@ function handlePageSizeChange(e: any) {
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+          <td v-for="cell in row.getAllCells()" :key="cell.id">
             <FlexRender
               :render="cell.column.columnDef.cell"
               :props="cell.getContext()"

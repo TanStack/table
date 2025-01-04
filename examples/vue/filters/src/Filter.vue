@@ -2,15 +2,15 @@
 import type { Column, Table } from '@tanstack/vue-table'
 import { computed, PropType } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
-import { _features, Person } from './App.vue'
+import { Person, tableHelper } from './tableHelper'
 
 const props = defineProps({
   column: {
-    type: Object as PropType<Column<typeof _features, Person>>,
+    type: Object as PropType<Column<typeof tableHelper.features, Person>>,
     required: true,
   },
   table: {
-    type: Object as PropType<Table<typeof _features, Person>>,
+    type: Object as PropType<Table<typeof tableHelper.features, Person>>,
     required: true,
   },
 })

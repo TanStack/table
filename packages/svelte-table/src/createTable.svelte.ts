@@ -35,6 +35,8 @@ export function createTable<
     },
   )
 
+  console.log(statefulOptions)
+
   const table = constructTable(statefulOptions)
 
   function updateOptions() {

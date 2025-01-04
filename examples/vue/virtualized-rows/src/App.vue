@@ -4,13 +4,20 @@ import { computed, ref, h } from 'vue'
 import {
   type ColumnDef,
   FlexRender,
-  useVueTable,
-  getCoreRowModel,
-  getSortedRowModel,
+  useTable,
+  columnSizingFeature,
+  rowSortingFeature,
+  createSortedRowModel,
+  tableFeatures,
+  sortFns,
 } from '@tanstack/vue-table'
 import { useVirtualizer } from '@tanstack/vue-virtual'
-
 import { makeData, type Person } from './makeData'
+
+const _features = tableFeatures({
+  columnSizingFeature,
+  rowSortingFeature,
+})
 
 const search = ref('')
 
@@ -44,7 +51,7 @@ function handleDebounceSearch(ev: Event) {
   }, 300)
 }
 
-const columns = computed<ColumnDef<Person>[]>(() => [
+const columns = computed<ColumnDef<typeof _features, Person>[]>(() => [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -82,13 +89,15 @@ const columns = computed<ColumnDef<Person>[]>(() => [
   },
 ])
 
-const table = useVueTable({
+const table = useTable({
+  _features,
+  _rowModels: {
+    sortedRowModel: createSortedRowModel(sortFns),
+  },
   get data() {
     return filteredData.value
   },
   columns: columns.value,
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(),
   debugTable: false,
 })
 
@@ -210,7 +219,7 @@ function measureElement(el?: Element) {
             }"
           >
             <td
-              v-for="cell in rows[vRow.index].getVisibleCells()"
+              v-for="cell in rows[vRow.index].getAllCells()"
               :key="cell.id"
               :style="{
                 display: 'flex',
