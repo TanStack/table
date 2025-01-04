@@ -73,13 +73,13 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['content']) {
-      this.renderFlags |= FlexRenderFlags.ContentChanged
-    }
     if (changes['props']) {
       this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
     }
-    this.checkView()
+    if (changes['content']) {
+      this.renderFlags |= FlexRenderFlags.ContentChanged
+      this.checkView()
+    }
   }
 
   ngDoCheck(): void {
@@ -90,25 +90,18 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return
     }
 
-    if (
-      this.renderFlags &
-      (FlexRenderFlags.PropsReferenceChanged | FlexRenderFlags.ContentChanged)
-    ) {
-      return
-    }
-
     const contentToRender = this.#getContentValue(this.props)
 
     if (contentToRender.kind === 'null' || !this.renderView) {
       this.renderFlags |= FlexRenderFlags.Creation
     } else {
       this.renderView.setContent(contentToRender.content)
-      const previousContentInfo = this.renderView.previousContent
+      this.renderFlags |= FlexRenderFlags.DirtyCheck
 
-      this.renderFlags |=
-        contentToRender.kind === previousContentInfo.kind
-          ? FlexRenderFlags.DirtyCheck
-          : FlexRenderFlags.ContentChanged
+      const previousContentInfo = this.renderView.previousContent
+      if (contentToRender.kind !== previousContentInfo.kind) {
+        this.renderFlags |= FlexRenderFlags.ContentChanged
+      }
     }
 
     this.checkView()
@@ -126,12 +119,11 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     if (this.renderFlags & FlexRenderFlags.PropsReferenceChanged) {
       if (this.renderView) this.renderView.updateProps(this.props)
       this.renderFlags &= ~FlexRenderFlags.PropsReferenceChanged
-      return
     }
 
     if (this.renderFlags & FlexRenderFlags.DirtyCheck) {
       if (this.renderView) this.renderView.dirtyCheck()
-      this.renderFlags &= ~FlexRenderFlags.DirtyCheck
+      this.renderFlags = FlexRenderFlags.Pristine
     }
   }
 
@@ -143,9 +135,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return
     }
     this.renderView = this.#renderViewByContent(resolvedContent)
-    this.renderFlags &= ~(
-      FlexRenderFlags.ContentChanged | FlexRenderFlags.PropsReferenceChanged
-    )
+    this.renderFlags = FlexRenderFlags.Pristine
   }
 
   #renderViewByContent(

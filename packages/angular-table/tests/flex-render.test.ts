@@ -138,11 +138,7 @@ describe('FlexRenderDirective', () => {
     class FakeComponent {
       row = input.required<{ property: string }>()
 
-      constructor() {
-        effect(() => {
-          console.log('row', this.row())
-        })
-      }
+      constructor() {}
     }
 
     const fixture = TestBed.createComponent(TestRenderComponent)

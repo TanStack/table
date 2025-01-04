@@ -125,6 +125,7 @@ export class FlexRenderComponentView extends FlexRenderView<
         if (this.view.eqType(this.content.content)) {
           this.view.update(this.content.content)
         }
+        this.view.markAsDirty()
         break
       }
     }
