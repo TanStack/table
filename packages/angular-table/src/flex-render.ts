@@ -73,10 +73,11 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
+    console.log('changes', changes)
     if (changes['content']) {
       this.renderFlags |= FlexRenderFlags.ContentChanged
     }
-    if (!changes['content'] && changes['props']) {
+    if (changes['props']) {
       this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
     }
     this.checkView()
@@ -98,10 +99,9 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     }
 
     const contentToRender = this.#getContentValue(this.props)
+
     if (contentToRender.kind === 'null' || !this.renderView) {
-      // Whether the content is null or view has not been rendered, we set contentChanged
-      // flag in order to re-initialize everything via the `render` method;
-      this.renderFlags |= FlexRenderFlags.ContentChanged
+      this.renderFlags = FlexRenderFlags.Creation
     } else {
       this.renderView.setContent(contentToRender.content)
       const previousContentInfo = this.renderView.previousContent
@@ -116,7 +116,10 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   checkView() {
-    if (this.renderFlags & FlexRenderFlags.ContentChanged) {
+    if (
+      this.renderFlags &
+      (FlexRenderFlags.ContentChanged | FlexRenderFlags.Creation)
+    ) {
       this.render()
       return
     }

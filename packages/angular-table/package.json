@@ -59,7 +59,6 @@
     "@angular/platform-browser": "^17.3.9",
     "@angular/platform-browser-dynamic": "^17.3.9",
     "ng-packagr": "^17.3.0",
-    "reflect-metadata": "^0.2.2",
     "typescript": "5.4.5",
     "vitest": "^1.6.0"
   },
