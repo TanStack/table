@@ -59,7 +59,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   ref?: FlexRenderComponentRef<any> | EmbeddedViewRef<unknown> | null = null
 
   #isFirstRender = true
-  #lastContentChecked: FlexRenderContent<TProps> | null = null
+  lastContentChecked: FlexRenderContent<TProps> | null = null
 
   readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
 
@@ -75,13 +75,19 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       this.#isFirstRender = false
       return
     }
-    this.#checkChanges()
+    this.#checkChanges({ propsReferenceChanged: false })
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes['content']) {
+      if (changes['props'] && this.lastContentChecked) {
+        this.#checkChanges({ propsReferenceChanged: true })
+        this.#isFirstRender = true
+        return
+      }
       return
     }
+
     this.render()
   }
 
@@ -90,33 +96,40 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     const { content, props } = this
     if (content === null || content === undefined) {
       this.ref = null
-      this.#lastContentChecked = null
+      this.lastContentChecked = null
       return
     }
 
     const resolvedContent = this.#getContentValue(props)
     this.ref = this.renderContent(resolvedContent)
-    this.#lastContentChecked = resolvedContent
+    this.lastContentChecked = resolvedContent
   }
 
-  #checkChanges(): void {
+  #checkChanges(options: { propsReferenceChanged: boolean }): void {
     const currentContent = this.#getContentValue(this.props)
-    if (Object.is(this.#lastContentChecked, currentContent)) {
-      this.#lastContentChecked = currentContent
+    const { propsReferenceChanged } = options
+
+    if (Object.is(this.lastContentChecked, currentContent)) {
+      this.lastContentChecked = currentContent
+
       // NOTE: currently this is like having a component with ChangeDetectionStrategy.Default.
       // In this case updating input values is just a noop since the instance of the context properties (table, cell, etc...) doesn't change,
       // but marking the view as dirty allows to re-evaluate all function invocation on the component template.
       if (this.ref instanceof FlexRenderComponentRef) {
+        if (propsReferenceChanged) {
+          this.ref.setInputs(this.props)
+        }
         this.ref.markAsDirty()
       }
+      return
     }
 
     // When the content reference (or value, for primitive values) differs, we need to detect the `type` of the
     // new content in order to apply a specific update strategy.
     const contentInfo = this.#getContentInfo(currentContent)
-    const previousContentInfo = this.#getContentInfo(this.#lastContentChecked)
+    const previousContentInfo = this.#getContentInfo(this.lastContentChecked)
     if (contentInfo.kind !== previousContentInfo.kind) {
-      this.#lastContentChecked = currentContent
+      this.lastContentChecked = currentContent
       this.render()
       return
     }
@@ -151,7 +164,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       }
     }
 
-    this.#lastContentChecked = currentContent
+    this.lastContentChecked = currentContent
   }
 
   private renderContent(content: FlexRenderContent<TProps>) {

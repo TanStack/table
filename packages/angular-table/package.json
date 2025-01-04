@@ -53,12 +53,15 @@
     "tslib": "^2.6.2"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "^1.3.1",
+    "@analogjs/vite-plugin-angular": "^1.11.0",
+    "@analogjs/vitest-angular": "^1.11.0",
     "@angular/core": "^17.3.9",
     "@angular/platform-browser": "^17.3.9",
     "@angular/platform-browser-dynamic": "^17.3.9",
+    "ng-packagr": "^17.3.0",
+    "reflect-metadata": "^0.2.2",
     "typescript": "5.4.5",
-    "ng-packagr": "^17.3.0"
+    "vitest": "^1.6.0"
   },
   "peerDependencies": {
     "@angular/core": ">=17"

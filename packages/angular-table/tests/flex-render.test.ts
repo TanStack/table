@@ -1,4 +1,10 @@
-import { Component, ViewChild, input, type TemplateRef } from '@angular/core'
+import {
+  Component,
+  ViewChild,
+  input,
+  type TemplateRef,
+  effect,
+} from '@angular/core'
 import { TestBed, type ComponentFixture } from '@angular/core/testing'
 import { createColumnHelper } from '@tanstack/table-core'
 import { describe, expect, test } from 'vitest'
@@ -124,13 +130,19 @@ describe('FlexRenderDirective', () => {
 
   // Skip for now, test framework (using ComponentRef.setInput) cannot recognize signal inputs
   // as component inputs
-  test.skip('should render custom components', () => {
+  test('should render custom components', () => {
     @Component({
       template: `{{ row().property }}`,
       standalone: true,
     })
     class FakeComponent {
       row = input.required<{ property: string }>()
+
+      constructor() {
+        effect(() => {
+          console.log('row', this.row())
+        })
+      }
     }
 
     const fixture = TestBed.createComponent(TestRenderComponent)
