@@ -41,10 +41,6 @@ export const packages = [
     packageDir: 'packages/vue-table',
   },
   {
-    name: '@tanstack/react-table-devtools',
-    packageDir: 'packages/react-table-devtools',
-  },
-  {
     name: '@tanstack/match-sorter-utils',
     packageDir: 'packages/match-sorter-utils',
   },
