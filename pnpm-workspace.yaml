@@ -2,6 +2,7 @@ packages:
   - 'packages/*'
   - 'examples/angular/*'
   - 'examples/lit/*'
+  - 'examples/preact/*'
   - 'examples/qwik/*'
   - 'examples/react/*'
   - 'examples/solid/*'

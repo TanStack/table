@@ -1,9 +1,15 @@
-import React from 'react'
-import type { ComponentType, JSX, ReactNode } from 'react'
+import type { ComponentType, VNode } from 'preact'
 
-export type Renderable<TProps> = ReactNode | ComponentType<TProps>
+export type Renderable<TProps> =
+  | VNode<TProps>
+  | ComponentType<TProps>
+  | undefined
+  | null
+  | string
+  | number
+  | boolean
 
-function isReactComponent<TProps>(
+function isPreactComponent<TProps>(
   component: unknown,
 ): component is ComponentType<TProps> {
   return (
@@ -18,7 +24,7 @@ function isClassComponent(component: any) {
     typeof component === 'function' &&
     (() => {
       const proto = Object.getPrototypeOf(component)
-      return proto.prototype && proto.prototype.isReactComponent
+      return proto.prototype && proto.prototype.isPreactComponent
     })()
   )
 }
@@ -27,7 +33,9 @@ function isExoticComponent(component: any) {
   return (
     typeof component === 'object' &&
     typeof component.$$typeof === 'symbol' &&
-    ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description)
+    ['preact.memo', 'preact.forward_ref'].includes(
+      component.$$typeof.description,
+    )
   )
 }
 
@@ -36,13 +44,13 @@ function isExoticComponent(component: any) {
  * @example flexRender(cell.column.columnDef.cell, cell.getContext())
  */
 export function flexRender<TProps extends object>(
-  Comp: Renderable<TProps>,
+  Comp: Renderable<TProps> | null,
   props: TProps,
-): ReactNode | JSX.Element {
-  return !Comp ? null : isReactComponent<TProps>(Comp) ? (
+): VNode<TProps> | Element | null {
+  return !Comp ? null : isPreactComponent<TProps>(Comp) ? (
     <Comp {...props} />
   ) : (
-    Comp
+    (Comp as VNode<TProps> | Element | null)
   )
 }
 
