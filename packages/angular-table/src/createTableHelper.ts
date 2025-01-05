@@ -10,7 +10,7 @@ import type {
   TableOptions,
 } from '@tanstack/table-core'
 
-export type TableHelper<
+type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
