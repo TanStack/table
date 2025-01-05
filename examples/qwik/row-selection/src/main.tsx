@@ -14,6 +14,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/qwik-table'
+import type { JSX } from '@builder.io/qwik'
 import type { ColumnDef } from '@tanstack/qwik-table'
 
 type Person = {
@@ -226,12 +227,21 @@ const App = component$(() => {
   )
 })
 
-const IndeterminateCheckbox = component$<{
-  indeterminate?: boolean
-}>(({ indeterminate, ...rest }) => {
+const IndeterminateCheckbox = component$<
+  Omit<JSX.IntrinsicElements['input'], 'type'> & {
+    indeterminate?: boolean
+  }
+>(({ indeterminate, ...rest }) => {
   const inputSig = useSignal<Element | undefined>()
 
-  return <input type="checkbox" ref={inputSig} {...rest} />
+  return (
+    <input
+      type="checkbox"
+      ref={inputSig}
+      indeterminate={indeterminate}
+      {...rest}
+    />
+  )
 })
 
 render(document.getElementById('app') as HTMLElement, <App />)
