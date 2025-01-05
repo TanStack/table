@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "skipLibCheck": true,
+    "paths": {
+      "react": ["./node_modules/preact/compat/"],
+      "react-dom": ["./node_modules/preact/compat/"]
+    }
+  },
+  "include": [
+    "src",
+    "eslint.config.js",
+    "vite.config.ts",
+    "tests",
+    "node_modules/vite/client.d.ts"
+  ]
+}

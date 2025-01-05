@@ -33,7 +33,7 @@
     "./package.json": "./package.json"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
   },
   "files": [
     "dist",

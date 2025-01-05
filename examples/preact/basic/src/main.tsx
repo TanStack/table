@@ -1,7 +1,7 @@
-import * as React from 'react'
-import ReactDOM from 'react-dom/client'
-import { flexRender, tableFeatures, useTable } from '@tanstack/react-table'
-import type { ColumnDef } from '@tanstack/react-table'
+import { render } from 'preact'
+import { useReducer, useState } from 'preact/hooks'
+import { flexRender, tableFeatures, useTable } from '@tanstack/preact-table'
+import type { ColumnDef } from '@tanstack/preact-table'
 import './index.css'
 
 // This example uses the classic standalone `useTable` hook to create a table without the new `createTableHelper` util.
@@ -92,8 +92,8 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 function App() {
   // 5. Store data with a stable reference
-  const [data, _setData] = React.useState(() => [...defaultData])
-  const rerender = React.useReducer(() => ({}), {})[1]
+  const [data, _setData] = useState(() => [...defaultData])
+  const rerender = useReducer(() => ({}), {})[1]
 
   // 6. Create the table instance with required _features, columns, and data
   const table = useTable({
@@ -153,7 +153,7 @@ function App() {
         </tfoot>
       </table>
       <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
+      <button onClick={() => rerender(0)} className="border p-2">
         Rerender
       </button>
     </div>
@@ -163,8 +163,4 @@ function App() {
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+render(<App />, rootElement)

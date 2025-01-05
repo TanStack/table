@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { render } from 'preact'
+import { useMemo, useReducer, useState } from 'preact/hooks'
 import './index.css'
 import {
   createSortedRowModel,
@@ -8,9 +8,9 @@ import {
   sortFns,
   tableFeatures,
   useTable,
-} from '@tanstack/react-table'
+} from '@tanstack/preact-table'
 import { makeData } from './makeData'
-import type { ColumnDef, SortFn, SortingState } from '@tanstack/react-table'
+import type { ColumnDef, SortFn, SortingState } from '@tanstack/preact-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
@@ -18,11 +18,7 @@ const _features = tableFeatures({
 })
 
 // custom sorting logic for one of our enum columns
-const sortStatusFn: SortFn<any, any> = (
-  rowA,
-  rowB,
-  _columnId,
-) => {
+const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
@@ -30,12 +26,12 @@ const sortStatusFn: SortFn<any, any> = (
 }
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
+  const rerender = useReducer(() => ({}), {})[1]
 
   // optionally, manage sorting state in your own state management
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = useState<SortingState>([])
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
+  const columns = useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -84,7 +80,7 @@ function App() {
     [],
   )
 
-  const [data, setData] = React.useState(() => makeData(1_000))
+  const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(100_000)) // stress test with 100k rows
 
   const table = useTable({
@@ -179,7 +175,7 @@ function App() {
       </table>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
+        <button onClick={() => rerender(0)}>Force Rerender</button>
       </div>
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
@@ -190,11 +186,6 @@ function App() {
 }
 
 const rootElement = document.getElementById('root')
-
 if (!rootElement) throw new Error('Failed to find the root element')
 
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+render(<App />, rootElement)
