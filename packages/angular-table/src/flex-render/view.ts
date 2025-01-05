@@ -35,20 +35,16 @@ export function mapToFlexRenderTypedContent(
 
 export abstract class FlexRenderView<
   TView extends FlexRenderComponentRef<any> | EmbeddedViewRef<unknown> | null,
-  TProps extends Record<string, any> = any,
 > {
-  view: TView
-
-  #rawContent: FlexRenderContent<TProps>
+  readonly view: TView
   #previousContent: FlexRenderTypedContent | undefined
   #content: FlexRenderTypedContent
 
   protected constructor(
-    initialContent: FlexRenderContent<TProps> | null,
+    initialContent: Exclude<FlexRenderTypedContent, { kind: 'null' }>,
     view: TView
   ) {
-    this.#rawContent = initialContent
-    this.#content = mapToFlexRenderTypedContent(initialContent)
+    this.#content = initialContent
     this.view = view
   }
 
@@ -60,11 +56,9 @@ export abstract class FlexRenderView<
     return this.#content
   }
 
-  setContent(content: FlexRenderContent<any>): FlexRenderTypedContent {
-    this.#rawContent = content
+  set content(content: FlexRenderTypedContent) {
     this.#previousContent = this.#content
-    this.#content = mapToFlexRenderTypedContent(content)
-    return this.#content
+    this.#content = content
   }
 
   abstract updateProps(props: Record<string, any>): void
@@ -78,7 +72,10 @@ export class FlexRenderTemplateView extends FlexRenderView<
   EmbeddedViewRef<unknown>
 > {
   constructor(
-    initialContent: FlexRenderContent<any>,
+    initialContent: Extract<
+      FlexRenderTypedContent,
+      { kind: 'primitive' | 'templateRef' }
+    >,
     view: EmbeddedViewRef<unknown>
   ) {
     super(initialContent, view)
@@ -106,7 +103,10 @@ export class FlexRenderComponentView extends FlexRenderView<
   FlexRenderComponentRef<unknown>
 > {
   constructor(
-    initialContent: FlexRenderComponent<unknown> | Type<unknown>,
+    initialContent: Extract<
+      FlexRenderTypedContent,
+      { kind: 'component' | 'flexRenderComponent' }
+    >,
     view: FlexRenderComponentRef<unknown>
   ) {
     super(initialContent, view)

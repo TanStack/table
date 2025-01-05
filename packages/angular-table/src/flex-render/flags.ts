@@ -7,14 +7,14 @@ export enum FlexRenderFlags {
    * Indicates that the view is being created for the first time or will be cleared during the next update phase.
    * This is the initial state and will transition after the first ngDoCheck.
    */
-  Creation = 1 << 0,
+  ViewFirstRender = 1 << 0,
   /**
    * Represents a state where the view is not dirty, meaning no changes require rendering updates.
    */
   Pristine = 1 << 1,
   /**
-   * Represents a state where the `content` property has been modified or the view requires a complete re-render.
-   * When this flag is enabled, the view is cleared and recreated from scratch.
+   * Indicates the `content` property has been modified or the view requires a complete re-render.
+   * When this flag is enabled, the view will be cleared and recreated from scratch.
    */
   ContentChanged = 1 << 2,
   /**
@@ -33,4 +33,8 @@ export enum FlexRenderFlags {
    * Indicates that a signal within the `content(props)` result has changed
    */
   DirtySignal = 1 << 5,
+  /**
+   * Indicates that the first render effect has been checked at least one time.
+   */
+  RenderEffectChecked = 1 << 6,
 }

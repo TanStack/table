@@ -1,8 +1,9 @@
 import {
-  computed,
+  ChangeDetectorRef,
   Directive,
   DoCheck,
   effect,
+  type EffectRef,
   Inject,
   inject,
   Injector,
@@ -12,7 +13,6 @@ import {
   SimpleChanges,
   TemplateRef,
   Type,
-  untracked,
   ViewContainerRef,
 } from '@angular/core'
 import { FlexRenderComponentProps } from './flex-render/context'
@@ -26,6 +26,7 @@ import {
   FlexRenderView,
   mapToFlexRenderTypedContent,
 } from './flex-render/view'
+import { memo } from '@tanstack/table-core'
 
 export {
   injectFlexRenderContext,
@@ -39,7 +40,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | FlexRenderComponent<TProps>
   | TemplateRef<{ $implicit: TProps }>
   | null
-  | Record<string, any>
+  | Record<any, any>
   | undefined
 
 @Directive({
@@ -50,6 +51,9 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
 export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   implements OnChanges, DoCheck
 {
+  readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
+  readonly #changeDetectorRef = inject(ChangeDetectorRef)
+
   @Input({ required: true, alias: 'flexRender' })
   content:
     | number
@@ -64,9 +68,23 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   @Input({ required: false, alias: 'flexRenderInjector' })
   injector: Injector = inject(Injector)
 
-  readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
-  renderFlags = FlexRenderFlags.Creation
+  renderFlags = FlexRenderFlags.ViewFirstRender
   renderView: FlexRenderView<any> | null = null
+
+  readonly #latestContent = () => {
+    const { content, props } = this
+    return typeof content !== 'function'
+      ? content
+      : runInInjectionContext(this.injector, () => content(props))
+  }
+
+  #getContentValue = memo(
+    () => [this.#latestContent(), this.props, this.content],
+    latestContent => {
+      return mapToFlexRenderTypedContent(latestContent)
+    },
+    { key: 'flexRenderContentValue', debug: () => false }
+  )
 
   constructor(
     @Inject(ViewContainerRef)
@@ -80,61 +98,69 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
     }
     if (changes['content']) {
-      this.renderFlags |= FlexRenderFlags.ContentChanged
-      this.checkView()
+      this.renderFlags |=
+        FlexRenderFlags.ContentChanged | FlexRenderFlags.ViewFirstRender
+      this.update()
     }
   }
 
   ngDoCheck(): void {
-    if (this.renderFlags & FlexRenderFlags.Creation) {
+    if (this.renderFlags & FlexRenderFlags.ViewFirstRender) {
       // On the initial render, the view is created during the `ngOnChanges` hook.
       // Since `ngDoCheck` is called immediately afterward, there's no need to check for changes in this phase.
-      this.renderFlags &= ~FlexRenderFlags.Creation
+      this.renderFlags &= ~FlexRenderFlags.ViewFirstRender
       return
     }
 
-    // TODO: Optimization for V9?. We could check for signal changes when
-    //  we have a way to detect here whether the table state changes
+    console.log('go into do check')
+
+    // TODO: Optimization for V9 / future updates?. We could check for dirty signal changes when
+    //  we are able to detect whether the table state changes here
     // const isChanged =
     //   this.renderFlags &
     //   (FlexRenderFlags.DirtySignal | FlexRenderFlags.PropsReferenceChanged)
     // if (!isChanged) {
     //   return
     // }
+    // if (this.renderFlags & FlexRenderFlags.DirtySignal) {
+    //   this.renderFlags &= ~FlexRenderFlags.DirtySignal
+    //   return
+    // }
 
-    const contentToRender = untracked(() => this.#getContentValue(this.props))
-
-    if (contentToRender.kind === 'null' || !this.renderView) {
-      this.renderFlags |= FlexRenderFlags.Creation
-    } else {
-      this.renderView.setContent(contentToRender.content)
-      this.renderFlags |= FlexRenderFlags.DirtyCheck
-
-      const previousContentInfo = this.renderView.previousContent
-      if (contentToRender.kind !== previousContentInfo.kind) {
-        this.renderFlags |= FlexRenderFlags.ContentChanged
-      }
-      this.renderFlags &= ~FlexRenderFlags.Pristine
-    }
-
-    this.checkView()
+    this.renderFlags |= FlexRenderFlags.DirtyCheck
+    this.checkViewChanges()
   }
 
-  checkView() {
+  checkViewChanges(): void {
+    const latestContent = this.#getContentValue()
+    if (latestContent.kind === 'null' || !this.renderView) {
+      this.renderFlags |= FlexRenderFlags.ContentChanged
+    } else {
+      this.renderView.content = latestContent
+      const { kind: previousKind } = this.renderView.previousContent
+      if (latestContent.kind !== previousKind) {
+        this.renderFlags |= FlexRenderFlags.ContentChanged
+      }
+    }
+    this.update()
+  }
+
+  update() {
     if (
       this.renderFlags &
-      (FlexRenderFlags.ContentChanged | FlexRenderFlags.Creation)
+      (FlexRenderFlags.ContentChanged | FlexRenderFlags.ViewFirstRender)
     ) {
       this.render()
       return
     }
-
     if (this.renderFlags & FlexRenderFlags.PropsReferenceChanged) {
       if (this.renderView) this.renderView.updateProps(this.props)
       this.renderFlags &= ~FlexRenderFlags.PropsReferenceChanged
     }
-
-    if (this.renderFlags & FlexRenderFlags.DirtyCheck) {
+    if (
+      this.renderFlags &
+      (FlexRenderFlags.DirtyCheck | FlexRenderFlags.DirtySignal)
+    ) {
       if (this.renderView) this.renderView.dirtyCheck()
       this.renderFlags &= ~(
         FlexRenderFlags.DirtyCheck | FlexRenderFlags.DirtySignal
@@ -142,58 +168,75 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     }
   }
 
-  render() {
-    this.viewContainerRef.clear()
-    const resolvedContent = this.#getContentValue(this.props)
+  #currentEffectRef: EffectRef | null = null
 
-    if (resolvedContent.kind === 'null') {
-      this.renderView = null
-      return
+  render() {
+    if (this.#shouldRecreateEntireView() && this.#currentEffectRef) {
+      this.#currentEffectRef.destroy()
+      this.#currentEffectRef = null
+      this.renderFlags &= ~FlexRenderFlags.RenderEffectChecked
     }
 
-    this.renderView = this.#renderViewByContent(resolvedContent)
+    this.viewContainerRef.clear()
+    this.renderFlags =
+      FlexRenderFlags.Pristine |
+      (this.renderFlags & FlexRenderFlags.ViewFirstRender) |
+      (this.renderFlags & FlexRenderFlags.RenderEffectChecked)
 
-    if (typeof this.content === 'function') {
-      let firstRender = true
-      const effectRef = effect(
+    const resolvedContent = this.#getContentValue()
+    if (resolvedContent.kind === 'null') {
+      this.renderView = null
+    } else {
+      this.renderView = this.#renderViewByContent(resolvedContent)
+    }
+
+    // If the content is a function `content(props)`, we initialize an effect
+    // in order to react to changes if the given definition use signals.
+    if (!this.#currentEffectRef && typeof this.content === 'function') {
+      this.#currentEffectRef = effect(
         () => {
-          resolvedContent.computedContent()
-          if (firstRender) {
-            firstRender = true
+          this.#latestContent()
+          if (!(this.renderFlags & FlexRenderFlags.RenderEffectChecked)) {
+            this.renderFlags |= FlexRenderFlags.RenderEffectChecked
             return
           }
           this.renderFlags |= FlexRenderFlags.DirtySignal
+          // This will mark the view as changed,
+          // so we'll try to check for updates into ngDoCheck
+          this.#changeDetectorRef.markForCheck()
         },
-        { injector: this.injector }
+        { injector: this.viewContainerRef.injector }
       )
-      if (this.renderView) {
-        this.renderView.onDestroy(() => {
-          effectRef.destroy()
-        })
-      }
     }
+  }
 
-    this.renderFlags |= FlexRenderFlags.Pristine
-    this.renderFlags &= ~FlexRenderFlags.ContentChanged
+  #shouldRecreateEntireView() {
+    return (
+      this.renderFlags &
+      FlexRenderFlags.ContentChanged &
+      FlexRenderFlags.ViewFirstRender
+    )
   }
 
   #renderViewByContent(
     content: FlexRenderTypedContent
   ): FlexRenderView<any> | null {
     if (content.kind === 'primitive') {
-      return this.#renderStringContent()
+      return this.#renderStringContent(content)
     } else if (content.kind === 'templateRef') {
-      return this.#renderTemplateRefContent(content.content)
+      return this.#renderTemplateRefContent(content)
     } else if (content.kind === 'flexRenderComponent') {
-      return this.#renderComponent(content.content)
+      return this.#renderComponent(content)
     } else if (content.kind === 'component') {
-      return this.#renderCustomComponent(content.content)
+      return this.#renderCustomComponent(content)
     } else {
       return null
     }
   }
 
-  #renderStringContent(): FlexRenderTemplateView {
+  #renderStringContent(
+    template: Extract<FlexRenderTypedContent, { kind: 'primitive' }>
+  ): FlexRenderTemplateView {
     const context = () => {
       return typeof this.content === 'string' ||
         typeof this.content === 'number'
@@ -205,23 +248,28 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
         return context()
       },
     })
-    return new FlexRenderTemplateView(context(), ref)
+    return new FlexRenderTemplateView(template, ref)
   }
 
-  #renderTemplateRefContent(content: TemplateRef<any>): FlexRenderTemplateView {
+  #renderTemplateRefContent(
+    template: Extract<FlexRenderTypedContent, { kind: 'templateRef' }>
+  ): FlexRenderTemplateView {
     const latestContext = () => this.props
-    const view = this.viewContainerRef.createEmbeddedView(content, {
+    const view = this.viewContainerRef.createEmbeddedView(template.content, {
       get $implicit() {
         return latestContext()
       },
     })
-    return new FlexRenderTemplateView(content, view)
+    return new FlexRenderTemplateView(template, view)
   }
 
   #renderComponent(
-    flexRenderComponent: FlexRenderComponent
+    flexRenderComponent: Extract<
+      FlexRenderTypedContent,
+      { kind: 'flexRenderComponent' }
+    >
   ): FlexRenderComponentView {
-    const { inputs, injector } = flexRenderComponent
+    const { inputs, injector } = flexRenderComponent.content
 
     const getContext = () => this.props
     const proxy = new Proxy(this.props, {
@@ -232,33 +280,35 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       providers: [{ provide: FlexRenderComponentProps, useValue: proxy }],
     })
     const view = this.#flexRenderComponentFactory.createComponent(
-      flexRenderComponent,
+      flexRenderComponent.content,
       componentInjector
     )
-    if (inputs) {
-      view.setInputs(inputs)
-    }
+    if (inputs) view.setInputs(inputs)
     return new FlexRenderComponentView(flexRenderComponent, view)
   }
 
-  #renderCustomComponent(component: Type<unknown>): FlexRenderComponentView {
+  #renderCustomComponent(
+    component: Extract<FlexRenderTypedContent, { kind: 'component' }>
+  ): FlexRenderComponentView {
     const view = this.#flexRenderComponentFactory.createComponent(
-      new FlexRenderComponent(component, this.props),
+      new FlexRenderComponent(component.content, this.props),
       this.injector
     )
     view.setInputs({ ...this.props })
     return new FlexRenderComponentView(component, view)
   }
+}
 
-  #getContentValue(context: TProps) {
-    const content = this.content
-    const computedContent = computed(() => {
-      return typeof content !== 'function'
-        ? content
-        : runInInjectionContext(this.injector, () => content(context))
-    })
-    return Object.assign(mapToFlexRenderTypedContent(computedContent()), {
-      computedContent,
-    })
+function logFlags(place: string, flags: FlexRenderFlags, val: any) {
+  console.group(`${place}`, val)
+  const result = {} as Record<string, boolean>
+  for (const key in FlexRenderFlags) {
+    // Skip the reverse mapping of numeric values to keys in enums
+    if (isNaN(Number(key))) {
+      const flagValue = FlexRenderFlags[key as keyof typeof FlexRenderFlags]
+      console.log(key, !!(flags & flagValue))
+    }
   }
+  console.groupEnd()
+  return result
 }

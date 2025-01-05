@@ -15,6 +15,7 @@ import {
 import {
   createAngularTable,
   FlexRenderComponent,
+  type FlexRenderContent,
   FlexRenderDirective,
   injectFlexRenderContext,
 } from '../src'
@@ -112,6 +113,37 @@ describe('FlexRenderDirective', () => {
 
     expect(firstCell!.textContent).toEqual('Updated status')
   })
+
+  test('Render content reactively based on signal value', async () => {
+    const statusComponent = signal<FlexRenderContent<any>>('Initial status')
+
+    const { dom, fixture } = createTestTable(defaultData, [
+      {
+        id: 'first_cell',
+        header: 'Status',
+        cell: () => {
+          return statusComponent()
+        },
+      },
+    ])
+
+    let row = dom.getBodyRow(0)!
+    let firstCell = row.querySelector('td')
+
+    expect(firstCell!.textContent).toEqual('Initial status')
+
+    statusComponent.set(null)
+    fixture.detectChanges()
+    expect(firstCell!.matches(':empty')).toBe(true)
+
+    statusComponent.set(
+      new FlexRenderComponent(TestBadgeComponent, { status: 'Updated status' })
+    )
+    fixture.detectChanges()
+    const el = firstCell!.firstElementChild as HTMLElement
+    expect(el!.tagName).toEqual('APP-TEST-BADGE')
+    expect(el.textContent).toEqual('Updated status')
+  })
 })
 
 function expectPrimitiveValueIs(
@@ -184,6 +216,10 @@ export function createTestTable(
       </table>
 
       <button (click)="(0)">Trigger CD</button>
+
+      <button (click)="count.set(count() + 1)">Trigger CD 2</button>
+
+      {{ count() }}
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
@@ -193,6 +229,8 @@ export function createTestTable(
   class TestComponent {
     readonly columns = input<ColumnDef<TestData>[]>(columns)
     readonly data = input<TestData[]>(data)
+
+    readonly count = signal(0)
 
     readonly table = createAngularTable(() => {
       return {
@@ -212,6 +250,11 @@ export function createTestTable(
     dom: {
       clickTriggerCdButton() {
         const btn = fixture.debugElement.query(By.css('button'))
+        btn.triggerEventHandler('click', null)
+        fixture.detectChanges()
+      },
+      clickTriggerCdButton2() {
+        const btn = fixture.debugElement.queryAll(By.css('button'))[1]!
         btn.triggerEventHandler('click', null)
         fixture.detectChanges()
       },
@@ -235,6 +278,7 @@ export function createTestTable(
 }
 
 @Component({
+  selector: 'app-test-badge',
   template: `<span>{{ status() }}</span> `,
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
