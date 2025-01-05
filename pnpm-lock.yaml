@@ -709,7 +709,7 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/preact-table
       preact:
-        specifier: ^10.25.3
+        specifier: ^10.25.4
         version: 10.25.4
     devDependencies:
       '@preact/preset-vite':
@@ -731,7 +731,7 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/preact-table
       preact:
-        specifier: ^10.25.3
+        specifier: ^10.25.4
         version: 10.25.4
     devDependencies:
       '@preact/preset-vite':

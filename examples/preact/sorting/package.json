@@ -12,7 +12,7 @@
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
     "@tanstack/preact-table": "^9.0.0-alpha.10",
-    "preact": "^10.25.3"
+    "preact": "^10.25.4"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.3",
