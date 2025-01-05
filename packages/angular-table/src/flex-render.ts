@@ -112,26 +112,17 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return
     }
 
-    console.log('go into do check')
-
-    // TODO: Optimization for V9 / future updates?. We could check for dirty signal changes when
-    //  we are able to detect whether the table state changes here
-    // const isChanged =
+    // TODO: Optimization for V9 / future updates?.
+    //  We could check for dirty signal changes when we are able to detect whether the table state changes here
+    //  const isChanged =
     //   this.renderFlags &
     //   (FlexRenderFlags.DirtySignal | FlexRenderFlags.PropsReferenceChanged)
-    // if (!isChanged) {
-    //   return
-    // }
-    // if (this.renderFlags & FlexRenderFlags.DirtySignal) {
-    //   this.renderFlags &= ~FlexRenderFlags.DirtySignal
-    //   return
-    // }
+    //  if (!isChanged) {
+    //    return
+    //  }
 
     this.renderFlags |= FlexRenderFlags.DirtyCheck
-    this.checkViewChanges()
-  }
 
-  checkViewChanges(): void {
     const latestContent = this.#getContentValue()
     if (latestContent.kind === 'null' || !this.renderView) {
       this.renderFlags |= FlexRenderFlags.ContentChanged
@@ -297,18 +288,4 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     view.setInputs({ ...this.props })
     return new FlexRenderComponentView(component, view)
   }
-}
-
-function logFlags(place: string, flags: FlexRenderFlags, val: any) {
-  console.group(`${place}`, val)
-  const result = {} as Record<string, boolean>
-  for (const key in FlexRenderFlags) {
-    // Skip the reverse mapping of numeric values to keys in enums
-    if (isNaN(Number(key))) {
-      const flagValue = FlexRenderFlags[key as keyof typeof FlexRenderFlags]
-      console.log(key, !!(flags & flagValue))
-    }
-  }
-  console.groupEnd()
-  return result
 }
