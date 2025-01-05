@@ -94,7 +94,7 @@ const data = makeData(50_000)
 @customElement('column-filter')
 class ColumnFilter extends LitElement {
   @property()
-  private column!: Column<any, {}>
+  private column!: Column<typeof _features, Person>
 
   private onChange(evt: InputEvent) {
     this.column.setFilterValue((evt.target as HTMLInputElement).value)
@@ -153,12 +153,12 @@ class ColumnFilter extends LitElement {
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<any, any>(this)
+  private tableController = new TableController<typeof _features, Person>(this)
 
   @state()
   private _columnFilters: ColumnFiltersState = []
 
-  protected render(): unknown {
+  protected render() {
     const table = this.tableController.table({
       _features,
       _rowModels: {
@@ -242,7 +242,7 @@ class LitTableExample extends LitElement {
               (row) => html`
                 <tr>
                   ${row
-                    .getVisibleCells()
+                    .getAllCells()
                     .map(
                       (cell) => html`
                         <td>

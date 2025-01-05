@@ -6,6 +6,7 @@ import {
   TableController,
   createSortedRowModel,
   flexRender,
+  isFunction,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -13,16 +14,16 @@ import {
 import { Person, makeData } from './makeData'
 import type { ColumnDef, SortFn, SortingState } from '@tanstack/lit-table'
 
-const sortStatusFn: SortFn<any, Person> = (rowA, rowB, _columnId) => {
+const _features = tableFeatures({
+  rowSortingFeature,
+})
+
+const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
-
-const _features = tableFeatures({
-  rowSortingFeature,
-})
 
 const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
@@ -77,7 +78,7 @@ class LitTableExample extends LitElement {
   @state()
   private _sorting: SortingState = []
 
-  private tableController = new TableController<any, Person>(this)
+  private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
     const table = this.tableController.table({
@@ -91,7 +92,7 @@ class LitTableExample extends LitElement {
         sorting: this._sorting,
       },
       onSortingChange: (updaterOrValue) => {
-        if (typeof updaterOrValue === 'function') {
+        if (isFunction(updaterOrValue)) {
           this._sorting = updaterOrValue(this._sorting)
         } else {
           this._sorting = updaterOrValue
@@ -148,7 +149,7 @@ class LitTableExample extends LitElement {
               (row) => html`
                 <tr>
                   ${row
-                    .getVisibleCells()
+                    .getAllCells()
                     .map(
                       (cell) => html`
                         <td>

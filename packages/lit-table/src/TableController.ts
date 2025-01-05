@@ -10,6 +10,7 @@ import type {
   TableFeatures,
   TableOptions,
   TableState,
+  Updater,
 } from '@tanstack/table-core'
 import type { ReactiveController, ReactiveControllerHost } from 'lit'
 
@@ -20,42 +21,43 @@ export class TableController<
 {
   host: ReactiveControllerHost
 
-  private tableInstance: Table<TFeatures, TData> | null = null
-
-  private state: TableState<TFeatures> = {} as TableState<TFeatures>
+  private _features: TableFeatures | null = null
+  private _state: TableState<TFeatures> | null = null
+  private _table: Table<TFeatures, TData> | null = null
 
   constructor(host: ReactiveControllerHost) {
     ;(this.host = host).addController(this)
   }
 
-  public table(tableOptions: TableOptions<TFeatures, TData>) {
-    if (!this.tableInstance) {
-      const _features = { ...coreFeatures, ...tableOptions._features }
+  public table(
+    tableOptions: TableOptions<TFeatures, TData>,
+  ): Table<TFeatures, TData> {
+    if (!this._table) {
+      this._features = { ...coreFeatures, ...tableOptions._features }
+      this._state = getInitialTableState(
+        this._features,
+        tableOptions.initialState,
+      )
 
-      this.state = {
-        ...getInitialTableState(_features, tableOptions.initialState),
-        ...tableOptions.state,
-      }
-
-      const statefulOptions: TableOptions<TFeatures, TData> = {
+      const initialOptions: TableOptions<TFeatures, TData> = {
         ...tableOptions,
-        state: { ...this.state, ...tableOptions.state },
-        onStateChange: (updater) => {
-          this.state = isFunction(updater) ? updater(this.state) : updater
-          this.host.requestUpdate()
-          tableOptions.onStateChange?.(updater)
-        },
+        _features: this._features,
       }
 
-      this.tableInstance = constructTable(statefulOptions)
+      this._table = constructTable(initialOptions)
     }
 
-    // this.tableInstance.setOptions((prev) => ({
-    //   ...prev,
-    //   state: { ...this.state, ...tableOptions.state },
-    // }))
+    this._table.setOptions((prev) => ({
+      ...prev,
+      state: { ...this._state, ...tableOptions.state },
+      onStateChange: (updater: Updater<TableState<TFeatures>>) => {
+        this._state = isFunction(updater) ? updater(this._state!) : updater
+        this.host.requestUpdate()
+        tableOptions.onStateChange?.(updater)
+      },
+    }))
 
-    return this.tableInstance
+    return this._table
   }
 
   hostDisconnected() {}
