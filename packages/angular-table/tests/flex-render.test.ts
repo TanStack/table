@@ -13,7 +13,10 @@ import {
   injectFlexRenderContext,
 } from '../src/flex-render'
 import { setFixtureSignalInput, setFixtureSignalInputs } from './test-utils'
-import { FlexRenderComponent } from '../src/flex-render/flex-render-component'
+import {
+  flexRenderComponent,
+  FlexRenderComponent,
+} from '../src/flex-render/flex-render-component'
 
 interface Data {
   id: string
@@ -114,7 +117,7 @@ describe('FlexRenderDirective', () => {
 
     const fixture = TestBed.createComponent(TestRenderComponent)
     setFixtureSignalInputs(fixture, {
-      content: () => new FlexRenderComponent(FakeComponent),
+      content: () => flexRenderComponent(FakeComponent),
       context: {
         property: 'Context value',
       },

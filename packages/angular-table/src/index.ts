@@ -15,11 +15,15 @@ export * from '@tanstack/table-core'
 export {
   type FlexRenderContent,
   FlexRenderDirective,
+  FlexRenderDirective as FlexRender,
   injectFlexRenderContext,
   type FlexRenderComponentProps,
 } from './flex-render'
 
-export { FlexRenderComponent } from './flex-render/flex-render-component'
+export {
+  FlexRenderComponent,
+  flexRenderComponent,
+} from './flex-render/flex-render-component'
 
 export function createAngularTable<TData extends RowData>(
   options: () => TableOptions<TData>

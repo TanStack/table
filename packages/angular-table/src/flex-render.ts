@@ -17,7 +17,10 @@ import {
 } from '@angular/core'
 import { FlexRenderComponentProps } from './flex-render/context'
 import { FlexRenderFlags } from './flex-render/flags'
-import { FlexRenderComponent } from './flex-render/flex-render-component'
+import {
+  flexRenderComponent,
+  FlexRenderComponent,
+} from './flex-render/flex-render-component'
 import { FlexRenderComponentFactory } from './flex-render/flex-render-component-ref'
 import {
   FlexRenderComponentView,
@@ -273,7 +276,10 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     component: Extract<FlexRenderTypedContent, { kind: 'component' }>
   ): FlexRenderComponentView {
     const view = this.#flexRenderComponentFactory.createComponent(
-      new FlexRenderComponent(component.content, this.props),
+      flexRenderComponent(component.content, {
+        inputs: this.props,
+        injector: this.injector,
+      }),
       this.injector
     )
     view.setInputs({ ...this.props })

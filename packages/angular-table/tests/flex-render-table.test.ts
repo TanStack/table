@@ -14,6 +14,7 @@ import {
 } from '@tanstack/table-core'
 import {
   createAngularTable,
+  flexRenderComponent,
   FlexRenderComponent,
   type FlexRenderContent,
   FlexRenderDirective,
@@ -97,8 +98,10 @@ describe('FlexRenderDirective', () => {
         id: 'first_cell',
         header: 'Status',
         cell: () => {
-          return new FlexRenderComponent(TestBadgeComponent, {
-            status: status(),
+          return flexRenderComponent(TestBadgeComponent, {
+            inputs: {
+              status: status(),
+            },
           })
         },
       },
@@ -137,7 +140,9 @@ describe('FlexRenderDirective', () => {
     expect(firstCell!.matches(':empty')).toBe(true)
 
     statusComponent.set(
-      new FlexRenderComponent(TestBadgeComponent, { status: 'Updated status' })
+      flexRenderComponent(TestBadgeComponent, {
+        inputs: { status: 'Updated status' },
+      })
     )
     fixture.detectChanges()
     const el = firstCell!.firstElementChild as HTMLElement

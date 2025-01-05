@@ -43,7 +43,7 @@
   ],
   "scripts": {
     "clean": "rimraf ./build",
-    "test:types": "tsc --noEmit",
+    "test:types": "tsc --noEmit && vitest --typecheck",
     "test:lib": "vitest",
     "test:lib:dev": "vitest --watch",
     "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./build/lib/package.json"
