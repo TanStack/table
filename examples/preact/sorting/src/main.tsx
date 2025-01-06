@@ -64,7 +64,7 @@ function App() {
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        // enableSorting: false, //disable sorting for this column
+        // enableSorting: false, // disable sorting for this column
       },
       {
         accessorKey: 'rank',

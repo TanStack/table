@@ -1,13 +1,6 @@
-import type { ComponentType, VNode } from 'preact'
+import type { ComponentChild, ComponentType } from 'preact'
 
-export type Renderable<TProps> =
-  | VNode<TProps>
-  | ComponentType<TProps>
-  | undefined
-  | null
-  | string
-  | number
-  | boolean
+export type Renderable<TProps> = ComponentChild | ComponentType<TProps>
 
 function isPreactComponent<TProps>(
   component: unknown,
@@ -46,11 +39,11 @@ function isExoticComponent(component: any) {
 export function flexRender<TProps extends object>(
   Comp: Renderable<TProps> | null,
   props: TProps,
-): VNode<TProps> | Element | null {
+): ComponentChild | Element | null {
   return !Comp ? null : isPreactComponent<TProps>(Comp) ? (
     <Comp {...props} />
   ) : (
-    (Comp as VNode<TProps> | Element | null)
+    Comp
   )
 }
 
