@@ -24,7 +24,9 @@ export function proxifyTable<T>(
       if (
         property.startsWith('get') &&
         !property.endsWith('Handler')
-        // Non-reactive properties like `getCoreRowModel` prevent to use latest row `getContext` in some cases
+        // e.g. getCoreRowModel, getSelectedRowModel etc.
+        // We need that after a signal change even `rowModel` may mark the view as dirty.
+        // This allows to always get the latest `getContext` value while using flexRender
         // && !property.endsWith('Model')
       ) {
         const maybeFn = table[property] as Function | never
