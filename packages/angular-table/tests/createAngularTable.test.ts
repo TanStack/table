@@ -1,11 +1,22 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import {
   type ColumnDef,
   createAngularTable,
   getCoreRowModel,
+  type RowSelectionState,
   type Table,
+  RowModel,
+  type PaginationState,
+  getPaginationRowModel,
 } from '../src/index'
-import { Component, input, isSignal, signal, untracked } from '@angular/core'
+import {
+  Component,
+  effect,
+  input,
+  isSignal,
+  signal,
+  untracked,
+} from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { setFixtureSignalInputs } from './test-utils'
 
@@ -73,6 +84,53 @@ describe('createAngularTable', () => {
       const tableProperty = table[name as keyof typeof table]
       expect(isSignal(tableProperty)).toEqual(expected)
     })
+
+    test('Row model is reactive', () => {
+      const coreRowModelFn = vi.fn<[RowModel<Data>]>()
+      const rowModelFn = vi.fn<[RowModel<Data>]>()
+      const pagination = signal<PaginationState>({
+        pageSize: 5,
+        pageIndex: 0,
+      })
+      const data = Array.from({ length: 10 }, (_, i) => ({
+        id: String(i),
+        title: `Title ${i}`,
+      }))
+
+      TestBed.runInInjectionContext(() => {
+        const table = createAngularTable(() => ({
+          data,
+          columns: columns,
+          getCoreRowModel: getCoreRowModel(),
+          getPaginationRowModel: getPaginationRowModel(),
+          getRowId: row => row.id,
+          state: {
+            pagination: pagination(),
+          },
+          onPaginationChange: updater => {
+            typeof updater === 'function'
+              ? pagination.update(updater)
+              : pagination.set(updater)
+          },
+        }))
+
+        effect(() => coreRowModelFn(table.getCoreRowModel()))
+        effect(() => rowModelFn(table.getRowModel()))
+
+        TestBed.flushEffects()
+
+        pagination.set({ pageIndex: 0, pageSize: 3 })
+
+        TestBed.flushEffects()
+      })
+
+      expect(coreRowModelFn).toHaveBeenCalledOnce()
+      expect(coreRowModelFn.mock.calls[0]![0].rows.length).toEqual(10)
+
+      expect(rowModelFn).toHaveBeenCalledTimes(2)
+      expect(rowModelFn.mock.calls[0]![0].rows.length).toEqual(5)
+      expect(rowModelFn.mock.calls[1]![0].rows.length).toEqual(3)
+    })
   })
 })
 
@@ -80,7 +138,8 @@ const testShouldBeComputedProperty = (
   table: Table<any>,
   propertyName: string
 ) => {
-  if (propertyName.endsWith('Handler') || propertyName.endsWith('Model')) {
+  if (propertyName.endsWith('Handler')) {
+    // || propertyName.endsWith('Model')) {
     return false
   }
 

@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   input,
   signal,
   type TemplateRef,
@@ -11,17 +10,19 @@ import {
   type CellContext,
   ColumnDef,
   getCoreRowModel,
+  TableOptions,
+  type TableState,
 } from '@tanstack/table-core'
 import {
   createAngularTable,
+  FlexRender,
   flexRenderComponent,
-  FlexRenderComponent,
   type FlexRenderContent,
   FlexRenderDirective,
   injectFlexRenderContext,
 } from '../src'
 import { TestBed } from '@angular/core/testing'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import { By } from '@angular/platform-browser'
 
 const defaultData: TestData[] = [{ id: '1', title: 'My title' }] as TestData[]
@@ -149,6 +150,63 @@ describe('FlexRenderDirective', () => {
     expect(el!.tagName).toEqual('APP-TEST-BADGE')
     expect(el.textContent).toEqual('Updated status')
   })
+
+  test('Cell content always get the latest context value', async () => {
+    const contextCaptor = vi.fn()
+
+    const tableState = signal<Partial<TableState>>({
+      rowSelection: {},
+    })
+
+    @Component({
+      template: ``,
+    })
+    class EmptyCell {}
+
+    const { dom, fixture } = createTestTable(
+      defaultData,
+      [
+        {
+          id: 'cell',
+          header: 'Header',
+          cell: context => {
+            contextCaptor(context)
+            return flexRenderComponent(EmptyCell)
+          },
+        },
+      ],
+      () => ({
+        state: tableState(),
+        onStateChange: updater => {
+          return typeof updater === 'function'
+            ? tableState.update(updater as any)
+            : tableState.set(updater)
+        },
+      })
+    )
+
+    const latestCall = () =>
+      contextCaptor.mock.lastCall[0] as CellContext<TestData, any>
+    // TODO: As a perf improvement, check in a future if we can avoid evaluating the cell twice during the first render.
+    // This is caused due to the registration of the initial effect and the first #getContentValue() to detect the
+    // type of content to render.
+    expect(contextCaptor).toHaveBeenCalledTimes(2)
+
+    expect(latestCall().row.getIsExpanded()).toEqual(false)
+    expect(latestCall().row.getIsSelected()).toEqual(false)
+
+    fixture.componentInstance.table.getRow('0').toggleSelected(true)
+    dom.clickTriggerCdButton2()
+    expect(contextCaptor).toHaveBeenCalledTimes(3)
+    expect(latestCall().row.getIsSelected()).toEqual(true)
+
+    fixture.componentInstance.table.getRow('0').toggleSelected(false)
+    fixture.componentInstance.table.getRow('0').toggleExpanded(true)
+    dom.clickTriggerCdButton2()
+    expect(contextCaptor).toHaveBeenCalledTimes(4)
+    expect(latestCall().row.getIsSelected()).toEqual(false)
+    expect(latestCall().row.getIsExpanded()).toEqual(true)
+  })
 })
 
 function expectPrimitiveValueIs(
@@ -166,7 +224,8 @@ type TestData = { id: string; title: string }
 
 export function createTestTable(
   data: TestData[],
-  columns: ColumnDef<TestData, any>[]
+  columns: ColumnDef<TestData, any>[],
+  optionsFn?: () => Partial<TableOptions<TestData>>
 ) {
   @Component({
     template: `
@@ -229,7 +288,7 @@ export function createTestTable(
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'app-table-test',
-    imports: [FlexRenderDirective],
+    imports: [FlexRender],
   })
   class TestComponent {
     readonly columns = input<ColumnDef<TestData>[]>(columns)
@@ -239,6 +298,7 @@ export function createTestTable(
 
     readonly table = createAngularTable(() => {
       return {
+        ...(optionsFn?.() ?? {}),
         columns: this.columns(),
         data: this.data(),
         getCoreRowModel: getCoreRowModel(),
