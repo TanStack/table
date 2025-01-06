@@ -23,8 +23,9 @@ export function proxifyTable<T>(
        */
       if (
         property.startsWith('get') &&
-        !property.endsWith('Handler') &&
-        !property.endsWith('Model')
+        !property.endsWith('Handler')
+        // Non-reactive properties like `getCoreRowModel` prevent to use latest row `getContext` in some cases
+        // && !property.endsWith('Model')
       ) {
         const maybeFn = table[property] as Function | never
         if (typeof maybeFn === 'function') {
