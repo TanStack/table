@@ -8,12 +8,9 @@ import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
-import type { Column } from '../../types/Column'
+import type { Column_Internal } from '../../types/Column'
 import type { ColumnSizingState } from '../column-sizing/columnSizingFeature.types'
-import type {
-  ColumnDef_ColumnResizing,
-  columnResizingState,
-} from './columnResizingFeature.types'
+import type { columnResizingState } from './columnResizingFeature.types'
 
 export function getDefaultColumnResizingState(): columnResizingState {
   return structuredClone({
@@ -30,11 +27,7 @@ export function column_getCanResize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: Partial<ColumnDef_ColumnResizing>
-  },
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   return (
     (column.columnDef.enableResizing ?? true) &&
     (column._table.options.enableColumnResizing ?? true)
@@ -45,11 +38,7 @@ export function column_getIsResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: Partial<ColumnDef_ColumnResizing>
-  },
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   return (
     column._table.options.state?.columnResizing?.isResizingColumn === column.id
   )

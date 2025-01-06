@@ -11,9 +11,8 @@ import type { Row } from '../../types/Row'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
-import type { Column } from '../../types/Column'
+import type { Column_Internal } from '../../types/Column'
 import type {
-  ColumnDef_ColumnPinning,
   ColumnPinningPosition,
   ColumnPinningState,
 } from './columnPinningFeature.types'
@@ -33,7 +32,10 @@ export function column_pin<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>, position: ColumnPinningPosition) {
+>(
+  column: Column_Internal<TFeatures, TData, TValue>,
+  position: ColumnPinningPosition,
+) {
   const columnIds = column
     .getLeafColumns()
     .map((d) => d.id)
@@ -68,15 +70,9 @@ export function column_getCanPin<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnPinning
-  },
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   const leafColumns = column.getLeafColumns() as Array<
-    Column<TFeatures, TData, TValue> & {
-      columnDef: ColumnDef_ColumnPinning
-    }
+    Column_Internal<TFeatures, TData, TValue>
   >
 
   return leafColumns.some(
@@ -90,7 +86,9 @@ export function column_getIsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>): ColumnPinningPosition | false {
+>(
+  column: Column_Internal<TFeatures, TData, TValue>,
+): ColumnPinningPosition | false {
   const leafColumnIds = column.getLeafColumns().map((d) => d.id)
 
   const { left, right } =
@@ -106,7 +104,7 @@ export function column_getPinnedIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   const position = column_getIsPinned(column)
 
   return position
@@ -216,7 +214,7 @@ export function table_getLeftHeaderGroups<
     table,
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
-  ) as unknown as Array<Column<TFeatures, TData, unknown>>
+  ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
   const { left } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
 
@@ -236,7 +234,7 @@ export function table_getRightHeaderGroups<
     table,
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
-  ) as unknown as Array<Column<TFeatures, TData, unknown>>
+  ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
   const { right } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
 
@@ -258,7 +256,7 @@ export function table_getCenterHeaderGroups<
     table,
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
-  ) as unknown as Array<Column<TFeatures, TData, unknown>>
+  ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
   const { left, right } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   const leftAndRight: Array<string> = [...left, ...right]

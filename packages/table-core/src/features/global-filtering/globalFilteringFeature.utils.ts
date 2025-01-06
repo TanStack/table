@@ -1,21 +1,16 @@
 import { filterFn_includesString } from '../../fns/filterFns'
 import { isFunction } from '../../utils'
-import type { ColumnDefBase_All } from '../../types/ColumnDef'
+import type { Column_Internal } from '../../types/Column'
 import type { FilterFn } from '../column-filtering/columnFilteringFeature.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
-import type { Column } from '../../types/Column'
 
 export function column_getCanGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDefBase_All<TFeatures, TData, TValue>
-  },
-): boolean {
+>(column: Column_Internal<TFeatures, TData, TValue>): boolean {
   const { _table: table } = column
   return (
     (column.columnDef.enableGlobalFilter ?? true) &&

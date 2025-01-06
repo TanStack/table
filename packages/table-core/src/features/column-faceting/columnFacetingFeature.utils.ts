@@ -2,14 +2,14 @@ import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
-import type { Column } from '../../types/Column'
+import type { Column_Internal } from '../../types/Column'
 
 export function column_getFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue>,
+  column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
 ): () => [number, number] | undefined {
   return (
@@ -23,7 +23,7 @@ export function column_getFacetedRowModel<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> | undefined,
+  column: Column_Internal<TFeatures, TData, TValue> | undefined,
   table: Table_Internal<TFeatures, TData>,
 ): () => RowModel<TFeatures, TData> {
   return (
@@ -37,7 +37,7 @@ export function column_getFacetedUniqueValues<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue>,
+  column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
 ): () => Map<any, number> {
   return (

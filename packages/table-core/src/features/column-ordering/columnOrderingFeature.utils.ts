@@ -3,7 +3,7 @@ import type { GroupingState } from '../column-grouping/columnGroupingFeature.typ
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
-import type { Column } from '../../types/Column'
+import type { Column_Internal } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { ColumnOrderState } from './columnOrderingFeature.types'
 
@@ -16,7 +16,7 @@ export function column_getIndex<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue>,
+  column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const { _table: table } = column
@@ -24,24 +24,24 @@ export function column_getIndex<
   return columns.findIndex((d) => d.id === column.id)
 }
 
-export function column_getIsFirstColumn<
+export function column_getIsFirstColumn_Internal<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue>,
+  column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = table_getPinnedVisibleLeafColumns(column._table, position)
   return columns[0]?.id === column.id
 }
 
-export function column_getIsLastColumn<
+export function column_getIsLastColumn_Internal<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue>,
+  column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
   const columns = table_getPinnedVisibleLeafColumns(column._table, position)
@@ -71,10 +71,10 @@ export function table_getOrderColumnsFn<
 >(table: Table_Internal<TFeatures, TData>) {
   const { columnOrder = [] } = table.options.state ?? {}
 
-  return (columns: Array<Column<TFeatures, TData, unknown>>) => {
+  return (columns: Array<Column_Internal<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
     // before the headers are built
-    let orderedColumns: Array<Column<TFeatures, TData, unknown>> = []
+    let orderedColumns: Array<Column_Internal<TFeatures, TData, unknown>> = []
 
     // If there is no order, return the normal columns
     if (!columnOrder.length) {
@@ -109,7 +109,7 @@ export function orderColumns<
   TData extends RowData,
 >(
   table: Table_Internal<TFeatures, TData>,
-  leafColumns: Array<Column<TFeatures, TData, unknown>>,
+  leafColumns: Array<Column_Internal<TFeatures, TData, unknown>>,
 ) {
   const grouping = table.options.state?.grouping ?? ([] as GroupingState)
   const { groupedColumnMode } = table.options

@@ -101,8 +101,8 @@ export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstruc
     },
 
     constructRowAPIs: (row) => {
-      ;(row as any).columnFilters = {}
-      ;(row as any).columnFiltersMeta = {}
+      row.columnFilters = {}
+      row.columnFiltersMeta = {}
     },
 
     constructTableAPIs: (table) => {
