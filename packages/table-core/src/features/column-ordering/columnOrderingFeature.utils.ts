@@ -24,7 +24,7 @@ export function column_getIndex<
   return columns.findIndex((d) => d.id === column.id)
 }
 
-export function column_getIsFirstColumn_Internal<
+export function column_getIsFirstColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
@@ -36,7 +36,7 @@ export function column_getIsFirstColumn_Internal<
   return columns[0]?.id === column.id
 }
 
-export function column_getIsLastColumn_Internal<
+export function column_getIsLastColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
