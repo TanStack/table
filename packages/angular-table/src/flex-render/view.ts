@@ -113,7 +113,17 @@ export class FlexRenderComponentView extends FlexRenderView<
   }
 
   override updateProps(props: Record<string, any>) {
-    this.view.setInputs(props)
+    switch (this.content.kind) {
+      case 'component': {
+        this.view.setInputs(props)
+        break
+      }
+      case 'flexRenderComponent': {
+        // No-op. When FlexRenderFlags.PropsReferenceChanged is set,
+        // FlexRenderComponent will be updated into `dirtyCheck`.
+        break
+      }
+    }
   }
 
   override dirtyCheck() {
