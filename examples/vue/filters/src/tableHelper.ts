@@ -31,5 +31,5 @@ export const tableHelper = createTableHelper({
     facetedMinMaxValues: createFacetedMinMaxValues(),
     facetedUniqueValues: createFacetedUniqueValues(),
   },
-  TData: {} as Array<Person>,
+  TData: {} as Person,
 })
