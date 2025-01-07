@@ -1,8 +1,6 @@
-import {
-  constructTableHelper,
-  TableHelperOptions,
-} from './constructTableHelper'
+import { constructTableHelper } from './constructTableHelper'
 import { injectTable } from './injectTable'
+import type { TableHelperOptions } from './constructTableHelper'
 import type { Signal } from '@angular/core'
 import type {
   RowData,
@@ -12,7 +10,7 @@ import type {
   TableOptions,
 } from '@tanstack/table-core'
 
-type TableHelper<
+export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {

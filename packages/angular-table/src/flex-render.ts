@@ -70,7 +70,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
     if ('table' in this.props) {
       this.experimentalReactivity =
-        (this.props.table as Partial<Table<any, any>>).options
+        (this.props.table as Partial<Table<any, any>>)['options']
           ?.enableExperimentalReactivity ?? false
     }
 

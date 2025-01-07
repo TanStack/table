@@ -107,6 +107,7 @@ const expanded = ref<ExpandedState>({})
 const rerender = () => {
   data.value = defaultData
 }
+
 const table = tableHelper.useTable({
   // features and row models are already defined in the tableHelper
   get data() {
