@@ -62,7 +62,8 @@
     _features,
     _rowModels: {
       filteredRowModel: createFilteredRowModel({
-         ...filterFns, fuzzy: fuzzyFilter 
+        ...filterFns,
+        fuzzy: fuzzyFilter,
       }),
       paginatedRowModel: createPaginatedRowModel(),
     },
