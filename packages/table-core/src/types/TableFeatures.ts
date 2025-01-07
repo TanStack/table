@@ -11,8 +11,8 @@ import type { TableState_All } from './TableState'
 import type { StockFeatures } from '../features/stockFeatures'
 
 export type ExtractFeatureTypes<
-  TFeatures extends TableFeatures,
   TKey extends keyof FeatureConstructors,
+  TFeatures extends TableFeatures,
 > = UnionToIntersection<
   {
     [K in keyof TFeatures]: TFeatures[K] extends TableFeature<
@@ -117,7 +117,7 @@ export type GetDefaultColumnDef<TConstructors extends FeatureConstructors> = <
 export type GetDefaultTableOptions<TConstructors extends FeatureConstructors> =
   <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table_Internal<TFeatures, TData> & Partial<TConstructors['Table']>,
-  ) => Partial<TableOptions_All<TFeatures, Array<TData>>> &
+  ) => Partial<TableOptions_All<TFeatures, TData>> &
     Partial<TConstructors['TableOptions']>
 
 export type GetInitialState<TConstructors extends FeatureConstructors> = (

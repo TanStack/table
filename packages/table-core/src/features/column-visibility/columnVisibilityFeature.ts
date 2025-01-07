@@ -21,24 +21,23 @@ import {
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
 } from './columnVisibilityFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type {
-  ColumnDef_ColumnVisibility,
-  Column_ColumnVisibility,
-  Row_ColumnVisibility,
-  TableOptions_ColumnVisibility,
-  TableState_ColumnVisibility,
-  Table_ColumnVisibility,
-} from './columnVisibilityFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
+// import type {
+//   ColumnDef_ColumnVisibility,
+//   Column_ColumnVisibility,
+//   Row_ColumnVisibility,
+//   TableOptions_ColumnVisibility,
+//   TableState_ColumnVisibility,
+//   Table_ColumnVisibility,
+// } from './columnVisibilityFeature.types'
 
 interface ColumnVisibilityFeatureConstructors {
-  ColumnDef: ColumnDef_ColumnVisibility
-  Column: Column_ColumnVisibility
-  Row: Row_ColumnVisibility<TableFeatures, RowData>
-  Table: Table_ColumnVisibility<TableFeatures, RowData>
-  TableOptions: TableOptions_ColumnVisibility
-  TableState: TableState_ColumnVisibility
+  // ColumnDef: ColumnDef_ColumnVisibility
+  // Column: Column_ColumnVisibility
+  // Row: Row_ColumnVisibility<TableFeatures, RowData>
+  // Table: Table_ColumnVisibility<TableFeatures, RowData>
+  // TableOptions: TableOptions_ColumnVisibility
+  // TableState: TableState_ColumnVisibility
 }
 
 /**

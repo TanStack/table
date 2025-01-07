@@ -8,20 +8,19 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './columnOrderingFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type {
-  Column_ColumnOrdering,
-  TableOptions_ColumnOrdering,
-  TableState_ColumnOrdering,
-  Table_ColumnOrdering,
-} from './columnOrderingFeature.types'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+// import type {
+//   Column_ColumnOrdering,
+//   TableOptions_ColumnOrdering,
+//   TableState_ColumnOrdering,
+//   Table_ColumnOrdering,
+// } from './columnOrderingFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
 
 interface ColumnOrderingFeatureConstructors {
-  Column: Column_ColumnOrdering
-  Table: Table_ColumnOrdering<TableFeatures, RowData>
-  TableOptions: TableOptions_ColumnOrdering
-  TableState: TableState_ColumnOrdering
+  // Column: Column_ColumnOrdering
+  // Table: Table_ColumnOrdering<TableFeatures, RowData>
+  // TableOptions: TableOptions_ColumnOrdering
+  // TableState: TableState_ColumnOrdering
 }
 
 /**

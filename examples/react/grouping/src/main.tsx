@@ -31,13 +31,13 @@ const tableHelper = createTableHelper({
     rowSortingFeature,
   },
   _rowModels: {
+    expandedRowModel: createExpandedRowModel(),
     filteredRowModel: createFilteredRowModel(filterFns),
+    groupedRowModel: createGroupedRowModel(aggregationFns),
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
   },
-  TData: [] as Array<Person>,
+  TData: {} as Person,
 })
 
 function App() {

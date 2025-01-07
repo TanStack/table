@@ -8,20 +8,20 @@ import {
   table_setColumnResizing,
 } from './columnResizingFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
-import type {
-  Column_ColumnResizing,
-  Header_ColumnResizing,
-  TableOptions_ColumnResizing,
-  TableState_ColumnResizing,
-  Table_ColumnResizing,
-} from './columnResizingFeature.types'
+// import type {
+//   Column_ColumnResizing,
+//   Header_ColumnResizing,
+//   TableOptions_ColumnResizing,
+//   TableState_ColumnResizing,
+//   Table_ColumnResizing,
+// } from './columnResizingFeature.types'
 
 interface ColumnResizingFeatureConstructors {
-  Column: Column_ColumnResizing
-  Header: Header_ColumnResizing
-  Table: Table_ColumnResizing
-  TableOptions: TableOptions_ColumnResizing
-  TableState: TableState_ColumnResizing
+  // Column: Column_ColumnResizing
+  // Header: Header_ColumnResizing
+  // Table: Table_ColumnResizing
+  // TableOptions: TableOptions_ColumnResizing
+  // TableState: TableState_ColumnResizing
 }
 
 /**

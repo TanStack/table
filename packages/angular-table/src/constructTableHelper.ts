@@ -17,15 +17,12 @@ import type { Signal } from '@angular/core'
  * Options for creating a table helper to share common options across multiple tables
  * coreColumnsFeature, data, and state are excluded from this type and reserved for only the `useTable`/`createTable` functions
  */
-type TableHelperOptions<
+export type TableHelperOptions<
   TFeatures extends TableFeatures,
-  TDataList extends Array<RowData> = Array<any>,
-> = Omit<
-  TableOptions<TFeatures, NoInfer<TDataList>>,
-  'columns' | 'data' | 'state'
-> & {
+  TData extends RowData,
+> = Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'> & {
   _features: TFeatures
-  TData?: TDataList[number] // provide a cast for the TData type
+  TData?: TData // provide a cast for the TData type
 }
 
 /**
@@ -57,7 +54,7 @@ export function constructTableHelper<
   tableCreator: (
     tableOptions: () => TableOptions<TFeatures, TData>,
   ) => Table<TFeatures, TData> & Signal<Table<TFeatures, TData>>,
-  tableHelperOptions: TableHelperOptions<TFeatures, Array<TData>>,
+  tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper_Core<TFeatures, TData> {
   const { TData: _TData, ..._tableHelperOptions } = tableHelperOptions
   return {

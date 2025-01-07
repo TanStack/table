@@ -4,12 +4,11 @@ import {
   table_getGlobalFacetedRowModel,
   table_getGlobalFacetedUniqueValues,
 } from './globalFacetingFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { Table_GlobalFaceting } from './globalFacetingFeature.types'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature } from '../../types/TableFeatures'
+// import type { Table_GlobalFaceting } from './globalFacetingFeature.types'
 
 interface GlobalFacetingFeatureConstructors {
-  Table: Table_GlobalFaceting<TableFeatures, RowData>
+  // Table: Table_GlobalFaceting<TableFeatures, RowData>
 }
 
 /**

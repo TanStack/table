@@ -16,32 +16,31 @@ import {
   table_resetGrouping,
   table_setGrouping,
 } from './columnGroupingFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type {
-  CachedRowModel_Grouped,
-  Cell_ColumnGrouping,
-  ColumnDef_ColumnGrouping,
-  Column_ColumnGrouping,
-  CreateRowModel_Grouped,
-  RowModelFns_ColumnGrouping,
-  Row_ColumnGrouping,
-  TableOptions_ColumnGrouping,
-  TableState_ColumnGrouping,
-  Table_ColumnGrouping,
-} from './columnGroupingFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
+// import type {
+//   CachedRowModel_Grouped,
+//   Cell_ColumnGrouping,
+//   ColumnDef_ColumnGrouping,
+//   Column_ColumnGrouping,
+//   CreateRowModel_Grouped,
+//   RowModelFns_ColumnGrouping,
+//   Row_ColumnGrouping,
+//   TableOptions_ColumnGrouping,
+//   TableState_ColumnGrouping,
+//   Table_ColumnGrouping,
+// } from './columnGroupingFeature.types'
 
 interface ColumnGroupingFeatureConstructors {
-  CachedRowModel: CachedRowModel_Grouped<TableFeatures, RowData>
-  Cell: Cell_ColumnGrouping
-  Column: Column_ColumnGrouping<TableFeatures, RowData>
-  ColumnDef: ColumnDef_ColumnGrouping<TableFeatures, RowData>
-  CreateRowModels: CreateRowModel_Grouped<TableFeatures, RowData>
-  Row: Row_ColumnGrouping
-  RowModelFns: RowModelFns_ColumnGrouping<TableFeatures, RowData>
-  Table: Table_ColumnGrouping<TableFeatures, RowData>
-  TableOptions: TableOptions_ColumnGrouping
-  TableState: TableState_ColumnGrouping
+  // CachedRowModel: CachedRowModel_Grouped<TableFeatures, RowData>
+  // Cell: Cell_ColumnGrouping
+  // Column: Column_ColumnGrouping<TableFeatures, RowData>
+  // ColumnDef: ColumnDef_ColumnGrouping<TableFeatures, RowData>
+  // CreateRowModels: CreateRowModel_Grouped<TableFeatures, RowData>
+  // Row: Row_ColumnGrouping
+  // RowModelFns: RowModelFns_ColumnGrouping<TableFeatures, RowData>
+  // Table: Table_ColumnGrouping<TableFeatures, RowData>
+  // TableOptions: TableOptions_ColumnGrouping
+  // TableState: TableState_ColumnGrouping
 }
 
 /**

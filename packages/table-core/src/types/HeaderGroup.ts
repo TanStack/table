@@ -20,5 +20,5 @@ export type HeaderGroup<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = HeaderGroup_Core<TFeatures, TData> &
-  ExtractFeatureTypes<TFeatures, 'HeaderGroup'> &
+  ExtractFeatureTypes<'HeaderGroup', TFeatures> &
   HeaderGroup_Plugins<TFeatures, TData>

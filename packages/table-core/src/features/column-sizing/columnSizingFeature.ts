@@ -16,23 +16,23 @@ import {
   table_resetColumnSizing,
   table_setColumnSizing,
 } from './columnSizingFeature.utils'
-import type {
-  ColumnDef_ColumnSizing,
-  Column_ColumnSizing,
-  Header_ColumnSizing,
-  TableOptions_ColumnSizing,
-  TableState_ColumnSizing,
-  Table_ColumnSizing,
-} from './columnSizingFeature.types'
+// import type {
+//   ColumnDef_ColumnSizing,
+//   Column_ColumnSizing,
+//   Header_ColumnSizing,
+//   TableOptions_ColumnSizing,
+//   TableState_ColumnSizing,
+//   Table_ColumnSizing,
+// } from './columnSizingFeature.types'
 import type { TableFeature } from '../../types/TableFeatures'
 
 interface ColumnSizingFeatureConstructors {
-  ColumnDef: ColumnDef_ColumnSizing
-  Column: Column_ColumnSizing
-  Header: Header_ColumnSizing
-  Table: Table_ColumnSizing
-  TableOptions: TableOptions_ColumnSizing
-  TableState: TableState_ColumnSizing
+  // ColumnDef: ColumnDef_ColumnSizing
+  // Column: Column_ColumnSizing
+  // Header: Header_ColumnSizing
+  // Table: Table_ColumnSizing
+  // TableOptions: TableOptions_ColumnSizing
+  // TableState: TableState_ColumnSizing
 }
 
 /**

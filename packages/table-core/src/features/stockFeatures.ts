@@ -48,4 +48,4 @@ export const stockFeatures: StockFeatures = {
   rowPinningFeature,
   rowSelectionFeature,
   rowSortingFeature,
-}
+} as const

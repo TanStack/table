@@ -24,20 +24,19 @@ import {
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './rowSelectionFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type {
-  Row_RowSelection,
-  TableOptions_RowSelection,
-  TableState_RowSelection,
-  Table_RowSelection,
-} from './rowSelectionFeature.types'
+import type { TableFeature } from '../../types/TableFeatures'
+// import type {
+//   Row_RowSelection,
+//   TableOptions_RowSelection,
+//   TableState_RowSelection,
+//   Table_RowSelection,
+// } from './rowSelectionFeature.types'
 
 interface RowSelectionFeatureConstructors {
-  Row: Row_RowSelection
-  Table: Table_RowSelection<TableFeatures, RowData>
-  TableOptions: TableOptions_RowSelection<TableFeatures, RowData>
-  TableState: TableState_RowSelection
+  // Row: Row_RowSelection
+  // Table: Table_RowSelection<TableFeatures, RowData>
+  // TableOptions: TableOptions_RowSelection<TableFeatures, RowData>
+  // TableState: TableState_RowSelection
 }
 
 /**

@@ -1,11 +1,13 @@
-import { constructTableHelper } from './constructTableHelper'
+import {
+  constructTableHelper,
+  TableHelperOptions,
+} from './constructTableHelper'
 import { injectTable } from './injectTable'
 import type { Signal } from '@angular/core'
 import type {
   RowData,
   Table,
   TableFeatures,
-  TableHelperOptions,
   TableHelper_Core,
   TableOptions,
 } from '@tanstack/table-core'
