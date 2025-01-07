@@ -106,7 +106,8 @@ export class AppComponent {
     },
   ]
 
-  table = injectTable(() => ({
+  // TODO make this generic infer without passing in manually
+  table = injectTable<typeof _features, Person>(() => ({
     _features,
     _rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),

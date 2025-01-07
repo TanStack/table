@@ -7,6 +7,7 @@ import {
   columnSizingFeature,
   columnVisibilityFeature,
   injectTable,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'
 import { NgStyle } from '@angular/common'
@@ -28,7 +29,15 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+})
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',
     id: 'firstName',
@@ -92,13 +101,7 @@ export class AppComponent {
   readonly split = signal(false)
 
   table = injectTable(() => ({
-    _features: {
-      columnOrderingFeature,
-      columnPinningFeature,
-      columnResizingFeature,
-      columnSizingFeature,
-      columnVisibilityFeature,
-    },
+    _features,
     columns: this.columns(),
     data: this.data(),
     enableExperimentalReactivity: true,
