@@ -254,7 +254,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       { kind: 'flexRenderComponent' }
     >
   ): FlexRenderComponentView {
-    const { inputs, injector } = flexRenderComponent.content
+    const { inputs, outputs, injector } = flexRenderComponent.content
 
     const getContext = () => this.props
     const proxy = new Proxy(this.props, {
@@ -268,7 +268,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       flexRenderComponent.content,
       componentInjector
     )
-    if (inputs) view.setInputs(inputs)
     return new FlexRenderComponentView(flexRenderComponent, view)
   }
 
@@ -282,7 +281,6 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       }),
       this.injector
     )
-    view.setInputs({ ...this.props })
     return new FlexRenderComponentView(component, view)
   }
 }

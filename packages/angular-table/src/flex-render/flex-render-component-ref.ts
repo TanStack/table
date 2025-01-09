@@ -6,6 +6,8 @@ import {
   Injector,
   KeyValueDiffer,
   KeyValueDiffers,
+  OutputEmitterRef,
+  OutputRefSubscription,
   ViewContainerRef,
 } from '@angular/core'
 import { FlexRenderComponent } from './flex-render-component'
@@ -24,46 +26,70 @@ export class FlexRenderComponentFactory {
         injector: componentInjector,
       }
     )
-
-    return new FlexRenderComponentRef(
+    const view = new FlexRenderComponentRef(
       componentRef,
       flexRenderComponent,
       componentInjector
     )
+
+    const { inputs, outputs } = flexRenderComponent
+
+    if (inputs) view.setInputs(inputs)
+    if (outputs) view.setOutputs(outputs)
+
+    return view
   }
 }
 
 export class FlexRenderComponentRef<T> {
   readonly #keyValueDiffersFactory: KeyValueDiffers
-  #keyValueDiffer: KeyValueDiffer<any, any>
+  #componentData: FlexRenderComponent<T>
+  #inputValueDiffer: KeyValueDiffer<string, unknown>
+
+  readonly #outputRegistry: FlexRenderComponentOutputManager
 
   constructor(
     readonly componentRef: ComponentRef<T>,
-    readonly componentData: FlexRenderComponent<T>,
+    componentData: FlexRenderComponent<T>,
     readonly componentInjector: Injector
   ) {
+    this.#componentData = componentData
     this.#keyValueDiffersFactory = componentInjector.get(KeyValueDiffers)
-    this.#keyValueDiffer = this.#keyValueDiffersFactory
-      .find(this.componentData.inputs ?? {})
+
+    this.#outputRegistry = new FlexRenderComponentOutputManager(
+      this.#keyValueDiffersFactory,
+      this.outputs
+    )
+
+    this.#inputValueDiffer = this.#keyValueDiffersFactory
+      .find(this.inputs)
       .create()
-    this.#keyValueDiffer.diff(this.componentData.inputs ?? {})
+    this.#inputValueDiffer.diff(this.inputs)
+
+    this.componentRef.onDestroy(() => this.#outputRegistry.unsubscribeAll())
   }
 
   get component() {
-    return this.componentData.component
+    return this.#componentData.component
   }
 
   get inputs() {
-    return this.componentData.inputs ?? {}
+    return this.#componentData.inputs ?? {}
+  }
+
+  get outputs() {
+    return this.#componentData.outputs ?? {}
   }
 
   /**
-   * Get component inputs diff by the given item
+   * Get component input and output diff by the given item
    */
   diff(item: FlexRenderComponent<T>) {
-    return this.#keyValueDiffer.diff(item.inputs ?? {})
+    return {
+      inputDiff: this.#inputValueDiffer.diff(item.inputs ?? {}),
+      outputDiff: this.#outputRegistry.diff(item.outputs ?? {}),
+    }
   }
-
   /**
    *
    * @param compare Whether the current ref component instance is the same as the given one
@@ -78,17 +104,33 @@ export class FlexRenderComponentRef<T> {
   update(content: FlexRenderComponent<T>) {
     const eq = this.eqType(content)
     if (!eq) return
-    const changes = this.diff(content)
-    if (!changes) return
-    changes.forEachAddedItem(item => {
-      this.setInput(item.key, item.currentValue)
-    })
-    changes.forEachChangedItem(item => {
-      this.setInput(item.key, item.currentValue)
-    })
-    changes.forEachRemovedItem(item => {
-      this.setInput(item.key, undefined)
-    })
+    const { inputDiff, outputDiff } = this.diff(content)
+    if (inputDiff) {
+      inputDiff.forEachAddedItem(item =>
+        this.setInput(item.key, item.currentValue)
+      )
+      inputDiff.forEachChangedItem(item =>
+        this.setInput(item.key, item.currentValue)
+      )
+      inputDiff.forEachRemovedItem(item => this.setInput(item.key, undefined))
+    }
+    if (outputDiff) {
+      outputDiff.forEachAddedItem(item => {
+        this.setOutput(item.key, item.currentValue)
+      })
+      outputDiff.forEachChangedItem(item => {
+        if (item.currentValue) {
+          this.#outputRegistry.setListener(item.key, item.currentValue)
+        } else {
+          this.#outputRegistry.unsubscribe(item.key)
+        }
+      })
+      outputDiff.forEachRemovedItem(item => {
+        this.#outputRegistry.unsubscribe(item.key)
+      })
+    }
+
+    this.#componentData = content
   }
 
   markAsDirty(): void {
@@ -102,8 +144,93 @@ export class FlexRenderComponentRef<T> {
   }
 
   setInput(key: string, value: unknown) {
-    if (this.componentData.allowedInputNames.includes(key)) {
+    if (this.#componentData.allowedInputNames.includes(key)) {
       this.componentRef.setInput(key, value)
     }
+  }
+
+  setOutputs(
+    outputs: Record<
+      string,
+      OutputEmitterRef<unknown>['emit'] | null | undefined
+    >
+  ) {
+    this.#outputRegistry.unsubscribeAll()
+    for (const prop in outputs) {
+      this.setOutput(prop, outputs[prop])
+    }
+  }
+
+  setOutput(
+    outputName: string,
+    emit: OutputEmitterRef<unknown>['emit'] | undefined | null
+  ): void {
+    if (!this.#componentData.allowedOutputNames.includes(outputName)) return
+    if (!emit) {
+      this.#outputRegistry.unsubscribe(outputName)
+      return
+    }
+
+    const hasListener = this.#outputRegistry.hasListener(outputName)
+    this.#outputRegistry.setListener(outputName, emit)
+
+    if (hasListener) {
+      return
+    }
+
+    const instance = this.componentRef.instance
+    const output = instance[outputName as keyof typeof instance]
+    if (output && output instanceof OutputEmitterRef) {
+      output.subscribe(value => {
+        this.#outputRegistry.getListener(outputName)?.(value)
+      })
+    }
+  }
+}
+
+class FlexRenderComponentOutputManager {
+  readonly #outputSubscribers: Record<string, OutputRefSubscription> = {}
+  readonly #outputListeners: Record<string, (...args: any[]) => void> = {}
+
+  readonly #valueDiffer: KeyValueDiffer<
+    string,
+    undefined | null | OutputEmitterRef<unknown>['emit']
+  >
+
+  constructor(keyValueDiffers: KeyValueDiffers, initialOutputs: any) {
+    this.#valueDiffer = keyValueDiffers.find(initialOutputs).create()
+    if (initialOutputs) {
+      this.#valueDiffer.diff(initialOutputs)
+    }
+  }
+
+  hasListener(outputName: string) {
+    return outputName in this.#outputListeners
+  }
+
+  setListener(outputName: string, callback: (...args: any[]) => void) {
+    this.#outputListeners[outputName] = callback
+  }
+
+  getListener(outputName: string) {
+    return this.#outputListeners[outputName]
+  }
+
+  unsubscribeAll(): void {
+    for (const prop in this.#outputSubscribers) {
+      this.unsubscribe(prop)
+    }
+  }
+
+  unsubscribe(outputName: string) {
+    if (outputName in this.#outputSubscribers) {
+      this.#outputSubscribers[outputName]?.unsubscribe()
+      delete this.#outputSubscribers[outputName]
+      delete this.#outputListeners[outputName]
+    }
+  }
+
+  diff(outputs: Record<string, OutputEmitterRef<unknown>['emit'] | undefined>) {
+    return this.#valueDiffer.diff(outputs ?? {})
   }
 }

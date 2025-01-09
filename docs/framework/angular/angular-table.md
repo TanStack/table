@@ -85,23 +85,28 @@ class YourComponent {}
 #### Rendering a Component
 
 To render a Component into a specific column header/cell/footer, you can pass a `FlexRenderComponent` instantiated with
-your `ComponentType, with the ability to include parameters such as inputs and an injector.
+your `ComponentType, with the ability to include parameters such as inputs, outputs and a custom injector.
 
 ```ts
 import {flexRenderComponent} from "./flex-render-component";
-import {ChangeDetectionStrategy} from "@angular/core";
+import {ChangeDetectionStrategy, input, output} from "@angular/core";
 
 @Component({
   template: `
     ...
   `,
   standalone: true,
-  changeDetectionStrategy: ChangeDetectionStrategy.OnPush
+  changeDetectionStrategy: ChangeDetectionStrategy.OnPush,
+  host: {
+    '(click)': 'clickEvent.emit($event)'
+  }
 })
 class CustomCell {
   readonly content = input.required<string>();
+  readonly cellType = input<MyType>();
 
-  readonly type = input<MyType>()
+  // An output that will emit for every cell click
+  readonly clickEvent = output<Event>();
 }
 
 class AppComponent {
@@ -120,7 +125,12 @@ class AppComponent {
             inputs: {
               // Mandatory input since we are using `input.required()
               content: context.row.original.rowProperty,
-              type // Optional input
+              // cellType? - Optional input
+            },
+            outputs: {
+              clickEvent: () => {
+                // Do something
+              }
             }
           }
         )

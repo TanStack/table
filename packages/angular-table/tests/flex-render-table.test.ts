@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
+  output,
   signal,
   type TemplateRef,
   ViewChild,
@@ -9,8 +10,9 @@ import {
 import {
   type CellContext,
   ColumnDef,
+  type ExpandedState,
   getCoreRowModel,
-  TableOptions,
+  type TableOptions,
   type TableState,
 } from '@tanstack/table-core'
 import {
@@ -18,7 +20,6 @@ import {
   FlexRender,
   flexRenderComponent,
   type FlexRenderContent,
-  FlexRenderDirective,
   injectFlexRenderContext,
 } from '../src'
 import { TestBed } from '@angular/core/testing'
@@ -206,6 +207,99 @@ describe('FlexRenderDirective', () => {
     expect(contextCaptor).toHaveBeenCalledTimes(4)
     expect(latestCall().row.getIsSelected()).toEqual(false)
     expect(latestCall().row.getIsExpanded()).toEqual(true)
+  })
+
+  test('Support cell with component output', async () => {
+    const columns = [
+      {
+        id: 'expand',
+        header: 'Expand',
+        cell: ({ row }) => {
+          return flexRenderComponent(ExpandCell, {
+            inputs: { expanded: row.getIsExpanded() },
+            outputs: { toggleExpand: () => row.toggleExpanded() },
+          })
+        },
+      },
+    ] satisfies ColumnDef<TestData>[]
+
+    @Component({
+      selector: 'expand-cell',
+      template: `
+        <button (click)="toggleExpand.emit()">
+          {{ expanded() ? 'Expanded' : 'Not expanded' }}
+        </button>
+      `,
+      changeDetection: ChangeDetectionStrategy.OnPush,
+      standalone: true,
+    })
+    class ExpandCell {
+      readonly expanded = input(false)
+      readonly toggleExpand = output<void>()
+    }
+
+    @Component({
+      template: `
+        <table>
+          <tbody>
+            @for (row of table.getRowModel().rows; track row.id) {
+              <tr>
+                @for (cell of row.getVisibleCells(); track cell.id) {
+                  <td>
+                    <ng-container
+                      *flexRender="
+                        cell.column.columnDef.cell;
+                        props: cell.getContext();
+                        let cell
+                      "
+                    >
+                      <span [innerHTML]="cell"></span>
+                    </ng-container>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      `,
+      changeDetection: ChangeDetectionStrategy.OnPush,
+      standalone: true,
+      selector: 'app-table-test',
+      imports: [FlexRender],
+    })
+    class TestComponent {
+      readonly expandState = signal<ExpandedState>({})
+
+      readonly table = createAngularTable(() => {
+        return {
+          columns: columns,
+          data: defaultData,
+          getCoreRowModel: getCoreRowModel(),
+          state: { expanded: this.expandState() },
+          onExpandedChange: updaterOrValue => {
+            typeof updaterOrValue === 'function'
+              ? this.expandState.update(updaterOrValue)
+              : this.expandState.set(updaterOrValue)
+          },
+        }
+      })
+    }
+    const fixture = TestBed.createComponent(TestComponent)
+    fixture.detectChanges()
+
+    const expandCell = fixture.debugElement.query(By.directive(ExpandCell))
+    expect(fixture.componentInstance.expandState()).toEqual({})
+    expect(expandCell.componentInstance.expanded()).toEqual(false)
+
+    const buttonEl = expandCell.query(By.css('button'))
+    expect(buttonEl.nativeElement.innerHTML).toEqual(' Not expanded ')
+    buttonEl.triggerEventHandler('click')
+
+    expect(fixture.componentInstance.expandState()).toEqual({
+      '0': true,
+    })
+    fixture.detectChanges()
+    expect(buttonEl.nativeElement.innerHTML).toEqual(' Expanded ')
   })
 })
 
