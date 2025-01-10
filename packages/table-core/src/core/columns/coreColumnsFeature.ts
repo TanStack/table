@@ -16,9 +16,11 @@ export const coreColumnsFeature: TableFeature<{
   // Table: Table_Columns<TableFeatures, RowData>
   // TableOptions: TableOptions_Columns<TableFeatures, RowData>
 }> = {
+  feature: 'coreColumnsFeature',
+
   constructColumnAPIs: (column) => {
     const { _table: table } = column
-    assignAPIs(column, [
+    assignAPIs('coreColumnsFeature', column, [
       {
         fn: () => column_getFlatColumns(column),
         fnName: 'column_getFlatColumns',
@@ -38,7 +40,7 @@ export const coreColumnsFeature: TableFeature<{
   },
 
   constructTableAPIs: (table) => {
-    assignAPIs(table, [
+    assignAPIs('coreColumnsFeature', table, [
       {
         fn: () => table_getDefaultColumnDef(table),
         fnName: 'table_getDefaultColumnDef',

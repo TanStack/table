@@ -110,12 +110,6 @@ export interface TableOptions_Rows<
   TData extends RowData,
 > {
   /**
-   * Set this option to `true` to output row debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugrows)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugRows?: boolean
-  /**
    * This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with `.` using their grandparents' index eg. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity eg. a userId, taskId, database ID field, etc.
    * @example getRowId: row => row.userId
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#getrowid)

@@ -18,10 +18,11 @@ import type { TableFeature } from '../../types/TableFeatures'
 export const coreHeadersFeature: TableFeature<{
   // Header: Header_Header<TableFeatures, RowData, CellData>
   // Table: Table_Headers<TableFeatures, RowData>
-  // TableOptions: TableOptions_Headers
 }> = {
+  feature: 'coreHeadersFeature',
+
   constructHeaderAPIs: (header) => {
-    assignAPIs(header, [
+    assignAPIs('coreHeadersFeature', header, [
       {
         fn: () => header_getLeafHeaders(header),
         fnName: 'header_getLeafHeaders',
@@ -36,7 +37,7 @@ export const coreHeadersFeature: TableFeature<{
   },
 
   constructTableAPIs: (table) => {
-    assignAPIs(table, [
+    assignAPIs('coreHeadersFeature', table, [
       {
         fn: () => table_getHeaderGroups(table),
         fnName: 'table_getHeaderGroups',

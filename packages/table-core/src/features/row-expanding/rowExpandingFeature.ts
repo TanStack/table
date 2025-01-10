@@ -42,6 +42,8 @@ interface RowExpandingFeatureConstructors {
  */
 export const rowExpandingFeature: TableFeature<RowExpandingFeatureConstructors> =
   {
+    feature: 'rowExpandingFeature',
+
     getInitialState: (initialState) => {
       return {
         expanded: getDefaultExpandedState(),
@@ -57,7 +59,7 @@ export const rowExpandingFeature: TableFeature<RowExpandingFeatureConstructors> 
     },
 
     constructRowAPIs: (row) => {
-      assignAPIs(row, [
+      assignAPIs('rowExpandingFeature', row, [
         {
           fn: (expanded) => row_toggleExpanded(row, expanded),
           fnName: 'row_toggleExpanded',
@@ -82,7 +84,7 @@ export const rowExpandingFeature: TableFeature<RowExpandingFeatureConstructors> 
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('rowExpandingFeature', table, [
         {
           fn: () => table_autoResetExpanded(table),
           fnName: 'table_autoResetExpanded',

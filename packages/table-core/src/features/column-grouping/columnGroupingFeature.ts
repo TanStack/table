@@ -50,6 +50,8 @@ interface ColumnGroupingFeatureConstructors {
  */
 export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructors> =
   {
+    feature: 'columnGroupingFeature',
+
     getInitialState: (initialState) => {
       return {
         grouping: getDefaultGroupingState(),
@@ -72,7 +74,7 @@ export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructo
     },
 
     constructCellAPIs: (cell) => {
-      assignAPIs(cell, [
+      assignAPIs('columnGroupingFeature', cell, [
         {
           fn: () => cell_getIsGrouped(cell),
           fnName: 'cell_getIsGrouped',
@@ -89,7 +91,7 @@ export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructo
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnGroupingFeature', column, [
         {
           fn: () => column_toggleGrouping(column),
           fnName: 'column_toggleGrouping',
@@ -124,7 +126,7 @@ export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructo
     constructRowAPIs: (row) => {
       ;(row as any)._groupingValuesCache = {}
 
-      assignAPIs(row, [
+      assignAPIs('columnGroupingFeature', row, [
         {
           fn: () => row_getIsGrouped(row),
           fnName: 'row_getIsGrouped',
@@ -137,7 +139,7 @@ export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructo
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnGroupingFeature', table, [
         {
           fn: (updater) => table_setGrouping(table, updater),
           fnName: 'table_setGrouping',

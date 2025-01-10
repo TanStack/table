@@ -45,6 +45,8 @@ interface ColumnFilteringFeatureConstructors {
  */
 export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstructors> =
   {
+    feature: 'columnFilteringFeature',
+
     getInitialState: (initialState) => {
       return {
         columnFilters: getDefaultColumnFiltersState(),
@@ -67,7 +69,7 @@ export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstruc
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnFilteringFeature', column, [
         {
           fn: () => column_getAutoFilterFn(column),
           fnName: 'column_getAutoFilterFn',
@@ -105,7 +107,7 @@ export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstruc
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnFilteringFeature', table, [
         {
           fn: (updater) => table_setColumnFilters(table, updater),
           fnName: 'table_setColumnFilters',

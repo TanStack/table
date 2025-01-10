@@ -125,6 +125,7 @@ export type GetInitialState<TConstructors extends FeatureConstructors> = (
 ) => TableState_All & Partial<TConstructors['TableState']>
 
 export interface TableFeature<TConstructors extends FeatureConstructors> {
+  feature?: string
   constructCellAPIs?: ConstructCellAPIs<TConstructors>
   constructColumnAPIs?: ConstructColumnAPIs<TConstructors>
   constructHeaderAPIs?: ConstructHeaderAPIs<TConstructors>

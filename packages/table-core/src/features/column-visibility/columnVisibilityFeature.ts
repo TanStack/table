@@ -46,6 +46,7 @@ interface ColumnVisibilityFeatureConstructors {
  */
 export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstructors> =
   {
+    feature: 'columnVisibilityFeature',
     getInitialState: (initialState) => {
       return {
         columnVisibility: getDefaultColumnVisibilityState(),
@@ -60,7 +61,7 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnVisibilityFeature', column, [
         {
           fn: () => column_getIsVisible(column),
           fnName: 'column_getIsVisible',
@@ -86,7 +87,7 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
     },
 
     constructRowAPIs: (row) => {
-      assignAPIs(row, [
+      assignAPIs('columnVisibilityFeature', row, [
         {
           fn: () => row_getAllVisibleCells(row),
           fnName: 'row_getAllVisibleCells',
@@ -120,7 +121,7 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnVisibilityFeature', table, [
         {
           fn: () => table_getVisibleFlatColumns(table),
           fnName: 'table_getVisibleFlatColumns',

@@ -11,8 +11,10 @@ export const coreTablesFeature: TableFeature<{
   // Table: Table_Table<TableFeatures, RowData>
   // TableOptions: TableOptions_Table<TableFeatures, RowData>
 }> = {
+  feature: 'coreTablesFeature',
+
   constructTableAPIs: (table) => {
-    assignAPIs(table, [
+    assignAPIs('coreTablesFeature', table, [
       {
         fnName: 'table_getState',
         fn: () => table_getState(table),

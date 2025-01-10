@@ -19,8 +19,9 @@ export const coreRowsFeature: TableFeature<{
   // TableOptions: TableOptions_Rows<TableFeatures, RowData>
   // Table: Table_Rows<TableFeatures, RowData>
 }> = {
+  feature: 'coreRowsFeature',
   constructRowAPIs: (row) => {
-    assignAPIs(row, [
+    assignAPIs('coreRowsFeature', row, [
       {
         fn: () => row_getAllCellsByColumnId(row),
         fnName: 'row_getAllCellsByColumnId',
@@ -59,7 +60,7 @@ export const coreRowsFeature: TableFeature<{
   },
 
   constructTableAPIs: (table) => {
-    assignAPIs(table, [
+    assignAPIs('coreRowsFeature', table, [
       {
         fn: (row, index, parent) => table_getRowId(row, table, index, parent),
         fnName: 'table_getRowId',

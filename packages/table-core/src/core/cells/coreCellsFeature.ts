@@ -10,8 +10,10 @@ export const coreCellsFeature: TableFeature<{
   // Cell: Cell_Cell<TableFeatures, RowData, CellData>
   // TableOptions: TableOptions_Cell
 }> = {
+  feature: 'coreCellsFeature',
+
   constructCellAPIs: (cell) => {
-    assignAPIs(cell, [
+    assignAPIs('coreCellsFeature', cell, [
       {
         fn: () => cell_getValue(cell),
         fnName: 'cell_getValue',

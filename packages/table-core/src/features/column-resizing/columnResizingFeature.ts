@@ -33,6 +33,8 @@ interface ColumnResizingFeatureConstructors {
  */
 export const columnResizingFeature: TableFeature<ColumnResizingFeatureConstructors> =
   {
+    feature: 'columnResizingFeature',
+
     getInitialState: (initialState) => {
       return {
         columnResizing: getDefaultColumnResizingState(),
@@ -49,7 +51,7 @@ export const columnResizingFeature: TableFeature<ColumnResizingFeatureConstructo
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnResizingFeature', column, [
         {
           fn: () => column_getCanResize(column),
           fnName: 'column_getCanResize',
@@ -62,7 +64,7 @@ export const columnResizingFeature: TableFeature<ColumnResizingFeatureConstructo
     },
 
     constructHeaderAPIs: (header) => {
-      assignAPIs(header, [
+      assignAPIs('columnResizingFeature', header, [
         {
           fn: (_contextDocument) =>
             header_getResizeHandler(header, _contextDocument),
@@ -72,7 +74,7 @@ export const columnResizingFeature: TableFeature<ColumnResizingFeatureConstructo
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnResizingFeature', table, [
         {
           fn: (updater) => table_setColumnResizing(table, updater),
           fnName: 'table_setColumnResizing',

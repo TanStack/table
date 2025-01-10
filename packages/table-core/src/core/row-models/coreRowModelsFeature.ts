@@ -20,8 +20,10 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 export const coreRowModelsFeature: TableFeature<{
   Table: Table_RowModels<TableFeatures, RowData>
 }> = {
+  feature: 'coreRowModelsFeature',
+
   constructTableAPIs: (table) => {
-    assignAPIs(table, [
+    assignAPIs('coreRowModelsFeature', table, [
       {
         fn: () => table_getCoreRowModel(table),
         fnName: 'table_getCoreRowModel',

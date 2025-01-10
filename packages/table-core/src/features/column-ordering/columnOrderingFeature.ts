@@ -30,6 +30,8 @@ interface ColumnOrderingFeatureConstructors {
  */
 export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructors> =
   {
+    feature: 'columnOrderingFeature',
+
     getInitialState: (initialState) => {
       return {
         columnOrder: getDefaultColumnOrderState(),
@@ -44,7 +46,7 @@ export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructo
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnOrderingFeature', column, [
         {
           fn: (position) => column_getIndex(column, position),
           fnName: 'column_getIndex',
@@ -67,7 +69,7 @@ export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructo
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnOrderingFeature', table, [
         {
           fn: (updater) => table_setColumnOrder(table, updater),
           fnName: 'table_setColumnOrder',

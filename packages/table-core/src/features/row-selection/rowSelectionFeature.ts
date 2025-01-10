@@ -46,6 +46,8 @@ interface RowSelectionFeatureConstructors {
  */
 export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> =
   {
+    feature: 'rowSelectionFeature',
+
     getInitialState: (initialState) => {
       return {
         rowSelection: getDefaultRowSelectionState(),
@@ -63,7 +65,7 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
     },
 
     constructRowAPIs: (row) => {
-      assignAPIs(row, [
+      assignAPIs('rowSelectionFeature', row, [
         {
           fn: (value, opts) => row_toggleSelected(row, value, opts),
           fnName: 'row_toggleSelected',
@@ -100,7 +102,7 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('rowSelectionFeature', table, [
         {
           fn: (updater) => table_setRowSelection(table, updater),
           fnName: 'table_setRowSelection',

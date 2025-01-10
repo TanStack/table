@@ -33,6 +33,8 @@ interface RowPinningFeatureConstructors {
  * [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
  */
 export const rowPinningFeature: TableFeature<RowPinningFeatureConstructors> = {
+  feature: 'rowPinningFeature',
+
   getInitialState: (initialState) => {
     return {
       ...initialState,
@@ -50,7 +52,7 @@ export const rowPinningFeature: TableFeature<RowPinningFeatureConstructors> = {
   },
 
   constructRowAPIs: (row) => {
-    assignAPIs(row, [
+    assignAPIs('rowPinningFeature', row, [
       {
         fn: () => row_getCanPin(row),
         fnName: 'row_getCanPin',
@@ -76,7 +78,7 @@ export const rowPinningFeature: TableFeature<RowPinningFeatureConstructors> = {
   },
 
   constructTableAPIs: (table) => {
-    assignAPIs(table, [
+    assignAPIs('rowPinningFeature', table, [
       {
         fn: (updater) => table_setRowPinning(table, updater),
         fnName: 'table_setRowPinning',

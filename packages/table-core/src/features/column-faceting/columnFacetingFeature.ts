@@ -3,6 +3,9 @@ import {
   column_getFacetedMinMaxValues,
   column_getFacetedRowModel,
   column_getFacetedUniqueValues,
+  table_getGlobalFacetedMinMaxValues,
+  table_getGlobalFacetedRowModel,
+  table_getGlobalFacetedUniqueValues,
 } from './columnFacetingFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
 // import type {
@@ -22,8 +25,10 @@ interface ColumnFacetingFeatureConstructors {
  */
 export const columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructors> =
   {
+    feature: 'columnFacetingFeature',
+
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnFacetingFeature', column, [
         {
           fn: () => column_getFacetedMinMaxValues(column, column._table),
           fnName: 'column_getFacetedMinMaxValues',
@@ -35,6 +40,22 @@ export const columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructo
         {
           fn: () => column_getFacetedUniqueValues(column, column._table),
           fnName: 'column_getFacetedUniqueValues',
+        },
+      ])
+    },
+    constructTableAPIs: (table) => {
+      assignAPIs('columnFacetingFeature', table, [
+        {
+          fn: () => table_getGlobalFacetedMinMaxValues(table),
+          fnName: 'table_getGlobalFacetedMinMaxValues',
+        },
+        {
+          fn: () => table_getGlobalFacetedRowModel(table),
+          fnName: 'table_getGlobalFacetedRowModel',
+        },
+        {
+          fn: () => table_getGlobalFacetedUniqueValues(table),
+          fnName: 'table_getGlobalFacetedUniqueValues',
         },
       ])
     },

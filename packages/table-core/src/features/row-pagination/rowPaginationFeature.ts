@@ -42,6 +42,8 @@ interface RowPaginationFeatureConstructors {
  */
 export const rowPaginationFeature: TableFeature<RowPaginationFeatureConstructors> =
   {
+    feature: 'rowPaginationFeature',
+
     getInitialState: (initialState) => {
       return {
         ...initialState,
@@ -59,7 +61,7 @@ export const rowPaginationFeature: TableFeature<RowPaginationFeatureConstructors
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('rowPaginationFeature', table, [
         {
           fn: () => table_autoResetPageIndex(table),
           fnName: 'table_autoResetPageIndex',

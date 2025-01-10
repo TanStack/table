@@ -40,24 +40,6 @@ export interface TableOptions_Table<
    */
   data: Array<TData>
   /**
-   * Set this option to `true` to output all debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugall)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugAll?: boolean
-  /**
-   * Set this option to `true` to output cache debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcache)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugCache?: boolean
-  /**
-   * Set this option to `true` to output table debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugtable)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugTable?: boolean
-  /**
    * Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPageIndex`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
    *
    * Table state will not be reset when this object changes, which also means that the initial state object does not need to be stable.

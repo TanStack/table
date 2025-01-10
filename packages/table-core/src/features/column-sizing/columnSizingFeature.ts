@@ -44,6 +44,8 @@ interface ColumnSizingFeatureConstructors {
  */
 export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> =
   {
+    feature: 'columnSizingFeature',
+
     getInitialState: (initialState) => {
       return {
         columnSizing: getDefaultColumnSizingState(),
@@ -62,7 +64,7 @@ export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> 
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnSizingFeature', column, [
         {
           fn: () => column_getSize(column),
           fnName: 'column_getSize',
@@ -103,7 +105,7 @@ export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> 
     },
 
     constructHeaderAPIs: (header) => {
-      assignAPIs(header, [
+      assignAPIs('columnSizingFeature', header, [
         {
           fn: () => header_getSize(header),
           fnName: 'header_getSize',
@@ -116,7 +118,7 @@ export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> 
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnSizingFeature', table, [
         {
           fn: (updater) => table_setColumnSizing(table, updater),
           fnName: 'table_setColumnSizing',

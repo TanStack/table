@@ -1,4 +1,4 @@
-import { isDev, tableMemo } from '../../utils'
+import { tableMemo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
 import type { Table_Internal } from '../../types/Table'
 import type {
@@ -19,7 +19,8 @@ export function createFacetedRowModel<
 ) => () => RowModel<TFeatures, TData> {
   return (table, columnId) =>
     tableMemo({
-      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      feature: 'columnFacetingFeature',
+      table,
       fnName: 'createFacetedRowModel',
       memoDeps: () => [
         table.getPreFilteredRowModel(),

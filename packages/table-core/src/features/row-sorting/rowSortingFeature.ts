@@ -45,6 +45,8 @@ interface RowSortingFeatureConstructors {
  * [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
  */
 export const rowSortingFeature: TableFeature<RowSortingFeatureConstructors> = {
+  feature: 'rowSortingFeature',
+
   getInitialState: (initialState) => {
     return {
       sorting: getDefaultSortingState(),
@@ -69,7 +71,7 @@ export const rowSortingFeature: TableFeature<RowSortingFeatureConstructors> = {
   },
 
   constructColumnAPIs: (column) => {
-    assignAPIs(column, [
+    assignAPIs('rowSortingFeature', column, [
       {
         fn: () => column_getAutoSortFn(column),
         fnName: 'column.getAutoSortFn',
@@ -122,7 +124,7 @@ export const rowSortingFeature: TableFeature<RowSortingFeatureConstructors> = {
   },
 
   constructTableAPIs: (table) => {
-    assignAPIs(table, [
+    assignAPIs('rowSortingFeature', table, [
       {
         fn: (updater) => table_setSorting(table, updater),
         fnName: 'table_setSorting',

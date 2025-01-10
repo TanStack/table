@@ -57,6 +57,7 @@ interface ColumnPinningFeatureConstructors {
  */
 export const columnPinningFeature: TableFeature<ColumnPinningFeatureConstructors> =
   {
+    feature: 'columnPinningFeature',
     getInitialState: (initialState) => {
       return {
         ...initialState,
@@ -74,7 +75,7 @@ export const columnPinningFeature: TableFeature<ColumnPinningFeatureConstructors
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnPinningFeature', column, [
         {
           fn: (position) => column_pin(column, position),
           fnName: 'column_pin',
@@ -95,7 +96,7 @@ export const columnPinningFeature: TableFeature<ColumnPinningFeatureConstructors
     },
 
     constructRowAPIs: (row) => {
-      assignAPIs(row, [
+      assignAPIs('columnPinningFeature', row, [
         {
           fn: () => row_getCenterVisibleCells(row),
           fnName: 'row_getCenterVisibleCells',
@@ -127,7 +128,7 @@ export const columnPinningFeature: TableFeature<ColumnPinningFeatureConstructors
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnPinningFeature', table, [
         {
           fn: (updater) => table_setColumnPinning(table, updater),
           fnName: 'table_setColumnPinning',

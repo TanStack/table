@@ -32,6 +32,8 @@ interface GlobalFilteringFeatureConstructors {
  */
 export const globalFilteringFeature: TableFeature<GlobalFilteringFeatureConstructors> =
   {
+    feature: 'globalFilteringFeature',
+
     getInitialState: (initialState) => {
       return {
         globalFilter: undefined,
@@ -55,7 +57,7 @@ export const globalFilteringFeature: TableFeature<GlobalFilteringFeatureConstruc
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('globalFilteringFeature', column, [
         {
           fn: () => column_getCanGlobalFilter(column),
           fnName: 'column_getCanGlobalFilter',
@@ -64,7 +66,7 @@ export const globalFilteringFeature: TableFeature<GlobalFilteringFeatureConstruc
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('globalFilteringFeature', table, [
         {
           fn: () => table_getGlobalAutoFilterFn(),
           fnName: 'table_getGlobalAutoFilterFn',
