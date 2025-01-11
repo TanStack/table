@@ -7,7 +7,7 @@ import {
 } from '@tanstack/table-core'
 import { lazyInit } from './lazy-signal-initializer'
 import { proxifyTable } from './proxy'
-import { reactivityFeature } from './reactivity'
+import { angularReactivityFeature } from './angularReactivityFeature'
 import type {
   RowData,
   Table,
@@ -28,7 +28,7 @@ export function injectTable<
       return {
         ...coreFeatures,
         ...options()._features,
-        reactivityFeature,
+        ...angularReactivityFeature,
       }
     }
 

@@ -190,9 +190,9 @@ export function tableMemo<
       'color: #87CEEB',
     )
     console.info({
-      deps: memoOptions.memoDeps?.toString(),
       feature,
       state: table.getState(),
+      deps: memoOptions.memoDeps?.toString(),
     })
     console.trace()
     console.groupEnd()

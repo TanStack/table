@@ -16,7 +16,8 @@ import {
   table_resetGrouping,
   table_setGrouping,
 } from './columnGroupingFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type {
 //   CachedRowModel_Grouped,
 //   Cell_ColumnGrouping,
@@ -30,28 +31,27 @@ import type { TableFeature } from '../../types/TableFeatures'
 //   Table_ColumnGrouping,
 // } from './columnGroupingFeature.types'
 
-interface ColumnGroupingFeatureConstructors {
-  // CachedRowModel: CachedRowModel_Grouped<TableFeatures, RowData>
+interface ColumnGroupingFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  // CachedRowModel: CachedRowModel_Grouped<TFeatures, TData>
   // Cell: Cell_ColumnGrouping
-  // Column: Column_ColumnGrouping<TableFeatures, RowData>
-  // ColumnDef: ColumnDef_ColumnGrouping<TableFeatures, RowData>
-  // CreateRowModels: CreateRowModel_Grouped<TableFeatures, RowData>
+  // Column: Column_ColumnGrouping<TFeatures, TData>
+  // ColumnDef: ColumnDef_ColumnGrouping<TFeatures, TData>
+  // CreateRowModels: CreateRowModel_Grouped<TFeatures, TData>
   // Row: Row_ColumnGrouping
-  // RowModelFns: RowModelFns_ColumnGrouping<TableFeatures, RowData>
-  // Table: Table_ColumnGrouping<TableFeatures, RowData>
+  // RowModelFns: RowModelFns_ColumnGrouping<TFeatures, TData>
+  // Table: Table_ColumnGrouping<TFeatures, TData>
   // TableOptions: TableOptions_ColumnGrouping
   // TableState: TableState_ColumnGrouping
 }
 
-/**
- * The (Column) Grouping feature adds column grouping state and APIs to the table, row, column, and cell objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-grouping)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
- */
-export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructors> =
-  {
-    feature: 'columnGroupingFeature',
-
+export function constructColumnGroupingFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<ColumnGroupingFeatureConstructors<TFeatures, TData>> {
+  return {
     getInitialState: (initialState) => {
       return {
         grouping: getDefaultGroupingState(),
@@ -151,3 +151,11 @@ export const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructo
       ])
     },
   }
+}
+
+/**
+ * The (Column) Grouping feature adds column grouping state and APIs to the table, row, column, and cell objects.
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-grouping)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
+ */
+export const columnGroupingFeature = constructColumnGroupingFeature()

@@ -7,26 +7,28 @@ import {
   table_getGlobalFacetedRowModel,
   table_getGlobalFacetedUniqueValues,
 } from './columnFacetingFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type {
 //   CachedRowModel_Faceted,
 //   Column_ColumnFaceting,
 //   CreateRowModel_Faceted,
 // } from './columnFacetingFeature.types'
 
-interface ColumnFacetingFeatureConstructors {
-  // Column: Column_ColumnFaceting<TableFeatures, RowData>
-  // CreateRowModels: CreateRowModel_Faceted<TableFeatures, RowData>
-  // CachedRowModel: CachedRowModel_Faceted<TableFeatures, RowData>
+interface ColumnFacetingFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  // CachedRowModel: CachedRowModel_Faceted<TFeatures, TData>
+  // Column: Column_ColumnFaceting<TFeatures, TData>
+  // CreateRowModels: CreateRowModel_Faceted<TFeatures, TData>
 }
 
-/**
- * The Column Faceting feature adds column faceting APIs to the column objects.
- */
-export const columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructors> =
-  {
-    feature: 'columnFacetingFeature',
-
+export function constructColumnFacetingFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<ColumnFacetingFeatureConstructors<TFeatures, TData>> {
+  return {
     constructColumnAPIs: (column) => {
       assignAPIs('columnFacetingFeature', column, [
         {
@@ -43,6 +45,7 @@ export const columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructo
         },
       ])
     },
+
     constructTableAPIs: (table) => {
       assignAPIs('columnFacetingFeature', table, [
         {
@@ -60,3 +63,9 @@ export const columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructo
       ])
     },
   }
+}
+
+/**
+ * The Column Faceting feature adds column faceting APIs to the column objects.
+ */
+export const columnFacetingFeature = constructColumnFacetingFeature()

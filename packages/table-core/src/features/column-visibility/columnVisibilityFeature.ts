@@ -1,4 +1,4 @@
-import { assignAPIs, callMemoOrStaticFn, makeStateUpdater } from '../../utils'
+import { assignAPIs, makeStateUpdater } from '../../utils'
 import {
   row_getCenterVisibleCells,
   row_getLeftVisibleCells,
@@ -21,7 +21,8 @@ import {
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
 } from './columnVisibilityFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type {
 //   ColumnDef_ColumnVisibility,
 //   Column_ColumnVisibility,
@@ -31,22 +32,23 @@ import type { TableFeature } from '../../types/TableFeatures'
 //   Table_ColumnVisibility,
 // } from './columnVisibilityFeature.types'
 
-interface ColumnVisibilityFeatureConstructors {
+interface ColumnVisibilityFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   // ColumnDef: ColumnDef_ColumnVisibility
   // Column: Column_ColumnVisibility
-  // Row: Row_ColumnVisibility<TableFeatures, RowData>
-  // Table: Table_ColumnVisibility<TableFeatures, RowData>
+  // Row: Row_ColumnVisibility<TFeatures, TData>
+  // Table: Table_ColumnVisibility<TFeatures, TData>
   // TableOptions: TableOptions_ColumnVisibility
   // TableState: TableState_ColumnVisibility
 }
 
-/**
- * The Column Visibility feature adds column visibility state and APIs to the table, row, and column objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility)
- */
-export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstructors> =
-  {
-    feature: 'columnVisibilityFeature',
+export function constructColumnVisibilityFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<ColumnVisibilityFeatureConstructors<TFeatures, TData>> {
+  return {
     getInitialState: (initialState) => {
       return {
         columnVisibility: getDefaultColumnVisibilityState(),
@@ -100,21 +102,9 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
           fn: (left, center, right) => row_getVisibleCells(left, center, right),
           fnName: 'row_getVisibleCells',
           memoDeps: () => [
-            callMemoOrStaticFn(
-              row,
-              'getLeftVisibleCells',
-              row_getLeftVisibleCells,
-            ),
-            callMemoOrStaticFn(
-              row,
-              'getCenterVisibleCells',
-              row_getCenterVisibleCells,
-            ),
-            callMemoOrStaticFn(
-              row,
-              'getRightVisibleCells',
-              row_getRightVisibleCells,
-            ),
+            row_getLeftVisibleCells(row),
+            row_getCenterVisibleCells(row),
+            row_getRightVisibleCells(row),
           ],
         },
       ])
@@ -166,3 +156,10 @@ export const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstr
       ])
     },
   }
+}
+
+/**
+ * The Column Visibility feature adds column visibility state and APIs to the table, row, and column objects.
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility)
+ */
+export const columnVisibilityFeature = constructColumnVisibilityFeature()
