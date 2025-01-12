@@ -75,7 +75,7 @@ export type Table<
     | ('columnVisibilityFeature' extends keyof TFeatures
         ? Table_ColumnVisibility<TFeatures, TData>
         : never)
-    | ('globalFacetingFeature' extends keyof TFeatures
+    | ('columnFacetingFeature' extends keyof TFeatures
         ? Table_ColumnFaceting<TFeatures, TData>
         : never)
     | ('globalFilteringFeature' extends keyof TFeatures
