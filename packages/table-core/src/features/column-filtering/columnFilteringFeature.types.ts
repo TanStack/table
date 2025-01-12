@@ -6,7 +6,7 @@ import type {
   RowData,
   Updater,
 } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { GetFeatureData, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
@@ -80,7 +80,7 @@ export type FilterFnOption<
 
 export interface ColumnDef_ColumnFiltering<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
 > {
   /**
    * Enables/disables the **column** filter for this column.

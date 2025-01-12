@@ -7,7 +7,7 @@ import type {
   RowData,
   Updater,
 } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { GetFeatureData, TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { ColumnDefTemplate } from '../../types/ColumnDef'
@@ -52,7 +52,7 @@ export type AggregationFnOption<
 
 export interface ColumnDef_ColumnGrouping<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
   TValue extends CellData = CellData,
 > {
   /**

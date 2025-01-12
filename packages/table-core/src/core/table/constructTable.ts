@@ -23,7 +23,9 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
 export function constructTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(options: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
+>(
+  options: TableOptions<TFeatures, TData>,
+): Table<TFeatures & { Data: TData }, TData> {
   const { _features = {} as TFeatures } = options
 
   const featuresList: Array<TableFeature<{}>> = Object.values(_features)
@@ -35,7 +37,7 @@ export function constructTable<
     )
   }
 
-  const table = {} as unknown as Table<TFeatures, TData>
+  const table = {} as unknown as Table<TFeatures & { Data: TData }, TData>
 
   const defaultOptions = featuresList.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultTableOptions?.(table as any))

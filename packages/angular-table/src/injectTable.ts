@@ -21,8 +21,9 @@ export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  options: () => TableOptions<TFeatures, TData>,
-): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
+  options: () => TableOptions<TFeatures & { Data: TData }, TData>,
+): Table<TFeatures & { Data: TData }, TData> &
+  Signal<Table<TFeatures & { Data: TData }, TData>> {
   return lazyInit(() => {
     const features = () => {
       return {
@@ -47,7 +48,9 @@ export function injectTable<
 
     // Compose table options using computed.
     // This is to allow `tableSignal` to listen and set table option
-    const updatedOptions = computed<TableOptions<TFeatures, TData>>(() => {
+    const updatedOptions = computed<
+      TableOptions<TFeatures & { Data: TData }, TData>
+    >(() => {
       // listen to table state changed
       const tableState = state()
       // listen to input options changed
