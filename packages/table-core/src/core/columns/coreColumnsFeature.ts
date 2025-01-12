@@ -29,7 +29,11 @@ interface CoreColumnsFeatureConstructors<
 export function constructCoreColumnsFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<CoreColumnsFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<
+  CoreColumnsFeatureConstructors<TFeatures, TData>,
+  TFeatures,
+  TData
+> {
   return {
     constructColumnAPIs: (column) => {
       const { _table: table } = column

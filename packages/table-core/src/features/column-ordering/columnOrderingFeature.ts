@@ -30,7 +30,7 @@ interface ColumnOrderingFeatureConstructors<
 export function constructColumnOrderingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<ColumnOrderingFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<ColumnOrderingFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState: (initialState) => {
       return {

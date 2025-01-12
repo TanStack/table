@@ -44,7 +44,7 @@ export type Row<
     | ('rowPinningFeature' extends keyof TFeatures ? Row_RowPinning : never)
     | ('rowSelectionFeature' extends keyof TFeatures ? Row_RowSelection : never)
   > &
-  ExtractFeatureTypes<'Row', TFeatures> &
+  ExtractFeatureTypes<'Row', TFeatures, TData> &
   Row_Plugins<TFeatures, TData>
 
 // export type Row<

@@ -30,7 +30,7 @@ interface GlobalFilteringFeatureConstructors<
 export function constructGlobalFilteringFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<GlobalFilteringFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<GlobalFilteringFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState: (initialState) => {
       return {

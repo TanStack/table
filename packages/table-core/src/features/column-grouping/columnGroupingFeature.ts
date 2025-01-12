@@ -50,7 +50,7 @@ interface ColumnGroupingFeatureConstructors<
 export function constructColumnGroupingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<ColumnGroupingFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<ColumnGroupingFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState: (initialState) => {
       return {

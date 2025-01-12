@@ -57,7 +57,7 @@ interface ColumnPinningFeatureConstructors<
 export function constructColumnPinningFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<ColumnPinningFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<ColumnPinningFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState: (initialState) => {
       return {

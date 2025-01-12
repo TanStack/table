@@ -66,7 +66,7 @@ export type Column<
         ? Column_RowSorting<TFeatures, TData>
         : never)
   > &
-  ExtractFeatureTypes<'Column', TFeatures> &
+  ExtractFeatureTypes<'Column', TFeatures, TData, TValue> &
   Column_Plugins<TFeatures, TData, TValue>
 
 // export type Column<

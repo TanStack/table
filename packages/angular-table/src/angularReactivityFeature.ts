@@ -43,7 +43,11 @@ interface AngularReactivityFeatureConstructors<
 export function constructAngularReactivityFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<AngularReactivityFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<
+  AngularReactivityFeatureConstructors<TFeatures, TData>,
+  TFeatures,
+  TData
+> {
   return {
     getDefaultTableOptions(table) {
       return { enableExperimentalReactivity: false }
@@ -56,13 +60,13 @@ export function constructAngularReactivityFeature<
 
       table._rootNotifier = computed(() => rootNotifier()?.(), {
         equal: () => false,
-      }) as any
+      })
 
       table._setRootNotifier = (notifier) => {
         rootNotifier.set(notifier)
       }
 
-      setReactiveProps(table._rootNotifier!, table, {
+      setReactiveProps(table._rootNotifier, table, {
         skipProperty: skipBaseProperties,
       })
     },
@@ -123,8 +127,11 @@ function skipBaseProperties(property: string): boolean {
   return property.endsWith('Handler') || !property.startsWith('get')
 }
 
-export function setReactiveProps(
-  notifier: Signal<Table<any, any>>,
+export function setReactiveProps<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  notifier: Signal<Table<TFeatures, TData>>,
   obj: { [key: string]: any },
   options: {
     skipProperty: (property: string) => boolean

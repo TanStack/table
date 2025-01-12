@@ -27,7 +27,7 @@ interface ColumnFacetingFeatureConstructors<
 export function constructColumnFacetingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<ColumnFacetingFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<ColumnFacetingFeatureConstructors<TFeatures, TData>, TData> {
   return {
     constructColumnAPIs: (column) => {
       assignAPIs('columnFacetingFeature', column, [

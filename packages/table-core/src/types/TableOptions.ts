@@ -91,7 +91,7 @@ export type TableOptions<
         ? TableOptions_RowSorting
         : never)
   > &
-  ExtractFeatureTypes<'TableOptions', TFeatures> &
+  ExtractFeatureTypes<'TableOptions', TFeatures, TData> &
   TableOptions_Plugins<TFeatures, TData> &
   DebugOptions<TFeatures>
 

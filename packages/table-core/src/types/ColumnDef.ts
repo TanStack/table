@@ -103,7 +103,7 @@ export type ColumnDefBase<
         ? ColumnDef_ColumnResizing
         : never)
   > &
-  ExtractFeatureTypes<'ColumnDef', TFeatures> &
+  ExtractFeatureTypes<'ColumnDef', TFeatures, TData, TValue> &
   ColumnDef_Plugins<TFeatures, TData, TValue>
 
 // export type ColumnDefBase<

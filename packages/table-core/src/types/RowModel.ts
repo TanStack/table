@@ -63,7 +63,7 @@ export type CreateRowModels<
         ? CreateRowModel_Sorted<TFeatures, TData>
         : never)
   > &
-  ExtractFeatureTypes<'CreateRowModels', TFeatures> &
+  ExtractFeatureTypes<'CreateRowModels', TFeatures, TData> &
   CreateRowModels_Plugins<TFeatures, TData>
 
 // export type CreateRowModels<
@@ -114,7 +114,7 @@ export type CachedRowModels<
       ? CachedRowModel_Sorted<TFeatures, TData>
       : never)
 > &
-  ExtractFeatureTypes<'CachedRowModel', TFeatures> &
+  ExtractFeatureTypes<'CachedRowModel', TFeatures, TData> &
   CachedRowModels_Plugins<TFeatures, TData>
 
 // export type CachedRowModels<

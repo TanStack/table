@@ -19,7 +19,11 @@ interface CoreCellsFeatureConstructors<
 export function constructCoreCellsFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<CoreCellsFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<
+  CoreCellsFeatureConstructors<TFeatures, TData>,
+  TFeatures,
+  TData
+> {
   return {
     constructCellAPIs: (cell) => {
       assignAPIs('coreCellsFeature', cell, [

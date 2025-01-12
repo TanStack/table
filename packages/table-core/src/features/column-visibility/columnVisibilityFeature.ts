@@ -47,7 +47,10 @@ interface ColumnVisibilityFeatureConstructors<
 export function constructColumnVisibilityFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<ColumnVisibilityFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<
+  ColumnVisibilityFeatureConstructors<TFeatures, TData>,
+  TData
+> {
   return {
     getInitialState: (initialState) => {
       return {

@@ -29,7 +29,7 @@ export type Cell<
       ? Cell_ColumnGrouping
       : never
   > &
-  ExtractFeatureTypes<'Cell', TFeatures> &
+  ExtractFeatureTypes<'Cell', TFeatures, TData, TValue> &
   Cell_Plugins<TFeatures, TData, TValue>
 
 // export type Cell<

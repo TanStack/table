@@ -27,7 +27,11 @@ interface CoreRowModelsFeatureConstructors<
 export function constructCoreRowModelsFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<CoreRowModelsFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<
+  CoreRowModelsFeatureConstructors<TFeatures, TData>,
+  TFeatures,
+  TData
+> {
   return {
     constructTableAPIs: (table) => {
       assignAPIs('coreRowModelsFeature', table, [

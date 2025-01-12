@@ -42,7 +42,7 @@ interface ColumnSizingFeatureConstructors<
 export function constructColumnSizingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<ColumnSizingFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<ColumnSizingFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState: (initialState) => {
       return {

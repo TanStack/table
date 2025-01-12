@@ -27,7 +27,11 @@ interface CoreHeadersFeatureConstructors<
 export function constructCoreHeadersFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<CoreHeadersFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<
+  CoreHeadersFeatureConstructors<TFeatures, TData>,
+  TFeatures,
+  TData
+> {
   return {
     constructHeaderAPIs: (header) => {
       assignAPIs('coreHeadersFeature', header, [

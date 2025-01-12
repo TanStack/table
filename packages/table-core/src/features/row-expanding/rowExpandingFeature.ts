@@ -42,7 +42,7 @@ interface RowExpandingFeatureConstructors<
 export function constructRowExpandingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<RowExpandingFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<RowExpandingFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState: (initialState) => {
       return {

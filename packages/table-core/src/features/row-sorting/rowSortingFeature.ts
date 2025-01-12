@@ -18,16 +18,15 @@ import {
 } from './rowSortingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Sorted,
-//   ColumnDef_RowSorting,
-//   Column_RowSorting,
-//   CreateRowModel_Sorted,
-//   RowModelFns_RowSorting,
-//   TableOptions_RowSorting,
-//   TableState_RowSorting,
-//   Table_RowSorting,
-// } from './rowSortingFeature.types'
+import type {} from // CachedRowModel_Sorted,
+// ColumnDef_RowSorting,
+// Column_RowSorting,
+// CreateRowModel_Sorted,
+// RowModelFns_RowSorting,
+// TableOptions_RowSorting,
+// TableState_RowSorting,
+// Table_RowSorting,
+'./rowSortingFeature.types'
 
 interface RowSortingFeatureConstructors<
   TFeatures extends TableFeatures,
@@ -46,7 +45,7 @@ interface RowSortingFeatureConstructors<
 export function constructRowSortingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<RowSortingFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<RowSortingFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState(initialState) {
       return {

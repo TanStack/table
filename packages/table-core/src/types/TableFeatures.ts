@@ -11,12 +11,16 @@ import type { TableState_All } from './TableState'
 import type { StockFeatures } from '../features/stockFeatures'
 
 export type ExtractFeatureTypes<
-  TKey extends keyof FeatureConstructors,
+  TKey extends keyof FeatureConstructors<TData, TValue>,
   TFeatures extends TableFeatures,
+  TData extends RowData = RowData,
+  TValue extends CellData = CellData,
 > = UnionToIntersection<
   {
     [K in keyof TFeatures]: TFeatures[K] extends TableFeature<
-      infer FeatureConstructorOptions
+      infer FeatureConstructorOptions,
+      TData,
+      TValue
     >
       ? TKey extends keyof FeatureConstructorOptions
         ? FeatureConstructorOptions[TKey]
@@ -25,7 +29,10 @@ export type ExtractFeatureTypes<
   }[keyof TFeatures]
 >
 
-interface FeatureConstructors {
+export interface FeatureConstructors<
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {
   CachedRowModel?: any
   Cell?: any
   Column?: any
@@ -47,11 +54,11 @@ export interface TableFeatures
     Partial<StockFeatures>,
     Partial<Plugins> {}
 
-export type ConstructCellAPIs<TConstructors extends FeatureConstructors> = <
-  TFeatures extends TableFeatures,
+export type ConstructCellAPIs<
+  TConstructors extends FeatureConstructors<TData, TValue>,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
+> = <TFeatures extends TableFeatures>(
   cell: Cell<TFeatures, TData, TValue> &
     Partial<TConstructors['Cell']> & {
       row: Row<TFeatures, TData> & Partial<TConstructors['Row']>
@@ -63,11 +70,11 @@ export type ConstructCellAPIs<TConstructors extends FeatureConstructors> = <
     },
 ) => void
 
-export type ConstructColumnAPIs<TConstructors extends FeatureConstructors> = <
-  TFeatures extends TableFeatures,
+export type ConstructColumnAPIs<
+  TConstructors extends FeatureConstructors<TData, TValue>,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
+> = <TFeatures extends TableFeatures>(
   column: Column<TFeatures, TData, TValue> &
     Partial<TConstructors['Column']> & {
       columnDef: ColumnDef<TFeatures, TData, TValue> &
@@ -75,11 +82,11 @@ export type ConstructColumnAPIs<TConstructors extends FeatureConstructors> = <
     },
 ) => void
 
-export type ConstructHeaderAPIs<TConstructors extends FeatureConstructors> = <
-  TFeatures extends TableFeatures,
+export type ConstructHeaderAPIs<
+  TConstructors extends FeatureConstructors<TData, TValue>,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
+> = <TFeatures extends TableFeatures>(
   header: Header<TFeatures, TData, TValue> &
     Partial<TConstructors['Header']> & {
       column: Column<TFeatures, TData, TValue> &
@@ -90,47 +97,64 @@ export type ConstructHeaderAPIs<TConstructors extends FeatureConstructors> = <
     },
 ) => void
 
-export type ConstructRowAPIs<TConstructors extends FeatureConstructors> = <
-  TFeatures extends TableFeatures,
+export type ConstructRowAPIs<
+  TConstructors extends FeatureConstructors<TData, TValue>,
   TData extends RowData,
->(
+  TValue extends CellData = CellData,
+> = <TFeatures extends TableFeatures>(
   row: Row<TFeatures, TData> & Partial<TConstructors['Row']>,
 ) => void
 
-export type ConstructTableAPIs<TConstructors extends FeatureConstructors> = <
-  TFeatures extends TableFeatures,
+export type ConstructTableAPIs<
+  TConstructors extends FeatureConstructors<TData, TValue>,
   TData extends RowData,
->(
+  TValue extends CellData = CellData,
+> = <TFeatures extends TableFeatures>(
   table: Table_Internal<TFeatures, TData> &
     Partial<TConstructors['Table']> & {
       options: Partial<TConstructors['TableOptions']>
     },
 ) => void
 
-export type GetDefaultColumnDef<TConstructors extends FeatureConstructors> = <
-  TFeatures extends TableFeatures,
+export type GetDefaultColumnDef<
+  TConstructors extends FeatureConstructors<TData, TValue>,
   TData extends RowData,
   TValue extends CellData = CellData,
->() => ColumnDefBase_All<TFeatures, TData, TValue> &
+> = <TFeatures extends TableFeatures>() => ColumnDefBase_All<
+  TFeatures,
+  TData,
+  TValue
+> &
   Partial<TConstructors['ColumnDef']>
 
-export type GetDefaultTableOptions<TConstructors extends FeatureConstructors> =
-  <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData> & Partial<TConstructors['Table']>,
-  ) => Partial<TableOptions_All<TFeatures, TData>> &
-    Partial<TConstructors['TableOptions']>
+export type GetDefaultTableOptions<
+  TConstructors extends FeatureConstructors<TData, TValue>,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = <TFeatures extends TableFeatures>(
+  table: Table_Internal<TFeatures, TData> & Partial<TConstructors['Table']>,
+) => Partial<TableOptions_All<TFeatures, TData>> &
+  Partial<TConstructors['TableOptions']>
 
-export type GetInitialState<TConstructors extends FeatureConstructors> = (
+export type GetInitialState<
+  TConstructors extends FeatureConstructors<TData, TValue>,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> = (
   initialState: Partial<TableState_All> & Partial<TConstructors['TableState']>,
 ) => TableState_All & Partial<TConstructors['TableState']>
 
-export interface TableFeature<TConstructors extends FeatureConstructors> {
-  constructCellAPIs?: ConstructCellAPIs<TConstructors>
-  constructColumnAPIs?: ConstructColumnAPIs<TConstructors>
-  constructHeaderAPIs?: ConstructHeaderAPIs<TConstructors>
-  constructRowAPIs?: ConstructRowAPIs<TConstructors>
-  constructTableAPIs?: ConstructTableAPIs<TConstructors>
-  getDefaultColumnDef?: GetDefaultColumnDef<TConstructors>
-  getDefaultTableOptions?: GetDefaultTableOptions<TConstructors>
-  getInitialState?: GetInitialState<TConstructors>
+export interface TableFeature<
+  TConstructors extends FeatureConstructors<TData, TValue>,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {
+  constructCellAPIs?: ConstructCellAPIs<TConstructors, TData, TValue>
+  constructColumnAPIs?: ConstructColumnAPIs<TConstructors, TData, TValue>
+  constructHeaderAPIs?: ConstructHeaderAPIs<TConstructors, TData, TValue>
+  constructRowAPIs?: ConstructRowAPIs<TConstructors, TData, TValue>
+  constructTableAPIs?: ConstructTableAPIs<TConstructors, TData, TValue>
+  getDefaultColumnDef?: GetDefaultColumnDef<TConstructors, TData, TValue>
+  getDefaultTableOptions?: GetDefaultTableOptions<TConstructors, TData, TValue>
+  getInitialState?: GetInitialState<TConstructors, TData, TValue>
 }

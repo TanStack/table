@@ -46,7 +46,7 @@ interface RowSelectionFeatureConstructors<
 export function constructRowSelectionFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<RowSelectionFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<RowSelectionFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState: (initialState) => {
       return {

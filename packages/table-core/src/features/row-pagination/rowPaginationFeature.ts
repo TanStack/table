@@ -42,7 +42,7 @@ interface RowPaginationFeatureConstructors<
 export function constructRowPaginationFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<RowPaginationFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<RowPaginationFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState: (initialState) => {
       return {

@@ -20,7 +20,11 @@ interface CoreTablesFeatureConstructors<
 export function constructCoreTablesFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<CoreTablesFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<
+  CoreTablesFeatureConstructors<TFeatures, TData>,
+  TFeatures,
+  TData
+> {
   return {
     constructTableAPIs: (table) => {
       assignAPIs('coreTablesFeature', table, [

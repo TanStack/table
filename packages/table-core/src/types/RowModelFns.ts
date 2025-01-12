@@ -30,7 +30,7 @@ export type RowModelFns<
         ? RowModelFns_RowSorting<TFeatures, TData>
         : never)
   > &
-    ExtractFeatureTypes<'RowModelFns', TFeatures> &
+    ExtractFeatureTypes<'RowModelFns', TFeatures, TData> &
     RowModelFns_Plugins<TFeatures, TData>
 >
 

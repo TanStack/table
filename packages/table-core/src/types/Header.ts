@@ -33,7 +33,7 @@ export type Header<
         ? Header_ColumnResizing
         : never)
   > &
-  ExtractFeatureTypes<'Header', TFeatures> &
+  ExtractFeatureTypes<'Header', TFeatures, TData, TValue> &
   Header_Plugins<TFeatures, TData, TValue>
 
 // export type Header<

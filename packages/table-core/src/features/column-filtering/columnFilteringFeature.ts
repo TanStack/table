@@ -43,7 +43,7 @@ interface ColumnFilteringFeatureConstructors<
 export function constructColumnFilteringFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<ColumnFilteringFeatureConstructors<TFeatures, TData>> {
+>(): TableFeature<ColumnFilteringFeatureConstructors<TFeatures, TData>, TData> {
   return {
     getInitialState: (initialState) => {
       return {

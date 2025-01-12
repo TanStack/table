@@ -97,7 +97,7 @@ export type Table<
         ? Table_RowSorting<TFeatures, TData>
         : never)
   > &
-  ExtractFeatureTypes<'Table', TFeatures> &
+  ExtractFeatureTypes<'Table', TFeatures, TData> &
   Table_Plugins<TFeatures, TData>
 
 // export type Table<
