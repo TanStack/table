@@ -16,7 +16,7 @@ export const Route = createFileRoute('/')({
 })
 
 function UsersPage() {
-  const { filters, resetFilters, setFilters } = useFilters(Route.fullPath)
+  const { filters, resetFilters, setFilters } = useFilters(Route.id)
 
   const { data } = useQuery({
     queryKey: ['users', filters],
