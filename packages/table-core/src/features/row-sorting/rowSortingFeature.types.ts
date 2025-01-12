@@ -2,7 +2,7 @@ import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table } from '../../types/Table'
 import type { BuiltInSortFn } from '../../fns/sortFns'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { GetFeatureData, TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 
 export type SortDirection = 'asc' | 'desc'
@@ -50,7 +50,7 @@ export type SortFnOption<
 
 export interface ColumnDef_RowSorting<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
 > {
   /**
    * Enables/Disables multi-sorting for this column.

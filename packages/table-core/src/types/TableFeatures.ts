@@ -26,6 +26,7 @@ export type ExtractFeatureTypes<
 >
 
 interface FeatureConstructors {
+  Data?: RowData
   CachedRowModel?: any
   Cell?: any
   Column?: any
@@ -45,11 +46,16 @@ export interface Plugins {}
 export interface TableFeatures
   extends Partial<CoreFeatures>,
     Partial<StockFeatures>,
-    Partial<Plugins> {}
+    Partial<Plugins> {
+  Data?: RowData
+}
+
+export type GetFeatureData<TFeatures extends TableFeatures> =
+  TFeatures['Data'] extends undefined ? RowData : NonNullable<TFeatures['Data']>
 
 export type ConstructCellAPIs<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TableFeatures>,
   TValue extends CellData = CellData,
 >(
   cell: Cell<TFeatures, TData, TValue> &
@@ -65,7 +71,7 @@ export type ConstructCellAPIs<TConstructors extends FeatureConstructors> = <
 
 export type ConstructColumnAPIs<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
   TValue extends CellData = CellData,
 >(
   column: Column<TFeatures, TData, TValue> &
@@ -77,7 +83,7 @@ export type ConstructColumnAPIs<TConstructors extends FeatureConstructors> = <
 
 export type ConstructHeaderAPIs<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
   TValue extends CellData = CellData,
 >(
   header: Header<TFeatures, TData, TValue> &
@@ -92,14 +98,14 @@ export type ConstructHeaderAPIs<TConstructors extends FeatureConstructors> = <
 
 export type ConstructRowAPIs<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
 >(
   row: Row<TFeatures, TData> & Partial<TConstructors['Row']>,
 ) => void
 
 export type ConstructTableAPIs<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
 >(
   table: Table_Internal<TFeatures, TData> &
     Partial<TConstructors['Table']> & {
@@ -109,13 +115,18 @@ export type ConstructTableAPIs<TConstructors extends FeatureConstructors> = <
 
 export type GetDefaultColumnDef<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
   TValue extends CellData = CellData,
 >() => ColumnDefBase_All<TFeatures, TData, TValue> &
   Partial<TConstructors['ColumnDef']>
 
 export type GetDefaultTableOptions<TConstructors extends FeatureConstructors> =
-  <TFeatures extends TableFeatures, TData extends RowData>(
+  <
+    TFeatures extends TableFeatures,
+    TData extends RowData = TConstructors['Data'] extends undefined
+      ? RowData
+      : NonNullable<TConstructors['Data']>,
+  >(
     table: Table_Internal<TFeatures, TData> & Partial<TConstructors['Table']>,
   ) => Partial<TableOptions_All<TFeatures, TData>> &
     Partial<TConstructors['TableOptions']>

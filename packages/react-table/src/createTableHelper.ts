@@ -28,10 +28,9 @@ export function createTableHelper<
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper<TFeatures, TData> {
   const tableHelper = constructTableHelper(useTable, tableHelperOptions)
-  return {
-    ...tableHelper,
+  return Object.assign(tableHelper, {
     useTable: tableHelper.tableCreator,
-  } as unknown as TableHelper<TFeatures, TData>
+  }) as unknown as TableHelper<TFeatures, TData>
 }
 
 // test

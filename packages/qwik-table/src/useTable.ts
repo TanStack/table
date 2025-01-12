@@ -16,14 +16,16 @@ import type {
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
+>(
+  tableOptions: TableOptions<TFeatures & { Data: TData }, TData>,
+): Table<TFeatures & { Data: TData }, TData> {
   const _features = { ...coreFeatures, ...tableOptions._features }
 
   const state = useSignal(
     getInitialTableState(_features, tableOptions.initialState),
   )
 
-  const statefulOptions: TableOptions<TFeatures, TData> = {
+  const statefulOptions: TableOptions<TFeatures & { Data: TData }, TData> = {
     ...tableOptions,
     _features,
     state: {
@@ -37,7 +39,7 @@ export function useTable<
   }
 
   const table = useStore<{
-    instance: NoSerialize<Table<TFeatures, TData>>
+    instance: NoSerialize<Table<TFeatures & { Data: TData }, TData>>
   }>({
     instance: noSerialize(constructTable(statefulOptions)),
   })
