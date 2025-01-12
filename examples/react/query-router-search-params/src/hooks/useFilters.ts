@@ -2,22 +2,30 @@ import {
   getRouteApi,
   RegisteredRouter,
   RouteIds,
-  useNavigate,
+  SearchParamOptions,
 } from '@tanstack/react-router'
 import { cleanEmptyParams } from '../utils/cleanEmptyParams'
 
-export function useFilters<T extends RouteIds<RegisteredRouter['routeTree']>>(
-  routeId: T
-) {
-  const routeApi = getRouteApi<T>(routeId)
-  const navigate = useNavigate()
+export function useFilters<
+  TId extends RouteIds<RegisteredRouter['routeTree']>,
+  TSearchParams extends SearchParamOptions<
+    RegisteredRouter,
+    TId,
+    TId
+  >['search'],
+>(routeId: TId) {
+  const routeApi = getRouteApi<TId>(routeId)
+  const navigate = routeApi.useNavigate()
   const filters = routeApi.useSearch()
 
-  const setFilters = (partialFilters: Partial<typeof filters>) =>
+  const setFilters = (partialFilters: Partial<TSearchParams>) =>
     navigate({
-      search: prev => cleanEmptyParams({ ...prev, ...partialFilters }),
+      search: cleanEmptyParams({
+        ...filters,
+        ...partialFilters,
+      }) as TSearchParams,
     })
-  const resetFilters = () => navigate({ search: {} })
+  const resetFilters = () => navigate({ search: {} as TSearchParams })
 
   return { filters, setFilters, resetFilters }
 }
