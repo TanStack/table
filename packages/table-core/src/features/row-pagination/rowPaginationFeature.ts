@@ -18,7 +18,8 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './rowPaginationFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type {
 //   CachedRowModel_Paginated,
 //   CreateRowModel_Paginated,
@@ -27,21 +28,22 @@ import type { TableFeature } from '../../types/TableFeatures'
 //   Table_RowPagination,
 // } from './rowPaginationFeature.types'
 
-interface RowPaginationFeatureConstructors {
-  // CachedRowModel: CachedRowModel_Paginated<TableFeatures, RowData>
-  // CreateRowModels: CreateRowModel_Paginated<TableFeatures, RowData>
-  // Table: Table_RowPagination<TableFeatures, RowData>
-  // TableOptions: TableOptions_RowPagination
+interface RowPaginationFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  // CachedRowModel: CachedRowModel_Paginated<TFeatures, TData>
+  // CreateRowModels: CreateRowModel_Paginated<TFeatures, TData>
+  // Table: Table_RowPagination<TFeatures, TData>
+  // TableOptions: TableOptions_RowPagination<TFeatures, TData>
   // TableState: TableState_RowPagination
 }
 
-/**
- * The (Row) Pagination feature adds pagination state and APIs to the table object.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination)
- * [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
- */
-export const rowPaginationFeature: TableFeature<RowPaginationFeatureConstructors> =
-  {
+export function constructRowPaginationFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<RowPaginationFeatureConstructors<TFeatures, TData>> {
+  return {
     getInitialState: (initialState) => {
       return {
         ...initialState,
@@ -59,7 +61,7 @@ export const rowPaginationFeature: TableFeature<RowPaginationFeatureConstructors
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('rowPaginationFeature', table, [
         {
           fn: () => table_autoResetPageIndex(table),
           fnName: 'table_autoResetPageIndex',
@@ -131,3 +133,11 @@ export const rowPaginationFeature: TableFeature<RowPaginationFeatureConstructors
       ])
     },
   }
+}
+
+/**
+ * The (Row) Pagination feature adds pagination state and APIs to the table object.
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
+ */
+export const rowPaginationFeature = constructRowPaginationFeature()

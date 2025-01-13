@@ -15,7 +15,6 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
-  globalFacetingFeature,
   injectTable,
   isFunction,
   rowPaginationFeature,

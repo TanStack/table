@@ -85,12 +85,6 @@ export interface TableOptions_Columns<
    */
   columns: Array<ColumnDef<TFeatures, TData, TValue>>
   /**
-   * Set this option to `true` to output column debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcolumns)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugColumns?: boolean
-  /**
    * Default column options to use for all column defs supplied to the table.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#defaultcolumn)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)

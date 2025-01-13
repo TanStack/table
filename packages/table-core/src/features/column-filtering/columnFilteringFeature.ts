@@ -11,7 +11,8 @@ import {
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './columnFilteringFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type {
 //   CachedRowModel_Filtered,
 //   ColumnDef_ColumnFiltering,
@@ -24,27 +25,26 @@ import type { TableFeature } from '../../types/TableFeatures'
 //   Table_ColumnFiltering,
 // } from './columnFilteringFeature.types'
 
-interface ColumnFilteringFeatureConstructors {
-  // CachedRowModel: CachedRowModel_Filtered<TableFeatures, RowData>
-  // Column: Column_ColumnFiltering<TableFeatures, RowData>
-  // ColumnDef: ColumnDef_ColumnFiltering<TableFeatures, RowData>
-  // CreateRowModels: CreateRowModel_Filtered<TableFeatures, RowData>
-  // Row: Row_ColumnFiltering<TableFeatures, RowData>
-  // RowModelFns: RowModelFns_ColumnFiltering<TableFeatures, RowData>
-  // Table: Table_ColumnFiltering
-  // TableOptions: TableOptions_ColumnFiltering<TableFeatures, RowData>
+interface ColumnFilteringFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  // CachedRowModel: CachedRowModel_Filtered<TFeatures, TData>
+  // Column: Column_ColumnFiltering<TFeatures, TData>
+  // ColumnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
+  // CreateRowModels: CreateRowModel_Filtered<TFeatures, TData>
+  // Row: Row_ColumnFiltering<TFeatures, TData>
+  // RowModelFns: RowModelFns_ColumnFiltering<TFeatures, TData>
+  // Table: Table_ColumnFiltering<TFeatures, TData>
+  // TableOptions: TableOptions_ColumnFiltering<TFeatures, TData>
   // TableState: TableState_ColumnFiltering
 }
 
-/**
- * The Column Filtering feature adds column filtering state and APIs to the table, row, and column objects.
- *
- * **Note:** This does not include Global Filtering. The globalFilteringFeature feature has been split out into its own standalone feature.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
- */
-export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstructors> =
-  {
+export function constructColumnFilteringFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<ColumnFilteringFeatureConstructors<TFeatures, TData>> {
+  return {
     getInitialState: (initialState) => {
       return {
         columnFilters: getDefaultColumnFiltersState(),
@@ -67,7 +67,7 @@ export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstruc
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnFilteringFeature', column, [
         {
           fn: () => column_getAutoFilterFn(column),
           fnName: 'column_getAutoFilterFn',
@@ -105,7 +105,7 @@ export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstruc
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnFilteringFeature', table, [
         {
           fn: (updater) => table_setColumnFilters(table, updater),
           fnName: 'table_setColumnFilters',
@@ -117,3 +117,13 @@ export const columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstruc
       ])
     },
   }
+}
+
+/**
+ * The Column Filtering feature adds column filtering state and APIs to the table, row, and column objects.
+ *
+ * **Note:** This does not include Global Filtering. The globalFilteringFeature feature has been split out into its own standalone feature.
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
+ */
+export const columnFilteringFeature = constructColumnFilteringFeature()

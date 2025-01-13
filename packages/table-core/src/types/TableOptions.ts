@@ -1,6 +1,6 @@
+import type { CoreFeatures } from '../core/coreFeatures'
 import type { TableOptions_Cell } from '../core/cells/coreCellsFeature.types'
 import type { TableOptions_Columns } from '../core/columns/coreColumnsFeature.types'
-import type { TableOptions_Headers } from '../core/headers/coreHeadersFeature.types'
 import type { TableOptions_Rows } from '../core/rows/coreRowsFeature.types'
 import type { TableOptions_Table } from '../core/table/coreTablesFeature.types'
 import type { TableOptions_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -30,8 +30,21 @@ export interface TableOptions_Core<
 > extends TableOptions_Table<TFeatures, TData>,
     TableOptions_Cell,
     TableOptions_Columns<TFeatures, TData>,
-    TableOptions_Rows<TFeatures, TData>,
-    TableOptions_Headers {}
+    TableOptions_Rows<TFeatures, TData> {}
+
+type DebugKeysFor<TFeatures extends TableFeatures> = {
+  [K in keyof TFeatures & string as `debug${Capitalize<K>}`]?: boolean
+}
+
+export type DebugOptions<TFeatures extends TableFeatures> = {
+  debugAll?: boolean
+  debugCache?: boolean
+  debugCells?: boolean
+  debugColumns?: boolean
+  debugHeaders?: boolean
+  debugRows?: boolean
+  debugTable?: boolean
+} & DebugKeysFor<CoreFeatures & TFeatures>
 
 export type TableOptions<
   TFeatures extends TableFeatures,
@@ -79,7 +92,8 @@ export type TableOptions<
         : never)
   > &
   ExtractFeatureTypes<'TableOptions', TFeatures> &
-  TableOptions_Plugins<TFeatures, TData>
+  TableOptions_Plugins<TFeatures, TData> &
+  DebugOptions<TFeatures>
 
 // export type TableOptions<
 //   TFeatures extends TableFeatures,

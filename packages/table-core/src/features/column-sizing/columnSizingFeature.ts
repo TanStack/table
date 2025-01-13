@@ -16,6 +16,8 @@ import {
   table_resetColumnSizing,
   table_setColumnSizing,
 } from './columnSizingFeature.utils'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type {
 //   ColumnDef_ColumnSizing,
 //   Column_ColumnSizing,
@@ -24,9 +26,11 @@ import {
 //   TableState_ColumnSizing,
 //   Table_ColumnSizing,
 // } from './columnSizingFeature.types'
-import type { TableFeature } from '../../types/TableFeatures'
 
-interface ColumnSizingFeatureConstructors {
+interface ColumnSizingFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   // ColumnDef: ColumnDef_ColumnSizing
   // Column: Column_ColumnSizing
   // Header: Header_ColumnSizing
@@ -35,15 +39,11 @@ interface ColumnSizingFeatureConstructors {
   // TableState: TableState_ColumnSizing
 }
 
-/**
- * The Column Sizing feature adds column sizing state and APIs to the table, header, and column objects.
- *
- * **Note:** This does not include column resizing. The columnResizingFeature feature has been split out into its own standalone feature.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
- */
-export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> =
-  {
+export function constructColumnSizingFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<ColumnSizingFeatureConstructors<TFeatures, TData>> {
+  return {
     getInitialState: (initialState) => {
       return {
         columnSizing: getDefaultColumnSizingState(),
@@ -62,7 +62,7 @@ export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> 
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnSizingFeature', column, [
         {
           fn: () => column_getSize(column),
           fnName: 'column_getSize',
@@ -103,7 +103,7 @@ export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> 
     },
 
     constructHeaderAPIs: (header) => {
-      assignAPIs(header, [
+      assignAPIs('columnSizingFeature', header, [
         {
           fn: () => header_getSize(header),
           fnName: 'header_getSize',
@@ -116,7 +116,7 @@ export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> 
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnSizingFeature', table, [
         {
           fn: (updater) => table_setColumnSizing(table, updater),
           fnName: 'table_setColumnSizing',
@@ -144,3 +144,13 @@ export const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors> 
       ])
     },
   }
+}
+
+/**
+ * The Column Sizing feature adds column sizing state and APIs to the table, header, and column objects.
+ *
+ * **Note:** This does not include column resizing. The columnResizingFeature feature has been split out into its own standalone feature.
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
+ */
+export const columnSizingFeature = constructColumnSizingFeature()

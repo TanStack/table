@@ -1,4 +1,4 @@
-import { isDev, tableMemo } from '../../utils'
+import { tableMemo } from '../../utils'
 import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
@@ -14,13 +14,15 @@ export function createFacetedMinMaxValues<
 ) => () => undefined | [number, number] {
   return (table, columnId) =>
     tableMemo({
-      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
-      fnName: 'table.getFacetedMinMaxValues',
-      memoDeps: () => [
-        column_getFacetedRowModel(table.getColumn(columnId), table)(),
-      ],
+      feature: 'columnFacetingFeature',
       fn: (facetedRowModel) =>
         _createFacetedMinMaxValues(columnId, facetedRowModel),
+      fnName: 'table.getFacetedMinMaxValues',
+      memoDeps: () => [
+        // TODO fix
+        column_getFacetedRowModel(table.getColumn(columnId), table)(),
+      ],
+      table,
     })
 }
 

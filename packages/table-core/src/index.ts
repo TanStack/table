@@ -123,11 +123,6 @@ export * from './features/column-visibility/columnVisibilityFeature'
 export * from './features/column-visibility/columnVisibilityFeature.types'
 export * from './features/column-visibility/columnVisibilityFeature.utils'
 
-// globalFacetingFeature
-export * from './features/global-faceting/globalFacetingFeature'
-export * from './features/global-faceting/globalFacetingFeature.types'
-export * from './features/global-faceting/globalFacetingFeature.utils'
-
 // globalFilteringFeature
 export * from './features/global-filtering/globalFilteringFeature'
 export * from './features/global-filtering/globalFilteringFeature.types'

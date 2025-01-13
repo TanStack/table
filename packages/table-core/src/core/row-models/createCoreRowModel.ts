@@ -1,5 +1,5 @@
 import { constructRow } from '../rows/constructRow'
-import { isDev, tableMemo } from '../../utils'
+import { tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/rowPaginationFeature.utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from './coreRowModelsFeature.types'
@@ -15,11 +15,12 @@ export function createCoreRowModel<
 ) => () => RowModel<TFeatures, TData> {
   return (table: Table_Internal<TFeatures, TData>) =>
     tableMemo({
-      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      feature: 'coreRowModelsFeature',
+      fn: (data) => _createCoreRowModel(table, data),
       fnName: 'table.getCoreRowModel',
       memoDeps: () => [table.options.data],
-      fn: (data) => _createCoreRowModel(table, data),
       onAfterUpdate: () => table_autoResetPageIndex(table),
+      table,
     })
 }
 

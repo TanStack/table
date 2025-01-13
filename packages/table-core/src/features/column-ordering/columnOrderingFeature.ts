@@ -8,28 +8,30 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './columnOrderingFeature.utils'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type {
 //   Column_ColumnOrdering,
 //   TableOptions_ColumnOrdering,
 //   TableState_ColumnOrdering,
 //   Table_ColumnOrdering,
 // } from './columnOrderingFeature.types'
-import type { TableFeature } from '../../types/TableFeatures'
 
-interface ColumnOrderingFeatureConstructors {
+interface ColumnOrderingFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   // Column: Column_ColumnOrdering
-  // Table: Table_ColumnOrdering<TableFeatures, RowData>
+  // Table: Table_ColumnOrdering<TFeatures, TData>
   // TableOptions: TableOptions_ColumnOrdering
   // TableState: TableState_ColumnOrdering
 }
 
-/**
- * The Column Ordering feature adds column ordering state and APIs to the table and column objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
- */
-export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructors> =
-  {
+export function constructColumnOrderingFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<ColumnOrderingFeatureConstructors<TFeatures, TData>> {
+  return {
     getInitialState: (initialState) => {
       return {
         columnOrder: getDefaultColumnOrderState(),
@@ -44,7 +46,7 @@ export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructo
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs(column, [
+      assignAPIs('columnOrderingFeature', column, [
         {
           fn: (position) => column_getIndex(column, position),
           fnName: 'column_getIndex',
@@ -67,7 +69,7 @@ export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructo
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('columnOrderingFeature', table, [
         {
           fn: (updater) => table_setColumnOrder(table, updater),
           fnName: 'table_setColumnOrder',
@@ -88,3 +90,11 @@ export const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructo
       ])
     },
   }
+}
+
+/**
+ * The Column Ordering feature adds column ordering state and APIs to the table and column objects.
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
+ */
+export const columnOrderingFeature = constructColumnOrderingFeature()

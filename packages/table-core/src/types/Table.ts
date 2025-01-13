@@ -1,3 +1,4 @@
+import type { Table_ColumnFaceting } from '../features/column-faceting/columnFacetingFeature.types'
 import type { Table_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 import type { Table_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { Table_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
@@ -5,7 +6,6 @@ import type { Table_ColumnPinning } from '../features/column-pinning/columnPinni
 import type { Table_ColumnOrdering } from '../features/column-ordering/columnOrderingFeature.types'
 import type { Table_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
 import type { Table_ColumnSizing } from '../features/column-sizing/columnSizingFeature.types'
-import type { Table_GlobalFaceting } from '../features/global-faceting/globalFacetingFeature.types'
 import type { Table_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { Table_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
 import type { Table_RowExpanding } from '../features/row-expanding/rowExpandingFeature.types'
@@ -75,8 +75,8 @@ export type Table<
     | ('columnVisibilityFeature' extends keyof TFeatures
         ? Table_ColumnVisibility<TFeatures, TData>
         : never)
-    | ('globalFacetingFeature' extends keyof TFeatures
-        ? Table_GlobalFaceting<TFeatures, TData>
+    | ('columnFacetingFeature' extends keyof TFeatures
+        ? Table_ColumnFaceting<TFeatures, TData>
         : never)
     | ('globalFilteringFeature' extends keyof TFeatures
         ? Table_GlobalFiltering<TFeatures, TData>

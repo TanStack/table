@@ -24,7 +24,8 @@ import {
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './rowSelectionFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type {
 //   Row_RowSelection,
 //   TableOptions_RowSelection,
@@ -32,20 +33,21 @@ import type { TableFeature } from '../../types/TableFeatures'
 //   Table_RowSelection,
 // } from './rowSelectionFeature.types'
 
-interface RowSelectionFeatureConstructors {
+interface RowSelectionFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
   // Row: Row_RowSelection
-  // Table: Table_RowSelection<TableFeatures, RowData>
-  // TableOptions: TableOptions_RowSelection<TableFeatures, RowData>
+  // Table: Table_RowSelection<TFeatures, TData>
+  // TableOptions: TableOptions_RowSelection<TFeatures, TData>
   // TableState: TableState_RowSelection
 }
 
-/**
- * The Row Selection feature adds row selection state and APIs to the table and row objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection)
- * [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
- */
-export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> =
-  {
+export function constructRowSelectionFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<RowSelectionFeatureConstructors<TFeatures, TData>> {
+  return {
     getInitialState: (initialState) => {
       return {
         rowSelection: getDefaultRowSelectionState(),
@@ -63,7 +65,7 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
     },
 
     constructRowAPIs: (row) => {
-      assignAPIs(row, [
+      assignAPIs('rowSelectionFeature', row, [
         {
           fn: (value, opts) => row_toggleSelected(row, value, opts),
           fnName: 'row_toggleSelected',
@@ -100,7 +102,7 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs(table, [
+      assignAPIs('rowSelectionFeature', table, [
         {
           fn: (updater) => table_setRowSelection(table, updater),
           fnName: 'table_setRowSelection',
@@ -172,3 +174,11 @@ export const rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors> 
       ])
     },
   }
+}
+
+/**
+ * The Row Selection feature adds row selection state and APIs to the table and row objects.
+ * [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection)
+ * [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
+ */
+export const rowSelectionFeature = constructRowSelectionFeature()
