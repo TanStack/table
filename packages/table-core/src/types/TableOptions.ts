@@ -52,7 +52,7 @@ export type TableOptions<
 > = TableOptions_Core<TFeatures, TData> &
   UnionToIntersection<
     | ('columnFilteringFeature' extends keyof TFeatures
-        ? TableOptions_ColumnFiltering<TFeatures, TData>
+        ? TableOptions_ColumnFiltering
         : never)
     | ('columnGroupingFeature' extends keyof TFeatures
         ? TableOptions_ColumnGrouping
@@ -107,7 +107,7 @@ export type TableOptions_All<
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
   Partial<
-    TableOptions_ColumnFiltering<TFeatures, TData> &
+    TableOptions_ColumnFiltering &
       TableOptions_ColumnGrouping &
       TableOptions_ColumnOrdering &
       TableOptions_ColumnPinning &

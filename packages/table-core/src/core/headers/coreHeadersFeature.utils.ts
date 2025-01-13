@@ -48,7 +48,7 @@ export function header_getContext<
 export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table_Internal<TFeatures & { Data: TData }, TData>) {
   const { left, right } =
     table.options.state?.columnPinning ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
@@ -56,7 +56,7 @@ export function table_getHeaderGroups<
     table,
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
-  ) as unknown as Array<Column<TFeatures, TData, unknown>>
+  ) as unknown as Array<Column<TFeatures & { Data: TData }, TData, unknown>>
 
   const leftColumns = left
     .map((columnId) => leafColumns.find((d) => d.id === columnId)!)

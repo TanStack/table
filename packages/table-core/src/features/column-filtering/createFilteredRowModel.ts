@@ -53,7 +53,7 @@ function _createFilteredRowModel<
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
     for (const row of rowModel.flatRows as Array<
-      Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
+      Row<TFeatures, TData> & Partial<Row_ColumnFiltering>
     >) {
       row.columnFilters = {}
       row.columnFiltersMeta = {}
@@ -106,7 +106,7 @@ function _createFilteredRowModel<
 
   // Flag the pre-filtered row model with each filter state
   for (const row of rowModel.flatRows as Array<
-    Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
+    Row<TFeatures, TData> & Partial<Row_ColumnFiltering>
   >) {
     row.columnFilters = {}
 
@@ -155,9 +155,7 @@ function _createFilteredRowModel<
     }
   }
 
-  const filterRowsImpl = (
-    row: Row<TFeatures, TData> & Row_ColumnFiltering<TFeatures, TData>,
-  ) => {
+  const filterRowsImpl = (row: Row<TFeatures, TData> & Row_ColumnFiltering) => {
     // Horizontally filter rows through each column
     for (const columnId of filterableIds) {
       if (row.columnFilters[columnId] === false) {

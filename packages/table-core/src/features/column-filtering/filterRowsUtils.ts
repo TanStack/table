@@ -36,13 +36,11 @@ function filterRowModelFromLeafs<
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
   const recurseFilterRows = (
-    rowsToFilter: Array<
-      Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
-    >,
+    rowsToFilter: Array<Row<TFeatures, TData> & Partial<Row_ColumnFiltering>>,
     depth = 0,
   ) => {
     const filteredRows: Array<Row<TFeatures, TData>> &
-      Partial<Row_ColumnFiltering<TFeatures, TData>> = []
+      Partial<Row_ColumnFiltering> = []
 
     // Filter from children up first
     for (let row of rowsToFilter) {
@@ -54,8 +52,7 @@ function filterRowModelFromLeafs<
         row.depth,
         undefined,
         row.parentId,
-      ) as Row<TFeatures, TData> &
-        Partial<Row_ColumnFiltering<TFeatures, TData>>
+      ) as Row<TFeatures, TData> & Partial<Row_ColumnFiltering>
       newRow.columnFilters = row.columnFilters
 
       if (row.subRows.length && depth < maxDepth) {

@@ -33,7 +33,7 @@ interface ColumnFilteringFeatureConstructors<
   // Column: Column_ColumnFiltering<TFeatures, TData>
   // ColumnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
   // CreateRowModels: CreateRowModel_Filtered<TFeatures, TData>
-  // Row: Row_ColumnFiltering<TFeatures, TData>
+  // Row: Row_ColumnFiltering
   // RowModelFns: RowModelFns_ColumnFiltering<TFeatures, TData>
   // Table: Table_ColumnFiltering<TFeatures, TData>
   // TableOptions: TableOptions_ColumnFiltering<TFeatures, TData>

@@ -123,9 +123,7 @@ export type GetDefaultColumnDef<TConstructors extends FeatureConstructors> = <
 export type GetDefaultTableOptions<TConstructors extends FeatureConstructors> =
   <
     TFeatures extends TableFeatures,
-    TData extends RowData = TConstructors['Data'] extends undefined
-      ? RowData
-      : NonNullable<TConstructors['Data']>,
+    TData extends RowData = GetFeatureData<TFeatures>,
   >(
     table: Table_Internal<TFeatures, TData> & Partial<TConstructors['Table']>,
   ) => Partial<TableOptions_All<TFeatures, TData>> &

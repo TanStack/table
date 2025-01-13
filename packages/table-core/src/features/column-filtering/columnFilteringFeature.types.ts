@@ -98,7 +98,7 @@ export interface ColumnDef_ColumnFiltering<
 
 export interface Column_ColumnFiltering<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
 > {
   /**
    * Returns an automatically calculated filter function for the column based off of the columns first known value.
@@ -144,10 +144,7 @@ export interface Column_ColumnFiltering<
   setFilterValue: (updater: Updater<any>) => void
 }
 
-export interface Row_ColumnFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
+export interface Row_ColumnFiltering {
   /**
    * The column filters map for the row. This object tracks whether a row is passing/failing specific filters by their column ID.
    * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#columnfilters)
@@ -162,10 +159,7 @@ export interface Row_ColumnFiltering<
   columnFiltersMeta: Record<string, FilterMeta>
 }
 
-export interface TableOptions_ColumnFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
+export interface TableOptions_ColumnFiltering {
   /**
    * Enables/disables **column** filtering for all columns.
    * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#enablecolumnfilters)
@@ -206,7 +200,7 @@ export interface TableOptions_ColumnFiltering<
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
 }
 
-export interface Table_ColumnFiltering<> {
+export interface Table_ColumnFiltering {
   /**
    * Resets the **columnFilters** state to `initialState.columnFilters`, or `true` can be passed to force a default blank state reset to `[]`.
    * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering#resetcolumnfilters)
@@ -223,7 +217,7 @@ export interface Table_ColumnFiltering<> {
 
 export interface Table_RowModels_Filtered<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
 > {
   /**
    * Returns the row model for the table after **column** filtering has been applied.
@@ -241,7 +235,7 @@ export interface Table_RowModels_Filtered<
 
 export interface CreateRowModel_Filtered<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
 > {
   /**
    * If provided, this function is called **once** per table and should return a **new function** which will calculate and return the row model for the table when it's filtered.
@@ -257,7 +251,7 @@ export interface CreateRowModel_Filtered<
 
 export interface CachedRowModel_Filtered<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
 > {
   filteredRowModel: () => RowModel<TFeatures, TData>
 }

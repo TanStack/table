@@ -29,7 +29,7 @@ export type Row<
 > = Row_Core<TFeatures, TData> &
   UnionToIntersection<
     | ('columnFilteringFeature' extends keyof TFeatures
-        ? Row_ColumnFiltering<TFeatures, TData>
+        ? Row_ColumnFiltering
         : never)
     | ('columnGroupingFeature' extends keyof TFeatures
         ? Row_ColumnGrouping

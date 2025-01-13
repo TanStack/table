@@ -47,7 +47,7 @@ export function constructCoreHeadersFeature<
     constructTableAPIs: (table) => {
       assignAPIs('coreHeadersFeature', table, [
         {
-          fn: () => table_getHeaderGroups(table),
+          fn: () => table_getHeaderGroups(table as any),
           fnName: 'table_getHeaderGroups',
           memoDeps: () => [
             table.options.columns,
