@@ -16,7 +16,7 @@ import type { TableOptions_RowPagination } from '../features/row-pagination/rowP
 import type { TableOptions_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { TableOptions_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
-import type { RowData, UnionToIntersection } from './type-utils'
+import type { RowData } from './type-utils'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 
 export interface TableOptions_Plugins<
@@ -50,47 +50,47 @@ export type TableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
-  UnionToIntersection<
-    | ('columnFilteringFeature' extends keyof TFeatures
-        ? TableOptions_ColumnFiltering<TFeatures, TData>
-        : never)
-    | ('columnGroupingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnGrouping
-        : never)
-    | ('columnOrderingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnOrdering
-        : never)
-    | ('columnPinningFeature' extends keyof TFeatures
-        ? TableOptions_ColumnPinning
-        : never)
-    | ('columnResizingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnResizing
-        : never)
-    | ('columnSizingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnSizing
-        : never)
-    | ('columnVisibilityFeature' extends keyof TFeatures
-        ? TableOptions_ColumnVisibility
-        : never)
-    | ('globalFilteringFeature' extends keyof TFeatures
-        ? TableOptions_GlobalFiltering<TFeatures, TData>
-        : never)
-    | ('rowExpandingFeature' extends keyof TFeatures
-        ? TableOptions_RowExpanding<TFeatures, TData>
-        : never)
-    | ('rowPaginationFeature' extends keyof TFeatures
-        ? TableOptions_RowPagination
-        : never)
-    | ('rowPinningFeature' extends keyof TFeatures
-        ? TableOptions_RowPinning<TFeatures, TData>
-        : never)
-    | ('rowSelectionFeature' extends keyof TFeatures
-        ? TableOptions_RowSelection<TFeatures, TData>
-        : never)
-    | ('rowSortingFeature' extends keyof TFeatures
-        ? TableOptions_RowSorting
-        : never)
-  > &
+  // UnionToIntersection<
+  //   | ('columnFilteringFeature' extends keyof TFeatures
+  //       ? TableOptions_ColumnFiltering<TFeatures, TData>
+  //       : never)
+  //   | ('columnGroupingFeature' extends keyof TFeatures
+  //       ? TableOptions_ColumnGrouping
+  //       : never)
+  //   | ('columnOrderingFeature' extends keyof TFeatures
+  //       ? TableOptions_ColumnOrdering
+  //       : never)
+  //   | ('columnPinningFeature' extends keyof TFeatures
+  //       ? TableOptions_ColumnPinning
+  //       : never)
+  //   | ('columnResizingFeature' extends keyof TFeatures
+  //       ? TableOptions_ColumnResizing
+  //       : never)
+  //   | ('columnSizingFeature' extends keyof TFeatures
+  //       ? TableOptions_ColumnSizing
+  //       : never)
+  //   | ('columnVisibilityFeature' extends keyof TFeatures
+  //       ? TableOptions_ColumnVisibility
+  //       : never)
+  //   | ('globalFilteringFeature' extends keyof TFeatures
+  //       ? TableOptions_GlobalFiltering<TFeatures, TData>
+  //       : never)
+  //   | ('rowExpandingFeature' extends keyof TFeatures
+  //       ? TableOptions_RowExpanding<TFeatures, TData>
+  //       : never)
+  //   | ('rowPaginationFeature' extends keyof TFeatures
+  //       ? TableOptions_RowPagination
+  //       : never)
+  //   | ('rowPinningFeature' extends keyof TFeatures
+  //       ? TableOptions_RowPinning<TFeatures, TData>
+  //       : never)
+  //   | ('rowSelectionFeature' extends keyof TFeatures
+  //       ? TableOptions_RowSelection<TFeatures, TData>
+  //       : never)
+  //   | ('rowSortingFeature' extends keyof TFeatures
+  //       ? TableOptions_RowSorting
+  //       : never)
+  // > &
   ExtractFeatureTypes<'TableOptions', TFeatures> &
   TableOptions_Plugins<TFeatures, TData> &
   DebugOptions<TFeatures>

@@ -10,21 +10,21 @@ import {
 } from './columnOrderingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   Column_ColumnOrdering,
-//   TableOptions_ColumnOrdering,
-//   TableState_ColumnOrdering,
-//   Table_ColumnOrdering,
-// } from './columnOrderingFeature.types'
+import type {
+  Column_ColumnOrdering,
+  TableOptions_ColumnOrdering,
+  TableState_ColumnOrdering,
+  Table_ColumnOrdering,
+} from './columnOrderingFeature.types'
 
 interface ColumnOrderingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Column: Column_ColumnOrdering
-  // Table: Table_ColumnOrdering<TFeatures, TData>
-  // TableOptions: TableOptions_ColumnOrdering
-  // TableState: TableState_ColumnOrdering
+  Column: Column_ColumnOrdering
+  Table: Table_ColumnOrdering<TFeatures, TData>
+  TableOptions: TableOptions_ColumnOrdering
+  TableState: TableState_ColumnOrdering
 }
 
 export function constructColumnOrderingFeature<

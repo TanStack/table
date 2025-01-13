@@ -33,25 +33,25 @@ import {
 } from './columnPinningFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   ColumnDef_ColumnPinning,
-//   Column_ColumnPinning,
-//   Row_ColumnPinning,
-//   TableOptions_ColumnPinning,
-//   TableState_ColumnPinning,
-//   Table_ColumnPinning,
-// } from './columnPinningFeature.types'
+import type {
+  ColumnDef_ColumnPinning,
+  Column_ColumnPinning,
+  Row_ColumnPinning,
+  TableOptions_ColumnPinning,
+  TableState_ColumnPinning,
+  Table_ColumnPinning,
+} from './columnPinningFeature.types'
 
 interface ColumnPinningFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Column: Column_ColumnPinning
-  // ColumnDef: ColumnDef_ColumnPinning
-  // Row: Row_ColumnPinning<TFeatures, TData>
-  // Table: Table_ColumnPinning<TFeatures, TData>
-  // TableOptions: TableOptions_ColumnPinning
-  // TableState: TableState_ColumnPinning
+  Column: Column_ColumnPinning
+  ColumnDef: ColumnDef_ColumnPinning
+  Row: Row_ColumnPinning<TFeatures, TData>
+  Table: Table_ColumnPinning<TFeatures, TData>
+  TableOptions: TableOptions_ColumnPinning
+  TableState: TableState_ColumnPinning
 }
 
 export function constructColumnPinningFeature<

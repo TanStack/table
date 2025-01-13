@@ -94,34 +94,26 @@ export type CachedRowModels<
   TData extends RowData,
 > = {
   CachedRowModel_Core: () => RowModel<TFeatures, TData>
-} & UnionToIntersection<
-  | ('columnFacetingFeature' extends keyof TFeatures
-      ? CachedRowModel_Faceted<TFeatures, TData>
-      : never)
-  | ('columnFilteringFeature' extends keyof TFeatures
-      ? CachedRowModel_Filtered<TFeatures, TData>
-      : never)
-  | ('rowExpandingFeature' extends keyof TFeatures
-      ? CachedRowModel_Expanded<TFeatures, TData>
-      : never)
-  | ('columnGroupingFeature' extends keyof TFeatures
-      ? CachedRowModel_Grouped<TFeatures, TData>
-      : never)
-  | ('rowPaginationFeature' extends keyof TFeatures
-      ? CachedRowModel_Paginated<TFeatures, TData>
-      : never)
-  | ('rowSortingFeature' extends keyof TFeatures
-      ? CachedRowModel_Sorted<TFeatures, TData>
-      : never)
-> &
-  ExtractFeatureTypes<'CachedRowModel', TFeatures> &
+} & //       ? CachedRowModel_Faceted<TFeatures, TData> //   | ('columnFacetingFeature' extends keyof TFeatures //  UnionToIntersection<
+//       : never)
+//   | ('columnFilteringFeature' extends keyof TFeatures
+//       ? CachedRowModel_Filtered<TFeatures, TData>
+//       : never)
+//   | ('rowExpandingFeature' extends keyof TFeatures
+//       ? CachedRowModel_Expanded<TFeatures, TData>
+//       : never)
+//   | ('columnGroupingFeature' extends keyof TFeatures
+//       ? CachedRowModel_Grouped<TFeatures, TData>
+//       : never)
+//   | ('rowPaginationFeature' extends keyof TFeatures
+//       ? CachedRowModel_Paginated<TFeatures, TData>
+//       : never)
+//   | ('rowSortingFeature' extends keyof TFeatures
+//       ? CachedRowModel_Sorted<TFeatures, TData>
+//       : never)
+// > &
+ExtractFeatureTypes<'CachedRowModel', TFeatures> &
   CachedRowModels_Plugins<TFeatures, TData>
-
-// export type CachedRowModels<
-//   TFeatures extends TableFeatures,
-//   TData extends RowData,
-// > = ExtractFeatureTypes<'CachedRowModel', TFeatures> &
-//   CachedRowModels_Plugins<TFeatures, TData>
 
 export type CachedRowModel_All<
   TFeatures extends TableFeatures,

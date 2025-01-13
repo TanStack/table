@@ -18,25 +18,25 @@ import {
 } from './columnSizingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   ColumnDef_ColumnSizing,
-//   Column_ColumnSizing,
-//   Header_ColumnSizing,
-//   TableOptions_ColumnSizing,
-//   TableState_ColumnSizing,
-//   Table_ColumnSizing,
-// } from './columnSizingFeature.types'
+import type {
+  ColumnDef_ColumnSizing,
+  Column_ColumnSizing,
+  Header_ColumnSizing,
+  TableOptions_ColumnSizing,
+  TableState_ColumnSizing,
+  Table_ColumnSizing,
+} from './columnSizingFeature.types'
 
 interface ColumnSizingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // ColumnDef: ColumnDef_ColumnSizing
-  // Column: Column_ColumnSizing
-  // Header: Header_ColumnSizing
-  // Table: Table_ColumnSizing
-  // TableOptions: TableOptions_ColumnSizing
-  // TableState: TableState_ColumnSizing
+  ColumnDef: ColumnDef_ColumnSizing
+  Column: Column_ColumnSizing
+  Header: Header_ColumnSizing
+  Table: Table_ColumnSizing
+  TableOptions: TableOptions_ColumnSizing
+  TableState: TableState_ColumnSizing
 }
 
 export function constructColumnSizingFeature<

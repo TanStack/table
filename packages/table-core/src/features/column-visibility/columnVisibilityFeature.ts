@@ -23,25 +23,25 @@ import {
 } from './columnVisibilityFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   ColumnDef_ColumnVisibility,
-//   Column_ColumnVisibility,
-//   Row_ColumnVisibility,
-//   TableOptions_ColumnVisibility,
-//   TableState_ColumnVisibility,
-//   Table_ColumnVisibility,
-// } from './columnVisibilityFeature.types'
+import type {
+  ColumnDef_ColumnVisibility,
+  Column_ColumnVisibility,
+  Row_ColumnVisibility,
+  TableOptions_ColumnVisibility,
+  TableState_ColumnVisibility,
+  Table_ColumnVisibility,
+} from './columnVisibilityFeature.types'
 
 interface ColumnVisibilityFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // ColumnDef: ColumnDef_ColumnVisibility
-  // Column: Column_ColumnVisibility
-  // Row: Row_ColumnVisibility<TFeatures, TData>
-  // Table: Table_ColumnVisibility<TFeatures, TData>
-  // TableOptions: TableOptions_ColumnVisibility
-  // TableState: TableState_ColumnVisibility
+  ColumnDef: ColumnDef_ColumnVisibility
+  Column: Column_ColumnVisibility
+  Row: Row_ColumnVisibility<TFeatures, TData>
+  Table: Table_ColumnVisibility<TFeatures, TData>
+  TableOptions: TableOptions_ColumnVisibility
+  TableState: TableState_ColumnVisibility
 }
 
 export function constructColumnVisibilityFeature<

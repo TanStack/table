@@ -20,23 +20,23 @@ import {
 } from './rowPaginationFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Paginated,
-//   CreateRowModel_Paginated,
-//   TableOptions_RowPagination,
-//   TableState_RowPagination,
-//   Table_RowPagination,
-// } from './rowPaginationFeature.types'
+import type {
+  CachedRowModel_Paginated,
+  CreateRowModel_Paginated,
+  TableOptions_RowPagination,
+  TableState_RowPagination,
+  Table_RowPagination,
+} from './rowPaginationFeature.types'
 
 interface RowPaginationFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // CachedRowModel: CachedRowModel_Paginated<TFeatures, TData>
-  // CreateRowModels: CreateRowModel_Paginated<TFeatures, TData>
-  // Table: Table_RowPagination<TFeatures, TData>
-  // TableOptions: TableOptions_RowPagination<TFeatures, TData>
-  // TableState: TableState_RowPagination
+  CachedRowModel: CachedRowModel_Paginated<TFeatures, TData>
+  CreateRowModels: CreateRowModel_Paginated<TFeatures, TData>
+  Table: Table_RowPagination<TFeatures, TData>
+  TableOptions: TableOptions_RowPagination
+  TableState: TableState_RowPagination
 }
 
 export function constructRowPaginationFeature<

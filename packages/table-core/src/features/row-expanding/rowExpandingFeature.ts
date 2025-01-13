@@ -18,25 +18,25 @@ import {
 } from './rowExpandingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Expanded,
-//   CreateRowModel_Expanded,
-//   Row_RowExpanding,
-//   TableOptions_RowExpanding,
-//   TableState_RowExpanding,
-//   Table_RowExpanding,
-// } from './rowExpandingFeature.types'
+import type {
+  CachedRowModel_Expanded,
+  CreateRowModel_Expanded,
+  Row_RowExpanding,
+  TableOptions_RowExpanding,
+  TableState_RowExpanding,
+  Table_RowExpanding,
+} from './rowExpandingFeature.types'
 
 interface RowExpandingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // CachedRowModel: CachedRowModel_Expanded<TFeatures, TData>
-  // CreateRowModels: CreateRowModel_Expanded<TFeatures, TData>
-  // Row: Row_RowExpanding
-  // Table: Table_RowExpanding<TFeatures, TData>
-  // TableOptions: TableOptions_RowExpanding<TFeatures, TData>
-  // TableState: TableState_RowExpanding
+  CachedRowModel: CachedRowModel_Expanded<TFeatures, TData>
+  CreateRowModels: CreateRowModel_Expanded<TFeatures, TData>
+  Row: Row_RowExpanding
+  Table: Table_RowExpanding<TFeatures, TData>
+  TableOptions: TableOptions_RowExpanding<TFeatures, TData>
+  TableState: TableState_RowExpanding
 }
 
 export function constructRowExpandingFeature<
