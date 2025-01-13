@@ -9,23 +9,23 @@ import {
 } from './columnResizingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   Column_ColumnResizing,
-//   Header_ColumnResizing,
-//   TableOptions_ColumnResizing,
-//   TableState_ColumnResizing,
-//   Table_ColumnResizing,
-// } from './columnResizingFeature.types'
+import type {
+  Column_ColumnResizing,
+  Header_ColumnResizing,
+  TableOptions_ColumnResizing,
+  TableState_ColumnResizing,
+  Table_ColumnResizing,
+} from './columnResizingFeature.types'
 
 interface ColumnResizingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Column: Column_ColumnResizing
-  // Header: Header_ColumnResizing
-  // Table: Table_ColumnResizing
-  // TableOptions: TableOptions_ColumnResizing
-  // TableState: TableState_ColumnResizing
+  Column: Column_ColumnResizing
+  Header: Header_ColumnResizing
+  Table: Table_ColumnResizing
+  TableOptions: TableOptions_ColumnResizing
+  TableState: TableState_ColumnResizing
 }
 
 export function constructColumnResizingFeature<

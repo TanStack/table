@@ -11,19 +11,19 @@ import {
 } from './coreColumnsFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   Column_Column,
-//   TableOptions_Columns,
-//   Table_Columns,
-// } from './coreColumnsFeature.types'
+import type {
+  Column_Column,
+  TableOptions_Columns,
+  Table_Columns,
+} from './coreColumnsFeature.types'
 
 interface CoreColumnsFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Column: Column_Column<TFeatures, TData>
-  // Table: Table_Columns<TFeatures, TData>
-  // TableOptions: TableOptions_Columns<TFeatures, TData>
+  Column: Column_Column<TFeatures, TData>
+  Table: Table_Columns<TFeatures, TData>
+  TableOptions: TableOptions_Columns<TFeatures, TData>
 }
 
 export function constructCoreColumnsFeature<

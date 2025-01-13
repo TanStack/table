@@ -13,19 +13,19 @@ import {
 } from './coreRowsFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   Row_Row,
-//   TableOptions_Rows,
-//   Table_Rows,
-// } from './coreRowsFeature.types'
+import type {
+  Row_Row,
+  TableOptions_Rows,
+  Table_Rows,
+} from './coreRowsFeature.types'
 
 interface CoreRowsFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Row: Row_Row<TFeatures, TData>
-  // TableOptions: TableOptions_Rows<TFeatures, TData>
-  // Table: Table_Rows<TFeatures, TData>
+  Row: Row_Row<TFeatures, TData>
+  TableOptions: TableOptions_Rows<TFeatures, TData>
+  Table: Table_Rows<TFeatures, TData>
 }
 
 export function constructCoreRowsFeature<

@@ -17,35 +17,39 @@ import {
   table_setSorting,
 } from './rowSortingFeature.utils'
 import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Sorted,
-//   ColumnDef_RowSorting,
-//   Column_RowSorting,
-//   CreateRowModel_Sorted,
-//   RowModelFns_RowSorting,
-//   TableOptions_RowSorting,
-//   TableState_RowSorting,
-//   Table_RowSorting,
-// } from './rowSortingFeature.types'
+import type {
+  GetFeatureData,
+  TableFeature,
+  TableFeatures,
+} from '../../types/TableFeatures'
+import type {
+  CachedRowModel_Sorted,
+  ColumnDef_RowSorting,
+  Column_RowSorting,
+  CreateRowModel_Sorted,
+  RowModelFns_RowSorting,
+  TableOptions_RowSorting,
+  TableState_RowSorting,
+  Table_RowSorting,
+} from './rowSortingFeature.types'
 
 interface RowSortingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // CachedRowModel: CachedRowModel_Sorted<TFeatures, TData>
-  // Column: Column_RowSorting<TFeatures, TData>
-  // ColumnDef: ColumnDef_RowSorting<TFeatures, TData>
-  // CreateRowModels: CreateRowModel_Sorted<TFeatures, TData>
-  // RowModelFns: RowModelFns_RowSorting<TFeatures, TData>
-  // Table: Table_RowSorting<TFeatures, TData>
-  // TableOptions: TableOptions_RowSorting
-  // TableState: TableState_RowSorting
+  CachedRowModel: CachedRowModel_Sorted<TFeatures, TData>
+  Column: Column_RowSorting<TFeatures, TData>
+  ColumnDef: ColumnDef_RowSorting<TFeatures, TData>
+  CreateRowModels: CreateRowModel_Sorted<TFeatures, TData>
+  RowModelFns: RowModelFns_RowSorting<TFeatures, TData>
+  Table: Table_RowSorting<TFeatures, TData>
+  TableOptions: TableOptions_RowSorting
+  TableState: TableState_RowSorting
 }
 
 export function constructRowSortingFeature<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TData extends RowData = GetFeatureData<TFeatures>,
 >(): TableFeature<RowSortingFeatureConstructors<TFeatures, TData>> {
   return {
     getInitialState(initialState) {

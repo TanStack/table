@@ -15,13 +15,13 @@ import {
 } from './coreRowModelsFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type { Table_RowModels } from './coreRowModelsFeature.types'
+import type { Table_RowModels } from './coreRowModelsFeature.types'
 
 interface CoreRowModelsFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Table: Table_RowModels<TFeatures, TData>
+  Table: Table_RowModels<TFeatures, TData>
 }
 
 export function constructCoreRowModelsFeature<

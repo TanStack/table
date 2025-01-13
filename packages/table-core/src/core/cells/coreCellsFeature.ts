@@ -6,14 +6,14 @@ import {
 } from './coreCellsFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type { Cell_Cell, TableOptions_Cell } from './coreCellsFeature.types'
+import type { Cell_Cell, TableOptions_Cell } from './coreCellsFeature.types'
 
 interface CoreCellsFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Cell: Cell_Cell<TableFeatures, RowData>
-  // TableOptions: TableOptions_Cell
+  Cell: Cell_Cell<TableFeatures, RowData>
+  TableOptions: TableOptions_Cell
 }
 
 export function constructCoreCellsFeature<

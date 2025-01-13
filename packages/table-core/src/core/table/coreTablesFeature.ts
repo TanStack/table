@@ -7,14 +7,14 @@ import {
 } from './coreTablesFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type { TableOptions_Table, Table_Table } from './coreTablesFeature.types'
+import type { TableOptions_Table, Table_Table } from './coreTablesFeature.types'
 
 interface CoreTablesFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Table: Table_Table<TFeatures, TData>
-  // TableOptions: TableOptions_Table<TFeatures, TData>
+  Table: Table_Table<TFeatures, TData>
+  TableOptions: TableOptions_Table<TFeatures, TData>
 }
 
 export function constructCoreTablesFeature<

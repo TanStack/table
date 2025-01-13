@@ -14,21 +14,21 @@ import {
 } from './rowPinningFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   Row_RowPinning,
-//   TableOptions_RowPinning,
-//   TableState_RowPinning,
-//   Table_RowPinning,
-// } from './rowPinningFeature.types'
+import type {
+  Row_RowPinning,
+  TableOptions_RowPinning,
+  TableState_RowPinning,
+  Table_RowPinning,
+} from './rowPinningFeature.types'
 
 interface RowPinningFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Row: Row_RowPinning
-  // Table: Table_RowPinning<TFeatures, RowData>
-  // TableOptions: TableOptions_RowPinning<TFeatures, RowData>
-  // TableState: TableState_RowPinning
+  Row: Row_RowPinning
+  Table: Table_RowPinning<TFeatures, RowData>
+  TableOptions: TableOptions_RowPinning<TFeatures, RowData>
+  TableState: TableState_RowPinning
 }
 
 export function constructRowPinningFeature<

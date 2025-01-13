@@ -9,19 +9,19 @@ import {
 } from './columnFacetingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Faceted,
-//   Column_ColumnFaceting,
-//   CreateRowModel_Faceted,
-// } from './columnFacetingFeature.types'
+import type {
+  CachedRowModel_Faceted,
+  Column_ColumnFaceting,
+  CreateRowModel_Faceted,
+} from './columnFacetingFeature.types'
 
 interface ColumnFacetingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // CachedRowModel: CachedRowModel_Faceted<TFeatures, TData>
-  // Column: Column_ColumnFaceting<TFeatures, TData>
-  // CreateRowModels: CreateRowModel_Faceted<TFeatures, TData>
+  CachedRowModel: CachedRowModel_Faceted<TFeatures, TData>
+  Column: Column_ColumnFaceting<TFeatures, TData>
+  CreateRowModels: CreateRowModel_Faceted<TFeatures, TData>
 }
 
 export function constructColumnFacetingFeature<

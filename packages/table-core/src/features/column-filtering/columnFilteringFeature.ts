@@ -13,31 +13,31 @@ import {
 } from './columnFilteringFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Filtered,
-//   ColumnDef_ColumnFiltering,
-//   Column_ColumnFiltering,
-//   CreateRowModel_Filtered,
-//   RowModelFns_ColumnFiltering,
-//   Row_ColumnFiltering,
-//   TableOptions_ColumnFiltering,
-//   TableState_ColumnFiltering,
-//   Table_ColumnFiltering,
-// } from './columnFilteringFeature.types'
+import type {
+  CachedRowModel_Filtered,
+  ColumnDef_ColumnFiltering,
+  Column_ColumnFiltering,
+  CreateRowModel_Filtered,
+  RowModelFns_ColumnFiltering,
+  Row_ColumnFiltering,
+  TableOptions_ColumnFiltering,
+  TableState_ColumnFiltering,
+  Table_ColumnFiltering,
+} from './columnFilteringFeature.types'
 
 interface ColumnFilteringFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // CachedRowModel: CachedRowModel_Filtered<TFeatures, TData>
-  // Column: Column_ColumnFiltering<TFeatures, TData>
-  // ColumnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
-  // CreateRowModels: CreateRowModel_Filtered<TFeatures, TData>
-  // Row: Row_ColumnFiltering
-  // RowModelFns: RowModelFns_ColumnFiltering<TFeatures, TData>
-  // Table: Table_ColumnFiltering<TFeatures, TData>
-  // TableOptions: TableOptions_ColumnFiltering<TFeatures, TData>
-  // TableState: TableState_ColumnFiltering
+  CachedRowModel: CachedRowModel_Filtered<TFeatures, TData>
+  Column: Column_ColumnFiltering<TFeatures, TData>
+  ColumnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
+  CreateRowModels: CreateRowModel_Filtered<TFeatures, TData>
+  Row: Row_ColumnFiltering
+  RowModelFns: RowModelFns_ColumnFiltering<TFeatures, TData>
+  Table: Table_ColumnFiltering
+  TableOptions: TableOptions_ColumnFiltering
+  TableState: TableState_ColumnFiltering
 }
 
 export function constructColumnFilteringFeature<

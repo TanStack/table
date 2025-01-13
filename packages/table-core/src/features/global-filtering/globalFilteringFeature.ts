@@ -8,23 +8,23 @@ import {
 } from './globalFilteringFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   ColumnDef_GlobalFiltering,
-//   Column_GlobalFiltering,
-//   TableOptions_GlobalFiltering,
-//   TableState_GlobalFiltering,
-//   Table_GlobalFiltering,
-// } from './globalFilteringFeature.types'
+import type {
+  ColumnDef_GlobalFiltering,
+  Column_GlobalFiltering,
+  TableOptions_GlobalFiltering,
+  TableState_GlobalFiltering,
+  Table_GlobalFiltering,
+} from './globalFilteringFeature.types'
 
 interface GlobalFilteringFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Column: Column_GlobalFiltering
-  // ColumnDef: ColumnDef_GlobalFiltering
-  // Table: Table_GlobalFiltering<TFeatures, TData>
-  // TableOptions: TableOptions_GlobalFiltering<TFeatures, TData>
-  // TableState: TableState_GlobalFiltering
+  Column: Column_GlobalFiltering
+  ColumnDef: ColumnDef_GlobalFiltering
+  Table: Table_GlobalFiltering<TFeatures, TData>
+  TableOptions: TableOptions_GlobalFiltering<TFeatures, TData>
+  TableState: TableState_GlobalFiltering
 }
 
 export function constructGlobalFilteringFeature<

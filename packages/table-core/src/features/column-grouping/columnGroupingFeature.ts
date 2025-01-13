@@ -18,33 +18,33 @@ import {
 } from './columnGroupingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Grouped,
-//   Cell_ColumnGrouping,
-//   ColumnDef_ColumnGrouping,
-//   Column_ColumnGrouping,
-//   CreateRowModel_Grouped,
-//   RowModelFns_ColumnGrouping,
-//   Row_ColumnGrouping,
-//   TableOptions_ColumnGrouping,
-//   TableState_ColumnGrouping,
-//   Table_ColumnGrouping,
-// } from './columnGroupingFeature.types'
+import type {
+  CachedRowModel_Grouped,
+  Cell_ColumnGrouping,
+  ColumnDef_ColumnGrouping,
+  Column_ColumnGrouping,
+  CreateRowModel_Grouped,
+  RowModelFns_ColumnGrouping,
+  Row_ColumnGrouping,
+  TableOptions_ColumnGrouping,
+  TableState_ColumnGrouping,
+  Table_ColumnGrouping,
+} from './columnGroupingFeature.types'
 
 interface ColumnGroupingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // CachedRowModel: CachedRowModel_Grouped<TFeatures, TData>
-  // Cell: Cell_ColumnGrouping
-  // Column: Column_ColumnGrouping<TFeatures, TData>
-  // ColumnDef: ColumnDef_ColumnGrouping<TFeatures, TData>
-  // CreateRowModels: CreateRowModel_Grouped<TFeatures, TData>
-  // Row: Row_ColumnGrouping
-  // RowModelFns: RowModelFns_ColumnGrouping<TFeatures, TData>
-  // Table: Table_ColumnGrouping<TFeatures, TData>
-  // TableOptions: TableOptions_ColumnGrouping
-  // TableState: TableState_ColumnGrouping
+  CachedRowModel: CachedRowModel_Grouped<TFeatures, TData>
+  Cell: Cell_ColumnGrouping
+  Column: Column_ColumnGrouping<TFeatures, TData>
+  ColumnDef: ColumnDef_ColumnGrouping<TFeatures, TData>
+  CreateRowModels: CreateRowModel_Grouped<TFeatures, TData>
+  Row: Row_ColumnGrouping
+  RowModelFns: RowModelFns_ColumnGrouping<TFeatures, TData>
+  Table: Table_ColumnGrouping<TFeatures, TData>
+  TableOptions: TableOptions_ColumnGrouping
+  TableState: TableState_ColumnGrouping
 }
 
 export function constructColumnGroupingFeature<

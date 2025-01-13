@@ -14,14 +14,14 @@ import {
 } from './coreHeadersFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type { Header_Header, Table_Headers } from './coreHeadersFeature.types'
+import type { Header_Header, Table_Headers } from './coreHeadersFeature.types'
 
 interface CoreHeadersFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  // Header: Header_Header<TFeatures, TData>
-  // Table: Table_Headers<TFeatures, TData>
+  Header: Header_Header<TFeatures, TData>
+  Table: Table_Headers<TFeatures, TData>
 }
 
 export function constructCoreHeadersFeature<
