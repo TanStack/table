@@ -117,7 +117,7 @@ export class AppComponent {
           })
         )
 
-        afterNextRender(() => this.autoResetPageIndex.set(false), {
+        afterNextRender(() => this.autoResetPageIndex.set(true), {
           injector: this.injector,
         })
       },
