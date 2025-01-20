@@ -446,6 +446,10 @@
             {
               "to": "framework/angular/examples/row-dnd",
               "label": "Row DnD"
+            },
+            {
+              "to": "framework/angular/examples/column-resizing-performant",
+              "label": "Performant Column Resizing"
             }
           ]
         },
