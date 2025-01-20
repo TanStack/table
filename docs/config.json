@@ -442,6 +442,10 @@
             {
               "to": "framework/angular/examples/editable",
               "label": "Editable data"
+            },
+            {
+              "to": "framework/angular/examples/row-dnd",
+              "label": "Row DnD"
             }
           ]
         },

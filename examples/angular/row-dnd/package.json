@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-angular-editable",
+  "name": "tanstack-table-example-angular-row-dnd",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -13,6 +13,7 @@
     "@angular/animations": "^17.3.9",
     "@angular/common": "^17.3.9",
     "@angular/compiler": "^17.3.9",
+    "@angular/cdk": "^17.3.10",
     "@angular/core": "^17.3.9",
     "@angular/forms": "^17.3.9",
     "@angular/platform-browser": "^17.3.9",
