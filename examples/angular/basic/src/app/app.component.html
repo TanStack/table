@@ -61,46 +61,6 @@
     </tfoot>
   </table>
 
-  <div class="h-2"></div>
-  <div class="flex items-center gap-2">
-    <button
-      class="border rounded p-1"
-      (click)="table.setPageIndex(0)"
-      [disabled]="!table.getCanPreviousPage()"
-    >
-      <<
-    </button>
-    <button
-      class="border rounded p-1"
-      (click)="table.previousPage()"
-      [disabled]="!table.getCanPreviousPage()"
-    >
-      <
-    </button>
-    <button
-      class="border rounded p-1"
-      (click)="table.nextPage()"
-      [disabled]="!table.getCanNextPage()"
-    >
-      >
-    </button>
-    <button
-      class="border rounded p-1"
-      (click)="table.setPageIndex(table.getPageCount() - 1)"
-      [disabled]="!table.getCanNextPage()"
-    >
-      >>
-    </button>
-    <span class="flex items-center gap-1">
-      <div>Page</div>
-      <strong>
-        {{ table.getState().pagination.pageIndex + 1 }} of
-        {{ table.getPageCount() }}
-      </strong>
-    </span>
-  </div>
-  <br />
+  <div class="h-4"></div>
+  <button (click)="rerender()" class="border p-2">Rerender</button>
 </div>
-<hr />
-<br />
-<div></div>

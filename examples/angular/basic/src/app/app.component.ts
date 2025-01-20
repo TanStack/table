@@ -6,7 +6,6 @@ import {
   FlexRenderDirective,
   getCoreRowModel,
 } from '@tanstack/angular-table'
-import { FormsModule } from '@angular/forms'
 
 type Person = {
   firstName: string
@@ -82,7 +81,7 @@ const defaultColumns: ColumnDef<Person>[] = [
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FlexRenderDirective, FormsModule],
+  imports: [RouterOutlet, FlexRenderDirective],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
