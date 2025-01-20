@@ -438,6 +438,10 @@
             {
               "to": "framework/angular/examples/signal-input",
               "label": "Signal Input"
+            },
+            {
+              "to": "framework/angular/examples/editable",
+              "label": "Editable data"
             }
           ]
         },

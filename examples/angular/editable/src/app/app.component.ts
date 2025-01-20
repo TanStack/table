@@ -124,7 +124,7 @@ export class AppComponent {
     },
   }))
 
-  rerender() {
+  refresh() {
     this.data.set(makeData(10_000))
   }
 }
