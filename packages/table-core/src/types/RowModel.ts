@@ -27,7 +27,7 @@ import type {
   CachedRowModel_Sorted,
   CreateRowModel_Sorted,
 } from '../features/row-sorting/rowSortingFeature.types'
-import type { RowData, UnionToIntersection } from './type-utils'
+import type { RowData } from './type-utils'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 
 /**
@@ -43,26 +43,26 @@ export type CreateRowModels<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = CreateRowModel_Core<TFeatures, TData> &
-  UnionToIntersection<
-    | ('columnFacetingFeature' extends keyof TFeatures
-        ? CreateRowModel_Faceted<TFeatures, TData>
-        : never)
-    | ('columnFilteringFeature' extends keyof TFeatures
-        ? CreateRowModel_Filtered<TFeatures, TData>
-        : never)
-    | ('rowExpandingFeature' extends keyof TFeatures
-        ? CreateRowModel_Expanded<TFeatures, TData>
-        : never)
-    | ('columnGroupingFeature' extends keyof TFeatures
-        ? CreateRowModel_Grouped<TFeatures, TData>
-        : never)
-    | ('rowPaginationFeature' extends keyof TFeatures
-        ? CreateRowModel_Paginated<TFeatures, TData>
-        : never)
-    | ('rowSortingFeature' extends keyof TFeatures
-        ? CreateRowModel_Sorted<TFeatures, TData>
-        : never)
-  > &
+  // UnionToIntersection<
+  //   | ('columnFacetingFeature' extends keyof TFeatures
+  //       ? CreateRowModel_Faceted<TFeatures, TData>
+  //       : never)
+  //   | ('columnFilteringFeature' extends keyof TFeatures
+  //       ? CreateRowModel_Filtered<TFeatures, TData>
+  //       : never)
+  //   | ('rowExpandingFeature' extends keyof TFeatures
+  //       ? CreateRowModel_Expanded<TFeatures, TData>
+  //       : never)
+  //   | ('columnGroupingFeature' extends keyof TFeatures
+  //       ? CreateRowModel_Grouped<TFeatures, TData>
+  //       : never)
+  //   | ('rowPaginationFeature' extends keyof TFeatures
+  //       ? CreateRowModel_Paginated<TFeatures, TData>
+  //       : never)
+  //   | ('rowSortingFeature' extends keyof TFeatures
+  //       ? CreateRowModel_Sorted<TFeatures, TData>
+  //       : never)
+  // > &
   ExtractFeatureTypes<'CreateRowModels', TFeatures> &
   CreateRowModels_Plugins<TFeatures, TData>
 
@@ -94,9 +94,7 @@ export type CachedRowModels<
   TData extends RowData,
 > = {
   CachedRowModel_Core: () => RowModel<TFeatures, TData>
-} & //       ? CachedRowModel_Faceted<TFeatures, TData> //   | ('columnFacetingFeature' extends keyof TFeatures //  UnionToIntersection<
-//       : never)
-//   | ('columnFilteringFeature' extends keyof TFeatures
+} & //   | ('columnFilteringFeature' extends keyof TFeatures //       : never) //       ? CachedRowModel_Faceted<TFeatures, TData> //   | ('columnFacetingFeature' extends keyof TFeatures //  UnionToIntersection<
 //       ? CachedRowModel_Filtered<TFeatures, TData>
 //       : never)
 //   | ('rowExpandingFeature' extends keyof TFeatures
