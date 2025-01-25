@@ -2,7 +2,15 @@
   import { createTableHelper, FlexRender } from '@tanstack/svelte-table'
   import './index.css'
 
-  // This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `createTable` hook and `createColumnHelper` method. You can choose to use either way.
+  /**
+   * This `svelte-table` example demonstrates the following:
+   * - Creating a basic table with no additional features (sorting, filtering,
+   *   grouping, etc),
+   * - Creating and using a `table helper`,
+   * - Defining columns with custom headers, cells, and footers using the table
+   *   helper, and
+   * - Rendering a table with the instance APIs.
+   */
 
   // 1. Define what the shape of your data will be for each row
   type Person = {
@@ -14,7 +22,8 @@
     progress: number
   }
 
-  // 2. Create some dummy data with a stable reference (this could be an API response stored in useState or similar)
+  // 2. Create some dummy data with a stable reference (this could be an API
+  //    response stored in a rune).
   const data: Person[] = [
     {
       firstName: 'tanner',
@@ -42,37 +51,35 @@
     },
   ]
 
-  // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
+  // 3. New in V9! Tell the table which features and row models we want to use.
+  //    In this case, this will be a basic table with no additional features
   const tableHelper = createTableHelper({
-    _features: { columnSizingFeature: {} },
-    _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
-    debugTable: true,
-    // TData: {} as Person, // optionally, set the TData type for the table helper. Omit if this will be a table helper for multiple tables of all different data types
+    _features: {},
+    // 3a. `_rowModels` defines client-side row models. `Core` row model is now
+    //     included by default, but you can still override it here.
+    _rowModels: {},
+    // 3b. Optionally, set the `TData` type. Omit TData is this table helper
+    //     will be used to create multiple tables with different data types.
+    TData: {} as Person,
   })
 
-  // 4. Create a helper object to help define our columns
-  // const { columnHelper } = tableHelper // if TData was set in the table helper options - otherwise use the createColumnHelper method below
-  const columnHelper = tableHelper.createColumnHelper<Person>()
+  // 4. For convenience, destructure the desired utilities from `tableHelper`
+  const { columnHelper, createTable } = tableHelper
 
-  // 5. Define the columns for your table with a stable reference (in this case, defined statically outside of a react component)
+  // 5. Define the columns for your table with a stable reference (in this case,
+  //    defined statically outside of a react component)
   const columns = columnHelper.columns([
-    // accessorKey method (most common for simple use-cases)
     columnHelper.accessor('firstName', {
       cell: (info) => info.getValue(),
       footer: (info) => info.column.id,
     }),
-    // accessorFn used (alternative) along with a custom id
-    columnHelper.accessor((row) => row.lastName, {
-      id: 'lastName',
-      cell: (info) => info.getValue(),
+    columnHelper.accessor('lastName', {
       header: () => 'Last Name',
+      cell: (info) => info.getValue(),
       footer: (info) => info.column.id,
     }),
-    // accessorFn used to transform the data
-    columnHelper.accessor((row) => Number(row.age), {
-      id: 'age',
+    columnHelper.accessor('age', {
       header: () => 'Age',
-      cell: (info) => info.renderValue(),
       footer: (info) => info.column.id,
     }),
     columnHelper.accessor('visits', {
@@ -89,15 +96,16 @@
     }),
   ])
 
-  // 7. Create the table instance with the required columns and data.
-  // Features and row models are already defined in the table helper object above
-  const table = tableHelper.createTable({
+  // 6. Create the table instance with columns and data. Featufres and row
+  //    models are already defined in the `tableHelper` object that
+  //    `createTable` was destructured from.
+  const table = createTable({
     columns,
     data,
-    // add additional table options here or in the table helper above
   })
 </script>
 
+<!-- 7. Render the table in markup using the Instance APIs. -->
 <div class="p-2">
   <table>
     <thead>

@@ -2,8 +2,6 @@
   lang="ts"
   generics="TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData, TContext extends HeaderContext<TFeatures, TData, TValue> | CellContext<TFeatures, TData, TValue>"
 >
-  import { isFunction } from '@tanstack/table-core'
-  import { RenderComponentConfig } from './render-component'
   import type {
     CellContext,
     CellData,
@@ -12,6 +10,11 @@
     RowData,
     TableFeatures,
   } from '@tanstack/table-core'
+  import { isFunction } from '@tanstack/table-core'
+  import {
+    RenderComponentConfig,
+    RenderSnippetConfig,
+  } from './render-component'
 
   type Props = {
     /** The cell or header field of the current cell's column definition. */
@@ -33,6 +36,11 @@
   {@const result = content(context as any)}
   {#if result instanceof RenderComponentConfig}
     {@render result.component(result.props)}
+    {@const { component: Component, props } = result}
+    <Component {...props} />
+  {:else if result instanceof RenderSnippetConfig}
+    {@const { snippet, params } = result}
+    {@render snippet(params)}
   {:else}
     {result}
   {/if}
