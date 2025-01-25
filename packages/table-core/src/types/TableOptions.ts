@@ -1,6 +1,6 @@
+import type { CoreFeatures } from '../core/coreFeatures'
 import type { TableOptions_Cell } from '../core/cells/coreCellsFeature.types'
 import type { TableOptions_Columns } from '../core/columns/coreColumnsFeature.types'
-import type { TableOptions_Headers } from '../core/headers/coreHeadersFeature.types'
 import type { TableOptions_Rows } from '../core/rows/coreRowsFeature.types'
 import type { TableOptions_Table } from '../core/table/coreTablesFeature.types'
 import type { TableOptions_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -17,9 +17,12 @@ import type { TableOptions_RowPinning } from '../features/row-pinning/rowPinning
 import type { TableOptions_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { RowData, UnionToIntersection } from './type-utils'
-import type { TableFeatures } from './TableFeatures'
+import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 
-export interface TableOptions_Plugins {}
+export interface TableOptions_Plugins<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {}
 
 export interface TableOptions_Core<
   TFeatures extends TableFeatures,
@@ -27,9 +30,21 @@ export interface TableOptions_Core<
 > extends TableOptions_Table<TFeatures, TData>,
     TableOptions_Cell,
     TableOptions_Columns<TFeatures, TData>,
-    TableOptions_Rows<TFeatures, TData>,
-    TableOptions_Headers,
-    TableOptions_Plugins {}
+    TableOptions_Rows<TFeatures, TData> {}
+
+type DebugKeysFor<TFeatures extends TableFeatures> = {
+  [K in keyof TFeatures & string as `debug${Capitalize<K>}`]?: boolean
+}
+
+export type DebugOptions<TFeatures extends TableFeatures> = {
+  debugAll?: boolean
+  debugCache?: boolean
+  debugCells?: boolean
+  debugColumns?: boolean
+  debugHeaders?: boolean
+  debugRows?: boolean
+  debugTable?: boolean
+} & DebugKeysFor<CoreFeatures & TFeatures>
 
 export type TableOptions<
   TFeatures extends TableFeatures,
@@ -75,13 +90,17 @@ export type TableOptions<
     | ('rowSortingFeature' extends keyof TFeatures
         ? TableOptions_RowSorting
         : never)
-  >
+  > &
+  ExtractFeatureTypes<'TableOptions', TFeatures> &
+  TableOptions_Plugins<TFeatures, TData> &
+  DebugOptions<TFeatures>
 
 // export type TableOptions<
 //   TFeatures extends TableFeatures,
 //   TData extends RowData,
 // > = TableOptions_Core<TFeatures, TData> &
-//   ExtractFeatureTypes<TFeatures, 'TableOptions'>
+//   ExtractFeatureTypes<'TableOptions', TFeatures> &
+//   TableOptions_Plugins<TFeatures, TData>
 
 export type TableOptions_All<
   TFeatures extends TableFeatures,

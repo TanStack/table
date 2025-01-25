@@ -1,4 +1,4 @@
-import type { CoreTableFeatures } from '../coreFeatures'
+import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -34,29 +34,11 @@ export interface TableOptions_Table<
    */
   autoResetAll?: boolean
   /**
-   * The data for the table to display. This array should match the type you provided to `table.setRowType<...>`. coreColumnsFeature can access this data via string/index or a functional accessor. When the `data` option changes reference, the table will reprocess the data.
+   * The data for the table to display. When the `data` option changes reference, the table will reprocess the data.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#data)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
   data: Array<TData>
-  /**
-   * Set this option to `true` to output all debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugall)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugAll?: boolean
-  /**
-   * Set this option to `true` to output cache debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcache)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugCache?: boolean
-  /**
-   * Set this option to `true` to output table debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugtable)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugTable?: boolean
   /**
    * Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPageIndex`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
    *
@@ -105,7 +87,7 @@ export interface Table_CoreProperties<
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_features)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  _features: Partial<CoreTableFeatures> & TFeatures
+  _features: Partial<CoreFeatures> & TFeatures
   /**
    * The row model processing functions that are used to process the data by features.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#_rowModelFns)

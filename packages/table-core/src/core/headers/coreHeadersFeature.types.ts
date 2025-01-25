@@ -5,15 +5,6 @@ import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Column } from '../../types/Column'
 
-export interface TableOptions_Headers {
-  /**
-   * Set this option to `true` to output header debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugheaders)
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugHeaders?: boolean
-}
-
 export interface Table_Headers<
   TFeatures extends TableFeatures,
   TData extends RowData,

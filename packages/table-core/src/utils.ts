@@ -103,13 +103,17 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   }
 }
 
-interface TableMemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>
-  extends MemoOptions<TDeps, TDepArgs, TResult> {
-  debug?: boolean
-  debugCache?: boolean
+interface TableMemoOptions<
+  TFeatures extends TableFeatures,
+  TDeps extends ReadonlyArray<any>,
+  TDepArgs,
+  TResult,
+> extends MemoOptions<TDeps, TDepArgs, TResult> {
+  feature?: keyof TFeatures & string
   fnName: string
   objectId?: string
   onAfterUpdate?: () => void
+  table: Table_Internal<TFeatures, any>
 }
 
 const pad = (str: number | string, num: number) => {
@@ -120,45 +124,78 @@ const pad = (str: number | string, num: number) => {
   return str
 }
 
-export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
-  debug,
-  debugCache,
+export function tableMemo<
+  TFeatures extends TableFeatures,
+  TDeps extends ReadonlyArray<any>,
+  TDepArgs,
+  TResult,
+>({
+  feature,
   fnName,
   objectId,
   onAfterUpdate,
+  table,
   ...memoOptions
-}: TableMemoOptions<TDeps, TDepArgs, TResult>) {
+}: TableMemoOptions<TFeatures, TDeps, TDepArgs, TResult>) {
   let beforeCompareTime: number
   let afterCompareTime: number
   let startCalcTime: number
   let endCalcTime: number
   let runCount = 0
+  let debug: boolean | undefined
+  let debugCache: boolean | undefined
+
+  if (isDev) {
+    const { debugCache: _debugCache, debugAll } = table.options
+    debugCache = _debugCache
+    const { parentName } = getFunctionNameInfo(fnName, '.')
+
+    const debugByParent =
+      // @ts-expect-error
+      table.options[
+        `debug${(parentName != 'table' ? parentName + 's' : parentName).replace(
+          parentName,
+          parentName.charAt(0).toUpperCase() + parentName.slice(1),
+        )}`
+      ]
+    const debugByFeature = feature
+      ? // @ts-expect-error
+        table.options[
+          `debug${feature.charAt(0).toUpperCase() + feature.slice(1)}`
+        ]
+      : false
+
+    debug = debugAll || debugByParent || debugByFeature
+  }
 
   function logTime(time: number, depsChanged: boolean) {
-    if (isDev) {
-      const runType =
-        runCount === 0
-          ? '(1st run)'
-          : depsChanged
-            ? '(rerun #' + runCount + ')'
-            : '(cache)'
-      runCount++
+    const runType =
+      runCount === 0
+        ? '(1st run)'
+        : depsChanged
+          ? '(rerun #' + runCount + ')'
+          : '(cache)'
+    runCount++
 
-      console.groupCollapsed(
-        `%c⏱ ${pad(`${time.toFixed(1)} ms`, 12)} %c${runType}%c ${fnName}%c ${objectId ? `(${fnName.split('.')[0]}Id: ${objectId})` : ''}`,
-        `font-size: .6rem; font-weight: bold; ${
-          depsChanged
-            ? `color: hsl(
+    console.groupCollapsed(
+      `%c⏱ ${pad(`${time.toFixed(1)} ms`, 12)} %c${runType}%c ${fnName}%c ${objectId ? `(${fnName.split('.')[0]}Id: ${objectId})` : ''}`,
+      `font-size: .6rem; font-weight: bold; ${
+        depsChanged
+          ? `color: hsl(
         ${Math.max(0, Math.min(120 - Math.log10(time) * 60, 120))}deg 100% 31%);`
-            : ''
-        } `,
-        `color: ${runCount < 2 ? '#FF00FF' : '#FF1493'}`,
-        'color: #666',
-        'color: #87CEEB',
-      )
-      console.trace()
-      console.groupEnd()
-    }
+          : ''
+      } `,
+      `color: ${runCount < 2 ? '#FF00FF' : '#FF1493'}`,
+      'color: #666',
+      'color: #87CEEB',
+    )
+    console.info({
+      feature,
+      state: table.getState(),
+      deps: memoOptions.memoDeps?.toString(),
+    })
+    console.trace()
+    console.groupEnd()
   }
 
   const debugOptions = isDev
@@ -208,18 +245,17 @@ export function tableMemo<TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
 interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
   fn: (...args: any) => any
   memoDeps?: (depArgs?: any) => [...any] | undefined
+  fnName: string
 }
 
 /**
  * Assumes that a function name is in the format of `parentName_fnKey` and returns the `fnKey` and `fnName` in the format of `parentName.fnKey`.
  */
-export function getFunctionNameInfo(fn: AnyFunction) {
-  const rawName = fn.name
-  const name =
-    rawName != 'fn'
-      ? rawName
-      : (fn.toString().match(/\s*(\w+)\s*\(/)?.[1] as `${string}_${string}`)
-  const [parentName, fnKey] = name.split('_')
+export function getFunctionNameInfo(
+  staticFnName: string,
+  splitBy: '_' | '.' = '_',
+) {
+  const [parentName, fnKey] = staticFnName.split(splitBy)
   const fnName = `${parentName}.${fnKey}`
   return { fnKey, fnName, parentName } as {
     fnKey: string
@@ -238,19 +274,13 @@ export function assignAPIs<
   TDeps extends ReadonlyArray<any>,
   TDepArgs,
 >(
+  feature: keyof TFeatures & string,
   obj: TObject extends Record<string, infer U> ? U : never, // table, row, cell, column, header
   apis: Array<API<TDeps, NoInfer<TDepArgs>>>,
 ): void {
   const table = (obj._table ?? obj) as Table_Internal<TFeatures, TData>
-  apis.forEach(({ fn, memoDeps }) => {
-    const { fnKey, fnName, parentName } = getFunctionNameInfo(fn)
-
-    const debugLevel = (
-      parentName != 'table' ? parentName + 's' : parentName
-    ).replace(
-      parentName,
-      parentName.charAt(0).toUpperCase() + parentName.slice(1),
-    ) as 'Table' | 'Rows' | 'Columns' | 'Headers' | 'Cells'
+  apis.forEach(({ fn, memoDeps, fnName: staticFnName }) => {
+    const { fnKey, fnName } = getFunctionNameInfo(staticFnName)
 
     obj[fnKey] = memoDeps
       ? tableMemo({
@@ -258,10 +288,8 @@ export function assignAPIs<
           fn,
           fnName,
           objectId: obj.id,
-          debug: isDev
-            ? (table.options.debugAll ?? table.options[`debug${debugLevel}`])
-            : false,
-          debugCache: isDev && table.options.debugCache,
+          table,
+          feature,
         })
       : fn
   })
@@ -275,10 +303,10 @@ export function callMemoOrStaticFn<
   TStaticFn extends AnyFunction,
 >(
   obj: TObject,
+  fnKey: string,
   staticFn: TStaticFn,
   ...args: Parameters<TStaticFn> extends [any, ...infer Rest] ? Rest : never
 ): ReturnType<TStaticFn> {
-  const { fnKey } = getFunctionNameInfo(staticFn)
   return (
     (obj[fnKey] as Function | undefined)?.(...args) ?? staticFn(obj, ...args)
   )

@@ -13,7 +13,7 @@ import {
   tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
-import type { ColumnDef } from '@tanstack/lit-table'
+import type { ColumnDef, RowSelectionState } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
@@ -81,12 +81,12 @@ const data = makeData(50_000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<any, Person>(this)
+  private tableController = new TableController<typeof _features, Person>(this)
 
   @state()
-  private _rowSelection: Record<string, boolean> = {}
+  private _rowSelection: RowSelectionState = {}
 
-  protected render(): unknown {
+  protected render() {
     const table = this.tableController.table({
       _features,
       _rowModels: {
@@ -145,7 +145,7 @@ class LitTableExample extends LitElement {
               (row) => html`
                 <tr>
                   ${row
-                    .getVisibleCells()
+                    .getAllCells()
                     .map(
                       (cell) => html`
                         <td>

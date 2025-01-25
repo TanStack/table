@@ -21,6 +21,10 @@ export const packages = [
     packageDir: 'packages/lit-table',
   },
   {
+    name: '@tanstack/preact-table',
+    packageDir: 'packages/preact-table',
+  },
+  {
     name: '@tanstack/qwik-table',
     packageDir: 'packages/qwik-table',
   },
@@ -39,10 +43,6 @@ export const packages = [
   {
     name: '@tanstack/vue-table',
     packageDir: 'packages/vue-table',
-  },
-  {
-    name: '@tanstack/react-table-devtools',
-    packageDir: 'packages/react-table-devtools',
   },
   {
     name: '@tanstack/match-sorter-utils',

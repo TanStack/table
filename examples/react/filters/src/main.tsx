@@ -116,8 +116,7 @@ function App() {
     },
     onColumnFiltersChange: setColumnFilters,
     debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
+    debugColumns: true,
   })
 
   return (

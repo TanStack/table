@@ -1,4 +1,4 @@
-import { isDev, tableMemo } from '../../utils'
+import { tableMemo } from '../../utils'
 import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -14,7 +14,8 @@ export function createFacetedUniqueValues<
 ) => () => Map<any, number> {
   return (table, columnId) =>
     tableMemo({
-      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      feature: 'columnFacetingFeature',
+      table,
       fnName: 'table.getFacetedUniqueValues',
       memoDeps: () => [
         column_getFacetedRowModel(table.getColumn(columnId), table)(),

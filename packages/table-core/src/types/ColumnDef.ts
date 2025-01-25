@@ -1,5 +1,5 @@
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
-import type { TableFeatures } from './TableFeatures'
+import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 import type { CellContext } from '../core/cells/coreCellsFeature.types'
 import type { HeaderContext } from '../core/headers/coreHeadersFeature.types'
 import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -11,7 +11,15 @@ import type { ColumnDef_ColumnVisibility } from '../features/column-visibility/c
 import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
 import type { ColumnDef_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 
-export interface ColumnDef_Plugins {}
+/**
+ * Use this interface as a target for declaration merging to add your own plugin properties.
+ * Note: This will affect the types of all tables in your project.
+ */
+export interface ColumnDef_Plugins<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> {}
 
 export interface ColumnMeta<
   TFeatures extends TableFeatures,
@@ -57,7 +65,7 @@ interface ColumnDefBase_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-> extends ColumnDef_Plugins {
+> {
   getUniqueValues?: AccessorFn<TData, Array<unknown>>
   footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
   cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
@@ -94,14 +102,17 @@ export type ColumnDefBase<
     | ('columnResizingFeature' extends keyof TFeatures
         ? ColumnDef_ColumnResizing
         : never)
-  >
+  > &
+  ExtractFeatureTypes<'ColumnDef', TFeatures> &
+  ColumnDef_Plugins<TFeatures, TData, TValue>
 
-//   export type ColumnDefBase<
+// export type ColumnDefBase<
 //   TFeatures extends TableFeatures,
 //   TData extends RowData,
 //   TValue extends CellData = CellData,
 // > = ColumnDefBase_Core<TFeatures, TData, TValue> &
-//   ExtractFeatureTypes<TFeatures, 'ColumnDef'>
+//   ExtractFeatureTypes<'ColumnDef', TFeatures> &
+//   ColumnDef_Plugins<TFeatures, TData, TValue>
 
 export type ColumnDefBase_All<
   TFeatures extends TableFeatures,

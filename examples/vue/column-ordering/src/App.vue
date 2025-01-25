@@ -1,20 +1,25 @@
 <script setup lang="ts">
 import {
-  type ColumnOrderState,
   FlexRender,
-  createCoreRowModel,
-  useTable,
-  type Column,
-  createColumnHelper,
-  type ColumnVisibilityState,
   columnOrderingFeature,
+  columnVisibilityFeature,
+  createColumnHelper,
   tableFeatures,
+  type Column,
+  type ColumnOrderState,
+  type ColumnVisibilityState,
+  useTable,
+  Updater,
+  isFunction,
 } from '@tanstack/vue-table'
 import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import { faker } from '@faker-js/faker'
 
-const _features = tableFeatures({ columnOrderingFeature })
+const _features = tableFeatures({
+  columnOrderingFeature,
+  columnVisibilityFeature,
+})
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
@@ -25,7 +30,7 @@ const columns = ref(
     columnHelper.group({
       header: 'Name',
       footer: (props) => props.column.id,
-      columns: [
+      columns: columnHelper.columns([
         columnHelper.accessor('firstName', {
           cell: (info) => info.getValue(),
           footer: (props) => props.column.id,
@@ -36,19 +41,19 @@ const columns = ref(
           header: () => 'Last Name',
           footer: (props) => props.column.id,
         }),
-      ],
+      ]),
     }),
     columnHelper.group({
       header: 'Info',
       footer: (props) => props.column.id,
-      columns: [
+      columns: columnHelper.columns([
         columnHelper.accessor('age', {
           header: () => 'Age',
           footer: (props) => props.column.id,
         }),
         columnHelper.group({
           header: 'More Info',
-          columns: [
+          columns: columnHelper.columns([
             columnHelper.accessor('visits', {
               header: () => 'Visits',
               footer: (props) => props.column.id,
@@ -61,9 +66,9 @@ const columns = ref(
               header: 'Profile Progress',
               footer: (props) => props.column.id,
             }),
-          ],
+          ]),
         }),
-      ],
+      ]),
     }),
   ]),
 )
@@ -74,6 +79,7 @@ const columnOrder = ref<ColumnOrderState>([])
 const rerender = () => (data.value = makeData(20))
 
 const table = useTable({
+  _features,
   get data() {
     return data.value
   },
@@ -88,14 +94,11 @@ const table = useTable({
       return columnOrder.value
     },
   },
-
-  onColumnOrderChange: (updaterOrValue) => {
-    columnOrder.value =
-      updaterOrValue === 'function'
-        ? updaterOrValue(columnOrder.value)
-        : updaterOrValue
+  onColumnOrderChange: (updaterOrValue: Updater<ColumnOrderState>) => {
+    columnOrder.value = isFunction(updaterOrValue)
+      ? updaterOrValue(columnOrder.value)
+      : updaterOrValue
   },
-  getCoreRowModel: createCoreRowModel(),
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,

@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import {
-  createColumnHelper,
   FlexRender,
-  createCoreRowModel,
-  useTable,
+  columnOrderingFeature,
   columnPinningFeature,
-  tableFeatures,
   columnVisibilityFeature,
+  createColumnHelper,
+  isFunction,
+  tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
 import type {
   Column,
   ColumnOrderState,
   ColumnPinningState,
+  Updater,
 } from '@tanstack/vue-table'
 import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
@@ -20,68 +22,71 @@ import { faker } from '@faker-js/faker'
 const data = ref(makeData(5000))
 
 const _features = tableFeatures({
+  columnOrderingFeature,
   columnPinningFeature,
   columnVisibilityFeature,
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
-const columns = ref([
-  columnHelper.group({
-    // id: 'Name',
-    header: 'Name',
-    footer: (props) => props.column.id,
-    columns: [
-      columnHelper.accessor('firstName', {
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      }),
-      columnHelper.accessor((row) => row.lastName, {
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => 'Last Name',
-        footer: (props) => props.column.id,
-      }),
-    ],
-  }),
-  columnHelper.group({
-    header: 'Info',
-    footer: (props) => props.column.id,
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-      }),
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => 'Visits',
-            footer: (props) => props.column.id,
-          }),
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: (props) => props.column.id,
-          }),
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: (props) => props.column.id,
-          }),
-        ],
-      }),
-    ],
-  }),
-])
+const columns = ref(
+  columnHelper.columns([
+    columnHelper.group({
+      header: 'Name',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => 'Last Name',
+          footer: (props) => props.column.id,
+        }),
+      ]),
+    }),
+    columnHelper.group({
+      header: 'Info',
+      footer: (props) => props.column.id,
+      columns: columnHelper.columns([
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.group({
+          header: 'More Info',
+          columns: columnHelper.columns([
+            columnHelper.accessor('visits', {
+              header: () => 'Visits',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('status', {
+              header: 'Status',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor('progress', {
+              header: 'Profile Progress',
+              footer: (props) => props.column.id,
+            }),
+          ]),
+        }),
+      ]),
+    }),
+  ]),
+)
 
 const columnVisibility = ref({})
 const columnOrder = ref<ColumnOrderState>([])
 
-const columnPinning = ref<ColumnPinningState>({})
+const columnPinning = ref<ColumnPinningState>({ left: [], right: [] })
 const isSplit = ref(false)
 
 const rerender = () => (data.value = makeData(5000))
 
 const table = useTable({
+  _features,
   get data() {
     return data.value
   },
@@ -100,19 +105,16 @@ const table = useTable({
     },
   },
 
-  onColumnOrderChange: (updaterOrValue) => {
-    columnOrder.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(columnOrder.value)
-        : updaterOrValue
+  onColumnOrderChange: (updaterOrValue: Updater<ColumnOrderState>) => {
+    columnOrder.value = isFunction(updaterOrValue)
+      ? updaterOrValue(columnOrder.value)
+      : updaterOrValue
   },
-  onColumnPinningChange: (updaterOrValue) => {
-    columnPinning.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(columnPinning.value)
-        : updaterOrValue
+  onColumnPinningChange: (updaterOrValue: Updater<ColumnPinningState>) => {
+    columnPinning.value = isFunction(updaterOrValue)
+      ? updaterOrValue(columnPinning.value)
+      : updaterOrValue
   },
-  getCoreRowModel: createCoreRowModel(),
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,

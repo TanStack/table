@@ -4,7 +4,8 @@ import {
   createTableHelper,
   stockFeatures,
 } from '../src'
-import type { ColumnDef, StockTableFeatures, Table, TableHelper } from '../src'
+import type { TableHelper } from '../src/createTableHelper'
+import type { ColumnDef, StockFeatures, Table } from '../src'
 
 test('infer data type from TData', () => {
   type TestDataType = { firstName: string; lastName: string; age: number }
@@ -18,11 +19,11 @@ test('infer data type from TData', () => {
   })
 
   expectTypeOf<typeof tableHelper>().toEqualTypeOf<
-    TableHelper<Required<StockTableFeatures>, TestDataType>
+    TableHelper<Required<StockFeatures>, TestDataType>
   >()
 
   expectTypeOf<(typeof tableHelper)['features']>().toEqualTypeOf<
-    Required<StockTableFeatures>
+    Required<StockFeatures>
   >()
 
   const columns = [
@@ -48,7 +49,7 @@ test('infer data type given by injectTable', () => {
   })
 
   expectTypeOf<typeof tableHelper>().toEqualTypeOf<
-    TableHelper<Required<StockTableFeatures>, any>
+    TableHelper<Required<StockFeatures>, any>
   >()
 
   const injectTable = tableHelper.injectTable
@@ -58,6 +59,6 @@ test('infer data type given by injectTable', () => {
   }))
 
   expectTypeOf<typeof table>().toEqualTypeOf<
-    Table<Required<StockTableFeatures>, TestDataType>
+    Table<Required<StockFeatures>, TestDataType>
   >()
 })

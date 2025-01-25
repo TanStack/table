@@ -37,7 +37,9 @@ export function table_setOptions<
   updater: Updater<TableOptions<TFeatures, TData>>,
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
-  table.options = table_mergeOptions(table, newOptions)
+  // any used to override type error with looser options available with _rowModels
+  // This is needed atm for allowing _rowModels to use TData or not
+  table.options = table_mergeOptions(table, newOptions) as any
 }
 
 export function table_getInitialState<

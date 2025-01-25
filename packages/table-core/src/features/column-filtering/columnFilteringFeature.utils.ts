@@ -2,9 +2,8 @@ import { functionalUpdate, isDev, isFunction } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
-import type { Column } from '../../types/Column'
+import type { Column_Internal } from '../../types/Column'
 import type {
-  ColumnDef_ColumnFiltering,
   ColumnFiltersState,
   FilterFn,
 } from './columnFilteringFeature.types'
@@ -17,7 +16,7 @@ export function column_getAutoFilterFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column<TFeatures, TData, TValue>) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   const filterFns = column._table._rowModelFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
@@ -54,9 +53,7 @@ export function column_getFilterFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
-  },
+  column: Column_Internal<TFeatures, TData, TValue>,
 ): FilterFn<TFeatures, TData> | undefined {
   let filterFn = null
   const filterFns = column._table._rowModelFns.filterFns as
@@ -81,11 +78,7 @@ export function column_getCanFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
-  },
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   return (
     (column.columnDef.enableColumnFilter ?? true) &&
     (column._table.options.enableColumnFilters ?? true) &&
@@ -98,11 +91,7 @@ export function column_getIsFiltered<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
-  },
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   return column_getFilterIndex(column) > -1
 }
 
@@ -110,11 +99,7 @@ export function column_getFilterValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
-  },
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>) {
   return column._table.options.state?.columnFilters?.find(
     (d) => d.id === column.id,
   )?.value
@@ -124,11 +109,7 @@ export function column_getFilterIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
-  },
-): number {
+>(column: Column_Internal<TFeatures, TData, TValue>): number {
   return (
     column._table.options.state?.columnFilters?.findIndex(
       (d) => d.id === column.id,
@@ -140,12 +121,7 @@ export function column_setFilterValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column<TFeatures, TData, TValue> & {
-    columnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
-  },
-  value: any,
-) {
+>(column: Column_Internal<TFeatures, TData, TValue>, value: any) {
   table_setColumnFilters(column._table, (old) => {
     const filterFn = column_getFilterFn(column)
     const previousFilter = old.find((d) => d.id === column.id)
@@ -223,11 +199,14 @@ export function shouldAutoRemoveFilter<
 >(
   filterFn?: FilterFn<TFeatures, TData>,
   value?: any,
-  column?: Column<TFeatures, TData, TValue>,
+  column?: Column_Internal<TFeatures, TData, TValue>,
 ) {
   return (
     (filterFn && filterFn.autoRemove
-      ? filterFn.autoRemove(value, column as Column<TFeatures, TData, unknown>)
+      ? filterFn.autoRemove(
+          value,
+          column as Column_Internal<TFeatures, TData, unknown>,
+        )
       : false) ||
     typeof value === 'undefined' ||
     (typeof value === 'string' && !value)

@@ -89,3 +89,27 @@ export interface CachedRowModel_Faceted<
   facetedMinMaxValues?: (columnId: string) => [number, number]
   facetedUniqueValues?: (columnId: string) => Map<any, number>
 }
+
+export interface Table_ColumnFaceting<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  /**
+   * Returns the min and max values for the global filter.
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting#getglobalfacetedminmaxvalues)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
+   */
+  getGlobalFacetedMinMaxValues: () => undefined | [number, number]
+  /**
+   * Returns the row model for the table after **global** filtering has been applied.
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting#getglobalfacetedrowmodel)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
+   */
+  getGlobalFacetedRowModel: () => RowModel<TFeatures, TData>
+  /**
+   * Returns the faceted unique values for the global filter.
+   * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-faceting#getglobalfaceteduniquevalues)
+   * [Guide](https://tanstack.com/table/v8/docs/guide/global-faceting)
+   */
+  getGlobalFacetedUniqueValues: () => Map<any, number>
+}

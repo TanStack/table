@@ -11,55 +11,84 @@ import {
   table_getRow,
   table_getRowId,
 } from './coreRowsFeature.utils'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+// import type {
+//   Row_Row,
+//   TableOptions_Rows,
+//   Table_Rows,
+// } from './coreRowsFeature.types'
 
-import type { TableFeature } from '../../types/TableFeatures'
-
-export const coreRowsFeature: TableFeature<{
-  // Row: Row_Row<TableFeatures, RowData>
-  // TableOptions: TableOptions_Rows<TableFeatures, RowData>
-  // Table: Table_Rows<TableFeatures, RowData>
-}> = {
-  constructRowAPIs: (row) => {
-    assignAPIs(row, [
-      {
-        fn: () => row_getAllCellsByColumnId(row),
-        memoDeps: () => [row.getAllCells()],
-      },
-      {
-        fn: () => row_getAllCells(row),
-        memoDeps: () => [row._table.getAllLeafColumns()],
-      },
-      {
-        fn: () => row_getLeafRows(row),
-      },
-      {
-        fn: () => row_getParentRow(row),
-      },
-      {
-        fn: () => row_getParentRows(row),
-      },
-      {
-        fn: (columnId) => row_getUniqueValues(row, columnId),
-      },
-      {
-        fn: (columnId) => row_getValue(row, columnId),
-      },
-      {
-        fn: (columnId) => row_renderValue(row, columnId),
-      },
-    ])
-  },
-
-  constructTableAPIs: (table) => {
-    assignAPIs(table, [
-      {
-        fn: (row, index, parent) => table_getRowId(row, table, index, parent),
-      },
-      {
-        // in next version, we should just pass in the row model as the optional 3rd arg
-        fn: (id: string, searchAll?: boolean) =>
-          table_getRow(table, id, searchAll),
-      },
-    ])
-  },
+interface CoreRowsFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  // Row: Row_Row<TFeatures, TData>
+  // TableOptions: TableOptions_Rows<TFeatures, TData>
+  // Table: Table_Rows<TFeatures, TData>
 }
+
+export function constructCoreRowsFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<CoreRowsFeatureConstructors<TFeatures, TData>> {
+  return {
+    constructRowAPIs: (row) => {
+      assignAPIs('coreRowsFeature', row, [
+        {
+          fn: () => row_getAllCellsByColumnId(row),
+          fnName: 'row_getAllCellsByColumnId',
+          memoDeps: () => [row.getAllCells()],
+        },
+        {
+          fn: () => row_getAllCells(row),
+          fnName: 'row_getAllCells',
+          memoDeps: () => [row._table.getAllLeafColumns()],
+        },
+        {
+          fn: () => row_getLeafRows(row),
+          fnName: 'row_getLeafRows',
+        },
+        {
+          fn: () => row_getParentRow(row),
+          fnName: 'row_getParentRow',
+        },
+        {
+          fn: () => row_getParentRows(row),
+          fnName: 'row_getParentRows',
+        },
+        {
+          fn: (columnId) => row_getUniqueValues(row, columnId),
+          fnName: 'row_getUniqueValues',
+        },
+        {
+          fn: (columnId) => row_getValue(row, columnId),
+          fnName: 'row_getValue',
+        },
+        {
+          fn: (columnId) => row_renderValue(row, columnId),
+          fnName: 'row_renderValue',
+        },
+      ])
+    },
+
+    constructTableAPIs: (table) => {
+      assignAPIs('coreRowsFeature', table, [
+        {
+          fn: (row, index, parent) => table_getRowId(row, table, index, parent),
+          fnName: 'table_getRowId',
+        },
+        {
+          fn: (id: string, searchAll?: boolean) =>
+            table_getRow(table, id, searchAll),
+          fnName: 'table_getRow',
+        },
+      ])
+    },
+  }
+}
+
+/**
+ * The Core Rows feature provides the core row functionality.
+ */
+export const coreRowsFeature = constructCoreRowsFeature()

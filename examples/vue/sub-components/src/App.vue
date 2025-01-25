@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  createColumnHelper,
-  createCoreRowModel,
   createExpandedRowModel,
-  useTable,
+  createTableHelper,
+  rowExpandingFeature,
   type ExpandedState,
   type Row,
 } from '@tanstack/vue-table'
 import { Text, h, ref } from 'vue'
+
 type Person = {
   firstName: string
   lastName: string
@@ -17,6 +17,7 @@ type Person = {
   status: string
   progress: number
 }
+
 const defaultData: Person[] = [
   {
     firstName: 'tanner',
@@ -43,8 +44,17 @@ const defaultData: Person[] = [
     progress: 10,
   },
 ]
-const columnHelper = createColumnHelper<any, Person>()
-function renderExpanded(row: Row<any, Person>) {
+
+const tableHelper = createTableHelper({
+  _features: { rowExpandingFeature },
+  _rowModels: {
+    expandedRowModel: createExpandedRowModel(),
+  },
+})
+
+const columnHelper = tableHelper.createColumnHelper<Person>()
+
+function renderExpanded(row: Row<typeof tableHelper.features, Person>) {
   if (!row.getCanExpand()) {
     return h(Text, '🔵')
   }
@@ -57,61 +67,49 @@ function renderExpanded(row: Row<any, Person>) {
     row.getIsExpanded() ? '👇' : '👉',
   )
 }
-const columns = [
-  columnHelper.group({
-    header: 'Name',
-    footer: (props) => props.column.id,
-    columns: [
-      columnHelper.display({
-        id: 'expander',
-        header: () => null,
-        cell: ({ row }) => renderExpanded(row),
-      }),
-      columnHelper.accessor('firstName', {
-        footer: (props) => props.column.id,
-      }),
-      columnHelper.accessor((row) => row.lastName, {
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => 'Last Name',
-        footer: (props) => props.column.id,
-      }),
-    ],
+
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'expander',
+    header: () => null,
+    cell: ({ row }) => renderExpanded(row),
   }),
-  columnHelper.group({
-    header: 'Info',
+  columnHelper.accessor('firstName', {
     footer: (props) => props.column.id,
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-      }),
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => 'Visits',
-            footer: (props) => props.column.id,
-          }),
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: (props) => props.column.id,
-          }),
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: (props) => props.column.id,
-          }),
-        ],
-      }),
-    ],
   }),
-]
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => 'Last Name',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: () => 'Visits',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+])
+
 const data = ref(defaultData)
 const expanded = ref<ExpandedState>({})
+
 const rerender = () => {
   data.value = defaultData
 }
-const table = useTable({
+
+const table = tableHelper.useTable({
+  // features and row models are already defined in the tableHelper
   get data() {
     return data.value
   },
@@ -122,8 +120,6 @@ const table = useTable({
   },
   columns,
   getRowCanExpand: () => true,
-  getCoreRowModel: createCoreRowModel(),
-  getExpandedRowModel: createExpandedRowModel(),
   onExpandedChange: (updaterOrValue) => {
     expanded.value =
       typeof updaterOrValue === 'function'
@@ -157,7 +153,7 @@ const table = useTable({
       <tbody>
         <template v-for="row in table.getRowModel().rows" :key="row.id">
           <tr>
-            <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+            <td v-for="cell in row.getAllCells()" :key="cell.id">
               <FlexRender
                 :render="cell.column.columnDef.cell"
                 :props="cell.getContext()"

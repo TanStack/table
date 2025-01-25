@@ -9,6 +9,7 @@ export * from './types/Header'
 export * from './types/HeaderGroup'
 export * from './types/Row'
 export * from './types/RowModel'
+export * from './types/RowModelFns'
 export * from './types/Table'
 export * from './types/TableFeatures'
 export * from './types/TableOptions'
@@ -121,11 +122,6 @@ export * from './features/column-sizing/columnSizingFeature.utils'
 export * from './features/column-visibility/columnVisibilityFeature'
 export * from './features/column-visibility/columnVisibilityFeature.types'
 export * from './features/column-visibility/columnVisibilityFeature.utils'
-
-// globalFacetingFeature
-export * from './features/global-faceting/globalFacetingFeature'
-export * from './features/global-faceting/globalFacetingFeature.types'
-export * from './features/global-faceting/globalFacetingFeature.utils'
 
 // globalFilteringFeature
 export * from './features/global-filtering/globalFilteringFeature'

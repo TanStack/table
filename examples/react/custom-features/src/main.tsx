@@ -47,12 +47,14 @@ export interface Table_Density {
   toggleDensity: (value?: DensityState) => void
 }
 
-// Here is all of the actual javascript code for our new feature
-export const densityPlugin: TableFeature<{
+interface DensityPluginConstructors {
   Table: Table_Density
   TableOptions: TableOptions_Density
   TableState: TableState_Density
-}> = {
+}
+
+// Here is all of the actual javascript code for our new feature
+export const densityPlugin: TableFeature<DensityPluginConstructors> = {
   // define the new feature's initial state
   getInitialState: (initialState) => {
     return {
@@ -69,9 +71,7 @@ export const densityPlugin: TableFeature<{
     }
   },
   // if you need to add a default column definition...
-  // getDefaultColumnDef: <TFeatures extends TableFeatures,  TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
-  //   return { meta: {} } //use meta instead of directly adding to the columnDef to avoid typescript stuff that's hard to workaround
-  // },
+  // getDefaultColumnDef: () => {},
 
   // define the new feature's table instance methods
   constructTableAPIs: (table) => {
@@ -83,21 +83,24 @@ export const densityPlugin: TableFeature<{
       return table.options.onDensityChange?.(safeUpdater)
     }
     table.toggleDensity = (value) => {
-      table.setDensity((old) => {
+      table.setDensity?.((old) => {
         if (value) return value
         return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' // cycle through the 3 options
       })
     }
   },
 
-  // // if you need to add row instance APIs...
-  // constructRowAPIs: <TFeatures extends TableFeatures, TData extends RowData>(row: Row<TFeatures, TData>, table: Table<TFeatures, TData>): void => {},
-  // // if you need to add cell instance APIs...
-  // constructCellAPIs: <TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData = CellData>(cell: Cell<TFeatures, TData, TValue>): void => {},
-  // // if you need to add column instance APIs...
-  // constructColumnAPIs: <TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData = CellData>(column: Column<TFeatures, TData, TValue>): void => {},
-  // // if you need to add header instance APIs...
-  // constructHeaderAPIs: <TFeatures extends TableFeatures, TData extends RowData, TValue extends CellData = CellData>(header: Header<TFeatures, TData, TValue>): void => {},
+  // if you need to add row instance APIs...
+  // constructRowAPIs: (row) => {},
+
+  // if you need to add cell instance APIs...
+  // constructCellAPIs: (cell) => {},
+
+  // if you need to add column instance APIs...
+  // constructColumnAPIs: (column) => {},
+
+  // if you need to add header instance APIs...
+  // constructHeaderAPIs: (header) => {},
 }
 // end of custom feature code
 

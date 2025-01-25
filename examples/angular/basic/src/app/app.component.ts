@@ -42,7 +42,9 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const defaultColumns: Array<ColumnDef<any, Person>> = [
+const _features = tableFeatures({})
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -86,10 +88,8 @@ const defaultColumns: Array<ColumnDef<any, Person>> = [
 export class AppComponent {
   readonly data = signal<Array<Person>>(defaultData)
 
-  readonly tableFeatures = tableFeatures({})
-
   table = injectTable(() => ({
-    _features: this.tableFeatures, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
+    _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
     _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
     data: this.data(),
     columns: defaultColumns,

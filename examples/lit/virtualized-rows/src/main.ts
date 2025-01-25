@@ -6,6 +6,7 @@ import {
   columnSizingFeature,
   createSortedRowModel,
   flexRender,
+  rowSortingFeature,
   sortFns,
   tableFeatures,
 } from '@tanstack/lit-table'
@@ -17,6 +18,7 @@ import type { ColumnDef } from '@tanstack/lit-table'
 
 const _features = tableFeatures({
   columnSizingFeature,
+  rowSortingFeature,
 })
 
 const columns: Array<ColumnDef<typeof _features, Person>> = [
@@ -65,7 +67,7 @@ const data = makeData(50_000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<any, Person>(this)
+  private tableController = new TableController<typeof _features, Person>(this)
 
   private tableContainerRef: Ref = createRef()
 
@@ -81,7 +83,7 @@ class LitTableExample extends LitElement {
     super.connectedCallback()
   }
 
-  protected render(): unknown {
+  protected render() {
     const table = this.tableController.table({
       _features,
       _rowModels: {
@@ -173,7 +175,7 @@ class LitTableExample extends LitElement {
                       )}
                     >
                       ${repeat(
-                        row.getVisibleCells(),
+                        row.getAllCells(),
                         (cell) => cell.id,
                         (cell) => html`
                           <td

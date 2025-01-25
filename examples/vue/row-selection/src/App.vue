@@ -1,18 +1,24 @@
 <script setup lang="tsx">
 import {
   FlexRender,
-  createCoreRowModel,
   useTable,
   createColumnHelper,
   RowSelectionState,
+  tableFeatures,
+  rowSelectionFeature,
+  Updater,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
 import { makeData, Person } from './makeData'
 
-const columnHelper = createColumnHelper<any, Person>()
+const _features = tableFeatures({
+  rowSelectionFeature,
+})
 
-const columns = [
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
   columnHelper.display({
     id: 'select',
     header: ({ table }) => {
@@ -26,12 +32,14 @@ const columns = [
     },
     cell: ({ row }) => {
       return (
+        // @ts-ignore
         <div className="px-1">
           <IndeterminateCheckbox
             checked={row.getIsSelected()}
             disabled={!row.getCanSelect()}
             onChange={row.getToggleSelectedHandler()}
           ></IndeterminateCheckbox>
+          {/* @ts-ignore */}
         </div>
       ) as any
     },
@@ -39,7 +47,7 @@ const columns = [
   columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
-    columns: [
+    columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
@@ -50,19 +58,19 @@ const columns = [
         header: () => 'Last Name',
         footer: (props) => props.column.id,
       }),
-    ],
+    ]),
   }),
   columnHelper.group({
     header: 'Info',
     footer: (props) => props.column.id,
-    columns: [
+    columns: columnHelper.columns([
       columnHelper.accessor('age', {
         header: () => 'Age',
         footer: (props) => props.column.id,
       }),
       columnHelper.group({
         header: 'More Info',
-        columns: [
+        columns: columnHelper.columns([
           columnHelper.accessor('visits', {
             header: () => 'Visits',
             footer: (props) => props.column.id,
@@ -75,11 +83,11 @@ const columns = [
             header: 'Profile Progress',
             footer: (props) => props.column.id,
           }),
-        ],
+        ]),
       }),
-    ],
+    ]),
   }),
-]
+])
 
 const data = ref(makeData(10))
 const rowSelection = ref<RowSelectionState>({})
@@ -89,6 +97,8 @@ const rerender = () => {
 }
 
 const table = useTable({
+  _features,
+  _rowModels: {},
   get data() {
     return data.value
   },
@@ -100,13 +110,12 @@ const table = useTable({
   },
   enableRowSelection: true, //enable row selection for all rows
   // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-  onRowSelectionChange: (updateOrValue) => {
+  onRowSelectionChange: (updateOrValue: Updater<RowSelectionState>) => {
     rowSelection.value =
       typeof updateOrValue === 'function'
         ? updateOrValue(rowSelection.value)
         : updateOrValue
   },
-  getCoreRowModel: createCoreRowModel(),
 })
 </script>
 
@@ -133,7 +142,7 @@ const table = useTable({
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+          <td v-for="cell in row.getAllCells()" :key="cell.id">
             <FlexRender
               :render="cell.column.columnDef.cell"
               :props="cell.getContext()"

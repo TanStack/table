@@ -1,4 +1,4 @@
-import { flattenBy, isDev, tableMemo } from '../../utils'
+import { flattenBy, tableMemo } from '../../utils'
 import { constructRow } from '../../core/rows/constructRow'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.utils'
@@ -31,7 +31,8 @@ export function createGroupedRowModel<
     if (!table._rowModelFns.aggregationFns)
       table._rowModelFns.aggregationFns = aggregationFns
     return tableMemo({
-      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      feature: 'columnGroupingFeature',
+      table,
       fnName: 'table.getGroupedRowModel',
       memoDeps: () => [
         table.options.state?.grouping,

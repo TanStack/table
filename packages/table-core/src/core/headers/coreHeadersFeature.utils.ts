@@ -54,6 +54,7 @@ export function table_getHeaderGroups<
   const allColumns = table.getAllColumns()
   const leafColumns = callMemoOrStaticFn(
     table,
+    'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
   ) as unknown as Array<Column<TFeatures, TData, unknown>>
 
@@ -102,9 +103,21 @@ export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const left = callMemoOrStaticFn(table, table_getLeftHeaderGroups)
-  const center = callMemoOrStaticFn(table, table_getCenterHeaderGroups)
-  const right = callMemoOrStaticFn(table, table_getRightHeaderGroups)
+  const left = callMemoOrStaticFn(
+    table,
+    'getLeftHeaderGroups',
+    table_getLeftHeaderGroups,
+  )
+  const center = callMemoOrStaticFn(
+    table,
+    'getCenterHeaderGroups',
+    table_getCenterHeaderGroups,
+  )
+  const right = callMemoOrStaticFn(
+    table,
+    'getRightHeaderGroups',
+    table_getRightHeaderGroups,
+  )
 
   return [
     ...(left[0]?.headers ?? []),

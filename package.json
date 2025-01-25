@@ -46,7 +46,7 @@
   "size-limit": [
     {
       "path": "packages/table-core/dist/esm/index.js",
-      "limit": "15 KB"
+      "limit": "16 KB"
     }
   ],
   "devDependencies": {

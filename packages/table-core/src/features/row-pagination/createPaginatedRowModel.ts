@@ -1,4 +1,4 @@
-import { isDev, tableMemo } from '../../utils'
+import { tableMemo } from '../../utils'
 import { expandRows } from '../row-expanding/createExpandedRowModel'
 import { getDefaultPaginationState } from './rowPaginationFeature.utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -15,7 +15,8 @@ export function createPaginatedRowModel<
 ) => () => RowModel<TFeatures, TData> {
   return (table) =>
     tableMemo({
-      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      feature: 'rowPaginationFeature',
+      table,
       fnName: 'table.getPaginatedRowModel',
       memoDeps: () => [
         table.getPrePaginatedRowModel(),

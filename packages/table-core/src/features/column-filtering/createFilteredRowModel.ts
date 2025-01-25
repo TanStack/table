@@ -1,4 +1,4 @@
-import { isDev, tableMemo } from '../../utils'
+import { tableMemo } from '../../utils'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import {
   column_getCanGlobalFilter,
@@ -30,7 +30,8 @@ export function createFilteredRowModel<
   return (table) => {
     if (!table._rowModelFns.filterFns) table._rowModelFns.filterFns = filterFns
     return tableMemo({
-      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      feature: 'columnFilteringFeature',
+      table,
       fnName: 'table.getFilteredRowModel',
       memoDeps: () => [
         table.getPreFilteredRowModel(),

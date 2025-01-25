@@ -1,10 +1,11 @@
-import * as React from 'react'
+import React from 'react'
+import type { ComponentType, JSX, ReactNode } from 'react'
 
-export type Renderable<TProps> = React.ReactNode | React.ComponentType<TProps>
+export type Renderable<TProps> = ReactNode | ComponentType<TProps>
 
 function isReactComponent<TProps>(
   component: unknown,
-): component is React.ComponentType<TProps> {
+): component is ComponentType<TProps> {
   return (
     isClassComponent(component) ||
     typeof component === 'function' ||
@@ -37,7 +38,7 @@ function isExoticComponent(component: any) {
 export function flexRender<TProps extends object>(
   Comp: Renderable<TProps>,
   props: TProps,
-): React.ReactNode | React.JSX.Element {
+): ReactNode | JSX.Element {
   return !Comp ? null : isReactComponent<TProps>(Comp) ? (
     <Comp {...props} />
   ) : (

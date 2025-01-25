@@ -1,63 +1,53 @@
-import type { Person } from './makeData'
-import type { _features } from './app.component'
-import type { ColumnDef } from '@tanstack/angular-table'
+import { tableHelper } from './app.component'
 
-export const columns: Array<ColumnDef<typeof _features, Person>> = [
-  {
+const { columnHelper } = tableHelper
+
+export const columns = columnHelper.columns([
+  columnHelper.group({
     header: 'Name',
-    columns: [
-      {
-        accessorKey: 'firstName',
-        header: 'First Name',
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
+        header: () => 'First Name',
         cell: (info) => info.getValue(),
-        /**
-         * override the value used for row grouping
-         * (otherwise, defaults to the value derived from accessorKey / accessorFn)
-         */
         getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
-      },
-      {
-        accessorFn: (row) => row.lastName,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
-        header: () => `Last Name`,
+        header: () => 'Last Name',
         cell: (info) => info.getValue(),
-      },
-    ],
-  },
-  {
+      }),
+    ]),
+  }),
+  columnHelper.group({
     header: 'Info',
-    columns: [
-      {
-        accessorKey: 'age',
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
         header: () => 'Age',
         aggregatedCell: ({ getValue }) =>
           Math.round(getValue<number>() * 100) / 100,
         aggregationFn: 'median',
-      },
-      {
+      }),
+      columnHelper.group({
         header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
             header: () => `Visits`,
             aggregationFn: 'sum',
-            // aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
-          },
-          {
-            accessorKey: 'status',
+            aggregatedCell: ({ getValue }) => getValue().toLocaleString(),
+          }),
+          columnHelper.accessor('status', {
             header: 'Status',
-          },
-          {
-            accessorKey: 'progress',
+          }),
+          columnHelper.accessor('progress', {
             header: 'Profile Progress',
             cell: ({ getValue }) =>
               Math.round(getValue<number>() * 100) / 100 + '%',
             aggregationFn: 'mean',
             aggregatedCell: ({ getValue }) =>
               Math.round(getValue<number>() * 100) / 100 + '%',
-          },
-        ],
-      },
-    ],
-  },
-]
+          }),
+        ]),
+      }),
+    ]),
+  }),
+])

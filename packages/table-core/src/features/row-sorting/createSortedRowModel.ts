@@ -1,4 +1,4 @@
-import { isDev, tableMemo } from '../../utils'
+import { tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
@@ -11,7 +11,7 @@ import type { RowData } from '../../types/type-utils'
 
 export function createSortedRowModel<
   TFeatures extends TableFeatures,
-  TData extends RowData = any,
+  TData extends RowData,
 >(
   sortFns: Record<keyof SortFns, SortFn<TFeatures, TData>>,
 ): (
@@ -20,7 +20,8 @@ export function createSortedRowModel<
   return (table) => {
     if (!table._rowModelFns.sortFns) table._rowModelFns.sortFns = sortFns
     return tableMemo({
-      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      feature: 'rowSortingFeature',
+      table,
       fnName: 'table.getSortedRowModel',
       memoDeps: () => [
         table.options.state?.sorting,

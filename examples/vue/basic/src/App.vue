@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  createCoreRowModel,
   useTable,
   createColumnHelper,
   tableFeatures,
@@ -52,7 +51,7 @@ const columns = [
   columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
-    columns: [
+    columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
@@ -63,19 +62,19 @@ const columns = [
         header: () => 'Last Name',
         footer: (props) => props.column.id,
       }),
-    ],
+    ]),
   }),
   columnHelper.group({
     header: 'Info',
     footer: (props) => props.column.id,
-    columns: [
+    columns: columnHelper.columns([
       columnHelper.accessor('age', {
         header: () => 'Age',
         footer: (props) => props.column.id,
       }),
       columnHelper.group({
         header: 'More Info',
-        columns: [
+        columns: columnHelper.columns([
           columnHelper.accessor('visits', {
             header: () => 'Visits',
             footer: (props) => props.column.id,
@@ -88,9 +87,9 @@ const columns = [
             header: 'Profile Progress',
             footer: (props) => props.column.id,
           }),
-        ],
+        ]),
       }),
-    ],
+    ]),
   }),
 ]
 
@@ -101,11 +100,13 @@ const rerender = () => {
 }
 
 const table = useTable({
+  _features,
+  _rowModels: {},
   get data() {
     return data.value
   },
   columns,
-  getCoreRowModel: createCoreRowModel(),
+  debugTable: true,
 })
 </script>
 
@@ -132,7 +133,7 @@ const table = useTable({
       </thead>
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
-          <td v-for="cell in row.getVisibleCells()" :key="cell.id">
+          <td v-for="cell in row.getAllCells()" :key="cell.id">
             <FlexRender
               :render="cell.column.columnDef.cell"
               :props="cell.getContext()"

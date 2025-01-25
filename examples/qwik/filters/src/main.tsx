@@ -13,6 +13,7 @@ import {
   createSortedRowModel,
   filterFns,
   flexRender,
+  globalFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -115,6 +116,7 @@ const _features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
+  globalFilteringFeature,
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
@@ -123,7 +125,7 @@ const columns = columnHelper.columns([
   columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
-    columns: [
+    columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
@@ -142,19 +144,19 @@ const columns = columnHelper.columns([
         footer: (props) => props.column.id,
         sortFn: fuzzySort,
       }),
-    ],
+    ]),
   }),
   columnHelper.group({
     header: 'Info',
     footer: (props) => props.column.id,
-    columns: [
+    columns: columnHelper.columns([
       columnHelper.accessor('age', {
         header: () => 'Age',
         footer: (props) => props.column.id,
       }),
       columnHelper.group({
         header: 'More Info',
-        columns: [
+        columns: columnHelper.columns([
           columnHelper.accessor('visits', {
             header: () => <span>Visits</span>,
             footer: (props) => props.column.id,
@@ -167,9 +169,9 @@ const columns = columnHelper.columns([
             header: 'Profile Progress',
             footer: (props) => props.column.id,
           }),
-        ],
+        ]),
       }),
-    ],
+    ]),
   }),
 ])
 
@@ -190,12 +192,9 @@ const App = component$(() => {
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(sortFns),
     },
-    data: defaultData,
     columns,
+    data: defaultData,
     enableSorting: true,
-    filterFns: {
-      fuzzy: fuzzyFilter,
-    },
     state: {
       columnFilters: columnFilters.value,
       globalFilter: globalFilter.value,
@@ -242,16 +241,19 @@ const App = component$(() => {
                               ? 'cursor-pointer select-none'
                               : ''
                           }
-                          onClick={header.column.getToggleSortingHandler()}
+                          onClick$={$(() => {
+                            header.column.getToggleSortingHandler()
+                          })}
                         >
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
-                          {{
-                            asc: ' 🔼',
-                            desc: ' 🔽',
-                          }[header.column.getIsSorted() as string] ?? null}
+                          {header.column.getIsSorted()
+                            ? header.column.getIsSorted() === 'asc'
+                              ? ' 🔼'
+                              : ' 🔽'
+                            : null}
                         </div>
                         {header.column.getCanFilter() ? (
                           <div>
@@ -270,7 +272,7 @@ const App = component$(() => {
           {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
+                {row.getAllCells().map((cell) => (
                   <td key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
@@ -290,8 +292,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<any, unknown>
-  table: Table<any>
+  column: Column<typeof _features, Person>
+  table: Table<typeof _features, Person>
 }) {
   const { id } = column
   const firstValue = table

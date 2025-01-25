@@ -16,31 +16,29 @@ import {
   createPaginatedRowModel,
   createTableHelper,
   filterFns,
-  injectTable,
   isFunction,
   rowExpandingFeature,
   rowPaginationFeature,
-  tableFeatures,
 } from '@tanstack/angular-table'
 import { columns } from './columns'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 import type { GroupingState, Updater } from '@tanstack/angular-table'
 
-export const _features = tableFeatures({
-  columnGroupingFeature,
-  rowPaginationFeature,
-  columnFilteringFeature,
-  rowExpandingFeature,
-})
-
-const tableHelper = createTableHelper<typeof _features, Person>({
-  _features,
+export const tableHelper = createTableHelper({
+  _features: {
+    columnGroupingFeature,
+    rowPaginationFeature,
+    columnFilteringFeature,
+    rowExpandingFeature,
+  },
   _rowModels: {
     groupedRowModel: createGroupedRowModel(aggregationFns),
     expandedRowModel: createExpandedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
     filteredRowModel: createFilteredRowModel(filterFns),
   },
+  TData: {} as Person,
 })
 
 @Component({

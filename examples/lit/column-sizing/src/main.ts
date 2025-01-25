@@ -59,7 +59,7 @@ const data: Array<Person> = makeData(1000)
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
-  private tableController = new TableController<any, Person>(this)
+  private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
     const table = this.tableController.table({
@@ -118,7 +118,7 @@ class LitTableExample extends LitElement {
               (row) => html`
                 <tr>
                   ${row
-                    .getVisibleCells()
+                    .getAllCells()
                     .map(
                       (cell) => html`
                         <td>

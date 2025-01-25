@@ -16,7 +16,8 @@ import {
   table_setExpanded,
   table_toggleAllRowsExpanded,
 } from './rowExpandingFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type {
 //   CachedRowModel_Expanded,
 //   CreateRowModel_Expanded,
@@ -26,82 +27,108 @@ import type { TableFeature } from '../../types/TableFeatures'
 //   Table_RowExpanding,
 // } from './rowExpandingFeature.types'
 
+interface RowExpandingFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  // CachedRowModel: CachedRowModel_Expanded<TFeatures, TData>
+  // CreateRowModels: CreateRowModel_Expanded<TFeatures, TData>
+  // Row: Row_RowExpanding
+  // Table: Table_RowExpanding<TFeatures, TData>
+  // TableOptions: TableOptions_RowExpanding<TFeatures, TData>
+  // TableState: TableState_RowExpanding
+}
+
+export function constructRowExpandingFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<RowExpandingFeatureConstructors<TFeatures, TData>> {
+  return {
+    getInitialState: (initialState) => {
+      return {
+        expanded: getDefaultExpandedState(),
+        ...initialState,
+      }
+    },
+
+    getDefaultTableOptions: (table) => {
+      return {
+        onExpandedChange: makeStateUpdater('expanded', table),
+        paginateExpandedRows: true,
+      }
+    },
+
+    constructRowAPIs: (row) => {
+      assignAPIs('rowExpandingFeature', row, [
+        {
+          fn: (expanded) => row_toggleExpanded(row, expanded),
+          fnName: 'row_toggleExpanded',
+        },
+        {
+          fn: () => row_getIsExpanded(row),
+          fnName: 'row_getIsExpanded',
+        },
+        {
+          fn: () => row_getCanExpand(row),
+          fnName: 'row_getCanExpand',
+        },
+        {
+          fn: () => row_getIsAllParentsExpanded(row),
+          fnName: 'row_getIsAllParentsExpanded',
+        },
+        {
+          fn: () => row_getToggleExpandedHandler(row),
+          fnName: 'row_getToggleExpandedHandler',
+        },
+      ])
+    },
+
+    constructTableAPIs: (table) => {
+      assignAPIs('rowExpandingFeature', table, [
+        {
+          fn: () => table_autoResetExpanded(table),
+          fnName: 'table_autoResetExpanded',
+        },
+        {
+          fn: (updater) => table_setExpanded(table, updater),
+          fnName: 'table_setExpanded',
+        },
+        {
+          fn: (expanded) => table_toggleAllRowsExpanded(table, expanded),
+          fnName: 'table_toggleAllRowsExpanded',
+        },
+        {
+          fn: (defaultState) => table_resetExpanded(table, defaultState),
+          fnName: 'table_resetExpanded',
+        },
+        {
+          fn: () => table_getCanSomeRowsExpand(table),
+          fnName: 'table_getCanSomeRowsExpand',
+        },
+        {
+          fn: () => table_getToggleAllRowsExpandedHandler(table),
+          fnName: 'table_getToggleAllRowsExpandedHandler',
+        },
+        {
+          fn: () => table_getIsSomeRowsExpanded(table),
+          fnName: 'table_getIsSomeRowsExpanded',
+        },
+        {
+          fn: () => table_getIsAllRowsExpanded(table),
+          fnName: 'table_getIsAllRowsExpanded',
+        },
+        {
+          fn: () => table_getExpandedDepth(table),
+          fnName: 'table_getExpandedDepth',
+        },
+      ])
+    },
+  }
+}
+
 /**
  * The Row Expanding feature adds row expanding state and APIs to the table and row objects.
  * [API Docs](https://tanstack.com/table/v8/docs/api/features/row-expanding)
  * [Guide](https://tanstack.com/table/v8/docs/guide/row-expanding)
  */
-export const rowExpandingFeature: TableFeature<{
-  // CachedRowModel: CachedRowModel_Expanded<TableFeatures, RowData>
-  // CreateRowModels: CreateRowModel_Expanded<TableFeatures, RowData>
-  // Row: Row_RowExpanding
-  // Table: Table_RowExpanding<TableFeatures, RowData>
-  // TableOptions: TableOptions_RowExpanding<TableFeatures, RowData>
-  // TableState: TableState_RowExpanding
-}> = {
-  getInitialState: (initialState) => {
-    return {
-      expanded: getDefaultExpandedState(),
-      ...initialState,
-    }
-  },
-
-  getDefaultTableOptions: (table) => {
-    return {
-      onExpandedChange: makeStateUpdater('expanded', table),
-      paginateExpandedRows: true,
-    }
-  },
-
-  constructRowAPIs: (row) => {
-    assignAPIs(row, [
-      {
-        fn: (expanded) => row_toggleExpanded(row, expanded),
-      },
-      {
-        fn: () => row_getIsExpanded(row),
-      },
-      {
-        fn: () => row_getCanExpand(row),
-      },
-      {
-        fn: () => row_getIsAllParentsExpanded(row),
-      },
-      {
-        fn: () => row_getToggleExpandedHandler(row),
-      },
-    ])
-  },
-
-  constructTableAPIs: (table) => {
-    assignAPIs(table, [
-      {
-        fn: () => table_autoResetExpanded(table),
-      },
-      {
-        fn: (updater) => table_setExpanded(table, updater),
-      },
-      {
-        fn: (expanded) => table_toggleAllRowsExpanded(table, expanded),
-      },
-      {
-        fn: (defaultState) => table_resetExpanded(table, defaultState),
-      },
-      {
-        fn: () => table_getCanSomeRowsExpand(table),
-      },
-      {
-        fn: () => table_getToggleAllRowsExpandedHandler(table),
-      },
-      {
-        fn: () => table_getIsSomeRowsExpanded(table),
-      },
-      {
-        fn: () => table_getIsAllRowsExpanded(table),
-      },
-      {
-        fn: () => table_getExpandedDepth(table),
-      },
-    ])
-  },
-}
+export const rowExpandingFeature = constructRowExpandingFeature()

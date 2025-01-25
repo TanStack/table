@@ -4,24 +4,44 @@ import {
   cell_getValue,
   cell_renderValue,
 } from './coreCellsFeature.utils'
-import type { TableFeature } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+// import type { Cell_Cell, TableOptions_Cell } from './coreCellsFeature.types'
 
-export const coreCellsFeature: TableFeature<{
-  // Cell: Cell_Cell<TableFeatures, RowData, CellData>
+interface CoreCellsFeatureConstructors<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  // Cell: Cell_Cell<TableFeatures, RowData>
   // TableOptions: TableOptions_Cell
-}> = {
-  constructCellAPIs: (cell) => {
-    assignAPIs(cell, [
-      {
-        fn: () => cell_getValue(cell),
-      },
-      {
-        fn: () => cell_renderValue(cell),
-      },
-      {
-        fn: () => cell_getContext(cell),
-        memoDeps: () => [cell],
-      },
-    ])
-  },
 }
+
+export function constructCoreCellsFeature<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(): TableFeature<CoreCellsFeatureConstructors<TFeatures, TData>> {
+  return {
+    constructCellAPIs: (cell) => {
+      assignAPIs('coreCellsFeature', cell, [
+        {
+          fn: () => cell_getValue(cell),
+          fnName: 'cell_getValue',
+        },
+        {
+          fn: () => cell_renderValue(cell),
+          fnName: 'cell_renderValue',
+        },
+        {
+          fn: () => cell_getContext(cell),
+          fnName: 'cell_getContext',
+          memoDeps: () => [cell],
+        },
+      ])
+    },
+  }
+}
+
+/**
+ * The Core Cells feature provides the core cell functionality.
+ */
+export const coreCellsFeature = constructCoreCellsFeature()

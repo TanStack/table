@@ -1,4 +1,4 @@
-import { isDev, tableMemo } from '../../utils'
+import { tableMemo } from '../../utils'
 import { row_getIsExpanded } from './rowExpandingFeature.utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -14,7 +14,8 @@ export function createExpandedRowModel<
 ) => () => RowModel<TFeatures, TData> {
   return (table) =>
     tableMemo({
-      debug: isDev && (table.options.debugAll ?? table.options.debugTable),
+      feature: 'rowExpandingFeature',
+      table,
       fnName: 'table.getExpandedRowModel',
       memoDeps: () => [
         table.options.state?.expanded,

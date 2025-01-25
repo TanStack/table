@@ -54,13 +54,14 @@ export function column_getStart<
   const { _table: table } = column
   const visibleLeafColumns = callMemoOrStaticFn(
     table,
+    'getPinnedVisibleLeafColumns',
     table_getPinnedVisibleLeafColumns,
     position,
   )
 
   return visibleLeafColumns
-    .slice(0, callMemoOrStaticFn(column, column_getIndex, position))
-    .reduce((sum, c) => sum + column_getSize(c), 0)
+    .slice(0, callMemoOrStaticFn(column, 'getIndex', column_getIndex, position))
+    .reduce((sum: number, c) => sum + column_getSize(c), 0)
 }
 
 export function column_getAfter<
@@ -74,13 +75,16 @@ export function column_getAfter<
   const { _table: table } = column
   const visibleLeafColumns = callMemoOrStaticFn(
     table,
+    'getPinnedVisibleLeafColumns',
     table_getPinnedVisibleLeafColumns,
     position,
   )
 
   return visibleLeafColumns
-    .slice(callMemoOrStaticFn(column, column_getIndex, position) + 1)
-    .reduce((sum, c) => sum + column_getSize(c), 0)
+    .slice(
+      callMemoOrStaticFn(column, 'getIndex', column_getIndex, position) + 1,
+    )
+    .reduce((sum: number, c) => sum + column_getSize(c), 0)
 }
 
 export function column_resetSize<
@@ -168,12 +172,13 @@ export function table_getLeftTotalSize<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
-    callMemoOrStaticFn(table, table_getLeftHeaderGroups)[0]?.headers.reduce(
-      (sum, header) => {
-        return sum + header_getSize(header)
-      },
-      0,
-    ) ?? 0
+    callMemoOrStaticFn(
+      table,
+      'getLeftHeaderGroups',
+      table_getLeftHeaderGroups,
+    )[0]?.headers.reduce((sum: number, header: Header<TFeatures, TData>) => {
+      return sum + header_getSize(header)
+    }, 0) ?? 0
   )
 }
 
@@ -182,12 +187,13 @@ export function table_getCenterTotalSize<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
-    callMemoOrStaticFn(table, table_getCenterHeaderGroups)[0]?.headers.reduce(
-      (sum, header) => {
-        return sum + header_getSize(header)
-      },
-      0,
-    ) ?? 0
+    callMemoOrStaticFn(
+      table,
+      'getCenterHeaderGroups',
+      table_getCenterHeaderGroups,
+    )[0]?.headers.reduce((sum: number, header: Header<TFeatures, TData>) => {
+      return sum + header_getSize(header)
+    }, 0) ?? 0
   )
 }
 
@@ -196,11 +202,12 @@ export function table_getRightTotalSize<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
-    callMemoOrStaticFn(table, table_getRightHeaderGroups)[0]?.headers.reduce(
-      (sum, header) => {
-        return sum + header_getSize(header)
-      },
-      0,
-    ) ?? 0
+    callMemoOrStaticFn(
+      table,
+      'getRightHeaderGroups',
+      table_getRightHeaderGroups,
+    )[0]?.headers.reduce((sum: number, header: Header<TFeatures, TData>) => {
+      return sum + header_getSize(header)
+    }, 0) ?? 0
   )
 }

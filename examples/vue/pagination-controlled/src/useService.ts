@@ -45,8 +45,9 @@ export default function useService(pagination: Ref<PaginationState>) {
         if (response.ok) {
           data.value = responseData
           error.value = null
-          totalResultCount.value =
-            Number(response.headers.get('x-total-count')) ?? DEFAULT_PAGE_COUNT
+          totalResultCount.value = Number(
+            response.headers.get('x-total-count') ?? DEFAULT_PAGE_COUNT,
+          )
         } else {
           throw new Error('Network response was not OK')
         }

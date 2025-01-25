@@ -74,12 +74,6 @@ export interface Cell_Cell<
 
 export interface TableOptions_Cell {
   /**
-   * Set this option to `true` to output cell debugging information to the console.
-   * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugcells]
-   * [Guide](https://tanstack.com/table/v8/docs/guide/tables)
-   */
-  debugCells?: boolean
-  /**
    * Value used when the desired value is not found in the data.
    * [API Docs](https://tanstack.com/table/v8/docs/api/core/table#renderfallbackvalue)
    * [Guide](https://tanstack.com/table/v8/docs/guide/tables)

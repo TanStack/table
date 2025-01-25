@@ -20,61 +20,37 @@ const _features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
-const columns = [
-  columnHelper.group({
-    header: 'Name',
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    cell: (info) => info.getValue(),
     footer: (props) => props.column.id,
-    columns: [
-      columnHelper.accessor('firstName', {
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      }),
-
-      columnHelper.accessor((row) => row.lastName, {
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => h('span', 'Last Name'),
-        footer: (props) => props.column.id,
-      }),
-    ],
   }),
-
-  columnHelper.group({
-    header: 'Info',
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => h('span', 'Last Name'),
     footer: (props) => props.column.id,
-
-    columns: [
-      columnHelper.accessor('age', {
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-      }),
-
-      columnHelper.group({
-        header: 'More Info',
-        columns: [
-          columnHelper.accessor('visits', {
-            header: () => h('span', 'Visits'),
-            footer: (props) => props.column.id,
-          }),
-
-          columnHelper.accessor('status', {
-            header: 'Status',
-            footer: (props) => props.column.id,
-          }),
-
-          columnHelper.accessor('progress', {
-            header: 'Profile Progress',
-            footer: (props) => props.column.id,
-          }),
-        ],
-      }),
-
-      columnHelper.accessor('createdAt', {
-        header: 'Created At',
-      }),
-    ],
   }),
-]
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: () => h('span', 'Visits'),
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('createdAt', {
+    header: 'Created At',
+  }),
+])
 
 const data = ref(makeData(10000))
 

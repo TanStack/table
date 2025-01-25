@@ -12,55 +12,64 @@ import type { TableState_RowPagination } from '../features/row-pagination/rowPag
 import type { TableState_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { TableState_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableState_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
-import type { TableFeatures } from './TableFeatures'
+import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 
-export interface TableState_Plugins {}
+/**
+ * Use this interface as a target for declaration merging to add your own state properties.
+ * Note: This will affect the types of all tables in your project.
+ */
+export interface TableState_Plugins<TFeatures extends TableFeatures> {}
 
-export type TableState<TFeatures extends TableFeatures> = TableState_Plugins &
-  UnionToIntersection<
-    | ('columnFilteringFeature' extends keyof TFeatures
-        ? TableState_ColumnFiltering
-        : never)
-    | ('columnGroupingFeature' extends keyof TFeatures
-        ? TableState_ColumnGrouping
-        : never)
-    | ('columnOrderingFeature' extends keyof TFeatures
-        ? TableState_ColumnOrdering
-        : never)
-    | ('columnPinningFeature' extends keyof TFeatures
-        ? TableState_ColumnPinning
-        : never)
-    | ('columnResizingFeature' extends keyof TFeatures
-        ? TableState_ColumnResizing
-        : never)
-    | ('columnSizingFeature' extends keyof TFeatures
-        ? TableState_ColumnSizing
-        : never)
-    | ('columnVisibilityFeature' extends keyof TFeatures
-        ? TableState_ColumnVisibility
-        : never)
-    | ('globalFilteringFeature' extends keyof TFeatures
-        ? TableState_GlobalFiltering
-        : never)
-    | ('rowExpandingFeature' extends keyof TFeatures
-        ? TableState_RowExpanding
-        : never)
-    | ('rowPaginationFeature' extends keyof TFeatures
-        ? TableState_RowPagination
-        : never)
-    | ('rowPinningFeature' extends keyof TFeatures
-        ? TableState_RowPinning
-        : never)
-    | ('rowSelectionFeature' extends keyof TFeatures
-        ? TableState_RowSelection
-        : never)
-    | ('rowSortingFeature' extends keyof TFeatures
-        ? TableState_RowSorting
-        : never)
-  >
+export type TableState<TFeatures extends TableFeatures> = UnionToIntersection<
+  | ('columnFilteringFeature' extends keyof TFeatures
+      ? TableState_ColumnFiltering
+      : never)
+  | ('columnGroupingFeature' extends keyof TFeatures
+      ? TableState_ColumnGrouping
+      : never)
+  | ('columnOrderingFeature' extends keyof TFeatures
+      ? TableState_ColumnOrdering
+      : never)
+  | ('columnPinningFeature' extends keyof TFeatures
+      ? TableState_ColumnPinning
+      : never)
+  | ('columnResizingFeature' extends keyof TFeatures
+      ? TableState_ColumnResizing
+      : never)
+  | ('columnSizingFeature' extends keyof TFeatures
+      ? TableState_ColumnSizing
+      : never)
+  | ('columnVisibilityFeature' extends keyof TFeatures
+      ? TableState_ColumnVisibility
+      : never)
+  | ('globalFilteringFeature' extends keyof TFeatures
+      ? TableState_GlobalFiltering
+      : never)
+  | ('rowExpandingFeature' extends keyof TFeatures
+      ? TableState_RowExpanding
+      : never)
+  | ('rowPaginationFeature' extends keyof TFeatures
+      ? TableState_RowPagination
+      : never)
+  | ('rowPinningFeature' extends keyof TFeatures
+      ? TableState_RowPinning
+      : never)
+  | ('rowSelectionFeature' extends keyof TFeatures
+      ? TableState_RowSelection
+      : never)
+  | ('rowSortingFeature' extends keyof TFeatures
+      ? TableState_RowSorting
+      : never)
+> &
+  ExtractFeatureTypes<'TableState', TFeatures> &
+  TableState_Plugins<TFeatures>
 
-// export type TableState<TFeatures extends TableFeatures> = TableState_Plugins &
-//   ExtractFeatureTypes<TFeatures, 'TableState'>
+// export type TableState<TFeatures extends TableFeatures> = ExtractFeatureTypes<
+// export type TableState<TFeatures extends TableFeatures> = ExtractFeatureTypes<
+//   'TableState',
+//   TFeatures
+// > &
+//   TableState_Plugins<TFeatures>
 
 export type TableState_All = Partial<
   TableState_ColumnFiltering &

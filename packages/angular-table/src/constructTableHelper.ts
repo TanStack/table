@@ -8,17 +8,19 @@ import type {
 } from '@tanstack/table-core'
 import type { Signal } from '@angular/core'
 
+// NOTE: This is a custom fork of the constructTableHelper function from the core package
+// It is used to create a table helper that can be used to create tables in Angular
+// It is a fork because the core package does not support Angular's reactive system
+// So we need to create a custom function to create a table helper that can be used in Angular
+
 /**
  * Options for creating a table helper to share common options across multiple tables
  * coreColumnsFeature, data, and state are excluded from this type and reserved for only the `useTable`/`createTable` functions
  */
 export type TableHelperOptions<
   TFeatures extends TableFeatures,
-  TData extends RowData = any,
-> = Omit<
-  TableOptions<TFeatures, NoInfer<TData>>,
-  'columns' | 'data' | 'state'
-> & {
+  TData extends RowData,
+> = Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'> & {
   _features: TFeatures
   TData?: TData // provide a cast for the TData type
 }
@@ -26,18 +28,15 @@ export type TableHelperOptions<
 /**
  * Internal type that each adapter package will build off of to create a table helper
  */
-export type TableHelper_Core<
+type TableHelper_Core<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 > = {
   columnHelper: ColumnHelper<TFeatures, TData>
-  createColumnHelper: <TData extends RowData>() => ColumnHelper<
-    TFeatures,
-    TData
-  >
+  createColumnHelper: () => ColumnHelper<TFeatures, TData>
   features: TFeatures
   options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'data' | 'state'>
-  tableCreator: <TData extends RowData>(
+  tableCreator: (
     tableOptions: () => Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'

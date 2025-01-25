@@ -50,14 +50,6 @@ const defaultData: Array<Person> = [
     status: 'Single',
     progress: 70,
   },
-  {
-    firstName: 'kevin',
-    lastName: 'vandy',
-    age: 28,
-    visits: 100,
-    status: 'Single',
-    progress: 70,
-  },
 ]
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
@@ -81,7 +73,6 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
     id: 'age',
     header: () => 'Age',
     cell: (info) => {
-      console.log('info test value')
       return info.renderValue()
     },
   },

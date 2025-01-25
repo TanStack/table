@@ -19,7 +19,9 @@ export function column_toggleVisibility<
   if (column_getCanHide(column)) {
     table_setColumnVisibility(column._table, (old) => ({
       ...old,
-      [column.id]: visible ?? !callMemoOrStaticFn(column, column_getIsVisible),
+      [column.id]:
+        visible ??
+        !callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
     }))
   }
 }
@@ -33,7 +35,7 @@ export function column_getIsVisible<
   return (
     (childColumns.length
       ? childColumns.some((childColumn) =>
-          callMemoOrStaticFn(childColumn, column_getIsVisible),
+          callMemoOrStaticFn(childColumn, 'getIsVisible', column_getIsVisible),
         )
       : column._table.options.state?.columnVisibility?.[column.id]) ?? true
   )
@@ -69,7 +71,9 @@ export function row_getAllVisibleCells<
 >(row: Row<TFeatures, TData>) {
   return row
     .getAllCells()
-    .filter((cell) => callMemoOrStaticFn(cell.column, column_getIsVisible))
+    .filter((cell) =>
+      callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible),
+    )
 }
 
 export function row_getVisibleCells<
@@ -89,7 +93,9 @@ export function table_getVisibleFlatColumns<
 >(table: Table_Internal<TFeatures, TData>) {
   return table
     .getAllFlatColumns()
-    .filter((column) => callMemoOrStaticFn(column, column_getIsVisible))
+    .filter((column) =>
+      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
+    )
 }
 
 export function table_getVisibleLeafColumns<
@@ -98,7 +104,9 @@ export function table_getVisibleLeafColumns<
 >(table: Table_Internal<TFeatures, TData>) {
   return table
     .getAllLeafColumns()
-    .filter((column) => callMemoOrStaticFn(column, column_getIsVisible))
+    .filter((column) =>
+      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
+    )
 }
 
 export function table_setColumnVisibility<
@@ -145,7 +153,10 @@ export function table_getIsAllColumnsVisible<
 >(table: Table_Internal<TFeatures, TData>) {
   return !table
     .getAllLeafColumns()
-    .some((column) => !callMemoOrStaticFn(column, column_getIsVisible))
+    .some(
+      (column) =>
+        !callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
+    )
 }
 
 export function table_getIsSomeColumnsVisible<
@@ -154,7 +165,9 @@ export function table_getIsSomeColumnsVisible<
 >(table: Table_Internal<TFeatures, TData>) {
   return table
     .getAllLeafColumns()
-    .some((column) => callMemoOrStaticFn(column, column_getIsVisible))
+    .some((column) =>
+      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
+    )
 }
 
 export function table_getToggleAllColumnsVisibilityHandler<
