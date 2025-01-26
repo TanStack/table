@@ -78,7 +78,7 @@ export const renderComponent = <
 /**
  * A helper function to help create cells from Svelte Snippets through ColumnDef's `cell` and `header` properties.
  *
- * The snippet must only take one parameter.
+ * *The snippet must only take one parameter.*
  *
  * This is only to be used with Snippets - use `renderComponent` for Svelte Components.
  *
