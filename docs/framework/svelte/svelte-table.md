@@ -81,7 +81,7 @@ Example:
 {#snippet mailtoLink(email: string)}
   <a href="mailto:{email}">
     {email}
-  </span>
+  </a>
 {/snippet}
 
 <table>
