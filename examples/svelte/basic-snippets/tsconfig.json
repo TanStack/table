@@ -9,5 +9,5 @@
     "checkJs": true,
     "isolatedModules": true
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
+  "include": ["../basic-snippets/src/**/*.ts", "../basic-snippets/src/**/*.js", "../basic-snippets/src/**/*.svelte"]
 }
