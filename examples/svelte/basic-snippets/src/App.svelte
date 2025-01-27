@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { createTableHelper, FlexRender } from '@tanstack/svelte-table'
+  import {
+    createTableHelper,
+    FlexRender,
+    renderSnippet,
+  } from '@tanstack/svelte-table'
+  import { capitalized, countup, spectrum } from './snippets.svelte'
   import './index.css'
 
   /**
@@ -67,36 +72,41 @@
   const { columnHelper, createTable } = tableHelper
 
   // 5. Define the columns for your table with a stable reference (in this case,
-  //    defined statically outside of a react component)
+  //    defined statically).
   const columns = columnHelper.columns([
     columnHelper.accessor('firstName', {
-      cell: (info) => info.getValue(),
-      footer: (info) => info.column.id,
+      header: 'First Name',
+      // 5a. Use the `renderSnippet` utility to render the snippet in the cell.
+      cell: (info) => renderSnippet(capitalized, info.getValue()),
     }),
     columnHelper.accessor('lastName', {
-      header: () => 'Last Name',
-      cell: (info) => info.getValue(),
-      footer: (info) => info.column.id,
+      header: 'Last Name',
+      cell: (info) => renderSnippet(capitalized, info.getValue()),
     }),
     columnHelper.accessor('age', {
-      header: () => 'Age',
-      footer: (info) => info.column.id,
+      header: 'Age',
+      cell: (info) => renderSnippet(countup, info.getValue()),
     }),
     columnHelper.accessor('visits', {
-      header: () => 'Visits',
-      footer: (info) => info.column.id,
+      header: 'Visits',
+      cell: (info) => renderSnippet(countup, info.getValue()),
     }),
     columnHelper.accessor('status', {
       header: 'Status',
-      footer: (info) => info.column.id,
     }),
     columnHelper.accessor('progress', {
       header: 'Profile Progress',
-      footer: (info) => info.column.id,
+      cell(info) {
+        return renderSnippet(spectrum, {
+          value: info.getValue(),
+          min: 0,
+          max: 100,
+        })
+      },
     }),
   ])
 
-  // 6. Create the table instance with columns and data. Featufres and row
+  // 6. Create the table instance with columns and data. Features and row
   //    models are already defined in the `tableHelper` object that
   //    `createTable` was destructured from.
   const table = createTable({
@@ -138,22 +148,5 @@
         </tr>
       {/each}
     </tbody>
-    <tfoot>
-      {#each table.getFooterGroups() as footerGroup}
-        <tr>
-          {#each footerGroup.headers as header}
-            <th>
-              {#if !header.isPlaceholder}
-                <FlexRender
-                  content={header.column.columnDef.footer}
-                  context={header.getContext()}
-                />
-              {/if}
-            </th>
-          {/each}
-        </tr>
-      {/each}
-    </tfoot>
   </table>
-  <div class="h-4"></div>
 </div>

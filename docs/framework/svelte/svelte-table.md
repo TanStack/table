@@ -32,19 +32,22 @@ Takes an `options` object and returns a table.
 A Svelte component for rendering cell/header/footer templates with dynamic values.
 
 FlexRender supports any type of renderable content supported by Svelte:
+
 - Scalar data types such as numbers, strings, etc.
 - Svelte components (when wrapped with `renderComponent`)
+- Svelte snippets (when wrapped with `renderSnippet`)
 
 Example:
 
 ```svelte
 <script lang="ts">
-  import { 
+  import {
     type ColumnDef,
     FlexRender,
     createTable,
     getCoreRowModel,
-    renderComponent
+    renderComponent,
+    renderSnippet
   } from '@tanstack/svelte-table'
   import { StatusTag } from '$lib/components/status-tag.svelte'
   import type { Person } from './types'
@@ -60,6 +63,11 @@ Example:
       /* Renders a Svelte component */
       accessorKey: 'status',
       cell: (info) => renderComponent(StatusTag, { value: info.getValue() })
+    },
+    {
+      /* Renders a Svelte component */
+      accessorKey: 'email',
+      cell: (info) => renderSnippet(mailtoLink, info.getValue())
     }
   ]
 
@@ -69,6 +77,12 @@ Example:
     getCoreRowModel: createCoreRowModel()
   })
 </script>
+
+{#snippet mailtoLink(email: string)}
+  <a href="mailto:{email}">
+    {email}
+  </a>
+{/snippet}
 
 <table>
   <tbody>
