@@ -1,13 +1,18 @@
 {
-  "name": "@parassantra/table-core",
-  "version": "1.0.0",
+  "name": "@tanstack/table-core",
+  "version": "8.20.5",
   "description": "Headless UI for building powerful tables & datagrids for TS/JS.",
-  "author": "Paras Santra",
+  "author": "Tanner Linsley",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/parassantra/table.git",
+    "url": "https://github.com/TanStack/table.git",
     "directory": "packages/table-core"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
     "react",
