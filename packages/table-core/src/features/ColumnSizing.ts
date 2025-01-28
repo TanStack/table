@@ -208,7 +208,7 @@ export interface ColumnSizingHeader {
   getSize: () => number
   /**
    * Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all preceding headers.
-   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getstart)
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing#getstart-1)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
    */
   getStart: (position?: ColumnPinningPosition) => number
