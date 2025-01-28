@@ -9,7 +9,7 @@ import {
 import {
   ColumnDef,
   createAngularTable,
-  FlexRenderComponent,
+  flexRenderComponent,
   FlexRenderDirective,
   getCoreRowModel,
   getFilteredRowModel,
@@ -43,10 +43,10 @@ export class AppComponent {
     {
       id: 'select',
       header: () => {
-        return new FlexRenderComponent(TableHeadSelectionComponent)
+        return flexRenderComponent(TableHeadSelectionComponent)
       },
       cell: () => {
-        return new FlexRenderComponent(TableRowSelectionComponent)
+        return flexRenderComponent(TableRowSelectionComponent)
       },
     },
     {

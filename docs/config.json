@@ -438,6 +438,18 @@
             {
               "to": "framework/angular/examples/signal-input",
               "label": "Signal Input"
+            },
+            {
+              "to": "framework/angular/examples/editable",
+              "label": "Editable data"
+            },
+            {
+              "to": "framework/angular/examples/row-dnd",
+              "label": "Row DnD"
+            },
+            {
+              "to": "framework/angular/examples/column-resizing-performant",
+              "label": "Performant Column Resizing"
             }
           ]
         },
@@ -728,6 +740,27 @@
             {
               "to": "framework/vue/examples/filters",
               "label": "Column Filters"
+            },
+            {
+              "to": "framework/vue/examples/virtualized-rows",
+              "label": "Virtualized Rows"
+            }
+          ]
+        },
+        {
+          "label": "vanilla",
+          "children": [
+            {
+              "to": "framework/vanilla/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/vanilla/examples/pagination",
+              "label": "Pagination"
+            },
+            {
+              "to": "framework/vanilla/examples/sorting",
+              "label": "Sorting"
             }
           ]
         }
