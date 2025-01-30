@@ -607,6 +607,10 @@
               "label": "Virtualized Rows"
             },
             {
+              "to": "framework/react/examples/virtualized-rows-experimental",
+              "label": "Virtualized Rows (Experimental)"
+            },
+            {
               "to": "framework/react/examples/virtualized-infinite-scrolling",
               "label": "Virtualized Infinite Scrolling"
             },
