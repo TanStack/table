@@ -436,6 +436,10 @@
               "label": "Row Selection"
             },
             {
+              "to": "framework/angular/examples/expanding",
+              "label": "Expanding"
+            },
+            {
               "to": "framework/angular/examples/signal-input",
               "label": "Signal Input"
             },
