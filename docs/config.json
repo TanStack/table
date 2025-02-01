@@ -440,6 +440,10 @@
               "label": "Expanding"
             },
             {
+              "to": "framework/angular/examples/sub-components",
+              "label": "Sub Components"
+            },
+            {
               "to": "framework/angular/examples/signal-input",
               "label": "Signal Input"
             },
