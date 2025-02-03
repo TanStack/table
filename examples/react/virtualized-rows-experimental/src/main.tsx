@@ -4,25 +4,21 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  Row,
-  Table,
   useReactTable,
 } from '@tanstack/react-table'
-import {
-  useVirtualizer,
-  VirtualItem,
-  Virtualizer,
-} from '@tanstack/react-virtual'
-import { makeData, Person } from './makeData'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import { makeData } from './makeData'
+import type { ColumnDef, Row, Table } from '@tanstack/react-table'
+import type { Virtualizer } from '@tanstack/react-virtual'
+import type { Person } from './makeData'
 
-//This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
-//See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
+// This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
+// See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
 function App() {
-  const columns = React.useMemo<ColumnDef<Person>[]>(
+  const columns = React.useMemo<Array<ColumnDef<Person>>>(
     () => [
       {
         accessorKey: 'id',
@@ -70,6 +66,10 @@ function App() {
 
   const [data, _setData] = React.useState(() => makeData(50_000))
 
+  const refreshData = React.useCallback(() => {
+    _setData(makeData(50_000))
+  }, [])
+
   const table = useReactTable({
     data,
     columns,
@@ -78,10 +78,10 @@ function App() {
     debugTable: true,
   })
 
-  //The virtualizer needs to know the scrollable container element
+  // The virtualizer needs to know the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  //All important CSS styles are included as inline styles for this example. This is not recommended for your code.
+  // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
   return (
     <div className="app">
       {process.env.NODE_ENV === 'development' ? (
@@ -92,13 +92,14 @@ function App() {
         </p>
       ) : null}
       ({data.length} rows)
+      <button onClick={refreshData}>Refresh Data</button>
       <div
         className="container"
         ref={tableContainerRef}
         style={{
-          overflow: 'auto', //our scrollable table container
-          position: 'relative', //needed for sticky header
-          height: '800px', //should be a fixed height
+          overflow: 'auto', // our scrollable table container
+          position: 'relative', // needed for sticky header
+          height: '800px', // should be a fixed height
         }}
       >
         {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
@@ -170,49 +171,31 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
 
   const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
-    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
-    //measure dynamic row height, except in firefox because it measures table border height incorrectly
+    // measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
         ? element => element?.getBoundingClientRect().height
         : undefined,
     overscan: 5,
+    onChange: instance => {
+      instance.getVirtualItems().forEach(virtualRow => {
+        const rowRef = rowRefsMap.current.get(virtualRow.index)
+        if (!rowRef) return
+        rowRef.style.transform = `translateY(${virtualRow.start}px)`
+      })
+    },
   })
 
   return (
-    <>
-      <RowScroller
-        rowRefsMap={rowRefsMap}
-        rowVirtualizer={rowVirtualizer}
-        table={table}
-      />
-      <TableBody
-        rowRefsMap={rowRefsMap}
-        rowVirtualizer={rowVirtualizer}
-        table={table}
-      />
-    </>
+    <TableBody
+      rowRefsMap={rowRefsMap}
+      rowVirtualizer={rowVirtualizer}
+      table={table}
+    />
   )
-}
-
-interface RowScrollerProps {
-  table: Table<Person>
-  rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
-  rowRefsMap: React.MutableRefObject<Map<number, HTMLTableRowElement>>
-}
-
-function RowScroller({ rowVirtualizer, rowRefsMap }: RowScrollerProps) {
-  const virtualRows = rowVirtualizer.getVirtualItems() // TODO subscribe to everything as currently implemented
-
-  virtualRows.forEach(virtualRow => {
-    const rowRef = rowRefsMap.current.get(virtualRow.index)
-    if (!rowRef) return <></>
-    rowRef.style.transform = `translateY(${virtualRow.start}px)`
-  })
-
-  return <></>
 }
 
 interface TableBodyProps {
@@ -223,25 +206,25 @@ interface TableBodyProps {
 
 function TableBody({ rowVirtualizer, table, rowRefsMap }: TableBodyProps) {
   const { rows } = table.getRowModel()
-  const virtualRows = rowVirtualizer.getVirtualItems() // TODO only subscribe to when rows are added or removed
+  const virtualRowIndexes = rowVirtualizer.getVirtualIndexes()
 
   return (
     <tbody
       style={{
         display: 'grid',
-        height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
-        position: 'relative', //needed for absolute positioning of rows
+        height: `${rowVirtualizer.getTotalSize()}px`, // tells scrollbar how big the table is
+        position: 'relative', // needed for absolute positioning of rows
       }}
     >
-      {virtualRows.map(virtualRow => {
-        const row = rows[virtualRow.index] as Row<Person>
+      {virtualRowIndexes.map(virtualRowIndex => {
+        const row = rows[virtualRowIndex]
         return (
           <TableBodyRowMemo
             key={row.id}
             row={row}
             rowRefsMap={rowRefsMap}
             rowVirtualizer={rowVirtualizer}
-            virtualRow={virtualRow}
+            virtualRowIndex={virtualRowIndex}
           />
         )
       })}
@@ -249,39 +232,32 @@ function TableBody({ rowVirtualizer, table, rowRefsMap }: TableBodyProps) {
   )
 }
 
-// test out when the table is re-rendered
-// const TableBodyMemo = React.memo(
-//   TableBody,
-//   (prev, next) => prev.table.options.data === next.table.options.data
-// ) as typeof TableBody
-
 interface TableBodyRowProps {
   row: Row<Person>
-  virtualRow: VirtualItem<HTMLTableRowElement>
   rowRefsMap: React.MutableRefObject<Map<number, HTMLTableRowElement>>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
+  virtualRowIndex: number
 }
 
 function TableBodyRow({
   row,
-  virtualRow,
   rowRefsMap,
   rowVirtualizer,
+  virtualRowIndex,
 }: TableBodyRowProps) {
   return (
     <tr
-      data-index={virtualRow.index} //needed for dynamic row height measurement
+      data-index={virtualRowIndex} // needed for dynamic row height measurement
       ref={node => {
-        if (node && virtualRow) {
-          rowVirtualizer.measureElement(node)
-          rowRefsMap.current.set(virtualRow.index, node)
+        if (node && virtualRowIndex) {
+          rowVirtualizer.measureElement(node) // measure dynamic row height
+          rowRefsMap.current.set(virtualRowIndex, node) // store ref for virtualizer to apply scrolling transforms
         }
-      }} //measure dynamic row height
+      }}
       key={row.id}
       style={{
         display: 'flex',
         position: 'absolute',
-        // transform: `translateY(${virtualRow.start}px)`, // no more transform from react, now done in RowScroller
         width: '100%',
       }}
     >
@@ -305,7 +281,7 @@ function TableBodyRow({
 // test out when rows don't re-render at all (future TanStack Virtual release can make this unnecessary)
 const TableBodyRowMemo = React.memo(
   TableBodyRow,
-  (prev, next) => prev.row === next.row
+  (_prev, next) => next.rowVirtualizer.isScrolling
 ) as typeof TableBodyRow
 
 const rootElement = document.getElementById('root')

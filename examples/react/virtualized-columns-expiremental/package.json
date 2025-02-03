@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-virtualized-infinite-scrolling",
+  "name": "tanstack-table-example-virtualized-columns-experimental",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@tanstack/react-query": "^5.49.0",
     "@tanstack/react-table": "^8.20.6",
     "@tanstack/react-virtual": "^3.12.0",
     "react": "^18.3.1",

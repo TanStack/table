@@ -12,13 +12,11 @@ import {
   Table,
   useReactTable,
 } from '@tanstack/react-table'
-
 import {
   useVirtualizer,
   VirtualItem,
   Virtualizer,
 } from '@tanstack/react-virtual'
-
 import { makeData, Person } from './makeData'
 
 //This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
@@ -73,7 +71,11 @@ function App() {
   // The virtualizer will need a reference to the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  const [data, _setData] = React.useState(() => makeData(50_000))
+  const [data, setData] = React.useState(() => makeData(50_000))
+
+  const refreshData = React.useCallback(() => {
+    setData(makeData(50_000))
+  }, [])
 
   const table = useReactTable({
     data,
@@ -94,6 +96,7 @@ function App() {
         </p>
       ) : null}
       ({data.length} rows)
+      <button onClick={refreshData}>Refresh Data</button>
       <div
         className="container"
         ref={tableContainerRef}
@@ -204,7 +207,7 @@ function TableBody({ table, tableContainerRef }: TableBodyProps) {
 
 interface TableBodyRowProps {
   row: Row<Person>
-  virtualRow: VirtualItem<HTMLTableRowElement>
+  virtualRow: VirtualItem
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
 }
 
