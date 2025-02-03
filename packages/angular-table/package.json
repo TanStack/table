@@ -21,13 +21,11 @@
     "datagrid"
   ],
   "type": "module",
-  "module": "dist/esm2022/index.mjs",
+  "module": "dist/fesm2022/tanstack-angular-table.mjs",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "esm": "./dist/esm2022/index.mjs",
-      "esm2022": "./dist/esm2022/index.mjs",
       "default": "./dist/fesm2022/tanstack-angular-table.mjs"
     },
     "./package.json": {
