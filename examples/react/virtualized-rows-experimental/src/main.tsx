@@ -70,6 +70,14 @@ function App() {
     _setData(makeData(50_000))
   }, [])
 
+  // refresh data every 5 seconds
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      refreshData()
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [refreshData])
+
   const table = useReactTable({
     data,
     columns,
@@ -188,6 +196,10 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
       })
     },
   })
+
+  React.useLayoutEffect(() => {
+    rowVirtualizer.measure()
+  }, [table.getState()])
 
   return (
     <TableBody
