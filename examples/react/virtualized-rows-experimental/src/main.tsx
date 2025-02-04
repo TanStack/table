@@ -189,11 +189,13 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
         : undefined,
     overscan: 5,
     onChange: instance => {
+      // requestAnimationFrame(() => {
       instance.getVirtualItems().forEach(virtualRow => {
         const rowRef = rowRefsMap.current.get(virtualRow.index)
         if (!rowRef) return
         rowRef.style.transform = `translateY(${virtualRow.start}px)`
       })
+      // })
     },
   })
 
