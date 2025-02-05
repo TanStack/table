@@ -1,35 +1,39 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ViewChild,
   input,
   output,
   signal,
-  type TemplateRef,
-  ViewChild,
 } from '@angular/core'
 import {
-  type CellContext,
   ColumnDef,
   createCoreRowModel,
-  type ExpandedState,
   stockFeatures,
-  type TableOptions,
-  type TableState,
 } from '@tanstack/table-core'
-import {
-  FlexRender,
-  flexRenderComponent,
-  type FlexRenderContent,
-  injectFlexRenderContext,
-  injectTable,
-} from '../src'
 import { TestBed } from '@angular/core/testing'
 import { describe, expect, test, vi } from 'vitest'
 import { By } from '@angular/platform-browser'
+import {
+  FlexRender,
+  flexRenderComponent,
+  injectFlexRenderContext,
+  injectTable,
+} from '../src'
+import type { FlexRenderContent } from '../src'
+import type {
+  CellContext,
+  ExpandedState,
+  TableOptions,
+  TableState,
+} from '@tanstack/table-core'
+import type { TemplateRef } from '@angular/core'
 
-const defaultData: TestData[] = [{ id: '1', title: 'My title' }] as TestData[]
+const defaultData: Array<TestData> = [
+  { id: '1', title: 'My title' },
+] as Array<TestData>
 
-const defaultColumns: ColumnDef<typeof stockFeatures, TestData>[] = [
+const defaultColumns: Array<ColumnDef<typeof stockFeatures, TestData>> = [
   {
     id: 'title',
     accessorKey: 'title',
@@ -109,8 +113,8 @@ describe('FlexRenderDirective', () => {
       },
     ])
 
-    let row = dom.getBodyRow(0)!
-    let firstCell = row.querySelector('td')
+    const row = dom.getBodyRow(0)!
+    const firstCell = row.querySelector('td')
     expect(firstCell!.textContent).toEqual('Initial status')
 
     status.set('Updated status')
@@ -132,8 +136,8 @@ describe('FlexRenderDirective', () => {
       },
     ])
 
-    let row = dom.getBodyRow(0)!
-    let firstCell = row.querySelector('td')
+    const row = dom.getBodyRow(0)!
+    const firstCell = row.querySelector('td')
 
     expect(firstCell!.textContent).toEqual('Initial status')
 
@@ -148,7 +152,7 @@ describe('FlexRenderDirective', () => {
     )
     fixture.detectChanges()
     const el = firstCell!.firstElementChild as HTMLElement
-    expect(el!.tagName).toEqual('APP-TEST-BADGE')
+    expect(el.tagName).toEqual('APP-TEST-BADGE')
     expect(el.textContent).toEqual('Updated status')
   })
 
@@ -157,6 +161,7 @@ describe('FlexRenderDirective', () => {
 
     const tableState = signal<Partial<TableState<typeof stockFeatures>>>({
       rowSelection: {},
+      expanded: {},
     })
 
     @Component({
@@ -187,7 +192,7 @@ describe('FlexRenderDirective', () => {
     )
 
     const latestCall = () =>
-      contextCaptor.mock.lastCall[0] as CellContext<
+      contextCaptor.mock.lastCall![0] as CellContext<
         typeof stockFeatures,
         TestData,
         any
@@ -225,7 +230,7 @@ describe('FlexRenderDirective', () => {
           })
         },
       },
-    ] satisfies ColumnDef<TestData>[]
+    ] satisfies Array<ColumnDef<TestData>>
 
     @Component({
       selector: 'expand-cell',
@@ -325,8 +330,8 @@ function expectPrimitiveValueIs(
 type TestData = { id: string; title: string }
 
 export function createTestTable(
-  data: TestData[],
-  columns: ColumnDef<typeof stockFeatures, TestData, any>[],
+  data: Array<TestData>,
+  columns: Array<ColumnDef<typeof stockFeatures, TestData, any>>,
   optionsFn?: () => Partial<TableOptions<typeof stockFeatures, TestData>>,
 ) {
   @Component({
@@ -394,8 +399,8 @@ export function createTestTable(
   })
   class TestComponent {
     readonly columns =
-      input<ColumnDef<typeof stockFeatures, TestData>[]>(columns)
-    readonly data = input<TestData[]>(data)
+      input<Array<ColumnDef<typeof stockFeatures, TestData>>>(columns)
+    readonly data = input<Array<TestData>>(data)
 
     readonly count = signal(0)
 
