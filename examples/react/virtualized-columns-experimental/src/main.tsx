@@ -29,6 +29,15 @@ function App() {
     setData(makeData(1_000, columns))
   }, [columns])
 
+  // refresh data every 5 seconds
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      refreshData()
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [refreshData])
+
+  // The table does not live in the same scope as the virtualizers
   const table = useReactTable({
     data,
     columns,
@@ -75,6 +84,7 @@ function TableContainer({ table }: TableContainerProps) {
     horizontal: true,
     overscan: 3, //how many columns to render on each side off screen each way (adjust this for performance)
     onChange: instance => {
+      // requestAnimationFrame(() => {
       const virtualColumns = instance.getVirtualItems()
       // different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right
       const virtualPaddingLeft = virtualColumns[0]?.start ?? 0
@@ -82,14 +92,15 @@ function TableContainer({ table }: TableContainerProps) {
         instance.getTotalSize() -
         (virtualColumns[virtualColumns.length - 1]?.end ?? 0)
 
-      document.documentElement.style.setProperty(
+      tableContainerRef.current?.style.setProperty(
         '--virtual-padding-left',
         `${virtualPaddingLeft}px`
       )
-      document.documentElement.style.setProperty(
+      tableContainerRef.current?.style.setProperty(
         '--virtual-padding-right',
         `${virtualPaddingRight}px`
       )
+      // })
     },
   })
 
@@ -221,6 +232,7 @@ function TableBody({
   table,
   tableContainerRef,
 }: TableBodyProps) {
+  const tableBodyRef = React.useRef<HTMLTableSectionElement>(null)
   const rowRefsMap = React.useRef<Map<number, HTMLTableRowElement>>(new Map())
 
   const { rows } = table.getRowModel()
@@ -238,21 +250,28 @@ function TableBody({
         : undefined,
     overscan: 5,
     onChange: instance => {
+      // requestAnimationFrame(() => {
+      tableBodyRef.current!.style.height = `${instance.getTotalSize()}px`
       instance.getVirtualItems().forEach(virtualRow => {
         const rowRef = rowRefsMap.current.get(virtualRow.index)
         if (!rowRef) return
         rowRef.style.transform = `translateY(${virtualRow.start}px)`
       })
+      // })
     },
   })
+
+  React.useLayoutEffect(() => {
+    rowVirtualizer.measure()
+  }, [table.getState()])
 
   const virtualRowIndexes = rowVirtualizer.getVirtualIndexes()
 
   return (
     <tbody
+      ref={tableBodyRef}
       style={{
         display: 'grid',
-        height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
         position: 'relative', //needed for absolute positioning of rows
       }}
     >
