@@ -9,9 +9,9 @@ import {
 import { FormsModule } from '@angular/forms'
 
 @Component({
-    selector: 'editable-cell',
-    template: ` <input [ngModel]="value()" (blur)="blur.emit(modelValue())" /> `,
-    imports: [FormsModule]
+  selector: 'editable-cell',
+  template: ` <input [ngModel]="value()" (blur)="blur.emit(modelValue())" /> `,
+  imports: [FormsModule],
 })
 export class EditableCell {
   readonly modelValue = signal<unknown>(undefined)

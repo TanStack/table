@@ -5,9 +5,7 @@ import angular from '@analogjs/vite-plugin-angular'
 const angularPlugin = angular({ tsconfig: 'tsconfig.test.json', jit: true })
 
 export default defineConfig({
-  plugins: [
-    angularPlugin,
-  ],
+  plugins: [angularPlugin],
   test: {
     name: packageJson.name,
     watch: false,

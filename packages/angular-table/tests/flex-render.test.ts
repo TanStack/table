@@ -107,12 +107,16 @@ describe('FlexRenderDirective', () => {
     }
 
     const fixture = TestBed.createComponent(TestRenderComponent)
-    setFixtureSignalInputs(fixture, {
-      content: () => flexRenderComponent(FakeComponent),
-      context: {
-        property: 'Context value',
+    setFixtureSignalInputs(
+      fixture,
+      {
+        content: () => flexRenderComponent(FakeComponent),
+        context: {
+          property: 'Context value',
+        },
       },
-    }, {detectChanges: true})
+      { detectChanges: true },
+    )
 
     expect(fixture.nativeElement.textContent).toEqual('Context value')
 

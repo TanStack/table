@@ -18,7 +18,11 @@ import type { ColumnDef, Row, Table } from '@tanstack/react-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 
-const features = { columnVisibilityFeature, columnSizingFeature, rowSortingFeature }
+const features = {
+  columnVisibilityFeature,
+  columnSizingFeature,
+  rowSortingFeature,
+}
 
 // This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
 // See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
@@ -84,7 +88,7 @@ function App() {
     columns,
     data,
     debugTable: true,
-  });
+  })
 
   // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
   return (

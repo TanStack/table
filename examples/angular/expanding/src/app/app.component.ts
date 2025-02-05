@@ -31,39 +31,39 @@ const defaultColumns: ColumnDef<Person>[] = [
     cell: () => flexRenderComponent(ExpandableCell),
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => 'Last Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   },
   {
     accessorKey: 'age',
     header: () => 'Age',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   },
   {
     accessorKey: 'visits',
     header: () => `Visits`,
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   },
   {
     accessorKey: 'status',
     header: 'Status',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   },
   {
     accessorKey: 'progress',
     header: 'Profile Progress',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   },
 ]
 
 @Component({
-    selector: 'app-root',
-    imports: [FlexRenderDirective, ReactiveFormsModule],
-    templateUrl: './app.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-root',
+  imports: [FlexRenderDirective, ReactiveFormsModule],
+  templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   readonly data = signal<Person[]>(makeData(100, 5, 3))
@@ -75,11 +75,11 @@ export class AppComponent {
     state: {
       expanded: this.expanded(),
     },
-    onExpandedChange: updater =>
+    onExpandedChange: (updater) =>
       typeof updater === 'function'
         ? this.expanded.update(updater)
         : this.expanded.set(updater),
-    getSubRows: row => row.subRows,
+    getSubRows: (row) => row.subRows,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -90,11 +90,11 @@ export class AppComponent {
   }))
 
   readonly rawExpandedState = computed(() =>
-    JSON.stringify(this.expanded(), undefined, 2)
+    JSON.stringify(this.expanded(), undefined, 2),
   )
 
   readonly rawRowSelectionState = computed(() =>
-    JSON.stringify(this.table.getState().rowSelection, undefined, 2)
+    JSON.stringify(this.table.getState().rowSelection, undefined, 2),
   )
 
   onPageInputChange(event: Event): void {

@@ -23,7 +23,7 @@ import { JsonPipe, NgTemplateOutlet } from '@angular/common'
 const columns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         id: 'expander',
@@ -46,25 +46,25 @@ const columns: ColumnDef<Person>[] = [
         accessorKey: 'firstName',
         header: 'First Name',
         cell: () => flexRenderComponent(ExpandableCell),
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => 'Last Name',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -72,17 +72,17 @@ const columns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => 'Visits',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -91,15 +91,15 @@ const columns: ColumnDef<Person>[] = [
 ]
 
 @Component({
-    selector: 'app-root',
-    imports: [
-        FlexRenderDirective,
-        ReactiveFormsModule,
-        JsonPipe,
-        NgTemplateOutlet,
-    ],
-    templateUrl: './app.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-root',
+  imports: [
+    FlexRenderDirective,
+    ReactiveFormsModule,
+    JsonPipe,
+    NgTemplateOutlet,
+  ],
+  templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   readonly data = signal<Person[]>(makeData(10))
@@ -111,7 +111,7 @@ export class AppComponent {
     state: {
       expanded: this.expanded(),
     },
-    onExpandedChange: updater =>
+    onExpandedChange: (updater) =>
       typeof updater === 'function'
         ? this.expanded.update(updater)
         : this.expanded.set(updater),

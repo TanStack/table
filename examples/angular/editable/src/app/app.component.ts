@@ -34,7 +34,7 @@ const defaultColumn: Partial<ColumnDef<Person>> = {
         value: initialValue,
       },
       outputs: {
-        blur: value => {
+        blur: (value) => {
           if (table.options.meta?.updateData) {
             table.options.meta.updateData(row.index, column.id, value)
           }
@@ -47,41 +47,41 @@ const defaultColumn: Partial<ColumnDef<Person>> = {
 const defaultColumns: ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
     header: () => `<span>Last Name</span>`,
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   },
   {
     accessorKey: 'age',
     header: () => 'Age',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   },
   {
     accessorKey: 'visits',
     header: () => `<span>Visits</span>`,
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   },
   {
     accessorKey: 'status',
     header: 'Status',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   },
   {
     accessorKey: 'progress',
     header: 'Profile Progress',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   },
 ]
 
 @Component({
-    selector: 'app-root',
-    imports: [FlexRenderDirective],
-    templateUrl: './app.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-root',
+  imports: [FlexRenderDirective],
+  templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
   readonly data = signal<Person[]>(makeData(10_000))
@@ -104,7 +104,7 @@ export class AppComponent {
         // Skip page index reset until after next rerender
         this.autoResetPageIndex.set(false)
 
-        this.data.update(old =>
+        this.data.update((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
               return {
@@ -113,7 +113,7 @@ export class AppComponent {
               }
             }
             return row
-          })
+          }),
         )
 
         afterNextRender(() => this.autoResetPageIndex.set(true), {

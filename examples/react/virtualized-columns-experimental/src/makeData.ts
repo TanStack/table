@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 
-export const makeColumns = num =>
+export const makeColumns = (num) =>
   [...Array(num)].map((_, i) => {
     return {
       accessorKey: i.toString(),
@@ -12,7 +12,7 @@ export const makeColumns = num =>
 export const makeData = (num, columns) =>
   [...Array(num)].map(() => ({
     ...Object.fromEntries(
-      columns.map(col => [col.accessorKey, faker.person.firstName()])
+      columns.map((col) => [col.accessorKey, faker.person.firstName()]),
     ),
   }))
 

@@ -27,12 +27,12 @@ function App() {
       },
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
       },
       {
@@ -57,11 +57,11 @@ function App() {
       {
         accessorKey: 'createdAt',
         header: 'Created At',
-        cell: info => info.getValue<Date>().toLocaleString(),
+        cell: (info) => info.getValue<Date>().toLocaleString(),
         size: 250,
       },
     ],
-    []
+    [],
   )
 
   const [data, _setData] = React.useState(() => makeData(50_000))
@@ -120,12 +120,12 @@ function App() {
               zIndex: 1,
             }}
           >
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr
                 key={headerGroup.id}
                 style={{ display: 'flex', width: '100%' }}
               >
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   return (
                     <th
                       key={header.id}
@@ -144,7 +144,7 @@ function App() {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {{
                           asc: ' 🔼',
@@ -185,12 +185,12 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? element => element?.getBoundingClientRect().height
+        ? (element) => element?.getBoundingClientRect().height
         : undefined,
     overscan: 5,
-    onChange: instance => {
+    onChange: (instance) => {
       // requestAnimationFrame(() => {
-      instance.getVirtualItems().forEach(virtualRow => {
+      instance.getVirtualItems().forEach((virtualRow) => {
         const rowRef = rowRefsMap.current.get(virtualRow.index)
         if (!rowRef) return
         rowRef.style.transform = `translateY(${virtualRow.start}px)`
@@ -230,7 +230,7 @@ function TableBody({ rowVirtualizer, table, rowRefsMap }: TableBodyProps) {
         position: 'relative', // needed for absolute positioning of rows
       }}
     >
-      {virtualRowIndexes.map(virtualRowIndex => {
+      {virtualRowIndexes.map((virtualRowIndex) => {
         const row = rows[virtualRowIndex]
         return (
           <TableBodyRowMemo
@@ -262,7 +262,7 @@ function TableBodyRow({
   return (
     <tr
       data-index={virtualRowIndex} // needed for dynamic row height measurement
-      ref={node => {
+      ref={(node) => {
         if (node && virtualRowIndex) {
           rowVirtualizer.measureElement(node) // measure dynamic row height
           rowRefsMap.current.set(virtualRowIndex, node) // store ref for virtualizer to apply scrolling transforms
@@ -275,7 +275,7 @@ function TableBodyRow({
         width: '100%',
       }}
     >
-      {row.getVisibleCells().map(cell => {
+      {row.getVisibleCells().map((cell) => {
         return (
           <td
             key={cell.id}
@@ -295,7 +295,7 @@ function TableBodyRow({
 // test out when rows don't re-render at all (future TanStack Virtual release can make this unnecessary)
 const TableBodyRowMemo = React.memo(
   TableBodyRow,
-  (_prev, next) => next.rowVirtualizer.isScrolling
+  (_prev, next) => next.rowVirtualizer.isScrolling,
 ) as typeof TableBodyRow
 
 const rootElement = document.getElementById('root')
@@ -305,5 +305,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

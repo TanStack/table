@@ -9,9 +9,7 @@ import {
   sortFns,
   useTable,
 } from '@tanstack/react-table'
-import {
-  useVirtualizer
-} from '@tanstack/react-virtual'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { makeColumns, makeData } from './makeData'
 import type {
   Cell,
@@ -19,14 +17,12 @@ import type {
   Header,
   HeaderGroup,
   Row,
-  Table
-} from '@tanstack/react-table';
-import type {
-  VirtualItem,
-  Virtualizer} from '@tanstack/react-virtual';
-import type { Person } from './makeData';
+  Table,
+} from '@tanstack/react-table'
+import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
+import type { Person } from './makeData'
 
-const features = { columnSizingFeature, rowSortingFeature };
+const features = { columnSizingFeature, rowSortingFeature }
 
 function App() {
   const columns = React.useMemo<Array<ColumnDef<typeof features, Person>>>(

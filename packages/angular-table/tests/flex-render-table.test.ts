@@ -70,8 +70,8 @@ describe('FlexRenderDirective', () => {
   test('Render TemplateRef', () => {
     @Component({
       template: `
-          <!-- prettier-ignore -->
-          <ng-template #template let-context>Cell id: {{ context.cell.id }}</ng-template>
+        <!-- prettier-ignore -->
+        <ng-template #template let-context>Cell id: {{ context.cell.id }}</ng-template>
       `,
       standalone: true,
     })
@@ -187,7 +187,11 @@ describe('FlexRenderDirective', () => {
     )
 
     const latestCall = () =>
-      contextCaptor.mock.lastCall[0] as CellContext<typeof stockFeatures, TestData, any>
+      contextCaptor.mock.lastCall[0] as CellContext<
+        typeof stockFeatures,
+        TestData,
+        any
+      >
     // TODO: As a perf improvement, check in a future if we can avoid evaluating the cell twice during the first render.
     // This is caused due to the registration of the initial effect and the first #getContentValue() to detect the
     // type of content to render.
@@ -449,7 +453,8 @@ export function createTestTable(
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class TestBadgeComponent {
-  readonly context = injectFlexRenderContext<CellContext<typeof stockFeatures, TestData, any>>()
+  readonly context =
+    injectFlexRenderContext<CellContext<typeof stockFeatures, TestData, any>>()
 
   readonly status = input.required<string>()
 }
