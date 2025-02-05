@@ -162,6 +162,10 @@ describe('FlexRenderDirective', () => {
     const tableState = signal<Partial<TableState<typeof stockFeatures>>>({
       rowSelection: {},
       expanded: {},
+      pagination: {
+        pageIndex: 0,
+        pageSize: 10
+      }
     })
 
     @Component({
