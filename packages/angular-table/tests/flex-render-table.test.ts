@@ -164,8 +164,8 @@ describe('FlexRenderDirective', () => {
       expanded: {},
       pagination: {
         pageIndex: 0,
-        pageSize: 10
-      }
+        pageSize: 10,
+      },
     })
 
     @Component({
