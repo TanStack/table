@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-<<<<<<< HEAD
   columnSizingFeature,
   createSortedRowModel,
   flexRender,
@@ -10,32 +9,27 @@ import {
   sortFns,
   useTable,
 } from '@tanstack/react-table'
-import { useVirtualizer } from '@tanstack/react-virtual'
+import {
+  useVirtualizer
+} from '@tanstack/react-virtual'
 import { makeColumns, makeData } from './makeData'
-import type { Person } from './makeData'
-import type { ColumnDef } from '@tanstack/react-table'
-=======
+import type {
   Cell,
   ColumnDef,
   Header,
   HeaderGroup,
   Row,
-  Table,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-import {
-  useVirtualizer,
+  Table
+} from '@tanstack/react-table';
+import type {
   VirtualItem,
-  Virtualizer,
-} from '@tanstack/react-virtual'
-import { makeColumns, makeData, Person } from './makeData'
->>>>>>> origin/main
+  Virtualizer} from '@tanstack/react-virtual';
+import type { Person } from './makeData';
+
+const features = { columnSizingFeature, rowSortingFeature };
 
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof features, Person>>>(
     () => makeColumns(1_000),
     [],
   )
@@ -47,62 +41,14 @@ function App() {
   }, [columns])
 
   const table = useTable({
-    _features: { columnSizingFeature, rowSortingFeature },
+    _features: features,
     _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
     debugTable: true,
   })
 
-<<<<<<< HEAD
-  const { rows } = table.getRowModel()
-
-  const visibleColumns = table.getVisibleLeafColumns()
-
-  // The virtualizers need to know the scrollable container element
-  const tableContainerRef = React.useRef<HTMLDivElement>(null)
-
-  // we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
-  const columnVirtualizer = useVirtualizer({
-    count: visibleColumns.length,
-    estimateSize: (index) => visibleColumns[index].getSize(), // estimate width of each column for accurate scrollbar dragging
-    getScrollElement: () => tableContainerRef.current,
-    horizontal: true,
-    overscan: 3, // how many columns to render on each side off screen each way (adjust this for performance)
-  })
-
-  // dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
-  const rowVirtualizer = useVirtualizer({
-    count: rows.length,
-    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
-    getScrollElement: () => tableContainerRef.current,
-    // measure dynamic row height, except in firefox because it measures table border height incorrectly
-    measureElement:
-      typeof window !== 'undefined' &&
-      navigator.userAgent.indexOf('Firefox') === -1
-        ? (element) => element.getBoundingClientRect().height
-        : undefined,
-    overscan: 5,
-  })
-
-  const virtualColumns = columnVirtualizer.getVirtualItems()
-  const virtualRows = rowVirtualizer.getVirtualItems()
-
-  // different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right
-  let virtualPaddingLeft: number | undefined
-  let virtualPaddingRight: number | undefined
-
-  if (virtualColumns.length) {
-    virtualPaddingLeft = virtualColumns[0]?.start ?? 0
-    virtualPaddingRight =
-      columnVirtualizer.getTotalSize() -
-      (virtualColumns[virtualColumns.length - 1]?.end ?? 0)
-  }
-
   // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
-=======
-  //All important CSS styles are included as inline styles for this example. This is not recommended for your code.
->>>>>>> origin/main
   return (
     <div className="app">
       {process.env.NODE_ENV === 'development' ? (
@@ -121,34 +67,34 @@ function App() {
 }
 
 interface TableContainerProps {
-  table: Table<Person>
+  table: Table<any, Person>
 }
 
 function TableContainer({ table }: TableContainerProps) {
   const visibleColumns = table.getVisibleLeafColumns()
 
-  //The virtualizers need to know the scrollable container element
+  // The virtualizers need to know the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  //we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
+  // we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
   const columnVirtualizer = useVirtualizer<
     HTMLDivElement,
     HTMLTableCellElement
   >({
     count: visibleColumns.length,
-    estimateSize: index => visibleColumns[index].getSize(), //estimate width of each column for accurate scrollbar dragging
+    estimateSize: (index) => visibleColumns[index].getSize(), // estimate width of each column for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
     horizontal: true,
-    overscan: 3, //how many columns to render on each side off screen each way (adjust this for performance)
+    overscan: 3, // how many columns to render on each side off screen each way (adjust this for performance)
   })
 
   const virtualColumns = columnVirtualizer.getVirtualItems()
 
-  //different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right
+  // different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right
   let virtualPaddingLeft: number | undefined
   let virtualPaddingRight: number | undefined
 
-  if (columnVirtualizer && virtualColumns?.length) {
+  if (columnVirtualizer && virtualColumns.length) {
     virtualPaddingLeft = virtualColumns[0]?.start ?? 0
     virtualPaddingRight =
       columnVirtualizer.getTotalSize() -
@@ -160,9 +106,9 @@ function TableContainer({ table }: TableContainerProps) {
       className="container"
       ref={tableContainerRef}
       style={{
-        overflow: 'auto', //our scrollable table container
-        position: 'relative', //needed for sticky header
-        height: '800px', //should be a fixed height
+        overflow: 'auto', // our scrollable table container
+        position: 'relative', // needed for sticky header
+        height: '800px', // should be a fixed height
       }}
     >
       {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
@@ -187,7 +133,7 @@ function TableContainer({ table }: TableContainerProps) {
 
 interface TableHeadProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  table: Table<Person>
+  table: Table<typeof features, Person>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
 }
@@ -207,7 +153,7 @@ function TableHead({
         zIndex: 1,
       }}
     >
-      {table.getHeaderGroups().map(headerGroup => (
+      {table.getHeaderGroups().map((headerGroup) => (
         <TableHeadRow
           columnVirtualizer={columnVirtualizer}
           headerGroup={headerGroup}
@@ -222,7 +168,7 @@ function TableHead({
 
 interface TableHeadRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  headerGroup: HeaderGroup<Person>
+  headerGroup: HeaderGroup<any, Person>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
 }
@@ -237,15 +183,15 @@ function TableHeadRow({
   return (
     <tr key={headerGroup.id} style={{ display: 'flex', width: '100%' }}>
       {virtualPaddingLeft ? (
-        //fake empty column to the left for virtualization scroll padding
+        // fake empty column to the left for virtualization scroll padding
         <th style={{ display: 'flex', width: virtualPaddingLeft }} />
       ) : null}
-      {virtualColumns.map(virtualColumn => {
+      {virtualColumns.map((virtualColumn) => {
         const header = headerGroup.headers[virtualColumn.index]
         return <TableHeadCell key={header.id} header={header} />
       })}
       {virtualPaddingRight ? (
-        //fake empty column to the right for virtualization scroll padding
+        // fake empty column to the right for virtualization scroll padding
         <th style={{ display: 'flex', width: virtualPaddingRight }} />
       ) : null}
     </tr>
@@ -253,7 +199,7 @@ function TableHeadRow({
 }
 
 interface TableHeadCellProps {
-  header: Header<Person, unknown>
+  header: Header<typeof features, Person, unknown>
 }
 
 function TableHeadCell({ header }: TableHeadCellProps) {
@@ -266,129 +212,6 @@ function TableHeadCell({ header }: TableHeadCellProps) {
       }}
     >
       <div
-<<<<<<< HEAD
-        className="container"
-        ref={tableContainerRef}
-        style={{
-          overflow: 'auto', // our scrollable table container
-          position: 'relative', // needed for sticky header
-          height: '800px', // should be a fixed height
-        }}
-      >
-        {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
-        <table style={{ display: 'grid' }}>
-          <thead
-            style={{
-              display: 'grid',
-              position: 'sticky',
-              top: 0,
-              zIndex: 1,
-            }}
-          >
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr
-                key={headerGroup.id}
-                style={{ display: 'flex', width: '100%' }}
-              >
-                {virtualPaddingLeft ? (
-                  // fake empty column to the left for virtualization scroll padding
-                  <th style={{ display: 'flex', width: virtualPaddingLeft }} />
-                ) : null}
-                {virtualColumns.map((vc) => {
-                  const header = headerGroup.headers[vc.index]
-                  return (
-                    <th
-                      key={header.id}
-                      style={{
-                        display: 'flex',
-                        width: header.getSize(),
-                      }}
-                    >
-                      <div
-                        className={
-                          header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : ''
-                        }
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    </th>
-                  )
-                })}
-                {virtualPaddingRight ? (
-                  // fake empty column to the right for virtualization scroll padding
-                  <th style={{ display: 'flex', width: virtualPaddingRight }} />
-                ) : null}
-              </tr>
-            ))}
-          </thead>
-          <tbody
-            style={{
-              display: 'grid',
-              height: `${rowVirtualizer.getTotalSize()}px`, // tells scrollbar how big the table is
-              position: 'relative', // needed for absolute positioning of rows
-            }}
-          >
-            {virtualRows.map((virtualRow) => {
-              const row = rows[virtualRow.index]
-              const visibleCells = row.getVisibleCells()
-
-              return (
-                <tr
-                  data-index={virtualRow.index} // needed for dynamic row height measurement
-                  ref={(node) => rowVirtualizer.measureElement(node)} // measure dynamic row height
-                  key={row.id}
-                  style={{
-                    display: 'flex',
-                    position: 'absolute',
-                    transform: `translateY(${virtualRow.start}px)`, // this should always be a `style` as it changes on scroll
-                    width: '100%',
-                  }}
-                >
-                  {virtualPaddingLeft ? (
-                    // fake empty column to the left for virtualization scroll padding
-                    <td
-                      style={{ display: 'flex', width: virtualPaddingLeft }}
-                    />
-                  ) : null}
-                  {virtualColumns.map((vc) => {
-                    const cell = visibleCells[vc.index]
-                    return (
-                      <td
-                        key={cell.id}
-                        style={{
-                          display: 'flex',
-                          width: cell.column.getSize(),
-                        }}
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </td>
-                    )
-                  })}
-                  {virtualPaddingRight ? (
-                    // fake empty column to the right for virtualization scroll padding
-                    <td
-                      style={{ display: 'flex', width: virtualPaddingRight }}
-                    />
-                  ) : null}
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-=======
         {...{
           className: header.column.getCanSort()
             ? 'cursor-pointer select-none'
@@ -401,7 +224,6 @@ function TableHeadCell({ header }: TableHeadCellProps) {
           asc: ' 🔼',
           desc: ' 🔽',
         }[header.column.getIsSorted() as string] ?? null}
->>>>>>> origin/main
       </div>
     </th>
   )
@@ -409,8 +231,8 @@ function TableHeadCell({ header }: TableHeadCellProps) {
 
 interface TableBodyProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  table: Table<Person>
-  tableContainerRef: React.RefObject<HTMLDivElement>
+  table: Table<typeof features, Person>
+  tableContainerRef: React.RefObject<HTMLDivElement | null>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
 }
@@ -424,16 +246,16 @@ function TableBody({
 }: TableBodyProps) {
   const { rows } = table.getRowModel()
 
-  //dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
+  // dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
   const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
-    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
-    //measure dynamic row height, except in firefox because it measures table border height incorrectly
+    // measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? element => element?.getBoundingClientRect().height
+        ? (element) => element.getBoundingClientRect().height
         : undefined,
     overscan: 5,
   })
@@ -444,12 +266,12 @@ function TableBody({
     <tbody
       style={{
         display: 'grid',
-        height: `${rowVirtualizer.getTotalSize()}px`, //tells scrollbar how big the table is
-        position: 'relative', //needed for absolute positioning of rows
+        height: `${rowVirtualizer.getTotalSize()}px`, // tells scrollbar how big the table is
+        position: 'relative', // needed for absolute positioning of rows
       }}
     >
-      {virtualRows.map(virtualRow => {
-        const row = rows[virtualRow.index] as Row<Person>
+      {virtualRows.map((virtualRow) => {
+        const row = rows[virtualRow.index]
 
         return (
           <TableBodyRow
@@ -469,7 +291,7 @@ function TableBody({
 
 interface TableBodyRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  row: Row<Person>
+  row: Row<any, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
@@ -488,26 +310,26 @@ function TableBodyRow({
   const virtualColumns = columnVirtualizer.getVirtualItems()
   return (
     <tr
-      data-index={virtualRow.index} //needed for dynamic row height measurement
-      ref={node => rowVirtualizer.measureElement(node)} //measure dynamic row height
+      data-index={virtualRow.index} // needed for dynamic row height measurement
+      ref={(node) => rowVirtualizer.measureElement(node)} // measure dynamic row height
       key={row.id}
       style={{
         display: 'flex',
         position: 'absolute',
-        transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
+        transform: `translateY(${virtualRow.start}px)`, // this should always be a `style` as it changes on scroll
         width: '100%',
       }}
     >
       {virtualPaddingLeft ? (
-        //fake empty column to the left for virtualization scroll padding
+        // fake empty column to the left for virtualization scroll padding
         <td style={{ display: 'flex', width: virtualPaddingLeft }} />
       ) : null}
-      {virtualColumns.map(vc => {
+      {virtualColumns.map((vc) => {
         const cell = visibleCells[vc.index]
         return <TableBodyCell key={cell.id} cell={cell} />
       })}
       {virtualPaddingRight ? (
-        //fake empty column to the right for virtualization scroll padding
+        // fake empty column to the right for virtualization scroll padding
         <td style={{ display: 'flex', width: virtualPaddingRight }} />
       ) : null}
     </tr>
@@ -515,7 +337,7 @@ function TableBodyRow({
 }
 
 interface TableBodyCellProps {
-  cell: Cell<Person, unknown>
+  cell: Cell<any, Person, unknown>
 }
 
 function TableBodyCell({ cell }: TableBodyCellProps) {
