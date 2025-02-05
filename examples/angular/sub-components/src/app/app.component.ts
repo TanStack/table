@@ -91,16 +91,15 @@ const columns: ColumnDef<Person>[] = [
 ]
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    FlexRenderDirective,
-    ReactiveFormsModule,
-    JsonPipe,
-    NgTemplateOutlet,
-  ],
-  templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    imports: [
+        FlexRenderDirective,
+        ReactiveFormsModule,
+        JsonPipe,
+        NgTemplateOutlet,
+    ],
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   readonly data = signal<Person[]>(makeData(10))

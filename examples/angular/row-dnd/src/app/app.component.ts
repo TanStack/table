@@ -59,12 +59,11 @@ const defaultColumns: ColumnDef<Person>[] = [
 ]
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [FlexRenderDirective, CdkDropList, CdkDrag, JsonPipe],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    imports: [FlexRenderDirective, CdkDropList, CdkDrag, JsonPipe],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   readonly data = signal<Person[]>(makeData(20))

@@ -60,11 +60,10 @@ const defaultColumns: ColumnDef<Person>[] = [
 ]
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [FlexRenderDirective, ReactiveFormsModule],
-  templateUrl: './app.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-root',
+    imports: [FlexRenderDirective, ReactiveFormsModule],
+    templateUrl: './app.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
   readonly data = signal<Person[]>(makeData(100, 5, 3))
