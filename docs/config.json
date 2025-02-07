@@ -519,6 +519,10 @@
               "label": "Basic"
             },
             {
+              "to": "framework/react/examples/shadcn-basic",
+              "label": "Shadcn Basic"
+            },
+            {
               "to": "framework/react/examples/basic-table-helper",
               "label": "Basic with Helpers"
             },
