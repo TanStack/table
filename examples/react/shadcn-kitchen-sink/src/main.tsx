@@ -2,18 +2,26 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
 import {
   columnFilteringFeature,
+  columnVisibilityFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
+  createSortedRowModel,
   filterFns,
   flexRender,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
+  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import type { Person } from '@/makeData'
-import type { Column, ColumnDef, Table } from '@tanstack/react-table'
+import type {
+  Column,
+  ColumnDef,
+  SortingState,
+  Table,
+} from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -32,14 +40,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 import { makeData } from '@/makeData'
-
-import './index.css'
+import '@/index.css'
 
 const _features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
+  columnVisibilityFeature,
   columnFilteringFeature,
 })
 
@@ -48,6 +57,8 @@ function App() {
 
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState({})
 
   const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
@@ -56,15 +67,14 @@ function App() {
         header: ({ table }) => (
           <Checkbox
             checked={
-              table.getIsAllRowsSelected()
-                ? true
-                : table.getIsSomeRowsSelected()
-                  ? 'indeterminate'
-                  : false
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && 'indeterminate')
             }
-            onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
             aria-label="Select all"
-            className="translate-y-[2px]"
+            className="translate-y-0.5"
           />
         ),
         cell: ({ row }) => (
@@ -72,9 +82,11 @@ function App() {
             checked={row.getIsSelected()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label="Select row"
-            className="translate-y-[2px]"
+            className="translate-y-0.5"
           />
         ),
+        enableSorting: false,
+        enableHiding: false,
       },
       {
         header: 'Name',
@@ -82,6 +94,9 @@ function App() {
         columns: [
           {
             accessorKey: 'firstName',
+            header: ({ column }) => (
+              <DataTableColumnHeader column={column} title="First Name" />
+            ),
             cell: (info) => info.getValue(),
             footer: (props) => props.column.id,
           },
@@ -89,7 +104,9 @@ function App() {
             accessorFn: (row) => row.lastName,
             id: 'lastName',
             cell: (info) => info.getValue(),
-            header: () => <span>Last Name</span>,
+            header: ({ column }) => (
+              <DataTableColumnHeader column={column} title="Last Name" />
+            ),
             footer: (props) => props.column.id,
           },
         ],
@@ -100,7 +117,9 @@ function App() {
         columns: [
           {
             accessorKey: 'age',
-            header: () => 'Age',
+            header: ({ column }) => (
+              <DataTableColumnHeader column={column} title="Age" />
+            ),
             footer: (props) => props.column.id,
           },
           {
@@ -108,17 +127,26 @@ function App() {
             columns: [
               {
                 accessorKey: 'visits',
-                header: () => <span>Visits</span>,
+                header: ({ column }) => (
+                  <DataTableColumnHeader column={column} title="Visits" />
+                ),
                 footer: (props) => props.column.id,
               },
               {
                 accessorKey: 'status',
-                header: 'Status',
+                header: ({ column }) => (
+                  <DataTableColumnHeader column={column} title="Status" />
+                ),
                 footer: (props) => props.column.id,
               },
               {
                 accessorKey: 'progress',
-                header: 'Profile Progress',
+                header: ({ column }) => (
+                  <DataTableColumnHeader
+                    column={column}
+                    title="Profile Progress"
+                  />
+                ),
                 footer: (props) => props.column.id,
               },
             ],
@@ -137,15 +165,19 @@ function App() {
     _rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel(sortFns),
     },
     columns,
     data,
     state: {
       rowSelection,
+      sorting,
+      columnVisibility,
     },
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
     getRowId: (row) => row.id,
-    enableRowSelection: true, // enable row selection for all rows
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+    enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     debugTable: true,
   })
