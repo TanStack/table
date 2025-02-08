@@ -5,21 +5,29 @@ import {
   signal,
 } from '@angular/core'
 import {
-  ColumnDef,
-  createAngularTable,
-  ExpandedState,
-  flexRenderComponent,
   FlexRenderDirective,
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
+  createExpandedRowModel,
+  createPaginatedRowModel,
+  createTableHelper,
+  flexRenderComponent,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
-import { makeData, type Person } from './makeData'
 import { ReactiveFormsModule } from '@angular/forms'
+import { makeData } from './makeData'
 import { ExpandableCell, ExpandableHeaderCell } from './expandable-cell'
+import type { Person } from './makeData'
+import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
-const defaultColumns: ColumnDef<Person>[] = [
+const _features = tableFeatures({
+  rowExpandingFeature: rowExpandingFeature,
+  rowPaginationFeature: rowPaginationFeature,
+  rowSelectionFeature: rowSelectionFeature,
+})
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',
     header: () =>
@@ -66,10 +74,18 @@ const defaultColumns: ColumnDef<Person>[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  readonly data = signal<Person[]>(makeData(100, 5, 3))
+  readonly data = signal<Array<Person>>(makeData(100, 5, 3))
   readonly expanded = signal<ExpandedState>({})
 
-  readonly table = createAngularTable(() => ({
+  readonly tableHelper = createTableHelper({
+    _features,
+    _rowModels: {
+      paginatedRowModel: createPaginatedRowModel(),
+      expandedRowModel: createExpandedRowModel(),
+    },
+  })
+
+  readonly table = this.tableHelper.injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
     state: {
@@ -80,10 +96,6 @@ export class AppComponent {
         ? this.expanded.update(updater)
         : this.expanded.set(updater),
     getSubRows: (row) => row.subRows,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
     // filterFromLeafRows: true,
     // maxLeafRowFilterDepth: 0,
     debugTable: true,

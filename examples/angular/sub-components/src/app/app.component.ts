@@ -1,26 +1,30 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import {
-  ColumnDef,
-  createAngularTable,
-  ExpandedState,
-  flexRenderComponent,
   FlexRenderDirective,
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
+  columnVisibilityFeature,
+  createExpandedRowModel,
+  createTableHelper,
+  flexRenderComponent,
+  rowExpandingFeature,
 } from '@tanstack/angular-table'
-import { makeData, type Person } from './makeData'
 import { ReactiveFormsModule } from '@angular/forms'
-import { ExpandableCell, ExpanderCell } from './expandable-cell'
 import { JsonPipe, NgTemplateOutlet } from '@angular/common'
+import {  makeData } from './makeData'
+import { ExpandableCell, ExpanderCell } from './expandable-cell'
+import type {Person} from './makeData';
+import type {
+  ColumnDef,
+  ExpandedState,
+} from '@tanstack/angular-table'
 
-const columns: ColumnDef<Person>[] = [
+const columns: Array<ColumnDef<{
+  rowExpandingFeature: typeof rowExpandingFeature,
+  columnVisibilityFeature: typeof columnVisibilityFeature
+}, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -102,10 +106,20 @@ const columns: ColumnDef<Person>[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  readonly data = signal<Person[]>(makeData(10))
-  readonly expanded = signal<ExpandedState>({})
+  readonly data = signal<Array<Person>>(makeData(10))
+  readonly expanded = signal<ExpandedState>({});
 
-  readonly table = createAngularTable(() => ({
+  tableHelper = createTableHelper({
+    _features: {
+      rowExpandingFeature: rowExpandingFeature,
+      columnVisibilityFeature: columnVisibilityFeature
+    },
+    _rowModels: {
+      expandedRowModel: createExpandedRowModel(),
+    },
+  })
+
+  readonly table = this.tableHelper.injectTable(() => ({
     data: this.data(),
     columns,
     state: {
@@ -116,7 +130,5 @@ export class AppComponent {
         ? this.expanded.update(updater)
         : this.expanded.set(updater),
     getRowCanExpand: () => true,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel: getExpandedRowModel(),
   }))
 }

@@ -5,25 +5,32 @@ import {
   signal,
 } from '@angular/core'
 import {
-  ColumnDef,
-  createAngularTable,
-  flexRenderComponent,
   FlexRenderDirective,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createPaginatedRowModel,
+  createTableHelper,
+  flexRenderComponent,
+  rowPaginationFeature,
 } from '@tanstack/angular-table'
-import { DragHandleCell } from './drag-handle-cell'
-import { makeData, type Person } from './makeData'
-import {
-  CdkDrag,
-  type CdkDragDrop,
-  CdkDropList,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop'
+import { CdkDrag, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop'
 import { JsonPipe } from '@angular/common'
+import { DragHandleCell } from './drag-handle-cell'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { CdkDragDrop } from '@angular/cdk/drag-drop'
+import type { ColumnDef } from '@tanstack/angular-table'
 
-const defaultColumns: ColumnDef<Person>[] = [
+const defaultColumns: Array<
+  ColumnDef<
+    {
+      rowPaginationFeature: typeof rowPaginationFeature
+      columnSizingFeature: typeof columnSizingFeature,
+      columnVisibilityFeature: typeof columnVisibilityFeature,
+    },
+    Person
+  >
+> = [
   {
     id: 'drag-handle',
     header: 'Move',
@@ -66,25 +73,33 @@ const defaultColumns: ColumnDef<Person>[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  readonly data = signal<Person[]>(makeData(20))
+  readonly data = signal<Array<Person>>(makeData(20))
 
-  readonly table = createAngularTable(() => {
+  readonly tableHelper = createTableHelper({
+    _features: {
+      rowPaginationFeature,
+      columnSizingFeature,
+      columnVisibilityFeature
+    },
+    _rowModels: {
+      paginatedRowModel: createPaginatedRowModel(),
+    },
+  })
+
+  readonly table = this.tableHelper.injectTable(() => {
     return {
       data: this.data(),
       columns: defaultColumns,
-      getRowId: (row) => row.userId, //required because row indexes will change
+      getRowId: (row) => row.userId,
       debugTable: true,
       debugHeaders: true,
       debugColumns: true,
-      getCoreRowModel: getCoreRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getPaginationRowModel: getPaginationRowModel(),
     }
   })
 
   readonly sortedIds = computed(() => this.data().map((data) => data.userId))
 
-  drop(event: CdkDragDrop<Person[]>) {
+  drop(event: CdkDragDrop<Array<Person>>) {
     const data = [...this.data()]
     moveItemInArray(data, event.previousIndex, event.currentIndex)
     this.data.set(data)
