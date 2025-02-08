@@ -32,7 +32,7 @@ export class ExpandableHeaderCell<T extends RowData> {
   readonly context = injectFlexRenderContext<
     HeaderContext<
       {
-        rowExpandingFeature: typeof rowExpandingFeature,
+        rowExpandingFeature: typeof rowExpandingFeature
         rowSelectionFeature: typeof rowSelectionFeature
       },
       T,
@@ -43,7 +43,7 @@ export class ExpandableHeaderCell<T extends RowData> {
   readonly label = input.required<string>()
 
   get table() {
-    return this.context.table;
+    return this.context.table
   }
 }
 
@@ -83,10 +83,16 @@ export class ExpandableHeaderCell<T extends RowData> {
   `,
 })
 export class ExpandableCell<T extends RowData> {
-  readonly context = injectFlexRenderContext<CellContext<{
-    rowExpandingFeature: typeof rowExpandingFeature,
-    rowSelectionFeature: typeof rowSelectionFeature
-  }, T, unknown>>()
+  readonly context = injectFlexRenderContext<
+    CellContext<
+      {
+        rowExpandingFeature: typeof rowExpandingFeature
+        rowSelectionFeature: typeof rowSelectionFeature
+      },
+      T,
+      unknown
+    >
+  >()
 
   get row() {
     return this.context.row
