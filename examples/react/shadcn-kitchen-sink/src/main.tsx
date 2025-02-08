@@ -1,5 +1,5 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom/client'
 import {
   columnFilteringFeature,
   createFilteredRowModel,
@@ -8,16 +8,36 @@ import {
   flexRender,
   rowPaginationFeature,
   rowSelectionFeature,
+  rowSortingFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import { makeData } from './makeData'
-import type { HTMLProps } from 'react'
-import type { Person } from './makeData'
+import type { Person } from '@/makeData'
 import type { Column, ColumnDef, Table } from '@tanstack/react-table'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Table as ShadcnTable,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { makeData } from '@/makeData'
+
 import './index.css'
 
 const _features = tableFeatures({
+  rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   columnFilteringFeature,
@@ -34,21 +54,26 @@ function App() {
       {
         id: 'select',
         header: ({ table }) => (
-          <IndeterminateCheckbox
-            checked={table.getIsAllRowsSelected()}
-            indeterminate={table.getIsSomeRowsSelected()}
-            onChange={table.getToggleAllRowsSelectedHandler()}
+          <Checkbox
+            checked={
+              table.getIsAllRowsSelected()
+                ? true
+                : table.getIsSomeRowsSelected()
+                  ? 'indeterminate'
+                  : false
+            }
+            onCheckedChange={(value) => table.toggleAllRowsSelected(!!value)}
+            aria-label="Select all"
+            className="translate-y-[2px]"
           />
         ),
         cell: ({ row }) => (
-          <div className="px-1">
-            <IndeterminateCheckbox
-              checked={row.getIsSelected()}
-              disabled={!row.getCanSelect()}
-              indeterminate={row.getIsSomeSelected()}
-              onChange={row.getToggleSelectedHandler()}
-            />
-          </div>
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+            className="translate-y-[2px]"
+          />
         ),
       },
       {
@@ -126,240 +151,193 @@ function App() {
   })
 
   return (
-    <div className="p-2">
-      <div>
-        <input
+    <div className="p-4 max-w-7xl mx-auto flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <Input
           value={globalFilter ?? ''}
           onChange={(e) => setGlobalFilter(e.target.value)}
-          className="p-2 font-lg shadow border border-block"
+          className="max-w-sm"
           placeholder="Search all columns..."
         />
+        <Button variant="outline" onClick={() => refreshData()}>
+          Refresh Data
+        </Button>
       </div>
-      <div className="h-2" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {header.column.getCanFilter() ? (
-                          <div>
-                            <Filter column={header.column} table={table} />
-                          </div>
-                        ) : null}
-                      </>
-                    )}
-                  </th>
-                )
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr key={row.id}>
-                {row.getAllCells().map((cell) => {
+      <div className="rounded-md border">
+        <ShadcnTable>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
                   return (
-                    <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
+                    <TableHead key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <div>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                          {header.column.getCanFilter() ? (
+                            <div className="mt-2">
+                              <Filter column={header.column} table={table} />
+                            </div>
+                          ) : null}
+                        </div>
                       )}
-                    </td>
+                    </TableHead>
                   )
                 })}
-              </tr>
-            )
-          })}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td className="p-1">
-              <IndeterminateCheckbox
-                checked={table.getIsAllPageRowsSelected()}
-                indeterminate={table.getIsSomePageRowsSelected()}
-                onChange={table.getToggleAllPageRowsSelectedHandler()}
-              />
-            </td>
-            <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
-          </tr>
-        </tfoot>
-      </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
-        <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<<'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>>'}
-        </button>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
-          </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
-            type="number"
-            min="1"
-            max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              table.setPageIndex(page)
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <TableRow key={row.id}>
+                  {row.getAllCells().map((cell) => {
+                    return (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </ShadcnTable>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<<'}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<'}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            {'>'}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+          >
+            {'>>'}
+          </Button>
+          <span className="flex items-center gap-1">
+            <div>Page</div>
+            <strong>
+              {table.getState().pagination.pageIndex + 1} of{' '}
+              {table.getPageCount()}
+            </strong>
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-medium">Rows per page</p>
+          <Select
+            value={table.getState().pagination.pageSize.toString()}
+            onValueChange={(value) => {
+              table.setPageSize(Number(value))
             }}
-            className="border p-1 rounded w-16"
-          />
-        </span>
-        <select
-          value={table.getState().pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue placeholder={table.getState().pagination.pageSize} />
+            </SelectTrigger>
+            <SelectContent side="top">
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <SelectItem key={pageSize} value={pageSize.toString()}>
+                  {pageSize}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
-      <br />
-      <div>
-        {Object.keys(rowSelection).length} of{' '}
-        {table.getPreFilteredRowModel().rows.length} Total Rows Selected
-      </div>
-      <hr />
-      <br />
-      <div>
-        <button className="border rounded p-2 mb-2" onClick={() => rerender()}>
-          Force Rerender
-        </button>
-      </div>
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
-          onClick={() => refreshData()}
-        >
-          Refresh Data
-        </button>
-      </div>
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
-          onClick={() =>
-            console.info(
-              'table.getSelectedRowModel().flatRows',
-              table.getSelectedRowModel().flatRows,
-            )
-          }
-        >
-          Log table.getSelectedRowModel().flatRows
-        </button>
-      </div>
-      <div>
-        <label>Row Selection State:</label>
-        <pre>{JSON.stringify(table.getState().rowSelection, null, 2)}</pre>
+      <div className="rounded-md border p-4 flex flex-col gap-4">
+        <div>
+          {Object.keys(rowSelection).length} of{' '}
+          {table.getPreFilteredRowModel().rows.length} Total Rows Selected
+        </div>
+        <div className="flex space-x-2">
+          <Button variant="outline" size="sm" onClick={() => rerender()}>
+            Force Rerender
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              console.info(
+                'table.getSelectedRowModel().flatRows',
+                table.getSelectedRowModel().flatRows,
+              )
+            }
+          >
+            Log Selected Rows
+          </Button>
+        </div>
       </div>
     </div>
   )
 }
-
-function Filter({
-  column,
-  table,
-}: {
+interface FilterProps {
   column: Column<typeof _features, Person>
   table: Table<typeof _features, Person>
-}) {
+}
+
+function Filter({ column, table }: FilterProps) {
   const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
-      <input
+      <Input
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
         onChange={(e) =>
           column.setFilterValue((old: any) => [e.target.value, old?.[1]])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="h-8 w-20"
       />
-      <input
+      <Input
         type="number"
         value={((column.getFilterValue() as any)?.[1] ?? '') as string}
         onChange={(e) =>
           column.setFilterValue((old: any) => [old?.[0], e.target.value])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="h-8 w-20"
       />
     </div>
   ) : (
-    <input
+    <Input
       type="text"
       value={(column.getFilterValue() ?? '') as string}
       onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
-    />
-  )
-}
-
-function IndeterminateCheckbox({
-  indeterminate,
-  className = '',
-  ...rest
-}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-  const ref = React.useRef<HTMLInputElement>(null!)
-
-  React.useEffect(() => {
-    if (typeof indeterminate === 'boolean') {
-      ref.current.indeterminate = !rest.checked && indeterminate
-    }
-  }, [ref, indeterminate])
-
-  return (
-    <input
-      type="checkbox"
-      ref={ref}
-      className={className + ' cursor-pointer'}
-      {...rest}
+      className="h-8 max-w-sm"
     />
   )
 }
