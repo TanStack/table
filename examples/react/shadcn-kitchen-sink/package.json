@@ -7,9 +7,13 @@
     "build": "vite build",
     "serve": "vite preview",
     "start": "vite",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "shadcn": "pnpm dlx shadcn@latest"
   },
   "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-slot": "^1.1.2",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
