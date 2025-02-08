@@ -36,10 +36,6 @@ export function DataTableViewOptions<
     React.useRef<React.PointerEvent['pointerType']>('touch')
   const [open, setOpen] = React.useState(false)
 
-  const columns = table.getAllColumns()
-
-  console.log({ columns })
-
   return (
     <Popover open={open} onOpenChange={setOpen} modal>
       <PopoverTrigger asChild>
@@ -56,6 +52,9 @@ export function DataTableViewOptions<
               setOpen(true)
             }
           }}
+          /**
+           * @see https://github.com/radix-ui/primitives/blob/main/packages/react/select/src/select.tsx#L267-L299
+           */
           onPointerDown={(event) => {
             pointerTypeRef.current = event.pointerType
 
