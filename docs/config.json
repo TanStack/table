@@ -458,6 +458,10 @@
             {
               "to": "framework/angular/examples/column-resizing-performant",
               "label": "Performant Column Resizing"
+            },
+            {
+              "to": "framework/angular/examples/remote-data",
+              "label": "Remote data (optional SSR)"
             }
           ]
         },
