@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, HTMLProps } from 'react'
+import React, { HTMLProps } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
@@ -348,7 +348,7 @@ function IndeterminateCheckbox({
     if (typeof indeterminate === 'boolean') {
       ref.current.indeterminate = !rest.checked && indeterminate
     }
-  }, [ref, indeterminate])
+  }, [indeterminate])
 
   return (
     <input
