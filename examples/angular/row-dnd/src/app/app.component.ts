@@ -25,8 +25,8 @@ const defaultColumns: Array<
   ColumnDef<
     {
       rowPaginationFeature: typeof rowPaginationFeature
-      columnSizingFeature: typeof columnSizingFeature,
-      columnVisibilityFeature: typeof columnVisibilityFeature,
+      columnSizingFeature: typeof columnSizingFeature
+      columnVisibilityFeature: typeof columnVisibilityFeature
     },
     Person
   >
@@ -79,7 +79,7 @@ export class AppComponent {
     _features: {
       rowPaginationFeature,
       columnSizingFeature,
-      columnVisibilityFeature
+      columnVisibilityFeature,
     },
     _rowModels: {
       paginatedRowModel: createPaginatedRowModel(),

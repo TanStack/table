@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
   FlexRenderDirective,
   columnVisibilityFeature,
@@ -13,18 +9,20 @@ import {
 } from '@tanstack/angular-table'
 import { ReactiveFormsModule } from '@angular/forms'
 import { JsonPipe, NgTemplateOutlet } from '@angular/common'
-import {  makeData } from './makeData'
+import { makeData } from './makeData'
 import { ExpandableCell, ExpanderCell } from './expandable-cell'
-import type {Person} from './makeData';
-import type {
-  ColumnDef,
-  ExpandedState,
-} from '@tanstack/angular-table'
+import type { Person } from './makeData'
+import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
-const columns: Array<ColumnDef<{
-  rowExpandingFeature: typeof rowExpandingFeature,
-  columnVisibilityFeature: typeof columnVisibilityFeature
-}, Person>> = [
+const columns: Array<
+  ColumnDef<
+    {
+      rowExpandingFeature: typeof rowExpandingFeature
+      columnVisibilityFeature: typeof columnVisibilityFeature
+    },
+    Person
+  >
+> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -107,12 +105,12 @@ const columns: Array<ColumnDef<{
 })
 export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(10))
-  readonly expanded = signal<ExpandedState>({});
+  readonly expanded = signal<ExpandedState>({})
 
   tableHelper = createTableHelper({
     _features: {
       rowExpandingFeature: rowExpandingFeature,
-      columnVisibilityFeature: columnVisibilityFeature
+      columnVisibilityFeature: columnVisibilityFeature,
     },
     _rowModels: {
       expandedRowModel: createExpandedRowModel(),
