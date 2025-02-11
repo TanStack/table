@@ -6,15 +6,23 @@ import {
   untracked,
 } from '@angular/core'
 import {
-  ColumnDef,
-  createAngularTable,
   FlexRenderDirective,
-  getCoreRowModel,
+  columnResizingFeature,
+  columnSizingFeature,
+  injectTable,
+  tableFeatures,
 } from '@tanstack/angular-table'
-import { makeData, type Person } from './makeData'
+import { makeData } from './makeData'
 import { TableResizableCell, TableResizableHeader } from './resizable-cell'
+import type { Person } from './makeData'
+import type { ColumnDef, ColumnResizeMode } from '@tanstack/angular-table'
 
-const defaultColumns: ColumnDef<Person>[] = [
+const _features = tableFeatures({
+  columnSizingFeature,
+  columnResizingFeature,
+})
+
+const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -68,11 +76,8 @@ const defaultColumns: ColumnDef<Person>[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  readonly data = signal<Person[]>(makeData(200))
+  readonly data = signal<Array<Person>>(makeData(200))
 
-  readonly columnSizingInfo = computed(
-    () => this.table.getState().columnSizingInfo,
-  )
   readonly columnSizing = computed(() => this.table.getState().columnSizing)
 
   /**
@@ -83,23 +88,22 @@ export class AppComponent {
    */
   readonly columnSizeVars = computed(() => {
     void this.columnSizing()
-    void this.columnSizingInfo()
     const headers = untracked(() => this.table.getFlatHeaders())
     const colSizes: { [key: string]: number } = {}
     let i = headers.length
     while (--i >= 0) {
-      const header = headers[i]!
+      const header = headers[i]
       colSizes[`--header-${header.id}-size`] = header.getSize()
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
   })
 
-  readonly table = createAngularTable(() => ({
+  readonly table = injectTable(() => ({
     data: this.data(),
+    _features,
     columns: defaultColumns,
-    columnResizeMode: 'onChange',
-    getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: 'onChange' as ColumnResizeMode,
     defaultColumn: {
       minSize: 60,
       maxSize: 800,

@@ -9,6 +9,7 @@ import {
   injectFlexRenderContext,
   type Table,
   CellContext,
+  RowData,
 } from '@tanstack/angular-table'
 
 @Component({
@@ -20,7 +21,7 @@ import {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpanderCell<T> {
+export class ExpanderCell {
   readonly expanded = input.required<boolean>()
 
   readonly click = output<MouseEvent>()
@@ -42,8 +43,8 @@ export class ExpanderCell<T> {
     }
   `,
 })
-export class ExpandableCell<T> {
-  readonly context = injectFlexRenderContext<CellContext<T, unknown>>()
+export class ExpandableCell<T extends RowData> {
+  readonly context = injectFlexRenderContext<CellContext<{}, T, unknown>>()
 
   get row() {
     return this.context.row

@@ -4,6 +4,9 @@ import {
   injectFlexRenderContext,
   type Table,
   CellContext,
+  rowExpandingFeature,
+  RowData,
+  rowSelectionFeature,
 } from '@tanstack/angular-table'
 
 @Component({
@@ -25,13 +28,22 @@ import {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpandableHeaderCell<T> {
-  readonly context = injectFlexRenderContext<HeaderContext<T, unknown>>()
+export class ExpandableHeaderCell<T extends RowData> {
+  readonly context = injectFlexRenderContext<
+    HeaderContext<
+      {
+        rowExpandingFeature: typeof rowExpandingFeature
+        rowSelectionFeature: typeof rowSelectionFeature
+      },
+      T,
+      unknown
+    >
+  >()
 
   readonly label = input.required<string>()
 
   get table() {
-    return this.context.table as Table<T>
+    return this.context.table
   }
 }
 
@@ -70,8 +82,17 @@ export class ExpandableHeaderCell<T> {
     }
   `,
 })
-export class ExpandableCell<T> {
-  readonly context = injectFlexRenderContext<CellContext<T, unknown>>()
+export class ExpandableCell<T extends RowData> {
+  readonly context = injectFlexRenderContext<
+    CellContext<
+      {
+        rowExpandingFeature: typeof rowExpandingFeature
+        rowSelectionFeature: typeof rowSelectionFeature
+      },
+      T,
+      unknown
+    >
+  >()
 
   get row() {
     return this.context.row
