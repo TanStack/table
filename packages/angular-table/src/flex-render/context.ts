@@ -1,4 +1,4 @@
-import { inject, InjectionToken } from '@angular/core'
+import { InjectionToken, inject } from '@angular/core'
 
 export const FlexRenderComponentProps = new InjectionToken<
   NonNullable<unknown>
