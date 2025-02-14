@@ -73,7 +73,7 @@ export function proxifyTable<
 export function toComputed<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(signal: Signal<Table<TFeatures, TData>>, fn: Function, debugName?: string) {
+>(signal: Signal<Table<TFeatures, TData>>, fn: Function, debugName: string) {
   const hasArgs = fn.length > 0
   if (!hasArgs) {
     return computed(
@@ -87,8 +87,7 @@ export function toComputed<
 
   const computedCache: Record<string, Signal<unknown>> = {}
 
-  // Declare at least a static argument in order to detect fns `length` > 0
-  return (arg0: any, ...otherArgs: Array<any>) => {
+  const computedFn = (arg0: any, ...otherArgs: Array<any>) => {
     const argsArray = [arg0, ...otherArgs]
     const serializedArgs = serializeArgs(...argsArray)
     if (computedCache.hasOwnProperty(serializedArgs)) {
@@ -106,6 +105,9 @@ export function toComputed<
 
     return computedSignal()
   }
+  Object.defineProperty(computedFn, 'name', { value: debugName, writable: false });
+
+  return computedFn
 }
 
 function serializeArgs(...args: Array<any>) {
@@ -143,7 +145,7 @@ function getDefaultProxyHandler<
           | never
         if (typeof maybeFn === 'function') {
           Object.defineProperty(target, property, {
-            value: toComputed(tableSignal, maybeFn),
+            value: toComputed(tableSignal, maybeFn, maybeFn.name),
             configurable: true,
             enumerable: true,
           })

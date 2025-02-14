@@ -22,6 +22,10 @@ declare module '@tanstack/table-core' {
 
 interface TableOptions_AngularReactivity {
   enableExperimentalReactivity?: boolean
+  enableCellAutoReactivity?: boolean
+  enableRowAutoReactivity?: boolean
+  enableColumnAutoReactivity?: boolean
+  enableHeaderAutoReactivity?: boolean
 }
 
 interface Table_AngularReactivity<
@@ -46,7 +50,13 @@ export function constructAngularReactivityFeature<
 >(): TableFeature<AngularReactivityFeatureConstructors<TFeatures, TData>> {
   return {
     getDefaultTableOptions(table) {
-      return { enableExperimentalReactivity: false }
+      return {
+        enableExperimentalReactivity: false,
+        enableHeaderAutoReactivity: true,
+        enableColumnAutoReactivity: true,
+        enableRowAutoReactivity: true,
+        enableCellAutoReactivity: false,
+      }
     },
     constructTableAPIs: (table) => {
       if (!table.options.enableExperimentalReactivity) {
@@ -69,11 +79,12 @@ export function constructAngularReactivityFeature<
 
     constructCellAPIs(cell) {
       if (
-        !cell._table.options.enableExperimentalReactivity ||
+        !cell._table.options.enableCellAutoReactivity ||
         !cell._table._rootNotifier
       ) {
         return
       }
+
       setReactiveProps(cell._table._rootNotifier, cell, {
         skipProperty: skipBaseProperties,
       })
@@ -81,7 +92,7 @@ export function constructAngularReactivityFeature<
 
     constructColumnAPIs(column) {
       if (
-        !column._table.options.enableExperimentalReactivity ||
+        !column._table.options.enableColumnAutoReactivity ||
         !column._table._rootNotifier
       ) {
         return
@@ -93,7 +104,7 @@ export function constructAngularReactivityFeature<
 
     constructHeaderAPIs(header) {
       if (
-        !header._table.options.enableExperimentalReactivity ||
+        !header._table.options.enableHeaderAutoReactivity ||
         !header._table._rootNotifier
       ) {
         return
@@ -105,7 +116,7 @@ export function constructAngularReactivityFeature<
 
     constructRowAPIs(row) {
       if (
-        !row._table.options.enableExperimentalReactivity ||
+        !row._table.options.enableRowAutoReactivity ||
         !row._table._rootNotifier
       ) {
         return
@@ -144,5 +155,28 @@ export function setReactiveProps(
       configurable: false,
       value: toComputed(notifier, value, property),
     })
+    // return;
+    //
+    // let _computed: any
+    // Object.defineProperty(obj, property, {
+    //   enumerable: true,
+    //   configurable: true,
+    //   get(): any {
+    //     if (_computed) {
+    //       Object.defineProperty(this, property, {
+    //         value: _computed,
+    //         writable: false, // Make it immutable (optional)
+    //         configurable: false,
+    //       })
+    //       return _computed
+    //     }
+    //     _computed = toComputed(notifier, value, property)
+    //     Object.defineProperty(this, property, {
+    //       value: _computed,
+    //       configurable: false,
+    //     })
+    //     return _computed
+    //   },
+    // })
   }
 }

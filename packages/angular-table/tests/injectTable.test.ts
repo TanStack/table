@@ -154,6 +154,10 @@ describe('injectTable - Experimental reactivity', () => {
     columns: columns,
     getRowId: (row) => row.id,
     enableExperimentalReactivity: true,
+    enableColumnAutoReactivity: true,
+    enableCellAutoReactivity: true,
+    enableRowAutoReactivity: true,
+    enableHeaderAutoReactivity: true
   }))
   const tablePropertyKeys = Object.keys(table)
 
