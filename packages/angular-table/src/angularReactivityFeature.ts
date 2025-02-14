@@ -1,6 +1,5 @@
-import { computed, signal } from '@angular/core'
-import { toComputed } from './proxy'
-import type { Signal } from '@angular/core'
+import { computed, isSignal, type Signal, signal } from '@angular/core'
+import { defineLazyComputedProperty } from './proxy'
 import type {
   RowData,
   Table,
@@ -20,20 +19,25 @@ declare module '@tanstack/table-core' {
   > extends Table_AngularReactivity<TFeatures, TData> {}
 }
 
+export interface AngularReactivityFlags {
+  header: boolean
+  column: boolean
+  row: boolean
+  cell: boolean
+  table: boolean
+}
+
 interface TableOptions_AngularReactivity {
-  enableExperimentalReactivity?: boolean
-  enableCellAutoReactivity?: boolean
-  enableRowAutoReactivity?: boolean
-  enableColumnAutoReactivity?: boolean
-  enableHeaderAutoReactivity?: boolean
+  reactivity?: Partial<AngularReactivityFlags>
 }
 
 interface Table_AngularReactivity<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  _rootNotifier?: Signal<Table<TFeatures, TData>>
-  _setRootNotifier?: (signal: Signal<Table<TFeatures, TData>>) => void
+  get: Signal<Table<TFeatures, TData>>
+  _rootNotifier: Signal<Table<TFeatures, TData>>
+  _setRootNotifier: (signal: Signal<Table<TFeatures, TData>>) => void
 }
 
 interface AngularReactivityFeatureConstructors<
@@ -51,17 +55,16 @@ export function constructAngularReactivityFeature<
   return {
     getDefaultTableOptions(table) {
       return {
-        enableExperimentalReactivity: false,
-        enableHeaderAutoReactivity: true,
-        enableColumnAutoReactivity: true,
-        enableRowAutoReactivity: true,
-        enableCellAutoReactivity: false,
+        reactivity: {
+          header: true,
+          column: true,
+          row: true,
+          cell: true,
+          table: true,
+        },
       }
     },
     constructTableAPIs: (table) => {
-      if (!table.options.enableExperimentalReactivity) {
-        return
-      }
       const rootNotifier = signal<Signal<any> | null>(null)
 
       table._rootNotifier = computed(() => rootNotifier()?.(), {
@@ -72,29 +75,26 @@ export function constructAngularReactivityFeature<
         rootNotifier.set(notifier)
       }
 
-      setReactiveProps(table._rootNotifier!, table, {
+      table.get = computed(() => rootNotifier()?.(), {
+        equal: () => false,
+      }) as any
+
+      setReactiveProps(table._rootNotifier, table, {
         skipProperty: skipBaseProperties,
       })
     },
 
     constructCellAPIs(cell) {
-      if (
-        !cell._table.options.enableCellAutoReactivity ||
-        !cell._table._rootNotifier
-      ) {
+      if (cell._table.options.reactivity?.cell === false) {
         return
       }
-
       setReactiveProps(cell._table._rootNotifier, cell, {
         skipProperty: skipBaseProperties,
       })
     },
 
     constructColumnAPIs(column) {
-      if (
-        !column._table.options.enableColumnAutoReactivity ||
-        !column._table._rootNotifier
-      ) {
+      if (column._table.options.reactivity?.column === false) {
         return
       }
       setReactiveProps(column._table._rootNotifier, column, {
@@ -103,10 +103,7 @@ export function constructAngularReactivityFeature<
     },
 
     constructHeaderAPIs(header) {
-      if (
-        !header._table.options.enableHeaderAutoReactivity ||
-        !header._table._rootNotifier
-      ) {
+      if (header._table.options.reactivity?.header === false) {
         return
       }
       setReactiveProps(header._table._rootNotifier, header, {
@@ -115,10 +112,7 @@ export function constructAngularReactivityFeature<
     },
 
     constructRowAPIs(row) {
-      if (
-        !row._table.options.enableRowAutoReactivity ||
-        !row._table._rootNotifier
-      ) {
+      if (row._table.options.reactivity?.row === false) {
         return
       }
       setReactiveProps(row._table._rootNotifier, row, {
@@ -131,7 +125,23 @@ export function constructAngularReactivityFeature<
 export const angularReactivityFeature = constructAngularReactivityFeature()
 
 function skipBaseProperties(property: string): boolean {
-  return property.endsWith('Handler') || !property.startsWith('get')
+  return (
+    // equal `getContext`
+    property === 'getContext' ||
+    // start with `_`
+    property[0] === '_' ||
+    // start with `get`
+    !(property[0] === 'g' && property[1] === 'e' && property[2] === 't') ||
+    // ends with `Handler`
+    (property.length >= 7 &&
+      property[property.length - 7] === 'H' &&
+      property[property.length - 6] === 'a' &&
+      property[property.length - 5] === 'n' &&
+      property[property.length - 4] === 'd' &&
+      property[property.length - 3] === 'l' &&
+      property[property.length - 2] === 'e' &&
+      property[property.length - 1] === 'r')
+  )
 }
 
 export function setReactiveProps(
@@ -144,39 +154,17 @@ export function setReactiveProps(
   const { skipProperty } = options
   for (const property in obj) {
     const value = obj[property]
-    if (typeof value !== 'function') {
+    if (
+      isSignal(value) ||
+      typeof value !== 'function' ||
+      skipProperty(property)
+    ) {
       continue
     }
-    if (skipProperty(property)) {
-      continue
-    }
-    Object.defineProperty(obj, property, {
-      enumerable: true,
-      configurable: false,
-      value: toComputed(notifier, value, property),
+    defineLazyComputedProperty(notifier, {
+      valueFn: value,
+      property,
+      originalObject: obj,
     })
-    // return;
-    //
-    // let _computed: any
-    // Object.defineProperty(obj, property, {
-    //   enumerable: true,
-    //   configurable: true,
-    //   get(): any {
-    //     if (_computed) {
-    //       Object.defineProperty(this, property, {
-    //         value: _computed,
-    //         writable: false, // Make it immutable (optional)
-    //         configurable: false,
-    //       })
-    //       return _computed
-    //     }
-    //     _computed = toComputed(notifier, value, property)
-    //     Object.defineProperty(this, property, {
-    //       value: _computed,
-    //       configurable: false,
-    //     })
-    //     return _computed
-    //   },
-    // })
   }
 }

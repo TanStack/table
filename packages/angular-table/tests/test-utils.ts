@@ -1,4 +1,4 @@
-import { SIGNAL, signalSetFn } from '@angular/core/primitives/signals'
+import { SIGNAL } from '@angular/core/primitives/signals'
 import type { InputSignal } from '@angular/core'
 import type { ComponentFixture } from '@angular/core/testing'
 
@@ -48,41 +48,22 @@ export async function flushQueue() {
   await new Promise(setImmediate)
 }
 
-export const experimentalReactivity_testShouldBeComputedProperty = (
+const staticComputedProperties = ['_rootNotifier', 'get']
+export const testShouldBeComputedProperty = (
   testObj: any,
   propertyName: string,
 ) => {
-  if (propertyName.startsWith('_rootNotifier')) {
+  if (staticComputedProperties.some((prop) => propertyName === prop)) {
     return true
   }
   if (propertyName.endsWith('Handler')) {
     return false
   }
-
   if (propertyName.startsWith('get')) {
     // Only properties with no arguments are computed
     const fn = testObj[propertyName]
     // Cannot test if is lazy computed since we return the unwrapped value
     return fn instanceof Function && fn.length === 0
   }
-
-  return false
-}
-
-export const testShouldBeComputedProperty = (
-  testObj: any,
-  propertyName: string,
-) => {
-  if (propertyName.endsWith('Handler')) {
-    return false
-  }
-
-  if (propertyName.startsWith('get')) {
-    // Only properties with no arguments are computed
-    const fn = testObj[propertyName]
-    // Cannot test if is lazy computed since we return the unwrapped value
-    return fn instanceof Function && fn.length === 0
-  }
-
   return false
 }

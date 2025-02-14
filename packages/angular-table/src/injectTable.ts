@@ -1,13 +1,4 @@
 import { computed, signal } from '@angular/core'
-import {
-  constructTable,
-  coreFeatures,
-  getInitialTableState,
-  isFunction,
-} from '@tanstack/table-core'
-import { lazyInit } from './lazy-signal-initializer'
-import { proxifyTable } from './proxy'
-import { angularReactivityFeature } from './angularReactivityFeature'
 import type {
   RowData,
   Table,
@@ -15,14 +6,19 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { Signal } from '@angular/core'
+import {
+  constructTable,
+  coreFeatures,
+  getInitialTableState,
+  isFunction,
+} from '@tanstack/table-core'
+import { lazyInit } from './lazy-signal-initializer'
+import { angularReactivityFeature } from './angularReactivityFeature'
 
 export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  options: () => TableOptions<TFeatures, TData>,
-): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
+>(options: () => TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
   return lazyInit(() => {
     const features = () => {
       return {
@@ -78,9 +74,9 @@ export function injectTable<
       },
     )
 
-    table._setRootNotifier?.(tableSignal as any)
+    table._setRootNotifier(tableSignal as any)
 
     // proxify Table instance to provide ability for consumer to listen to any table state changes
-    return proxifyTable(tableSignal)
+    return table as any
   })
 }
