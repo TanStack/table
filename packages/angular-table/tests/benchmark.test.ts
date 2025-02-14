@@ -35,7 +35,7 @@ describe('Reactivity benchmark', () => {
         enableColumnAutoReactivity: true,
         enableHeaderAutoReactivity: true,
         debugAll: true,
-        debugTable: true
+        debugTable: true,
       }))
 
       await setTimeout(0)
@@ -44,9 +44,9 @@ describe('Reactivity benchmark', () => {
 
       const elapsed = Math.round((t1 - t0) * 100) / 100
 
-      table.getCoreRowModel();
+      table.getCoreRowModel()
 
-      console.log(elapsed);
+      console.log(elapsed)
       // expect(elapsed).toBeLessThan(2)
     },
   )
