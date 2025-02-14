@@ -48,7 +48,7 @@ export async function flushQueue() {
   await new Promise(setImmediate)
 }
 
-const staticComputedProperties = ['_rootNotifier', 'get']
+const staticComputedProperties = ['get']
 export const testShouldBeComputedProperty = (
   testObj: any,
   propertyName: string,

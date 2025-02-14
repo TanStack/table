@@ -1,5 +1,6 @@
-import { computed, isSignal, type Signal, signal } from '@angular/core'
+import {  computed, isSignal, signal } from '@angular/core'
 import { defineLazyComputedProperty } from './proxy'
+import type {Signal} from '@angular/core';
 import type {
   RowData,
   Table,
@@ -36,7 +37,6 @@ interface Table_AngularReactivity<
   TData extends RowData,
 > {
   get: Signal<Table<TFeatures, TData>>
-  _rootNotifier: Signal<Table<TFeatures, TData>>
   _setRootNotifier: (signal: Signal<Table<TFeatures, TData>>) => void
 }
 
@@ -65,21 +65,19 @@ export function constructAngularReactivityFeature<
       }
     },
     constructTableAPIs: (table) => {
-      const rootNotifier = signal<Signal<any> | null>(null)
-
-      table._rootNotifier = computed(() => rootNotifier()?.(), {
-        equal: () => false,
-      }) as any
+      const rootNotifier = signal<Signal<Table<TableFeatures, TData>> | null>(
+        null,
+      )
 
       table._setRootNotifier = (notifier) => {
         rootNotifier.set(notifier)
       }
 
-      table.get = computed(() => rootNotifier()?.(), {
+      table.get = computed(() => rootNotifier()!(), {
         equal: () => false,
-      }) as any
+      })
 
-      setReactiveProps(table._rootNotifier, table, {
+      setReactiveProps(table.get, table, {
         skipProperty: skipBaseProperties,
       })
     },
@@ -88,7 +86,7 @@ export function constructAngularReactivityFeature<
       if (cell._table.options.reactivity?.cell === false) {
         return
       }
-      setReactiveProps(cell._table._rootNotifier, cell, {
+      setReactiveProps(cell._table.get, cell, {
         skipProperty: skipBaseProperties,
       })
     },
@@ -97,7 +95,7 @@ export function constructAngularReactivityFeature<
       if (column._table.options.reactivity?.column === false) {
         return
       }
-      setReactiveProps(column._table._rootNotifier, column, {
+      setReactiveProps(column._table.get, column, {
         skipProperty: skipBaseProperties,
       })
     },
@@ -106,7 +104,7 @@ export function constructAngularReactivityFeature<
       if (header._table.options.reactivity?.header === false) {
         return
       }
-      setReactiveProps(header._table._rootNotifier, header, {
+      setReactiveProps(header._table.get, header, {
         skipProperty: skipBaseProperties,
       })
     },
@@ -115,7 +113,7 @@ export function constructAngularReactivityFeature<
       if (row._table.options.reactivity?.row === false) {
         return
       }
-      setReactiveProps(row._table._rootNotifier, row, {
+      setReactiveProps(row._table.get, row, {
         skipProperty: skipBaseProperties,
       })
     },

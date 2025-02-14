@@ -1,26 +1,19 @@
-import type { EffectRef } from '@angular/core'
 import {
   ChangeDetectorRef,
   Directive,
   DoCheck,
-  effect,
   Inject,
-  inject,
   Injector,
   Input,
   OnChanges,
-  runInInjectionContext,
   SimpleChanges,
   TemplateRef,
   Type,
   ViewContainerRef,
+  effect,
+  inject,
+  runInInjectionContext,
 } from '@angular/core'
-import type {
-  CellContext,
-  HeaderContext,
-  Table,
-  TableFeatures,
-} from '@tanstack/table-core'
 import { memo } from '@tanstack/table-core'
 import { FlexRenderComponentProps } from './flex-render/context'
 import { FlexRenderFlags } from './flex-render/flags'
@@ -29,13 +22,20 @@ import {
   flexRenderComponent,
 } from './flex-render/flex-render-component'
 import { FlexRenderComponentFactory } from './flex-render/flex-render-component-ref'
-import type { FlexRenderTypedContent } from './flex-render/view'
 import {
   FlexRenderComponentView,
   FlexRenderTemplateView,
   FlexRenderView,
   mapToFlexRenderTypedContent,
 } from './flex-render/view'
+import type { FlexRenderTypedContent } from './flex-render/view'
+import type {
+  CellContext,
+  HeaderContext,
+  Table,
+  TableFeatures,
+} from '@tanstack/table-core'
+import type { EffectRef } from '@angular/core'
 
 export {
   injectFlexRenderContext,
@@ -80,7 +80,7 @@ export class FlexRenderDirective<
   props: TProps = {} as TProps
 
   @Input({ required: false, alias: 'flexRenderNotifier' })
-  notifier: 'doCheck' | 'tableChange' = 'tableChange'
+  notifier: 'doCheck' | 'tableChange' = 'doCheck'
 
   @Input({ required: false, alias: 'flexRenderInjector' })
   injector: Injector = inject(Injector)

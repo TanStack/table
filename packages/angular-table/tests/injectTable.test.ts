@@ -53,10 +53,10 @@ describe('injectTable', () => {
       columns: columns,
       getRowId: (row) => row.id,
     }))
-    const tablePropertyKeys = Object.keys(table._rootNotifier())
+    const tablePropertyKeys = Object.keys(table.get())
 
     test('table must be a signal', () => {
-      expect(isSignal(table._rootNotifier)).toEqual(true)
+      expect(isSignal(table.get)).toEqual(true)
     })
 
     test('supports "in" operator', () => {
