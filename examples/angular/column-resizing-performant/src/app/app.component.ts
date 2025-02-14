@@ -5,17 +5,17 @@ import {
   signal,
   untracked,
 } from '@angular/core'
+import type { ColumnDef, ColumnResizeMode } from '@tanstack/angular-table'
 import {
-  FlexRenderDirective,
   columnResizingFeature,
   columnSizingFeature,
+  FlexRenderDirective,
   injectTable,
   tableFeatures,
 } from '@tanstack/angular-table'
+import type { Person } from './makeData'
 import { makeData } from './makeData'
 import { TableResizableCell, TableResizableHeader } from './resizable-cell'
-import type { Person } from './makeData'
-import type { ColumnDef, ColumnResizeMode } from '@tanstack/angular-table'
 
 const _features = tableFeatures({
   columnSizingFeature,
