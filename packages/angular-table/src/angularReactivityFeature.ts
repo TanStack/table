@@ -1,6 +1,6 @@
-import {  computed, isSignal, signal } from '@angular/core'
+import { computed, isSignal, signal } from '@angular/core'
 import { defineLazyComputedProperty } from './proxy'
-import type {Signal} from '@angular/core';
+import type { Signal } from '@angular/core'
 import type {
   RowData,
   Table,
