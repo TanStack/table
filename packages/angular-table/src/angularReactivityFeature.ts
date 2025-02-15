@@ -130,21 +130,14 @@ export const angularReactivityFeature = constructAngularReactivityFeature()
 
 function skipBaseProperties(property: string): boolean {
   return (
-    // equal `getContext`
+    // equals `getContext`
     property === 'getContext' ||
     // start with `_`
     property[0] === '_' ||
-    // start with `get`
+    // doesn't start with `get`
     !(property[0] === 'g' && property[1] === 'e' && property[2] === 't') ||
     // ends with `Handler`
-    (property.length >= 7 &&
-      property[property.length - 7] === 'H' &&
-      property[property.length - 6] === 'a' &&
-      property[property.length - 5] === 'n' &&
-      property[property.length - 4] === 'd' &&
-      property[property.length - 3] === 'l' &&
-      property[property.length - 2] === 'e' &&
-      property[property.length - 1] === 'r')
+    property.endsWith('Handler')
   )
 }
 

@@ -5,11 +5,11 @@ import { benchCases, columns, createTestTable, dataMap } from './setup'
 const nIteration = 5
 
 for (const benchCase of benchCases) {
-  describe(`injectTable (${benchCase.size} elements)`, () => {
+  describe(`injectTable - ${benchCase.size} elements`, () => {
     const data = dataMap[benchCase.size]!
 
     bench(
-      `${benchCase.size} elements - No reactivity`,
+      `No reactivity`,
       async () => {
         const table = createTestTable(false, data, columns)
         await setTimeout(0)
@@ -21,7 +21,7 @@ for (const benchCase of benchCases) {
     )
 
     bench(
-      `${benchCase.size} Enabled reactivity`,
+      `Full reactivity`,
       async () => {
         const table = createTestTable(true, data, columns)
         await setTimeout(0)
