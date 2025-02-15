@@ -1,5 +1,5 @@
 import { computed, isSignal, signal } from '@angular/core'
-import { defineLazyComputedProperty } from './reactivityUtils'
+import { defineLazyComputedProperty, markReactive } from './reactivityUtils'
 import type { Signal } from '@angular/core'
 import type {
   RowData,
@@ -65,9 +65,7 @@ export function constructAngularReactivityFeature<
       }
     },
     constructTableAPIs: (table) => {
-      const rootNotifier = signal<Signal<Table<TableFeatures, TData>> | null>(
-        null,
-      )
+      const rootNotifier = signal<Signal<any> | null>(null)
 
       table._setTableNotifier = (notifier) => {
         rootNotifier.set(notifier)
@@ -77,6 +75,7 @@ export function constructAngularReactivityFeature<
         equal: () => false,
       })
 
+      markReactive(table)
       setReactiveProps(table.get, table, {
         skipProperty: skipBaseProperties,
       })
@@ -86,6 +85,7 @@ export function constructAngularReactivityFeature<
       if (cell._table.options.reactivity?.cell === false) {
         return
       }
+      markReactive(cell)
       setReactiveProps(cell._table.get, cell, {
         skipProperty: skipBaseProperties,
       })
@@ -95,6 +95,7 @@ export function constructAngularReactivityFeature<
       if (column._table.options.reactivity?.column === false) {
         return
       }
+      markReactive(column)
       setReactiveProps(column._table.get, column, {
         skipProperty: skipBaseProperties,
       })
@@ -104,6 +105,7 @@ export function constructAngularReactivityFeature<
       if (header._table.options.reactivity?.header === false) {
         return
       }
+      markReactive(header)
       setReactiveProps(header._table.get, header, {
         skipProperty: skipBaseProperties,
       })
@@ -113,6 +115,7 @@ export function constructAngularReactivityFeature<
       if (row._table.options.reactivity?.row === false) {
         return
       }
+      markReactive(row)
       setReactiveProps(row._table.get, row, {
         skipProperty: skipBaseProperties,
       })

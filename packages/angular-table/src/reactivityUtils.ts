@@ -1,6 +1,18 @@
 import { computed } from '@angular/core'
 import type { Signal } from '@angular/core'
 
+export const $TABLE_REACTIVE = Symbol('reactive')
+
+export function markReactive<T extends object>(obj: T): void {
+  Object.defineProperty(obj, $TABLE_REACTIVE, { value: true })
+}
+
+export function isReactive<T extends object>(
+  obj: T,
+): obj is T & { [$TABLE_REACTIVE]: true } {
+  return Reflect.get(obj, $TABLE_REACTIVE) === true
+}
+
 /**
  * Defines a lazy computed property on an object. The property is initialized
  * with a getter that computes its value only when accessed for the first time.
@@ -83,6 +95,7 @@ export function toComputed<
       { debugName },
     )
     Object.defineProperty(computedFn, 'name', { value: debugName })
+    markReactive(computedFn)
     return computedFn as ComputedFunction<TFunction>
   }
 
@@ -108,6 +121,7 @@ export function toComputed<
   }
 
   Object.defineProperty(computedFn, 'name', { value: debugName })
+  markReactive(computedFn)
 
   return computedFn as ComputedFunction<TFunction>
 }

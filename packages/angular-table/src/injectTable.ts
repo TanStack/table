@@ -12,7 +12,7 @@ import {
   getInitialTableState,
   isFunction,
 } from '@tanstack/table-core'
-import { lazyInit } from './lazy-signal-initializer'
+import { lazyInit } from './lazySignalInitializer'
 import { angularReactivityFeature } from './angularReactivityFeature'
 
 export function injectTable<

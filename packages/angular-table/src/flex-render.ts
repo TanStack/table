@@ -36,6 +36,7 @@ import type {
   TableFeatures,
 } from '@tanstack/table-core'
 import type { EffectRef } from '@angular/core'
+import { isReactive } from './reactivityUtils'
 
 export {
   injectFlexRenderContext,
@@ -157,7 +158,12 @@ export class FlexRenderDirective<
     this.#tableChangeEffect?.destroy()
     this.#tableChangeEffect = null
     let firstCheck = !!(this.renderFlags & FlexRenderFlags.ViewFirstRender)
-    if (this.table && this.notifier === 'tableChange') {
+    console.log(this.table)
+    if (
+      this.table &&
+      this.notifier === 'tableChange' &&
+      isReactive(this.table)
+    ) {
       this.#tableChangeEffect = effect(
         () => {
           this.table.get()
