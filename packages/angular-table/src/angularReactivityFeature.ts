@@ -75,6 +75,9 @@ export function constructAngularReactivityFeature<
         equal: () => false,
       })
 
+      if (table.options.reactivity?.table === false) {
+        return
+      }
       markReactive(table)
       setReactiveProps(table.get, table, {
         skipProperty: skipBaseProperties,

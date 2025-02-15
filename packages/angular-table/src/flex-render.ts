@@ -158,7 +158,6 @@ export class FlexRenderDirective<
     this.#tableChangeEffect?.destroy()
     this.#tableChangeEffect = null
     let firstCheck = !!(this.renderFlags & FlexRenderFlags.ViewFirstRender)
-    console.log(this.table)
     if (
       this.table &&
       this.notifier === 'tableChange' &&

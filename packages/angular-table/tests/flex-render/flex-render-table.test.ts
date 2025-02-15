@@ -19,8 +19,8 @@ import {
   flexRenderComponent,
   injectFlexRenderContext,
   injectTable,
-} from '../src'
-import type { FlexRenderContent } from '../src'
+} from '../../src'
+import type { FlexRenderContent } from '../../src'
 import type {
   CellContext,
   ExpandedState,

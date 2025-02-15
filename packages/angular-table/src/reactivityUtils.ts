@@ -43,7 +43,6 @@ export function defineLazyComputedProperty<T extends object>(
         configurable: true,
         enumerable: true,
       })
-
       return computedValue
     },
   })
