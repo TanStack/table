@@ -1,13 +1,20 @@
-import type { Signal } from '@angular/core'
 import { computed } from '@angular/core'
-import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
+import type { Signal } from '@angular/core'
 
+/**
+ * Defines a lazy computed property on an object. The property is initialized
+ * with a getter that computes its value only when accessed for the first time.
+ * After the first access, the computed value is cached, and the getter is
+ * replaced with a direct property assignment for efficiency.
+ *
+ * @internal should be used only internally
+ */
 export function defineLazyComputedProperty<T extends object>(
-  notifier: Signal<Table<{}, any>>,
+  notifier: Signal<T>,
   setObjectOptions: {
     originalObject: T
     property: keyof T & string
-    valueFn: Function
+    valueFn: (...args: any) => any
   },
 ) {
   const { valueFn, originalObject, property } = setObjectOptions
@@ -24,12 +31,27 @@ export function defineLazyComputedProperty<T extends object>(
         configurable: true,
         enumerable: true,
       })
+
       return computedValue
     },
   })
 }
 
 /**
+ * @internal should be used only internally
+ */
+type ComputedFunction<T> =
+  // 0 args
+  T extends (...args: []) => infer TReturn
+    ? Signal<TReturn>
+    : // 1+ args
+      T extends (arg0?: any, ...args: Array<any>) => any
+      ? T
+      : never
+
+/**
+ * @description Transform a function into a computed that react to given notifier re-computations
+ *
  * Here we'll handle all type of accessors:
  * - 0 argument -> e.g. table.getCanNextPage())
  * - 0~1 arguments -> e.g. table.getIsSomeRowsPinned(position?)
@@ -39,11 +61,18 @@ export function defineLazyComputedProperty<T extends object>(
  * Since we are not able to detect automatically the accessors parameters,
  * we'll wrap all accessors into a cached function wrapping a computed
  * that return it's value based on the given parameters
+ *
+ * @internal should be used only internally
  */
 export function toComputed<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(notifier: Signal<Table<TFeatures, TData>>, fn: Function, debugName: string) {
+  T,
+  TReturn,
+  TFunction extends (...args: any) => TReturn,
+>(
+  notifier: Signal<T>,
+  fn: TFunction,
+  debugName: string,
+): ComputedFunction<TFunction> {
   const hasArgs = fn.length > 0
   if (!hasArgs) {
     const computedFn = computed(
@@ -54,7 +83,7 @@ export function toComputed<
       { debugName },
     )
     Object.defineProperty(computedFn, 'name', { value: debugName })
-    return computedFn
+    return computedFn as ComputedFunction<TFunction>
   }
 
   const computedCache: Record<string, Signal<unknown>> = {}
@@ -80,7 +109,7 @@ export function toComputed<
 
   Object.defineProperty(computedFn, 'name', { value: debugName })
 
-  return computedFn
+  return computedFn as ComputedFunction<TFunction>
 }
 
 function serializeArgs(...args: Array<any>) {

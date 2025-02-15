@@ -74,7 +74,7 @@ export function injectTable<
       },
     )
 
-    table._setRootNotifier(tableSignal as any)
+    table._setTableNotifier(tableSignal as any)
 
     return table
   })

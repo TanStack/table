@@ -1,5 +1,5 @@
 import { computed, isSignal, signal } from '@angular/core'
-import { defineLazyComputedProperty } from './proxy'
+import { defineLazyComputedProperty } from './reactivityUtils'
 import type { Signal } from '@angular/core'
 import type {
   RowData,
@@ -37,7 +37,7 @@ interface Table_AngularReactivity<
   TData extends RowData,
 > {
   get: Signal<Table<TFeatures, TData>>
-  _setRootNotifier: (signal: Signal<Table<TFeatures, TData>>) => void
+  _setTableNotifier: (signal: Signal<Table<TFeatures, TData>>) => void
 }
 
 interface AngularReactivityFeatureConstructors<
@@ -69,7 +69,7 @@ export function constructAngularReactivityFeature<
         null,
       )
 
-      table._setRootNotifier = (notifier) => {
+      table._setTableNotifier = (notifier) => {
         rootNotifier.set(notifier)
       }
 
@@ -142,7 +142,7 @@ function skipBaseProperties(property: string): boolean {
   )
 }
 
-export function setReactiveProps(
+function setReactiveProps(
   notifier: Signal<Table<any, any>>,
   obj: { [key: string]: any },
   options: {
