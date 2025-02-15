@@ -156,8 +156,7 @@ describe('toComputed', () => {
       )
       expect(fn1.length).toEqual(1)
 
-      fn1();
-
+      fn1()
     })
   })
 })
