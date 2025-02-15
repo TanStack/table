@@ -20,12 +20,14 @@ declare module '@tanstack/table-core' {
   > extends Table_AngularReactivity<TFeatures, TData> {}
 }
 
+type SkipPropertyFn = (property: string) => boolean
+
 export interface AngularReactivityFlags {
-  header: boolean
-  column: boolean
-  row: boolean
-  cell: boolean
-  table: boolean
+  header: boolean | SkipPropertyFn
+  column: boolean | SkipPropertyFn
+  row: boolean | SkipPropertyFn
+  cell: boolean | SkipPropertyFn
+  table: boolean | SkipPropertyFn
 }
 
 interface TableOptions_AngularReactivity {
@@ -46,6 +48,16 @@ interface AngularReactivityFeatureConstructors<
 > {
   TableOptions: TableOptions_AngularReactivity
   Table: Table_AngularReactivity<TFeatures, TData>
+}
+
+const getUserSkipPropertyFn = (
+  value: undefined | null | boolean | SkipPropertyFn,
+  defaultPropertyFn: SkipPropertyFn,
+) => {
+  if (typeof value === 'boolean') {
+    return defaultPropertyFn
+  }
+  return value ?? defaultPropertyFn
 }
 
 export function constructAngularReactivityFeature<
@@ -80,7 +92,10 @@ export function constructAngularReactivityFeature<
       }
       markReactive(table)
       setReactiveProps(table.get, table, {
-        skipProperty: skipBaseProperties,
+        skipProperty: getUserSkipPropertyFn(
+          table.options.reactivity?.table,
+          skipBaseProperties,
+        ),
       })
     },
 
@@ -90,7 +105,10 @@ export function constructAngularReactivityFeature<
       }
       markReactive(cell)
       setReactiveProps(cell._table.get, cell, {
-        skipProperty: skipBaseProperties,
+        skipProperty: getUserSkipPropertyFn(
+          cell._table.options.reactivity?.cell,
+          skipBaseProperties,
+        ),
       })
     },
 
@@ -100,7 +118,10 @@ export function constructAngularReactivityFeature<
       }
       markReactive(column)
       setReactiveProps(column._table.get, column, {
-        skipProperty: skipBaseProperties,
+        skipProperty: getUserSkipPropertyFn(
+          column._table.options.reactivity?.cell,
+          skipBaseProperties,
+        ),
       })
     },
 
@@ -110,7 +131,10 @@ export function constructAngularReactivityFeature<
       }
       markReactive(header)
       setReactiveProps(header._table.get, header, {
-        skipProperty: skipBaseProperties,
+        skipProperty: getUserSkipPropertyFn(
+          header._table.options.reactivity?.cell,
+          skipBaseProperties,
+        ),
       })
     },
 
@@ -120,7 +144,10 @@ export function constructAngularReactivityFeature<
       }
       markReactive(row)
       setReactiveProps(row._table.get, row, {
-        skipProperty: skipBaseProperties,
+        skipProperty: getUserSkipPropertyFn(
+          row._table.options.reactivity?.cell,
+          skipBaseProperties,
+        ),
       })
     },
   }
@@ -134,7 +161,7 @@ function skipBaseProperties(property: string): boolean {
     property === 'getContext' ||
     // start with `_`
     property[0] === '_' ||
-    // doesn't start with `get`
+    // doesn't start with `get`, but faster
     !(property[0] === 'g' && property[1] === 'e' && property[2] === 't') ||
     // ends with `Handler`
     property.endsWith('Handler')
