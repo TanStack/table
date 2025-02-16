@@ -255,25 +255,30 @@ function App() {
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <div>
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                            {header.column.getCanFilter() ? (
-                              <div className="mt-2">
-                                <Filter column={header.column} table={table} />
-                              </div>
-                            ) : null}
-                          </div>
-                        )}
-                      </TableHead>
-                    )
-                  })}
+                  {headerGroup.headers
+                    .filter((header) => header.column.getIsVisible())
+                    .map((header) => {
+                      return (
+                        <TableHead key={header.id} colSpan={header.colSpan}>
+                          {header.isPlaceholder ? null : (
+                            <div>
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                              {header.column.getCanFilter() ? (
+                                <div className="mt-2">
+                                  <Filter
+                                    column={header.column}
+                                    table={table}
+                                  />
+                                </div>
+                              ) : null}
+                            </div>
+                          )}
+                        </TableHead>
+                      )
+                    })}
                 </TableRow>
               ))}
             </TableHeader>
