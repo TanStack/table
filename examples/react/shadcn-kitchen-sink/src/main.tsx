@@ -281,7 +281,7 @@ function App() {
               {table.getRowModel().rows.map((row) => {
                 return (
                   <TableRow key={row.id}>
-                    {row.getAllCells().map((cell) => {
+                    {row.getVisibleCells().map((cell) => {
                       return (
                         <TableCell key={cell.id}>
                           {flexRender(

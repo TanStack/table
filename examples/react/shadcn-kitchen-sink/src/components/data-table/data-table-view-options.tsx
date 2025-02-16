@@ -12,6 +12,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from '@/components/ui/command'
 import {
   Popover,
@@ -53,6 +54,9 @@ export function DataTableViewOptions<
             }
           }}
           onPointerDown={(event) => {
+            /**
+             * @see https://github.com/radix-ui/primitives/blob/main/packages/react/select/src/select.tsx#L267-L299
+             */
             pointerTypeRef.current = event.pointerType
 
             // prevent implicit pointer capture
@@ -93,15 +97,30 @@ export function DataTableViewOptions<
                 .getAllColumns()
                 .filter((column) => typeof column.accessorFn !== 'undefined')
                 .map((column) => {
+                  const header = table
+                    .getHeaderGroups()[0]
+                    .headers.find((h) => h.column.id === column.id)
+
                   return (
                     <CommandItem
                       key={column.id}
                       aria-selected={column.getIsVisible()}
+                      data-selected={column.getIsVisible()}
                       onSelect={() =>
                         column.toggleVisibility(!column.getIsVisible())
                       }
                     >
-                      <span className="truncate">{column.id}</span>
+                      <span className="truncate">
+                        {column.columnDef.header instanceof Function && header
+                          ? (
+                              column.columnDef.header({
+                                table,
+                                header,
+                                column,
+                              }) as { props: { title: string } }
+                            ).props.title
+                          : column.id}
+                      </span>
                       <Check
                         className={cn(
                           'ml-auto size-4 shrink-0',
@@ -111,6 +130,23 @@ export function DataTableViewOptions<
                     </CommandItem>
                   )
                 })}
+            </CommandGroup>
+            <CommandSeparator />
+            <CommandGroup>
+              <div className="flex items-center gap-1">
+                <CommandItem
+                  onSelect={() => table.toggleAllColumnsVisible(false)}
+                  className="w-full justify-center border"
+                >
+                  Hide All
+                </CommandItem>
+                <CommandItem
+                  onSelect={() => table.toggleAllColumnsVisible(true)}
+                  className="w-full justify-center border"
+                >
+                  Show All
+                </CommandItem>
+              </div>
             </CommandGroup>
           </CommandList>
         </Command>
