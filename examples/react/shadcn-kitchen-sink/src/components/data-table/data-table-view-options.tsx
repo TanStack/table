@@ -22,15 +22,15 @@ import { cn } from '@/lib/utils'
 
 interface DataTableViewOptionsProps<
   TFeatures extends TableFeatures,
-  TData extends RowData,
+  TRowData extends RowData,
 > {
-  table: Table<TFeatures, TData>
+  table: Table<Pick<TFeatures, 'columnVisibilityFeature'>, TRowData>
 }
 
 export function DataTableViewOptions<
   TFeatures extends TableFeatures,
-  TData extends RowData,
->({ table }: DataTableViewOptionsProps<TFeatures, TData>) {
+  TRowData extends RowData,
+>({ table }: DataTableViewOptionsProps<TFeatures, TRowData>) {
   const triggerRef = React.useRef<HTMLButtonElement>(null)
   const pointerTypeRef =
     React.useRef<React.PointerEvent['pointerType']>('touch')
@@ -52,9 +52,6 @@ export function DataTableViewOptions<
               setOpen(true)
             }
           }}
-          /**
-           * @see https://github.com/radix-ui/primitives/blob/main/packages/react/select/src/select.tsx#L267-L299
-           */
           onPointerDown={(event) => {
             pointerTypeRef.current = event.pointerType
 
@@ -87,7 +84,7 @@ export function DataTableViewOptions<
         className="w-44 p-0"
         onCloseAutoFocus={() => triggerRef.current?.focus()}
       >
-        {/* <Command>
+        <Command>
           <CommandInput placeholder="Search columns..." />
           <CommandList>
             <CommandEmpty>No columns found.</CommandEmpty>
@@ -99,6 +96,7 @@ export function DataTableViewOptions<
                   return (
                     <CommandItem
                       key={column.id}
+                      aria-selected={column.getIsVisible()}
                       onSelect={() =>
                         column.toggleVisibility(!column.getIsVisible())
                       }
@@ -115,7 +113,7 @@ export function DataTableViewOptions<
                 })}
             </CommandGroup>
           </CommandList>
-        </Command> */}
+        </Command>
       </PopoverContent>
     </Popover>
   )

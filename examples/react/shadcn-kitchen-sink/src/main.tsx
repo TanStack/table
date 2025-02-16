@@ -37,6 +37,7 @@ import { DataTableColumnHeader } from '@/components/data-table/data-table-column
 import { makeData } from '@/makeData'
 import '@/index.css'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
+import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
 
 const _features = tableFeatures({
   rowSortingFeature,
@@ -83,69 +84,43 @@ function App() {
         enableHiding: false,
       },
       {
-        header: 'Name',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            header: ({ column }) => (
-              <DataTableColumnHeader column={column} title="First Name" />
-            ),
-            cell: (info) => info.getValue(),
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorFn: (row) => row.lastName,
-            id: 'lastName',
-            cell: (info) => info.getValue(),
-            header: ({ column }) => (
-              <DataTableColumnHeader column={column} title="Last Name" />
-            ),
-            footer: (props) => props.column.id,
-          },
-        ],
+        accessorKey: 'firstName',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="First Name" />
+        ),
+        cell: (info) => info.getValue(),
       },
       {
-        header: 'Info',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: ({ column }) => (
-              <DataTableColumnHeader column={column} title="Age" />
-            ),
-            footer: (props) => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: ({ column }) => (
-                  <DataTableColumnHeader column={column} title="Visits" />
-                ),
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: ({ column }) => (
-                  <DataTableColumnHeader column={column} title="Status" />
-                ),
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: ({ column }) => (
-                  <DataTableColumnHeader
-                    column={column}
-                    title="Profile Progress"
-                  />
-                ),
-                footer: (props) => props.column.id,
-              },
-            ],
-          },
-        ],
+        accessorFn: (row) => row.lastName,
+        id: 'lastName',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Last Name" />
+        ),
+        cell: (info) => info.getValue(),
+      },
+      {
+        accessorKey: 'age',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Age" />
+        ),
+      },
+      {
+        accessorKey: 'visits',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Visits" />
+        ),
+      },
+      {
+        accessorKey: 'status',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
+        ),
+      },
+      {
+        accessorKey: 'progress',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Profile Progress" />
+        ),
       },
     ],
     [],
@@ -189,75 +164,78 @@ function App() {
           Refresh Data
         </Button>
       </div>
-      <div className="rounded-md border">
-        <ShadcnTable>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : (
-                        <div>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                          {header.column.getCanFilter() ? (
-                            <div className="mt-2">
-                              <Filter column={header.column} table={table} />
-                            </div>
-                          ) : null}
-                        </div>
-                      )}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.map((row) => {
-              return (
-                <TableRow key={row.id}>
-                  {row.getAllCells().map((cell) => {
+      <div className="flex flex-col gap-4">
+        <DataTableViewOptions table={table} />
+        <div className="rounded-md border">
+          <ShadcnTable>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
                     return (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
+                      <TableHead key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <div>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                            {header.column.getCanFilter() ? (
+                              <div className="mt-2">
+                                <Filter column={header.column} table={table} />
+                              </div>
+                            ) : null}
+                          </div>
                         )}
-                      </TableCell>
+                      </TableHead>
                     )
                   })}
                 </TableRow>
-              )
-            })}
-          </TableBody>
-        </ShadcnTable>
-      </div>
-      <DataTablePagination table={table} />
-      <div className="rounded-md border p-4 flex flex-col gap-4">
-        <div>
-          {Object.keys(rowSelection).length} of{' '}
-          {table.getPreFilteredRowModel().rows.length} Total Rows Selected
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.map((row) => {
+                return (
+                  <TableRow key={row.id}>
+                    {row.getAllCells().map((cell) => {
+                      return (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      )
+                    })}
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </ShadcnTable>
         </div>
-        <div className="flex space-x-2">
-          <Button variant="outline" size="sm" onClick={() => rerender()}>
-            Force Rerender
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              console.info(
-                'table.getSelectedRowModel().flatRows',
-                table.getSelectedRowModel().flatRows,
-              )
-            }
-          >
-            Log Selected Rows
-          </Button>
+        <DataTablePagination table={table} />
+        <div className="rounded-md border p-4 flex flex-col gap-4">
+          <div>
+            {Object.keys(rowSelection).length} of{' '}
+            {table.getPreFilteredRowModel().rows.length} Total Rows Selected
+          </div>
+          <div className="flex space-x-2">
+            <Button variant="outline" size="sm" onClick={() => rerender()}>
+              Force Rerender
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                console.info(
+                  'table.getSelectedRowModel().flatRows',
+                  table.getSelectedRowModel().flatRows,
+                )
+              }
+            >
+              Log Selected Rows
+            </Button>
+          </div>
         </div>
       </div>
     </div>
