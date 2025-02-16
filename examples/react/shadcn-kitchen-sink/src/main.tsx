@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
+import { AlertCircle, MoreHorizontal, User, Users } from 'lucide-react'
 import {
   columnFilteringFeature,
   columnVisibilityFeature,
@@ -38,6 +39,16 @@ import { makeData } from '@/makeData'
 import '@/index.css'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
+import { Progress } from '@/components/ui/progress'
+import { Badge } from '@/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 
 const _features = tableFeatures({
   rowSortingFeature,
@@ -88,7 +99,9 @@ function App() {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="First Name" />
         ),
-        cell: (info) => info.getValue(),
+        cell: (info) => (
+          <span className="font-medium">{String(info.getValue())}</span>
+        ),
       },
       {
         accessorFn: (row) => row.lastName,
@@ -96,12 +109,19 @@ function App() {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Last Name" />
         ),
-        cell: (info) => info.getValue(),
+        cell: (info) => (
+          <span className="font-medium">{String(info.getValue())}</span>
+        ),
       },
       {
         accessorKey: 'age',
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Age" />
+        ),
+        cell: (info) => (
+          <span className="text-muted-foreground">
+            {String(info.getValue())}
+          </span>
         ),
       },
       {
@@ -109,18 +129,82 @@ function App() {
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Visits" />
         ),
+        cell: (info) => (
+          <Badge variant="secondary">
+            {info.getValue<number>().toLocaleString()}
+          </Badge>
+        ),
       },
       {
         accessorKey: 'status',
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Status" />
         ),
+        cell: (info) => {
+          const status = info.getValue<Person['status']>()
+          const icons: Record<Person['status'], React.ReactNode> = {
+            relationship: <Users />,
+            complicated: <AlertCircle />,
+            single: <User />,
+          }
+
+          return (
+            <Badge
+              variant="outline"
+              className="gap-1 w-32 [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0"
+            >
+              {icons[status]}
+              <span className="truncate">
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+              </span>
+            </Badge>
+          )
+        },
       },
       {
         accessorKey: 'progress',
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Profile Progress" />
         ),
+        cell: ({ getValue }) => {
+          const progress = getValue<number>()
+          return (
+            <div className="flex items-center gap-2">
+              <Progress value={progress} className="w-[60px]" />
+              <span className="text-sm text-muted-foreground w-9">
+                {progress}%
+              </span>
+            </div>
+          )
+        },
+      },
+      {
+        id: 'actions',
+        enableHiding: false,
+        cell: ({ row }) => {
+          const person = row.original
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={() => navigator.clipboard.writeText(person.id)}
+                >
+                  Copy ID
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>View details</DropdownMenuItem>
+                <DropdownMenuItem>View profile</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )
+        },
       },
     ],
     [],
