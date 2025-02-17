@@ -123,53 +123,38 @@ export function DataTableViewOptions<
                     .filter(
                       (column) => typeof column.accessorFn !== 'undefined',
                     )
-                    .map((column) => {
-                      const header = table
-                        .getHeaderGroups()[0]
-                        .headers.find((h) => h.column.id === column.id)
-
-                      return (
-                        <SortableItem key={column.id} value={column.id} asChild>
-                          <CommandItem
-                            aria-selected={column.getIsVisible()}
-                            data-selected={column.getIsVisible()}
-                            onSelect={() =>
-                              column.toggleVisibility(!column.getIsVisible())
-                            }
-                          >
-                            <Check
-                              className={cn(
-                                'size-4 shrink-0',
-                                column.getIsVisible()
-                                  ? 'opacity-100'
-                                  : 'opacity-0',
-                              )}
-                            />
-                            <span className="truncate">
-                              {column.columnDef.header instanceof Function &&
-                              header
-                                ? (
-                                    column.columnDef.header({
-                                      table,
-                                      header,
-                                      column,
-                                    }) as { props: { title: string } }
-                                  ).props.title
-                                : column.id}
-                            </span>
-                            <SortableItemHandle asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="ml-auto size-6"
-                              >
-                                <GripVertical />
-                              </Button>
-                            </SortableItemHandle>
-                          </CommandItem>
-                        </SortableItem>
-                      )
-                    })}
+                    .map((column) => (
+                      <SortableItem key={column.id} value={column.id} asChild>
+                        <CommandItem
+                          aria-selected={column.getIsVisible()}
+                          data-selected={column.getIsVisible()}
+                          onSelect={() =>
+                            column.toggleVisibility(!column.getIsVisible())
+                          }
+                        >
+                          <Check
+                            className={cn(
+                              'size-4 shrink-0',
+                              column.getIsVisible()
+                                ? 'opacity-100'
+                                : 'opacity-0',
+                            )}
+                          />
+                          <span className="truncate">
+                            {column.columnDef.meta?.title ?? column.id}
+                          </span>
+                          <SortableItemHandle asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="ml-auto size-6"
+                            >
+                              <GripVertical />
+                            </Button>
+                          </SortableItemHandle>
+                        </CommandItem>
+                      </SortableItem>
+                    ))}
                 </CommandGroup>
                 <CommandSeparator />
                 <CommandGroup>

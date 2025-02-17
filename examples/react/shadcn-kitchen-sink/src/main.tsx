@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import '@/index.css'
+import '@/styles/globals.css'
 
 import { AlertCircle, MoreHorizontal, User, Users } from 'lucide-react'
 import {
@@ -24,9 +24,12 @@ import {
 } from '@tanstack/react-table'
 import type { Person } from '@/makeData'
 import type {
+  CellData,
   ColumnDef,
   ColumnSizingState,
+  RowData,
   SortingState,
+  TableFeatures,
 } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -56,6 +59,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
+
+declare module '@tanstack/react-table' {
+  interface ColumnMeta<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  > {
+    title: string
+  }
+}
 
 const _features = tableFeatures({
   rowSortingFeature,
@@ -115,6 +129,9 @@ function App() {
           <span className="font-medium">{String(info.getValue())}</span>
         ),
         size: 200,
+        meta: {
+          title: 'First Name',
+        },
       },
       {
         id: 'lastName',
@@ -126,6 +143,9 @@ function App() {
           <span className="font-medium">{String(info.getValue())}</span>
         ),
         size: 200,
+        meta: {
+          title: 'Last Name',
+        },
       },
       {
         id: 'age',
@@ -139,6 +159,9 @@ function App() {
           </span>
         ),
         size: 200,
+        meta: {
+          title: 'Age',
+        },
       },
       {
         id: 'visits',
@@ -152,6 +175,9 @@ function App() {
           </Badge>
         ),
         size: 200,
+        meta: {
+          title: 'Visits',
+        },
       },
       {
         id: 'status',
@@ -180,6 +206,9 @@ function App() {
           )
         },
         size: 200,
+        meta: {
+          title: 'Status',
+        },
       },
       {
         id: 'progress',
@@ -199,6 +228,9 @@ function App() {
           )
         },
         size: 200,
+        meta: {
+          title: 'Profile Progress',
+        },
       },
       {
         id: 'actions',
@@ -297,11 +329,18 @@ function App() {
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        <DataTableViewOptions
-          table={table}
-          columnOrder={columnOrder}
-          onColumnOrderChange={setColumnOrder}
-        />
+        <div className="flex items-center gap-2">
+          <DataTableSortList
+            table={table}
+            sorting={sorting}
+            onSortingChange={setSorting}
+          />
+          <DataTableViewOptions
+            table={table}
+            columnOrder={columnOrder}
+            onColumnOrderChange={setColumnOrder}
+          />
+        </div>
         <div className="rounded-md border">
           <Table>
             <TableHeader>
