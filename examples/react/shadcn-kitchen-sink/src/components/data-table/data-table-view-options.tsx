@@ -141,7 +141,7 @@ export function DataTableViewOptions<
                             )}
                           />
                           <span className="truncate">
-                            {column.columnDef.meta?.title ?? column.id}
+                            {column.columnDef.meta?.label ?? column.id}
                           </span>
                           <SortableItemHandle asChild>
                             <Button

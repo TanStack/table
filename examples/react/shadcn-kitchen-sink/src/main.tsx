@@ -26,6 +26,7 @@ import type { Person } from '@/makeData'
 import type {
   CellData,
   ColumnDef,
+  ColumnFiltersState,
   ColumnSizingState,
   RowData,
   SortingState,
@@ -60,6 +61,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
+import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
@@ -67,7 +69,8 @@ declare module '@tanstack/react-table' {
     TData extends RowData,
     TValue extends CellData = CellData,
   > {
-    title: string
+    label?: string
+    type?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
   }
 }
 
@@ -87,6 +90,9 @@ function App() {
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  )
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
 
@@ -130,7 +136,7 @@ function App() {
         ),
         size: 200,
         meta: {
-          title: 'First Name',
+          label: 'First Name',
         },
       },
       {
@@ -144,7 +150,7 @@ function App() {
         ),
         size: 200,
         meta: {
-          title: 'Last Name',
+          label: 'Last Name',
         },
       },
       {
@@ -160,7 +166,7 @@ function App() {
         ),
         size: 200,
         meta: {
-          title: 'Age',
+          label: 'Age',
         },
       },
       {
@@ -176,7 +182,7 @@ function App() {
         ),
         size: 200,
         meta: {
-          title: 'Visits',
+          label: 'Visits',
         },
       },
       {
@@ -207,7 +213,7 @@ function App() {
         },
         size: 200,
         meta: {
-          title: 'Status',
+          label: 'Status',
         },
       },
       {
@@ -229,7 +235,7 @@ function App() {
         },
         size: 200,
         meta: {
-          title: 'Profile Progress',
+          label: 'Profile Progress',
         },
       },
       {
@@ -330,6 +336,11 @@ function App() {
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
+          <DataTableFilterList
+            table={table}
+            columnFilters={columnFilters}
+            onColumnFiltersChange={setColumnFilters}
+          />
           <DataTableSortList
             table={table}
             sorting={sorting}
@@ -352,11 +363,10 @@ function App() {
                       return (
                         <TableHead
                           colSpan={header.colSpan}
-                          className={cn({
+                          className={cn('relative', {
                             'border-r': header.id !== 'actions',
-                            'px-px': header.id !== 'select',
+                            'px-0': header.id !== 'select',
                             'select-none': true,
-                            relative: true,
                           })}
                           style={{
                             width: header.getSize(),
@@ -368,7 +378,7 @@ function App() {
                                 header.column.columnDef.header,
                                 header.getContext(),
                               )}
-                          {header.id !== 'select' &&
+                          {/* {header.id !== 'select' &&
                             header.id !== 'actions' && (
                               <div
                                 onMouseDown={(event) => {
@@ -410,7 +420,7 @@ function App() {
                                   'bg-muted/50',
                                 )}
                               />
-                            )}
+                            )} */}
                         </TableHead>
                       )
                     })}

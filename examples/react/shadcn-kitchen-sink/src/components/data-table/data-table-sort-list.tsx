@@ -174,7 +174,7 @@ export function DataTableSortList<
                 {sorting.map((sort, index) => {
                   const columnTitle =
                     sortableColumns.find((col) => col.id === sort.id)?.columnDef
-                      .meta?.title ?? sort.id
+                      .meta?.label ?? sort.id
 
                   const itemId = `${listId}-item-${index}`
 
@@ -228,7 +228,7 @@ export function DataTableSortList<
                                         }
                                       >
                                         <span className="mr-2 truncate">
-                                          {column.columnDef.meta?.title ??
+                                          {column.columnDef.meta?.label ??
                                             column.id}
                                         </span>
                                         <Check
