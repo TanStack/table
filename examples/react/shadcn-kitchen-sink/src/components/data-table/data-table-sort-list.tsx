@@ -64,7 +64,6 @@ export function DataTableSortList<
   sorting,
   onSortingChange,
 }: DataTableSortListProps<TFeatures, TData>) {
-  const triggerId = React.useId()
   const listId = React.useId()
   const labelId = React.useId()
   const descriptionId = React.useId()
@@ -125,7 +124,6 @@ export function DataTableSortList<
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            id={triggerId}
             aria-label={`Sort table${sorting.length > 0 ? ` (${sorting.length} active)` : ''}`}
             variant="outline"
             size="sm"
