@@ -2,28 +2,13 @@
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import {
-  DndContext,
-  KeyboardSensor,
-  MouseSensor,
-  TouchSensor,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
-import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
-import {
-  SortableContext,
-  arrayMove,
-  horizontalListSortingStrategy,
-  sortableKeyboardCoordinates,
-  useSortable,
-} from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
+import '@/index.css'
+
 import { AlertCircle, MoreHorizontal, User, Users } from 'lucide-react'
 import {
   columnFilteringFeature,
   columnOrderingFeature,
+  columnSizingFeature,
   columnVisibilityFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
@@ -39,17 +24,15 @@ import {
 } from '@tanstack/react-table'
 import type { Person } from '@/makeData'
 import type {
-  Column,
   ColumnDef,
+  ColumnSizingState,
   SortingState,
-  Table,
 } from '@tanstack/react-table'
-import type { DragEndEvent } from '@dnd-kit/core'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
-  Table as ShadcnTable,
+  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -72,23 +55,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import '@/index.css'
-import {
-  Sortable,
-  SortableContent,
-  SortableItem,
-  SortableItemHandle,
-  SortableOverlay,
-} from '@/components/ui/sortable'
 import { cn } from '@/lib/utils'
 
 const _features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
-  columnVisibilityFeature,
   columnFilteringFeature,
   columnOrderingFeature,
+  columnVisibilityFeature,
+  columnSizingFeature,
 })
 
 function App() {
@@ -98,6 +74,7 @@ function App() {
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = React.useState({})
+  const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
 
   const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
@@ -126,6 +103,7 @@ function App() {
         ),
         enableSorting: false,
         enableHiding: false,
+        size: 60,
       },
       {
         id: 'firstName',
@@ -136,6 +114,7 @@ function App() {
         cell: (info) => (
           <span className="font-medium">{String(info.getValue())}</span>
         ),
+        size: 200,
       },
       {
         id: 'lastName',
@@ -146,6 +125,7 @@ function App() {
         cell: (info) => (
           <span className="font-medium">{String(info.getValue())}</span>
         ),
+        size: 200,
       },
       {
         id: 'age',
@@ -158,6 +138,7 @@ function App() {
             {String(info.getValue())}
           </span>
         ),
+        size: 200,
       },
       {
         id: 'visits',
@@ -170,6 +151,7 @@ function App() {
             {info.getValue<number>().toLocaleString()}
           </Badge>
         ),
+        size: 200,
       },
       {
         id: 'status',
@@ -197,6 +179,7 @@ function App() {
             </Badge>
           )
         },
+        size: 200,
       },
       {
         id: 'progress',
@@ -208,13 +191,14 @@ function App() {
           const progress = getValue<number>()
           return (
             <div className="flex items-center gap-2">
-              <Progress value={progress} className="w-[60px]" />
+              <Progress value={progress} />
               <span className="text-sm text-muted-foreground w-9">
                 {progress}%
               </span>
             </div>
           )
         },
+        size: 200,
       },
       {
         id: 'actions',
@@ -243,6 +227,7 @@ function App() {
             </DropdownMenu>
           )
         },
+        size: 60,
       },
     ],
     [],
@@ -252,6 +237,7 @@ function App() {
   const [columnOrder, setColumnOrder] = React.useState<Array<string>>(() =>
     columns.map((c) => c.id ?? ''),
   )
+
   const refreshData = () => setData(() => makeData(100_000)) // stress test
 
   const table = useTable({
@@ -268,10 +254,12 @@ function App() {
       sorting,
       columnVisibility,
       columnOrder,
+      columnSizing,
     },
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
+    onColumnSizingChange: setColumnSizing,
     getRowId: (row) => row.id,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -308,112 +296,115 @@ function App() {
           </Button>
         </div>
       </div>
-      <Sortable
-        value={columnOrder}
-        onValueChange={setColumnOrder}
-        orientation="horizontal"
-      >
-        <div className="flex flex-col gap-4">
-          <DataTableViewOptions table={table} />
-          <div className="rounded-md border">
-            <ShadcnTable>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers
-                      .filter((header) => header.column.getIsVisible())
-                      .map((header) => {
-                        return (
-                          <TableHead
-                            colSpan={header.colSpan}
-                            className={cn({
-                              'border-r': header.id !== 'actions',
-                              'px-px': header.id !== 'select',
-                            })}
-                          >
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext(),
+      <div className="flex flex-col gap-4">
+        <DataTableViewOptions table={table} />
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers
+                    .filter((header) => header.column.getIsVisible())
+                    .map((header) => {
+                      return (
+                        <TableHead
+                          colSpan={header.colSpan}
+                          className={cn({
+                            'border-r': header.id !== 'actions',
+                            'px-px': header.id !== 'select',
+                            'select-none': true,
+                            relative: true,
+                          })}
+                          style={{
+                            width: header.getSize(),
+                          }}
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                          {header.id !== 'select' &&
+                            header.id !== 'actions' && (
+                              <div
+                                onMouseDown={(event) => {
+                                  event.preventDefault()
+                                  const startX = event.pageX
+                                  const startWidth = header.getSize()
+
+                                  const onMouseMove = (event: MouseEvent) => {
+                                    const currentWidth =
+                                      startWidth + (event.pageX - startX)
+                                    table.setColumnSizing((old) => ({
+                                      ...old,
+                                      [header.id]: Math.max(currentWidth, 20),
+                                    }))
+                                  }
+
+                                  const onMouseUp = () => {
+                                    document.removeEventListener(
+                                      'mousemove',
+                                      onMouseMove,
+                                    )
+                                    document.removeEventListener(
+                                      'mouseup',
+                                      onMouseUp,
+                                    )
+                                  }
+
+                                  document.addEventListener(
+                                    'mousemove',
+                                    onMouseMove,
+                                  )
+                                  document.addEventListener(
+                                    'mouseup',
+                                    onMouseUp,
+                                  )
+                                }}
+                                className={cn(
+                                  'absolute right-0 top-0 h-full w-1 cursor-e-resize select-none touch-none hover:bg-muted',
+                                  'bg-muted/50',
                                 )}
-                          </TableHead>
-                        )
-                      })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {table.getRowModel().rows.map((row) => {
-                  return (
-                    <TableRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => {
-                        return (
-                          <TableCell
-                            key={cell.id}
-                            className={
-                              cell.column.id === 'actions' ? '' : 'border-r'
-                            }
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
+                              />
                             )}
-                          </TableCell>
-                        )
-                      })}
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </ShadcnTable>
-          </div>
-          <DataTablePagination table={table} />
+                        </TableHead>
+                      )
+                    })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows.map((row) => {
+                return (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <TableCell
+                          key={cell.id}
+                          className={
+                            cell.column.id === 'actions' ? '' : 'border-r'
+                          }
+                          style={{
+                            width: cell.column.getSize(),
+                          }}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </TableCell>
+                      )
+                    })}
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
         </div>
-      </Sortable>
+        <DataTablePagination table={table} />
+      </div>
     </div>
-  )
-}
-
-interface FilterProps {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
-}
-
-function Filter({ column, table }: FilterProps) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
-
-  return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
-      <Input
-        type="number"
-        value={((column.getFilterValue() as any)?.[0] ?? '') as string}
-        onChange={(e) =>
-          column.setFilterValue((old: any) => [e.target.value, old?.[1]])
-        }
-        placeholder={`Min`}
-        className="h-8 w-20"
-      />
-      <Input
-        type="number"
-        value={((column.getFilterValue() as any)?.[1] ?? '') as string}
-        onChange={(e) =>
-          column.setFilterValue((old: any) => [old?.[0], e.target.value])
-        }
-        placeholder={`Max`}
-        className="h-8 w-20"
-      />
-    </div>
-  ) : (
-    <Input
-      type="text"
-      value={(column.getFilterValue() ?? '') as string}
-      onChange={(e) => column.setFilterValue(e.target.value)}
-      placeholder={`Search...`}
-      className="h-8 max-w-sm"
-    />
   )
 }
 
