@@ -351,7 +351,6 @@ export function DataTableFilterList<
               Add filters to refine results.
             </p>
           </div>
-          {/* Active Filters */}
           {columnFilters.length > 0 && (
             <div className="flex flex-col gap-4">
               {columnFilters.length > 1 && (
@@ -458,9 +457,7 @@ export function DataTableFilterList<
           {/* Add New Filter */}
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
               size="sm"
-              className="h-8"
               onClick={() => {
                 const firstFilterableColumn = filterableColumns[0]
                 if (firstFilterableColumn) {
@@ -479,9 +476,8 @@ export function DataTableFilterList<
             </Button>
             {columnFilters.length > 0 && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="h-8"
                 onClick={() => onColumnFiltersChange([])}
               >
                 Reset filters
