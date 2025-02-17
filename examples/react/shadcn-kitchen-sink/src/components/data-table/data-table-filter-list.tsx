@@ -342,7 +342,7 @@ export function DataTableFilterList<
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="flex w-[calc(100vw-theme(spacing.12))] min-w-60 origin-[var(--radix-popover-content-transform-origin)] flex-col p-4 sm:w-[30rem]"
+        className="flex origin-[var(--radix-popover-content-transform-origin)] flex-col p-4 w-[calc(100vw-theme(spacing.12))] min-w-60 max-w-[36rem] sm:w-fit"
       >
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
@@ -353,24 +353,8 @@ export function DataTableFilterList<
           </div>
           {columnFilters.length > 0 && (
             <div className="flex flex-col gap-4">
-              {columnFilters.length > 1 && (
-                <Select
-                  value={joinOperator}
-                  onValueChange={(value: 'and' | 'or') =>
-                    setJoinOperator(value)
-                  }
-                >
-                  <SelectTrigger className="h-8 w-[100px]">
-                    <SelectValue placeholder="Join type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="and">AND</SelectItem>
-                    <SelectItem value="or">OR</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
               <div className="flex flex-col gap-2">
-                {columnFilters.map((filter) => {
+                {columnFilters.map((filter, index) => {
                   const column = table.getColumn(filter.id)
                   if (!column) return null
 
@@ -379,7 +363,34 @@ export function DataTableFilterList<
                   const advancedFilter = filter as AdvancedFilter
 
                   return (
-                    <div key={filter.id} className="flex items-center gap-2">
+                    <div
+                      key={filter.id}
+                      className="grid grid-cols-[60px_140px_130px_1fr_40px] items-center gap-2"
+                    >
+                      {index === 0 ? (
+                        <div className="text-sm text-muted-foreground">
+                          Where
+                        </div>
+                      ) : index === 1 ? (
+                        <Select
+                          value={joinOperator}
+                          onValueChange={(value: 'and' | 'or') =>
+                            setJoinOperator(value)
+                          }
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue placeholder="Join" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="and">and</SelectItem>
+                            <SelectItem value="or">or</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <div className="text-sm text-muted-foreground">
+                          {joinOperator}
+                        </div>
+                      )}
                       <Select
                         value={filter.id}
                         onValueChange={(value) => {
@@ -389,7 +400,7 @@ export function DataTableFilterList<
                           onColumnFiltersChange(newFilters)
                         }}
                       >
-                        <SelectTrigger className="h-8 w-[180px]">
+                        <SelectTrigger className="h-8">
                           <SelectValue
                             placeholder={
                               column.columnDef.meta?.label ?? column.id
@@ -420,7 +431,7 @@ export function DataTableFilterList<
                           onColumnFiltersChange(newFilters)
                         }}
                       >
-                        <SelectTrigger className="h-8 w-[180px]">
+                        <SelectTrigger className="h-8">
                           <SelectValue placeholder="Select operator" />
                         </SelectTrigger>
                         <SelectContent>
@@ -438,7 +449,7 @@ export function DataTableFilterList<
                       <Button
                         variant="outline"
                         size="icon"
-                        className="size-8 [&_svg]:size-3.5 shrink-0"
+                        className="size-8 [&_svg]:size-3.5"
                         onClick={() => {
                           const newFilters = columnFilters.filter(
                             (f) => f.id !== filter.id,
