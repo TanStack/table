@@ -137,6 +137,7 @@ function App() {
         size: 200,
         meta: {
           label: 'First Name',
+          type: 'text',
         },
       },
       {
@@ -151,6 +152,7 @@ function App() {
         size: 200,
         meta: {
           label: 'Last Name',
+          type: 'text',
         },
       },
       {
@@ -167,6 +169,7 @@ function App() {
         size: 200,
         meta: {
           label: 'Age',
+          type: 'number',
         },
       },
       {
@@ -183,6 +186,7 @@ function App() {
         size: 200,
         meta: {
           label: 'Visits',
+          type: 'number',
         },
       },
       {
@@ -214,6 +218,7 @@ function App() {
         size: 200,
         meta: {
           label: 'Status',
+          type: 'select',
         },
       },
       {
@@ -236,6 +241,7 @@ function App() {
         size: 200,
         meta: {
           label: 'Profile Progress',
+          type: 'number',
         },
       },
       {

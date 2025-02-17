@@ -147,13 +147,12 @@ export function DataTableSortList<
               }
             }}
           >
-            <ArrowDownUp aria-hidden="true" />
+            <ArrowDownUp />
             Sort
             {sorting.length > 0 && (
               <Badge
                 variant="secondary"
                 className="h-[1.14rem] rounded-[0.2rem] px-[0.32rem] font-mono font-normal text-[0.65rem]"
-                aria-hidden="true"
               >
                 {sorting.length}
               </Badge>
@@ -164,7 +163,7 @@ export function DataTableSortList<
           aria-labelledby={labelId}
           aria-describedby={descriptionId}
           align="start"
-          className="w-[calc(100vw-theme(spacing.20))] flex flex-col gap-2.5 min-w-72 max-w-[25rem] p-4 sm:w-[25rem]"
+          className="w-[calc(100vw-theme(spacing.20))] origin-[var(--radix-popover-content-transform-origin)] flex flex-col gap-2.5 min-w-72 max-w-[25rem] p-4 sm:w-[25rem]"
         >
           <div className="flex flex-col gap-2">
             {sorting.length > 0 ? (
@@ -213,10 +212,7 @@ export function DataTableSortList<
                               className="h-8 w-44 justify-between gap-2 rounded"
                             >
                               <span className="truncate">{columnTitle}</span>
-                              <ChevronsUpDown
-                                className="size-4 shrink-0 opacity-50"
-                                aria-hidden="true"
-                              />
+                              <ChevronsUpDown className="opacity-50" />
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
@@ -283,25 +279,22 @@ export function DataTableSortList<
                           </SelectContent>
                         </Select>
                         <Button
+                          aria-label={`Remove sort for ${columnTitle}`}
                           variant="outline"
                           size="icon"
-                          className="size-8"
+                          className="size-8 [&_svg]:size-3.5 shrink-0"
                           onClick={() => onSortRemove(sort.id)}
-                          aria-label={`Remove sort for ${columnTitle}`}
                         >
-                          <Trash2 className="size-3.5" aria-hidden="true" />
+                          <Trash2 />
                         </Button>
                         <SortableItemHandle asChild>
                           <Button
+                            aria-label={`Drag to reorder ${columnTitle} sort`}
                             variant="outline"
                             size="icon"
-                            className="size-8"
-                            aria-label={`Drag to reorder ${columnTitle} sort`}
+                            className="size-8 [&_svg]:size-3.5 shrink-0"
                           >
-                            <GripVertical
-                              className="size-3.5"
-                              aria-hidden="true"
-                            />
+                            <GripVertical />
                           </Button>
                         </SortableItemHandle>
                       </div>
@@ -313,19 +306,19 @@ export function DataTableSortList<
           </div>
           <div className="flex items-center gap-2">
             <Button
+              aria-label="Add new sort"
               size="sm"
               onClick={onSortAdd}
               disabled={sorting.length >= sortableColumns.length}
-              aria-label="Add new sort"
             >
               Add sort
             </Button>
             {sorting.length > 0 && (
               <Button
+                aria-label="Reset all sorting"
                 size="sm"
                 variant="outline"
                 onClick={() => table.resetSorting()}
-                aria-label="Reset all sorting"
               >
                 Reset
               </Button>
