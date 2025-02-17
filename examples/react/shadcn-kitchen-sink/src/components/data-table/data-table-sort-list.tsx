@@ -67,7 +67,6 @@ export function DataTableSortList<
   const listId = React.useId()
   const labelId = React.useId()
   const descriptionId = React.useId()
-
   const [open, setOpen] = React.useState(false)
 
   const sortableColumns = React.useMemo(
@@ -128,6 +127,25 @@ export function DataTableSortList<
             variant="outline"
             size="sm"
             className="[&_svg]:size-3"
+            onClick={(event) => event.currentTarget.focus()}
+            onPointerDown={(event) => {
+              // prevent implicit pointer capture
+              // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture
+              const target = event.target
+              if (!(target instanceof HTMLElement)) return
+              if (target.hasPointerCapture(event.pointerId)) {
+                target.releasePointerCapture(event.pointerId)
+              }
+
+              if (
+                event.button === 0 &&
+                event.ctrlKey === false &&
+                event.pointerType === 'mouse'
+              ) {
+                // prevent trigger from stealing focus from the active item after opening.
+                event.preventDefault()
+              }
+            }}
           >
             <ArrowDownUp aria-hidden="true" />
             Sort

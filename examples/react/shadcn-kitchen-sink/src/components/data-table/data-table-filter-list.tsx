@@ -259,8 +259,31 @@ export function DataTableFilterList<
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8">
-          <Filter className="mr-2" />
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8"
+          onClick={(event) => event.currentTarget.focus()}
+          onPointerDown={(event) => {
+            // prevent implicit pointer capture
+            // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture
+            const target = event.target
+            if (!(target instanceof HTMLElement)) return
+            if (target.hasPointerCapture(event.pointerId)) {
+              target.releasePointerCapture(event.pointerId)
+            }
+
+            if (
+              event.button === 0 &&
+              event.ctrlKey === false &&
+              event.pointerType === 'mouse'
+            ) {
+              // prevent trigger from stealing focus from the active item after opening.
+              event.preventDefault()
+            }
+          }}
+        >
+          <Filter aria-hidden="true" />
           {columnFilters.length > 0 ? (
             <>
               {columnFilters.length} active filter
