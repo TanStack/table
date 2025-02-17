@@ -27,8 +27,6 @@ export function DataTableColumnHeader({
     return <div>{title}</div>
   }
 
-  return <div>{title}</div>
-
   const ascValue = `${column.id}-asc`
   const descValue = `${column.id}-desc`
   const hideValue = `${column.id}-hide`
@@ -56,7 +54,7 @@ export function DataTableColumnHeader({
               ? 'Sorted ascending. Click to sort descending.'
               : 'Not sorted. Click to sort ascending.'
         }
-        className="-ml-3 h-8 w-full border-none shadow-none text-xs hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent [&>svg:last-child]:hidden"
+        className="size-full border-none rounded-none shadow-none text-xs hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent [&>svg:last-child]:hidden"
       >
         {title}
         <SelectIcon asChild>

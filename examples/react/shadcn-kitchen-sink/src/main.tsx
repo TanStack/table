@@ -80,6 +80,7 @@ import {
   SortableItemHandle,
   SortableOverlay,
 } from '@/components/ui/sortable'
+import { cn } from '@/lib/utils'
 
 const _features = tableFeatures({
   rowSortingFeature,
@@ -319,39 +320,26 @@ function App() {
               <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
-                    <SortableContent withoutSlot>
-                      {headerGroup.headers
-                        .filter((header) => header.column.getIsVisible())
-                        .map((header) => {
-                          return (
-                            <SortableItem
-                              key={header.id}
-                              value={header.id}
-                              asHandle
-                              asChild
-                            >
-                              <TableHead colSpan={header.colSpan}>
-                                {header.isPlaceholder ? null : (
-                                  <div>
-                                    {flexRender(
-                                      header.column.columnDef.header,
-                                      header.getContext(),
-                                    )}
-                                    {header.column.getCanFilter() ? (
-                                      <div className="mt-2">
-                                        <Filter
-                                          column={header.column}
-                                          table={table}
-                                        />
-                                      </div>
-                                    ) : null}
-                                  </div>
+                    {headerGroup.headers
+                      .filter((header) => header.column.getIsVisible())
+                      .map((header) => {
+                        return (
+                          <TableHead
+                            colSpan={header.colSpan}
+                            className={cn({
+                              'border-r': header.id !== 'actions',
+                              'px-px': header.id !== 'select',
+                            })}
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext(),
                                 )}
-                              </TableHead>
-                            </SortableItem>
-                          )
-                        })}
-                    </SortableContent>
+                          </TableHead>
+                        )
+                      })}
                   </TableRow>
                 ))}
               </TableHeader>
@@ -361,14 +349,17 @@ function App() {
                     <TableRow key={row.id}>
                       {row.getVisibleCells().map((cell) => {
                         return (
-                          <SortableContent key={cell.id} withoutSlot>
-                            <TableCell key={cell.id}>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext(),
-                              )}
-                            </TableCell>
-                          </SortableContent>
+                          <TableCell
+                            key={cell.id}
+                            className={
+                              cell.column.id === 'actions' ? '' : 'border-r'
+                            }
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </TableCell>
                         )
                       })}
                     </TableRow>
@@ -379,13 +370,11 @@ function App() {
           </div>
           <DataTablePagination table={table} />
         </div>
-        <SortableOverlay>
-          <div className="bg-primary/10 w-full h-dvh" />
-        </SortableOverlay>
       </Sortable>
     </div>
   )
 }
+
 interface FilterProps {
   column: Column<typeof _features, Person>
   table: Table<typeof _features, Person>
