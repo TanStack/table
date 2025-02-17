@@ -297,7 +297,11 @@ function App() {
         </div>
       </div>
       <div className="flex flex-col gap-4">
-        <DataTableViewOptions table={table} />
+        <DataTableViewOptions
+          table={table}
+          columnOrder={columnOrder}
+          onColumnOrderChange={setColumnOrder}
+        />
         <div className="rounded-md border">
           <Table>
             <TableHeader>
