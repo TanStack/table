@@ -64,6 +64,11 @@ export function DataTableSortList<
   sorting,
   onSortingChange,
 }: DataTableSortListProps<TFeatures, TData>) {
+  const triggerId = React.useId()
+  const listId = React.useId()
+  const labelId = React.useId()
+  const descriptionId = React.useId()
+
   const [open, setOpen] = React.useState(false)
 
   const sortableColumns = React.useMemo(
@@ -119,13 +124,20 @@ export function DataTableSortList<
     >
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-2">
-            <ArrowDownUp className="size-3" aria-hidden="true" />
+          <Button
+            id={triggerId}
+            aria-label={`Sort table${sorting.length > 0 ? ` (${sorting.length} active)` : ''}`}
+            variant="outline"
+            size="sm"
+            className="[&_svg]:size-3"
+          >
+            <ArrowDownUp aria-hidden="true" />
             Sort
             {sorting.length > 0 && (
               <Badge
                 variant="secondary"
                 className="h-[1.14rem] rounded-[0.2rem] px-[0.32rem] font-mono font-normal text-[0.65rem]"
+                aria-hidden="true"
               >
                 {sorting.length}
               </Badge>
@@ -133,119 +145,153 @@ export function DataTableSortList<
           </Button>
         </PopoverTrigger>
         <PopoverContent
+          aria-labelledby={labelId}
+          aria-describedby={descriptionId}
           align="start"
           className="w-[calc(100vw-theme(spacing.20))] flex flex-col gap-2.5 min-w-72 max-w-[25rem] p-4 sm:w-[25rem]"
         >
           <div className="flex flex-col gap-2">
             {sorting.length > 0 ? (
-              <h4 className="font-medium leading-none">Sort by</h4>
+              <h4 id={labelId} className="font-medium leading-none">
+                Sort by
+              </h4>
             ) : (
               <div className="flex flex-col gap-1">
-                <h4 className="font-medium leading-none">No sorting applied</h4>
-                <p className="text-muted-foreground text-sm">
+                <h4 id={labelId} className="font-medium leading-none">
+                  No sorting applied
+                </h4>
+                <p id={descriptionId} className="text-muted-foreground text-sm">
                   Add sorting to organize your results.
                 </p>
               </div>
             )}
             <SortableContent asChild>
-              <div className="flex max-h-40 flex-col gap-2 overflow-y-auto p-0.5">
-                {sorting.map((sort) => (
-                  <SortableItem key={sort.id} value={sort.id} asChild>
-                    <div className="flex items-center gap-2">
-                      <Popover modal>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            role="combobox"
-                            className="h-8 w-44 justify-between gap-2 rounded"
+              <div
+                role="list"
+                id={listId}
+                aria-labelledby={labelId}
+                aria-describedby={descriptionId}
+                className="flex max-h-40 flex-col gap-2 overflow-y-auto p-0.5"
+              >
+                {sorting.map((sort, index) => {
+                  const columnTitle =
+                    sortableColumns.find((col) => col.id === sort.id)?.columnDef
+                      .meta?.title ?? sort.id
+
+                  const itemId = `${listId}-item-${index}`
+
+                  return (
+                    <SortableItem key={sort.id} value={sort.id} asChild>
+                      <div
+                        role="listitem"
+                        id={itemId}
+                        className="flex items-center gap-2"
+                      >
+                        <Popover modal>
+                          <PopoverTrigger asChild>
+                            <Button
+                              role="combobox"
+                              aria-label={`Select column to sort by. Current: ${columnTitle}`}
+                              variant="outline"
+                              size="sm"
+                              className="h-8 w-44 justify-between gap-2 rounded"
+                            >
+                              <span className="truncate">{columnTitle}</span>
+                              <ChevronsUpDown
+                                className="size-4 shrink-0 opacity-50"
+                                aria-hidden="true"
+                              />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                            <Command>
+                              <CommandInput
+                                placeholder="Search columns..."
+                                aria-label="Search sortable columns"
+                              />
+                              <CommandList>
+                                <CommandEmpty>No column found.</CommandEmpty>
+                                <CommandGroup>
+                                  {sortableColumns
+                                    .filter(
+                                      (column) =>
+                                        !sorting.some(
+                                          (s) =>
+                                            s.id === column.id &&
+                                            s.id !== sort.id,
+                                        ),
+                                    )
+                                    .map((column) => (
+                                      <CommandItem
+                                        key={column.id}
+                                        value={column.id}
+                                        onSelect={() =>
+                                          onColumnSelect(sort.id, column.id)
+                                        }
+                                      >
+                                        <span className="mr-2 truncate">
+                                          {column.columnDef.meta?.title ??
+                                            column.id}
+                                        </span>
+                                        <Check
+                                          className={cn(
+                                            'ml-auto size-4',
+                                            column.id === sort.id
+                                              ? 'opacity-100'
+                                              : 'opacity-0',
+                                          )}
+                                          aria-hidden="true"
+                                        />
+                                      </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        <Select
+                          value={sort.desc ? 'desc' : 'asc'}
+                          onValueChange={(value: SortDirection) =>
+                            onSortDirectionChange(sort.id, value)
+                          }
+                        >
+                          <SelectTrigger
+                            className="h-8 w-24"
+                            aria-label={`Sort direction for ${columnTitle}`}
                           >
-                            <span className="truncate">
-                              {sortableColumns.find((col) => col.id === sort.id)
-                                ?.columnDef.meta?.title ?? sort.id}
-                            </span>
-                            <ChevronsUpDown
-                              className="size-4 shrink-0 opacity-50"
-                              aria-hidden="true"
-                            />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search columns..." />
-                            <CommandList>
-                              <CommandEmpty>No column found.</CommandEmpty>
-                              <CommandGroup>
-                                {sortableColumns
-                                  .filter(
-                                    (column) =>
-                                      !sorting.some(
-                                        (s) =>
-                                          s.id === column.id &&
-                                          s.id !== sort.id,
-                                      ),
-                                  )
-                                  .map((column) => (
-                                    <CommandItem
-                                      key={column.id}
-                                      value={column.id}
-                                      onSelect={() =>
-                                        onColumnSelect(sort.id, column.id)
-                                      }
-                                    >
-                                      <span className="mr-2 truncate">
-                                        {column.columnDef.meta?.title ??
-                                          column.id}
-                                      </span>
-                                      <Check
-                                        className={cn(
-                                          'ml-auto size-4',
-                                          column.id === sort.id
-                                            ? 'opacity-100'
-                                            : 'opacity-0',
-                                        )}
-                                      />
-                                    </CommandItem>
-                                  ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                      <Select
-                        value={sort.desc ? 'desc' : 'asc'}
-                        onValueChange={(value: SortDirection) =>
-                          onSortDirectionChange(sort.id, value)
-                        }
-                      >
-                        <SelectTrigger className="h-8 w-24">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="min-w-[var(--radix-select-trigger-width)]">
-                          <SelectItem value="asc">Asc</SelectItem>
-                          <SelectItem value="desc">Desc</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="size-8"
-                        onClick={() => onSortRemove(sort.id)}
-                      >
-                        <Trash2 className="size-3.5" />
-                      </Button>
-                      <SortableItemHandle asChild>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="min-w-[var(--radix-select-trigger-width)]">
+                            <SelectItem value="asc">Asc</SelectItem>
+                            <SelectItem value="desc">Desc</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <Button
                           variant="outline"
                           size="icon"
                           className="size-8"
+                          onClick={() => onSortRemove(sort.id)}
+                          aria-label={`Remove sort for ${columnTitle}`}
                         >
-                          <GripVertical className="size-3.5" />
+                          <Trash2 className="size-3.5" aria-hidden="true" />
                         </Button>
-                      </SortableItemHandle>
-                    </div>
-                  </SortableItem>
-                ))}
+                        <SortableItemHandle asChild>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="size-8"
+                            aria-label={`Drag to reorder ${columnTitle} sort`}
+                          >
+                            <GripVertical
+                              className="size-3.5"
+                              aria-hidden="true"
+                            />
+                          </Button>
+                        </SortableItemHandle>
+                      </div>
+                    </SortableItem>
+                  )
+                })}
               </div>
             </SortableContent>
           </div>
@@ -254,6 +300,7 @@ export function DataTableSortList<
               size="sm"
               onClick={onSortAdd}
               disabled={sorting.length >= sortableColumns.length}
+              aria-label="Add new sort"
             >
               Add sort
             </Button>
@@ -262,6 +309,7 @@ export function DataTableSortList<
                 size="sm"
                 variant="outline"
                 onClick={() => table.resetSorting()}
+                aria-label="Reset all sorting"
               >
                 Reset
               </Button>
