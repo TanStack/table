@@ -1,8 +1,29 @@
+'use client'
+
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
+import {
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
+import {
+  SortableContext,
+  arrayMove,
+  horizontalListSortingStrategy,
+  sortableKeyboardCoordinates,
+  useSortable,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { AlertCircle, MoreHorizontal, User, Users } from 'lucide-react'
 import {
   columnFilteringFeature,
+  columnOrderingFeature,
   columnVisibilityFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
@@ -23,6 +44,7 @@ import type {
   SortingState,
   Table,
 } from '@tanstack/react-table'
+import type { DragEndEvent } from '@dnd-kit/core'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -35,11 +57,12 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
+
 import { makeData } from '@/makeData'
-import '@/index.css'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
 import { Progress } from '@/components/ui/progress'
+
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -49,6 +72,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import '@/index.css'
+import {
+  Sortable,
+  SortableContent,
+  SortableItem,
+  SortableItemHandle,
+  SortableOverlay,
+} from '@/components/ui/sortable'
 
 const _features = tableFeatures({
   rowSortingFeature,
@@ -56,6 +87,7 @@ const _features = tableFeatures({
   rowSelectionFeature,
   columnVisibilityFeature,
   columnFilteringFeature,
+  columnOrderingFeature,
 })
 
 function App() {
@@ -95,6 +127,7 @@ function App() {
         enableHiding: false,
       },
       {
+        id: 'firstName',
         accessorKey: 'firstName',
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="First Name" />
@@ -104,8 +137,8 @@ function App() {
         ),
       },
       {
-        accessorFn: (row) => row.lastName,
         id: 'lastName',
+        accessorFn: (row) => row.lastName,
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Last Name" />
         ),
@@ -114,6 +147,7 @@ function App() {
         ),
       },
       {
+        id: 'age',
         accessorKey: 'age',
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Age" />
@@ -125,6 +159,7 @@ function App() {
         ),
       },
       {
+        id: 'visits',
         accessorKey: 'visits',
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Visits" />
@@ -136,6 +171,7 @@ function App() {
         ),
       },
       {
+        id: 'status',
         accessorKey: 'status',
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Status" />
@@ -162,6 +198,7 @@ function App() {
         },
       },
       {
+        id: 'progress',
         accessorKey: 'progress',
         header: ({ column }) => (
           <DataTableColumnHeader column={column} title="Profile Progress" />
@@ -211,6 +248,9 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(1_000))
+  const [columnOrder, setColumnOrder] = React.useState<Array<string>>(() =>
+    columns.map((c) => c.id ?? ''),
+  )
   const refreshData = () => setData(() => makeData(100_000)) // stress test
 
   const table = useTable({
@@ -226,9 +266,11 @@ function App() {
       rowSelection,
       sorting,
       columnVisibility,
+      columnOrder,
     },
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
+    onColumnOrderChange: setColumnOrder,
     getRowId: (row) => row.id,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
@@ -236,7 +278,7 @@ function App() {
   })
 
   return (
-    <div className="p-4 max-w-7xl mx-auto flex flex-col gap-4">
+    <div className="container mx-auto p-4 flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <Input
           value={globalFilter ?? ''}
@@ -244,89 +286,103 @@ function App() {
           className="max-w-sm"
           placeholder="Search all columns..."
         />
-        <Button variant="outline" onClick={() => refreshData()}>
-          Refresh Data
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => refreshData()}>
+            Refresh Data
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => rerender()}>
+            Force Rerender
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              console.info(
+                'table.getSelectedRowModel().flatRows',
+                table.getSelectedRowModel().flatRows,
+              )
+            }
+          >
+            Log Selected Rows
+          </Button>
+        </div>
       </div>
-      <div className="flex flex-col gap-4">
-        <DataTableViewOptions table={table} />
-        <div className="rounded-md border">
-          <ShadcnTable>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers
-                    .filter((header) => header.column.getIsVisible())
-                    .map((header) => {
-                      return (
-                        <TableHead key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder ? null : (
-                            <div>
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                              {header.column.getCanFilter() ? (
-                                <div className="mt-2">
-                                  <Filter
-                                    column={header.column}
-                                    table={table}
-                                  />
-                                </div>
-                              ) : null}
-                            </div>
-                          )}
-                        </TableHead>
-                      )
-                    })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows.map((row) => {
-                return (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </TableCell>
-                      )
-                    })}
+      <Sortable
+        value={columnOrder}
+        onValueChange={setColumnOrder}
+        orientation="horizontal"
+      >
+        <div className="flex flex-col gap-4">
+          <DataTableViewOptions table={table} />
+          <div className="rounded-md border">
+            <ShadcnTable>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    <SortableContent withoutSlot>
+                      {headerGroup.headers
+                        .filter((header) => header.column.getIsVisible())
+                        .map((header) => {
+                          return (
+                            <SortableItem
+                              key={header.id}
+                              value={header.id}
+                              asHandle
+                              asChild
+                            >
+                              <TableHead colSpan={header.colSpan}>
+                                {header.isPlaceholder ? null : (
+                                  <div>
+                                    {flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext(),
+                                    )}
+                                    {header.column.getCanFilter() ? (
+                                      <div className="mt-2">
+                                        <Filter
+                                          column={header.column}
+                                          table={table}
+                                        />
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                )}
+                              </TableHead>
+                            </SortableItem>
+                          )
+                        })}
+                    </SortableContent>
                   </TableRow>
-                )
-              })}
-            </TableBody>
-          </ShadcnTable>
-        </div>
-        <DataTablePagination table={table} />
-        <div className="rounded-md border p-4 flex flex-col gap-4">
-          <div>
-            {Object.keys(rowSelection).length} of{' '}
-            {table.getPreFilteredRowModel().rows.length} Total Rows Selected
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows.map((row) => {
+                  return (
+                    <TableRow key={row.id}>
+                      {row.getVisibleCells().map((cell) => {
+                        return (
+                          <SortableContent key={cell.id} withoutSlot>
+                            <TableCell key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </TableCell>
+                          </SortableContent>
+                        )
+                      })}
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </ShadcnTable>
           </div>
-          <div className="flex space-x-2">
-            <Button variant="outline" size="sm" onClick={() => rerender()}>
-              Force Rerender
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                console.info(
-                  'table.getSelectedRowModel().flatRows',
-                  table.getSelectedRowModel().flatRows,
-                )
-              }
-            >
-              Log Selected Rows
-            </Button>
-          </div>
+          <DataTablePagination table={table} />
         </div>
-      </div>
+        <SortableOverlay>
+          <div className="bg-primary/10 w-full h-dvh" />
+        </SortableOverlay>
+      </Sortable>
     </div>
   )
 }
