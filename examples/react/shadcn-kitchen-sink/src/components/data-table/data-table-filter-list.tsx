@@ -301,6 +301,151 @@ export function DataTableFilterList<
     [getColumnFilterType, getFacetedUniqueValues],
   )
 
+  // Centralized filter row management functions
+  const createFilterRow = React.useCallback(
+    (columnId: string) => {
+      const column = filterableColumns.find((col) => col.id === columnId)
+      if (!column) return null
+
+      const filterType = getColumnFilterType(column)
+      return {
+        id: columnId,
+        value: filterType === 'multi-select' ? [] : '',
+        operator: 'contains',
+        rowId: crypto.randomUUID(),
+      }
+    },
+    [filterableColumns, getColumnFilterType],
+  )
+
+  const addFilterRow = React.useCallback(() => {
+    const firstFilterableColumn = filterableColumns[0]
+    if (!firstFilterableColumn) return
+
+    const newFilter = createFilterRow(firstFilterableColumn.id)
+    if (newFilter) {
+      onColumnFiltersChange([...columnFilters, newFilter])
+    }
+  }, [columnFilters, createFilterRow, filterableColumns, onColumnFiltersChange])
+
+  const updateFilterRow = React.useCallback(
+    (rowId: string, updates: Partial<AdvancedFilter>) => {
+      const newFilters = columnFilters.map((filter) => {
+        const advancedFilter = filter as AdvancedFilter
+        return advancedFilter.rowId === rowId
+          ? { ...filter, ...updates }
+          : filter
+      })
+      onColumnFiltersChange(newFilters)
+    },
+    [columnFilters, onColumnFiltersChange],
+  )
+
+  const removeFilterRow = React.useCallback(
+    (rowId: string) => {
+      const newFilters = columnFilters.filter((filter) => {
+        const advancedFilter = filter as AdvancedFilter
+        return advancedFilter.rowId !== rowId
+      })
+      onColumnFiltersChange(newFilters)
+    },
+    [columnFilters, onColumnFiltersChange],
+  )
+
+  const renderFilterRow = React.useCallback(
+    (filter: AdvancedFilter, index: number) => {
+      const column = table.getColumn(filter.id)
+      if (!column || !filter.rowId) return null
+
+      const filterType = getColumnFilterType(column) ?? 'text'
+      const operators = getFilterOperators(filterType)
+
+      return (
+        <div
+          key={filter.rowId}
+          className="grid grid-cols-[70px_140px_130px_1fr_32px] items-center gap-2"
+        >
+          {index === 0 ? (
+            <span className="text-sm text-center text-muted-foreground">
+              Where
+            </span>
+          ) : index === 1 ? (
+            <Select
+              value={joinOperator}
+              onValueChange={(value: 'and' | 'or') => setJoinOperator(value)}
+            >
+              <SelectTrigger className="h-8">
+                <SelectValue placeholder="Join" />
+              </SelectTrigger>
+              <SelectContent className="min-w-[var(--radix-select-trigger-width)]">
+                <SelectItem value="and">and</SelectItem>
+                <SelectItem value="or">or</SelectItem>
+              </SelectContent>
+            </Select>
+          ) : (
+            <span className="text-sm text-center text-muted-foreground">
+              {joinOperator}
+            </span>
+          )}
+          <Select
+            value={filter.id}
+            onValueChange={(value) =>
+              updateFilterRow(filter.rowId!, { id: value })
+            }
+          >
+            <SelectTrigger className="h-8">
+              <SelectValue
+                placeholder={column.columnDef.meta?.label ?? column.id}
+              />
+            </SelectTrigger>
+            <SelectContent>
+              {filterableColumns.map((col) => (
+                <SelectItem key={col.id} value={col.id}>
+                  {col.columnDef.meta?.label ?? col.id}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={filter.operator ?? 'contains'}
+            onValueChange={(value) =>
+              updateFilterRow(filter.rowId!, { operator: value })
+            }
+          >
+            <SelectTrigger className="h-8">
+              <SelectValue placeholder="Select operator" />
+            </SelectTrigger>
+            <SelectContent>
+              {operators.map((op) => (
+                <SelectItem key={op.value} value={op.value}>
+                  {op.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {renderFilterInput(column, filter.operator ?? 'contains')}
+          <Button
+            variant="outline"
+            size="icon"
+            className="size-8 [&_svg]:size-3.5"
+            onClick={() => removeFilterRow(filter.rowId!)}
+          >
+            <Trash2 />
+          </Button>
+        </div>
+      )
+    },
+    [
+      filterableColumns,
+      getColumnFilterType,
+      joinOperator,
+      removeFilterRow,
+      renderFilterInput,
+      table,
+      updateFilterRow,
+    ],
+  )
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -310,8 +455,6 @@ export function DataTableFilterList<
           className="[&_svg]:size-3"
           onClick={(event) => event.currentTarget.focus()}
           onPointerDown={(event) => {
-            // prevent implicit pointer capture
-            // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture
             const target = event.target
             if (!(target instanceof HTMLElement)) return
             if (target.hasPointerCapture(event.pointerId)) {
@@ -323,7 +466,6 @@ export function DataTableFilterList<
               event.ctrlKey === false &&
               event.pointerType === 'mouse'
             ) {
-              // prevent trigger from stealing focus from the active item after opening.
               event.preventDefault()
             }
           }}
@@ -354,135 +496,14 @@ export function DataTableFilterList<
           {columnFilters.length > 0 && (
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                {columnFilters.map((filter, index) => {
-                  const column = table.getColumn(filter.id)
-                  if (!column) return null
-
-                  const filterType = getColumnFilterType(column) ?? 'text'
-                  const operators = getFilterOperators(filterType)
-                  const advancedFilter = filter as AdvancedFilter
-
-                  return (
-                    <div
-                      key={filter.id}
-                      className="grid grid-cols-[70px_140px_130px_1fr_32px] items-center gap-2"
-                    >
-                      {index === 0 ? (
-                        <span className="text-sm text-center text-muted-foreground">
-                          Where
-                        </span>
-                      ) : index === 1 ? (
-                        <Select
-                          value={joinOperator}
-                          onValueChange={(value: 'and' | 'or') =>
-                            setJoinOperator(value)
-                          }
-                        >
-                          <SelectTrigger className="h-8">
-                            <SelectValue placeholder="Join" />
-                          </SelectTrigger>
-                          <SelectContent className="min-w-[var(--radix-select-trigger-width)]">
-                            <SelectItem value="and">and</SelectItem>
-                            <SelectItem value="or">or</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      ) : (
-                        <span className="text-sm text-center text-muted-foreground">
-                          {joinOperator}
-                        </span>
-                      )}
-                      <Select
-                        value={filter.id}
-                        onValueChange={(value) => {
-                          const newFilters = columnFilters.map((f) =>
-                            f.id === filter.id ? { ...f, id: value } : f,
-                          )
-                          onColumnFiltersChange(newFilters)
-                        }}
-                      >
-                        <SelectTrigger className="h-8">
-                          <SelectValue
-                            placeholder={
-                              column.columnDef.meta?.label ?? column.id
-                            }
-                          />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {filterableColumns
-                            .filter(
-                              (col) =>
-                                !columnFilters.some(
-                                  (f) => f.id === col.id && f.id !== filter.id,
-                                ),
-                            )
-                            .map((col) => (
-                              <SelectItem key={col.id} value={col.id}>
-                                {col.columnDef.meta?.label ?? col.id}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <Select
-                        value={advancedFilter.operator ?? 'contains'}
-                        onValueChange={(value) => {
-                          const newFilters = columnFilters.map((f) =>
-                            f.id === filter.id ? { ...f, operator: value } : f,
-                          )
-                          onColumnFiltersChange(newFilters)
-                        }}
-                      >
-                        <SelectTrigger className="h-8">
-                          <SelectValue placeholder="Select operator" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {operators.map((op) => (
-                            <SelectItem key={op.value} value={op.value}>
-                              {op.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {renderFilterInput(
-                        column,
-                        advancedFilter.operator ?? 'contains',
-                      )}
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="size-8 [&_svg]:size-3.5"
-                        onClick={() => {
-                          const newFilters = columnFilters.filter(
-                            (f) => f.id !== filter.id,
-                          )
-                          onColumnFiltersChange(newFilters)
-                        }}
-                      >
-                        <Trash2 />
-                      </Button>
-                    </div>
-                  )
-                })}
+                {columnFilters.map((filter, index) =>
+                  renderFilterRow(filter as AdvancedFilter, index),
+                )}
               </div>
             </div>
           )}
-          {/* Add New Filter */}
           <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              onClick={() => {
-                const firstFilterableColumn = filterableColumns[0]
-                if (firstFilterableColumn) {
-                  const filterType = getColumnFilterType(firstFilterableColumn)
-                  const newFilter = {
-                    id: firstFilterableColumn.id,
-                    value: filterType === 'multi-select' ? [] : '',
-                    operator: 'contains',
-                    rowId: crypto.randomUUID(),
-                  }
-                  onColumnFiltersChange([...columnFilters, newFilter])
-                }
-              }}
-            >
+            <Button size="sm" onClick={addFilterRow}>
               Add filter
             </Button>
             {columnFilters.length > 0 && (
