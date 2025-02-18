@@ -342,7 +342,7 @@ export function DataTableFilterList<
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="flex origin-[var(--radix-popover-content-transform-origin)] flex-col p-4 w-[calc(100vw-theme(spacing.12))] min-w-60 max-w-[36rem] sm:w-fit"
+        className="flex origin-[var(--radix-popover-content-transform-origin)] flex-col p-4 w-[calc(100vw-theme(spacing.12))] min-w-60 sm:min-w-80 sm:w-fit"
       >
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
@@ -365,12 +365,12 @@ export function DataTableFilterList<
                   return (
                     <div
                       key={filter.id}
-                      className="grid grid-cols-[60px_140px_130px_1fr_40px] items-center gap-2"
+                      className="grid grid-cols-[70px_140px_130px_1fr_32px] items-center gap-2"
                     >
                       {index === 0 ? (
-                        <div className="text-sm text-muted-foreground">
+                        <span className="text-sm text-center text-muted-foreground">
                           Where
-                        </div>
+                        </span>
                       ) : index === 1 ? (
                         <Select
                           value={joinOperator}
@@ -381,15 +381,15 @@ export function DataTableFilterList<
                           <SelectTrigger className="h-8">
                             <SelectValue placeholder="Join" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="min-w-[var(--radix-select-trigger-width)]">
                             <SelectItem value="and">and</SelectItem>
                             <SelectItem value="or">or</SelectItem>
                           </SelectContent>
                         </Select>
                       ) : (
-                        <div className="text-sm text-muted-foreground">
+                        <span className="text-sm text-center text-muted-foreground">
                           {joinOperator}
-                        </div>
+                        </span>
                       )}
                       <Select
                         value={filter.id}
