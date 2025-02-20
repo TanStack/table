@@ -92,6 +92,136 @@ export interface CoreRow<TData extends RowData> {
   subRows: Row<TData>[]
 }
 
+const rowProtosByTable = new WeakMap<Table<any>, any>()
+
+
+/**
+ * Creates a table-specific row prototype object to hold shared row methods, including from all the
+ * features that have been registered on the table.
+ */
+export function getRowProto<TData extends RowData>(table: Table<TData>) {
+  let rowProto = rowProtosByTable.get(table)
+
+  if (!rowProto) {
+    const obj: CoreRow<TData> = {
+      // props are here only for typing; they are set on the instance at runtime
+      id: 'unused',
+      depth: 0,
+      index: -1,
+      original: undefined as TData,
+      subRows: [],
+      _valuesCache: {},
+      _uniqueValuesCache: {},
+
+
+      getValue(columnId: string) {
+        if (this._valuesCache.hasOwnProperty(columnId)) {
+          return this._valuesCache[columnId]
+        }
+
+        const column = table.getColumn(columnId)
+
+        if (!column?.accessorFn) {
+          return undefined
+        }
+
+        this._valuesCache[columnId] = column.accessorFn(
+          this.original as TData,
+          this.index
+        )
+
+        return this._valuesCache[columnId] as any
+      },
+
+      getUniqueValues(columnId: string) {
+        if (!this.hasOwnProperty('_uniqueValuesCache')) {
+          // lazy-init cache on the instance
+          this._uniqueValuesCache = {};
+        }
+
+        if (this._uniqueValuesCache.hasOwnProperty(columnId)) {
+          return this._uniqueValuesCache[columnId]
+        }
+
+        const column = table.getColumn(columnId)
+
+        if (!column?.accessorFn) {
+          return undefined
+        }
+
+        if (!column.columnDef.getUniqueValues) {
+          this._uniqueValuesCache[columnId] = [this.getValue(columnId)]
+          return this._uniqueValuesCache[columnId]
+        }
+
+        this._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
+          this.original as TData,
+          this.index
+        )
+
+        return this._uniqueValuesCache[columnId] as any
+      },
+
+      renderValue(columnId: string) {
+        return this.getValue(columnId) ?? table.options.renderFallbackValue
+      },
+
+      getLeafRows() {
+        return flattenBy(this.subRows, d => d.subRows)
+      },
+
+      getParentRow() {
+        return this.parentId ? table.getRow(this.parentId, true) : undefined
+      },
+
+      getParentRows() {
+        let parentRows: Row<TData>[] = []
+        let currentRow = this
+        while (true) {
+          const parentRow = currentRow.getParentRow()
+          if (!parentRow) break
+          parentRows.push(parentRow)
+          currentRow = parentRow
+        }
+        return parentRows.reverse()
+      },
+
+      getAllCells: memo(
+        function (this: Row<TData>) {
+          return [this, table.getAllLeafColumns()]
+        },
+        (row, leafColumns) => {
+          return leafColumns.map(column => {
+            return createCell(table, row, column, column.id)
+          })
+        },
+        getMemoOptions(table.options, 'debugRows', 'getAllCells')
+      ),
+
+      _getAllCellsByColumnId: memo(
+        function (this: Row<TData>) {
+          return [this.getAllCells()]
+        },
+        allCells => {
+          return allCells.reduce(
+            (acc, cell) => {
+              acc[cell.column.id] = cell
+              return acc
+            },
+            {} as Record<string, Cell<TData, unknown>>
+          )
+        },
+        getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId')
+      ),
+    }
+
+    rowProtosByTable.set(table, obj)
+    rowProto = obj
+  }
+
+  return rowProto as CoreRow<TData>
+}
+
 export const createRow = <TData extends RowData>(
   table: Table<TData>,
   id: string,
@@ -101,95 +231,18 @@ export const createRow = <TData extends RowData>(
   subRows?: Row<TData>[],
   parentId?: string
 ): Row<TData> => {
-  let row: CoreRow<TData> = {
+  const row: CoreRow<TData> = Object.create(getRowProto(table))
+  Object.assign(row, {
     id,
     index: rowIndex,
     original,
     depth,
     parentId,
     _valuesCache: {},
-    _uniqueValuesCache: {},
-    getValue: columnId => {
-      if (row._valuesCache.hasOwnProperty(columnId)) {
-        return row._valuesCache[columnId]
-      }
+    })
 
-      const column = table.getColumn(columnId)
-
-      if (!column?.accessorFn) {
-        return undefined
-      }
-
-      row._valuesCache[columnId] = column.accessorFn(
-        row.original as TData,
-        rowIndex
-      )
-
-      return row._valuesCache[columnId] as any
-    },
-    getUniqueValues: columnId => {
-      if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
-        return row._uniqueValuesCache[columnId]
-      }
-
-      const column = table.getColumn(columnId)
-
-      if (!column?.accessorFn) {
-        return undefined
-      }
-
-      if (!column.columnDef.getUniqueValues) {
-        row._uniqueValuesCache[columnId] = [row.getValue(columnId)]
-        return row._uniqueValuesCache[columnId]
-      }
-
-      row._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
-        row.original as TData,
-        rowIndex
-      )
-
-      return row._uniqueValuesCache[columnId] as any
-    },
-    renderValue: columnId =>
-      row.getValue(columnId) ?? table.options.renderFallbackValue,
-    subRows: subRows ?? [],
-    getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
-    getParentRow: () =>
-      row.parentId ? table.getRow(row.parentId, true) : undefined,
-    getParentRows: () => {
-      let parentRows: Row<TData>[] = []
-      let currentRow = row
-      while (true) {
-        const parentRow = currentRow.getParentRow()
-        if (!parentRow) break
-        parentRows.push(parentRow)
-        currentRow = parentRow
-      }
-      return parentRows.reverse()
-    },
-    getAllCells: memo(
-      () => [table.getAllLeafColumns()],
-      leafColumns => {
-        return leafColumns.map(column => {
-          return createCell(table, row as Row<TData>, column, column.id)
-        })
-      },
-      getMemoOptions(table.options, 'debugRows', 'getAllCells')
-    ),
-
-    _getAllCellsByColumnId: memo(
-      () => [row.getAllCells()],
-      allCells => {
-        return allCells.reduce(
-          (acc, cell) => {
-            acc[cell.column.id] = cell
-            return acc
-          },
-          {} as Record<string, Cell<TData, unknown>>
-        )
-      },
-      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId')
-    ),
+  if (subRows) {
+    row.subRows = subRows
   }
 
   for (let i = 0; i < table._features.length; i++) {

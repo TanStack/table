@@ -1,4 +1,4 @@
-import { ColumnPinningPosition } from '..'
+import { ColumnPinningPosition, getRowProto } from '..'
 import {
   Cell,
   Column,
@@ -201,28 +201,6 @@ export const ColumnVisibility: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>
-  ): void => {
-    row._getAllVisibleCells = memo(
-      () => [row.getAllCells(), table.getState().columnVisibility],
-      cells => {
-        return cells.filter(cell => cell.column.getIsVisible())
-      },
-      getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells')
-    )
-    row.getVisibleCells = memo(
-      () => [
-        row.getLeftVisibleCells(),
-        row.getCenterVisibleCells(),
-        row.getRightVisibleCells(),
-      ],
-      (left, center, right) => [...left, ...center, ...right],
-      getMemoOptions(table.options, 'debugRows', 'getVisibleCells')
-    )
-  },
-
   createTable: <TData extends RowData>(table: Table<TData>): void => {
     const makeVisibleColumnsMethod = (
       key: string,
@@ -300,6 +278,30 @@ export const ColumnVisibility: TableFeature = {
         )
       }
     }
+
+    Object.assign(getRowProto(table), {
+      _getAllVisibleCells: memo(
+        function (this: Row<unknown>) {
+          return [this.getAllCells(), table.getState().columnVisibility]
+        },
+        cells => {
+          return cells.filter(cell => cell.column.getIsVisible())
+        },
+        getMemoOptions(table.options, 'debugRows', '_getAllVisibleCells')
+      ),
+
+      getVisibleCells: memo(
+        function (this: Row<unknown>) {
+          return [
+            this.getLeftVisibleCells(),
+            this.getCenterVisibleCells(),
+            this.getRightVisibleCells(),
+          ]
+        },
+        (left, center, right) => [...left, ...center, ...right],
+        getMemoOptions(table.options, 'debugRows', 'getVisibleCells')
+      ),
+    })
   },
 }
 

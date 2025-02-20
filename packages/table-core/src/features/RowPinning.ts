@@ -1,3 +1,4 @@
+import { getRowProto } from '..'
 import {
   OnChangeFn,
   Updater,
@@ -142,75 +143,6 @@ export const RowPinning: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>
-  ): void => {
-    row.pin = (position, includeLeafRows, includeParentRows) => {
-      const leafRowIds = includeLeafRows
-        ? row.getLeafRows().map(({ id }) => id)
-        : []
-      const parentRowIds = includeParentRows
-        ? row.getParentRows().map(({ id }) => id)
-        : []
-      const rowIds = new Set([...parentRowIds, row.id, ...leafRowIds])
-
-      table.setRowPinning(old => {
-        if (position === 'bottom') {
-          return {
-            top: (old?.top ?? []).filter(d => !rowIds?.has(d)),
-            bottom: [
-              ...(old?.bottom ?? []).filter(d => !rowIds?.has(d)),
-              ...Array.from(rowIds),
-            ],
-          }
-        }
-
-        if (position === 'top') {
-          return {
-            top: [
-              ...(old?.top ?? []).filter(d => !rowIds?.has(d)),
-              ...Array.from(rowIds),
-            ],
-            bottom: (old?.bottom ?? []).filter(d => !rowIds?.has(d)),
-          }
-        }
-
-        return {
-          top: (old?.top ?? []).filter(d => !rowIds?.has(d)),
-          bottom: (old?.bottom ?? []).filter(d => !rowIds?.has(d)),
-        }
-      })
-    }
-    row.getCanPin = () => {
-      const { enableRowPinning, enablePinning } = table.options
-      if (typeof enableRowPinning === 'function') {
-        return enableRowPinning(row)
-      }
-      return enableRowPinning ?? enablePinning ?? true
-    }
-    row.getIsPinned = () => {
-      const rowIds = [row.id]
-
-      const { top, bottom } = table.getState().rowPinning
-
-      const isTop = rowIds.some(d => top?.includes(d))
-      const isBottom = rowIds.some(d => bottom?.includes(d))
-
-      return isTop ? 'top' : isBottom ? 'bottom' : false
-    }
-    row.getPinnedIndex = () => {
-      const position = row.getIsPinned()
-      if (!position) return -1
-
-      const visiblePinnedRowIds = (
-        position === 'top' ? table.getTopRows() : table.getBottomRows()
-      )?.map(({ id }) => id)
-
-      return visiblePinnedRowIds?.indexOf(row.id) ?? -1
-    }
-  },
-
   createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setRowPinning = updater => table.options.onRowPinningChange?.(updater)
 
@@ -273,5 +205,74 @@ export const RowPinning: TableFeature = {
       },
       getMemoOptions(table.options, 'debugRows', 'getCenterRows')
     )
+
+    Object.assign(getRowProto(table), {
+      pin(position, includeLeafRows, includeParentRows) {
+        const leafRowIds = includeLeafRows
+          ? this.getLeafRows().map(({ id }) => id)
+          : []
+        const parentRowIds = includeParentRows
+          ? this.getParentRows().map(({ id }) => id)
+          : []
+        const rowIds = new Set([...parentRowIds, this.id, ...leafRowIds])
+
+        table.setRowPinning(old => {
+          if (position === 'bottom') {
+            return {
+              top: (old?.top ?? []).filter(d => !rowIds?.has(d)),
+              bottom: [
+                ...(old?.bottom ?? []).filter(d => !rowIds?.has(d)),
+                ...Array.from(rowIds),
+              ],
+            }
+          }
+
+          if (position === 'top') {
+            return {
+              top: [
+                ...(old?.top ?? []).filter(d => !rowIds?.has(d)),
+                ...Array.from(rowIds),
+              ],
+              bottom: (old?.bottom ?? []).filter(d => !rowIds?.has(d)),
+            }
+          }
+
+          return {
+            top: (old?.top ?? []).filter(d => !rowIds?.has(d)),
+            bottom: (old?.bottom ?? []).filter(d => !rowIds?.has(d)),
+          }
+        })
+      },
+
+      getCanPin() {
+        const { enableRowPinning, enablePinning } = table.options
+        if (typeof enableRowPinning === 'function') {
+          return enableRowPinning(this)
+        }
+        return enableRowPinning ?? enablePinning ?? true
+      },
+
+      getIsPinned() {
+        const rowIds = [this.id]
+
+        const { top, bottom } = table.getState().rowPinning
+
+        const isTop = rowIds.some(d => top?.includes(d))
+        const isBottom = rowIds.some(d => bottom?.includes(d))
+
+        return isTop ? 'top' : isBottom ? 'bottom' : false
+      },
+
+      getPinnedIndex() {
+        const position = this.getIsPinned()
+        if (!position) return -1
+
+        const visiblePinnedRowIds = (
+          position === 'top' ? table.getTopRows() : table.getBottomRows()
+        )?.map(({ id }) => id)
+
+        return visiblePinnedRowIds?.indexOf(this.id) ?? -1
+      },
+    } as RowPinningRow & Row<any>)
   },
 }

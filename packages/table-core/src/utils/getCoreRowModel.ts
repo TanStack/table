@@ -71,7 +71,9 @@ export function getCoreRowModel<TData extends RowData>(): (
           return rows
         }
 
+        console.time('accessRows');
         rowModel.rows = accessRows(data)
+        console.timeEnd('accessRows');
 
         return rowModel
       },

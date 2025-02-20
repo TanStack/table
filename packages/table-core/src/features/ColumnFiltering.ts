@@ -366,6 +366,7 @@ export const ColumnFiltering: TableFeature = {
     row: Row<TData>,
     _table: Table<TData>
   ): void => {
+    // TODO: move to a lazy-initialized proto getters
     row.columnFilters = {}
     row.columnFiltersMeta = {}
   },

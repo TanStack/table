@@ -1,4 +1,4 @@
-import { RowModel } from '..'
+import { getRowProto, RowModel } from '..'
 import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
 import {
   AggregationFns,
@@ -353,30 +353,36 @@ export const ColumnGrouping: TableFeature = {
 
       return table._getGroupedRowModel()
     }
+
+    Object.assign(getRowProto(table), {
+      getIsGrouped() {
+        return !!this.groupingColumnId
+      },
+      getGroupingValue(columnId) {
+        if (this._groupingValuesCache.hasOwnProperty(columnId)) {
+          return this._groupingValuesCache[columnId]
+        }
+
+        const column = table.getColumn(columnId)
+
+        if (!column?.columnDef.getGroupingValue) {
+          return this.getValue(columnId)
+        }
+
+        this._groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
+          this.original
+        )
+
+        return this._groupingValuesCache[columnId]
+      },
+    } as GroupingRow & Row<any>)
   },
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
     table: Table<TData>
   ): void => {
-    row.getIsGrouped = () => !!row.groupingColumnId
-    row.getGroupingValue = columnId => {
-      if (row._groupingValuesCache.hasOwnProperty(columnId)) {
-        return row._groupingValuesCache[columnId]
-      }
-
-      const column = table.getColumn(columnId)
-
-      if (!column?.columnDef.getGroupingValue) {
-        return row.getValue(columnId)
-      }
-
-      row._groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
-        row.original
-      )
-
-      return row._groupingValuesCache[columnId]
-    }
+    // TODO: move to a lazy-initialized proto getter
     row._groupingValuesCache = {}
   },
 

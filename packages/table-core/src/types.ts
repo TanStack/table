@@ -98,6 +98,7 @@ import { CellContext, CoreCell } from './core/cell'
 import { CoreColumn } from './core/column'
 
 export interface TableFeature<TData extends RowData = any> {
+  init?: (table: Table<TData>) => void
   createCell?: (
     cell: Cell<TData, unknown>,
     column: Column<TData>,
