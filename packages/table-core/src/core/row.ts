@@ -94,7 +94,6 @@ export interface CoreRow<TData extends RowData> {
 
 const rowProtosByTable = new WeakMap<Table<any>, any>()
 
-
 /**
  * Creates a table-specific row prototype object to hold shared row methods, including from all the
  * features that have been registered on the table.
@@ -112,7 +111,6 @@ export function getRowProto<TData extends RowData>(table: Table<TData>) {
       subRows: [],
       _valuesCache: {},
       _uniqueValuesCache: {},
-
 
       getValue(columnId: string) {
         if (this._valuesCache.hasOwnProperty(columnId)) {
@@ -136,7 +134,7 @@ export function getRowProto<TData extends RowData>(table: Table<TData>) {
       getUniqueValues(columnId: string) {
         if (!this.hasOwnProperty('_uniqueValuesCache')) {
           // lazy-init cache on the instance
-          this._uniqueValuesCache = {};
+          this._uniqueValuesCache = {}
         }
 
         if (this._uniqueValuesCache.hasOwnProperty(columnId)) {
@@ -239,7 +237,7 @@ export const createRow = <TData extends RowData>(
     depth,
     parentId,
     _valuesCache: {},
-    })
+  })
 
   if (subRows) {
     row.subRows = subRows

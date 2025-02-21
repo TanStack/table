@@ -145,11 +145,11 @@ export function memo<TDeps extends readonly any[], TDepArgs, TResult>(
   let deps: any[] = []
   let result: TResult | undefined
 
-  return function(this: any, depArgs) {
+  return function (this: any, depArgs) {
     let depTime: number
     if (opts.key && opts.debug) depTime = Date.now()
 
-    const newDeps = getDeps.call(this, depArgs);
+    const newDeps = getDeps.call(this, depArgs)
 
     const depsChanged =
       newDeps.length !== deps.length ||
