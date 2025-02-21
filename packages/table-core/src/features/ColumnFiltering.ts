@@ -1,4 +1,4 @@
-import { RowModel } from '..'
+import { getRowProto, RowModel } from '..'
 import { BuiltInFilterFn, filterFns } from '../filterFns'
 import {
   Column,
@@ -362,15 +362,6 @@ export const ColumnFiltering: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
-    row: Row<TData>,
-    _table: Table<TData>
-  ): void => {
-    // TODO: move to a lazy-initialized proto getters
-    row.columnFilters = {}
-    row.columnFiltersMeta = {}
-  },
-
   createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setColumnFilters = (updater: Updater<ColumnFiltersState>) => {
       const leafColumns = table.getAllLeafColumns()
@@ -412,6 +403,23 @@ export const ColumnFiltering: TableFeature = {
 
       return table._getFilteredRowModel()
     }
+
+    Object.assign(getRowProto(table), {
+      get columnFilters() {
+        // Lazy-init the backing cache on the instance so we don't take up memory for rows that don't need it
+        return ((
+          this as { _columnFilters?: ColumnFiltersRow<any>['columnFilters'] }
+        )._columnFilters ??= {})
+      },
+      get columnFiltersMeta() {
+        // Lazy-init the backing cache on the instance so we don't take up memory for rows that don't need it
+        return ((
+          this as {
+            _columnFiltersMeta?: ColumnFiltersRow<any>['columnFiltersMeta']
+          }
+        )._columnFiltersMeta ??= {})
+      },
+    } as ColumnFiltersRow<any> & Row<any>)
   },
 }
 

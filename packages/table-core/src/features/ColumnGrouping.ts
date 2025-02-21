@@ -355,6 +355,15 @@ export const ColumnGrouping: TableFeature = {
     }
 
     Object.assign(getRowProto(table), {
+      get _groupingValuesCache() {
+        // Lazy-init the backing cache on the instance so we don't take up memory for rows that don't need it
+        return ((
+          this as {
+            __groupingValuesCache?: GroupingRow['_groupingValuesCache']
+          }
+        ).__groupingValuesCache ??= {})
+      },
+
       getIsGrouped() {
         return !!this.groupingColumnId
       },
@@ -376,14 +385,6 @@ export const ColumnGrouping: TableFeature = {
         return this._groupingValuesCache[columnId]
       },
     } as GroupingRow & Row<any>)
-  },
-
-  createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>
-  ): void => {
-    // TODO: move to a lazy-initialized proto getter
-    row._groupingValuesCache = {}
   },
 
   createCell: <TData extends RowData, TValue>(
