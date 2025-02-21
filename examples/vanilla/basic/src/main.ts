@@ -12,7 +12,7 @@ type Person = {
   status: string
   progress: number
 }
-/*
+
 const data: Person[] = [
   {
     firstName: 'tanner',
@@ -38,10 +38,7 @@ const data: Person[] = [
     status: 'Complicated',
     progress: 10,
   },
-];
-*/
-
-const data = new Array(50000).fill({});
+]
 
 const columnHelper = createColumnHelper<Person>()
 
@@ -99,15 +96,8 @@ const renderTable = () => {
     theadElement.appendChild(trElement)
   })
 
-
-  table.getRowModel();
-
-
-/*
   // Render table rows
-  table.getRowModel().rows.forEach((row, idx) => {
-    if (idx > 10) return;
-
+  table.getRowModel().rows.forEach(row => {
     const trElement = document.createElement('tr')
     row.getVisibleCells().forEach(cell => {
       const tdElement = document.createElement('td')
@@ -120,7 +110,6 @@ const renderTable = () => {
     tbodyElement.appendChild(trElement)
   })
 
-  /*
   // Render table footers
   table.getFooterGroups().forEach(footerGroup => {
     const trElement = document.createElement('tr')
@@ -133,8 +122,6 @@ const renderTable = () => {
     })
     tfootElement.appendChild(trElement)
   })
-
-  */
 
   // Clear previous content and append new content
   const wrapperElement = document.getElementById('wrapper') as HTMLDivElement
