@@ -1,3 +1,4 @@
+import { getRowProto } from '..'
 import {
   OnChangeFn,
   Table,
@@ -464,83 +465,82 @@ export const RowSelection: TableFeature = {
         )
       }
     }
-  },
 
-  createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>
-  ): void => {
-    row.toggleSelected = (value, opts) => {
-      const isSelected = row.getIsSelected()
+    Object.assign(getRowProto(table), {
+      toggleSelected(value, opts) {
+        const isSelected = this.getIsSelected()
 
-      table.setRowSelection(old => {
-        value = typeof value !== 'undefined' ? value : !isSelected
+        table.setRowSelection(old => {
+          value = typeof value !== 'undefined' ? value : !isSelected
 
-        if (row.getCanSelect() && isSelected === value) {
-          return old
+          if (this.getCanSelect() && isSelected === value) {
+            return old
+          }
+
+          const selectedRowIds = { ...old }
+
+          mutateRowIsSelected(
+            selectedRowIds,
+            this.id,
+            value,
+            opts?.selectChildren ?? true,
+            table
+          )
+
+          return selectedRowIds
+        })
+      },
+
+      getIsSelected() {
+        const { rowSelection } = table.getState()
+        return isRowSelected(this, rowSelection)
+      },
+
+      getIsSomeSelected() {
+        const { rowSelection } = table.getState()
+        return isSubRowSelected(this, rowSelection, table) === 'some'
+      },
+
+      getIsAllSubRowsSelected() {
+        const { rowSelection } = table.getState()
+        return isSubRowSelected(this, rowSelection, table) === 'all'
+      },
+
+      getCanSelect() {
+        if (typeof table.options.enableRowSelection === 'function') {
+          return table.options.enableRowSelection(this)
         }
 
-        const selectedRowIds = { ...old }
+        return table.options.enableRowSelection ?? true
+      },
 
-        mutateRowIsSelected(
-          selectedRowIds,
-          row.id,
-          value,
-          opts?.selectChildren ?? true,
-          table
-        )
+      getCanSelectSubRows() {
+        if (typeof table.options.enableSubRowSelection === 'function') {
+          return table.options.enableSubRowSelection(this)
+        }
 
-        return selectedRowIds
-      })
-    }
-    row.getIsSelected = () => {
-      const { rowSelection } = table.getState()
-      return isRowSelected(row, rowSelection)
-    }
+        return table.options.enableSubRowSelection ?? true
+      },
 
-    row.getIsSomeSelected = () => {
-      const { rowSelection } = table.getState()
-      return isSubRowSelected(row, rowSelection, table) === 'some'
-    }
+      getCanMultiSelect() {
+        if (typeof table.options.enableMultiRowSelection === 'function') {
+          return table.options.enableMultiRowSelection(this)
+        }
 
-    row.getIsAllSubRowsSelected = () => {
-      const { rowSelection } = table.getState()
-      return isSubRowSelected(row, rowSelection, table) === 'all'
-    }
+        return table.options.enableMultiRowSelection ?? true
+      },
 
-    row.getCanSelect = () => {
-      if (typeof table.options.enableRowSelection === 'function') {
-        return table.options.enableRowSelection(row)
-      }
+      getToggleSelectedHandler() {
+        const canSelect = this.getCanSelect()
 
-      return table.options.enableRowSelection ?? true
-    }
-
-    row.getCanSelectSubRows = () => {
-      if (typeof table.options.enableSubRowSelection === 'function') {
-        return table.options.enableSubRowSelection(row)
-      }
-
-      return table.options.enableSubRowSelection ?? true
-    }
-
-    row.getCanMultiSelect = () => {
-      if (typeof table.options.enableMultiRowSelection === 'function') {
-        return table.options.enableMultiRowSelection(row)
-      }
-
-      return table.options.enableMultiRowSelection ?? true
-    }
-    row.getToggleSelectedHandler = () => {
-      const canSelect = row.getCanSelect()
-
-      return (e: unknown) => {
-        if (!canSelect) return
-        row.toggleSelected(
-          ((e as MouseEvent).target as HTMLInputElement)?.checked
-        )
-      }
-    }
+        return (e: unknown) => {
+          if (!canSelect) return
+          this.toggleSelected(
+            ((e as MouseEvent).target as HTMLInputElement)?.checked
+          )
+        }
+      },
+    } as RowSelectionRow & Row<any>)
   },
 }
 
