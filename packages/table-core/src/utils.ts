@@ -164,7 +164,7 @@ export function memo<TDeps extends readonly any[], TDepArgs, TResult>(
     let resultTime: number
     if (opts.key && opts.debug) resultTime = Date.now()
 
-    result = fn(...newDeps)
+    result = fn.apply(this, newDeps)
     opts?.onChange?.(result)
 
     if (opts.key && opts.debug) {
