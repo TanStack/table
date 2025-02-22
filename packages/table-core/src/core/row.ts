@@ -102,119 +102,114 @@ export function getRowProto<TData extends RowData>(table: Table<TData>) {
   let rowProto = rowProtosByTable.get(table)
 
   if (!rowProto) {
-    const obj: CoreRow<TData> = {
-      // props are here only for typing; they are set on the instance at runtime
-      id: 'unused',
-      depth: 0,
-      index: -1,
-      original: undefined as TData,
-      subRows: [],
-      _valuesCache: {},
-      _uniqueValuesCache: {},
+    const proto = {} as CoreRow<TData>
 
-      getValue(columnId: string) {
-        if (this._valuesCache.hasOwnProperty(columnId)) {
-          return this._valuesCache[columnId]
-        }
+    // Make the default fallback value available on the proto itself to avoid duplicating it on every row instance
+    // even if it's not used. This is safe as long as we don't mutate the value directly.
+    proto.subRows = [] as const
 
-        const column = table.getColumn(columnId)
+    proto.getValue = function (columnId: string) {
+      if (this._valuesCache.hasOwnProperty(columnId)) {
+        return this._valuesCache[columnId]
+      }
 
-        if (!column?.accessorFn) {
-          return undefined
-        }
+      const column = table.getColumn(columnId)
 
-        this._valuesCache[columnId] = column.accessorFn(
-          this.original as TData,
-          this.index
-        )
+      if (!column?.accessorFn) {
+        return undefined
+      }
 
-        return this._valuesCache[columnId] as any
-      },
+      this._valuesCache[columnId] = column.accessorFn(
+        this.original as TData,
+        this.index
+      )
 
-      getUniqueValues(columnId: string) {
-        if (!this.hasOwnProperty('_uniqueValuesCache')) {
-          // lazy-init cache on the instance
-          this._uniqueValuesCache = {}
-        }
-
-        if (this._uniqueValuesCache.hasOwnProperty(columnId)) {
-          return this._uniqueValuesCache[columnId]
-        }
-
-        const column = table.getColumn(columnId)
-
-        if (!column?.accessorFn) {
-          return undefined
-        }
-
-        if (!column.columnDef.getUniqueValues) {
-          this._uniqueValuesCache[columnId] = [this.getValue(columnId)]
-          return this._uniqueValuesCache[columnId]
-        }
-
-        this._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
-          this.original as TData,
-          this.index
-        )
-
-        return this._uniqueValuesCache[columnId] as any
-      },
-
-      renderValue(columnId: string) {
-        return this.getValue(columnId) ?? table.options.renderFallbackValue
-      },
-
-      getLeafRows() {
-        return flattenBy(this.subRows, d => d.subRows)
-      },
-
-      getParentRow() {
-        return this.parentId ? table.getRow(this.parentId, true) : undefined
-      },
-
-      getParentRows() {
-        let parentRows: Row<TData>[] = []
-        let currentRow = this
-        while (true) {
-          const parentRow = currentRow.getParentRow()
-          if (!parentRow) break
-          parentRows.push(parentRow)
-          currentRow = parentRow
-        }
-        return parentRows.reverse()
-      },
-
-      getAllCells: memo(
-        function (this: Row<TData>) {
-          return [this, table.getAllLeafColumns()]
-        },
-        (row, leafColumns) => {
-          return leafColumns.map(column => {
-            return createCell(table, row, column, column.id)
-          })
-        },
-        getMemoOptions(table.options, 'debugRows', 'getAllCells')
-      ),
-
-      _getAllCellsByColumnId: memo(
-        function (this: Row<TData>) {
-          return [this.getAllCells()]
-        },
-        allCells => {
-          return allCells.reduce(
-            (acc, cell) => {
-              acc[cell.column.id] = cell
-              return acc
-            },
-            {} as Record<string, Cell<TData, unknown>>
-          )
-        },
-        getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId')
-      ),
+      return this._valuesCache[columnId] as any
     }
 
-    rowProtosByTable.set(table, obj)
-    rowProto = obj
+    proto.getUniqueValues = function (columnId: string) {
+      if (!this.hasOwnProperty('_uniqueValuesCache')) {
+        // lazy-init cache on the instance
+        this._uniqueValuesCache = {}
+      }
+
+      if (this._uniqueValuesCache.hasOwnProperty(columnId)) {
+        return this._uniqueValuesCache[columnId]
+      }
+
+      const column = table.getColumn(columnId)
+
+      if (!column?.accessorFn) {
+        return undefined
+      }
+
+      if (!column.columnDef.getUniqueValues) {
+        this._uniqueValuesCache[columnId] = [this.getValue(columnId)]
+        return this._uniqueValuesCache[columnId]
+      }
+
+      this._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
+        this.original as TData,
+        this.index
+      )
+
+      return this._uniqueValuesCache[columnId] as any
+    }
+
+    proto.renderValue = function (columnId: string) {
+      return this.getValue(columnId) ?? table.options.renderFallbackValue
+    }
+
+    proto.getLeafRows = function () {
+      return flattenBy(this.subRows, d => d.subRows)
+    }
+
+    proto.getParentRow = function () {
+      return this.parentId ? table.getRow(this.parentId, true) : undefined
+    }
+
+    proto.getParentRows = function () {
+      let parentRows: Row<TData>[] = []
+      let currentRow = this
+      while (true) {
+        const parentRow = currentRow.getParentRow()
+        if (!parentRow) break
+        parentRows.push(parentRow)
+        currentRow = parentRow
+      }
+      return parentRows.reverse()
+    }
+
+    proto.getAllCells = memo(
+      function (this: Row<TData>) {
+        return [this, table.getAllLeafColumns()]
+      },
+      (row, leafColumns) => {
+        return leafColumns.map(column => {
+          return createCell(table, row, column, column.id)
+        })
+      },
+      getMemoOptions(table.options, 'debugRows', 'getAllCells')
+    )
+
+    proto._getAllCellsByColumnId = memo(
+      function (this: Row<TData>) {
+        return [this.getAllCells()]
+      },
+      allCells => {
+        return allCells.reduce(
+          (acc, cell) => {
+            acc[cell.column.id] = cell
+            return acc
+          },
+          {} as Record<string, Cell<TData, unknown>>
+        )
+      },
+      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId')
+    )
+
+    rowProtosByTable.set(table, proto)
+    rowProto = proto
   }
 
   return rowProto as CoreRow<TData>
