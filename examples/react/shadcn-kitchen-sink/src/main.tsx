@@ -26,6 +26,7 @@ import type { Person } from '@/makeData'
 import type {
   CellData,
   ColumnDef,
+  ColumnFilter,
   ColumnFiltersState,
   ColumnSizingState,
   RowData,
@@ -74,6 +75,11 @@ declare module '@tanstack/react-table' {
   }
 }
 
+export interface ExtendedColumnFilter extends ColumnFilter {
+  operator?: string
+  rowId?: string
+}
+
 const _features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
@@ -90,9 +96,9 @@ function App() {
   const [rowSelection, setRowSelection] = React.useState({})
   const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  )
+  const [columnFilters, setColumnFilters] = React.useState<
+    Array<ExtendedColumnFilter>
+  >([])
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
 

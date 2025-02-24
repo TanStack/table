@@ -4,13 +4,12 @@ import * as React from 'react'
 import { Check, ListFilter, Trash2 } from 'lucide-react'
 import type {
   Column,
-  ColumnFilter,
-  ColumnFiltersState,
   ColumnMeta,
   RowData,
   Table,
   TableFeatures,
 } from '@tanstack/react-table'
+import type { ExtendedColumnFilter } from '@/main'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -36,11 +35,6 @@ import {
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 
-interface AdvancedFilter extends ColumnFilter {
-  operator?: string
-  rowId?: string
-}
-
 interface DataTableFilterListProps<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -49,8 +43,8 @@ interface DataTableFilterListProps<
     Pick<TFeatures, 'columnFilteringFeature' | 'columnFacetingFeature'>,
     TData
   >
-  columnFilters: ColumnFiltersState
-  onColumnFiltersChange: (columnFilters: ColumnFiltersState) => void
+  columnFilters: Array<ExtendedColumnFilter>
+  onColumnFiltersChange: (columnFilters: Array<ExtendedColumnFilter>) => void
 }
 
 export function DataTableFilterList<
@@ -313,10 +307,9 @@ export function DataTableFilterList<
   }, [columnFilters, createFilterRow, filterableColumns, onColumnFiltersChange])
 
   const updateFilterRow = React.useCallback(
-    (rowId: string, updates: Partial<AdvancedFilter>) => {
+    (rowId: string, updates: Partial<ExtendedColumnFilter>) => {
       const newFilters = columnFilters.map((filter) => {
-        const advancedFilter = filter as AdvancedFilter
-        if (advancedFilter.rowId === rowId) {
+        if (filter.rowId === rowId) {
           // If column is being changed, set the default operator based on the new column type
           if (updates.id) {
             const newColumn = filterableColumns.find(
@@ -351,8 +344,7 @@ export function DataTableFilterList<
   const removeFilterRow = React.useCallback(
     (rowId: string) => {
       const newFilters = columnFilters.filter((filter) => {
-        const advancedFilter = filter as AdvancedFilter
-        return advancedFilter.rowId !== rowId
+        return filter.rowId !== rowId
       })
       onColumnFiltersChange(newFilters)
     },
@@ -360,7 +352,7 @@ export function DataTableFilterList<
   )
 
   const renderFilterRow = React.useCallback(
-    (filter: AdvancedFilter, index: number) => {
+    (filter: ExtendedColumnFilter, index: number) => {
       const column = table.getColumn(filter.id)
       if (!column || !filter.rowId) return null
 
@@ -504,7 +496,7 @@ export function DataTableFilterList<
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 {columnFilters.map((filter, index) =>
-                  renderFilterRow(filter as AdvancedFilter, index),
+                  renderFilterRow(filter, index),
                 )}
               </div>
             </div>
