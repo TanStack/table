@@ -4,11 +4,11 @@ title: Columns Guide
 
 ## API
 
-[Column API](../../api/core/column)
+[Column API](../api/core/column)
 
 ## Columns Guide
 
-> Note: This guide is about the actual `column` objects that are generated within the table instance and NOT about setting up the [column definitions](../column-defs) for your table.
+> Note: This guide is about the actual `column` objects that are generated within the table instance and NOT about setting up the [column definitions](./column-defs) for your table.
 
 This quick guide will discuss the different ways you can retrieve and interact with `column` objects in TanStack Table.
 
@@ -18,7 +18,7 @@ You can find the `column` objects in many places. They are often attached
 
 #### Header and Cell Objects
 
-Before you reach for one of the `table` instance APIs, consider if you actually need to retrieve either [headers](../headers) or [cells](../cells) instead of `columns`. If you are rending out the markup for your table, you will most likely want to reach for the APIs that return headers or cells instead of columns. The column objects themselves are not really meant to render out the headers or cells, but the `header` and `cell` objects will contain references to these `column` objects from which they can derive the necessary information to render their UI.
+Before you reach for one of the `table` instance APIs, consider if you actually need to retrieve either [headers](./headers) or [cells](./cells) instead of `columns`. If you are rending out the markup for your table, you will most likely want to reach for the APIs that return headers or cells instead of columns. The column objects themselves are not really meant to render out the headers or cells, but the `header` and `cell` objects will contain references to these `column` objects from which they can derive the necessary information to render their UI.
 
 ```js
 const column = cell.column; // get column from cell
@@ -47,7 +47,7 @@ Column objects are not actually meant to be used to render out the table UI dire
 
 #### Column IDs
 
-Every column must have a unique `id` defined in their associated [Column Definition](../column-defs). Usually, you define this `id` yourself, or it is derived from the `accessorKey` or `header` properties in the column definition.
+Every column must have a unique `id` defined in their associated [Column Definition](./column-defs). Usually, you define this `id` yourself, or it is derived from the `accessorKey` or `header` properties in the column definition.
 
 #### ColumnDef
 
@@ -67,6 +67,6 @@ There are dozens of Column APIs that you can use to interact with the table stat
 
 ### Column Rendering
 
-Don't necessarily use `column` objects to render `headers` or `cells` directly. Instead, use the [`header`](../headers) and [`cell`](../cells) objects, as discussed above.
+Don't necessarily use `column` objects to render `headers` or `cells` directly. Instead, use the [`header`](./headers) and [`cell`](./cells) objects, as discussed above.
 
 But if you are just rendering a list of columns somewhere else in your UI for something like a column visibility menu or something similar, you can just map over a columns array and render out the UI as you normally would.

@@ -4,7 +4,7 @@ title: Rows Guide
 
 ## API
 
-[Row API](../../api/core/row)
+[Row API](../api/core/row)
 
 ## Rows Guide
 
@@ -24,7 +24,7 @@ const row = table.getRow(rowId)
 
 #### Row Models
 
-The `table` instance generates `row` objects and stores them in useful arrays called ["Row Models"](../row-models). This is discussed in much more detail in the [Row Models Guide](../row-models), but here are the most common ways you may access the row models.
+The `table` instance generates `row` objects and stores them in useful arrays called ["Row Models"](./row-models). This is discussed in much more detail in the [Row Models Guide](./row-models), but here are the most common ways you may access the row models.
 
 ##### Render Rows
 

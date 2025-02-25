@@ -4,7 +4,7 @@ title: Table Instance Guide
 
 ## API
 
-[Table API](../../api/core/table)
+[Table API](../api/core/table)
 
 ## Table Instance Guide
 
@@ -22,7 +22,7 @@ Define your data as an array of objects with a stable reference. `data` can come
 
 #### Defining Columns
 
-Column definitions are covered in detail in the previous section in the [Column Def Guide](../column-defs). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for your data.
+Column definitions are covered in detail in the previous section in the [Column Def Guide](./column-defs). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for your data.
 
 ```ts
 const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
@@ -34,7 +34,7 @@ The column definitions are where we will tell TanStack Table how each column sho
 
 #### Passing in Row Models
 
-This is explained in much more detail in the [Row Models Guide](../row-models), but for now, just import the `getCoreRowModel` function from TanStack Table and pass it in as a table option. Depending on the features you plan to use, you may need to pass in additional row models later.
+This is explained in much more detail in the [Row Models Guide](./row-models), but for now, just import the `getCoreRowModel` function from TanStack Table and pass it in as a table option. Depending on the features you plan to use, you may need to pass in additional row models later.
 
 ```ts
 import { getCoreRowModel } from '@tanstack/[framework]-table'
@@ -86,7 +86,7 @@ table.setRowSelection((old) => ({...old})) //set the row selection state
 table.resetRowSelection() //reset the row selection state
 ```
 
-This is covered in more detail in the [Table State Guides](../../framework/react/guide/table-state)
+This is covered in more detail in the [Table State Guides](../framework/react/guide/table-state)
 
 ### Table APIs
 
@@ -94,7 +94,7 @@ There are dozens of table APIs created by each feature to help you either read o
 
 API reference docs for the core table instance and all other feature APIs can be found throughout the API docs.
 
-For example, you can find the core table instance API docs here: [Table API](../../api/core/table#table-api)
+For example, you can find the core table instance API docs here: [Table API](../api/core/table#table-api)
 
 ### Table Row Models
 
