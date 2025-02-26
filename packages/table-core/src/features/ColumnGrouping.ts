@@ -354,16 +354,15 @@ export const ColumnGrouping: TableFeature = {
       return table._getGroupedRowModel()
     }
 
-    Object.assign(getRowProto(table), {
-      get _groupingValuesCache() {
+    Object.defineProperty(getRowProto(table), '_groupingValuesCache', {
+      get() {
         // Lazy-init the backing cache on the instance so we don't take up memory for rows that don't need it
-        return ((
-          this as {
-            __groupingValuesCache?: GroupingRow['_groupingValuesCache']
-          }
-        ).__groupingValuesCache ??= {})
+        return (this.__groupingValuesCache ??= {})
       },
+      enumerable: true,
+    })
 
+    Object.assign(getRowProto(table), {
       getIsGrouped() {
         return !!this.groupingColumnId
       },
