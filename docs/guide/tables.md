@@ -4,7 +4,7 @@ title: Table Instance Guide
 
 ## API
 
-[Table API](../../api/core/table)
+[Table API](../api/core/table.md)
 
 ## Table Instance Guide
 
