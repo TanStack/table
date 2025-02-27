@@ -108,7 +108,7 @@ export function getRowProto<TData extends RowData>(table: Table<TData>) {
     proto.clone = function () {
       return Object.assign(Object.create(Object.getPrototypeOf(this)), this)
     }
-      
+
     // Make the default fallback value available on the proto itself to avoid duplicating it on every row instance
     // even if it's not used. This is safe as long as we don't mutate the value directly.
     proto.subRows = [] as const
