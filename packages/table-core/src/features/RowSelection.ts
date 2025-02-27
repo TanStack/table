@@ -599,10 +599,8 @@ export function selectRowsFn<TData extends RowData>(
         }
 
         if (row.subRows?.length) {
-          row = {
-            ...row,
-            subRows: recurseRows(row.subRows, depth + 1),
-          }
+          row = row.clone()
+          row.subRows = recurseRows(row.subRows, depth + 1)
         }
 
         if (isSelected) {

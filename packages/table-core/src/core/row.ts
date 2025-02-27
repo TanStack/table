@@ -6,6 +6,7 @@ export interface CoreRow<TData extends RowData> {
   _getAllCellsByColumnId: () => Record<string, Cell<TData, unknown>>
   _uniqueValuesCache: Record<string, unknown>
   _valuesCache: Record<string, unknown>
+  clone: () => Row<TData>
   /**
    * The depth of the row (if nested or grouped) relative to the root row array.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/row#depth)
@@ -104,6 +105,10 @@ export function getRowProto<TData extends RowData>(table: Table<TData>) {
   if (!rowProto) {
     const proto = {} as CoreRow<TData>
 
+    proto.clone = function () {
+      return Object.assign(Object.create(Object.getPrototypeOf(this)), this)
+    }
+      
     // Make the default fallback value available on the proto itself to avoid duplicating it on every row instance
     // even if it's not used. This is safe as long as we don't mutate the value directly.
     proto.subRows = [] as const
