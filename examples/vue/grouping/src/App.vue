@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import
-  {
-    FlexRender,
-    getCoreRowModel,
-    getExpandedRowModel,
-    getGroupedRowModel,
-    useVueTable,
-    type ColumnDef,
-    type GroupingState,
-    type ExpandedState,
-  } from '@tanstack/vue-table'
+import {
+  FlexRender,
+  getCoreRowModel,
+  getExpandedRowModel,
+  getGroupedRowModel,
+  useVueTable,
+  type ColumnDef,
+  type GroupingState,
+  type ExpandedState,
+} from '@tanstack/vue-table'
 import { ref } from 'vue'
 
 // Define task type
@@ -77,14 +76,14 @@ const columns: ColumnDef<Task>[] = [
     accessorKey: 'status',
     header: 'Status',
     enableGrouping: true,
-    accessorFn: (row) => row.status.name,
+    accessorFn: row => row.status.name,
     cell: ({ row }) => row.original.status.name,
   },
   {
     accessorKey: 'priority',
     header: 'Priority',
     enableGrouping: true,
-    accessorFn: (row) => row.priority.name,
+    accessorFn: row => row.priority.name,
     cell: ({ row }) => row.original.priority.name,
   },
   {
@@ -118,13 +117,17 @@ const table = useVueTable({
       return expanded.value
     },
   },
-  onGroupingChange: (updaterOrValue) => {
+  onGroupingChange: updaterOrValue => {
     grouping.value =
-      typeof updaterOrValue === 'function' ? updaterOrValue(grouping.value) : updaterOrValue
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(grouping.value)
+        : updaterOrValue
   },
-  onExpandedChange: (updaterOrValue) => {
+  onExpandedChange: updaterOrValue => {
     expanded.value =
-      typeof updaterOrValue === 'function' ? updaterOrValue(expanded.value) : updaterOrValue
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(expanded.value)
+        : updaterOrValue
   },
 })
 
@@ -174,7 +177,11 @@ const clearGrouping = (): void => {
         Group by Priority
       </button>
 
-      <button v-if="grouping.length > 0" @click="clearGrouping" class="clear-button">
+      <button
+        v-if="grouping.length > 0"
+        @click="clearGrouping"
+        class="clear-button"
+      >
         Clear Grouping
       </button>
     </div>
@@ -184,7 +191,10 @@ const clearGrouping = (): void => {
       <table class="data-table">
         <thead>
           <tr>
-            <th v-for="header in table.getHeaderGroups()[0].headers" :key="header.id">
+            <th
+              v-for="header in table.getHeaderGroups()[0].headers"
+              :key="header.id"
+            >
               {{ header.column.columnDef.header }}
             </th>
           </tr>
@@ -198,7 +208,10 @@ const clearGrouping = (): void => {
             <td v-for="cell in row.getVisibleCells()" :key="cell.id">
               <!-- Grouped cell -->
               <div v-if="cell.getIsGrouped()" class="grouped-cell">
-                <button class="expand-button" @click="toggleRowExpanded(row.id)">
+                <button
+                  class="expand-button"
+                  @click="toggleRowExpanded(row.id)"
+                >
                   <span v-if="expanded[row.id]" class="icon">👇</span>
                   <span v-else class="icon">👉</span>
                   <span class="group-value">{{ cell.getValue() }}</span>
@@ -216,14 +229,19 @@ const clearGrouping = (): void => {
 
               <!-- Regular cell -->
               <div v-else>
-                <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+                <FlexRender
+                  :render="cell.column.columnDef.cell"
+                  :props="cell.getContext()"
+                />
               </div>
             </td>
           </tr>
 
           <!-- Empty state -->
           <tr v-if="table.getRowModel().rows.length === 0">
-            <td :colspan="columns.length" class="empty-table">No tasks found.</td>
+            <td :colspan="columns.length" class="empty-table">
+              No tasks found.
+            </td>
           </tr>
         </tbody>
       </table>
