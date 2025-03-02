@@ -8,6 +8,7 @@ import
     useVueTable,
     type ColumnDef,
     type GroupingState,
+    type ExpandedState,
   } from '@tanstack/vue-table'
 import { ref } from 'vue'
 
@@ -100,7 +101,7 @@ const columns: ColumnDef<Task>[] = [
 
 // State for grouping
 const grouping = ref<GroupingState>([])
-const expanded = ref<Record<string, boolean>>({})
+const expanded = ref<ExpandedState>({})
 
 // Initialize table
 const table = useVueTable({
