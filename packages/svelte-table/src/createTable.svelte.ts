@@ -25,7 +25,9 @@ export function createTable<
     tableOptions,
     {
       _features,
-      state: { ...state, ...tableOptions.state },
+      get state() {
+        return { ...state, ...tableOptions.state }
+      },
       mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
         newOptions: Partial<TableOptions<TFeatures, TData>>,
@@ -40,7 +42,9 @@ export function createTable<
   function updateOptions() {
     table.setOptions((prev) => {
       return mergeObjects(prev, tableOptions, {
-        state: mergeObjects(state, tableOptions.state || {}),
+        get state() {
+          return mergeObjects(state, tableOptions.state || {})
+        },
         onStateChange: (updater: any) => {
           if (isFunction(updater)) state = updater(state)
           else state = mergeObjects(state, updater)
