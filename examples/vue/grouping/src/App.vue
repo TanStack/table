@@ -6,8 +6,8 @@ import {
   getGroupedRowModel,
   useVueTable,
   type ColumnDef,
-  type GroupingState,
   type ExpandedState,
+  type GroupingState,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 
@@ -133,9 +133,10 @@ const table = useVueTable({
 
 // Toggle row expanded state
 const toggleRowExpanded = (id: string): void => {
+  const currentExpanded = expanded.value as Record<string, boolean>
   expanded.value = {
-    ...expanded.value,
-    [id]: !expanded.value[id],
+    ...currentExpanded,
+    [id]: !currentExpanded[id],
   }
 }
 
@@ -212,7 +213,7 @@ const clearGrouping = (): void => {
                   class="expand-button"
                   @click="toggleRowExpanded(row.id)"
                 >
-                  <span v-if="expanded[row.id]" class="icon">👇</span>
+                  <span v-if="row.getIsExpanded()" class="icon">👇</span>
                   <span v-else class="icon">👉</span>
                   <span class="group-value">{{ cell.getValue() }}</span>
                   <span class="group-count"> ({{ row.subRows.length }}) </span>
