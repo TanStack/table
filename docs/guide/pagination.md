@@ -7,7 +7,7 @@ title: Pagination Guide
 Want to skip to the implementation? Check out these examples:
 
 - [pagination](../../framework/react/examples/pagination)
-- [pagination-controlled (React Query)](../../framework/react/examples/pagination-controlled)
+- [pagination-controlled (React Query)](../../docs/framework/react/examples/pagination-controlled)
 - [editable-data](../../framework/react/examples/editable-data)
 - [expanding](../../framework/react/examples/expanding)
 - [filters](../../framework/react/examples/filters)
