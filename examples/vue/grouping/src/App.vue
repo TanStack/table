@@ -131,15 +131,6 @@ const table = useVueTable({
   },
 })
 
-// Toggle row expanded state
-const toggleRowExpanded = (id: string): void => {
-  const currentExpanded = expanded.value as Record<string, boolean>
-  expanded.value = {
-    ...currentExpanded,
-    [id]: !currentExpanded[id],
-  }
-}
-
 // Group by status
 const groupByStatus = (): void => {
   grouping.value = ['status']
@@ -211,7 +202,7 @@ const clearGrouping = (): void => {
               <div v-if="cell.getIsGrouped()" class="grouped-cell">
                 <button
                   class="expand-button"
-                  @click="toggleRowExpanded(row.id)"
+                  @click="row.getToggleExpandedHandler()()"
                 >
                   <span v-if="row.getIsExpanded()" class="icon">👇</span>
                   <span v-else class="icon">👉</span>
