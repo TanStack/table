@@ -4,7 +4,14 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
 import '@/styles/globals.css'
 
-import { AlertCircle, MoreHorizontal, User, Users } from 'lucide-react'
+import {
+  AlertCircle,
+  ChevronDown,
+  ChevronUp,
+  MoreHorizontal,
+  User,
+  Users,
+} from 'lucide-react'
 import {
   columnFilteringFeature,
   columnOrderingFeature,
@@ -43,7 +50,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 
 import { makeData } from '@/makeData'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
@@ -126,7 +132,7 @@ function App() {
             className="translate-y-0.5"
           />
         ),
-        maxSize: 40,
+        maxSize: 30,
         enableSorting: false,
         enableHiding: false,
         enableResizing: false,
@@ -134,9 +140,7 @@ function App() {
       {
         id: 'firstName',
         accessorKey: 'firstName',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="First Name" />
-        ),
+        header: 'First Name',
         cell: (info) => (
           <span className="font-medium">{String(info.getValue())}</span>
         ),
@@ -148,9 +152,7 @@ function App() {
       {
         id: 'lastName',
         accessorFn: (row) => row.lastName,
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Last Name" />
-        ),
+        header: 'Last Name',
         cell: (info) => (
           <span className="font-medium">{String(info.getValue())}</span>
         ),
@@ -162,9 +164,7 @@ function App() {
       {
         id: 'age',
         accessorKey: 'age',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Age" />
-        ),
+        header: 'Age',
         cell: (info) => (
           <span className="text-muted-foreground">
             {String(info.getValue())}
@@ -178,9 +178,7 @@ function App() {
       {
         id: 'visits',
         accessorKey: 'visits',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Visits" />
-        ),
+        header: 'Visits',
         cell: (info) => (
           <Badge variant="secondary">
             {info.getValue<number>().toLocaleString()}
@@ -194,9 +192,7 @@ function App() {
       {
         id: 'status',
         accessorKey: 'status',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Status" />
-        ),
+        header: 'Status',
         cell: (info) => {
           const status = info.getValue<Person['status']>()
           const icons: Record<Person['status'], React.ReactNode> = {
@@ -225,9 +221,7 @@ function App() {
       {
         id: 'progress',
         accessorKey: 'progress',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Profile Progress" />
-        ),
+        header: 'Progress',
         cell: ({ getValue }) => {
           const progress = getValue<number>()
           return (
@@ -271,7 +265,7 @@ function App() {
             </DropdownMenu>
           )
         },
-        maxSize: 20,
+        maxSize: 30,
         enableResizing: false,
       },
     ],
@@ -383,19 +377,34 @@ function App() {
                           colSpan={header.colSpan}
                           className={cn('relative', {
                             'border-r': header.id !== 'actions',
-                            'px-0': header.id !== 'select',
-                            'select-none': true,
                           })}
                           style={{
                             width: `calc(var(--header-${header.id}-size) * 1px)`,
                           }}
                         >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
+                          {header.isPlaceholder ? null : (
+                            <div
+                              className={cn(
+                                'flex items-center justify-between gap-2 cursor-pointer select-none',
+                                header.column.getCanSort() && 'cursor-pointer',
+                              )}
+                              onClick={header.column.getToggleSortingHandler()}
+                            >
+                              {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
                               )}
+                              {header.column.getIsSorted() && (
+                                <>
+                                  {header.column.getIsSorted() === 'asc' ? (
+                                    <ChevronUp className="size-4" />
+                                  ) : (
+                                    <ChevronDown className="size-4" />
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          )}
                           {header.column.getCanResize() && (
                             <div
                               onDoubleClick={() => header.column.resetSize()}
