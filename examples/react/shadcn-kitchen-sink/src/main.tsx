@@ -68,6 +68,7 @@ import {
 import { cn } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
+import { customFilterFns } from '@/components/data-table/data-table-filter-utils'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
@@ -282,7 +283,10 @@ function App() {
   const table = useTable({
     _features,
     _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
+      filteredRowModel: createFilteredRowModel({
+        ...filterFns,
+        ...customFilterFns,
+      }),
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(sortFns),
     },
@@ -361,11 +365,7 @@ function App() {
           />
         </div>
         <div className="rounded-md border">
-          <Table
-            style={{
-              ...columnSizeVars,
-            }}
-          >
+          <Table style={{ ...columnSizeVars }}>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>

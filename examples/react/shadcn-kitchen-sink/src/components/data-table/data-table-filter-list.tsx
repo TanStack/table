@@ -99,55 +99,63 @@ export function DataTableFilterList<
         }))
         .slice(0, 50)
     },
-    [],
+    [table],
   )
 
   const getFilterOperators = (type: string) => {
     switch (type) {
       case 'text':
         return [
-          { label: 'Contains', value: 'contains' as const },
-          { label: 'Does not contain', value: 'notContains' as const },
-          { label: 'Is', value: 'equals' as const },
-          { label: 'Is not', value: 'notEquals' as const },
-          { label: 'Is empty', value: 'isEmpty' as const },
-          { label: 'Is not empty', value: 'isNotEmpty' as const },
+          { label: 'Contains', value: 'includesString' },
+          { label: 'Does not contain', value: 'notIncludesString' },
+          { label: 'Is', value: 'equalsString' },
+          { label: 'Is not', value: 'notEqualsString' },
+          { label: 'Starts with', value: 'startsWith' },
+          { label: 'Ends with', value: 'endsWith' },
+          { label: 'Is empty', value: 'isEmpty' },
+          { label: 'Is not empty', value: 'isNotEmpty' },
         ]
       case 'number':
         return [
-          { label: 'Is', value: 'equals' as const },
-          { label: 'Is not', value: 'notEquals' as const },
-          { label: 'Is less than', value: 'lessThan' as const },
-          { label: 'Is less than or equal to', value: 'lessOrEqual' as const },
-          { label: 'Is greater than', value: 'greaterThan' as const },
+          { label: 'Is', value: 'equals' },
+          { label: 'Is not', value: 'notEquals' },
+          { label: 'Is less than', value: 'lessThan' },
+          { label: 'Is less than or equal to', value: 'lessThanOrEqualTo' },
+          { label: 'Is greater than', value: 'greaterThan' },
           {
             label: 'Is greater than or equal to',
-            value: 'greaterOrEqual' as const,
+            value: 'greaterThanOrEqualTo',
           },
-          { label: 'Is empty', value: 'isEmpty' as const },
-          { label: 'Is not empty', value: 'isNotEmpty' as const },
+          { label: 'Is in range', value: 'inNumberRange' },
         ]
       case 'date':
         return [
-          { label: 'Is', value: 'equals' as const },
-          { label: 'Is not', value: 'notEquals' as const },
-          { label: 'Is before', value: 'lessThan' as const },
-          { label: 'Is after', value: 'greaterThan' as const },
-          { label: 'Is on or before', value: 'lessOrEqual' as const },
-          { label: 'Is on or after', value: 'greaterOrEqual' as const },
-          { label: 'Is empty', value: 'isEmpty' as const },
-          { label: 'Is not empty', value: 'isNotEmpty' as const },
+          { label: 'Is', value: 'equals' },
+          { label: 'Is not', value: 'notEquals' },
+          { label: 'Is before', value: 'lessThan' },
+          { label: 'Is on or before', value: 'lessThanOrEqualTo' },
+          { label: 'Is after', value: 'greaterThan' },
+          { label: 'Is on or after', value: 'greaterThanOrEqualTo' },
+          { label: 'Is in range', value: 'inNumberRange' },
         ]
-      case 'select':
-      case 'multi-select':
+      case 'boolean':
         return [
-          { label: 'Is', value: 'equals' as const },
-          { label: 'Is not', value: 'notEquals' as const },
-          { label: 'Is empty', value: 'isEmpty' as const },
-          { label: 'Is not empty', value: 'isNotEmpty' as const },
+          { label: 'Is true', value: 'equals-true' },
+          { label: 'Is false', value: 'equals-false' },
+        ]
+      case 'array':
+        return [
+          { label: 'Includes', value: 'arrIncludes' },
+          { label: 'Includes all', value: 'arrIncludesAll' },
+          { label: 'Includes some', value: 'arrIncludesSome' },
         ]
       default:
-        return [{ label: 'Contains', value: 'contains' as const }]
+        return [
+          { label: 'Contains', value: 'includesString' },
+          { label: 'Does not contain', value: 'notIncludesString' },
+          { label: 'Is', value: 'equalsString' },
+          { label: 'Is not', value: 'notEqualsString' },
+        ]
     }
   }
 
@@ -162,48 +170,105 @@ export function DataTableFilterList<
       const filterType = getColumnFilterType(column)
       const currentFilter = column.getFilterValue()
 
-      if (operator === 'isEmpty' || operator === 'isNotEmpty') {
+      // Handle operators that don't need input
+      if (
+        operator === 'isEmpty' ||
+        operator === 'isNotEmpty' ||
+        operator === 'equals-true' ||
+        operator === 'equals-false'
+      ) {
         return <div className="h-8 w-full rounded border border-dashed" />
       }
 
       switch (filterType) {
         case 'number':
+          // For range-based filters
+          if (operator === 'inNumberRange') {
+            return (
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  value={(currentFilter as Array<number>)?.[0] ?? ''}
+                  onChange={(e) =>
+                    column.setFilterValue((old: any) => [
+                      e.target.value ? Number(e.target.value) : undefined,
+                      old?.[1],
+                    ])
+                  }
+                  placeholder="Min"
+                  className="h-8 w-[75px]"
+                />
+                <span>to</span>
+                <Input
+                  type="number"
+                  value={(currentFilter as Array<number>)?.[1] ?? ''}
+                  onChange={(e) =>
+                    column.setFilterValue((old: any) => [
+                      old?.[0],
+                      e.target.value ? Number(e.target.value) : undefined,
+                    ])
+                  }
+                  placeholder="Max"
+                  className="h-8 w-[75px]"
+                />
+              </div>
+            )
+          }
+
           return (
             <Input
               type="number"
               value={(currentFilter ?? '') as string}
-              onChange={(e) => column.setFilterValue(e.target.value)}
+              onChange={(e) =>
+                column.setFilterValue(
+                  e.target.value ? Number(e.target.value) : undefined,
+                )
+              }
               placeholder={`Enter ${column.columnDef.meta?.label ?? column.id}...`}
               className="h-8 w-[150px]"
             />
           )
 
         case 'date':
+          // For range-based filters
+          if (operator === 'inNumberRange') {
+            return (
+              <div className="flex items-center gap-2">
+                <Input
+                  type="date"
+                  value={(currentFilter as Array<string>)?.[0] ?? ''}
+                  onChange={(e) =>
+                    column.setFilterValue((old: any) => [
+                      e.target.value,
+                      old?.[1],
+                    ])
+                  }
+                  className="h-8 w-[140px]"
+                />
+                <span>to</span>
+                <Input
+                  type="date"
+                  value={(currentFilter as Array<string>)?.[1] ?? ''}
+                  onChange={(e) =>
+                    column.setFilterValue((old: any) => [
+                      old?.[0],
+                      e.target.value,
+                    ])
+                  }
+                  className="h-8 w-[140px]"
+                />
+              </div>
+            )
+          }
+
           return (
-            <div className="flex items-center gap-2">
-              <Input
-                type="date"
-                value={(currentFilter as Array<string>)?.[0] ?? ''}
-                onChange={(e) =>
-                  column.setFilterValue((old: any) => [
-                    e.target.value,
-                    old?.[1],
-                  ])
-                }
-                className="h-8 w-[140px]"
-              />
-              <Input
-                type="date"
-                value={(currentFilter as Array<string>)?.[1] ?? ''}
-                onChange={(e) =>
-                  column.setFilterValue((old: any) => [
-                    old?.[0],
-                    e.target.value,
-                  ])
-                }
-                className="h-8 w-[140px]"
-              />
-            </div>
+            <Input
+              type="date"
+              value={(currentFilter ?? '') as string}
+              onChange={(e) => column.setFilterValue(e.target.value)}
+              placeholder={`Enter ${column.columnDef.meta?.label ?? column.id}...`}
+              className="h-8 w-[150px]"
+            />
           )
 
         case 'select':
@@ -286,14 +351,17 @@ export function DataTableFilterList<
       if (!column) return null
 
       const filterType = getColumnFilterType(column)
+      const operators = getFilterOperators(filterType ?? 'text')
+      const defaultOperator = operators[0].value
+
       return {
         id: columnId,
         value: filterType === 'multi-select' ? [] : '',
-        operator: 'contains',
+        operator: defaultOperator,
         rowId: crypto.randomUUID(),
       }
     },
-    [filterableColumns, getColumnFilterType],
+    [filterableColumns, getColumnFilterType, getFilterOperators],
   )
 
   const addFilterRow = React.useCallback(() => {
