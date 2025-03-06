@@ -27,14 +27,12 @@ import type {
   CellData,
   ColumnDef,
   ColumnFilter,
-  ColumnFiltersState,
   ColumnSizingState,
   RowData,
   SortingState,
   TableFeatures,
 } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Table,
@@ -94,7 +92,6 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const [rowSelection, setRowSelection] = React.useState({})
-  const [globalFilter, setGlobalFilter] = React.useState<string | undefined>('')
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<
     Array<ExtendedColumnFilter>
@@ -129,7 +126,6 @@ function App() {
         ),
         enableSorting: false,
         enableHiding: false,
-        size: 60,
       },
       {
         id: 'firstName',
@@ -140,7 +136,6 @@ function App() {
         cell: (info) => (
           <span className="font-medium">{String(info.getValue())}</span>
         ),
-        size: 200,
         meta: {
           label: 'First Name',
           type: 'text',
@@ -155,7 +150,6 @@ function App() {
         cell: (info) => (
           <span className="font-medium">{String(info.getValue())}</span>
         ),
-        size: 200,
         meta: {
           label: 'Last Name',
           type: 'text',
@@ -172,7 +166,6 @@ function App() {
             {String(info.getValue())}
           </span>
         ),
-        size: 200,
         meta: {
           label: 'Age',
           type: 'number',
@@ -189,7 +182,6 @@ function App() {
             {info.getValue<number>().toLocaleString()}
           </Badge>
         ),
-        size: 200,
         meta: {
           label: 'Visits',
           type: 'number',
@@ -221,7 +213,6 @@ function App() {
             </Badge>
           )
         },
-        size: 200,
         meta: {
           label: 'Status',
           type: 'select',
@@ -244,7 +235,6 @@ function App() {
             </div>
           )
         },
-        size: 200,
         meta: {
           label: 'Profile Progress',
           type: 'number',
@@ -277,7 +267,6 @@ function App() {
             </DropdownMenu>
           )
         },
-        size: 60,
       },
     ],
     [],
@@ -299,6 +288,10 @@ function App() {
     },
     columns,
     data,
+    defaultColumn: {
+      minSize: 60,
+      maxSize: 800,
+    },
     state: {
       rowSelection,
       sorting,
@@ -316,35 +309,37 @@ function App() {
     debugTable: true,
   })
 
+  const columnSizeVars = React.useMemo(() => {
+    const headers = table.getFlatHeaders()
+    const colSizes: { [key: string]: number } = {}
+    for (const header of headers) {
+      colSizes[`--header-${header.id}-size`] = header.getSize()
+      colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
+    }
+    return colSizes
+  }, [table.getState().columnSizing])
+
   return (
     <div className="container mx-auto p-4 flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <Input
-          value={globalFilter ?? ''}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-          className="max-w-sm"
-          placeholder="Search all columns..."
-        />
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => refreshData()}>
-            Refresh Data
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => rerender()}>
-            Force Rerender
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              console.info(
-                'table.getSelectedRowModel().flatRows',
-                table.getSelectedRowModel().flatRows,
-              )
-            }
-          >
-            Log Selected Rows
-          </Button>
-        </div>
+      <div className="flex items-center justify-end gap-2">
+        <Button variant="outline" size="sm" onClick={() => refreshData()}>
+          Refresh Data
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => rerender()}>
+          Force Rerender
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() =>
+            console.info(
+              'table.getSelectedRowModel().flatRows',
+              table.getSelectedRowModel().flatRows,
+            )
+          }
+        >
+          Log Selected Rows
+        </Button>
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
@@ -365,7 +360,11 @@ function App() {
           />
         </div>
         <div className="rounded-md border">
-          <Table>
+          <Table
+            style={{
+              ...columnSizeVars,
+            }}
+          >
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -381,7 +380,7 @@ function App() {
                             'select-none': true,
                           })}
                           style={{
-                            width: header.getSize(),
+                            width: `calc(var(--header-${header.id}-size) * 1px)`,
                           }}
                         >
                           {header.isPlaceholder
@@ -390,7 +389,7 @@ function App() {
                                 header.column.columnDef.header,
                                 header.getContext(),
                               )}
-                          {/* {header.id !== 'select' &&
+                          {header.id !== 'select' &&
                             header.id !== 'actions' && (
                               <div
                                 onMouseDown={(event) => {
@@ -432,7 +431,7 @@ function App() {
                                   'bg-muted/50',
                                 )}
                               />
-                            )} */}
+                            )}
                         </TableHead>
                       )
                     })}
@@ -451,7 +450,7 @@ function App() {
                             cell.column.id === 'actions' ? '' : 'border-r'
                           }
                           style={{
-                            width: cell.column.getSize(),
+                            width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                           }}
                         >
                           {flexRender(
