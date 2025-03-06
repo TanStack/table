@@ -8,6 +8,7 @@ import { AlertCircle, MoreHorizontal, User, Users } from 'lucide-react'
 import {
   columnFilteringFeature,
   columnOrderingFeature,
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   createFilteredRowModel,
@@ -86,6 +87,7 @@ const _features = tableFeatures({
   columnOrderingFeature,
   columnVisibilityFeature,
   columnSizingFeature,
+  columnResizingFeature,
 })
 
 function App() {
@@ -124,8 +126,10 @@ function App() {
             className="translate-y-0.5"
           />
         ),
+        maxSize: 40,
         enableSorting: false,
         enableHiding: false,
+        enableResizing: false,
       },
       {
         id: 'firstName',
@@ -267,6 +271,8 @@ function App() {
             </DropdownMenu>
           )
         },
+        maxSize: 20,
+        enableResizing: false,
       },
     ],
     [],
@@ -306,6 +312,7 @@ function App() {
     getRowId: (row) => row.id,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
+    columnResizeMode: 'onChange',
     debugTable: true,
   })
 
@@ -389,49 +396,17 @@ function App() {
                                 header.column.columnDef.header,
                                 header.getContext(),
                               )}
-                          {header.id !== 'select' &&
-                            header.id !== 'actions' && (
-                              <div
-                                onMouseDown={(event) => {
-                                  event.preventDefault()
-                                  const startX = event.pageX
-                                  const startWidth = header.getSize()
-
-                                  const onMouseMove = (event: MouseEvent) => {
-                                    const currentWidth =
-                                      startWidth + (event.pageX - startX)
-                                    table.setColumnSizing((old) => ({
-                                      ...old,
-                                      [header.id]: Math.max(currentWidth, 20),
-                                    }))
-                                  }
-
-                                  const onMouseUp = () => {
-                                    document.removeEventListener(
-                                      'mousemove',
-                                      onMouseMove,
-                                    )
-                                    document.removeEventListener(
-                                      'mouseup',
-                                      onMouseUp,
-                                    )
-                                  }
-
-                                  document.addEventListener(
-                                    'mousemove',
-                                    onMouseMove,
-                                  )
-                                  document.addEventListener(
-                                    'mouseup',
-                                    onMouseUp,
-                                  )
-                                }}
-                                className={cn(
-                                  'absolute right-0 top-0 h-full w-1 cursor-e-resize select-none touch-none hover:bg-muted',
-                                  'bg-muted/50',
-                                )}
-                              />
-                            )}
+                          {header.column.getCanResize() && (
+                            <div
+                              onDoubleClick={() => header.column.resetSize()}
+                              onMouseDown={header.getResizeHandler()}
+                              onTouchStart={header.getResizeHandler()}
+                              className={cn(
+                                'absolute right-[-2px] z-10 top-1/2 h-6 w-[3px] -translate-y-1/2 cursor-e-resize select-none touch-none rounded-md transition-colors hover:bg-blue-600 before:absolute before:left-[-4px] before:right-[-4px] before:top-0 before:h-full before:content-[""]',
+                                header.column.getIsResizing() && 'bg-blue-600',
+                              )}
+                            />
+                          )}
                         </TableHead>
                       )
                     })}
