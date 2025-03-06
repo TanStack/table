@@ -1,26 +1,18 @@
 'use client'
 
 import * as React from 'react'
-import { Check, ListFilter, Trash2 } from 'lucide-react'
+import { ListFilter, Trash2 } from 'lucide-react'
+import type { ExtendedColumnFilter } from '@/main'
 import type {
   Column,
   ColumnMeta,
   RowData,
   Table,
   TableFeatures,
-  Updater,
 } from '@tanstack/react-table'
-import type { ExtendedColumnFilter } from '@/main'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command'
 import { Input } from '@/components/ui/input'
 import {
   Popover,
@@ -34,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
 
 interface DataTableFilterListProps<
   TFeatures extends TableFeatures,
@@ -184,7 +175,6 @@ export function DataTableFilterList<
 
   const addFilterRow = React.useCallback(() => {
     const firstFilterableColumn = filterableColumns[0]
-    if (!firstFilterableColumn) return
 
     const newFilter = createFilterRow(firstFilterableColumn.id)
     if (newFilter) {
