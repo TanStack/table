@@ -8,6 +8,7 @@ import type {
   RowData,
   Table,
   TableFeatures,
+  Updater,
 } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/main'
 
@@ -44,7 +45,9 @@ interface DataTableFilterListProps<
     TData
   >
   columnFilters: Array<ExtendedColumnFilter>
-  onColumnFiltersChange: (columnFilters: Array<ExtendedColumnFilter>) => void
+  onColumnFiltersChange: React.Dispatch<
+    React.SetStateAction<Array<ExtendedColumnFilter>>
+  >
 }
 
 export function DataTableFilterList<
@@ -159,191 +162,6 @@ export function DataTableFilterList<
     }
   }
 
-  const renderFilterInput = React.useCallback(
-    (
-      column: Column<
-        Pick<TFeatures, 'columnFilteringFeature' | 'columnFacetingFeature'>,
-        TData
-      >,
-      operator: string,
-    ) => {
-      const filterType = getColumnFilterType(column)
-      const currentFilter = column.getFilterValue()
-
-      // Handle operators that don't need input
-      if (
-        operator === 'isEmpty' ||
-        operator === 'isNotEmpty' ||
-        operator === 'equals-true' ||
-        operator === 'equals-false'
-      ) {
-        return <div className="h-8 w-full rounded border border-dashed" />
-      }
-
-      switch (filterType) {
-        case 'number':
-          // For range-based filters
-          if (operator === 'inNumberRange') {
-            return (
-              <div className="flex items-center gap-2">
-                <Input
-                  type="number"
-                  value={(currentFilter as Array<number>)?.[0] ?? ''}
-                  onChange={(e) =>
-                    column.setFilterValue((old: any) => [
-                      e.target.value ? Number(e.target.value) : undefined,
-                      old?.[1],
-                    ])
-                  }
-                  placeholder="Min"
-                  className="h-8 w-[75px]"
-                />
-                <span>to</span>
-                <Input
-                  type="number"
-                  value={(currentFilter as Array<number>)?.[1] ?? ''}
-                  onChange={(e) =>
-                    column.setFilterValue((old: any) => [
-                      old?.[0],
-                      e.target.value ? Number(e.target.value) : undefined,
-                    ])
-                  }
-                  placeholder="Max"
-                  className="h-8 w-[75px]"
-                />
-              </div>
-            )
-          }
-
-          return (
-            <Input
-              type="number"
-              value={(currentFilter ?? '') as string}
-              onChange={(e) =>
-                column.setFilterValue(
-                  e.target.value ? Number(e.target.value) : undefined,
-                )
-              }
-              placeholder={`Enter ${column.columnDef.meta?.label ?? column.id}...`}
-              className="h-8 w-[150px]"
-            />
-          )
-
-        case 'date':
-          // For range-based filters
-          if (operator === 'inNumberRange') {
-            return (
-              <div className="flex items-center gap-2">
-                <Input
-                  type="date"
-                  value={(currentFilter as Array<string>)?.[0] ?? ''}
-                  onChange={(e) =>
-                    column.setFilterValue((old: any) => [
-                      e.target.value,
-                      old?.[1],
-                    ])
-                  }
-                  className="h-8 w-[140px]"
-                />
-                <span>to</span>
-                <Input
-                  type="date"
-                  value={(currentFilter as Array<string>)?.[1] ?? ''}
-                  onChange={(e) =>
-                    column.setFilterValue((old: any) => [
-                      old?.[0],
-                      e.target.value,
-                    ])
-                  }
-                  className="h-8 w-[140px]"
-                />
-              </div>
-            )
-          }
-
-          return (
-            <Input
-              type="date"
-              value={(currentFilter ?? '') as string}
-              onChange={(e) => column.setFilterValue(e.target.value)}
-              placeholder={`Enter ${column.columnDef.meta?.label ?? column.id}...`}
-              className="h-8 w-[150px]"
-            />
-          )
-
-        case 'select':
-        case 'multi-select':
-          const options = getFacetedUniqueValues(column)
-          return (
-            <Command className="rounded-md border shadow-md">
-              <CommandInput
-                placeholder={`Search ${
-                  column.columnDef.meta?.label ?? column.id
-                }...`}
-              />
-              <CommandList>
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup>
-                  {options.map((option) => (
-                    <CommandItem
-                      key={String(option.value)}
-                      onSelect={() => {
-                        if (filterType === 'multi-select') {
-                          const currentValues =
-                            (currentFilter as Array<string>) || []
-                          const newValues = currentValues.includes(
-                            option.value as string,
-                          )
-                            ? currentValues.filter((v) => v !== option.value)
-                            : [...currentValues, option.value as string]
-                          column.setFilterValue(
-                            newValues.length ? newValues : undefined,
-                          )
-                        } else {
-                          column.setFilterValue(
-                            currentFilter === option.value
-                              ? undefined
-                              : option.value,
-                          )
-                        }
-                      }}
-                    >
-                      <Check
-                        className={`mr-2 h-4 w-4 ${
-                          filterType === 'multi-select'
-                            ? (currentFilter as Array<string>)?.includes(
-                                option.value as string,
-                              )
-                            : currentFilter === option.value
-                              ? 'opacity-100'
-                              : 'opacity-0'
-                        }`}
-                      />
-                      {option.label}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          )
-
-        default:
-          return (
-            <Input
-              type="text"
-              value={(currentFilter ?? '') as string}
-              onChange={(e) => column.setFilterValue(e.target.value)}
-              placeholder={`Search ${
-                column.columnDef.meta?.label ?? column.id
-              }...`}
-              className="h-8 w-[150px]"
-            />
-          )
-      }
-    },
-    [getColumnFilterType, getFacetedUniqueValues],
-  )
-
   // Centralized filter row management functions
   const createFilterRow = React.useCallback(
     (columnId: string) => {
@@ -405,6 +223,7 @@ export function DataTableFilterList<
       columnFilters,
       filterableColumns,
       getColumnFilterType,
+      getFilterOperators,
       onColumnFiltersChange,
     ],
   )
@@ -417,6 +236,49 @@ export function DataTableFilterList<
       onColumnFiltersChange(newFilters)
     },
     [columnFilters, onColumnFiltersChange],
+  )
+
+  const renderFilterInput = React.useCallback(
+    (
+      column: Column<
+        Pick<TFeatures, 'columnFilteringFeature' | 'columnFacetingFeature'>,
+        TData
+      >,
+      operator: string,
+    ) => {
+      const filterType = getColumnFilterType(column)
+      const currentFilter = columnFilters.find(
+        (filter) => filter.id === column.id,
+      )
+
+      console.log({ currentFilter, operator })
+
+      switch (filterType) {
+        default:
+          return (
+            <Input
+              type="text"
+              value={(currentFilter?.value ?? '') as string}
+              placeholder={`Search ${
+                column.columnDef.meta?.label ?? column.id
+              }...`}
+              className="h-8 w-[150px]"
+              onChange={(e) => {
+                const rowId = currentFilter?.rowId
+                if (rowId) {
+                  updateFilterRow(rowId, { value: e.target.value })
+                }
+              }}
+            />
+          )
+      }
+    },
+    [
+      getColumnFilterType,
+      getFacetedUniqueValues,
+      columnFilters,
+      updateFilterRow,
+    ],
   )
 
   const renderFilterRow = React.useCallback(

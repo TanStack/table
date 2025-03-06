@@ -302,16 +302,23 @@ function App() {
       columnVisibility,
       columnOrder,
       columnSizing,
+      // columnFilters,
     },
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
     onColumnSizingChange: setColumnSizing,
+    // onColumnFiltersChange: setColumnFilters,
     getRowId: (row) => row.id,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     columnResizeMode: 'onChange',
-    debugTable: true,
+    // debugTable: true,
+  })
+
+  console.log({
+    tableColumnFilters: table.getState().columnFilters,
+    columnFilters,
   })
 
   const columnSizeVars = React.useMemo(() => {
