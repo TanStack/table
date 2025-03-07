@@ -149,9 +149,7 @@ export const dynamicFilterFn: FilterFn<any, any> = <
 
   const filter: ExtendedColumnFilter | undefined = row._table
     .getState()
-    .columnFilters.find((f) => f.id === columnId) as
-    | ExtendedColumnFilter
-    | undefined
+    .columnFilters.find((f) => f.id === columnId)
 
   if (filter && filter.operator) {
     operator = filter.operator

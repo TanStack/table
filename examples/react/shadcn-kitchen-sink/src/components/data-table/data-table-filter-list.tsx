@@ -163,7 +163,7 @@ export function DataTableFilterList<
         rowId: crypto.randomUUID(),
       }
     },
-    [filterableColumns, getColumnFilterType, getFilterOperators],
+    [filterableColumns, getColumnFilterType],
   )
 
   const addFilterRow = React.useCallback(() => {
@@ -221,10 +221,14 @@ export function DataTableFilterList<
   )
 
   const renderFilterInput = React.useCallback(
-    (column: Column<Features<TFeatures>, TData>, operator: string) => {
+    (
+      column: Column<Features<TFeatures>, TData>,
+      operator: string,
+      rowId: string,
+    ) => {
       const filterType = getColumnFilterType(column)
       const currentFilter = columnFilters.find(
-        (filter) => filter.id === column.id,
+        (filter) => filter.rowId === rowId,
       )
 
       switch (filterType) {
@@ -238,7 +242,6 @@ export function DataTableFilterList<
               }...`}
               className="h-8 w-[150px]"
               onChange={(event) => {
-                const rowId = currentFilter?.rowId
                 if (rowId) {
                   updateFilterRow(rowId, {
                     value: event.target.value,
@@ -329,7 +332,11 @@ export function DataTableFilterList<
               ))}
             </SelectContent>
           </Select>
-          {renderFilterInput(column, filter.operator ?? 'contains')}
+          {renderFilterInput(
+            column,
+            filter.operator ?? 'contains',
+            filter.rowId,
+          )}
           <Button
             variant="outline"
             size="icon"
