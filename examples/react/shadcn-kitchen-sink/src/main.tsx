@@ -34,12 +34,12 @@ import type { Person } from '@/makeData'
 import type {
   CellData,
   ColumnDef,
-  ColumnFilter,
   ColumnSizingState,
   RowData,
   SortingState,
   TableFeatures,
 } from '@tanstack/react-table'
+import type { ExtendedColumnFilter } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -68,10 +68,7 @@ import {
 import { cn } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
-import {
-  customFilterFns,
-  dynamicFilterFn,
-} from '@/components/data-table/data-table-filter-utils'
+import { dynamicFilterFn } from '@/components/data-table/data-table-filter-utils'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
@@ -82,12 +79,6 @@ declare module '@tanstack/react-table' {
     label?: string
     type?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
   }
-  interface FilterFns {}
-}
-
-export interface ExtendedColumnFilter extends ColumnFilter {
-  operator?: string
-  rowId?: string
 }
 
 const _features = tableFeatures({
@@ -243,6 +234,13 @@ function App() {
           type: 'number',
         },
       },
+      // add a boolean column
+      {
+        id: 'boolean',
+        accessorKey: 'boolean',
+        header: 'Boolean',
+        cell: (info) => <Badge>{String(info.getValue())}</Badge>,
+      },
       {
         id: 'actions',
         enableHiding: false,
@@ -287,10 +285,7 @@ function App() {
   const table = useTable({
     _features,
     _rowModels: {
-      filteredRowModel: createFilteredRowModel({
-        ...filterFns,
-        ...customFilterFns,
-      }),
+      filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(sortFns),
     },

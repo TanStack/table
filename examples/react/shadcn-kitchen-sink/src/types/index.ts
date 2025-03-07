@@ -1,6 +1,26 @@
-import type { ColumnFilter } from '@tanstack/react-table'
+import type { ColumnFilter, filterFns } from '@tanstack/react-table'
+
+export type FilterOperator =
+  | keyof typeof filterFns
+  | 'notIncludesString'
+  | 'notEqualsString'
+  | 'notEquals'
+  | 'greaterThan'
+  | 'notGreaterThan'
+  | 'greaterThanOrEqualTo'
+  | 'notGreaterThanOrEqualTo'
+  | 'lessThan'
+  | 'notLessThan'
+  | 'lessThanOrEqualTo'
+  | 'notLessThanOrEqualTo'
+  | 'inNumberRange'
+  | 'notInNumberRange'
+  | 'startsWith'
+  | 'endsWith'
+  | 'isEmpty'
+  | 'isNotEmpty'
 
 export interface ExtendedColumnFilter extends ColumnFilter {
-  operator?: string
-  rowId?: string
+  filterId?: string
+  operator?: FilterOperator
 }
