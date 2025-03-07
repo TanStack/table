@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { ListFilter, Trash2 } from 'lucide-react'
+import { CalendarIcon, ListFilter, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
 import type { ExtendedColumnFilter, FilterOperator } from '@/types'
 import type {
@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/select'
 import { Calendar } from '@/components/ui/calendar'
 import { getFilterOperators } from '@/lib/data-table'
+import { cn } from '@/lib/utils'
 
 type Features<TFeatures extends TableFeatures> = Pick<
   TFeatures,
@@ -124,7 +125,10 @@ export function DataTableFilterList<
   }, [columnFilters, onFilterAddImpl, filterableColumns, onColumnFiltersChange])
 
   const onFilterUpdate = React.useCallback(
-    (filterId: string, updates: Partial<ExtendedColumnFilter>) => {
+    (
+      filterId: string,
+      updates: Partial<Omit<ExtendedColumnFilter, 'filterId'>>,
+    ) => {
       const newFilters = columnFilters.map((filter) => {
         if (filter.filterId === filterId) {
           if (updates.id) {
@@ -168,7 +172,7 @@ export function DataTableFilterList<
     [columnFilters, onColumnFiltersChange],
   )
 
-  const renderFilterInput = React.useCallback(
+  const onFilterInputRender = React.useCallback(
     ({
       column,
       operator,
@@ -190,6 +194,16 @@ export function DataTableFilterList<
               ? currentFilter.value
               : [currentFilter?.value, undefined]
 
+            const dateRange =
+              currentValue[0] || currentValue[1]
+                ? {
+                    from: currentValue[0]
+                      ? new Date(currentValue[0])
+                      : undefined,
+                    to: currentValue[1] ? new Date(currentValue[1]) : undefined,
+                  }
+                : undefined
+
             return (
               <div className="flex items-center gap-2">
                 <Popover>
@@ -197,68 +211,43 @@ export function DataTableFilterList<
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-[110px] h-8 justify-start text-left font-normal"
+                      className={cn(
+                        'w-[240px] justify-start text-left font-normal',
+                        !dateRange && 'text-muted-foreground',
+                      )}
                     >
-                      {currentValue[0] ? (
-                        format(new Date(currentValue[0]), 'PP')
+                      <CalendarIcon />
+                      {dateRange?.from ? (
+                        dateRange.to ? (
+                          <>
+                            {format(dateRange.from, 'LLL dd, y')} -{' '}
+                            {format(dateRange.to, 'LLL dd, y')}
+                          </>
+                        ) : (
+                          format(dateRange.from, 'LLL dd, y')
+                        )
                       ) : (
-                        <span className="text-muted-foreground">From date</span>
+                        <span>Select date range</span>
                       )}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
-                      mode="single"
-                      selected={
-                        currentValue[0] ? new Date(currentValue[0]) : undefined
-                      }
+                      mode="range"
+                      selected={dateRange}
+                      defaultMonth={dateRange?.from}
                       onSelect={(date) => {
                         if (filterId) {
                           onFilterUpdate(filterId, {
                             value: [
-                              date ? date.toISOString() : undefined,
-                              currentValue[1],
+                              date?.from ? date.from.toISOString() : undefined,
+                              date?.to ? date.to.toISOString() : undefined,
                             ],
                             operator,
                           })
                         }
                       }}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-[110px] h-8 justify-start text-left font-normal"
-                    >
-                      {currentValue[1] ? (
-                        format(new Date(currentValue[1]), 'PP')
-                      ) : (
-                        <span className="text-muted-foreground">To date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={
-                        currentValue[1] ? new Date(currentValue[1]) : undefined
-                      }
-                      onSelect={(date) => {
-                        if (filterId) {
-                          onFilterUpdate(filterId, {
-                            value: [
-                              currentValue[0],
-                              date ? date.toISOString() : undefined,
-                            ],
-                            operator,
-                          })
-                        }
-                      }}
+                      numberOfMonths={2}
                       initialFocus
                     />
                   </PopoverContent>
@@ -273,8 +262,12 @@ export function DataTableFilterList<
                 <Button
                   variant="outline"
                   size="sm"
-                  className="w-[150px] h-8 justify-start text-left font-normal"
+                  className={cn(
+                    'w-[150px] justify-start text-left font-normal',
+                    !currentFilter?.value && 'text-muted-foreground',
+                  )}
                 >
+                  <CalendarIcon />
                   {currentFilter?.value ? (
                     format(new Date(currentFilter.value as string), 'PP')
                   ) : (
@@ -478,7 +471,7 @@ export function DataTableFilterList<
               ))}
             </SelectContent>
           </Select>
-          {renderFilterInput({
+          {onFilterInputRender({
             column,
             operator: filter.operator ?? 'includesString',
             filterId: filter.filterId,
@@ -503,7 +496,7 @@ export function DataTableFilterList<
       getColumnFilterVariant,
       joinOperator,
       removeFilterRow,
-      renderFilterInput,
+      onFilterInputRender,
       table,
       onFilterUpdate,
     ],
