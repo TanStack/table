@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { getFilterOperators } from '@/components/data-table/data-table-filter-utils'
 
 type Features<TFeatures extends TableFeatures> = Pick<
   TFeatures,
@@ -90,62 +91,7 @@ export function DataTableFilterList<
     [table],
   )
 
-  function getFilterOperators(type: string): Array<{
-    label: string
-    value: FilterOperator
-  }> {
-    switch (type) {
-      case 'text':
-        return [
-          { label: 'Contains', value: 'includesString' },
-          { label: 'Does not contain', value: 'notIncludesString' },
-          { label: 'Is', value: 'equalsString' },
-          { label: 'Is not', value: 'notEqualsString' },
-          { label: 'Starts with', value: 'startsWith' },
-          { label: 'Ends with', value: 'endsWith' },
-          { label: 'Is empty', value: 'isEmpty' },
-          { label: 'Is not empty', value: 'isNotEmpty' },
-        ]
-      case 'number':
-        return [
-          { label: 'Is', value: 'equals' },
-          { label: 'Is not', value: 'notEquals' },
-          { label: 'Is less than', value: 'lessThan' },
-          { label: 'Is less than or equal to', value: 'lessThanOrEqualTo' },
-          { label: 'Is greater than', value: 'greaterThan' },
-          {
-            label: 'Is greater than or equal to',
-            value: 'greaterThanOrEqualTo',
-          },
-          { label: 'Is in range', value: 'inNumberRange' },
-        ]
-      case 'date':
-        return [
-          { label: 'Is', value: 'equals' },
-          { label: 'Is not', value: 'notEquals' },
-          { label: 'Is before', value: 'lessThan' },
-          { label: 'Is on or before', value: 'lessThanOrEqualTo' },
-          { label: 'Is after', value: 'greaterThan' },
-          { label: 'Is on or after', value: 'greaterThanOrEqualTo' },
-          { label: 'Is in range', value: 'inNumberRange' },
-        ]
-      case 'array':
-        return [
-          { label: 'Includes', value: 'arrIncludes' },
-          { label: 'Includes all', value: 'arrIncludesAll' },
-          { label: 'Includes some', value: 'arrIncludesSome' },
-        ]
-      default:
-        return [
-          { label: 'Contains', value: 'includesString' },
-          { label: 'Does not contain', value: 'notIncludesString' },
-          { label: 'Is', value: 'equalsString' },
-          { label: 'Is not', value: 'notEqualsString' },
-        ]
-    }
-  }
-
-  const createFilterRow = React.useCallback(
+  const onFilterAddImpl = React.useCallback(
     (columnId: string) => {
       const column = filterableColumns.find((col) => col.id === columnId)
       if (!column) return null
@@ -164,16 +110,16 @@ export function DataTableFilterList<
     [filterableColumns, getColumnFilterType],
   )
 
-  const addFilterRow = React.useCallback(() => {
+  const onFilterAdd = React.useCallback(() => {
     const firstFilterableColumn = filterableColumns[0]
 
-    const newFilter = createFilterRow(firstFilterableColumn.id)
+    const newFilter = onFilterAddImpl(firstFilterableColumn.id)
     if (newFilter) {
       onColumnFiltersChange([...columnFilters, newFilter])
     }
-  }, [columnFilters, createFilterRow, filterableColumns, onColumnFiltersChange])
+  }, [columnFilters, onFilterAddImpl, filterableColumns, onColumnFiltersChange])
 
-  const updateFilterRow = React.useCallback(
+  const onFilterUpdate = React.useCallback(
     (filterId: string, updates: Partial<ExtendedColumnFilter>) => {
       const newFilters = columnFilters.map((filter) => {
         if (filter.filterId === filterId) {
@@ -245,7 +191,7 @@ export function DataTableFilterList<
                   className="h-8 w-[70px]"
                   onChange={(event) => {
                     if (filterId) {
-                      updateFilterRow(filterId, {
+                      onFilterUpdate(filterId, {
                         value: [
                           event.target.value === ''
                             ? undefined
@@ -264,7 +210,7 @@ export function DataTableFilterList<
                   className="h-8 w-[70px]"
                   onChange={(event) => {
                     if (filterId) {
-                      updateFilterRow(filterId, {
+                      onFilterUpdate(filterId, {
                         value: [
                           currentValue[0] ?? undefined,
                           event.target.value === ''
@@ -288,7 +234,7 @@ export function DataTableFilterList<
               className="h-8 w-[150px]"
               onChange={(event) => {
                 if (filterId) {
-                  updateFilterRow(filterId, {
+                  onFilterUpdate(filterId, {
                     value:
                       event.target.value === ''
                         ? ''
@@ -310,7 +256,7 @@ export function DataTableFilterList<
               className="h-8 w-[150px]"
               onChange={(event) => {
                 if (filterId) {
-                  updateFilterRow(filterId, {
+                  onFilterUpdate(filterId, {
                     value: event.target.value,
                     operator,
                   })
@@ -324,12 +270,12 @@ export function DataTableFilterList<
       getColumnFilterType,
       getFacetedUniqueValues,
       columnFilters,
-      updateFilterRow,
+      onFilterUpdate,
     ],
   )
 
   const renderFilterRow = React.useCallback(
-    (filter: ExtendedColumnFilter, index: number) => {
+    ({ filter, index }: { filter: ExtendedColumnFilter; index: number }) => {
       const column = table.getColumn(filter.id)
       if (!column || !filter.filterId) return null
 
@@ -368,7 +314,7 @@ export function DataTableFilterList<
             onValueChange={(value) => {
               if (!filter.filterId) return
 
-              updateFilterRow(filter.filterId, { id: value })
+              onFilterUpdate(filter.filterId, { id: value })
             }}
           >
             <SelectTrigger className="h-8">
@@ -386,11 +332,11 @@ export function DataTableFilterList<
           </Select>
           <Select
             value={filter.operator ?? 'contains'}
-            onValueChange={(value) => {
+            onValueChange={(value: FilterOperator) => {
               if (!filter.filterId) return
 
-              updateFilterRow(filter.filterId, {
-                operator: value as FilterOperator,
+              onFilterUpdate(filter.filterId, {
+                operator: value,
               })
             }}
           >
@@ -432,7 +378,7 @@ export function DataTableFilterList<
       removeFilterRow,
       renderFilterInput,
       table,
-      updateFilterRow,
+      onFilterUpdate,
     ],
   )
 
@@ -487,13 +433,13 @@ export function DataTableFilterList<
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 {columnFilters.map((filter, index) =>
-                  renderFilterRow(filter, index),
+                  renderFilterRow({ filter, index }),
                 )}
               </div>
             </div>
           )}
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={addFilterRow}>
+            <Button size="sm" onClick={onFilterAdd}>
               Add filter
             </Button>
             {columnFilters.length > 0 && (

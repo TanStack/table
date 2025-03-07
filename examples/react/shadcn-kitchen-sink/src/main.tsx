@@ -313,7 +313,7 @@ function App() {
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     columnResizeMode: 'onChange',
-    // debugTable: true,
+    debugTable: true,
   })
 
   console.log({

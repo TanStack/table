@@ -100,11 +100,9 @@ export const dynamicFilterFn: FilterFn<any, any> = <
   let operator: FilterOperator = 'includesString'
   let value = filterValue
 
-  const filter = row._table
+  const filter: ExtendedColumnFilter | undefined = row._table
     .getState()
-    .columnFilters.find((f) => f.id === columnId) as
-    | ExtendedColumnFilter
-    | undefined
+    .columnFilters.find((f) => f.id === columnId)
 
   if (!filter) return true
 
@@ -148,5 +146,60 @@ export const dynamicFilterFn: FilterFn<any, any> = <
       return filterFn_inNumberRange(row, columnId, value)
     default:
       return filterFn_includesString(row, columnId, value)
+  }
+}
+
+export function getFilterOperators(type: string): Array<{
+  label: string
+  value: FilterOperator
+}> {
+  switch (type) {
+    case 'text':
+      return [
+        { label: 'Contains', value: 'includesString' },
+        { label: 'Does not contain', value: 'notIncludesString' },
+        { label: 'Is', value: 'equalsString' },
+        { label: 'Is not', value: 'notEqualsString' },
+        { label: 'Starts with', value: 'startsWith' },
+        { label: 'Ends with', value: 'endsWith' },
+        { label: 'Is empty', value: 'isEmpty' },
+        { label: 'Is not empty', value: 'isNotEmpty' },
+      ]
+    case 'number':
+      return [
+        { label: 'Is', value: 'equals' },
+        { label: 'Is not', value: 'notEquals' },
+        { label: 'Is less than', value: 'lessThan' },
+        { label: 'Is less than or equal to', value: 'lessThanOrEqualTo' },
+        { label: 'Is greater than', value: 'greaterThan' },
+        {
+          label: 'Is greater than or equal to',
+          value: 'greaterThanOrEqualTo',
+        },
+        { label: 'Is between', value: 'inNumberRange' },
+      ]
+    case 'date':
+      return [
+        { label: 'Is', value: 'equals' },
+        { label: 'Is not', value: 'notEquals' },
+        { label: 'Is before', value: 'lessThan' },
+        { label: 'Is on or before', value: 'lessThanOrEqualTo' },
+        { label: 'Is after', value: 'greaterThan' },
+        { label: 'Is on or after', value: 'greaterThanOrEqualTo' },
+        { label: 'Is between', value: 'inNumberRange' },
+      ]
+    case 'select':
+      return [
+        { label: 'Includes', value: 'arrIncludes' },
+        { label: 'Includes all', value: 'arrIncludesAll' },
+        { label: 'Includes some', value: 'arrIncludesSome' },
+      ]
+    default:
+      return [
+        { label: 'Contains', value: 'includesString' },
+        { label: 'Does not contain', value: 'notIncludesString' },
+        { label: 'Is', value: 'equalsString' },
+        { label: 'Is not', value: 'notEqualsString' },
+      ]
   }
 }
