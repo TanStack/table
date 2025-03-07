@@ -27,14 +27,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
+type TableFeature<TFeatures extends TableFeatures> = Pick<
+  TFeatures,
+  'columnFilteringFeature' | 'columnFacetingFeature'
+>
+
 interface DataTableFilterListProps<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  table: Table<
-    Pick<TFeatures, 'columnFilteringFeature' | 'columnFacetingFeature'>,
-    TData
-  >
+  table: Table<TableFeature<TFeatures>, TData>
   columnFilters: Array<ExtendedColumnFilter>
   onColumnFiltersChange: React.Dispatch<
     React.SetStateAction<Array<ExtendedColumnFilter>>
@@ -59,10 +61,7 @@ export function DataTableFilterList<
 
   const getColumnFilterType = React.useCallback(
     (
-      column: Column<
-        Pick<TFeatures, 'columnFilteringFeature' | 'columnFacetingFeature'>,
-        TData
-      >,
+      column: Column<TableFeature<TFeatures>, TData>,
     ): ColumnMeta<TFeatures, TData>['type'] => {
       const firstValue = table
         .getPreFilteredRowModel()
@@ -79,12 +78,7 @@ export function DataTableFilterList<
   )
 
   const getFacetedUniqueValues = React.useCallback(
-    (
-      column: Column<
-        Pick<TFeatures, 'columnFilteringFeature' | 'columnFacetingFeature'>,
-        TData
-      >,
-    ) => {
+    (column: Column<TableFeature<TFeatures>, TData>) => {
       const facetedUniqueValues = column.getFacetedUniqueValues()
       return Array.from(facetedUniqueValues.keys())
         .map((value) => ({
@@ -96,7 +90,7 @@ export function DataTableFilterList<
     [table],
   )
 
-  const getFilterOperators = (type: string) => {
+  function getFilterOperators(type: string) {
     switch (type) {
       case 'text':
         return [
@@ -153,7 +147,6 @@ export function DataTableFilterList<
     }
   }
 
-  // Centralized filter row management functions
   const createFilterRow = React.useCallback(
     (columnId: string) => {
       const column = filterableColumns.find((col) => col.id === columnId)
@@ -186,7 +179,6 @@ export function DataTableFilterList<
     (rowId: string, updates: Partial<ExtendedColumnFilter>) => {
       const newFilters = columnFilters.map((filter) => {
         if (filter.rowId === rowId) {
-          // If column is being changed, set the default operator based on the new column type
           if (updates.id) {
             const newColumn = filterableColumns.find(
               (col) => col.id === updates.id,
@@ -229,19 +221,11 @@ export function DataTableFilterList<
   )
 
   const renderFilterInput = React.useCallback(
-    (
-      column: Column<
-        Pick<TFeatures, 'columnFilteringFeature' | 'columnFacetingFeature'>,
-        TData
-      >,
-      operator: string,
-    ) => {
+    (column: Column<TableFeature<TFeatures>, TData>, operator: string) => {
       const filterType = getColumnFilterType(column)
       const currentFilter = columnFilters.find(
         (filter) => filter.id === column.id,
       )
-
-      console.log({ currentFilter, operator })
 
       switch (filterType) {
         default:
@@ -253,10 +237,13 @@ export function DataTableFilterList<
                 column.columnDef.meta?.label ?? column.id
               }...`}
               className="h-8 w-[150px]"
-              onChange={(e) => {
+              onChange={(event) => {
                 const rowId = currentFilter?.rowId
                 if (rowId) {
-                  updateFilterRow(rowId, { value: e.target.value })
+                  updateFilterRow(rowId, {
+                    value: event.target.value,
+                    operator,
+                  })
                 }
               }}
             />
