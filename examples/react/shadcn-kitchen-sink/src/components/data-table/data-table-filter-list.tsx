@@ -61,7 +61,7 @@ export function DataTableFilterList<
   const getColumnFilterType = React.useCallback(
     (
       column: Column<Features<TFeatures>, TData>,
-    ): ColumnMeta<TFeatures, TData>['type'] => {
+    ): ColumnMeta<TFeatures, TData>['variant'] => {
       const firstValue = table
         .getPreFilteredRowModel()
         .flatRows[0]?.getValue(column.id)
@@ -69,7 +69,7 @@ export function DataTableFilterList<
       if (Array.isArray(firstValue)) return 'multi-select'
       if (typeof firstValue === 'number') return 'number'
       if (firstValue instanceof Date) return 'date'
-      if (column.columnDef.meta?.type === 'select') return 'select'
+      if (column.columnDef.meta?.variant === 'select') return 'select'
 
       return 'text'
     },

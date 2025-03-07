@@ -77,7 +77,7 @@ declare module '@tanstack/react-table' {
     TValue extends CellData = CellData,
   > {
     label?: string
-    type?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
+    variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
   }
 }
 
