@@ -14,7 +14,6 @@ import type {
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
 import {
   Popover,
@@ -28,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Calendar } from '@/components/ui/calendar'
 import { getFilterOperators } from '@/lib/data-table'
 
 type Features<TFeatures extends TableFeatures> = Pick<
@@ -266,8 +266,6 @@ export function DataTableFilterList<
               </div>
             )
           }
-
-          console.log({ currentFilter })
 
           return (
             <Popover>
