@@ -1,11 +1,12 @@
 import type {
+  ColumnFilter,
   FilterFn,
   FilterMeta,
   Row,
   RowData,
   TableFeatures,
 } from '@tanstack/react-table'
-import type { ExtendedColumnFilter } from '@/main'
+import type { ExtendedColumnFilter } from '../../main'
 
 export const filterFn_notIncludesString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -15,6 +16,7 @@ export const filterFn_notIncludesString: FilterFn<any, any> = <
   columnId: string,
   filterValue: string,
 ) => {
+  console.log({ filterValue })
   const value = String(row.getValue(columnId) ?? '').toLowerCase()
   return !value.includes(String(filterValue ?? '').toLowerCase())
 }
@@ -87,7 +89,6 @@ export const filterFn_isNotEmpty: FilterFn<any, any> = <
   )
 }
 
-// Custom boolean filter functions
 export const filterFn_equalsTrue: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -108,7 +109,6 @@ export const filterFn_equalsFalse: FilterFn<any, any> = <
   return row.getValue(columnId) === false
 }
 
-// Custom filter functions mapping object
 export const customFilterFns = {
   notIncludesString: filterFn_notIncludesString,
   notEqualsString: filterFn_notEqualsString,
@@ -120,7 +120,6 @@ export const customFilterFns = {
   'equals-false': filterFn_equalsFalse,
 }
 
-// Dynamic filter function that uses the operator property to select the appropriate filter function
 export const dynamicFilterFn: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -134,13 +133,24 @@ export const dynamicFilterFn: FilterFn<any, any> = <
   let operator = 'includesString' // Default to includesString
   let value = filterValue
 
-  // Check if filterValue is an object with an operator property
-  if (
+  // Check if the filter is an ExtendedColumnFilter with an operator property
+  const state = row._table.getState() as any
+  const columnFilters = state.columnFilters || []
+  const filter = columnFilters.find(
+    (f: { id: string }) => f.id === columnId,
+  ) as ExtendedColumnFilter | undefined
+
+  if (filter && filter.operator) {
+    // If we have an ExtendedColumnFilter with an operator, use those values
+    operator = filter.operator
+    value = filter.value
+  } else if (
+    // Fallback to the old approach for backward compatibility
     filterValue &&
     typeof filterValue === 'object' &&
     'operator' in filterValue
   ) {
-    const extendedFilter = filterValue as ExtendedColumnFilter
+    const extendedFilter = filterValue as { operator?: string; value: unknown }
     operator = extendedFilter.operator || operator
     value = extendedFilter.value
   }

@@ -112,18 +112,6 @@ function App() {
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
 
-  // Transform ExtendedColumnFilter objects into standard ColumnFilter objects
-  // with the operator embedded in the value
-  const transformedColumnFilters = React.useMemo(() => {
-    return columnFilters.map((filter) => ({
-      id: filter.id,
-      value: {
-        operator: filter.operator,
-        value: filter.value,
-      },
-    }))
-  }, [columnFilters])
-
   const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
@@ -319,7 +307,7 @@ function App() {
       columnVisibility,
       columnOrder,
       columnSizing,
-      columnFilters: transformedColumnFilters,
+      columnFilters,
     },
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
@@ -334,9 +322,7 @@ function App() {
   })
 
   console.log({
-    tableColumnFilters: table.getState().columnFilters,
     columnFilters,
-    transformedColumnFilters,
   })
 
   const columnSizeVars = React.useMemo(() => {
