@@ -1,11 +1,11 @@
 import type {
   FilterFn,
+  FilterMeta,
   Row,
   RowData,
   TableFeatures,
 } from '@tanstack/react-table'
-
-// Custom filter functions to complement the built-in TanStack filter functions
+import type { ExtendedColumnFilter } from '@/main'
 
 export const filterFn_notIncludesString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -118,4 +118,62 @@ export const customFilterFns = {
   isNotEmpty: filterFn_isNotEmpty,
   'equals-true': filterFn_equalsTrue,
   'equals-false': filterFn_equalsFalse,
+}
+
+// Dynamic filter function that uses the operator property to select the appropriate filter function
+export const dynamicFilterFn: FilterFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  columnId: string,
+  filterValue: unknown,
+  addMeta?: (meta: FilterMeta) => void,
+) => {
+  // Extract the operator from the filter value if it's an ExtendedColumnFilter
+  let operator = 'includesString' // Default to includesString
+  let value = filterValue
+
+  // Check if filterValue is an object with an operator property
+  if (
+    filterValue &&
+    typeof filterValue === 'object' &&
+    'operator' in filterValue
+  ) {
+    const extendedFilter = filterValue as ExtendedColumnFilter
+    operator = extendedFilter.operator || operator
+    value = extendedFilter.value
+  }
+
+  // Store the operator in meta for debugging or other uses
+  if (addMeta) {
+    addMeta({ operator })
+  }
+
+  // Use the appropriate filter function based on the operator
+  switch (operator) {
+    case 'notIncludesString':
+      return filterFn_notIncludesString(row, columnId, value as string, addMeta)
+    case 'equalsString':
+      return !filterFn_notEqualsString(row, columnId, value as string)
+    case 'notEqualsString':
+      return filterFn_notEqualsString(row, columnId, value as string)
+    case 'startsWith':
+      return filterFn_startsWith(row, columnId, value as string)
+    case 'endsWith':
+      return filterFn_endsWith(row, columnId, value as string)
+    case 'isEmpty':
+      return filterFn_isEmpty(row, columnId, '' as string)
+    case 'isNotEmpty':
+      return filterFn_isNotEmpty(row, columnId, '' as string)
+    case 'equals-true':
+      return filterFn_equalsTrue(row, columnId, '' as string)
+    case 'equals-false':
+      return filterFn_equalsFalse(row, columnId, '' as string)
+    case 'includesString':
+    default:
+      // Default to the built-in includesString filter
+      const stringValue = String(row.getValue(columnId) ?? '').toLowerCase()
+      return stringValue.includes(String(value ?? '').toLowerCase())
+  }
 }

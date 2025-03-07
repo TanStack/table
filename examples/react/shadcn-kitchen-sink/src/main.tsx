@@ -68,7 +68,10 @@ import {
 import { cn } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
-import { customFilterFns } from '@/components/data-table/data-table-filter-utils'
+import {
+  customFilterFns,
+  dynamicFilterFn,
+} from '@/components/data-table/data-table-filter-utils'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
@@ -79,6 +82,7 @@ declare module '@tanstack/react-table' {
     label?: string
     type?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
   }
+  interface FilterFns {}
 }
 
 export interface ExtendedColumnFilter extends ColumnFilter {
@@ -107,6 +111,18 @@ function App() {
   >([])
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
+
+  // Transform ExtendedColumnFilter objects into standard ColumnFilter objects
+  // with the operator embedded in the value
+  const transformedColumnFilters = React.useMemo(() => {
+    return columnFilters.map((filter) => ({
+      id: filter.id,
+      value: {
+        operator: filter.operator,
+        value: filter.value,
+      },
+    }))
+  }, [columnFilters])
 
   const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
@@ -295,6 +311,7 @@ function App() {
     defaultColumn: {
       minSize: 60,
       maxSize: 800,
+      filterFn: dynamicFilterFn,
     },
     state: {
       rowSelection,
@@ -302,7 +319,7 @@ function App() {
       columnVisibility,
       columnOrder,
       columnSizing,
-      columnFilters,
+      columnFilters: transformedColumnFilters,
     },
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
@@ -319,6 +336,7 @@ function App() {
   console.log({
     tableColumnFilters: table.getState().columnFilters,
     columnFilters,
+    transformedColumnFilters,
   })
 
   const columnSizeVars = React.useMemo(() => {
