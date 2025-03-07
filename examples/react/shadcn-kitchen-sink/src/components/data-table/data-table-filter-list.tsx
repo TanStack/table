@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { getFilterOperators } from '@/components/data-table/data-table-filter-utils'
+import { getFilterOperators } from '@/lib/data-table'
 
 type Features<TFeatures extends TableFeatures> = Pick<
   TFeatures,
@@ -39,9 +39,7 @@ interface DataTableFilterListProps<
 > {
   table: Table<Features<TFeatures>, TData>
   columnFilters: Array<ExtendedColumnFilter>
-  onColumnFiltersChange: React.Dispatch<
-    React.SetStateAction<Array<ExtendedColumnFilter>>
-  >
+  onColumnFiltersChange: (filters: Array<ExtendedColumnFilter>) => void
 }
 
 export function DataTableFilterList<

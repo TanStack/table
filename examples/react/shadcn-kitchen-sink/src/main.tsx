@@ -68,7 +68,7 @@ import {
 import { cn } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
-import { dynamicFilterFn } from '@/components/data-table/data-table-filter-utils'
+import { dynamicFilterFn } from '@/lib/data-table'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
@@ -230,16 +230,9 @@ function App() {
           )
         },
         meta: {
-          label: 'Profile Progress',
+          label: 'Progress',
           type: 'number',
         },
-      },
-      // add a boolean column
-      {
-        id: 'boolean',
-        accessorKey: 'boolean',
-        header: 'Boolean',
-        cell: (info) => <Badge>{String(info.getValue())}</Badge>,
       },
       {
         id: 'actions',
