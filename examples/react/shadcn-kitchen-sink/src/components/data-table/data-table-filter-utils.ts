@@ -7,7 +7,12 @@ import type {
 import type { ExtendedColumnFilter } from '../../main'
 
 function testFalsy(val: unknown) {
-  return val === undefined || val === null || val === ''
+  return (
+    val === undefined ||
+    val === null ||
+    val === '' ||
+    (Array.isArray(val) && val.length === 0)
+  )
 }
 
 const filterFn_notIncludesString: FilterFn<any, any> = <
@@ -18,10 +23,12 @@ const filterFn_notIncludesString: FilterFn<any, any> = <
   columnId: string,
   filterValue: string,
 ) => {
-  console.log({ filterValue })
+  if (testFalsy(filterValue)) return true
   const value = String(row.getValue(columnId) ?? '').toLowerCase()
   return !value.includes(String(filterValue ?? '').toLowerCase())
 }
+
+filterFn_notIncludesString.autoRemove = (val: any) => testFalsy(val)
 
 const filterFn_notEqualsString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -31,6 +38,7 @@ const filterFn_notEqualsString: FilterFn<any, any> = <
   columnId: string,
   filterValue: string,
 ) => {
+  if (testFalsy(filterValue)) return true
   const value = String(row.getValue(columnId) ?? '').toLowerCase()
   return value !== String(filterValue ?? '').toLowerCase()
 }
@@ -45,6 +53,7 @@ const filterFn_startsWith: FilterFn<any, any> = <
   columnId: string,
   filterValue: string,
 ) => {
+  if (testFalsy(filterValue)) return true
   const value = String(row.getValue(columnId) ?? '').toLowerCase()
   return value.startsWith(String(filterValue ?? '').toLowerCase())
 }
@@ -59,6 +68,7 @@ const filterFn_endsWith: FilterFn<any, any> = <
   columnId: string,
   filterValue: string,
 ) => {
+  if (testFalsy(filterValue)) return true
   const value = String(row.getValue(columnId) ?? '').toLowerCase()
   return value.endsWith(String(filterValue ?? '').toLowerCase())
 }
@@ -164,10 +174,22 @@ export const dynamicFilterFn: FilterFn<any, any> = <
     value = extendedFilter.value
   }
 
+  // Skip filtering if value is empty (except for isEmpty and isNotEmpty operators)
+  if (
+    testFalsy(value) &&
+    operator !== 'isEmpty' &&
+    operator !== 'isNotEmpty' &&
+    operator !== 'equals-true' &&
+    operator !== 'equals-false'
+  ) {
+    return true
+  }
+
   switch (operator) {
     case 'notIncludesString':
       return filterFn_notIncludesString(row, columnId, value as string)
     case 'equalsString':
+      if (testFalsy(value)) return true
       return !filterFn_notEqualsString(row, columnId, value as string)
     case 'notEqualsString':
       return filterFn_notEqualsString(row, columnId, value as string)
@@ -185,6 +207,7 @@ export const dynamicFilterFn: FilterFn<any, any> = <
       return filterFn_equalsFalse(row, columnId, '' as string)
     case 'includesString':
     default:
+      if (testFalsy(value)) return true
       const stringValue = String(row.getValue(columnId) ?? '').toLowerCase()
       return stringValue.includes(String(value ?? '').toLowerCase())
   }
