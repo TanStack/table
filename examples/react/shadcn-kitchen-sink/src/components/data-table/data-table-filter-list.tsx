@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { ListFilter, Trash2 } from 'lucide-react'
+import { format } from 'date-fns'
 import type { ExtendedColumnFilter, FilterOperator } from '@/types'
 import type {
   Column,
@@ -13,6 +14,7 @@ import type {
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
 import {
   Popover,
@@ -58,10 +60,14 @@ export function DataTableFilterList<
     [table],
   )
 
-  const getColumnFilterType = React.useCallback(
+  const getColumnFilterVariant = React.useCallback(
     (
       column: Column<Features<TFeatures>, TData>,
     ): ColumnMeta<TFeatures, TData>['variant'] => {
+      if (column.columnDef.meta?.variant) {
+        return column.columnDef.meta.variant
+      }
+
       const firstValue = table
         .getPreFilteredRowModel()
         .flatRows[0]?.getValue(column.id)
@@ -94,18 +100,18 @@ export function DataTableFilterList<
       const column = filterableColumns.find((col) => col.id === columnId)
       if (!column) return null
 
-      const filterType = getColumnFilterType(column)
-      const operators = getFilterOperators(filterType ?? 'text')
+      const filterVariant = getColumnFilterVariant(column)
+      const operators = getFilterOperators(filterVariant ?? 'text')
       const defaultOperator = operators[0].value
 
       return {
         id: columnId,
-        value: filterType === 'multi-select' ? [] : '',
+        value: filterVariant === 'multi-select' ? [] : '',
         operator: defaultOperator,
         filterId: crypto.randomUUID(),
       }
     },
-    [filterableColumns, getColumnFilterType],
+    [filterableColumns, getColumnFilterVariant],
   )
 
   const onFilterAdd = React.useCallback(() => {
@@ -126,14 +132,14 @@ export function DataTableFilterList<
               (col) => col.id === updates.id,
             )
             if (newColumn) {
-              const filterType = getColumnFilterType(newColumn)
-              const operators = getFilterOperators(filterType ?? 'text')
+              const filterVariant = getColumnFilterVariant(newColumn)
+              const operators = getFilterOperators(filterVariant ?? 'text')
               const defaultOperator = operators[0].value
               return {
                 ...filter,
                 ...updates,
                 operator: defaultOperator,
-                value: filterType === 'multi-select' ? [] : '',
+                value: filterVariant === 'multi-select' ? [] : '',
               }
             }
           }
@@ -146,7 +152,7 @@ export function DataTableFilterList<
     [
       columnFilters,
       filterableColumns,
-      getColumnFilterType,
+      getColumnFilterVariant,
       getFilterOperators,
       onColumnFiltersChange,
     ],
@@ -163,17 +169,142 @@ export function DataTableFilterList<
   )
 
   const renderFilterInput = React.useCallback(
-    (
-      column: Column<Features<TFeatures>, TData>,
-      operator: FilterOperator,
-      filterId: string,
-    ) => {
-      const filterType = getColumnFilterType(column)
+    ({
+      column,
+      operator,
+      filterId,
+    }: {
+      column: Column<Features<TFeatures>, TData>
+      operator: FilterOperator
+      filterId: string
+    }) => {
+      const filterVariant = getColumnFilterVariant(column)
       const currentFilter = columnFilters.find(
         (filter) => filter.filterId === filterId,
       )
 
-      switch (filterType) {
+      switch (filterVariant) {
+        case 'date':
+          if (operator === 'inNumberRange') {
+            const currentValue = Array.isArray(currentFilter?.value)
+              ? currentFilter.value
+              : [currentFilter?.value, undefined]
+
+            return (
+              <div className="flex items-center gap-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-[110px] h-8 justify-start text-left font-normal"
+                    >
+                      {currentValue[0] ? (
+                        format(new Date(currentValue[0]), 'PP')
+                      ) : (
+                        <span className="text-muted-foreground">From date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={
+                        currentValue[0] ? new Date(currentValue[0]) : undefined
+                      }
+                      onSelect={(date) => {
+                        if (filterId) {
+                          onFilterUpdate(filterId, {
+                            value: [
+                              date ? date.toISOString() : undefined,
+                              currentValue[1],
+                            ],
+                            operator,
+                          })
+                        }
+                      }}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-[110px] h-8 justify-start text-left font-normal"
+                    >
+                      {currentValue[1] ? (
+                        format(new Date(currentValue[1]), 'PP')
+                      ) : (
+                        <span className="text-muted-foreground">To date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={
+                        currentValue[1] ? new Date(currentValue[1]) : undefined
+                      }
+                      onSelect={(date) => {
+                        if (filterId) {
+                          onFilterUpdate(filterId, {
+                            value: [
+                              currentValue[0],
+                              date ? date.toISOString() : undefined,
+                            ],
+                            operator,
+                          })
+                        }
+                      }}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )
+          }
+
+          console.log({ currentFilter })
+
+          return (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-[150px] h-8 justify-start text-left font-normal"
+                >
+                  {currentFilter?.value ? (
+                    format(new Date(currentFilter.value as string), 'PP')
+                  ) : (
+                    <span className="text-muted-foreground">Pick a date</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={
+                    currentFilter?.value
+                      ? new Date(currentFilter.value as string)
+                      : undefined
+                  }
+                  onSelect={(date) => {
+                    if (filterId) {
+                      onFilterUpdate(filterId, {
+                        value: date ? date.toISOString() : undefined,
+                        operator,
+                      })
+                    }
+                  }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          )
         case 'number':
           if (operator === 'inNumberRange') {
             const currentValue = Array.isArray(currentFilter?.value)
@@ -265,7 +396,7 @@ export function DataTableFilterList<
       }
     },
     [
-      getColumnFilterType,
+      getColumnFilterVariant,
       getFacetedUniqueValues,
       columnFilters,
       onFilterUpdate,
@@ -277,8 +408,8 @@ export function DataTableFilterList<
       const column = table.getColumn(filter.id)
       if (!column || !filter.filterId) return null
 
-      const filterType = getColumnFilterType(column) ?? 'text'
-      const operators = getFilterOperators(filterType)
+      const filterVariant = getColumnFilterVariant(column) ?? 'text'
+      const operators = getFilterOperators(filterVariant)
 
       return (
         <div
@@ -349,11 +480,11 @@ export function DataTableFilterList<
               ))}
             </SelectContent>
           </Select>
-          {renderFilterInput(
+          {renderFilterInput({
             column,
-            filter.operator ?? 'includesString',
-            filter.filterId,
-          )}
+            operator: filter.operator ?? 'includesString',
+            filterId: filter.filterId,
+          })}
           <Button
             variant="outline"
             size="icon"
@@ -371,7 +502,7 @@ export function DataTableFilterList<
     },
     [
       filterableColumns,
-      getColumnFilterType,
+      getColumnFilterVariant,
       joinOperator,
       removeFilterRow,
       renderFilterInput,

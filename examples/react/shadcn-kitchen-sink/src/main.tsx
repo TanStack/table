@@ -35,7 +35,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import type { Person } from '@/makeData'
+import type { Person } from '@/lib/make-data'
 import type {
   CellData,
   ColumnDef,
@@ -56,7 +56,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { makeData } from '@/makeData'
+import { makeData } from '@/lib/make-data'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
 
@@ -144,7 +144,7 @@ function App() {
         cell: (info) => String(info.getValue()),
         meta: {
           label: 'First Name',
-          type: 'text',
+          variant: 'text',
         },
       },
       {
@@ -154,7 +154,7 @@ function App() {
         cell: (info) => String(info.getValue()),
         meta: {
           label: 'Last Name',
-          type: 'text',
+          variant: 'text',
         },
       },
       {
@@ -164,7 +164,7 @@ function App() {
         cell: (info) => <span>{String(info.getValue())}</span>,
         meta: {
           label: 'Age',
-          type: 'number',
+          variant: 'number',
         },
       },
       {
@@ -174,7 +174,7 @@ function App() {
         cell: (info) => info.cell.getValue<string>(),
         meta: {
           label: 'Email',
-          type: 'text',
+          variant: 'text',
         },
       },
       {
@@ -192,7 +192,7 @@ function App() {
           return (
             <Badge
               variant="outline"
-              className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0"
+              className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0 rounded-full"
             >
               {icons[status]}
               <span className="truncate">{toSentenceCase(status)}</span>
@@ -201,7 +201,7 @@ function App() {
         },
         meta: {
           label: 'Status',
-          type: 'select',
+          variant: 'select',
         },
       },
       {
@@ -221,7 +221,7 @@ function App() {
           return (
             <Badge
               variant="outline"
-              className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0"
+              className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0 rounded-full"
             >
               {icons[department]}
               <span className="truncate">{toSentenceCase(department)}</span>
@@ -230,7 +230,7 @@ function App() {
         },
         meta: {
           label: 'Department',
-          type: 'text',
+          variant: 'multi-select',
         },
       },
       {
@@ -240,7 +240,7 @@ function App() {
         cell: (info) => formatDate(info.getValue<string>()),
         meta: {
           label: 'Join Date',
-          type: 'date',
+          variant: 'date',
         },
       },
       {
@@ -315,12 +315,10 @@ function App() {
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     columnResizeMode: 'onChange',
-    debugTable: true,
+    // debugTable: true,
   })
 
-  console.log({
-    columnFilters,
-  })
+  console.log({ columnFilters })
 
   const columnSizeVars = React.useMemo(() => {
     const headers = table.getFlatHeaders()
