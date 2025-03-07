@@ -5,12 +5,17 @@ import * as ReactDOM from 'react-dom/client'
 import '@/styles/globals.css'
 
 import {
-  AlertCircle,
+  CheckCircle,
   ChevronDown,
   ChevronUp,
+  Clock,
+  Code,
+  CreditCard,
+  Megaphone,
   MoreHorizontal,
-  User,
+  ShoppingCart,
   Users,
+  XCircle,
 } from 'lucide-react'
 import {
   columnFilteringFeature,
@@ -54,7 +59,6 @@ import {
 import { makeData } from '@/makeData'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
-import { Progress } from '@/components/ui/progress'
 
 import { Badge } from '@/components/ui/badge'
 import {
@@ -65,7 +69,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
+import { cn, formatDate, toSentenceCase } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
 import { dynamicFilterFn } from '@/lib/data-table'
@@ -137,9 +141,7 @@ function App() {
         id: 'firstName',
         accessorKey: 'firstName',
         header: 'First Name',
-        cell: (info) => (
-          <span className="font-medium">{String(info.getValue())}</span>
-        ),
+        cell: (info) => String(info.getValue()),
         meta: {
           label: 'First Name',
           type: 'text',
@@ -149,9 +151,7 @@ function App() {
         id: 'lastName',
         accessorFn: (row) => row.lastName,
         header: 'Last Name',
-        cell: (info) => (
-          <span className="font-medium">{String(info.getValue())}</span>
-        ),
+        cell: (info) => String(info.getValue()),
         meta: {
           label: 'Last Name',
           type: 'text',
@@ -161,28 +161,20 @@ function App() {
         id: 'age',
         accessorKey: 'age',
         header: 'Age',
-        cell: (info) => (
-          <span className="text-muted-foreground">
-            {String(info.getValue())}
-          </span>
-        ),
+        cell: (info) => <span>{String(info.getValue())}</span>,
         meta: {
           label: 'Age',
           type: 'number',
         },
       },
       {
-        id: 'visits',
-        accessorKey: 'visits',
-        header: 'Visits',
-        cell: (info) => (
-          <Badge variant="secondary">
-            {info.getValue<number>().toLocaleString()}
-          </Badge>
-        ),
+        id: 'email',
+        accessorKey: 'email',
+        header: 'Email',
+        cell: (info) => info.cell.getValue<string>(),
         meta: {
-          label: 'Visits',
-          type: 'number',
+          label: 'Email',
+          type: 'text',
         },
       },
       {
@@ -192,20 +184,18 @@ function App() {
         cell: (info) => {
           const status = info.getValue<Person['status']>()
           const icons: Record<Person['status'], React.ReactNode> = {
-            relationship: <Users />,
-            complicated: <AlertCircle />,
-            single: <User />,
+            active: <CheckCircle />,
+            inactive: <XCircle />,
+            pending: <Clock />,
           }
 
           return (
             <Badge
               variant="outline"
-              className="gap-1 w-32 [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0"
+              className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0"
             >
               {icons[status]}
-              <span className="truncate">
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </span>
+              <span className="truncate">{toSentenceCase(status)}</span>
             </Badge>
           )
         },
@@ -215,23 +205,42 @@ function App() {
         },
       },
       {
-        id: 'progress',
-        accessorKey: 'progress',
-        header: 'Progress',
-        cell: ({ getValue }) => {
-          const progress = getValue<number>()
+        id: 'department',
+        accessorKey: 'department',
+        header: 'Department',
+        cell: (info) => {
+          const department = info.getValue<Person['department']>()
+          const icons: Record<Person['department'], React.ReactNode> = {
+            engineering: <Code />,
+            marketing: <Megaphone />,
+            sales: <ShoppingCart />,
+            hr: <Users />,
+            finance: <CreditCard />,
+          }
+
           return (
-            <div className="flex items-center gap-2">
-              <Progress value={progress} />
-              <span className="text-sm text-muted-foreground w-9">
-                {progress}%
-              </span>
-            </div>
+            <Badge
+              variant="outline"
+              className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0"
+            >
+              {icons[department]}
+              <span className="truncate">{toSentenceCase(department)}</span>
+            </Badge>
           )
         },
         meta: {
-          label: 'Progress',
-          type: 'number',
+          label: 'Department',
+          type: 'text',
+        },
+      },
+      {
+        id: 'joinDate',
+        accessorKey: 'joinDate',
+        header: 'Join Date',
+        cell: (info) => formatDate(info.getValue<string>()),
+        meta: {
+          label: 'Join Date',
+          type: 'date',
         },
       },
       {

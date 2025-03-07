@@ -1,17 +1,27 @@
 import { faker } from '@faker-js/faker'
 
-export type Person = {
+const statuses = ['active', 'inactive', 'pending'] as const
+const departments = [
+  'engineering',
+  'marketing',
+  'finance',
+  'sales',
+  'hr',
+] as const
+
+export interface Person {
   id: string
   firstName: string
   lastName: string
   age: number
-  visits: number
-  progress: number
-  status: 'relationship' | 'complicated' | 'single'
+  email: string
+  status: (typeof statuses)[number]
+  department: (typeof departments)[number]
+  joinDate: string
   subRows?: Array<Person>
 }
 
-const range = (len: number) => {
+function range(len: number) {
   const arr: Array<number> = []
   for (let i = 0; i < len; i++) {
     arr.push(i)
@@ -19,19 +29,16 @@ const range = (len: number) => {
   return arr
 }
 
-const newPerson = (): Person => {
+function newPerson(): Person {
   return {
     id: faker.string.uuid(),
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
-    age: faker.number.int(40),
-    visits: faker.number.int(1000),
-    progress: faker.number.int(100),
-    status: faker.helpers.shuffle<Person['status']>([
-      'relationship',
-      'complicated',
-      'single',
-    ])[0],
+    age: faker.number.int({ min: 20, max: 65 }),
+    email: faker.internet.email(),
+    status: faker.helpers.arrayElement(statuses),
+    department: faker.helpers.arrayElement(departments),
+    joinDate: faker.date.past({ years: 5 }).toISOString().split('T')[0],
   }
 }
 
