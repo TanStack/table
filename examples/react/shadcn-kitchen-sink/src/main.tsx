@@ -318,8 +318,6 @@ function App() {
     // debugTable: true,
   })
 
-  console.log({ columnFilters })
-
   const columnSizeVars = React.useMemo(() => {
     const headers = table.getFlatHeaders()
     const colSizes: { [key: string]: number } = {}

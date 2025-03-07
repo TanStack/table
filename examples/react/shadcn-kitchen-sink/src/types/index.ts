@@ -14,7 +14,7 @@ export type FilterOperator =
   | 'lessThanOrEqualTo'
   | 'notLessThanOrEqualTo'
   | 'isRelativeToToday'
-  | 'inNumberRange'
+  | 'inRange'
   | 'startsWith'
   | 'endsWith'
   | 'isEmpty'

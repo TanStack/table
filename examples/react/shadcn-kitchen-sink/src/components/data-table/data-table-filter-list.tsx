@@ -162,7 +162,7 @@ export function DataTableFilterList<
     ],
   )
 
-  const removeFilterRow = React.useCallback(
+  const onFilterRemove = React.useCallback(
     (filterId: string) => {
       const newFilters = columnFilters.filter((filter) => {
         return filter.filterId !== filterId
@@ -189,7 +189,7 @@ export function DataTableFilterList<
 
       switch (filterVariant) {
         case 'date':
-          if (operator === 'inNumberRange') {
+          if (operator === 'inRange') {
             const currentValue = Array.isArray(currentFilter?.value)
               ? currentFilter.value
               : [currentFilter?.value, undefined]
@@ -212,7 +212,7 @@ export function DataTableFilterList<
                       variant="outline"
                       size="sm"
                       className={cn(
-                        'w-[240px] justify-start text-left font-normal',
+                        'w-full justify-start text-left font-normal',
                         !dateRange && 'text-muted-foreground',
                       )}
                     >
@@ -263,7 +263,7 @@ export function DataTableFilterList<
                   variant="outline"
                   size="sm"
                   className={cn(
-                    'w-[150px] justify-start text-left font-normal',
+                    'w-full justify-start text-left font-normal',
                     !currentFilter?.value && 'text-muted-foreground',
                   )}
                 >
@@ -297,7 +297,7 @@ export function DataTableFilterList<
             </Popover>
           )
         case 'number':
-          if (operator === 'inNumberRange') {
+          if (operator === 'inRange') {
             const currentValue = Array.isArray(currentFilter?.value)
               ? currentFilter.value
               : [currentFilter?.value, undefined]
@@ -308,7 +308,7 @@ export function DataTableFilterList<
                   type="number"
                   value={currentValue[0] ?? ''}
                   placeholder="Min"
-                  className="h-8 w-[70px]"
+                  className="h-8"
                   onChange={(event) => {
                     if (filterId) {
                       onFilterUpdate(filterId, {
@@ -327,7 +327,7 @@ export function DataTableFilterList<
                   type="number"
                   value={currentValue[1] ?? ''}
                   placeholder="Max"
-                  className="h-8 w-[70px]"
+                  className="h-8"
                   onChange={(event) => {
                     if (filterId) {
                       onFilterUpdate(filterId, {
@@ -351,7 +351,7 @@ export function DataTableFilterList<
               type="number"
               value={(currentFilter?.value ?? '') as string}
               placeholder={`Enter number...`}
-              className="h-8 w-[150px]"
+              className="h-8"
               onChange={(event) => {
                 if (filterId) {
                   onFilterUpdate(filterId, {
@@ -373,7 +373,7 @@ export function DataTableFilterList<
               placeholder={`Search ${
                 column.columnDef.meta?.label ?? column.id
               }...`}
-              className="h-8 w-[150px]"
+              className="h-8"
               onChange={(event) => {
                 if (filterId) {
                   onFilterUpdate(filterId, {
@@ -394,7 +394,7 @@ export function DataTableFilterList<
     ],
   )
 
-  const renderFilterRow = React.useCallback(
+  const onFilterRender = React.useCallback(
     ({ filter, index }: { filter: ExtendedColumnFilter; index: number }) => {
       const column = table.getColumn(filter.id)
       if (!column || !filter.filterId) return null
@@ -405,7 +405,7 @@ export function DataTableFilterList<
       return (
         <div
           key={filter.filterId}
-          className="grid grid-cols-[70px_140px_130px_1fr_32px] items-center gap-2"
+          className="grid items-center grid-cols-[70px_135px_125px_minmax(0,200px)_32px] gap-1.5"
         >
           {index === 0 ? (
             <span className="text-sm text-center text-muted-foreground">
@@ -483,7 +483,7 @@ export function DataTableFilterList<
             onClick={() => {
               if (!filter.filterId) return
 
-              removeFilterRow(filter.filterId)
+              onFilterRemove(filter.filterId)
             }}
           >
             <Trash2 />
@@ -492,13 +492,13 @@ export function DataTableFilterList<
       )
     },
     [
+      table,
       filterableColumns,
       getColumnFilterVariant,
       joinOperator,
-      removeFilterRow,
       onFilterInputRender,
-      table,
       onFilterUpdate,
+      onFilterRemove,
     ],
   )
 
@@ -553,7 +553,7 @@ export function DataTableFilterList<
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 {columnFilters.map((filter, index) =>
-                  renderFilterRow({ filter, index }),
+                  onFilterRender({ filter, index }),
                 )}
               </div>
             </div>
