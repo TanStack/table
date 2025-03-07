@@ -1,14 +1,16 @@
 import type {
-  ColumnFilter,
   FilterFn,
-  FilterMeta,
   Row,
   RowData,
   TableFeatures,
 } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '../../main'
 
-export const filterFn_notIncludesString: FilterFn<any, any> = <
+function testFalsy(val: unknown) {
+  return val === undefined || val === null || val === ''
+}
+
+const filterFn_notIncludesString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -21,7 +23,7 @@ export const filterFn_notIncludesString: FilterFn<any, any> = <
   return !value.includes(String(filterValue ?? '').toLowerCase())
 }
 
-export const filterFn_notEqualsString: FilterFn<any, any> = <
+const filterFn_notEqualsString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -33,7 +35,9 @@ export const filterFn_notEqualsString: FilterFn<any, any> = <
   return value !== String(filterValue ?? '').toLowerCase()
 }
 
-export const filterFn_startsWith: FilterFn<any, any> = <
+filterFn_notEqualsString.autoRemove = (val: any) => testFalsy(val)
+
+const filterFn_startsWith: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -45,7 +49,9 @@ export const filterFn_startsWith: FilterFn<any, any> = <
   return value.startsWith(String(filterValue ?? '').toLowerCase())
 }
 
-export const filterFn_endsWith: FilterFn<any, any> = <
+filterFn_startsWith.autoRemove = (val: any) => testFalsy(val)
+
+const filterFn_endsWith: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -57,7 +63,9 @@ export const filterFn_endsWith: FilterFn<any, any> = <
   return value.endsWith(String(filterValue ?? '').toLowerCase())
 }
 
-export const filterFn_isEmpty: FilterFn<any, any> = <
+filterFn_endsWith.autoRemove = (val: any) => testFalsy(val)
+
+const filterFn_isEmpty: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -73,7 +81,9 @@ export const filterFn_isEmpty: FilterFn<any, any> = <
   )
 }
 
-export const filterFn_isNotEmpty: FilterFn<any, any> = <
+filterFn_isEmpty.autoRemove = (val: any) => testFalsy(val)
+
+const filterFn_isNotEmpty: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -89,7 +99,9 @@ export const filterFn_isNotEmpty: FilterFn<any, any> = <
   )
 }
 
-export const filterFn_equalsTrue: FilterFn<any, any> = <
+filterFn_isNotEmpty.autoRemove = (val: any) => testFalsy(val)
+
+const filterFn_equalsTrue: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -99,7 +111,9 @@ export const filterFn_equalsTrue: FilterFn<any, any> = <
   return row.getValue(columnId) === true
 }
 
-export const filterFn_equalsFalse: FilterFn<any, any> = <
+filterFn_equalsTrue.autoRemove = (val: any) => testFalsy(val)
+
+const filterFn_equalsFalse: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -108,6 +122,8 @@ export const filterFn_equalsFalse: FilterFn<any, any> = <
 ) => {
   return row.getValue(columnId) === false
 }
+
+filterFn_equalsFalse.autoRemove = (val: any) => testFalsy(val)
 
 export const customFilterFns = {
   notIncludesString: filterFn_notIncludesString,
@@ -124,28 +140,23 @@ export const dynamicFilterFn: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<TFeatures, TData>,
+  row: Row<Pick<TFeatures, 'columnFilteringFeature'>, TData>,
   columnId: string,
   filterValue: unknown,
-  addMeta?: (meta: FilterMeta) => void,
 ) => {
-  // Extract the operator from the filter value if it's an ExtendedColumnFilter
-  let operator = 'includesString' // Default to includesString
+  let operator = 'includesString'
   let value = filterValue
 
-  // Check if the filter is an ExtendedColumnFilter with an operator property
-  const state = row._table.getState() as any
-  const columnFilters = state.columnFilters || []
-  const filter = columnFilters.find(
-    (f: { id: string }) => f.id === columnId,
-  ) as ExtendedColumnFilter | undefined
+  const filter: ExtendedColumnFilter | undefined = row._table
+    .getState()
+    .columnFilters.find((f) => f.id === columnId) as
+    | ExtendedColumnFilter
+    | undefined
 
   if (filter && filter.operator) {
-    // If we have an ExtendedColumnFilter with an operator, use those values
     operator = filter.operator
     value = filter.value
   } else if (
-    // Fallback to the old approach for backward compatibility
     filterValue &&
     typeof filterValue === 'object' &&
     'operator' in filterValue
@@ -155,15 +166,9 @@ export const dynamicFilterFn: FilterFn<any, any> = <
     value = extendedFilter.value
   }
 
-  // Store the operator in meta for debugging or other uses
-  if (addMeta) {
-    addMeta({ operator })
-  }
-
-  // Use the appropriate filter function based on the operator
   switch (operator) {
     case 'notIncludesString':
-      return filterFn_notIncludesString(row, columnId, value as string, addMeta)
+      return filterFn_notIncludesString(row, columnId, value as string)
     case 'equalsString':
       return !filterFn_notEqualsString(row, columnId, value as string)
     case 'notEqualsString':
@@ -182,7 +187,6 @@ export const dynamicFilterFn: FilterFn<any, any> = <
       return filterFn_equalsFalse(row, columnId, '' as string)
     case 'includesString':
     default:
-      // Default to the built-in includesString filter
       const stringValue = String(row.getValue(columnId) ?? '').toLowerCase()
       return stringValue.includes(String(value ?? '').toLowerCase())
   }

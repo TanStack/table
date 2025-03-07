@@ -27,7 +27,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-type TableFeature<TFeatures extends TableFeatures> = Pick<
+type Features<TFeatures extends TableFeatures> = Pick<
   TFeatures,
   'columnFilteringFeature' | 'columnFacetingFeature'
 >
@@ -36,7 +36,7 @@ interface DataTableFilterListProps<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  table: Table<TableFeature<TFeatures>, TData>
+  table: Table<Features<TFeatures>, TData>
   columnFilters: Array<ExtendedColumnFilter>
   onColumnFiltersChange: React.Dispatch<
     React.SetStateAction<Array<ExtendedColumnFilter>>
@@ -61,7 +61,7 @@ export function DataTableFilterList<
 
   const getColumnFilterType = React.useCallback(
     (
-      column: Column<TableFeature<TFeatures>, TData>,
+      column: Column<Features<TFeatures>, TData>,
     ): ColumnMeta<TFeatures, TData>['type'] => {
       const firstValue = table
         .getPreFilteredRowModel()
@@ -78,7 +78,7 @@ export function DataTableFilterList<
   )
 
   const getFacetedUniqueValues = React.useCallback(
-    (column: Column<TableFeature<TFeatures>, TData>) => {
+    (column: Column<Features<TFeatures>, TData>) => {
       const facetedUniqueValues = column.getFacetedUniqueValues()
       return Array.from(facetedUniqueValues.keys())
         .map((value) => ({
@@ -221,7 +221,7 @@ export function DataTableFilterList<
   )
 
   const renderFilterInput = React.useCallback(
-    (column: Column<TableFeature<TFeatures>, TData>, operator: string) => {
+    (column: Column<Features<TFeatures>, TData>, operator: string) => {
       const filterType = getColumnFilterType(column)
       const currentFilter = columnFilters.find(
         (filter) => filter.id === column.id,
