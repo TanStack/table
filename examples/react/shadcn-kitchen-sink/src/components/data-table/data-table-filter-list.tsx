@@ -147,6 +147,33 @@ export function DataTableFilterList<
               }
             }
           }
+
+          if (updates.operator && filter.value) {
+            const column = filterableColumns.find((col) => col.id === filter.id)
+            if (column && getColumnFilterVariant(column) === 'date') {
+              const currentValue = filter.value
+              if (
+                updates.operator === 'inRange' &&
+                !Array.isArray(currentValue)
+              ) {
+                return {
+                  ...filter,
+                  ...updates,
+                  value: [currentValue, undefined],
+                }
+              } else if (
+                updates.operator !== 'inRange' &&
+                Array.isArray(currentValue)
+              ) {
+                return {
+                  ...filter,
+                  ...updates,
+                  value: currentValue[0] ?? '',
+                }
+              }
+            }
+          }
+
           return { ...filter, ...updates }
         }
         return filter
