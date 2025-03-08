@@ -51,13 +51,10 @@ export function DataTableViewOptions<
   onColumnOrderChange,
 }: DataTableViewOptionsProps<TFeatures, TRowData>) {
   const triggerRef = React.useRef<HTMLButtonElement>(null)
-  const pointerTypeRef =
-    React.useRef<React.PointerEvent['pointerType']>('touch')
-  const [open, setOpen] = React.useState(false)
 
   return (
     <Sortable value={columnOrder} onValueChange={onColumnOrderChange}>
-      <Popover open={open} onOpenChange={setOpen} modal>
+      <Popover>
         <PopoverTrigger asChild>
           <Button
             ref={triggerRef}
@@ -66,18 +63,7 @@ export function DataTableViewOptions<
             role="combobox"
             size="sm"
             className="ml-auto hidden h-8 gap-2 focus:outline-none focus:ring-1 focus:ring-ring focus-visible:ring-0 lg:flex"
-            onClick={(event) => {
-              event.currentTarget.focus()
-              if (pointerTypeRef.current !== 'mouse') {
-                setOpen(true)
-              }
-            }}
             onPointerDown={(event) => {
-              /**
-               * @see https://github.com/radix-ui/primitives/blob/main/packages/react/select/src/select.tsx#L267-L299
-               */
-              pointerTypeRef.current = event.pointerType
-
               // prevent implicit pointer capture
               // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture
               const target = event.target
@@ -91,15 +77,14 @@ export function DataTableViewOptions<
                 event.ctrlKey === false &&
                 event.pointerType === 'mouse'
               ) {
-                setOpen(true)
                 // prevent trigger from stealing focus from the active item after opening.
                 event.preventDefault()
               }
             }}
           >
-            <Settings2 className="size-4" />
+            <Settings2 />
             View
-            <ChevronsUpDown className="ml-auto size-4 shrink-0 opacity-50" />
+            <ChevronsUpDown className="ml-auto opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent

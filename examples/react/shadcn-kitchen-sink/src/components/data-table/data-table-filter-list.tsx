@@ -283,6 +283,10 @@ export function DataTableFilterList<
             )
           }
 
+          const selectedDate = currentFilter?.value
+            ? new Date(currentFilter.value as string)
+            : undefined
+
           return (
             <Popover>
               <PopoverTrigger asChild>
@@ -290,9 +294,27 @@ export function DataTableFilterList<
                   variant="outline"
                   size="sm"
                   className={cn(
-                    'w-full justify-start text-left font-normal',
+                    'w-full justify-start text-left font-normal focus:outline-none focus:ring-1 focus:ring-ring focus-visible:ring-0',
                     !currentFilter?.value && 'text-muted-foreground',
                   )}
+                  onPointerDown={(event) => {
+                    // prevent implicit pointer capture
+                    // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture
+                    const target = event.target
+                    if (!(target instanceof HTMLElement)) return
+                    if (target.hasPointerCapture(event.pointerId)) {
+                      target.releasePointerCapture(event.pointerId)
+                    }
+
+                    if (
+                      event.button === 0 &&
+                      event.ctrlKey === false &&
+                      event.pointerType === 'mouse'
+                    ) {
+                      // prevent trigger from stealing focus from the active item after opening.
+                      event.preventDefault()
+                    }
+                  }}
                 >
                   <CalendarIcon />
                   {currentFilter?.value ? (
@@ -305,11 +327,8 @@ export function DataTableFilterList<
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={
-                    currentFilter?.value
-                      ? new Date(currentFilter.value as string)
-                      : undefined
-                  }
+                  selected={selectedDate}
+                  defaultMonth={selectedDate}
                   onSelect={(date) => {
                     if (filterId) {
                       onFilterUpdate(filterId, {
