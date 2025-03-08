@@ -28,8 +28,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Calendar } from '@/components/ui/calendar'
-import { getFilterOperators } from '@/lib/data-table'
-import { cn } from '@/lib/utils'
+import { getFilterOperators } from '@/utils/data-table'
+import { cn } from '@/utils/utils'
 
 type Features<TFeatures extends TableFeatures> = Pick<
   TFeatures,

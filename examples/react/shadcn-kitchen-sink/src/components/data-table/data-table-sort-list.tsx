@@ -45,7 +45,7 @@ import {
   SortableItemHandle,
   SortableOverlay,
 } from '@/components/ui/sortable'
-import { cn } from '@/lib/utils'
+import { cn } from '@/utils/utils'
 
 interface DataTableSortListProps<
   TFeatures extends TableFeatures,

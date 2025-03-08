@@ -39,6 +39,12 @@ function toDate(value: unknown): Date | null {
   return null
 }
 
+function isSameDay(date1: Date, date2: Date): boolean {
+  const date1Str = date1.toISOString().split('T')[0]
+  const date2Str = date2.toISOString().split('T')[0]
+  return date1Str === date2Str
+}
+
 const filterFn_enhancedEquals: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -54,7 +60,7 @@ const filterFn_enhancedEquals: FilterFn<any, any> = <
     const filterDate = toDate(filterValue)
 
     if (rowDate && filterDate) {
-      return rowDate.getTime() === filterDate.getTime()
+      return isSameDay(rowDate, filterDate)
     }
   }
 

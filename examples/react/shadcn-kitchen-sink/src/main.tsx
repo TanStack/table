@@ -35,7 +35,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import type { Person } from '@/lib/make-data'
+import type { Person } from '@/utils/make-data'
 import type {
   CellData,
   ColumnDef,
@@ -56,7 +56,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { makeData } from '@/lib/make-data'
+import { makeData } from '@/utils/make-data'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
 
@@ -69,10 +69,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { cn, formatDate, toSentenceCase } from '@/lib/utils'
+import { cn, formatDate, toSentenceCase } from '@/utils/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
-import { dynamicFilterFn } from '@/lib/data-table'
+import { dynamicFilterFn } from '@/utils/data-table'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
@@ -327,6 +327,11 @@ function App() {
     }
     return colSizes
   }, [table.getState().columnSizing])
+
+  console.log({
+    columnFilters,
+    joinDates: table.getRowModel().flatRows.map((row) => row.original.joinDate),
+  })
 
   return (
     <div className="container mx-auto p-4 flex flex-col gap-4">
