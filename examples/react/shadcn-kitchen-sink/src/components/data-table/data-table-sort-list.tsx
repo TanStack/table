@@ -203,7 +203,7 @@ export function DataTableSortList<
                         role="listitem"
                         id={sortItemId}
                         tabIndex={-1}
-                        className="flex items-center gap-2"
+                        className="grid items-center grid-cols-[175px_100px_32px_32px] gap-2"
                       >
                         <Popover>
                           <PopoverTrigger asChild>
@@ -214,7 +214,7 @@ export function DataTableSortList<
                               aria-label={`Select column to sort by. Current: ${columnTitle}`}
                               variant="outline"
                               size="sm"
-                              className="h-8 w-44 font-normal justify-between gap-2 focus:outline-none focus:ring-1 focus:ring-ring"
+                              className="h-8 font-normal justify-between gap-2 focus:outline-none focus:ring-1 focus:ring-ring"
                               onPointerDown={(event) => {
                                 const target = event.target
                                 if (!(target instanceof HTMLElement)) return
@@ -298,7 +298,7 @@ export function DataTableSortList<
                           <SelectTrigger
                             aria-controls={operatorListboxId}
                             aria-label={`Sort direction for ${columnTitle}`}
-                            className="h-8 w-24"
+                            className="h-8"
                           >
                             <SelectValue />
                           </SelectTrigger>
@@ -359,11 +359,11 @@ export function DataTableSortList<
         </PopoverContent>
       </Popover>
       <SortableOverlay>
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-[11.25rem] rounded-md bg-primary/10" />
-          <div className="h-8 w-24 rounded-md bg-primary/10" />
-          <div className="size-8 shrink-0 rounded-md bg-primary/10" />
-          <div className="size-8 shrink-0 rounded-md bg-primary/10" />
+        <div className="grid grid-cols-[175px_100px_32px_32px] gap-2">
+          <div className="h-8 rounded-md bg-primary/10" />
+          <div className="h-8 rounded-md bg-primary/10" />
+          <div className="h-8 shrink-0 rounded-md bg-primary/10" />
+          <div className="h-8 shrink-0 rounded-md bg-primary/10" />
         </div>
       </SortableOverlay>
     </Sortable>
