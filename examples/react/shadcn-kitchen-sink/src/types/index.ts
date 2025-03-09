@@ -29,7 +29,10 @@ export type FilterOperator =
   | 'isEmpty'
   | 'isNotEmpty'
 
+export type JoinOperator = 'and' | 'or'
+
 export interface ExtendedColumnFilter extends ColumnFilter {
   filterId?: string
   operator?: FilterOperator
+  joinOperator?: JoinOperator
 }

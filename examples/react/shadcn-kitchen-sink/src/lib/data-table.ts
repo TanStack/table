@@ -11,6 +11,7 @@ import {
 import type {
   ExtendedColumnFilter,
   FilterOperator,
+  JoinOperator,
   TableFilterFeatures,
 } from '@/types'
 import type {
@@ -323,56 +324,85 @@ export const dynamicFilterFn: FilterFn<any, any> = <
 ) => {
   let operator: FilterOperator = 'includesString'
   let value = filterValue
+  let joinOperator: JoinOperator = 'and'
 
-  const filter: ExtendedColumnFilter | undefined = row._table
+  const filters: Array<ExtendedColumnFilter> = row._table
     .getState()
-    .columnFilters.find((f) => f.id === columnId)
+    .columnFilters.filter((f) => f.id === columnId)
 
-  if (!filter) return true
+  if (!filters.length) return true
 
-  operator = filter.operator ?? operator
-  value = filter.value
-
-  if (isFalsy(value) && operator !== 'isEmpty' && operator !== 'isNotEmpty') {
-    return true
+  if (filters[0].joinOperator) {
+    joinOperator = filters[0].joinOperator
   }
 
-  switch (operator) {
-    case 'includesString':
-      return filterFn_includesString(row, columnId, value)
-    case 'notIncludesString':
-      return !filterFn_includesString(row, columnId, value)
-    case 'equalsString':
-      return filterFn_equalsString(row, columnId, value)
-    case 'notEqualsString':
-      return !filterFn_equalsString(row, columnId, value)
-    case 'startsWith':
-      return filterFn_startsWith(row, columnId, value)
-    case 'endsWith':
-      return filterFn_endsWith(row, columnId, value)
-    case 'isEmpty':
-      return filterFn_isEmpty(row, columnId, '')
-    case 'isNotEmpty':
-      return !filterFn_isEmpty(row, columnId, '')
-    case 'equals':
-      return filterFn_enhancedEquals(row, columnId, value)
-    case 'notEquals':
-      return !filterFn_enhancedEquals(row, columnId, value)
-    case 'greaterThan':
-      return filterFn_enhancedGreaterThan(row, columnId, value)
-    case 'greaterThanOrEqualTo':
-      return filterFn_enhancedGreaterThanOrEqualTo(row, columnId, value)
-    case 'lessThan':
-      return filterFn_enhancedLessThan(row, columnId, value)
-    case 'lessThanOrEqualTo':
-      return filterFn_enhancedLessThanOrEqualTo(row, columnId, value)
-    case 'inRange':
-      return filterFn_inBetween(row, columnId, value)
-    case 'isRelativeToToday':
-      return filterFn_isRelativeToToday(row, columnId, value)
-    default:
-      return filterFn_includesString(row, columnId, value)
-  }
+  return filters.reduce((pass, filter, index) => {
+    operator = filter.operator ?? 'includesString'
+    value = filter.value
+
+    if (isFalsy(value) && operator !== 'isEmpty' && operator !== 'isNotEmpty') {
+      return pass
+    }
+
+    let result: boolean
+    switch (operator) {
+      case 'includesString':
+        result = filterFn_includesString(row, columnId, value)
+        break
+      case 'notIncludesString':
+        result = !filterFn_includesString(row, columnId, value)
+        break
+      case 'equalsString':
+        result = filterFn_equalsString(row, columnId, value)
+        break
+      case 'notEqualsString':
+        result = !filterFn_equalsString(row, columnId, value)
+        break
+      case 'startsWith':
+        result = filterFn_startsWith(row, columnId, value)
+        break
+      case 'endsWith':
+        result = filterFn_endsWith(row, columnId, value)
+        break
+      case 'isEmpty':
+        result = filterFn_isEmpty(row, columnId, '')
+        break
+      case 'isNotEmpty':
+        result = !filterFn_isEmpty(row, columnId, '')
+        break
+      case 'equals':
+        result = filterFn_enhancedEquals(row, columnId, value)
+        break
+      case 'notEquals':
+        result = !filterFn_enhancedEquals(row, columnId, value)
+        break
+      case 'greaterThan':
+        result = filterFn_enhancedGreaterThan(row, columnId, value)
+        break
+      case 'greaterThanOrEqualTo':
+        result = filterFn_enhancedGreaterThanOrEqualTo(row, columnId, value)
+        break
+      case 'lessThan':
+        result = filterFn_enhancedLessThan(row, columnId, value)
+        break
+      case 'lessThanOrEqualTo':
+        result = filterFn_enhancedLessThanOrEqualTo(row, columnId, value)
+        break
+      case 'inRange':
+        result = filterFn_inBetween(row, columnId, value)
+        break
+      case 'isRelativeToToday':
+        result = filterFn_isRelativeToToday(row, columnId, value)
+        break
+      default:
+        result = filterFn_includesString(row, columnId, value)
+        break
+    }
+
+    if (index === 0) return result
+
+    return joinOperator === 'and' ? pass && result : pass || result
+  }, true)
 }
 
 export function getFilterOperators(type: string): Array<{

@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 import type {
   ExtendedColumnFilter,
   FilterOperator,
+  JoinOperator,
   TableFilterFeatures,
 } from '@/types'
 import type {
@@ -116,7 +117,6 @@ export function DataTableFilterList<
   onColumnFiltersChange,
 }: DataTableFilterListProps<TFeatures, TData>) {
   const [open, setOpen] = React.useState(false)
-  const [joinOperator, setJoinOperator] = React.useState<'and' | 'or'>('and')
 
   const filterableColumns = React.useMemo(
     () => table.getAllColumns().filter((column) => column.getCanFilter()),
@@ -146,7 +146,7 @@ export function DataTableFilterList<
   )
 
   const onFilterAddImpl = React.useCallback(
-    (columnId: string) => {
+    (columnId: string): ExtendedColumnFilter | null => {
       const column = filterableColumns.find((col) => col.id === columnId)
       if (!column) return null
 
@@ -159,6 +159,7 @@ export function DataTableFilterList<
         value: filterVariant === 'multi-select' ? [] : '',
         operator: defaultOperator,
         filterId: crypto.randomUUID(),
+        joinOperator: 'and',
       }
     },
     [filterableColumns, getColumnFilterVariant],
@@ -606,8 +607,16 @@ export function DataTableFilterList<
             </span>
           ) : index === 1 ? (
             <Select
-              value={joinOperator}
-              onValueChange={(value: 'and' | 'or') => setJoinOperator(value)}
+              value={filter.joinOperator}
+              onValueChange={(value: JoinOperator) => {
+                if (columnFilters.length > 0) {
+                  const updatedFilters = columnFilters.map((f) => ({
+                    ...f,
+                    joinOperator: value,
+                  }))
+                  onColumnFiltersChange(updatedFilters)
+                }
+              }}
             >
               <SelectTrigger className="h-8">
                 <SelectValue placeholder="Join" />
@@ -619,7 +628,7 @@ export function DataTableFilterList<
             </Select>
           ) : (
             <span className="text-sm text-center text-muted-foreground">
-              {joinOperator}
+              {filter.joinOperator}
             </span>
           )}
           <Select
@@ -688,7 +697,6 @@ export function DataTableFilterList<
       table,
       filterableColumns,
       getColumnFilterVariant,
-      joinOperator,
       onFilterInputRender,
       onFilterUpdate,
       onFilterRemove,
