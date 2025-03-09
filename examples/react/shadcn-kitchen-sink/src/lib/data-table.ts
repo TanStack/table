@@ -1,4 +1,5 @@
 import {
+  filterFn_arrIncludes,
   filterFn_equals,
   filterFn_equalsString,
   filterFn_greaterThan,
@@ -58,6 +59,10 @@ const filterFn_enhancedEquals: FilterFn<any, any> = <
   filterValue: unknown,
 ) => {
   const rowValue = row.getValue(columnId)
+
+  if (Array.isArray(filterValue)) {
+    return filterFn_arrIncludes(row, columnId, filterValue)
+  }
 
   if (isValidDate(rowValue) && isValidDate(filterValue)) {
     const rowDate = toDate(rowValue)
@@ -413,10 +418,12 @@ export function getFilterOperators(type: string): Array<{
         { label: 'Is not empty', value: 'isNotEmpty' },
       ]
     case 'select':
+    case 'multi-select':
       return [
-        { label: 'Includes', value: 'arrIncludes' },
-        { label: 'Includes all', value: 'arrIncludesAll' },
-        { label: 'Includes some', value: 'arrIncludesSome' },
+        { label: 'Is', value: 'equals' },
+        { label: 'Is not', value: 'notEquals' },
+        { label: 'Is empty', value: 'isEmpty' },
+        { label: 'Is not empty', value: 'isNotEmpty' },
       ]
     default:
       return [
