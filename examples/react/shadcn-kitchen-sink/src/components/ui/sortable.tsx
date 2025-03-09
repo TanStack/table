@@ -40,8 +40,8 @@ import type {
 } from '@dnd-kit/core'
 import type { SortableContextProps } from '@dnd-kit/sortable'
 
-import { composeEventHandlers, useComposedRefs } from '@/utils/composition'
-import { cn } from '@/utils/utils'
+import { composeEventHandlers, useComposedRefs } from '@/lib/composition'
+import { cn } from '@/lib/utils'
 
 const orientationConfig = {
   vertical: {

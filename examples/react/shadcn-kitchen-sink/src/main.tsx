@@ -18,11 +18,15 @@ import {
   XCircle,
 } from 'lucide-react'
 import {
+  columnFacetingFeature,
   columnFilteringFeature,
   columnOrderingFeature,
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
+  createCoreRowModel,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -35,7 +39,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import type { Person } from '@/utils/make-data'
+import type { Person } from '@/lib/make-data'
 import type {
   CellData,
   ColumnDef,
@@ -56,7 +60,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { makeData } from '@/utils/make-data'
+import { makeData } from '@/lib/make-data'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
 
@@ -69,10 +73,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { cn, formatDate, toSentenceCase } from '@/utils/utils'
+import { cn, formatDate, toSentenceCase } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
-import { dynamicFilterFn } from '@/utils/data-table'
+import { dynamicFilterFn } from '@/lib/data-table'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
@@ -90,6 +94,7 @@ const _features = tableFeatures({
   rowPaginationFeature,
   rowSelectionFeature,
   columnFilteringFeature,
+  columnFacetingFeature,
   columnOrderingFeature,
   columnVisibilityFeature,
   columnSizingFeature,
@@ -287,7 +292,10 @@ function App() {
   const table = useTable({
     _features,
     _rowModels: {
+      coreRowModel: createCoreRowModel(),
       filteredRowModel: createFilteredRowModel(filterFns),
+      facetedRowModel: createFacetedRowModel(),
+      facetedUniqueValues: createFacetedUniqueValues(),
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(sortFns),
     },

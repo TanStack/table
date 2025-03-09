@@ -28,8 +28,19 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Calendar } from '@/components/ui/calendar'
-import { getFilterOperators } from '@/utils/data-table'
-import { cn } from '@/utils/utils'
+import { getFilterOperators } from '@/lib/data-table'
+import { cn } from '@/lib/utils'
+import {
+  Faceted,
+  FacetedBadgeList,
+  FacetedContent,
+  FacetedEmpty,
+  FacetedGroup,
+  FacetedInput,
+  FacetedItem,
+  FacetedList,
+  FacetedTrigger,
+} from '@/components/ui/faceted'
 
 type Features<TFeatures extends TableFeatures> = Pick<
   TFeatures,
@@ -43,6 +54,28 @@ interface DataTableFilterListProps<
   table: Table<Features<TFeatures>, TData>
   columnFilters: Array<ExtendedColumnFilter>
   onColumnFiltersChange: (filters: Array<ExtendedColumnFilter>) => void
+}
+
+// Utility function to manually create faceted values if the built-in one fails
+function createManualFacetedValues<TData extends RowData>(
+  table: Table<any, TData>,
+  columnId: string,
+): Map<any, number> {
+  const facetedValues = new Map<any, number>()
+
+  // Get all rows
+  const rows = table.getRowModel().flatRows
+
+  // For each row, get the value for this column and count occurrences
+  for (const row of rows) {
+    const value = row.getValue(columnId)
+    if (value !== undefined && value !== null) {
+      const count = facetedValues.get(value) || 0
+      facetedValues.set(value, count + 1)
+    }
+  }
+
+  return facetedValues
 }
 
 export function DataTableFilterList<
@@ -79,19 +112,6 @@ export function DataTableFilterList<
       if (column.columnDef.meta?.variant === 'select') return 'select'
 
       return 'text'
-    },
-    [table],
-  )
-
-  const getFacetedUniqueValues = React.useCallback(
-    (column: Column<Features<TFeatures>, TData>) => {
-      const facetedUniqueValues = column.getFacetedUniqueValues()
-      return Array.from(facetedUniqueValues.keys())
-        .map((value) => ({
-          label: String(value),
-          value,
-        }))
-        .slice(0, 50)
     },
     [table],
   )
@@ -411,6 +431,156 @@ export function DataTableFilterList<
               }}
             />
           )
+        case 'select':
+          // Get unique values from column faceting
+          let uniqueValues
+          try {
+            uniqueValues = column.getFacetedUniqueValues()
+
+            // If not a Map, try to create manually
+            if (!(uniqueValues instanceof Map)) {
+              console.warn(
+                'getFacetedUniqueValues did not return a Map, creating manually',
+              )
+              uniqueValues = createManualFacetedValues(table, column.id)
+            }
+          } catch (e) {
+            console.error('Error getting faceted unique values:', e)
+            uniqueValues = createManualFacetedValues(table, column.id)
+          }
+
+          const selectOptions = Array.from(uniqueValues.entries()).map(
+            ([value, count]) => ({
+              label: String(value),
+              value: String(value),
+              count,
+            }),
+          )
+
+          return (
+            <Faceted
+              value={
+                typeof currentFilter?.value === 'string'
+                  ? currentFilter.value
+                  : undefined
+              }
+              onValueChange={(value) => {
+                if (filterId) {
+                  onFilterUpdate(filterId, { value })
+                }
+              }}
+            >
+              <FacetedTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 w-full justify-start text-left font-normal"
+                >
+                  <FacetedBadgeList
+                    options={selectOptions}
+                    placeholder={`Select ${column.columnDef.meta?.label ?? column.id}...`}
+                  />
+                </Button>
+              </FacetedTrigger>
+              <FacetedContent>
+                <FacetedInput
+                  placeholder={`Search ${column.columnDef.meta?.label ?? column.id}...`}
+                />
+                <FacetedList>
+                  <FacetedEmpty>No options found.</FacetedEmpty>
+                  <FacetedGroup>
+                    {selectOptions.map((option) => (
+                      <FacetedItem key={option.value} value={option.value}>
+                        <span>{option.label}</span>
+                        {option.count && (
+                          <span className="ml-auto flex size-4 items-center justify-center font-mono text-xs">
+                            {option.count}
+                          </span>
+                        )}
+                      </FacetedItem>
+                    ))}
+                  </FacetedGroup>
+                </FacetedList>
+              </FacetedContent>
+            </Faceted>
+          )
+
+        case 'multi-select':
+          // Get unique values from column faceting
+          let multiUniqueValues
+          try {
+            multiUniqueValues = column.getFacetedUniqueValues()
+
+            // If not a Map, try to create manually
+            if (!(multiUniqueValues instanceof Map)) {
+              console.warn(
+                'getFacetedUniqueValues did not return a Map for multi-select, creating manually',
+              )
+              multiUniqueValues = createManualFacetedValues(table, column.id)
+            }
+          } catch (e) {
+            console.error(
+              'Error getting faceted unique values for multi-select:',
+              e,
+            )
+            multiUniqueValues = createManualFacetedValues(table, column.id)
+          }
+
+          const multiSelectOptions = Array.from(
+            multiUniqueValues.entries(),
+          ).map(([value, count]) => ({
+            label: String(value),
+            value: String(value),
+            count,
+          }))
+          const selectedValues = Array.isArray(currentFilter?.value)
+            ? currentFilter.value
+            : []
+
+          return (
+            <Faceted
+              multiple
+              value={selectedValues}
+              onValueChange={(value) => {
+                if (filterId) {
+                  onFilterUpdate(filterId, { value })
+                }
+              }}
+            >
+              <FacetedTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 w-full justify-start text-left font-normal"
+                >
+                  <FacetedBadgeList
+                    options={multiSelectOptions}
+                    placeholder={`Select ${column.columnDef.meta?.label ?? column.id}...`}
+                  />
+                </Button>
+              </FacetedTrigger>
+              <FacetedContent>
+                <FacetedInput
+                  placeholder={`Search ${column.columnDef.meta?.label ?? column.id}...`}
+                />
+                <FacetedList>
+                  <FacetedEmpty>No options found.</FacetedEmpty>
+                  <FacetedGroup>
+                    {multiSelectOptions.map((option) => (
+                      <FacetedItem key={option.value} value={option.value}>
+                        <span>{option.label}</span>
+                        {option.count && (
+                          <span className="ml-auto flex size-4 items-center justify-center font-mono text-xs">
+                            {option.count}
+                          </span>
+                        )}
+                      </FacetedItem>
+                    ))}
+                  </FacetedGroup>
+                </FacetedList>
+              </FacetedContent>
+            </Faceted>
+          )
         default:
           return (
             <Input
@@ -432,12 +602,7 @@ export function DataTableFilterList<
           )
       }
     },
-    [
-      getColumnFilterVariant,
-      getFacetedUniqueValues,
-      columnFilters,
-      onFilterUpdate,
-    ],
+    [getColumnFilterVariant, columnFilters, onFilterUpdate],
   )
 
   const onFilterRender = React.useCallback(
