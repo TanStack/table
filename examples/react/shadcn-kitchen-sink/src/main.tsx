@@ -332,7 +332,7 @@ function App() {
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     columnResizeMode: 'onChange',
-    // debugTable: true,
+    debugTable: true,
   })
 
   const columnSizeVars = React.useMemo(() => {
