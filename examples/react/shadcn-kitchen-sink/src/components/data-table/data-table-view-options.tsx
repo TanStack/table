@@ -64,6 +64,10 @@ export function DataTableViewOptions<
             size="sm"
             className="ml-auto hidden h-8 gap-2 focus:outline-hidden focus:ring-1 focus:ring-ring lg:flex"
             onPointerDown={(event) => {
+              /**
+               * @see https://github.com/radix-ui/primitives/blob/main/packages/react/select/src/select.tsx#L28 1-L299
+               */
+
               // prevent implicit pointer capture
               // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture
               const target = event.target
