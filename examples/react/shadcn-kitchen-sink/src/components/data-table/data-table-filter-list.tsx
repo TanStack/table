@@ -313,7 +313,7 @@ export function DataTableFilterList<
                       variant="outline"
                       size="sm"
                       className={cn(
-                        'w-full justify-start text-left font-normal',
+                        'w-full justify-start text-left font-normal [&>svg]:size-3.5',
                         !dateRange && 'text-muted-foreground',
                       )}
                       onPointerDown={(event) => {
@@ -332,10 +332,7 @@ export function DataTableFilterList<
                         }
                       }}
                     >
-                      <CalendarIcon
-                        className="size-3.5 shrink-0"
-                        aria-hidden="true"
-                      />
+                      <CalendarIcon />
                       {dateRange?.from ? (
                         dateRange.to ? (
                           <>
@@ -399,7 +396,7 @@ export function DataTableFilterList<
                   variant="outline"
                   size="sm"
                   className={cn(
-                    'w-full justify-start text-left font-normal',
+                    'w-full justify-start text-left font-normal [&>svg]:size-3.5',
                     !currentFilter?.value && 'text-muted-foreground',
                   )}
                   onPointerDown={(event) => {
@@ -418,10 +415,7 @@ export function DataTableFilterList<
                     }
                   }}
                 >
-                  <CalendarIcon
-                    className="size-3.5 shrink-0"
-                    aria-hidden="true"
-                  />
+                  <CalendarIcon />
                   {currentFilter?.value ? (
                     format(new Date(currentFilter.value as string), 'PP')
                   ) : (
