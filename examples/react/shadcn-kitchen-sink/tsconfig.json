@@ -26,5 +26,5 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "vite.config.js"]
+  "include": ["src", "tailwind.config.ts", "vite.config.js"]
 }

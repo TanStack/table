@@ -728,7 +728,7 @@ export function DataTableFilterList<
               </SelectTrigger>
               <SelectContent
                 id={joinOperatorListboxId}
-                className="min-w-(--radix-select-trigger-width)"
+                className="min-w-[var(--radix-select-trigger-width)]"
               >
                 <SelectItem value="and">and</SelectItem>
                 <SelectItem value="or">or</SelectItem>
@@ -748,7 +748,7 @@ export function DataTableFilterList<
                 aria-label={`Select filter field. Current: ${column.columnDef.meta?.label ?? column.id}`}
                 variant="outline"
                 size="sm"
-                className="h-8 justify-between font-normal focus:outline-hidden focus:ring-1 focus:ring-ring"
+                className="h-8 justify-between font-normal focus:outline-none focus:ring-1 focus:ring-ring"
                 onPointerDown={(event) => {
                   const target = event.target
                   if (!(target instanceof HTMLElement)) return
@@ -773,7 +773,7 @@ export function DataTableFilterList<
             </PopoverTrigger>
             <PopoverContent
               id={fieldListboxId}
-              className="w-(--radix-popover-trigger-width) p-0"
+              className="w-[var(--radix-popover-trigger-width)] p-0"
               onCloseAutoFocus={() =>
                 document
                   .getElementById(triggerId)
@@ -912,7 +912,7 @@ export function DataTableFilterList<
         aria-labelledby={labelId}
         align="start"
         collisionPadding={16}
-        className="flex flex-col gap-3 origin-(--radix-popover-content-transform-origin) p-4 w-[calc(100vw-(--spacing(12)))] min-w-60 sm:min-w-80 sm:w-fit"
+        className="flex flex-col gap-3 origin-[var(--radix-popover-content-transform-origin)] p-4 w-[calc(100vw-theme(spacing.12))] min-w-60 sm:min-w-80 sm:w-fit"
       >
         <div className="flex flex-col gap-1">
           <h4 id={labelId} className="font-medium leading-none">
