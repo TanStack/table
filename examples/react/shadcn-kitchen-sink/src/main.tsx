@@ -86,6 +86,7 @@ declare module '@tanstack/react-table' {
   > {
     label?: string
     variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
+    options?: Array<{ label: string; value: string; count?: number }>
   }
 }
 
@@ -207,6 +208,11 @@ function App() {
         meta: {
           label: 'Status',
           variant: 'select',
+          options: [
+            { label: 'Active', value: 'active' },
+            { label: 'Inactive', value: 'inactive' },
+            { label: 'Pending', value: 'pending' },
+          ],
         },
       },
       {

@@ -1,4 +1,13 @@
-import type { ColumnFilter, filterFns } from '@tanstack/react-table'
+import type {
+  ColumnFilter,
+  TableFeatures,
+  filterFns,
+} from '@tanstack/react-table'
+
+export type TableFilterFeatures<TFeatures extends TableFeatures> = Pick<
+  TFeatures,
+  'columnFilteringFeature' | 'columnFacetingFeature'
+>
 
 export type FilterOperator =
   | keyof typeof filterFns

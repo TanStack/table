@@ -3,7 +3,11 @@
 import * as React from 'react'
 import { CalendarIcon, ListFilter, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
-import type { ExtendedColumnFilter, FilterOperator } from '@/types'
+import type {
+  ExtendedColumnFilter,
+  FilterOperator,
+  TableFilterFeatures,
+} from '@/types'
 import type {
   Column,
   ColumnMeta,
@@ -42,40 +46,65 @@ import {
   FacetedTrigger,
 } from '@/components/ui/faceted'
 
-type Features<TFeatures extends TableFeatures> = Pick<
-  TFeatures,
-  'columnFilteringFeature' | 'columnFacetingFeature'
->
-
-interface DataTableFilterListProps<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  table: Table<Features<TFeatures>, TData>
-  columnFilters: Array<ExtendedColumnFilter>
-  onColumnFiltersChange: (filters: Array<ExtendedColumnFilter>) => void
-}
-
-// Utility function to manually create faceted values if the built-in one fails
+// TODO: Faceted filtering is broken rn, remove this once it's fixed
 function createManualFacetedValues<TData extends RowData>(
-  table: Table<any, TData>,
+  table: Table<TableFilterFeatures<TableFeatures>, TData>,
   columnId: string,
-): Map<any, number> {
-  const facetedValues = new Map<any, number>()
+): Map<unknown, number> {
+  const facetedValues = new Map<unknown, number>()
 
-  // Get all rows
   const rows = table.getRowModel().flatRows
 
-  // For each row, get the value for this column and count occurrences
   for (const row of rows) {
     const value = row.getValue(columnId)
     if (value !== undefined && value !== null) {
-      const count = facetedValues.get(value) || 0
+      const count = facetedValues.get(value) ?? 0
       facetedValues.set(value, count + 1)
     }
   }
 
   return facetedValues
+}
+
+function getColumnOptions<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>({
+  column,
+  table,
+}: {
+  column: Column<TableFilterFeatures<TFeatures>, TData>
+  table: Table<TableFilterFeatures<TFeatures>, TData>
+}): Array<{ label: string; value: string; count?: number }> {
+  const customOptions = column.columnDef.meta?.options
+
+  if (customOptions) return customOptions
+
+  let uniqueValues: Map<unknown, number>
+  try {
+    uniqueValues = column.getFacetedUniqueValues()
+
+    if (!(uniqueValues instanceof Map)) {
+      uniqueValues = createManualFacetedValues(table, column.id)
+    }
+  } catch (_err) {
+    uniqueValues = createManualFacetedValues(table, column.id)
+  }
+
+  return Array.from(uniqueValues.entries()).map(([value, count]) => ({
+    label: String(value),
+    value: String(value),
+    count,
+  }))
+}
+
+interface DataTableFilterListProps<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  table: Table<TableFilterFeatures<TFeatures>, TData>
+  columnFilters: Array<ExtendedColumnFilter>
+  onColumnFiltersChange: (filters: Array<ExtendedColumnFilter>) => void
 }
 
 export function DataTableFilterList<
@@ -96,7 +125,7 @@ export function DataTableFilterList<
 
   const getColumnFilterVariant = React.useCallback(
     (
-      column: Column<Features<TFeatures>, TData>,
+      column: Column<TableFilterFeatures<TFeatures>, TData>,
     ): ColumnMeta<TFeatures, TData>['variant'] => {
       if (column.columnDef.meta?.variant) {
         return column.columnDef.meta.variant
@@ -225,7 +254,7 @@ export function DataTableFilterList<
       operator,
       filterId,
     }: {
-      column: Column<Features<TFeatures>, TData>
+      column: Column<TableFilterFeatures<TFeatures>, TData>
       operator: FilterOperator
       filterId: string
     }) => {
@@ -432,30 +461,8 @@ export function DataTableFilterList<
             />
           )
         case 'select':
-          // Get unique values from column faceting
-          let uniqueValues
-          try {
-            uniqueValues = column.getFacetedUniqueValues()
-
-            // If not a Map, try to create manually
-            if (!(uniqueValues instanceof Map)) {
-              console.warn(
-                'getFacetedUniqueValues did not return a Map, creating manually',
-              )
-              uniqueValues = createManualFacetedValues(table, column.id)
-            }
-          } catch (e) {
-            console.error('Error getting faceted unique values:', e)
-            uniqueValues = createManualFacetedValues(table, column.id)
-          }
-
-          const selectOptions = Array.from(uniqueValues.entries()).map(
-            ([value, count]) => ({
-              label: String(value),
-              value: String(value),
-              count,
-            }),
-          )
+          // Get options for select dropdown using our helper function
+          const selectOptions = getColumnOptions({ column, table })
 
           return (
             <Faceted
@@ -506,33 +513,8 @@ export function DataTableFilterList<
           )
 
         case 'multi-select':
-          // Get unique values from column faceting
-          let multiUniqueValues
-          try {
-            multiUniqueValues = column.getFacetedUniqueValues()
-
-            // If not a Map, try to create manually
-            if (!(multiUniqueValues instanceof Map)) {
-              console.warn(
-                'getFacetedUniqueValues did not return a Map for multi-select, creating manually',
-              )
-              multiUniqueValues = createManualFacetedValues(table, column.id)
-            }
-          } catch (e) {
-            console.error(
-              'Error getting faceted unique values for multi-select:',
-              e,
-            )
-            multiUniqueValues = createManualFacetedValues(table, column.id)
-          }
-
-          const multiSelectOptions = Array.from(
-            multiUniqueValues.entries(),
-          ).map(([value, count]) => ({
-            label: String(value),
-            value: String(value),
-            count,
-          }))
+          // Get options for multi-select dropdown using our helper function
+          const multiSelectOptions = getColumnOptions({ column, table })
           const selectedValues = Array.isArray(currentFilter?.value)
             ? currentFilter.value
             : []

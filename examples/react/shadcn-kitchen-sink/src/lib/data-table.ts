@@ -7,7 +7,11 @@ import {
   filterFn_lessThan,
   filterFn_lessThanOrEqualTo,
 } from '@tanstack/react-table'
-import type { ExtendedColumnFilter, FilterOperator } from '@/types'
+import type {
+  ExtendedColumnFilter,
+  FilterOperator,
+  TableFilterFeatures,
+} from '@/types'
 import type {
   FilterFn,
   Row,
@@ -308,7 +312,7 @@ export const dynamicFilterFn: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  row: Row<Pick<TFeatures, 'columnFilteringFeature'>, TData>,
+  row: Row<TableFilterFeatures<TFeatures>, TData>,
   columnId: string,
   filterValue: unknown,
 ) => {
