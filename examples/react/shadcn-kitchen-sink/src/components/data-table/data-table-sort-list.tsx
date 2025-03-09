@@ -65,9 +65,9 @@ export function DataTableSortList<
   sorting,
   onSortingChange,
 }: DataTableSortListProps<TFeatures, TData>) {
-  const listId = React.useId()
   const labelId = React.useId()
   const descriptionId = React.useId()
+  const listId = React.useId()
   const [open, setOpen] = React.useState(false)
 
   const sortableColumns = React.useMemo(
@@ -98,9 +98,9 @@ export function DataTableSortList<
   }, [sorting, sortableColumns, table])
 
   const onSortUpdate = React.useCallback(
-    (sortId: string, options: Partial<Omit<ColumnSort, 'id'>>) => {
+    (sortId: string, updates: Partial<Omit<ColumnSort, 'id'>>) => {
       const newSorting = sorting.map((s) =>
-        s.id === sortId ? { ...s, ...options } : s,
+        s.id === sortId ? { ...s, ...updates } : s,
       )
       table.setSorting(newSorting)
     },
@@ -182,8 +182,8 @@ export function DataTableSortList<
           {sorting.length > 0 ? (
             <SortableContent asChild>
               <div
-                id={listId}
                 role="list"
+                id={listId}
                 aria-labelledby={labelId}
                 aria-describedby={descriptionId}
                 className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5"
@@ -192,21 +192,17 @@ export function DataTableSortList<
                   const columnTitle =
                     sortableColumns.find((col) => col.id === sort.id)?.columnDef
                       .meta?.label ?? sort.id
-                  const itemId = `${listId}-item-${sort.id}`
+                  const sortItemId = `${listId}-item-${sort.id}`
 
                   return (
-                    <SortableItem
-                      key={sort.id}
-                      value={sort.id}
-                      tabIndex={-1}
-                      asChild
-                    >
+                    <SortableItem key={sort.id} value={sort.id} asChild>
                       <div
                         role="listitem"
-                        id={itemId}
+                        id={sortItemId}
+                        tabIndex={-1}
                         className="flex items-center gap-2"
                       >
-                        <Popover modal>
+                        <Popover>
                           <PopoverTrigger asChild>
                             <Button
                               role="combobox"

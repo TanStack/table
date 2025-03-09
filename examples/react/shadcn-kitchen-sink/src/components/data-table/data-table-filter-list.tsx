@@ -119,6 +119,7 @@ export function DataTableFilterList<
   const id = React.useId()
   const labelId = React.useId()
   const descriptionId = React.useId()
+  const listId = React.useId()
   const [open, setOpen] = React.useState(false)
 
   const filterableColumns = React.useMemo(
@@ -302,7 +303,6 @@ export function DataTableFilterList<
                         !dateRange && 'text-muted-foreground',
                       )}
                       onPointerDown={(event) => {
-                        // prevent implicit pointer capture
                         const target = event.target
                         if (!(target instanceof HTMLElement)) return
                         if (target.hasPointerCapture(event.pointerId)) {
@@ -314,7 +314,6 @@ export function DataTableFilterList<
                           event.ctrlKey === false &&
                           event.pointerType === 'mouse'
                         ) {
-                          // prevent trigger from stealing focus
                           event.preventDefault()
                         }
                       }}
@@ -390,8 +389,6 @@ export function DataTableFilterList<
                     !currentFilter?.value && 'text-muted-foreground',
                   )}
                   onPointerDown={(event) => {
-                    // prevent implicit pointer capture
-                    // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture
                     const target = event.target
                     if (!(target instanceof HTMLElement)) return
                     if (target.hasPointerCapture(event.pointerId)) {
@@ -403,7 +400,6 @@ export function DataTableFilterList<
                       event.ctrlKey === false &&
                       event.pointerType === 'mouse'
                     ) {
-                      // prevent trigger from stealing focus from the active item after opening.
                       event.preventDefault()
                     }
                   }}
@@ -636,8 +632,8 @@ export function DataTableFilterList<
           if (operator === 'isEmpty' || operator === 'isNotEmpty') {
             return (
               <div
-                id={inputId}
                 role="status"
+                id={inputId}
                 aria-live="polite"
                 aria-label={`${columnLabel} filter is ${
                   operator === 'isEmpty' ? 'empty' : 'not empty'
@@ -679,15 +675,16 @@ export function DataTableFilterList<
 
       const filterVariant = getColumnFilterVariant(column) ?? 'text'
       const operators = getFilterOperators(filterVariant)
-      const filterId = `${id}-filter-${filter.filterId}`
-      const joinOperatorListboxId = `${filterId}-join-operator-listbox`
-      const fieldListboxId = `${filterId}-field-listbox`
-      const operatorListboxId = `${filterId}-operator-listbox`
-      const inputId = `${filterId}-input`
+      const filterItemId = `${id}-filter-${filter.filterId}`
+      const joinOperatorListboxId = `${filterItemId}-join-operator-listbox`
+      const fieldListboxId = `${filterItemId}-field-listbox`
+      const operatorListboxId = `${filterItemId}-operator-listbox`
+      const inputId = `${filterItemId}-input`
 
       return (
         <div
-          key={filter.filterId}
+          role="listitem"
+          id={filterItemId}
           className="grid items-center grid-cols-[70px_135px_125px_minmax(0,200px)_32px] gap-2 rounded"
         >
           {index === 0 ? (
@@ -869,7 +866,11 @@ export function DataTableFilterList<
           </p>
         </div>
         {columnFilters.length > 0 && (
-          <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5">
+          <div
+            role="list"
+            id={listId}
+            className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5"
+          >
             {columnFilters.map((filter, index) =>
               onFilterRender({ filter, index }),
             )}
