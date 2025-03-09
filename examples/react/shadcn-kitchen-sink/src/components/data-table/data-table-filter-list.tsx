@@ -652,7 +652,7 @@ export function DataTableFilterList<
                 aria-label={`${columnLabel} filter is ${
                   operator === 'isEmpty' ? 'empty' : 'not empty'
                 }`}
-                className="h-8 w-full rounded border border-dashed"
+                className="h-8 w-full rounded-md border border-dashed"
               />
             )
           }
@@ -700,7 +700,7 @@ export function DataTableFilterList<
         <div
           role="listitem"
           id={filterItemId}
-          className="grid items-center grid-cols-[70px_135px_125px_minmax(0,200px)_32px] gap-2 rounded"
+          className="grid items-center grid-cols-[70px_135px_125px_minmax(0,200px)_32px] gap-2"
         >
           {index === 0 ? (
             <span className="text-sm text-center text-muted-foreground">
@@ -748,7 +748,7 @@ export function DataTableFilterList<
                 aria-label={`Select filter field. Current: ${column.columnDef.meta?.label ?? column.id}`}
                 variant="outline"
                 size="sm"
-                className="h-8 justify-between gap-2 rounded focus:outline-none focus:ring-1 focus:ring-ring"
+                className="h-8 justify-between font-normal focus:outline-none focus:ring-1 focus:ring-ring"
                 onPointerDown={(event) => {
                   const target = event.target
                   if (!(target instanceof HTMLElement)) return
@@ -797,7 +797,7 @@ export function DataTableFilterList<
                           onFilterUpdate(filter.filterId, { id: value })
                         }}
                       >
-                        <span className="mr-2 truncate">
+                        <span className="truncate">
                           {col.columnDef.meta?.label ?? col.id}
                         </span>
                         <Check

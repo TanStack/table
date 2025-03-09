@@ -214,7 +214,7 @@ export function DataTableSortList<
                               aria-label={`Select column to sort by. Current: ${columnTitle}`}
                               variant="outline"
                               size="sm"
-                              className="h-8 w-44 justify-between gap-2 rounded focus:outline-none focus:ring-1 focus:ring-ring"
+                              className="h-8 w-44 font-normal justify-between gap-2 focus:outline-none focus:ring-1 focus:ring-ring"
                               onPointerDown={(event) => {
                                 const target = event.target
                                 if (!(target instanceof HTMLElement)) return
@@ -269,7 +269,7 @@ export function DataTableSortList<
                                           onColumnSelect(sort.id, column.id)
                                         }
                                       >
-                                        <span className="mr-2 truncate">
+                                        <span className="truncate">
                                           {column.columnDef.meta?.label ??
                                             column.id}
                                         </span>
