@@ -869,12 +869,10 @@ export function DataTableFilterList<
             </p>
           </div>
           {columnFilters.length > 0 && (
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                {columnFilters.map((filter, index) =>
-                  onFilterRender({ filter, index }),
-                )}
-              </div>
+            <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5">
+              {columnFilters.map((filter, index) =>
+                onFilterRender({ filter, index }),
+              )}
             </div>
           )}
           <div className="flex items-center gap-2">
@@ -883,10 +881,10 @@ export function DataTableFilterList<
             </Button>
             {columnFilters.length > 0 && (
               <Button
+                aria-label="Reset all filters"
                 variant="outline"
                 size="sm"
                 onClick={() => onColumnFiltersChange([])}
-                aria-label="Reset all filters"
               >
                 Reset filters
               </Button>

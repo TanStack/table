@@ -131,8 +131,6 @@ export function DataTableSortList<
             className="[&_svg]:size-3"
             onClick={(event) => event.currentTarget.focus()}
             onPointerDown={(event) => {
-              // prevent implicit pointer capture
-              // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture
               const target = event.target
               if (!(target instanceof HTMLElement)) return
               if (target.hasPointerCapture(event.pointerId)) {
@@ -144,7 +142,6 @@ export function DataTableSortList<
                 event.ctrlKey === false &&
                 event.pointerType === 'mouse'
               ) {
-                // prevent trigger from stealing focus from the active item after opening.
                 event.preventDefault()
               }
             }}
