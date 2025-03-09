@@ -161,7 +161,7 @@ export function DataTableSortList<
           aria-describedby={descriptionId}
           align="start"
           collisionPadding={16}
-          className="w-[calc(100vw-theme(spacing.20))] origin-[var(--radix-popover-content-transform-origin)] flex flex-col gap-3 min-w-72 max-w-[25rem] p-4 sm:w-[25rem]"
+          className="w-[calc(100vw-(--spacing(20)))] origin-(--radix-popover-content-transform-origin) flex flex-col gap-3 min-w-72 max-w-[25rem] p-4 sm:w-[25rem]"
         >
           <div className="flex flex-col gap-1">
             <h4 id={labelId} className="font-medium leading-none">
@@ -214,7 +214,7 @@ export function DataTableSortList<
                               aria-label={`Select column to sort by. Current: ${columnTitle}`}
                               variant="outline"
                               size="sm"
-                              className="h-8 font-normal justify-between gap-2 focus:outline-none focus:ring-1 focus:ring-ring"
+                              className="h-8 font-normal justify-between gap-2 focus:outline-hidden focus:ring-1 focus:ring-ring"
                               onPointerDown={(event) => {
                                 const target = event.target
                                 if (!(target instanceof HTMLElement)) return
@@ -237,7 +237,7 @@ export function DataTableSortList<
                           </PopoverTrigger>
                           <PopoverContent
                             id={fieldListboxId}
-                            className="w-[var(--radix-popover-trigger-width)] p-0"
+                            className="w-(--radix-popover-trigger-width) p-0"
                             onCloseAutoFocus={() =>
                               document
                                 .getElementById(triggerId)

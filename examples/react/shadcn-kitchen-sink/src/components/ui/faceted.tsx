@@ -142,7 +142,7 @@ const FacetedTrigger = React.forwardRef<
       {...triggerProps}
       ref={composedRef}
       className={cn(
-        'justify-between text-left focus:outline-none focus:ring-1 focus:ring-ring',
+        'justify-between text-left focus:outline-hidden focus:ring-1 focus:ring-ring',
         className,
       )}
       onPointerDown={composeEventHandlers(
