@@ -688,7 +688,7 @@ export function DataTableFilterList<
       return (
         <div
           key={filter.filterId}
-          className="grid items-center grid-cols-[70px_135px_125px_minmax(0,200px)_32px] gap-1.5 rounded"
+          className="grid items-center grid-cols-[70px_135px_125px_minmax(0,200px)_32px] gap-2 rounded"
         >
           {index === 0 ? (
             <span className="text-sm text-center text-muted-foreground">
@@ -813,8 +813,6 @@ export function DataTableFilterList<
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          aria-describedby={descriptionId}
-          aria-labelledby={labelId}
           variant="outline"
           size="sm"
           className="[&_svg]:size-3"
@@ -848,48 +846,49 @@ export function DataTableFilterList<
         </Button>
       </PopoverTrigger>
       <PopoverContent
+        aria-describedby={descriptionId}
+        aria-labelledby={labelId}
         align="start"
-        className="flex origin-[var(--radix-popover-content-transform-origin)] flex-col p-4 w-[calc(100vw-theme(spacing.12))] min-w-60 sm:min-w-80 sm:w-fit"
+        collisionPadding={16}
+        className="flex flex-col gap-3 origin-[var(--radix-popover-content-transform-origin)] p-4 w-[calc(100vw-theme(spacing.12))] min-w-60 sm:min-w-80 sm:w-fit"
       >
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <h4 id={labelId} className="font-medium leading-none">
-              Filters
-            </h4>
-            <p
-              id={descriptionId}
-              className={cn(
-                'text-sm text-muted-foreground',
-                columnFilters.length > 0 && 'sr-only',
-              )}
-            >
-              {columnFilters.length > 0
-                ? 'Modify filters to refine your results.'
-                : 'Add filters to refine your results.'}
-            </p>
-          </div>
-          {columnFilters.length > 0 && (
-            <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5">
-              {columnFilters.map((filter, index) =>
-                onFilterRender({ filter, index }),
-              )}
-            </div>
-          )}
-          <div className="flex items-center gap-2">
-            <Button size="sm" onClick={onFilterAdd} aria-label="Add new filter">
-              Add filter
-            </Button>
-            {columnFilters.length > 0 && (
-              <Button
-                aria-label="Reset all filters"
-                variant="outline"
-                size="sm"
-                onClick={() => onColumnFiltersChange([])}
-              >
-                Reset filters
-              </Button>
+        <div className="flex flex-col gap-1">
+          <h4 id={labelId} className="font-medium leading-none">
+            Filters
+          </h4>
+          <p
+            id={descriptionId}
+            className={cn(
+              'text-sm text-muted-foreground',
+              columnFilters.length > 0 && 'sr-only',
+            )}
+          >
+            {columnFilters.length > 0
+              ? 'Modify filters to refine your results.'
+              : 'Add filters to refine your results.'}
+          </p>
+        </div>
+        {columnFilters.length > 0 && (
+          <div className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5">
+            {columnFilters.map((filter, index) =>
+              onFilterRender({ filter, index }),
             )}
           </div>
+        )}
+        <div className="flex items-center gap-2">
+          <Button size="sm" onClick={onFilterAdd} aria-label="Add new filter">
+            Add filter
+          </Button>
+          {columnFilters.length > 0 && (
+            <Button
+              aria-label="Reset all filters"
+              variant="outline"
+              size="sm"
+              onClick={() => onColumnFiltersChange([])}
+            >
+              Reset filters
+            </Button>
+          )}
         </div>
       </PopoverContent>
     </Popover>

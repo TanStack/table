@@ -124,8 +124,6 @@ export function DataTableSortList<
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            aria-describedby={descriptionId}
-            aria-labelledby={labelId}
             variant="outline"
             size="sm"
             className="[&_svg]:size-3"
@@ -162,42 +160,47 @@ export function DataTableSortList<
           aria-labelledby={labelId}
           aria-describedby={descriptionId}
           align="start"
-          className="w-[calc(100vw-theme(spacing.20))] origin-[var(--radix-popover-content-transform-origin)] flex flex-col gap-2.5 min-w-72 max-w-[25rem] p-4 sm:w-[25rem]"
+          collisionPadding={16}
+          className="w-[calc(100vw-theme(spacing.20))] origin-[var(--radix-popover-content-transform-origin)] flex flex-col gap-3 min-w-72 max-w-[25rem] p-4 sm:w-[25rem]"
         >
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col gap-1">
-              <h4 id={labelId} className="font-medium leading-none">
-                {sorting.length > 0 ? 'Sort by' : 'No sorting applied'}
-              </h4>
-              <p
-                id={descriptionId}
-                className={cn(
-                  'text-muted-foreground text-sm',
-                  sorting.length > 0 && 'sr-only',
-                )}
-              >
-                {sorting.length > 0
-                  ? 'Modify sorting to organize your results.'
-                  : 'Add sorting to organize your results.'}
-              </p>
-            </div>
+          <div className="flex flex-col gap-1">
+            <h4 id={labelId} className="font-medium leading-none">
+              {sorting.length > 0 ? 'Sort by' : 'No sorting applied'}
+            </h4>
+            <p
+              id={descriptionId}
+              className={cn(
+                'text-muted-foreground text-sm',
+                sorting.length > 0 && 'sr-only',
+              )}
+            >
+              {sorting.length > 0
+                ? 'Modify sorting to organize your results.'
+                : 'Add sorting to organize your results.'}
+            </p>
+          </div>
+          {sorting.length > 0 ? (
             <SortableContent asChild>
               <div
-                role="list"
                 id={listId}
+                role="list"
                 aria-labelledby={labelId}
                 aria-describedby={descriptionId}
-                className="flex max-h-40 flex-col gap-2 overflow-y-auto p-0.5"
+                className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5"
               >
-                {sorting.map((sort, index) => {
+                {sorting.map((sort) => {
                   const columnTitle =
                     sortableColumns.find((col) => col.id === sort.id)?.columnDef
                       .meta?.label ?? sort.id
-
-                  const itemId = `${listId}-item-${index}`
+                  const itemId = `${listId}-item-${sort.id}`
 
                   return (
-                    <SortableItem key={sort.id} value={sort.id} asChild>
+                    <SortableItem
+                      key={sort.id}
+                      value={sort.id}
+                      tabIndex={-1}
+                      asChild
+                    >
                       <div
                         role="listitem"
                         id={itemId}
@@ -304,7 +307,7 @@ export function DataTableSortList<
                 })}
               </div>
             </SortableContent>
-          </div>
+          ) : null}
           <div className="flex items-center gap-2">
             <Button
               aria-label="Add new sort"

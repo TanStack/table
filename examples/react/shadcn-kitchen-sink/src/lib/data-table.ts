@@ -412,55 +412,52 @@ export function getFilterOperators(type: string): Array<{
   switch (type) {
     case 'text':
       return [
-        { label: 'Contains', value: 'includesString' },
-        { label: 'Does not contain', value: 'notIncludesString' },
-        { label: 'Starts with', value: 'startsWith' },
-        { label: 'Ends with', value: 'endsWith' },
-        { label: 'Is', value: 'equalsString' },
-        { label: 'Is not', value: 'notEqualsString' },
-        { label: 'Is empty', value: 'isEmpty' },
-        { label: 'Is not empty', value: 'isNotEmpty' },
+        { label: 'contains', value: 'includesString' },
+        { label: 'does not contain', value: 'notIncludesString' },
+        { label: 'starts with', value: 'startsWith' },
+        { label: 'ends with', value: 'endsWith' },
+        { label: 'is', value: 'equalsString' },
+        { label: 'is not', value: 'notEqualsString' },
+        { label: 'is empty', value: 'isEmpty' },
+        { label: 'is not empty', value: 'isNotEmpty' },
       ]
     case 'number':
       return [
-        { label: 'Is', value: 'equals' },
-        { label: 'Is not', value: 'notEquals' },
-        { label: 'Is less than', value: 'lessThan' },
-        { label: 'Is less than or equal to', value: 'lessThanOrEqualTo' },
-        { label: 'Is greater than', value: 'greaterThan' },
-        {
-          label: 'Is greater than or equal to',
-          value: 'greaterThanOrEqualTo',
-        },
-        { label: 'Is between', value: 'inRange' },
+        { label: 'is', value: 'equals' },
+        { label: 'is not', value: 'notEquals' },
+        { label: 'is less than', value: 'lessThan' },
+        { label: 'is less than or equal to', value: 'lessThanOrEqualTo' },
+        { label: 'is greater than', value: 'greaterThan' },
+        { label: 'is greater than or equal to', value: 'greaterThanOrEqualTo' },
+        { label: 'is between', value: 'inRange' },
       ]
     case 'date':
       return [
-        { label: 'Is', value: 'equals' },
-        { label: 'Is not', value: 'notEquals' },
-        { label: 'Is before', value: 'lessThan' },
-        { label: 'Is on or before', value: 'lessThanOrEqualTo' },
-        { label: 'Is after', value: 'greaterThan' },
-        { label: 'Is on or after', value: 'greaterThanOrEqualTo' },
-        { label: 'Is between', value: 'inRange' },
-        { label: 'Is relative to today', value: 'isRelativeToToday' },
-        { label: 'Is empty', value: 'isEmpty' },
-        { label: 'Is not empty', value: 'isNotEmpty' },
+        { label: 'is', value: 'equals' },
+        { label: 'is not', value: 'notEquals' },
+        { label: 'is before', value: 'lessThan' },
+        { label: 'is on or before', value: 'lessThanOrEqualTo' },
+        { label: 'is after', value: 'greaterThan' },
+        { label: 'is on or after', value: 'greaterThanOrEqualTo' },
+        { label: 'is between', value: 'inRange' },
+        { label: 'is relative to today', value: 'isRelativeToToday' },
+        { label: 'is empty', value: 'isEmpty' },
+        { label: 'is not empty', value: 'isNotEmpty' },
       ]
     case 'select':
     case 'multi-select':
       return [
-        { label: 'Is', value: 'equals' },
-        { label: 'Is not', value: 'notEquals' },
-        { label: 'Is empty', value: 'isEmpty' },
-        { label: 'Is not empty', value: 'isNotEmpty' },
+        { label: 'is', value: 'equals' },
+        { label: 'is not', value: 'notEquals' },
+        { label: 'is empty', value: 'isEmpty' },
+        { label: 'is not empty', value: 'isNotEmpty' },
       ]
     default:
       return [
-        { label: 'Contains', value: 'includesString' },
-        { label: 'Does not contain', value: 'notIncludesString' },
-        { label: 'Is', value: 'equalsString' },
-        { label: 'Is not', value: 'notEqualsString' },
+        { label: 'contains', value: 'includesString' },
+        { label: 'does not contain', value: 'notIncludesString' },
+        { label: 'is', value: 'equalsString' },
+        { label: 'is not', value: 'notEqualsString' },
       ]
   }
 }
