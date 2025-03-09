@@ -1,8 +1,14 @@
 'use client'
 
 import * as React from 'react'
-import { CalendarIcon, ListFilter, Trash2 } from 'lucide-react'
 import { format } from 'date-fns'
+import {
+  CalendarIcon,
+  Check,
+  ChevronsUpDown,
+  ListFilter,
+  Trash2,
+} from 'lucide-react'
 import type {
   ExtendedColumnFilter,
   FilterOperator,
@@ -46,6 +52,14 @@ import {
   FacetedList,
   FacetedTrigger,
 } from '@/components/ui/faceted'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 
 // TODO: column.getFacetedUniqueValues() is broken rn, remove this once it's fixed
 function createManualFacetedValues<TData extends RowData>(
@@ -676,6 +690,7 @@ export function DataTableFilterList<
       const filterVariant = getColumnFilterVariant(column) ?? 'text'
       const operators = getFilterOperators(filterVariant)
       const filterItemId = `${id}-filter-${filter.filterId}`
+      const triggerId = `${filterItemId}-trigger`
       const joinOperatorListboxId = `${filterItemId}-join-operator-listbox`
       const fieldListboxId = `${filterItemId}-field-listbox`
       const operatorListboxId = `${filterItemId}-operator-listbox`
@@ -724,31 +739,81 @@ export function DataTableFilterList<
               {filter.joinOperator}
             </span>
           )}
-          <Select
-            value={filter.id}
-            onValueChange={(value) => {
-              if (!filter.filterId) return
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                role="combobox"
+                id={triggerId}
+                aria-controls={fieldListboxId}
+                aria-label={`Select filter field. Current: ${column.columnDef.meta?.label ?? column.id}`}
+                variant="outline"
+                size="sm"
+                className="h-8 justify-between gap-2 rounded focus:outline-none focus:ring-1 focus:ring-ring"
+                onPointerDown={(event) => {
+                  const target = event.target
+                  if (!(target instanceof HTMLElement)) return
+                  if (target.hasPointerCapture(event.pointerId)) {
+                    target.releasePointerCapture(event.pointerId)
+                  }
 
-              onFilterUpdate(filter.filterId, { id: value })
-            }}
-          >
-            <SelectTrigger
-              className="h-8"
-              aria-label="Select filter field"
-              aria-controls={fieldListboxId}
+                  if (
+                    event.button === 0 &&
+                    event.ctrlKey === false &&
+                    event.pointerType === 'mouse'
+                  ) {
+                    event.preventDefault()
+                  }
+                }}
+              >
+                <span className="truncate">
+                  {column.columnDef.meta?.label ?? column.id}
+                </span>
+                <ChevronsUpDown className="opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              id={fieldListboxId}
+              className="w-[var(--radix-popover-trigger-width)] p-0"
+              onCloseAutoFocus={() =>
+                document
+                  .getElementById(triggerId)
+                  ?.focus({ preventScroll: true })
+              }
             >
-              <SelectValue
-                placeholder={column.columnDef.meta?.label ?? column.id}
-              />
-            </SelectTrigger>
-            <SelectContent id={fieldListboxId}>
-              {filterableColumns.map((col) => (
-                <SelectItem key={col.id} value={col.id}>
-                  {col.columnDef.meta?.label ?? col.id}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <Command>
+                <CommandInput
+                  placeholder="Search columns..."
+                  aria-label="Search filterable columns"
+                />
+                <CommandList>
+                  <CommandEmpty>No column found.</CommandEmpty>
+                  <CommandGroup>
+                    {filterableColumns.map((col) => (
+                      <CommandItem
+                        key={col.id}
+                        value={col.id}
+                        onSelect={(value) => {
+                          if (!filter.filterId) return
+                          onFilterUpdate(filter.filterId, { id: value })
+                        }}
+                      >
+                        <span className="mr-2 truncate">
+                          {col.columnDef.meta?.label ?? col.id}
+                        </span>
+                        <Check
+                          className={cn(
+                            'ml-auto size-4',
+                            col.id === filter.id ? 'opacity-100' : 'opacity-0',
+                          )}
+                          aria-hidden="true"
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
           <Select
             value={filter.operator ?? 'contains'}
             onValueChange={(value: FilterOperator) => {

@@ -62,7 +62,7 @@ export function DataTableViewOptions<
             variant="outline"
             role="combobox"
             size="sm"
-            className="ml-auto hidden h-8 gap-2 focus:outline-none focus:ring-1 focus:ring-ring focus-visible:ring-0 lg:flex"
+            className="ml-auto hidden h-8 gap-2 focus:outline-none focus:ring-1 focus:ring-ring lg:flex"
             onPointerDown={(event) => {
               // prevent implicit pointer capture
               // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture

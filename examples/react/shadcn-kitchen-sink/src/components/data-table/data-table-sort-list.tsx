@@ -188,11 +188,14 @@ export function DataTableSortList<
                 aria-describedby={descriptionId}
                 className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5"
               >
-                {sorting.map((sort) => {
+                {sorting.map((sort, index) => {
                   const columnTitle =
                     sortableColumns.find((col) => col.id === sort.id)?.columnDef
                       .meta?.label ?? sort.id
                   const sortItemId = `${listId}-item-${sort.id}`
+                  const triggerId = `${listId}-${index}-trigger`
+                  const fieldListboxId = `${sortItemId}-field-listbox`
+                  const operatorListboxId = `${sortItemId}-operator-listbox`
 
                   return (
                     <SortableItem key={sort.id} value={sort.id} asChild>
@@ -206,16 +209,41 @@ export function DataTableSortList<
                           <PopoverTrigger asChild>
                             <Button
                               role="combobox"
+                              id={triggerId}
+                              aria-controls={fieldListboxId}
                               aria-label={`Select column to sort by. Current: ${columnTitle}`}
                               variant="outline"
                               size="sm"
-                              className="h-8 w-44 justify-between gap-2 rounded"
+                              className="h-8 w-44 justify-between gap-2 rounded focus:outline-none focus:ring-1 focus:ring-ring"
+                              onPointerDown={(event) => {
+                                const target = event.target
+                                if (!(target instanceof HTMLElement)) return
+                                if (target.hasPointerCapture(event.pointerId)) {
+                                  target.releasePointerCapture(event.pointerId)
+                                }
+
+                                if (
+                                  event.button === 0 &&
+                                  event.ctrlKey === false &&
+                                  event.pointerType === 'mouse'
+                                ) {
+                                  event.preventDefault()
+                                }
+                              }}
                             >
                               <span className="truncate">{columnTitle}</span>
                               <ChevronsUpDown className="opacity-50" />
                             </Button>
                           </PopoverTrigger>
-                          <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0">
+                          <PopoverContent
+                            id={fieldListboxId}
+                            className="w-[var(--radix-popover-trigger-width)] p-0"
+                            onCloseAutoFocus={() =>
+                              document
+                                .getElementById(triggerId)
+                                ?.focus({ preventScroll: true })
+                            }
+                          >
                             <Command>
                               <CommandInput
                                 placeholder="Search columns..."
@@ -268,12 +296,16 @@ export function DataTableSortList<
                           }
                         >
                           <SelectTrigger
-                            className="h-8 w-24"
+                            aria-controls={operatorListboxId}
                             aria-label={`Sort direction for ${columnTitle}`}
+                            className="h-8 w-24"
                           >
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent className="min-w-[var(--radix-select-trigger-width)]">
+                          <SelectContent
+                            id={operatorListboxId}
+                            className="min-w-[var(--radix-select-trigger-width)]"
+                          >
                             <SelectItem value="asc">Asc</SelectItem>
                             <SelectItem value="desc">Desc</SelectItem>
                           </SelectContent>
