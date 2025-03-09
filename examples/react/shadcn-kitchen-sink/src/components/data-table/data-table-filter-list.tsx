@@ -46,14 +46,14 @@ import {
   FacetedTrigger,
 } from '@/components/ui/faceted'
 
-// TODO: Faceted filtering is broken rn, remove this once it's fixed
+// TODO: column.getFacetedUniqueValues() is broken rn, remove this once it's fixed
 function createManualFacetedValues<TData extends RowData>(
   table: Table<TableFilterFeatures<TableFeatures>, TData>,
   columnId: string,
 ): Map<unknown, number> {
   const facetedValues = new Map<unknown, number>()
 
-  const rows = table.getRowModel().flatRows
+  const rows = table.getPreFilteredRowModel().flatRows
 
   for (const row of rows) {
     const value = row.getValue(columnId)

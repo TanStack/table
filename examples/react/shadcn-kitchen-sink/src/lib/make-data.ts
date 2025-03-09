@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 
-const statuses = ['active', 'inactive', 'pending'] as const
-const departments = [
+export const statuses = ['active', 'inactive', 'pending'] as const
+export const departments = [
   'engineering',
   'marketing',
   'finance',

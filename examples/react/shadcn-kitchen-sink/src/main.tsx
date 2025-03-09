@@ -60,7 +60,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { makeData } from '@/lib/make-data'
+import { departments, makeData, statuses } from '@/lib/make-data'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
 
@@ -208,11 +208,10 @@ function App() {
         meta: {
           label: 'Status',
           variant: 'select',
-          options: [
-            { label: 'Active', value: 'active' },
-            { label: 'Inactive', value: 'inactive' },
-            { label: 'Pending', value: 'pending' },
-          ],
+          options: statuses.map((status) => ({
+            label: toSentenceCase(status),
+            value: status,
+          })),
         },
       },
       {
@@ -242,6 +241,10 @@ function App() {
         meta: {
           label: 'Department',
           variant: 'multi-select',
+          options: departments.map((department) => ({
+            label: toSentenceCase(department),
+            value: department,
+          })),
         },
       },
       {
