@@ -116,6 +116,9 @@ export function DataTableFilterList<
   columnFilters,
   onColumnFiltersChange,
 }: DataTableFilterListProps<TFeatures, TData>) {
+  const id = React.useId()
+  const labelId = React.useId()
+  const descriptionId = React.useId()
   const [open, setOpen] = React.useState(false)
 
   const filterableColumns = React.useMemo(
@@ -254,15 +257,18 @@ export function DataTableFilterList<
       column,
       operator,
       filterId,
+      inputId,
     }: {
       column: Column<TableFilterFeatures<TFeatures>, TData>
       operator: FilterOperator
       filterId: string
+      inputId: string
     }) => {
-      const filterVariant = getColumnFilterVariant(column)
+      const filterVariant = getColumnFilterVariant(column) ?? 'text'
       const currentFilter = columnFilters.find(
         (filter) => filter.filterId === filterId,
       )
+      const columnLabel = column.columnDef.meta?.label ?? column.id
 
       switch (filterVariant) {
         case 'date':
@@ -286,14 +292,37 @@ export function DataTableFilterList<
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
+                      id={inputId}
+                      aria-controls={`${inputId}-calendar`}
+                      aria-label={`${columnLabel} date range filter`}
                       variant="outline"
                       size="sm"
                       className={cn(
                         'w-full justify-start text-left font-normal',
                         !dateRange && 'text-muted-foreground',
                       )}
+                      onPointerDown={(event) => {
+                        // prevent implicit pointer capture
+                        const target = event.target
+                        if (!(target instanceof HTMLElement)) return
+                        if (target.hasPointerCapture(event.pointerId)) {
+                          target.releasePointerCapture(event.pointerId)
+                        }
+
+                        if (
+                          event.button === 0 &&
+                          event.ctrlKey === false &&
+                          event.pointerType === 'mouse'
+                        ) {
+                          // prevent trigger from stealing focus
+                          event.preventDefault()
+                        }
+                      }}
                     >
-                      <CalendarIcon />
+                      <CalendarIcon
+                        className="size-3.5 shrink-0"
+                        aria-hidden="true"
+                      />
                       {dateRange?.from ? (
                         dateRange.to ? (
                           <>
@@ -308,9 +337,19 @@ export function DataTableFilterList<
                       )}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
+                  <PopoverContent
+                    id={`${inputId}-calendar`}
+                    className="w-auto p-0"
+                    align="start"
+                    onCloseAutoFocus={() => {
+                      document.getElementById(inputId)?.focus({
+                        preventScroll: true,
+                      })
+                    }}
+                  >
                     <Calendar
                       mode="range"
+                      aria-label={`Select ${columnLabel} date range`}
                       selected={dateRange}
                       defaultMonth={dateRange?.from}
                       onSelect={(date) => {
@@ -341,10 +380,13 @@ export function DataTableFilterList<
             <Popover>
               <PopoverTrigger asChild>
                 <Button
+                  id={inputId}
+                  aria-controls={`${inputId}-calendar`}
+                  aria-label={`${columnLabel} date filter`}
                   variant="outline"
                   size="sm"
                   className={cn(
-                    'w-full justify-start text-left font-normal focus:outline-none focus:ring-1 focus:ring-ring focus-visible:ring-0',
+                    'w-full justify-start text-left font-normal',
                     !currentFilter?.value && 'text-muted-foreground',
                   )}
                   onPointerDown={(event) => {
@@ -366,7 +408,10 @@ export function DataTableFilterList<
                     }
                   }}
                 >
-                  <CalendarIcon />
+                  <CalendarIcon
+                    className="size-3.5 shrink-0"
+                    aria-hidden="true"
+                  />
                   {currentFilter?.value ? (
                     format(new Date(currentFilter.value as string), 'PP')
                   ) : (
@@ -374,9 +419,19 @@ export function DataTableFilterList<
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent
+                id={`${inputId}-calendar`}
+                className="w-auto p-0"
+                align="start"
+                onCloseAutoFocus={() => {
+                  document.getElementById(inputId)?.focus({
+                    preventScroll: true,
+                  })
+                }}
+              >
                 <Calendar
                   mode="single"
+                  aria-label={`Select ${columnLabel} date`}
                   selected={selectedDate}
                   defaultMonth={selectedDate}
                   onSelect={(date) => {
@@ -401,7 +456,9 @@ export function DataTableFilterList<
             return (
               <div className="flex items-center gap-2">
                 <Input
+                  id={`${inputId}-min`}
                   type="number"
+                  aria-label={`${columnLabel} minimum value`}
                   value={currentValue[0] ?? ''}
                   placeholder="Min"
                   className="h-8"
@@ -420,7 +477,9 @@ export function DataTableFilterList<
                   }}
                 />
                 <Input
+                  id={`${inputId}-max`}
                   type="number"
+                  aria-label={`${columnLabel} maximum value`}
                   value={currentValue[1] ?? ''}
                   placeholder="Max"
                   className="h-8"
@@ -444,7 +503,9 @@ export function DataTableFilterList<
 
           return (
             <Input
+              id={inputId}
               type="number"
+              aria-label={`${columnLabel} filter value`}
               value={(currentFilter?.value ?? '') as string}
               placeholder={`Enter number...`}
               className="h-8"
@@ -462,7 +523,6 @@ export function DataTableFilterList<
             />
           )
         case 'select':
-          // Get options for select dropdown using our helper function
           const selectOptions = getColumnOptions({ column, table })
 
           return (
@@ -480,6 +540,9 @@ export function DataTableFilterList<
             >
               <FacetedTrigger asChild>
                 <Button
+                  id={inputId}
+                  aria-controls={`${inputId}-listbox`}
+                  aria-label={`${columnLabel} filter value`}
                   variant="outline"
                   size="sm"
                   className="h-8 w-full justify-start text-left font-normal"
@@ -490,8 +553,9 @@ export function DataTableFilterList<
                   />
                 </Button>
               </FacetedTrigger>
-              <FacetedContent>
+              <FacetedContent id={`${inputId}-listbox`}>
                 <FacetedInput
+                  aria-label={`Search ${columnLabel} options`}
                   placeholder={`Search ${column.columnDef.meta?.label ?? column.id}...`}
                 />
                 <FacetedList>
@@ -514,7 +578,6 @@ export function DataTableFilterList<
           )
 
         case 'multi-select':
-          // Get options for multi-select dropdown using our helper function
           const multiSelectOptions = getColumnOptions({ column, table })
           const selectedValues = Array.isArray(currentFilter?.value)
             ? currentFilter.value
@@ -532,6 +595,9 @@ export function DataTableFilterList<
             >
               <FacetedTrigger asChild>
                 <Button
+                  id={inputId}
+                  aria-controls={`${inputId}-listbox`}
+                  aria-label={`${columnLabel} filter values`}
                   variant="outline"
                   size="sm"
                   className="h-8 w-full justify-start text-left font-normal"
@@ -542,8 +608,9 @@ export function DataTableFilterList<
                   />
                 </Button>
               </FacetedTrigger>
-              <FacetedContent>
+              <FacetedContent id={`${inputId}-listbox`}>
                 <FacetedInput
+                  aria-label={`Search ${columnLabel} options`}
                   placeholder={`Search ${column.columnDef.meta?.label ?? column.id}...`}
                 />
                 <FacetedList>
@@ -564,10 +631,27 @@ export function DataTableFilterList<
               </FacetedContent>
             </Faceted>
           )
+
         default:
+          if (operator === 'isEmpty' || operator === 'isNotEmpty') {
+            return (
+              <div
+                id={inputId}
+                role="status"
+                aria-live="polite"
+                aria-label={`${columnLabel} filter is ${
+                  operator === 'isEmpty' ? 'empty' : 'not empty'
+                }`}
+                className="h-8 w-full rounded border border-dashed"
+              />
+            )
+          }
+
           return (
             <Input
+              id={inputId}
               type="text"
+              aria-label={`${columnLabel} filter value`}
               value={(currentFilter?.value ?? '') as string}
               placeholder={`Search ${
                 column.columnDef.meta?.label ?? column.id
@@ -595,11 +679,16 @@ export function DataTableFilterList<
 
       const filterVariant = getColumnFilterVariant(column) ?? 'text'
       const operators = getFilterOperators(filterVariant)
+      const filterId = `${id}-filter-${filter.filterId}`
+      const joinOperatorListboxId = `${filterId}-join-operator-listbox`
+      const fieldListboxId = `${filterId}-field-listbox`
+      const operatorListboxId = `${filterId}-operator-listbox`
+      const inputId = `${filterId}-input`
 
       return (
         <div
           key={filter.filterId}
-          className="grid items-center grid-cols-[70px_135px_125px_minmax(0,200px)_32px] gap-1.5"
+          className="grid items-center grid-cols-[70px_135px_125px_minmax(0,200px)_32px] gap-1.5 rounded"
         >
           {index === 0 ? (
             <span className="text-sm text-center text-muted-foreground">
@@ -618,10 +707,17 @@ export function DataTableFilterList<
                 }
               }}
             >
-              <SelectTrigger className="h-8">
+              <SelectTrigger
+                className="h-8"
+                aria-label="Select join operator"
+                aria-controls={joinOperatorListboxId}
+              >
                 <SelectValue placeholder="Join" />
               </SelectTrigger>
-              <SelectContent className="min-w-[var(--radix-select-trigger-width)]">
+              <SelectContent
+                id={joinOperatorListboxId}
+                className="min-w-[var(--radix-select-trigger-width)]"
+              >
                 <SelectItem value="and">and</SelectItem>
                 <SelectItem value="or">or</SelectItem>
               </SelectContent>
@@ -639,12 +735,16 @@ export function DataTableFilterList<
               onFilterUpdate(filter.filterId, { id: value })
             }}
           >
-            <SelectTrigger className="h-8">
+            <SelectTrigger
+              className="h-8"
+              aria-label="Select filter field"
+              aria-controls={fieldListboxId}
+            >
               <SelectValue
                 placeholder={column.columnDef.meta?.label ?? column.id}
               />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent id={fieldListboxId}>
               {filterableColumns.map((col) => (
                 <SelectItem key={col.id} value={col.id}>
                   {col.columnDef.meta?.label ?? col.id}
@@ -662,10 +762,14 @@ export function DataTableFilterList<
               })
             }}
           >
-            <SelectTrigger className="h-8">
+            <SelectTrigger
+              className="h-8"
+              aria-label="Select filter operator"
+              aria-controls={operatorListboxId}
+            >
               <SelectValue placeholder="Select operator" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent id={operatorListboxId}>
               {operators.map((op) => (
                 <SelectItem key={op.value} value={op.value}>
                   {op.label}
@@ -677,11 +781,13 @@ export function DataTableFilterList<
             column,
             operator: filter.operator ?? 'includesString',
             filterId: filter.filterId,
+            inputId,
           })}
           <Button
             variant="outline"
             size="icon"
             className="size-8 [&_svg]:size-3.5"
+            aria-label={`Remove ${column.columnDef.meta?.label ?? column.id} filter`}
             onClick={() => {
               if (!filter.filterId) return
 
@@ -707,6 +813,8 @@ export function DataTableFilterList<
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
+          aria-describedby={descriptionId}
+          aria-labelledby={labelId}
           variant="outline"
           size="sm"
           className="[&_svg]:size-3"
@@ -745,9 +853,19 @@ export function DataTableFilterList<
       >
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <h4 className="font-medium leading-none">Filters</h4>
-            <p className="text-sm text-muted-foreground">
-              Add filters to refine results.
+            <h4 id={labelId} className="font-medium leading-none">
+              Filters
+            </h4>
+            <p
+              id={descriptionId}
+              className={cn(
+                'text-sm text-muted-foreground',
+                columnFilters.length > 0 && 'sr-only',
+              )}
+            >
+              {columnFilters.length > 0
+                ? 'Modify filters to refine your results.'
+                : 'Add filters to refine your results.'}
             </p>
           </div>
           {columnFilters.length > 0 && (
@@ -760,7 +878,7 @@ export function DataTableFilterList<
             </div>
           )}
           <div className="flex items-center gap-2">
-            <Button size="sm" onClick={onFilterAdd}>
+            <Button size="sm" onClick={onFilterAdd} aria-label="Add new filter">
               Add filter
             </Button>
             {columnFilters.length > 0 && (
@@ -768,6 +886,7 @@ export function DataTableFilterList<
                 variant="outline"
                 size="sm"
                 onClick={() => onColumnFiltersChange([])}
+                aria-label="Reset all filters"
               >
                 Reset filters
               </Button>

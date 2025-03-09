@@ -345,11 +345,6 @@ function App() {
     return colSizes
   }, [table.getState().columnSizing])
 
-  console.log({
-    columnFilters,
-    joinDates: table.getRowModel().flatRows.map((row) => row.original.joinDate),
-  })
-
   return (
     <div className="container mx-auto p-4 flex flex-col gap-4">
       <div className="flex items-center justify-end gap-2">

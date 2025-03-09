@@ -9,6 +9,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import type {
+  ColumnSort,
   RowData,
   SortDirection,
   SortingState,
@@ -84,10 +85,22 @@ export function DataTableSortList<
     [sorting, table],
   )
 
-  const onSortDirectionChange = React.useCallback(
-    (sortId: string, value: SortDirection) => {
+  const onSortAdd = React.useCallback(() => {
+    const firstAvailableColumn = sortableColumns.find(
+      (col) => !sorting.some((s) => s.id === col.id),
+    )
+    if (firstAvailableColumn) {
+      table.setSorting([
+        ...sorting,
+        { id: firstAvailableColumn.id, desc: false },
+      ])
+    }
+  }, [sorting, sortableColumns, table])
+
+  const onSortUpdate = React.useCallback(
+    (sortId: string, options: Partial<Omit<ColumnSort, 'id'>>) => {
       const newSorting = sorting.map((s) =>
-        s.id === sortId ? { ...s, desc: value === 'desc' } : s,
+        s.id === sortId ? { ...s, ...options } : s,
       )
       table.setSorting(newSorting)
     },
@@ -102,18 +115,6 @@ export function DataTableSortList<
     [sorting, table],
   )
 
-  const onSortAdd = React.useCallback(() => {
-    const firstAvailableColumn = sortableColumns.find(
-      (col) => !sorting.some((s) => s.id === col.id),
-    )
-    if (firstAvailableColumn) {
-      table.setSorting([
-        ...sorting,
-        { id: firstAvailableColumn.id, desc: false },
-      ])
-    }
-  }, [sorting, sortableColumns, table])
-
   return (
     <Sortable
       value={sorting}
@@ -123,7 +124,8 @@ export function DataTableSortList<
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            aria-label={`Sort table${sorting.length > 0 ? ` (${sorting.length} active)` : ''}`}
+            aria-describedby={descriptionId}
+            aria-labelledby={labelId}
             variant="outline"
             size="sm"
             className="[&_svg]:size-3"
@@ -166,20 +168,22 @@ export function DataTableSortList<
           className="w-[calc(100vw-theme(spacing.20))] origin-[var(--radix-popover-content-transform-origin)] flex flex-col gap-2.5 min-w-72 max-w-[25rem] p-4 sm:w-[25rem]"
         >
           <div className="flex flex-col gap-2">
-            {sorting.length > 0 ? (
+            <div className="flex flex-col gap-1">
               <h4 id={labelId} className="font-medium leading-none">
-                Sort by
+                {sorting.length > 0 ? 'Sort by' : 'No sorting applied'}
               </h4>
-            ) : (
-              <div className="flex flex-col gap-1">
-                <h4 id={labelId} className="font-medium leading-none">
-                  No sorting applied
-                </h4>
-                <p id={descriptionId} className="text-muted-foreground text-sm">
-                  Add sorting to organize your results.
-                </p>
-              </div>
-            )}
+              <p
+                id={descriptionId}
+                className={cn(
+                  'text-muted-foreground text-sm',
+                  sorting.length > 0 && 'sr-only',
+                )}
+              >
+                {sorting.length > 0
+                  ? 'Modify sorting to organize your results.'
+                  : 'Add sorting to organize your results.'}
+              </p>
+            </div>
             <SortableContent asChild>
               <div
                 role="list"
@@ -264,7 +268,7 @@ export function DataTableSortList<
                         <Select
                           value={sort.desc ? 'desc' : 'asc'}
                           onValueChange={(value: SortDirection) =>
-                            onSortDirectionChange(sort.id, value)
+                            onSortUpdate(sort.id, { desc: value === 'desc' })
                           }
                         >
                           <SelectTrigger
