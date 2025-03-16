@@ -20,7 +20,7 @@ import { makeData, Person } from './makeData'
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void
+    updateData: (rowIndex: number, columnId: keyof TData, value: unknown) => void
   }
 }
 
@@ -33,7 +33,8 @@ const defaultColumn: Partial<ColumnDef<Person>> = {
 
     // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = () => {
-      table.options.meta?.updateData(index, id, value)
+      const columnId = id as keyof Person;
+      table.options.meta?.updateData(index, columnId, value)
     }
 
     // If the initialValue is changed external, sync it up with our state
