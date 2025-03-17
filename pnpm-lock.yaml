@@ -3228,6 +3228,31 @@ importers:
         specifier: ^2.0.22
         version: 2.0.29(typescript@5.4.5)
 
+  examples/vue/grouping:
+    dependencies:
+      '@tanstack/vue-table':
+        specifier: ^8.21.2
+        version: link:../../../packages/vue-table
+      vue:
+        specifier: ^3.4.31
+        version: 3.5.13(typescript@5.4.5)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.14.9
+        version: 20.14.9
+      '@vitejs/plugin-vue':
+        specifier: ^5.0.5
+        version: 5.2.1(vite@5.4.11(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1))(vue@3.5.13(typescript@5.4.5))
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+      vite:
+        specifier: ^5.3.2
+        version: 5.4.11(@types/node@20.14.9)(less@4.2.0)(sass@1.77.6)(terser@5.31.1)
+      vue-tsc:
+        specifier: ^2.0.22
+        version: 2.2.0(typescript@5.4.5)
+
   examples/vue/pagination:
     dependencies:
       '@faker-js/faker':
@@ -3413,10 +3438,10 @@ importers:
     devDependencies:
       '@analogjs/vite-plugin-angular':
         specifier: ^1.11.0
-        version: 1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/node@20.14.9)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5))
+        version: 1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/express@4.17.21)(@types/node@20.14.9)(chokidar@3.6.0)(karma@6.4.3)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5))
       '@analogjs/vitest-angular':
         specifier: ^1.11.0
-        version: 1.11.0(@analogjs/vite-plugin-angular@1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/node@20.14.9)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5)))(vitest@1.6.0(@types/node@20.14.9)(jsdom@24.1.0)(less@4.2.0)(sass@1.77.6)(terser@5.31.1))
+        version: 1.11.0(@analogjs/vite-plugin-angular@1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/express@4.17.21)(@types/node@20.14.9)(chokidar@3.6.0)(karma@6.4.3)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5)))(vitest@1.6.0(@types/node@20.14.9)(jsdom@24.1.0)(less@4.2.0)(sass@1.77.6)(terser@5.31.1))
       '@angular/core':
         specifier: ^17.3.9
         version: 17.3.11(rxjs@7.8.1)(zone.js@0.14.7)
@@ -10871,16 +10896,16 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@analogjs/vite-plugin-angular@1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/node@20.14.9)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5))':
+  '@analogjs/vite-plugin-angular@1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/express@4.17.21)(@types/node@20.14.9)(chokidar@3.6.0)(karma@6.4.3)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5))':
     dependencies:
       ts-morph: 21.0.1
       vfile: 6.0.3
     optionalDependencies:
       '@angular-devkit/build-angular': 17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/express@4.17.21)(@types/node@20.14.9)(chokidar@3.6.0)(karma@6.4.3)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5)
 
-  '@analogjs/vitest-angular@1.11.0(@analogjs/vite-plugin-angular@1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/node@20.14.9)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5)))(vitest@1.6.0(@types/node@20.14.9)(jsdom@24.1.0)(less@4.2.0)(sass@1.77.6)(terser@5.31.1))':
+  '@analogjs/vitest-angular@1.11.0(@analogjs/vite-plugin-angular@1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/express@4.17.21)(@types/node@20.14.9)(chokidar@3.6.0)(karma@6.4.3)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5)))(vitest@1.6.0(@types/node@20.14.9)(jsdom@24.1.0)(less@4.2.0)(sass@1.77.6)(terser@5.31.1))':
     dependencies:
-      '@analogjs/vite-plugin-angular': 1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/node@20.14.9)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5))
+      '@analogjs/vite-plugin-angular': 1.11.0(@angular-devkit/build-angular@17.3.8(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(@types/express@4.17.21)(@types/node@20.14.9)(chokidar@3.6.0)(karma@6.4.3)(ng-packagr@17.3.0(@angular/compiler-cli@17.3.11(@angular/compiler@17.3.11(@angular/core@17.3.11(rxjs@7.8.1)(zone.js@0.14.7)))(typescript@5.4.5))(tslib@2.6.3)(typescript@5.4.5))(typescript@5.4.5))
       vitest: 1.6.0(@types/node@20.14.9)(jsdom@24.1.0)(less@4.2.0)(sass@1.77.6)(terser@5.31.1)
 
   '@angular-devkit/architect@0.1703.8(chokidar@3.6.0)':
