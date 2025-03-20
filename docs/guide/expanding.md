@@ -6,13 +6,13 @@ title: Expanding Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [expanding](../../framework/react/examples/expanding)
-- [grouping](../../framework/react/examples/grouping)
-- [sub-components](../../framework/react/examples/sub-components)
+- [expanding](../framework/react/examples/expanding)
+- [grouping](../framework/react/examples/grouping)
+- [sub-components](../framework/react/examples/sub-components)
 
 ## API
 
-[Expanding API](../../api/features/expanding)
+[Expanding API](../api/features/expanding)
 
 ## Expanding Feature Guide
 

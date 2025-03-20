@@ -4,7 +4,7 @@ title: Table Instance Guide
 
 ## API
 
-[Table API](../../api/core/table)
+[Table API](../api/core/table)
 
 ## Table Instance Guide
 
@@ -18,11 +18,11 @@ To create a table instance, 3 `options` are required: `columns`, `data`, and a `
 
 #### Defining Data
 
-Define your data as an array of objects with a stable reference. `data` can come from anywhere like an API response or defined statically in your code, but it must have a stable reference to prevent infinite re-renders. If using TypeScript, the type that you give your data will be used as a `TData` generic. See the [Data Guide](../data) for more info.
+Define your data as an array of objects with a stable reference. `data` can come from anywhere like an API response or defined statically in your code, but it must have a stable reference to prevent infinite re-renders. If using TypeScript, the type that you give your data will be used as a `TData` generic. See the [Data Guide](../guide/data) for more info.
 
 #### Defining Columns
 
-Column definitions are covered in detail in the previous section in the [Column Def Guide](../column-defs). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for your data.
+Column definitions are covered in detail in the previous section in the [Column Def Guide](../guide/column-defs). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for your data.
 
 ```ts
 const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
@@ -30,11 +30,11 @@ const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
 const columnHelper = createColumnHelper<User>() //Pass User type as the generic TData type
 ```
 
-The column definitions are where we will tell TanStack Table how each column should access and/or transform row data with either an `accessorKey` or `accessorFn`. See the [Column Def Guide](../column-defs#creating-accessor-columns) for more info.
+The column definitions are where we will tell TanStack Table how each column should access and/or transform row data with either an `accessorKey` or `accessorFn`. See the [Column Def Guide](../guide/column-defs#creating-accessor-columns) for more info.
 
 #### Passing in Row Models
 
-This is explained in much more detail in the [Row Models Guide](../row-models), but for now, just import the `getCoreRowModel` function from TanStack Table and pass it in as a table option. Depending on the features you plan to use, you may need to pass in additional row models later.
+This is explained in much more detail in the [Row Models Guide](../guide/row-models), but for now, just import the `getCoreRowModel` function from TanStack Table and pass it in as a table option. Depending on the features you plan to use, you may need to pass in additional row models later.
 
 ```ts
 import { getCoreRowModel } from '@tanstack/[framework]-table'
@@ -86,7 +86,7 @@ table.setRowSelection((old) => ({...old})) //set the row selection state
 table.resetRowSelection() //reset the row selection state
 ```
 
-This is covered in more detail in the [Table State Guides](../../framework/react/guide/table-state)
+This is covered in more detail in the [Table State Guides](../framework/react/guide/table-state)
 
 ### Table APIs
 
@@ -94,8 +94,8 @@ There are dozens of table APIs created by each feature to help you either read o
 
 API reference docs for the core table instance and all other feature APIs can be found throughout the API docs.
 
-For example, you can find the core table instance API docs here: [Table API](../../api/core/table#table-api)
+For example, you can find the core table instance API docs here: [Table API](../api/core/table#table-api)
 
 ### Table Row Models
 
-There is a special set of table instance APIs for reading rows out of the table instance called row models. TanStack Table has advanced features where the rows that are generated may be very different than the array of `data` that you originally passed in. To learn more about the different row models that you can pass in as a table option, see the [Row Models Guide](../row-models).
+There is a special set of table instance APIs for reading rows out of the table instance called row models. TanStack Table has advanced features where the rows that are generated may be very different than the array of `data` that you originally passed in. To learn more about the different row models that you can pass in as a table option, see the [Row Models Guide](../guide/row-models).
