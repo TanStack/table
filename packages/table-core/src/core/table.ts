@@ -505,15 +505,7 @@ export function createTable<TData extends RowData>(
       getMemoOptions(options, 'debugColumns', 'getAllLeafColumns')
     ),
 
-    getColumn: columnId => {
-      const column = table._getAllFlatColumnsById()[columnId]
-
-      if (process.env.NODE_ENV !== 'production' && !column) {
-        console.error(`[Table] Column with id '${columnId}' does not exist.`)
-      }
-
-      return column
-    },
+    getColumn: columnId => table._getAllFlatColumnsById()[columnId],
   }
 
   Object.assign(table, coreInstance)
