@@ -53,7 +53,7 @@ const table = useReactTable({
 })
 ```
 
-> **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will take overwrite any corresponding value in `initialState`.
+> **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will overwrite any corresponding value in `initialState`.
 
 ### Controlled State
 
