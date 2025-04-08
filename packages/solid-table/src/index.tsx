@@ -67,7 +67,7 @@ export function useSolidTable<TData extends RowData>(
 /**
  * @deprecated Use useSolidTable instead
  */
-export function useSolidTable<TData extends RowData>(
+export function createSolidTable<TData extends RowData>(
   options: TableOptions<TData>
 ) {
   return useSolidTable(options)
