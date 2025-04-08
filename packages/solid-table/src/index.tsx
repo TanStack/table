@@ -24,7 +24,7 @@ export function flexRender<TProps>(
   return Comp
 }
 
-export function createSolidTable<TData extends RowData>(
+export function useSolidTable<TData extends RowData>(
   options: TableOptions<TData>
 ) {
   const resolvedOptions: TableOptionsResolved<TData> = mergeProps(
@@ -62,4 +62,13 @@ export function createSolidTable<TData extends RowData>(
   })
 
   return table
+}
+
+/**
+ * @deprecated Use useSolidTable instead
+ */
+export function useSolidTable<TData extends RowData>(
+  options: TableOptions<TData>
+) {
+  return useSolidTable(options)
 }

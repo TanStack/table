@@ -11,7 +11,7 @@ TanStack Table has a simple underlying internal state management system to store
 You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.getState()` table instance API.
 
 ```jsx
-const table = createSolidTable({
+const table = useSolidTable({
   columns,
   get data() {
     return data()
@@ -28,7 +28,7 @@ console.log(table.getState().rowSelection) //access just the row selection state
 If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
 
 ```jsx
-const table = createSolidTable({
+const table = useSolidTable({
   columns,
   data,
   initialState: {
@@ -67,7 +67,7 @@ const [columnFilters, setColumnFilters] = createSignal([]) //no default filters
 const [sorting, setSorting] = createSignal([{
   id: 'age',
   desc: true, //sort by age in descending order by default
-}]) 
+}])
 const [pagination, setPagination] = createSignal({ pageIndex: 0, pageSize: 15 })
 
 //Use our controlled state values to fetch data
@@ -77,7 +77,7 @@ const tableQuery = createQuery({
   //...
 })
 
-const table = createSolidTable({
+const table = useSolidTable({
   columns,
   get data() {
     return tableQuery.data()
@@ -109,7 +109,7 @@ A couple of more tricks may be needed to make this work. If you use the `onState
 
 ```jsx
 //create a table instance with default state values
-const table = createSolidTable({
+const table = useSolidTable({
   columns,
   get data() {
     return data()
@@ -147,7 +147,7 @@ Specifying an `on[State]Change` callback tells the table instance that this will
 ```jsx
 const [sorting, setSorting] = createSignal([])
 //...
-const table = createSolidTable({
+const table = useSolidTable({
   columns,
   data,
   //...
@@ -170,7 +170,7 @@ What implications does this have? It means that if you want to add in some extra
 const [sorting, setSorting] = createSignal([])
 const [pagination, setPagination] = createSignal({ pageIndex: 0, pageSize: 10 })
 
-const table = createSolidTable({
+const table = useSolidTable({
   get columns() {
     return columns()
   },
@@ -210,7 +210,7 @@ const table = createSolidTable({
 All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
 
 ```tsx
-import { createSolidTable, type SortingState } from '@tanstack/solid-table'
+import { useSolidTable, type SortingState } from '@tanstack/solid-table'
 //...
 const [sorting, setSorting] = createSignal<SortingState[]>([
   {

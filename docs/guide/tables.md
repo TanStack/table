@@ -8,7 +8,7 @@ title: Table Instance Guide
 
 ## Table Instance Guide
 
-TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that contains the table state and APIs. The `table` instance is created by calling your adapter's `createTable` function (e.g. `useReactTable`, `useVueTable`, `createSolidTable`, `createSvelteTable`, `createAngularTable`, `useQwikTable`).
+TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that contains the table state and APIs. The `table` instance is created by calling your adapter's `createTable` function (e.g. `useReactTable`, `useVueTable`, `useSolidTable`, `createSvelteTable`, `createAngularTable`, `useQwikTable`).
 
 The `table` instance that is returned from the `createTable` function (from the framework adapter) is the main object that you will interact with to read and mutate the table state. It is the one place where everything happens in TanStack Table. When you get to the point where you are rendering your UI, you will use APIs from this `table` instance.
 
@@ -63,7 +63,7 @@ const table = useQwikTable({ columns, data, getCoreRowModel: getCoreRowModel() }
 const table = useReactTable({ columns, data, getCoreRowModel: getCoreRowModel() })
 
 //solid
-const table = createSolidTable({ columns, get data() { return data() }, getCoreRowModel: getCoreRowModel() })
+const table = useSolidTable({ columns, get data() { return data() }, getCoreRowModel: getCoreRowModel() })
 
 //svelte
 const table = createSvelteTable({ columns, data, getCoreRowModel: getCoreRowModel() })

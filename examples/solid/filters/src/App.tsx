@@ -7,7 +7,7 @@ import {
   getFacetedMinMaxValues,
   ColumnDef,
   ColumnFiltersState,
-  createSolidTable,
+  useSolidTable,
 } from '@tanstack/solid-table'
 import { debounce } from '@solid-primitives/scheduled'
 import { makeData, Person } from './makeData'
@@ -76,7 +76,7 @@ function App() {
   )
   const refreshData = () => setData(makeData(50000))
 
-  const table = createSolidTable({
+  const table = useSolidTable({
     get data() {
       return data()
     },

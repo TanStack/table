@@ -3,7 +3,7 @@ import {
   getCoreRowModel,
   VisibilityState,
   ColumnDef,
-  createSolidTable,
+  useSolidTable,
 } from '@tanstack/solid-table'
 import { createSignal, For, Show } from 'solid-js'
 
@@ -102,7 +102,7 @@ function App() {
   )
   const rerender = () => setData(defaultData)
 
-  const table = createSolidTable({
+  const table = useSolidTable({
     get data() {
       return data()
     },
