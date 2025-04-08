@@ -6,11 +6,11 @@ title: Column Faceting Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters-faceted](../../framework/react/examples/filters-faceted)
+- [filters-faceted](../framework/react/examples/filters-faceted)
 
 ## API
 
-[Column Faceting API](../../api/features/column-faceting)
+[Column Faceting API](../api/features/column-faceting)
 
 ## Column Faceting Guide
 
