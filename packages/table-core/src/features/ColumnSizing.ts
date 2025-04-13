@@ -10,6 +10,7 @@ import {
 } from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 import { ColumnPinningPosition } from './ColumnPinning'
+import { safelyAccessDocument } from '../utils/document'
 
 //
 
@@ -428,8 +429,7 @@ export const ColumnSizing: TableFeature = {
           }))
         }
 
-        const contextDocument =
-          _contextDocument || typeof document !== 'undefined' ? document : null
+        const contextDocument = safelyAccessDocument(_contextDocument)
 
         const mouseEvents = {
           moveHandler: (e: MouseEvent) => onMove(e.clientX),
