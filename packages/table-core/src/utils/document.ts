@@ -7,6 +7,6 @@ export function safelyAccessDocumentEvent(event: Event): Document | null {
     !!event.target &&
     typeof event.target === 'object' &&
     'ownerDocument' in event.target
-    ? event.target.ownerDocument
+    ? (event.target.ownerDocument as Document | null)
     : null
 }

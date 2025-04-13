@@ -2,14 +2,17 @@ import {
   safelyAccessDocument,
   safelyAccessDocumentEvent,
 } from '../../src/utils/document'
-import { expect, vi, beforeEach, afterEach } from 'vitest'
-import { before } from 'node:test'
+import { afterEach, beforeEach, expect, describe, test } from 'vitest'
 
 const originalDocument = globalThis.document
 
+export function getDocumentMock(): Document {
+  return {} as Document
+}
+
 describe('safelyAccessDocument', () => {
   describe('global document', () => {
-    const mockedDocument = {}
+    const mockedDocument = getDocumentMock()
     const originalDocument = globalThis.document
     beforeEach(() => {
       if (typeof globalThis.document === 'undefined') {
@@ -18,6 +21,7 @@ describe('safelyAccessDocument', () => {
     })
     afterEach(() => {
       if (typeof originalDocument === 'undefined') {
+        // @ts-expect-error Just Typings
         delete globalThis.document
       }
     })
@@ -40,9 +44,11 @@ describe('safelyAccessDocumentEvent', () => {
   test('get document by given event', () => {
     const fakeDocument = {}
     const event = new Event('mousedown')
+
     class FakeElement extends EventTarget {
       ownerDocument = fakeDocument
     }
+
     Object.defineProperty(event, 'target', { value: new FakeElement() })
 
     const document = safelyAccessDocumentEvent(event)
