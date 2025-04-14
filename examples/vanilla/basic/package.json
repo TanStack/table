@@ -14,7 +14,7 @@
     "vite": "^5.3.2"
   },
   "dependencies": {
-    "@tanstack/table-core": "^8.21.2",
+    "@tanstack/table-core": "^8.21.3",
     "nanostores": "^0.11.3"
   }
 }

@@ -9,7 +9,7 @@
     "test:types": "vue-tsc"
   },
   "dependencies": {
-    "@tanstack/vue-table": "^8.21.2",
+    "@tanstack/vue-table": "^8.21.3",
     "@tanstack/vue-virtual": "^3.10.8",
     "vue": "^3.4.31"
   },
