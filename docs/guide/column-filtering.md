@@ -6,18 +6,18 @@ title: Column Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [Column Filters](../../framework/react/examples/filters)
-- [Faceted Filters](../../framework/react/examples/filters-faceted) (Autocomplete and Range filters)
-- [Fuzzy Search](../../framework/react/examples/filters-fuzzy) (Match Sorter)
-- [Editable Data](../../framework/react/examples/editable-data)
-- [Expanding](../../framework/react/examples/expanding) (Filtering from Sub-Rows)
-- [Grouping](../../framework/react/examples/grouping)
-- [Pagination](../../framework/react/examples/pagination)
-- [Row Selection](../../framework/react/examples/row-selection)
+- [Column Filters](../framework/react/examples/filters)
+- [Faceted Filters](../framework/react/examples/filters-faceted) (Autocomplete and Range filters)
+- [Fuzzy Search](../framework/react/examples/filters-fuzzy) (Match Sorter)
+- [Editable Data](../framework/react/examples/editable-data)
+- [Expanding](../framework/react/examples/expanding) (Filtering from Sub-Rows)
+- [Grouping](../framework/react/examples/grouping)
+- [Pagination](../framework/react/examples/pagination)
+- [Row Selection](../framework/react/examples/row-selection)
 
 ## API
 
-[Column Filtering API](../../api/features/column-filtering)
+[Column Filtering API](../api/features/column-filtering)
 
 ## Column Filtering Guide
 
@@ -31,7 +31,7 @@ TanStack table supports both client-side and manual server-side filtering. This 
 
 If you have a large dataset, you may not want to load all of that data into the client's browser in order to filter it. In this case, you will most likely want to implement server-side filtering, sorting, pagination, etc. 
 
-However, as also discussed in the [Pagination Guide](../pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily mean that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
+However, as also discussed in the [Pagination Guide](../guide/pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily mean that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
 
 > TanStack Table can handle thousands of client-side rows with good performance. Don't rule out client-side filtering, pagination, sorting, etc. without some thought first.
 
