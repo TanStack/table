@@ -1,13 +1,15 @@
-import { Component, input, type TemplateRef, ViewChild } from '@angular/core'
-import { type ComponentFixture, TestBed } from '@angular/core/testing'
+import { Component, ViewChild, input } from '@angular/core'
+import { TestBed } from '@angular/core/testing'
 import { createColumnHelper } from '@tanstack/table-core'
 import { describe, expect, test } from 'vitest'
 import {
   FlexRenderDirective,
   injectFlexRenderContext,
-} from '../src/flex-render'
-import { setFixtureSignalInput, setFixtureSignalInputs } from './test-utils'
-import { flexRenderComponent } from '../src/flex-render/flex-render-component'
+} from '../../src/flex-render'
+import { setFixtureSignalInput, setFixtureSignalInputs } from '../test-utils'
+import { flexRenderComponent } from '../../src/flex-render/flex-render-component'
+import type { TemplateRef } from '@angular/core'
+import type { ComponentFixture } from '@angular/core/testing'
 
 interface Data {
   id: string
