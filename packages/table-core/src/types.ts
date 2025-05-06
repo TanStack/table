@@ -283,7 +283,7 @@ export type DisplayColumnDef<
   TValue = unknown,
 > = ColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
-interface GroupColumnDefBase<TData extends RowData, TValue = unknown>
+export interface GroupColumnDefBase<TData extends RowData, TValue = unknown>
   extends ColumnDefBase<TData, TValue> {
   columns?: ColumnDef<TData, any>[]
 }
