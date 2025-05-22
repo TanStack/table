@@ -166,23 +166,26 @@ function getMatchRanking<TItem>(
   testString = testString.toLowerCase()
   stringToRank = stringToRank.toLowerCase()
 
+  // Use indexOf to check for several types of equality
+  const indexOfTestStringInStringToRank = stringToRank.indexOf(testString)
+
   // case insensitive equals
-  if (testString === stringToRank) {
+  if (testString.length === stringToRank.length && indexOfTestStringInStringToRank === 0) {
     return rankings.EQUAL
   }
 
   // starts with
-  if (testString.startsWith(stringToRank)) {
+  if (indexOfTestStringInStringToRank === 0) {
     return rankings.STARTS_WITH
   }
 
   // word starts with
-  if (testString.includes(` ${stringToRank}`)) {
+  if (indexOfTestStringInStringToRank > 0 && testString[indexOfTestStringInStringToRank-1] === ' ') {
     return rankings.WORD_STARTS_WITH
   }
 
   // contains
-  if (testString.includes(stringToRank)) {
+  if (indexOfTestStringInStringToRank > 0) {
     return rankings.CONTAINS
   } else if (stringToRank.length === 1) {
     // If the only character in the given stringToRank
