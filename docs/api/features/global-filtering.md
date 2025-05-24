@@ -25,7 +25,7 @@ export interface GlobalFilterTableState {
 
 ## Filter Functions
 
-You can use the same filter functions that are available for column filtering for global filtering. See the [Column Filtering APIs](../api/features/column-filtering) to learn more about filter functions.
+You can use the same filter functions that are available for column filtering for global filtering. See the [Column Filtering](../../features/column-filtering.md) to learn more about filter functions.
 
 #### Using Filter Functions
 

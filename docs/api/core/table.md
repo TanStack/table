@@ -2,7 +2,7 @@
 title: Table APIs
 ---
 
-## `createAngularTable` / `useReactTable` / `createSolidTable` / `useQwikTable` / `useVueTable` / `createSvelteTable`
+## `useReactTable` / `createSolidTable` / `useQwikTable` / `useVueTable` / `createSvelteTable`
 
 ```tsx
 type useReactTable = <TData extends AnyData>(
@@ -14,7 +14,7 @@ These functions are used to create a table. Which one you use depends on which f
 
 ## Options
 
-These are **core** options and API properties for the table. More options and API properties are available for other [table features](../guide/features).
+These are **core** options and API properties for the table. More options and API properties are available for other [table features](../../../guide/features.md).
 
 ### `data`
 
@@ -34,7 +34,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 type columns = ColumnDef<TData>[]
 ```
 
-The array of column defs to use for the table. See the [Column Defs Guide](../../docs/guide/column-defs) for more information on creating column definitions.
+The array of column defs to use for the table. See the [Column Def Guide](../../../guide/column-defs.md) for more information on creating column definitions.
 
 ### `defaultColumn`
 
@@ -89,7 +89,7 @@ declare module '@tanstack/table-core' {
 }
 ```
 
-> 🧠 Think of this option as an arbitrary "context" for your table. This is a great way to pass arbitrary data or functions to your table without having to pass it to every thing the table touches. A good example is passing a locale object to your table to use for formatting dates, numbers, etc or even a function that can be used to update editable data like in the [editable-data example](../framework/react/examples/editable-data).
+> 🧠 Think of this option as an arbitrary "context" for your table. This is a great way to pass arbitrary data or functions to your table without having to pass it to every thing the table touches. A good example is passing a locale object to your table to use for formatting dates, numbers, etc or even a function that can be used to update editable data like in the [editable-data](../../../framework/react/examples/editable-data) example.
 
 ### `state`
 

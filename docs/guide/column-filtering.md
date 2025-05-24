@@ -6,18 +6,16 @@ title: Column Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [Column Filters](../framework/react/examples/filters)
-- [Faceted Filters](../framework/react/examples/filters-faceted) (Autocomplete and Range filters)
-- [Fuzzy Search](../framework/react/examples/filters-fuzzy) (Match Sorter)
-- [Editable Data](../framework/react/examples/editable-data)
-- [Expanding](../framework/react/examples/expanding) (Filtering from Sub-Rows)
-- [Grouping](../framework/react/examples/grouping)
-- [Pagination](../framework/react/examples/pagination)
-- [Row Selection](../framework/react/examples/row-selection)
+- [filters](../../framework/react/examples/filters) (includes faceting)
+- [editable-data](../../framework/react/examples/editable-data)
+- [expanding](../../framework/react/examples/expanding)
+- [grouping](../../framework/react/examples/grouping)
+- [pagination](../../framework/react/examples/pagination)
+- [row-selection](../../framework/react/examples/row-selection)
 
 ## API
 
-[Column Filtering API](../api/features/column-filtering)
+[Column Filtering API](../../api/features/column-filtering)
 
 ## Column Filtering Guide
 
@@ -25,13 +23,13 @@ Filtering comes in 2 flavors: Column Filtering and Global Filtering.
 
 This guide will focus on column filtering, which is a filter that is applied to a single column's accessor value.
 
-TanStack table supports both client-side and manual server-side filtering. This guide will go over how to implement and customize both, and help you decide which one is best for your use-case.
+TanStack table supports both both client-side and manual server-side filtering. This guide will go over how to implement and customize both, and help you decide which one is best for your use-case.
 
 ### Client-Side vs Server-Side Filtering
 
 If you have a large dataset, you may not want to load all of that data into the client's browser in order to filter it. In this case, you will most likely want to implement server-side filtering, sorting, pagination, etc. 
 
-However, as also discussed in the [Pagination Guide](../guide/pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily mean that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
+However, as also discussed in the [Pagination Guide](../pagination.md#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
 
 > TanStack Table can handle thousands of client-side rows with good performance. Don't rule out client-side filtering, pagination, sorting, etc. without some thought first.
 
@@ -59,7 +57,7 @@ const table = useReactTable({
 })
 ```
 
-> **Note:** When using manual filtering, many of the options that are discussed in the rest of this guide will have no effect. When `manualFiltering` is set to `true`, the table instance will not apply any filtering logic to the rows that are passed to it. Instead, it will assume that the rows are already filtered and will use the `data` that you pass to it as-is.
+> **Note:** When using manual filtering, many of the options that are discussed in the rest of this guide will have no effect. When is `manualFiltering` is set to `true`, the table instance will not apply any filtering logic to the rows that are passed to it. Instead, it will assume that the rows are already filtered and will use the `data` that you pass to it as-is.
 
 ### Client-Side Filtering
 
@@ -217,8 +215,8 @@ const table = useReactTable({
   data,
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
-  filterFns: { // add a custom global filter function
-    myCustomFilterFn: (row, columnId, filterValue) => { // defined inline here
+  filterFns: { //add a custom sorting function
+    myCustomFilterFn: (row, columnId, filterValue) => { //defined inline here
       return // true or false based on your custom logic
     },
     startsWith: startsWithFilterFn, // defined elsewhere
@@ -323,15 +321,15 @@ const table = useReactTable({
 
 There are a lot of Column and Table APIs that you can use to interact with the column filter state and hook up to your UI components. Here is a list of the available APIs and their most common use-cases:
 
-- `table.setColumnFilters` - Overwrite the entire column filter state with a new state.
-- `table.resetColumnFilters` - Useful for a "clear all/reset filters" button.
+- `table.setColumnFilters` - Overwrite the entire column filter state with a new state
+- `table.resetColumnFilters` - Useful for a "clear all/reset filters" button
 
-- **`column.getFilterValue`** - Useful for getting the default initial filter value for an input, or even directly providing the filter value to a filter input.
-- **`column.setFilterValue`** - Useful for connecting filter inputs to their `onChange` or `onBlur` handlers.
+- **`column.getFilterValue`** - Useful for getting the default initial filter value for an input, or even directly providing the filter value to a filter input
+- **`column.setFilterValue`** - Useful for connecting filter inputs to their `onChange` or `onBlur` handlers
 
-- `column.getCanFilter` - Useful for disabling/enabling filter inputs.
-- `column.getIsFiltered` - Useful for displaying a visual indicator that a column is currently being filtered.
-- `column.getFilterIndex` - Useful for displaying in what order the current filter is being applied.
+- `column.getCanFilter` - Useful for disabling/enabling filter inputs
+- `column.getIsFiltered` - Useful for displaying a visual indicator that a column is currently being filtered
+- `column.getFilterIndex` - Useful for displaying in what order the current filter is being applied
 
-- `column.getAutoFilterFn` - Used internally to find the default filter function for a column if none is specified.
-- `column.getFilterFn` - Useful for displaying which filter mode or function is currently being used.
+- `column.getAutoFilterFn` - 
+- `column.getFilterFn` - Useful for displaying which filter mode or function is currently being used

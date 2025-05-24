@@ -2,7 +2,7 @@
 title: Row APIs
 ---
 
-These are **core** options and API properties for all rows. More options and API properties are available for other [table features](../guide/features).
+These are **core** options and API properties for all rows. More options and API properties are available for other [table features](../../../guide/features.md).
 
 ## Row API
 
@@ -120,4 +120,4 @@ An array of the original subRows as returned by the `options.getSubRows` option.
 type getAllCells = () => Cell<TData>[]
 ```
 
-Returns all of the [Cells](../api/core/cell) for the row.
+Returns all of the [Cells](../../../api/core/cell.md) for the row.

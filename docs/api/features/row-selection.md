@@ -15,7 +15,7 @@ export type RowSelectionTableState = {
 }
 ```
 
-By default, the row selection state uses the index of each row as the row identifiers. Row selection state can instead be tracked with a custom unique row id by passing in a custom [getRowId](../core/table.md#getrowid) function to the the table.
+By default, the row selection state uses the index of each row as the row identifiers. Row selection state can instead be tracked with a custom unique row id by passing in a custom [getRowId](../../core/table.md#getrowid) function to the the table.
 
 ## Table Options
 
@@ -112,8 +112,6 @@ getIsSomeRowsSelected: () => boolean
 ```
 
 Returns whether or not any rows in the table are selected.
-
-NOTE: Returns `false` if all rows are selected.
 
 ### `getIsSomePageRowsSelected`
 
