@@ -24,7 +24,7 @@
     "prettier": "prettier --ignore-unknown '**/*'",
     "prettier:write": "pnpm run prettier --write",
     "cipublish": "node scripts/publish.js",
-    "verify": "ts-node scripts/verify-links.ts"
+    "verify-links": "node scripts/verify-links.ts"
   },
   "nx": {
     "includedScripts": [

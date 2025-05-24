@@ -4,7 +4,7 @@ title: Table Instance Guide
 
 ## API
 
-[Table API](../../api/core/table)
+[Table API](../../api/core/table.md)
 
 ## Table Instance Guide
 
@@ -79,7 +79,7 @@ const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
 const columnHelper = createColumnHelper<User>() //Pass User type as the generic TData type
 ```
 
-The column definitions are where we will tell TanStack Table how each column should access and/or transform row data with either an `accessorKey` or `accessorFn`. See the [Column Def Guide](../column-defs#creating-accessor-columns) for more info.
+The column definitions are where we will tell TanStack Table how each column should access and/or transform row data with either an `accessorKey` or `accessorFn`. See the [Column Def Guide](../column-defs.md) for more info.
 
 #### Creating the Table Instance
 
