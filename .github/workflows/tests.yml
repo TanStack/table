@@ -1,0 +1,44 @@
+name: react-table tests
+
+on:
+  push:
+    branches:
+      - "master"
+      - "next"
+      - "6.x"
+  pull_request:
+
+jobs:
+  test:
+    name: "Node ${{ matrix.node }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [10, 12, 14]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+      - run: yarn test:ci
+
+  publish-module:
+    name: "Publish Module to NPM"
+    needs: test
+    # publish only when merged in master on original repo, not on PR
+    if: github.repository == 'tannerlinsley/react-table' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/next' || github.ref == 'refs/heads/6.x')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
+      - run: npx semantic-release@17
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          GH_TOKEN: ${{secrets.GH_TOKEN}}

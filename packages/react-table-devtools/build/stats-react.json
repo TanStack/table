@@ -1,0 +1,350 @@
+{
+  "version": 2,
+  "tree": {
+    "name": "root",
+    "children": [
+      {
+        "name": "index.production.js",
+        "children": [
+          {
+            "uid": "3b62-108",
+            "name": "\u0000rollupPluginBabelHelpers.js"
+          },
+          {
+            "name": "packages/react-table-devtools/src",
+            "children": [
+              {
+                "uid": "3b62-110",
+                "name": "useLocalStorage.ts"
+              },
+              {
+                "uid": "3b62-112",
+                "name": "theme.tsx"
+              },
+              {
+                "uid": "3b62-114",
+                "name": "useMediaQuery.ts"
+              },
+              {
+                "uid": "3b62-116",
+                "name": "utils.ts"
+              },
+              {
+                "uid": "3b62-118",
+                "name": "styledComponents.ts"
+              },
+              {
+                "uid": "3b62-120",
+                "name": "Explorer.tsx"
+              },
+              {
+                "uid": "3b62-122",
+                "name": "Logo.tsx"
+              },
+              {
+                "uid": "3b62-124",
+                "name": "index.tsx"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "isRoot": true
+  },
+  "nodeParts": {
+    "3b62-108": {
+      "renderedLength": 771,
+      "gzipLength": 353,
+      "brotliLength": 0,
+      "mainUid": "3b62-107"
+    },
+    "3b62-110": {
+      "renderedLength": 1212,
+      "gzipLength": 444,
+      "brotliLength": 0,
+      "mainUid": "3b62-109"
+    },
+    "3b62-112": {
+      "renderedLength": 783,
+      "gzipLength": 395,
+      "brotliLength": 0,
+      "mainUid": "3b62-111"
+    },
+    "3b62-114": {
+      "renderedLength": 1059,
+      "gzipLength": 418,
+      "brotliLength": 0,
+      "mainUid": "3b62-113"
+    },
+    "3b62-116": {
+      "renderedLength": 1428,
+      "gzipLength": 606,
+      "brotliLength": 0,
+      "mainUid": "3b62-115"
+    },
+    "3b62-118": {
+      "renderedLength": 2600,
+      "gzipLength": 891,
+      "brotliLength": 0,
+      "mainUid": "3b62-117"
+    },
+    "3b62-120": {
+      "renderedLength": 7676,
+      "gzipLength": 2028,
+      "brotliLength": 0,
+      "mainUid": "3b62-119"
+    },
+    "3b62-122": {
+      "renderedLength": 8080,
+      "gzipLength": 3760,
+      "brotliLength": 0,
+      "mainUid": "3b62-121"
+    },
+    "3b62-124": {
+      "renderedLength": 8302,
+      "gzipLength": 1719,
+      "brotliLength": 0,
+      "mainUid": "3b62-123"
+    }
+  },
+  "nodeMetas": {
+    "3b62-107": {
+      "id": "\u0000rollupPluginBabelHelpers.js",
+      "moduleParts": {
+        "index.production.js": "3b62-108"
+      },
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-123"
+        },
+        {
+          "uid": "3b62-115"
+        },
+        {
+          "uid": "3b62-111"
+        },
+        {
+          "uid": "3b62-119"
+        },
+        {
+          "uid": "3b62-121"
+        }
+      ]
+    },
+    "3b62-109": {
+      "id": "/packages/react-table-devtools/src/useLocalStorage.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-110"
+      },
+      "imported": [
+        {
+          "uid": "3b62-125"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-123"
+        }
+      ]
+    },
+    "3b62-111": {
+      "id": "/packages/react-table-devtools/src/theme.tsx",
+      "moduleParts": {
+        "index.production.js": "3b62-112"
+      },
+      "imported": [
+        {
+          "uid": "3b62-107"
+        },
+        {
+          "uid": "3b62-125"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-123"
+        },
+        {
+          "uid": "3b62-115"
+        }
+      ]
+    },
+    "3b62-113": {
+      "id": "/packages/react-table-devtools/src/useMediaQuery.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-114"
+      },
+      "imported": [
+        {
+          "uid": "3b62-125"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-115"
+        }
+      ]
+    },
+    "3b62-115": {
+      "id": "/packages/react-table-devtools/src/utils.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-116"
+      },
+      "imported": [
+        {
+          "uid": "3b62-107"
+        },
+        {
+          "uid": "3b62-125"
+        },
+        {
+          "uid": "3b62-111"
+        },
+        {
+          "uid": "3b62-113"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-123"
+        },
+        {
+          "uid": "3b62-117"
+        },
+        {
+          "uid": "3b62-119"
+        }
+      ]
+    },
+    "3b62-117": {
+      "id": "/packages/react-table-devtools/src/styledComponents.ts",
+      "moduleParts": {
+        "index.production.js": "3b62-118"
+      },
+      "imported": [
+        {
+          "uid": "3b62-115"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-123"
+        }
+      ]
+    },
+    "3b62-119": {
+      "id": "/packages/react-table-devtools/src/Explorer.tsx",
+      "moduleParts": {
+        "index.production.js": "3b62-120"
+      },
+      "imported": [
+        {
+          "uid": "3b62-107"
+        },
+        {
+          "uid": "3b62-125"
+        },
+        {
+          "uid": "3b62-115"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-123"
+        }
+      ]
+    },
+    "3b62-121": {
+      "id": "/packages/react-table-devtools/src/Logo.tsx",
+      "moduleParts": {
+        "index.production.js": "3b62-122"
+      },
+      "imported": [
+        {
+          "uid": "3b62-107"
+        },
+        {
+          "uid": "3b62-125"
+        }
+      ],
+      "importedBy": [
+        {
+          "uid": "3b62-123"
+        }
+      ]
+    },
+    "3b62-123": {
+      "id": "/packages/react-table-devtools/src/index.tsx",
+      "moduleParts": {
+        "index.production.js": "3b62-124"
+      },
+      "imported": [
+        {
+          "uid": "3b62-107"
+        },
+        {
+          "uid": "3b62-125"
+        },
+        {
+          "uid": "3b62-109"
+        },
+        {
+          "uid": "3b62-115"
+        },
+        {
+          "uid": "3b62-117"
+        },
+        {
+          "uid": "3b62-111"
+        },
+        {
+          "uid": "3b62-119"
+        },
+        {
+          "uid": "3b62-121"
+        }
+      ],
+      "importedBy": [],
+      "isEntry": true
+    },
+    "3b62-125": {
+      "id": "react",
+      "moduleParts": {},
+      "imported": [],
+      "importedBy": [
+        {
+          "uid": "3b62-123"
+        },
+        {
+          "uid": "3b62-109"
+        },
+        {
+          "uid": "3b62-115"
+        },
+        {
+          "uid": "3b62-111"
+        },
+        {
+          "uid": "3b62-119"
+        },
+        {
+          "uid": "3b62-121"
+        },
+        {
+          "uid": "3b62-113"
+        }
+      ],
+      "isExternal": true
+    }
+  },
+  "env": {
+    "rollup": "2.66.0"
+  },
+  "options": {
+    "gzip": true,
+    "brotli": false,
+    "sourcemap": false
+  }
+}

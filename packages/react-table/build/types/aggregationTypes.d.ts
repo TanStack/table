@@ -1,0 +1,22 @@
+export declare const aggregationTypes: {
+    sum: typeof sum;
+    min: typeof min;
+    max: typeof max;
+    extent: typeof extent;
+    mean: typeof mean;
+    median: typeof median;
+    unique: typeof unique;
+    uniqueCount: typeof uniqueCount;
+    count: typeof count;
+};
+export declare type BuiltInAggregationType = keyof typeof aggregationTypes;
+declare function sum(_leafValues: unknown[], childValues: unknown[]): number;
+declare function min(_leafValues: unknown[], childValues: unknown[]): number | undefined;
+declare function max(_leafValues: unknown[], childValues: unknown[]): number | undefined;
+declare function extent(_leafValues: unknown[], childValues: unknown[]): (number | undefined)[];
+declare function mean(leafValues: unknown[]): number | undefined;
+declare function median(values: unknown[]): number | undefined;
+declare function unique<T>(values: T[]): T[];
+declare function uniqueCount(values: unknown[]): number;
+declare function count(values: unknown[]): number;
+export {};
