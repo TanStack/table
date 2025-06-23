@@ -52,7 +52,7 @@
   ],
   "browserslist": "> 0.25%, not dead",
   "peerDependencies": {
-    "react": "^16.8.3 || ^17.0.0-0 || ^18.0.0"
+    "react": "^16.8.3 || ^17.0.0-0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
@@ -96,8 +96,8 @@
     "lint-staged": "^9.4.3",
     "prettier": "^1.19.1",
     "prop-types": "^15.5.0",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "react-test-renderer": "^18.1.0",
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^4.3.3",
