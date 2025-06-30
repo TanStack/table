@@ -1,4 +1,4 @@
-import { RowModel } from '..'
+import { getRowProto, RowModel } from '..'
 import { BuiltInFilterFn, filterFns } from '../filterFns'
 import {
   Column,
@@ -362,14 +362,6 @@ export const ColumnFiltering: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
-    row: Row<TData>,
-    _table: Table<TData>
-  ): void => {
-    row.columnFilters = {}
-    row.columnFiltersMeta = {}
-  },
-
   createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setColumnFilters = (updater: Updater<ColumnFiltersState>) => {
       const leafColumns = table.getAllLeafColumns()
@@ -411,6 +403,28 @@ export const ColumnFiltering: TableFeature = {
 
       return table._getFilteredRowModel()
     }
+
+    // Lazy-init the backing caches on the instance so we don't take up memory for rows that don't need it
+    Object.defineProperties(getRowProto(table), {
+      columnFilters: {
+        get() {
+          return (this._columnFilters ??= {})
+        },
+        set(value) {
+          this._columnFilters = value
+        },
+        enumerable: true,
+      },
+      columnFiltersMeta: {
+        get() {
+          return (this._columnFiltersMeta ??= {})
+        },
+        set(value) {
+          this._columnFiltersMeta = value
+        },
+        enumerable: true,
+      },
+    })
   },
 }
 
