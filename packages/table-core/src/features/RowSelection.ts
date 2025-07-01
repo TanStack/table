@@ -431,12 +431,14 @@ export const RowSelection: TableFeature = {
     }
 
     table.getIsSomeRowsSelected = () => {
-      const totalSelected = Object.keys(
-        table.getState().rowSelection ?? {}
-      ).length
+      const rowSelection = table.getState().rowSelection ?? {};
+      const selectedRowKeys = Object.keys(rowSelection).filter(
+        key => rowSelection[key]
+      )
+      const totalSelected = selectedRowKeys.length
       return (
         totalSelected > 0 &&
-        totalSelected < table.getFilteredRowModel().flatRows.length
+        totalSelected <= table.getFilteredRowModel().flatRows.length
       )
     }
 
