@@ -12,8 +12,9 @@ const props = defineProps({
     required: true,
   },
 })
-const firstValue = computed(() =>
-  props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id)
+const firstValue = computed(
+  () =>
+    props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id)
 )
 const columnFilterValue = computed(() => props.column.getFilterValue())
 const sortedUniqueValues = computed(() =>

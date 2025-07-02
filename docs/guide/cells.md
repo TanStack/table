@@ -4,7 +4,7 @@ title: Cells Guide
 
 ## API
 
-[Cell API](../api/core/cell)
+[Cell API](../../api/core/cell)
 
 ## Cells Guide
 
@@ -12,7 +12,7 @@ This quick guide will discuss the different ways you can retrieve and interact w
 
 ### Where to Get Cells From
 
-Cells come from [Rows](../guide/rows). Enough said, right?
+Cells come from [Rows](../../guide/rows). Enough said, right?
 
 There are multiple `row` instance APIs you can use to retrieve the appropriate cells from a row depending on which features you are using. Most commonly, you will use the `row.getAllCells` or `row.getVisibleCells` APIs (if you are using column visibility features), but there are a handful of other similar APIs that you can use.
 
@@ -32,7 +32,7 @@ During grouping or aggregation features, the `cell.id` will have additional stri
 
 #### Cell Parent Objects
 
-Every cell stores a reference to its parent [row](../guide/rows) and [column](../guide/columns) objects.
+Every cell stores a reference to its parent [row](../../guide/rows) and [column](../../guide/columns) objects.
 
 #### Access Cell Values
 

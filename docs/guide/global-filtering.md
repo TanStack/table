@@ -6,11 +6,11 @@ title: Global Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [Global Filters](../framework/react/examples/filters-global)
+- [Global Filters](https://github.com/TanStack/table/tree/main/examples/react/filters-global)
 
 ## API
 
-[Global Filtering API](../api/features/global-filtering)
+[Global Filtering API](../../api/features/global-filtering)
 
 ## Global Filtering Guide
 
@@ -22,7 +22,7 @@ This guide will focus on global filtering, which is a filter that is applied acr
 
 If you have a large dataset, you may not want to load all of that data into the client's browser in order to filter it. In this case, you will most likely want to implement server-side filtering, sorting, pagination, etc.
 
-However, as also discussed in the [Pagination Guide](../guide/pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily mean that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
+However, as also discussed in the [Pagination Guide](../../guide/pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily mean that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
 
 > TanStack Table can handle thousands of client-side rows with good performance. Don't rule out client-side filtering, pagination, sorting, etc. without some thought first.
 
@@ -138,7 +138,7 @@ return (
 
 If you want to use a custom global filter function, you can define the function and pass it to the globalFilterFn option.
 
-> **Note:** It is often a popular idea to use fuzzy filtering functions for global filtering. This is discussed in the [Fuzzy Filtering Guide](./fuzzy-filtering.md).
+> **Note:** It is often a popular idea to use fuzzy filtering functions for global filtering. This is discussed in the [Fuzzy Filtering Guide](../fuzzy-filtering.md).
 
 ```jsx
 const customFilterFn = (rows, columnId, filterValue) => {

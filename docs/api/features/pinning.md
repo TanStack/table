@@ -7,5 +7,5 @@ id: pinning
 
 The pinning apis are now split into multiple api pages:
 
-- [Column Pinning](../api/features/column-pinning)
-- [Row Pinning](../api/features/row-pinning)
+- [Column Pinning](../../../guide/column-pinning.md)
+- [Row Pinning](../../../guide/row-pinning.md)
