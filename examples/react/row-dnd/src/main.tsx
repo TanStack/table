@@ -37,12 +37,13 @@ import { CSS } from '@dnd-kit/utilities'
 
 // Cell Component
 const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
-  const { attributes, listeners } = useSortable({
+  const { setNodeRef, attributes, listeners } = useSortable({
     id: rowId,
   })
   return (
     // Alternatively, you could set these attributes on the rows themselves
-    <button {...attributes} {...listeners}>
+    // If you happen to have a problem with the drag handle not working, try setting the ref to `setNodeRef` attribute on this button but normally it should work fine without it
+    <button ref={setNodeRef} {...attributes} {...listeners}>
       🟰
     </button>
   )
