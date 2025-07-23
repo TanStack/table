@@ -133,7 +133,7 @@ const columns = [
 ]
 ```
 
-This is discussed in more detail in the [Column Def Guide](../guide/column-defs).
+This is discussed in more detail in the [Column Def Guide](../../guide/column-defs).
 
 > NOTE: The "keys" in your json data can usually be anything, but any periods in the keys will be interpreted as a deep key and will cause errors.
 
@@ -179,7 +179,7 @@ type User = {
 }
 ```
 
-Where `subRows` is an optional array of `User` objects. This is discussed in more detail in the [Expanding Guide](../guide/expanding).
+Where `subRows` is an optional array of `User` objects. This is discussed in more detail in the [Expanding Guide](../../guide/expanding).
 
 ### Give Data a "Stable" Reference
 
@@ -239,7 +239,7 @@ export default function MyComponent() {
 
 ### How TanStack Table Transforms Data
 
-Later, in other parts of these docs, you will see how TanStack Table processes the `data` that you pass to the table and generates the row and cell objects that are used to create the table. The `data` that you pass to the table is never mutated by TanStack Table, but the actual values in the rows and cells may be transformed by the accessors in your column definitions, or by other features performed by [row models](../guide/row-models) like grouping or aggregation.
+Later, in other parts of these docs, you will see how TanStack Table processes the `data` that you pass to the table and generates the row and cell objects that are used to create the table. The `data` that you pass to the table is never mutated by TanStack Table, but the actual values in the rows and cells may be transformed by the accessors in your column definitions, or by other features performed by [row models](../../guide/row-models) like grouping or aggregation.
 
 ### How Much Data Can TanStack Table Handle?
 
@@ -247,4 +247,4 @@ Believe it or not, TanStack Table was actually built to scale up to handle poten
 
 The default mindset of a developer building a data grid is to implement server-side pagination, sorting, and filtering for large datasets. This is still usually a good idea, but a lot of developers underestimate how much data can actually be handled in the client with modern browsers and the right optimizations. If your table will never have more than a few thousand rows, you can probably take advantage of the client-side features in TanStack Table instead of implementing them yourself on the server. Before committing to letting TanStack Table's client-side features handle your large dataset, you should test it with your actual data to see if it performs well enough for your needs, of course.
 
-This is discussed in more detail in the [Pagination Guide](../guide/pagination#should-you-use-client-side-pagination).
+This is discussed in more detail in the [Pagination Guide](../../guide/pagination#should-you-use-client-side-pagination).

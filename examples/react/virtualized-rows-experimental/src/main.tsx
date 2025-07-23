@@ -263,7 +263,7 @@ function TableBodyRow({
     <tr
       data-index={virtualRowIndex} // needed for dynamic row height measurement
       ref={node => {
-        if (node && virtualRowIndex) {
+        if (node && typeof virtualRowIndex !== 'undefined') {
           rowVirtualizer.measureElement(node) // measure dynamic row height
           rowRefsMap.current.set(virtualRowIndex, node) // store ref for virtualizer to apply scrolling transforms
         }

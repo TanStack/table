@@ -2,7 +2,7 @@
 title: Column APIs
 ---
 
-These are **core** options and API properties for all columns. More options and API properties are available for other [table features](../guide/features).
+These are **core** options and API properties for all columns. More options and API properties are available for other [table features](../../../guide/features.md).
 
 ## Column API
 

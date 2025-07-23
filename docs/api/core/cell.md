@@ -2,7 +2,7 @@
 title: Cell APIs
 ---
 
-These are **core** options and API properties for all cells. More options and API properties are available for other [table features](../guide/features).
+These are **core** options and API properties for all cells. More options and API properties are available for other [table features](../../../guide/features.md).
 
 ## Cell API
 
