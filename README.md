@@ -28,6 +28,9 @@ Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue
 <a href="https://twitter.com/tannerlinsley" target="\_parent">
   <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
 </a>
+<a href="https://www.coderabbit.ai">
+  <img alt="" src="https://img.shields.io/coderabbit/prs/github/TanStack/table?utm_source=oss&utm_medium=github&utm_campaign=TanStack%2Ftable&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews" />
+</a>
 
 > [Looking for version 7 of `react-table`? Click here!](https://github.com/tanstack/table/tree/v7)
 
