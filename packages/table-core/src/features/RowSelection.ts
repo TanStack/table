@@ -245,6 +245,9 @@ export const RowSelection: TableFeature = {
           })
         } else {
           preGroupedFlatRows.forEach(row => {
+            if (!row.getCanSelect()) {
+              return
+            }
             delete rowSelection[row.id]
           })
         }
