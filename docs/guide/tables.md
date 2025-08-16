@@ -71,7 +71,7 @@ const data = ref<User[]>([])
 
 #### Defining Columns
 
-Column definitions are covered in detail in the next section in the [Column Def Guide](../column-defs.md). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for you data.
+Column definitions are covered in detail in the previous section in the [Column Def Guide](../column-defs.md). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for you data.
 
 ```ts
 const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
