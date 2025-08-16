@@ -306,7 +306,7 @@ export const RowSorting: TableFeature = {
     table: Table<TData>
   ): void => {
     column.getAutoSortingFn = () => {
-      const firstRows = table.getFilteredRowModel().flatRows.slice(10)
+      const firstRows = table.getFilteredRowModel().flatRows.slice(0, 10)
 
       let isString = false
 
