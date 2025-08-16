@@ -61,8 +61,8 @@ export function getSortedRowModel<TData extends RowData>(): (
                 const aValue = rowA.getValue(sortEntry.id)
                 const bValue = rowB.getValue(sortEntry.id)
 
-                const aUndefined = aValue === undefined
-                const bUndefined = bValue === undefined
+                const aUndefined = aValue == null // true for null or undefined
+                const bUndefined = bValue == null // true for null or undefined
 
                 if (aUndefined || bUndefined) {
                   if (sortUndefined === 'first') return aUndefined ? -1 : 1
