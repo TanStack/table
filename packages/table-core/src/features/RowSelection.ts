@@ -1,11 +1,11 @@
 import {
   OnChangeFn,
-  Row,
-  RowData,
-  RowModel,
   Table,
-  TableFeature,
+  Row,
+  RowModel,
   Updater,
+  RowData,
+  TableFeature,
 } from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
