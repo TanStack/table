@@ -1,11 +1,11 @@
 import {
   OnChangeFn,
-  Table,
   Row,
-  RowModel,
-  Updater,
   RowData,
+  RowModel,
+  Table,
   TableFeature,
+  Updater,
 } from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
 
@@ -431,12 +431,11 @@ export const RowSelection: TableFeature = {
     }
 
     table.getIsSomeRowsSelected = () => {
-      const totalSelected = Object.keys(
-        table.getState().rowSelection ?? {}
-      ).length
+      const visibleRows = table.getFilteredRowModel().flatRows
+      const selectedVisibleRows = visibleRows.filter(row => row.getIsSelected())
       return (
-        totalSelected > 0 &&
-        totalSelected < table.getFilteredRowModel().flatRows.length
+        selectedVisibleRows.length > 0 &&
+        selectedVisibleRows.length < visibleRows.length
       )
     }
 
