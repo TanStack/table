@@ -26,6 +26,8 @@ export function getSortedRowModel<TData extends RowData>(): (
           string,
           {
             sortUndefined?: false | -1 | 1 | 'first' | 'last'
+            sortEmpty?: false | 'first' | 'last'
+            isEmptyValue?: (value: unknown) => boolean
             invertSorting?: boolean
             sortingFn: SortingFn<TData>
           }
@@ -37,6 +39,8 @@ export function getSortedRowModel<TData extends RowData>(): (
 
           columnInfoById[sortEntry.id] = {
             sortUndefined: column.columnDef.sortUndefined,
+            sortEmpty: column.columnDef.sortEmpty,
+            isEmptyValue: column.columnDef.isEmptyValue ?? ((value: unknown) => value == null || value === ''),
             invertSorting: column.columnDef.invertSorting,
             sortingFn: column.getSortingFn(),
           }
@@ -52,12 +56,35 @@ export function getSortedRowModel<TData extends RowData>(): (
               const sortEntry = availableSorting[i]!
               const columnInfo = columnInfoById[sortEntry.id]!
               const sortUndefined = columnInfo.sortUndefined
+              const sortEmpty = columnInfo.sortEmpty
+              const isEmptyValue = columnInfo.isEmptyValue!
               const isDesc = sortEntry?.desc ?? false
 
               let sortInt = 0
 
-              // All sorting ints should always return in ascending order
-              if (sortUndefined) {
+              // Handle sortEmpty option first (takes precedence over sortUndefined)
+              if (sortEmpty) {
+                const aValue = rowA.getValue(sortEntry.id)
+                const bValue = rowB.getValue(sortEntry.id)
+
+                const aIsEmpty = isEmptyValue(aValue)
+                const bIsEmpty = isEmptyValue(bValue)
+
+                if (aIsEmpty && bIsEmpty) {
+                  continue // Both empty, check next sort column
+                }
+
+                if (aIsEmpty || bIsEmpty) {
+                  // Determine position based on sortEmpty setting
+                  const emptyPosition = sortEmpty === 'last' ? 1 : -1
+                  sortInt = aIsEmpty ? emptyPosition : -emptyPosition
+                  
+                  // Return immediately - empty values maintain their position regardless of desc
+                  return sortInt
+                }
+              }
+              // Backward compatibility: handle sortUndefined if sortEmpty not set
+              else if (sortUndefined) {
                 const aValue = rowA.getValue(sortEntry.id)
                 const bValue = rowB.getValue(sortEntry.id)
 
