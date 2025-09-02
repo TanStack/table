@@ -139,6 +139,8 @@ sortUndefined?: 'first' | 'last' | false | -1 | 1 // defaults to 1
 
 > NOTE: `'first'` and `'last'` options are new in v8.16.0
 
+> NOTE: `sortUndefined` only affects undefined values, not null. For handling both null and undefined values (Excel-like sorting), see the [Excel-like Sorting Guide](../guide/excel-like-sorting.md).
+
 ## Column API
 
 ### `getAutoSortingFn`
