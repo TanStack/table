@@ -43,7 +43,7 @@ importers:
         version: 11.1.2(size-limit@11.1.2)
       '@tanstack/config':
         specifier: ^0.6.0
-        version: 0.6.0(@types/node@20.11.30)(esbuild@0.20.2)(rollup@4.13.0)(typescript@5.4.3)(vite@5.4.19)
+        version: 0.6.0(@types/node@20.11.30)(esbuild@0.25.4)(rollup@4.13.0)(typescript@5.4.3)(vite@5.4.19)
       '@testing-library/jest-dom':
         specifier: ^6.4.2
         version: 6.4.2(vitest@1.4.0)
@@ -82,7 +82,7 @@ importers:
         version: 4.0.0-alpha.8
       prettier-plugin-svelte:
         specifier: ^3.2.2
-        version: 3.2.2(prettier@4.0.0-alpha.8)(svelte@3.59.2)
+        version: 3.2.2(prettier@4.0.0-alpha.8)(svelte@4.2.20)
       rimraf:
         specifier: ^5.0.5
         version: 5.0.5
@@ -94,7 +94,7 @@ importers:
         version: 0.3.1
       rollup-plugin-svelte:
         specifier: ^7.2.0
-        version: 7.2.0(rollup@4.13.0)(svelte@3.59.2)
+        version: 7.2.0(rollup@4.13.0)(svelte@4.2.20)
       rollup-plugin-visualizer:
         specifier: ^5.12.0
         version: 5.12.0(rollup@4.13.0)
@@ -1853,6 +1853,40 @@ importers:
         specifier: ^5.3.2
         version: 5.4.19(@types/node@20.11.30)(less@4.2.0)(sass@1.71.1)(terser@5.29.1)
 
+  examples/react/excel-sorting:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: link:../../../packages/react-table
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^5.0.7
+        version: 5.0.7(rollup@4.13.0)
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.22
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.22)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.1
+        version: 4.5.0(vite@5.4.19)
+      typescript:
+        specifier: 5.4.5
+        version: 5.4.5
+      vite:
+        specifier: ^5.3.2
+        version: 5.4.19(@types/node@20.11.30)(less@4.2.0)(sass@1.71.1)(terser@5.29.1)
+
   examples/react/expanding:
     dependencies:
       '@faker-js/faker':
@@ -2160,7 +2194,7 @@ importers:
         version: 11.11.0
       '@emotion/babel-plugin-jsx-pragmatic':
         specifier: ^0.2.1
-        version: 0.2.1(@babel/core@7.24.3)
+        version: 0.2.1(@babel/core@7.27.1)
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
@@ -3728,7 +3762,7 @@ packages:
       typescript: 5.4.5
       vite: 5.4.19(@types/node@20.11.30)(less@4.2.0)(sass@1.71.1)(terser@5.29.1)
       watchpack: 2.4.0
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
       webpack-dev-middleware: 6.1.2(webpack@5.94.0)
       webpack-dev-server: 4.15.1(webpack@5.94.0)
       webpack-merge: 5.10.0
@@ -3764,7 +3798,7 @@ packages:
     dependencies:
       '@angular-devkit/architect': 0.1703.17
       rxjs: 7.8.1
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
       webpack-dev-server: 4.15.1(webpack@5.94.0)
     transitivePeerDependencies:
       - chokidar
@@ -4879,6 +4913,16 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.24.3
+      '@babel/helper-plugin-utils': 7.24.0
+    dev: true
+
+  /@babel/plugin-syntax-jsx@7.24.1(@babel/core@7.27.1):
+    resolution: {integrity: sha512-2eCtxZXf+kbkMIsXS4poTvT4Yu5rXiRa+9xGVT56raghjmBTKMpFNc9R4IDiB4emao9eO22Ox7CxuJG7BgExqA==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.27.1
       '@babel/helper-plugin-utils': 7.24.0
     dev: true
 
@@ -6629,13 +6673,13 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@emotion/babel-plugin-jsx-pragmatic@0.2.1(@babel/core@7.24.3):
+  /@emotion/babel-plugin-jsx-pragmatic@0.2.1(@babel/core@7.27.1):
     resolution: {integrity: sha512-xy1SlgEJygAAIvIuC2idkGKJYa6v5iwoyILkvNKgk347bV+IImXrUat5Z86EmLGyWhEoTplVT9EHqTnHZG4HFw==}
     peerDependencies:
       '@babel/core': ^7.0.0
     dependencies:
-      '@babel/core': 7.24.3
-      '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.24.3)
+      '@babel/core': 7.27.1
+      '@babel/plugin-syntax-jsx': 7.24.1(@babel/core@7.27.1)
     dev: true
 
   /@emotion/babel-plugin@11.11.0:
@@ -8174,7 +8218,7 @@ packages:
     dependencies:
       '@angular/compiler-cli': 17.3.12(@angular/compiler@17.3.12)(typescript@5.4.5)
       typescript: 5.4.5
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /@nodelib/fs.scandir@2.1.5:
@@ -8819,7 +8863,7 @@ packages:
       rollup: 4.13.0
     dev: true
 
-  /@rollup/plugin-json@6.1.0(rollup@4.13.0):
+  /@rollup/plugin-json@6.1.0(rollup@4.41.1):
     resolution: {integrity: sha512-EGI2te5ENk1coGeADSIwZ7G2Q8CJS2sF120T7jLw4xFw9n7wIOXHo+kIYRAoVpJAN+kmqZSoO3Fp4JtoNF4ReA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -8828,8 +8872,8 @@ packages:
       rollup:
         optional: true
     dependencies:
-      '@rollup/pluginutils': 5.1.0(rollup@4.13.0)
-      rollup: 4.13.0
+      '@rollup/pluginutils': 5.1.0(rollup@4.41.1)
+      rollup: 4.41.1
     dev: true
 
   /@rollup/plugin-node-resolve@15.2.3(rollup@4.13.0):
@@ -8848,6 +8892,24 @@ packages:
       is-module: 1.0.0
       resolve: 1.22.8
       rollup: 4.13.0
+    dev: true
+
+  /@rollup/plugin-node-resolve@15.2.3(rollup@4.41.1):
+    resolution: {integrity: sha512-j/lym8nf5E21LwBT4Df1VD6hRO2L2iwUeUmP7litikRsVp1H6NWx20NEp0Y7su+7XGc476GnXXc4kFeZNGmaSQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.78.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': 5.1.0(rollup@4.41.1)
+      '@types/resolve': 1.20.2
+      deepmerge: 4.3.1
+      is-builtin-module: 3.2.1
+      is-module: 1.0.0
+      resolve: 1.22.8
+      rollup: 4.41.1
     dev: true
 
   /@rollup/plugin-replace@5.0.5(rollup@4.13.0):
@@ -8914,6 +8976,21 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
       rollup: 4.13.0
+    dev: true
+
+  /@rollup/pluginutils@5.1.0(rollup@4.41.1):
+    resolution: {integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@types/estree': 1.0.7
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+      rollup: 4.41.1
     dev: true
 
   /@rollup/rollup-android-arm-eabi@4.13.0:
@@ -9388,7 +9465,7 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tanstack/config@0.6.0(@types/node@20.11.30)(esbuild@0.20.2)(rollup@4.13.0)(typescript@5.4.3)(vite@5.4.19):
+  /@tanstack/config@0.6.0(@types/node@20.11.30)(esbuild@0.25.4)(rollup@4.13.0)(typescript@5.4.3)(vite@5.4.19):
     resolution: {integrity: sha512-ndVPsyXWZFz3RcpRF7q5L4Ol5zY+m1H2lAiufw+J4BrV09042PETU2OZAREYz88ZcLtu6p+LZAHKltmqrL8gDg==}
     engines: {node: '>=18'}
     hasBin: true
@@ -9398,7 +9475,7 @@ packages:
       chalk: 5.3.0
       commander: 12.0.0
       current-git-branch: 1.1.0
-      esbuild-register: 3.5.0(esbuild@0.20.2)
+      esbuild-register: 3.5.0(esbuild@0.25.4)
       git-log-parser: 1.2.0
       interpret: 3.1.1
       jsonfile: 6.1.0
@@ -9792,11 +9869,11 @@ packages:
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
     dependencies:
-      '@babel/parser': 7.24.1
-      '@babel/types': 7.24.0
+      '@babel/parser': 7.27.2
+      '@babel/types': 7.27.1
       '@types/babel__generator': 7.6.8
       '@types/babel__template': 7.4.4
-      '@types/babel__traverse': 7.20.5
+      '@types/babel__traverse': 7.20.7
     dev: true
 
   /@types/babel__generator@7.6.8:
@@ -9809,12 +9886,6 @@ packages:
     resolution: {integrity: sha512-h/NUaSyG5EyxBIp8YRxo4RMe2/qQgvyowRwVMzhYhBCONbW8PUsg4lkFMrhgZhUe5z3L3MiLDuvyJ/CaPa2A8A==}
     dependencies:
       '@babel/parser': 7.24.1
-      '@babel/types': 7.24.0
-    dev: true
-
-  /@types/babel__traverse@7.20.5:
-    resolution: {integrity: sha512-WXCyOcRtH37HAUkpXhUduaxdm82b4GSlyTqajXviN4EfiuPgNYR109xMCKvpl6zPIpua0DGlMEDCq+g8EdoheQ==}
-    dependencies:
       '@babel/types': 7.24.0
     dev: true
 
@@ -10137,7 +10208,7 @@ packages:
   /@vitest/snapshot@1.4.0:
     resolution: {integrity: sha512-saAFnt5pPIA5qDGxOHxJ/XxhMFKkUSBJmVt5VgDsAqPTX6JP326r5C/c9UuCMPoXNzuudTPsYDZCoJ5ilpqG2A==}
     dependencies:
-      magic-string: 0.30.8
+      magic-string: 0.30.17
       pathe: 1.1.2
       pretty-format: 29.7.0
     dev: true
@@ -10145,7 +10216,7 @@ packages:
   /@vitest/snapshot@1.6.1:
     resolution: {integrity: sha512-WvidQuWAzU2p95u8GAKlRMqMyN1yOJkGHnx3M1PL9Raf7AQ1kwLKg04ADlCa3+OXUZE7BceOhVZiuWAbzCKcUQ==}
     dependencies:
-      magic-string: 0.30.8
+      magic-string: 0.30.17
       pathe: 1.1.2
       pretty-format: 29.7.0
     dev: true
@@ -10939,7 +11010,7 @@ packages:
       '@babel/core': 7.26.10
       find-cache-dir: 4.0.0
       schema-utils: 4.3.2
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /babel-plugin-add-module-exports@0.2.1:
@@ -11754,7 +11825,7 @@ packages:
       normalize-path: 3.0.0
       schema-utils: 4.3.2
       serialize-javascript: 6.0.2
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /core-js-compat@3.36.1:
@@ -11865,7 +11936,7 @@ packages:
       postcss-modules-values: 4.0.0(postcss@8.4.38)
       postcss-value-parser: 4.2.0
       semver: 7.6.0
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /css-select@5.1.0:
@@ -12426,13 +12497,13 @@ packages:
     resolution: {integrity: sha512-SOp9Phqvqn7jtEUxPWdWfWoLmyt2VaJ6MpvP9Comy1MceMXqE6bxvaTu4iaxpYYPzhny28Lc+M87/c2cPK6lDg==}
     dev: true
 
-  /esbuild-register@3.5.0(esbuild@0.20.2):
+  /esbuild-register@3.5.0(esbuild@0.25.4):
     resolution: {integrity: sha512-+4G/XmakeBAsvJuDugJvtyF1x+XJT4FMocynNpxrvEBViirpfUn2PgNpCHedfWhF4WokNsO/OvMKrmJOIJsI5A==}
     peerDependencies:
       esbuild: '>=0.12 <1'
     dependencies:
       debug: 4.3.4
-      esbuild: 0.20.2
+      esbuild: 0.25.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -14486,7 +14557,7 @@ packages:
     dependencies:
       klona: 2.0.6
       less: 4.2.0
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /less@4.2.0:
@@ -14535,7 +14606,7 @@ packages:
       webpack-sources:
         optional: true
     dependencies:
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
       webpack-sources: 3.3.0
     dev: true
 
@@ -14978,7 +15049,7 @@ packages:
     dependencies:
       schema-utils: 4.3.2
       tapable: 2.2.2
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /minimalistic-assert@1.0.1:
@@ -15232,8 +15303,8 @@ packages:
         optional: true
     dependencies:
       '@angular/compiler-cli': 17.3.12(@angular/compiler@17.3.12)(typescript@5.4.5)
-      '@rollup/plugin-json': 6.1.0(rollup@4.13.0)
-      '@rollup/plugin-node-resolve': 15.2.3(rollup@4.13.0)
+      '@rollup/plugin-json': 6.1.0(rollup@4.41.1)
+      '@rollup/plugin-node-resolve': 15.2.3(rollup@4.41.1)
       '@rollup/wasm-node': 4.41.1
       ajv: 8.17.1
       ansi-colors: 4.1.3
@@ -15258,7 +15329,7 @@ packages:
       typescript: 5.4.5
     optionalDependencies:
       esbuild: 0.20.2
-      rollup: 4.13.0
+      rollup: 4.41.1
     dev: true
 
   /nice-napi@1.0.2:
@@ -16053,7 +16124,7 @@ packages:
       jiti: 1.21.0
       postcss: 8.4.35
       semver: 7.6.0
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     transitivePeerDependencies:
       - typescript
     dev: true
@@ -16141,14 +16212,14 @@ packages:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  /prettier-plugin-svelte@3.2.2(prettier@4.0.0-alpha.8)(svelte@3.59.2):
+  /prettier-plugin-svelte@3.2.2(prettier@4.0.0-alpha.8)(svelte@4.2.20):
     resolution: {integrity: sha512-ZzzE/wMuf48/1+Lf2Ffko0uDa6pyCfgHV6+uAhtg2U0AAXGrhCSW88vEJNAkAxW5qyrFY1y1zZ4J8TgHrjW++Q==}
     peerDependencies:
       prettier: ^3.0.0
       svelte: ^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0
     dependencies:
       prettier: 4.0.0-alpha.8
-      svelte: 3.59.2
+      svelte: 4.2.20
     dev: true
 
   /prettier@3.5.3:
@@ -16747,7 +16818,7 @@ packages:
       rollup: 2.x || 3.x || 4.x
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.13.0)
-      magic-string: 0.30.8
+      magic-string: 0.30.17
       rollup: 4.13.0
     dev: true
 
@@ -16766,7 +16837,7 @@ packages:
       - debug
     dev: true
 
-  /rollup-plugin-svelte@7.2.0(rollup@4.13.0)(svelte@3.59.2):
+  /rollup-plugin-svelte@7.2.0(rollup@4.13.0)(svelte@4.2.20):
     resolution: {integrity: sha512-Qvo5VNFQZtaI+sHSjcCIFDP+olfKVyslAoJIkL3DxuhUpNY5Ys0+hhxUY3kuEKt9BXFgkFJiiic/XRb07zdSbg==}
     engines: {node: '>=10'}
     peerDependencies:
@@ -16776,7 +16847,7 @@ packages:
       '@rollup/pluginutils': 4.2.1
       resolve.exports: 2.0.2
       rollup: 4.13.0
-      svelte: 3.59.2
+      svelte: 4.2.20
     dev: true
 
   /rollup-plugin-visualizer@5.12.0(rollup@4.13.0):
@@ -16935,7 +17006,7 @@ packages:
     dependencies:
       neo-async: 2.6.2
       sass: 1.71.1
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /sass@1.71.1:
@@ -17463,7 +17534,7 @@ packages:
     resolution: {integrity: sha512-J69LQ22xrQB1cIFJhPfgtLuI6BpWRiWu1Y3vSsIwK/eAScqJxd/+CJlUuHQRdX2C9NGFamq+KqNywGgaThwfHw==}
     hasBin: true
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.15
+      '@jridgewell/sourcemap-codec': 1.5.0
       buffer-crc32: 0.2.13
       minimist: 1.2.8
       sander: 0.5.1
@@ -17486,7 +17557,7 @@ packages:
     dependencies:
       iconv-lite: 0.6.3
       source-map-js: 1.2.0
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /source-map-support@0.5.21:
@@ -17886,7 +17957,7 @@ packages:
       '@babel/core': 7.24.3
       '@types/pug': 2.0.10
       detect-indent: 6.1.0
-      magic-string: 0.30.8
+      magic-string: 0.30.17
       sorcery: 0.11.0
       strip-indent: 3.0.0
       svelte: 4.2.20
@@ -17955,7 +18026,7 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /terser-webpack-plugin@5.3.14(esbuild@0.20.2)(webpack@5.94.0):
+  /terser-webpack-plugin@5.3.14(esbuild@0.25.4)(webpack@5.94.0):
     resolution: {integrity: sha512-vkZjpUjb6OMS7dhV+tILUW6BhpDR7P2L/aQSAv+Uwk+m8KATX9EccViHTJR2qDtACKPIYndLGCyl3FMo+r2LMw==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -17972,12 +18043,12 @@ packages:
         optional: true
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
-      esbuild: 0.20.2
+      esbuild: 0.25.4
       jest-worker: 27.5.1
       schema-utils: 4.3.2
       serialize-javascript: 6.0.2
       terser: 5.39.2
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /terser@5.29.1:
@@ -19075,7 +19146,7 @@ packages:
       mime-types: 2.1.35
       range-parser: 1.2.1
       schema-utils: 4.3.2
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /webpack-dev-middleware@6.1.2(webpack@5.94.0):
@@ -19092,7 +19163,7 @@ packages:
       mime-types: 2.1.35
       range-parser: 1.2.1
       schema-utils: 4.3.2
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /webpack-dev-server@4.15.1(webpack@5.94.0):
@@ -19136,7 +19207,7 @@ packages:
       serve-index: 1.9.1
       sockjs: 0.3.24
       spdy: 4.0.2
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
       webpack-dev-middleware: 5.3.4(webpack@5.94.0)
       ws: 8.16.0
     transitivePeerDependencies:
@@ -19171,14 +19242,14 @@ packages:
         optional: true
     dependencies:
       typed-assert: 1.0.9
-      webpack: 5.94.0(esbuild@0.20.2)
+      webpack: 5.94.0(esbuild@0.25.4)
     dev: true
 
   /webpack-virtual-modules@0.6.2:
     resolution: {integrity: sha512-66/V2i5hQanC51vBQKPH4aI8NMAcBW59FVBs+rC7eGHupMyfn34q7rZIE+ETlJ+XTevqfUhVVBgSUNSW2flEUQ==}
     dev: true
 
-  /webpack@5.94.0(esbuild@0.20.2):
+  /webpack@5.94.0(esbuild@0.25.4):
     resolution: {integrity: sha512-KcsGn50VT+06JH/iunZJedYGUJS5FGjow8wb9c0v5n1Om8O1g4L6LjtfxwlXIATopoQu+vOXXa7gYisWxCoPyg==}
     engines: {node: '>=10.13.0'}
     hasBin: true
@@ -19208,7 +19279,7 @@ packages:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.2
-      terser-webpack-plugin: 5.3.14(esbuild@0.20.2)(webpack@5.94.0)
+      terser-webpack-plugin: 5.3.14(esbuild@0.25.4)(webpack@5.94.0)
       watchpack: 2.4.4
       webpack-sources: 3.3.0
     transitivePeerDependencies:
