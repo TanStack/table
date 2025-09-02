@@ -62,7 +62,6 @@ export function getSortedRowModel<TData extends RowData>(): (
 
               let sortInt = 0
 
-              // Handle sortEmpty option first (takes precedence over sortUndefined)
               if (sortEmpty) {
                 const aValue = rowA.getValue(sortEntry.id)
                 const bValue = rowB.getValue(sortEntry.id)
@@ -75,11 +74,8 @@ export function getSortedRowModel<TData extends RowData>(): (
                 }
 
                 if (aIsEmpty || bIsEmpty) {
-                  // Determine position based on sortEmpty setting
                   const emptyPosition = sortEmpty === 'last' ? 1 : -1
                   sortInt = aIsEmpty ? emptyPosition : -emptyPosition
-                  
-                  // Return immediately - empty values maintain their position regardless of desc
                   return sortInt
                 }
               }

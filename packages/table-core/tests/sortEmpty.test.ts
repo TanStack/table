@@ -223,7 +223,6 @@ describe('sortEmpty option', () => {
       columnHelper.accessor('price', {
         header: 'Price',
         sortEmpty: 'last',
-        // No custom isEmptyValue - should use default
       }),
     ]
 
