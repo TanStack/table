@@ -230,7 +230,7 @@ describe('sortEmpty option', () => {
     it('should use default isEmptyValue function (null, undefined, empty string)', () => {
       const dataWithEmptyString = [
         ...testData,
-        { id: 6, name: 'Product F', price: '' as any, description: 'Description F' },
+        { id: 6, name: 'Product F', price: '' as unknown as number, description: 'Description F' },
       ]
 
       const table = createTable({

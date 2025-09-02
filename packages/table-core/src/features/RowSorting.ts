@@ -330,9 +330,9 @@ export const RowSorting: TableFeature = {
     if (column.columnDef.sortUndefined && !column.columnDef.sortEmpty) {
       if (process.env.NODE_ENV !== 'production') {
         console.warn(
-          `[TanStack Table] sortUndefined is deprecated. ` +
-          `Please use sortEmpty instead for more comprehensive empty value handling. ` +
-          `Column: ${column.id}`
+          '[TanStack Table] sortUndefined is deprecated. ' +
+            'Please use sortEmpty instead for more comprehensive empty value handling. ' +
+            `Column: ${column.id}`
         )
       }
     }

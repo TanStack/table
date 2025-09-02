@@ -141,7 +141,7 @@ const columns = [
       !value || (typeof value === 'string' && value.trim() === ''),
     cell: info => {
       const value = info.getValue()
-      return value && value.trim() ? value : '(No description)'
+      return value?.trim() ? value : '(No description)'
     },
     size: 200,
   }),
@@ -200,6 +200,13 @@ function App() {
                     key={header.id}
                     style={{ width: header.getSize() }}
                     onClick={header.column.getToggleSortingHandler()}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        header.column.getToggleSortingHandler()?.(e)
+                      }
+                    }}
+                    tabIndex={header.column.getCanSort() ? 0 : -1}
                     className={header.column.getCanSort() ? 'sortable' : ''}
                   >
                     <div className="header-content">
