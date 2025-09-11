@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./media/header_table.png" >
+  <img src="./media/header_table.png" alt="TanStack Table">
 </div>
 
 A headless table library for building powerful datagrids with full control over markup, styles, and behavior.
@@ -61,13 +61,13 @@ A headless table library for building powerful datagrids with full control over 
 
 <div style="display: flex; flex-wrap: wrap; gap: 50px; justify-content: center; align-items: center;">
 
-  <a href="https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable" style="display: flex; align-items: center; border: none; margin-bottom: -20px;">
+  <a href="https://www.coderabbit.ai/?via=tanstack&dub_id=aCcEEdAOqqutX6OS" style="display: flex; align-items: center; border: none; margin-bottom: -20px;">
     <img src="https://tanstack.com/assets/coderabbit-light-DVMJ2jHi.svg" height="40" alt="Code Rabbit"/>
   </a>
     <a href="https://www.cloudflare.com?utm_source=tanstack">
      <img src="https://tanstack.com/assets/cloudflare-black-CPufaW0B.svg" height="60" alt="Cloudflare"/>
   </a>
-  <a href="https://www.coderabbit.ai/?via=tanstack&dub_id=aCcEEdAOqqutX6OS" style="display: flex; align-items: center; border: none;">
+  <a href="https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable" style="display: flex; align-items: center; border: none;">
     <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/partners/ag-grid.svg" height="40" alt="AG Grid"/>
   </a>
 </div>
