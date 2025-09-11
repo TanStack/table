@@ -106,6 +106,4 @@ A headless table library for building powerful datagrids with full control over 
   … and more at <a href="https://tanstack.com" style="font-weight: bold;">TanStack.com »</a>
 </div>
 
-
-
 <!-- USE THE FORCE LUKE -->
