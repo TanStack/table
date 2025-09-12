@@ -2,6 +2,8 @@
   <img src="./media/header_table.png" alt="TanStack Table">
 </div>
 
+# TanStack Table
+
 A headless table library for building powerful datagrids with full control over markup, styles, and behavior.
 
 - Framework‑agnostic core with bindings for React, Vue & Solid
@@ -84,7 +86,7 @@ A headless table library for building powerful datagrids with full control over 
     <p>
       We're looking for TanStack Table Partners to join our mission! Partner with us to push the boundaries of TanStack Table and build amazing things together.
     </p>
-    <a href="mailto:partners@tanstack.com?subject=TanStack TanStack Table Partnership" style="text-transform: uppercase; font-weight: bold;">Let's chat</a>
+    <a href="mailto:partners@tanstack.com?subject=TanStack Table Partnership" style="text-transform: uppercase; font-weight: bold;">Let's chat</a>
   </div>
 </div>
 
