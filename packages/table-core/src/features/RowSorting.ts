@@ -80,6 +80,7 @@ export interface SortingColumnDef<TData extends RowData> {
    */
   sortingFn?: SortingFnOption<TData>
   /**
+   * @deprecated Use `sortEmpty` for more comprehensive empty value handling
    * The priority of undefined values when sorting this column.
    * - `false`
    *   - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
@@ -91,6 +92,26 @@ export interface SortingColumnDef<TData extends RowData> {
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
    */
   sortUndefined?: false | -1 | 1 | 'first' | 'last'
+  /**
+   * Determines how empty values (null, undefined, empty string) are sorted
+   * - `false`
+   *   - Empty values are sorted normally
+   * - `'first'`
+   *   - Empty values are sorted to the top
+   * - `'last'`
+   *   - Empty values are sorted to the bottom
+   * @default false
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#sortempty)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
+   */
+  sortEmpty?: false | 'first' | 'last'
+  /**
+   * Custom function to determine if a value should be considered empty
+   * @default (value) => value == null || value === ''
+   * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting#isemptyvalue)
+   * @link [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
+   */
+  isEmptyValue?: (value: unknown) => boolean
 }
 
 export interface SortingColumn<TData extends RowData> {
@@ -305,6 +326,14 @@ export const RowSorting: TableFeature = {
     column: Column<TData, TValue>,
     table: Table<TData>
   ): void => {
+    if (column.columnDef.sortUndefined && !column.columnDef.sortEmpty) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn(
+          `[TanStack Table] sortUndefined is deprecated. Please use sortEmpty instead for more comprehensive empty value handling. Column: ${column.id}`
+        )
+      }
+    }
+
     column.getAutoSortingFn = () => {
       const firstRows = table.getFilteredRowModel().flatRows.slice(10)
 
