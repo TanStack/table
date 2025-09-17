@@ -24,16 +24,17 @@
   <a href="https://twitter.com/tan_stack"><img src="https://img.shields.io/twitter/follow/tan_stack.svg?style=social" alt="Follow @TanStack"/></a>
 </div>
 
-
 <div align="center">
 
 ### [Become a Sponsor!](https://github.com/sponsors/tannerlinsley/)
+
 </div>
 
 # TanStack Table
 
 > [!NOTE]
 > You may know TanStack Table by the adapter names:
+>
 > - [Angular Table](https://tanstack.com/table/v8/docs/framework/angular/angular-table)
 > - [Lit Table](https://tanstack.com/table/v8/docs/framework/lit/lit-table)
 > - [Qwik Table](https://tanstack.com/table/v8/docs/framework/qwik/qwik-table)
@@ -80,9 +81,6 @@ A headless table library for building powerful datagrids with full control over 
 </tr>
 </table>
 
-
-
-
 <div align="center">
 <img src="./media/partner_logo.svg" alt="Table & you?" height="65">
 <p>
@@ -90,8 +88,6 @@ We're looking for TanStack Table Partners to join our mission! Partner with us t
 </p>
 <a href="mailto:partners@tanstack.com?subject=TanStack Table Partnership"><b>LET'S CHAT</b></a>
 </div>
-
-
 
 ## Explore the TanStack Ecosystem
 
