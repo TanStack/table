@@ -24,8 +24,6 @@
   <a href="https://twitter.com/tan_stack"><img src="https://img.shields.io/twitter/follow/tan_stack.svg?style=social" alt="Follow @TanStack"/></a>
 </div>
 
-<div align="center">
-
 ### [Become a Sponsor!](https://github.com/sponsors/tannerlinsley/)
 
 </div>
@@ -62,23 +60,35 @@ A headless table library for building powerful datagrids with full control over 
 ## Partners
 
 <table align="center">
-<tr>
-<td>
-<a href="https://www.coderabbit.ai/?via=tanstack&dub_id=aCcEEdAOqqutX6OS">
-<img src="https://tanstack.com/assets/coderabbit-light-DVMJ2jHi.svg" height="40" padding="20px" alt="Code Rabbit"/>
-</a>
-</td>
-<td padding="20">
-<a href="https://www.cloudflare.com?utm_source=tanstack">
-<img src="https://tanstack.com/assets/cloudflare-black-CPufaW0B.svg" height="70" alt="Cloudflare"/>
-</a>
-</td>
-<td>
- <a href="https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable" style="display: flex; align-items: center; border: none;">
-    <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/partners/ag-grid.svg" height="40" alt="AG Grid"/>
-  </a>
-</td>
-</tr>
+  <tr>
+    <td>
+        <a href="https://www.coderabbit.ai/?via=tanstack&dub_id=aCcEEdAOqqutX6OS">
+			<picture>
+			  <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/coderabbit-dark-CMcuvjEy.svg" height="40" />
+			  <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/coderabbit-light-DVMJ2jHi.svg" height="40" />
+			  <img src="https://tanstack.com/assets/coderabbit-light-DVMJ2jHi.svg" height="40" alt="CodeRabbit" />
+			</picture>        
+		</a>
+    </td>
+    <td padding="20">
+      <a href="https://www.cloudflare.com?utm_source=tanstack">
+         <picture>
+		  <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/cloudflare-white-DQDB7UaL.svg" height="60" />
+		  <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/cloudflare-black-CPufaW0B.svg" height="60" />
+		  <img src="https://tanstack.com/assets/cloudflare-black-CPufaW0B.svg" height="60" alt="Cloudflare" />
+		</picture>
+      </a>
+    </td>
+    <td>
+     <a href="https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable" style="display: flex; align-items: center; border: none;">
+       <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./media/ag-grid-dark.svg" height="40" />
+        <source media="(prefers-color-scheme: light)" srcset="./media/ag-grid-light.svg" height="40" />
+        <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/partners/ag-grid.svg" height="60" alt="AG Grid" />
+      </picture>
+      </a>
+    </td>
+  </tr>
 </table>
 
 <div align="center">
