@@ -50,22 +50,25 @@ import { DeepKeys, DeepValue } from './utils'
 //   cell: info => info.getValue(),
 // })
 
+type AccessorValue<
+  TData,
+  TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
+> =
+  TAccessor extends AccessorFn<TData, infer TReturn>
+    ? TReturn
+    : TAccessor extends DeepKeys<TData>
+      ? DeepValue<TData, TAccessor>
+      : never
+
 export type ColumnHelper<TData extends RowData> = {
-  accessor: <
-    TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
-    TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
-      ? TReturn
-      : TAccessor extends DeepKeys<TData>
-        ? DeepValue<TData, TAccessor>
-        : never,
-  >(
+  accessor: <TAccessor extends AccessorFn<TData> | DeepKeys<TData>>(
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
-      ? DisplayColumnDef<TData, TValue>
-      : IdentifiedColumnDef<TData, TValue>
+      ? DisplayColumnDef<TData, AccessorValue<TData, TAccessor>>
+      : IdentifiedColumnDef<TData, AccessorValue<TData, TAccessor>>
   ) => TAccessor extends AccessorFn<TData>
-    ? AccessorFnColumnDef<TData, TValue>
-    : AccessorKeyColumnDef<TData, TValue>
+    ? AccessorFnColumnDef<TData, AccessorValue<TData, TAccessor>>
+    : AccessorKeyColumnDef<TData, AccessorValue<TData, TAccessor>>
   display: (column: DisplayColumnDef<TData>) => DisplayColumnDef<TData, unknown>
   group: (column: GroupColumnDef<TData>) => GroupColumnDef<TData, unknown>
 }
