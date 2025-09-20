@@ -22,7 +22,7 @@ export function getCoreRowModel<TData extends RowData>(): (
         }
 
         const accessRows = (
-          originalRows: TData[],
+          originalRows: readonly TData[],
           depth = 0,
           parentRow?: Row<TData>
         ): Row<TData>[] => {
