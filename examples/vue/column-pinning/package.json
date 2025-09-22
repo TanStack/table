@@ -1,6 +1,5 @@
 {
   "name": "tanstack-table-example-vue-column-pinning",
-  "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

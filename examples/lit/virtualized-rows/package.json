@@ -1,6 +1,5 @@
 {
   "name": "tanstack-lit-table-virtualized-rows",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",

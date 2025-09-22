@@ -1,7 +1,6 @@
 {
   "name": "tanstack-table-example-vue-filters",
   "private": true,
-  "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

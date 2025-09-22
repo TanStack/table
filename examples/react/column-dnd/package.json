@@ -1,6 +1,5 @@
 {
   "name": "tanstack-table-example-column-dnd",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",

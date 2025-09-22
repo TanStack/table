@@ -1,6 +1,5 @@
 {
   "name": "tanstack-table-example-vue-column-ordering",
-  "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

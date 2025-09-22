@@ -1,6 +1,5 @@
 {
   "name": "tanstack-table-example-angular-column-pinning",
-  "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
