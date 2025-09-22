@@ -35,7 +35,7 @@ jobs:
       - name: Stop Nx Agents
         if: ${{ always() }}
         run: npx nx-cloud stop-all-agents
-           - name: Run Changesets (version or publish)
+      - name: Run Changesets (version or publish)
         uses: changesets/action@v1.5.3
         with:
           version: pnpm run changeset:version
