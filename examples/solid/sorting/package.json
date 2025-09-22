@@ -1,6 +1,6 @@
 {
   "name": "tanstack-table-example-solid-sorting",
-  "description": "",
+  "private": true,
   "scripts": {
     "start": "vite",
     "dev": "vite",
