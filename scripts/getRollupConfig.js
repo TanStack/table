@@ -13,7 +13,7 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import svelte from 'rollup-plugin-svelte'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
-export const rootDir = resolve(__dirname, '..')
+const rootDir = resolve(__dirname, '..')
 
 /** @param {'development' | 'production'} type */
 const forceEnvPlugin = type =>
