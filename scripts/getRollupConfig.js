@@ -1,6 +1,7 @@
 // @ts-check
 
 import { resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { babel } from '@rollup/plugin-babel'
 import commonJS from '@rollup/plugin-commonjs'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -10,7 +11,9 @@ import size from 'rollup-plugin-size'
 import replace from '@rollup/plugin-replace'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import svelte from 'rollup-plugin-svelte'
-import { rootDir } from './config.js'
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url))
+const rootDir = resolve(__dirname, '..')
 
 /** @param {'development' | 'production'} type */
 const forceEnvPlugin = type =>

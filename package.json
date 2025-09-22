@@ -24,7 +24,9 @@
     "prettier": "prettier --ignore-unknown '**/*'",
     "prettier:write": "pnpm run prettier --write",
     "verify-links": "node scripts/verify-links.ts",
-    "cipublish": "node scripts/publish.js"
+    "changeset": "changeset",
+    "changeset:version": "changeset version && pnpm install --no-frozen-lockfile && pnpm prettier:write",
+    "changeset:publish": "changeset publish"
   },
   "nx": {
     "includedScripts": [
@@ -48,6 +50,7 @@
     "@babel/preset-env": "^7.24.7",
     "@babel/preset-react": "^7.24.7",
     "@babel/preset-typescript": "^7.24.7",
+    "@changesets/cli": "^2.29.7",
     "@faker-js/faker": "^8.4.1",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.1",
@@ -55,6 +58,7 @@
     "@rollup/plugin-replace": "^5.0.7",
     "@rollup/plugin-terser": "^0.4.4",
     "@size-limit/preset-small-lib": "^11.1.4",
+    "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "@tanstack/config": "^0.13.0",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
