@@ -166,10 +166,8 @@ export function getGroupedRowModel<TData extends RowData>(): (
         }
       },
       getMemoOptions(table.options, 'debugTable', 'getGroupedRowModel', () => {
-        table._queue(() => {
-          table._autoResetExpanded()
-          table._autoResetPageIndex()
-        })
+        table._autoResetExpanded()
+        table._autoResetPageIndex()
       })
     )
 }
