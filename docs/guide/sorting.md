@@ -284,7 +284,7 @@ const columns = [
 
 Any undefined values will be sorted to the beginning or end of the list based on the `sortUndefined` column option or table option. You can customize this behavior for your specific use-case.
 
-In not specified, the default value for `sortUndefined` is `1`, and undefined values will be sorted with lower priority (descending), if ascending, undefined will appear on the end of the list.
+If not specified, the default value for `sortUndefined` is `1`, and undefined values will be sorted with lower priority (descending), if ascending, undefined will appear on the end of the list.
 
 - `'first'` - Undefined values will be pushed to the beginning of the list
 - `'last'` - Undefined values will be pushed to the end of the list
