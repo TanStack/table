@@ -44,13 +44,22 @@ export function getPaginationRowModel<TData extends RowData>(opts?: {
 
         paginatedRowModel.flatRows = []
 
+        // keep track of the already added flatRows, to avoid duplication of already expanded sub-rows
+        const addedFlatRowsSet = new Set()
+
         const handleRow = (row: Row<TData>) => {
+          if (addedFlatRowsSet.has(row.id)) {
+            return
+          }
+
           paginatedRowModel.flatRows.push(row)
+          addedFlatRowsSet.add(row.id)
+
           if (row.subRows.length) {
             row.subRows.forEach(handleRow)
           }
         }
-
+        
         paginatedRowModel.rows.forEach(handleRow)
 
         return paginatedRowModel
