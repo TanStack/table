@@ -2,7 +2,7 @@
 title: Vue Table
 ---
 
-The `@tanstack/vue-table` adapter is a wrapper around the core table logic. Most of it's job is related to managing state the "vue" way, providing types and the rendering implementation of cell/header/footer templates.
+The `@tanstack/vue-table` adapter is a wrapper around the core table logic. Most of its job is related to managing state the "vue" way, providing types and the rendering implementation of cell/header/footer templates.
 
 ## Exports
 
