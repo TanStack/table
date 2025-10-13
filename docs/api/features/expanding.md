@@ -81,7 +81,7 @@ This function is called when the `expanded` table state changes. If a function i
 autoResetExpanded?: boolean
 ```
 
-Enable this setting to automatically reset the expanded state of the table when expanding state changes.
+Enable this setting to automatically reset the expanded state of the table when table state changes.
 
 ### `enableExpanding`
 
