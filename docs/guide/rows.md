@@ -24,7 +24,7 @@ const row = table.getRow(rowId)
 
 #### Row Models
 
-The `table` instance generates `row` objects and stores them in useful arrays called ["Row Models"](../row-models). This is discussed in much more detail in the [Row Models Guide](../row-models), but here are the most common ways you may access the row models.
+The `table` instance generates `row` objects and stores them in useful arrays called ["Row Models"](../../guide/row-models). This is discussed in much more detail in the [Row Models Guide](../../guide/row-models), but here are the most common ways you may access the row models.
 
 ##### Render Rows
 
@@ -85,7 +85,7 @@ const firstName = row.original.firstName // { firstName: 'John', lastName: 'Doe'
 
 ### Sub Rows
 
-If you are using either grouping or expanding features, your rows may contain sub-rows or parent row references. This is discussed in much more detail in the [Expanding Guide](../expanding), but here is a quick overview of useful properties and methods for working with sub-rows.
+If you are using either grouping or expanding features, your rows may contain sub-rows or parent row references. This is discussed in much more detail in the [Expanding Guide](../../guide/expanding), but here is a quick overview of useful properties and methods for working with sub-rows.
 
 - `row.subRows`: An array of sub-rows for the row.
 - `row.depth`: The depth of the row (if nested or grouped) relative to the root row array. 0 for root level rows, 1 for child rows, 2 for grandchild rows, etc.

@@ -18,7 +18,7 @@ export type Renderable<TProps> = React.ReactNode | React.ComponentType<TProps>
 export function flexRender<TProps extends object>(
   Comp: Renderable<TProps>,
   props: TProps
-): React.ReactNode | JSX.Element {
+): React.ReactNode | React.JSX.Element {
   return !Comp ? null : isReactComponent<TProps>(Comp) ? (
     <Comp {...props} />
   ) : (

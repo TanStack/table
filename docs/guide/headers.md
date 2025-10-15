@@ -14,7 +14,7 @@ Headers are the equivalent of cells, but meant for the `<thead>` section of the 
 
 ### Where to Get Headers From
 
-Headers come from [Header Groups](../header-groups), which are the equivalent of rows, but meant for the `<thead>` section of the table instead of the `<tbody>` section.
+Headers come from [Header Groups](../../guide/header-groups), which are the equivalent of rows, but meant for the `<thead>` section of the table instead of the `<tbody>` section.
 
 #### HeaderGroup Headers
 
@@ -42,7 +42,7 @@ There are multiple `table` instance APIs that you can use to retrieve a list of 
 
 ### Header Objects
 
-Header objects are similar to [Cell](../cells) objects, but meant for the `<thead>` section of the table instead of the `<tbody>` section. Every header object can be associated with a `<th>` or similar cell element in your UI. There are a few properties and methods on `header` objects that you can use to interact with the table state and extract cell values from the table based on the state of the table.
+Header objects are similar to [Cell](../../guide/cells) objects, but meant for the `<thead>` section of the table instead of the `<tbody>` section. Every header object can be associated with a `<th>` or similar cell element in your UI. There are a few properties and methods on `header` objects that you can use to interact with the table state and extract cell values from the table based on the state of the table.
 
 #### Header IDs
 
@@ -65,11 +65,11 @@ There are a few properties on `header` objects that are only useful if the heade
 
 #### Header Parent Objects
 
-Every header stores a reference to its parent [column](../columns) object and its parent [header group](../header-groups) object.
+Every header stores a reference to its parent [column](../../guide/columns) object and its parent [header group](../../guide/header-groups) object.
 
 ### More Header APIs
 
-Headers have a few more useful APIs attached to them that are useful for interacting with the table state. Most of them relate to the Column sizing and resizing features. See the [Column Resizing Guide](../column-resizing) for more information.
+Headers have a few more useful APIs attached to them that are useful for interacting with the table state. Most of them relate to the Column sizing and resizing features. See the [Column Sizing Guide](../../guide/column-sizing) for more information.
 
 ### Header Rendering
 

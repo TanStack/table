@@ -49,10 +49,10 @@ type Person = {
   id: number
   name: string
   age: number
-  children: Person[]
+  children?: Person[] | undefined
 }
 
-const data: Person =  [
+const data: Person[] =  [
   { id: 1, 
   name: 'John', 
   age: 30, 
@@ -211,7 +211,7 @@ const table = useReactTable({
 
 ### Pinning Expanded Rows
 
-Pinning expanded rows works the same way as pinning regular rows. You can pin expanded rows to the top or bottom of the table. Please refer to the [Pinning Guide](./pinning.md) for more information on row pinning.
+Pinning expanded rows works the same way as pinning regular rows. You can pin expanded rows to the top or bottom of the table. Please refer to the [Pinning Guide](../pinning.md) for more information on row pinning.
 
 ### Sorting Expanded Rows
 

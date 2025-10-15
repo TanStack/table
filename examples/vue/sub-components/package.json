@@ -1,7 +1,6 @@
 {
   "name": "tanstack-table-example-vue-subcomponents",
   "private": true,
-  "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,7 +10,7 @@
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "vue": "^3.4.31",
-    "@tanstack/vue-table": "^8.20.5"
+    "@tanstack/vue-table": "^8.21.3"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",
