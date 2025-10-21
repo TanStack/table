@@ -208,9 +208,7 @@ export const RowExpanding: TableFeature = {
         })
       }
     }
-    table.setExpanded = updater => {
-      return table.options.onExpandedChange?.(updater)
-    }
+    table.setExpanded = updater => table.options.onExpandedChange?.(updater)
     table.toggleAllRowsExpanded = expanded => {
       if (expanded ?? !table.getIsAllRowsExpanded()) {
         table.setExpanded(true)
