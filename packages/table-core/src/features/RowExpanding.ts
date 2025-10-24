@@ -311,8 +311,15 @@ export const RowExpanding: TableFeature = {
         }
 
         if (exists && !expanded) {
-          const { [row.id]: _, ...rest } = oldExpanded
-          return rest
+          const currentExpandedState = table.getState().expanded as ExpandedStateList;
+          const rowIds = Object.keys(currentExpandedState);
+          const updatedExpandedState = rowIds.reduce((acc, rowId) => {
+            if (!rowId.startsWith(row.id)) {
+              acc[rowId] = !!(currentExpandedState[rowId]);
+            }
+            return acc;
+          }, {} as ExpandedStateList);
+          return updatedExpandedState;
         }
 
         return old
