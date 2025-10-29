@@ -373,7 +373,11 @@ export const RowPagination: TableFeature = {
           table.options.getPaginationRowModel(table)
       }
 
-      if (table.options.manualPagination || !table._getPaginationRowModel) {
+      if (
+        table.options.manualPagination ||
+        !table._getPaginationRowModel ||
+        !table.options.getPaginationRowModel
+      ) {
         return table.getPrePaginationRowModel()
       }
 
