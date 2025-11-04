@@ -69,7 +69,8 @@ export function flexRender(component: any, props: any): ComponentType | null {
 type ReadableOrVal<T> = T | Readable<T>
 
 export function createSvelteTable<TData extends RowData>(
-  options: ReadableOrVal<TableOptions<TData>>
+  options: ReadableOrVal<TableOptions<TData>>,
+  existingTable?: import('@tanstack/table-core').Table<TData>
 ) {
   let optionsStore: Readable<TableOptions<TData>>
 
@@ -86,7 +87,7 @@ export function createSvelteTable<TData extends RowData>(
     ...get(optionsStore),
   }
 
-  let table = createTable(resolvedOptions)
+  let table = existingTable ?? createTable(resolvedOptions)
 
   let stateStore = writable(/** @type {number} */ table.initialState)
   // combine stores

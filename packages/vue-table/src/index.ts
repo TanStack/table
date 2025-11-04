@@ -51,7 +51,8 @@ function getOptionsWithReactiveData<TData extends RowData>(
 }
 
 export function useVueTable<TData extends RowData>(
-  initialOptions: TableOptionsWithReactiveData<TData>
+  initialOptions: TableOptionsWithReactiveData<TData>,
+  existingTable?: import('@tanstack/table-core').Table<TData>
 ) {
   const IS_REACTIVE = isRef(initialOptions.data)
 
@@ -75,9 +76,9 @@ export function useVueTable<TData extends RowData>(
     IS_REACTIVE ? getOptionsWithReactiveData(initialOptions) : initialOptions
   )
 
-  const table = createTable<TData>(
-    resolvedOptions as TableOptionsResolved<TData>
-  )
+  const table =
+    existingTable ??
+    createTable<TData>(resolvedOptions as TableOptionsResolved<TData>)
 
   // Add reactivity support
   if (IS_REACTIVE) {

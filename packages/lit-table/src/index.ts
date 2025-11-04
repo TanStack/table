@@ -36,7 +36,7 @@ export class TableController<TData extends RowData>
     ;(this.host = host).addController(this)
   }
 
-  public table(options: TableOptions<TData>) {
+  public table(options: TableOptions<TData>, existingTable?: Table<TData>) {
     if (!this.tableInstance) {
       const resolvedOptions: TableOptionsResolved<TData> = {
         state: {},
@@ -45,7 +45,7 @@ export class TableController<TData extends RowData>
         ...options,
       }
 
-      this.tableInstance = createTable(resolvedOptions)
+      this.tableInstance = existingTable ?? createTable(resolvedOptions)
       this._tableState = {
         ...this.tableInstance.initialState,
         ...options.state,

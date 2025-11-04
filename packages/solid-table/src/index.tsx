@@ -25,7 +25,8 @@ export function flexRender<TProps>(
 }
 
 export function createSolidTable<TData extends RowData>(
-  options: TableOptions<TData>
+  options: TableOptions<TData>,
+  existingTable?: import('@tanstack/table-core').Table<TData>
 ) {
   const resolvedOptions: TableOptionsResolved<TData> = mergeProps(
     {
@@ -42,7 +43,7 @@ export function createSolidTable<TData extends RowData>(
     options
   )
 
-  const table = createTable<TData>(resolvedOptions)
+  const table = existingTable ?? createTable<TData>(resolvedOptions)
   const [state, setState] = createStore(table.initialState)
 
   createComputed(() => {
