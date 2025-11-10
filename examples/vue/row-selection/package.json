@@ -1,7 +1,6 @@
 {
   "name": "tanstack-table-example-vue-row-selection",
   "private": true,
-  "version": "0.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -9,7 +8,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@tanstack/vue-table": "^8.20.5",
+    "@tanstack/vue-table": "^8.21.3",
     "vue": "^3.4.31"
   },
   "devDependencies": {

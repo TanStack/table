@@ -1,7 +1,6 @@
 {
   "name": "tanstack-table-example-solid-filters",
-  "version": "0.0.0",
-  "description": "",
+  "private": true,
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -17,7 +16,7 @@
   },
   "dependencies": {
     "@solid-primitives/scheduled": "^1.4.3",
-    "@tanstack/solid-table": "^8.20.5",
+    "@tanstack/solid-table": "^8.21.3",
     "solid-js": "^1.8.18"
   }
 }

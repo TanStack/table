@@ -1,7 +1,6 @@
 {
   "name": "tanstack-table-example-solid-bootstrap",
-  "version": "0.0.0",
-  "description": "",
+  "private": true,
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -16,7 +15,7 @@
     "vite-plugin-solid": "^2.10.2"
   },
   "dependencies": {
-    "@tanstack/solid-table": "^8.20.5",
+    "@tanstack/solid-table": "^8.21.3",
     "bootstrap": "^5.3.3",
     "solid-bootstrap": "^1.0.20",
     "solid-js": "^1.8.18"

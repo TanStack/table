@@ -1,7 +1,6 @@
 {
   "name": "tanstack-table-example-solid-column-groups",
-  "version": "0.0.0",
-  "description": "",
+  "private": true,
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -15,7 +14,7 @@
     "vite-plugin-solid": "^2.10.2"
   },
   "dependencies": {
-    "@tanstack/solid-table": "^8.20.5",
+    "@tanstack/solid-table": "^8.21.3",
     "solid-js": "^1.8.18"
   }
 }

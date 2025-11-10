@@ -21,9 +21,9 @@ By default, columns are ordered in the order they are defined in the `columns` a
 
 There are 3 table features that can reorder columns, which happen in the following order:
 
-1. [Column Pinning](../column-pinning) - If pinning, columns are split into left, center (unpinned), and right pinned columns.
+1. [Column Pinning](../../guide/column-pinning) - If pinning, columns are split into left, center (unpinned), and right pinned columns.
 2. Manual **Column Ordering** - A manually specified column order is applied.
-3. [Grouping](../grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
+3. [Grouping](../../guide/grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
 
 > **Note:** `columnOrder` state will only affect unpinned columns if used in conjunction with column pinning.
 
