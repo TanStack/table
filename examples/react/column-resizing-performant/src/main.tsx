@@ -190,7 +190,7 @@ function App() {
             ))}
           </div>
           {/* When resizing any column we will render this special memoized version of our table body */}
-          {table.getState().columnSizingInfo.isResizingColumn && enableMemo ? (
+          {enableMemo ? (
             <MemoizedTableBody table={table} />
           ) : (
             <TableBody table={table} />
@@ -243,9 +243,10 @@ function TableBody({ table }: { table: Table<Person> }) {
 }
 
 //special memoized wrapper for our table body that we will use during column resizing
-export const MemoizedTableBody = React.memo(
-  TableBody,
-  (prev, next) => prev.table.options.data === next.table.options.data
+export const MemoizedTableBody = React.memo(TableBody, (prev, next) =>
+  next.table.getState().columnSizingInfo.isResizingColumn
+    ? prev.table.options.data === next.table.options.data
+    : false
 ) as typeof TableBody
 
 const rootElement = document.getElementById('root')
