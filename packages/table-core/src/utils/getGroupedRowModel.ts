@@ -72,7 +72,7 @@ export function getGroupedRowModel<TData extends RowData>(): (
               })
 
               // Flatten the leaf rows of the rows in this group
-              const leafRows = depth
+              const leafRows = groupedRows.some((row) => row.subRows.length > 0)
                 ? flattenBy(groupedRows, row => row.subRows)
                 : groupedRows
 
