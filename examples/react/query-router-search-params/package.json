@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@tanstack/router-vite-plugin": "^1.43.1",
     "@rollup/plugin-replace": "^5.0.7",
+    "@tanstack/router-vite-plugin": "^1.43.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
