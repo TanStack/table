@@ -39,6 +39,7 @@ function filterRowModelFromLeafs<TData extends RowData>(
         row.parentId
       )
       newRow.columnFilters = row.columnFilters
+      newRow.columnFiltersMeta = row.columnFiltersMeta
 
       if (row.subRows?.length && depth < maxDepth) {
         newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
