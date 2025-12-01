@@ -294,8 +294,11 @@ export const RowExpanding: TableFeature = {
         let oldExpanded: ExpandedStateList = {}
 
         if (old === true) {
-          Object.keys(table.getRowModel().rowsById).forEach(rowId => {
-            oldExpanded[rowId] = true
+          const rowIds = table.getRowModel().rowsById
+          Object.keys(rowIds).forEach(rowId => {
+            if (rowIds[rowId]?.getCanExpand()) {
+              oldExpanded[rowId] = true
+            }
           })
         } else {
           oldExpanded = old
