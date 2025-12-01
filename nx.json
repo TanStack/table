@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "defaultBase": "main",
-  "nxCloudAccessToken": "OWExNzViODMtZjU4Ny00MTRmLTk3ZDYtMGY5YzlkOTRhZDQ2fHJlYWQtb25seQ==",
+  "nxCloudId": "6435ee4cd7387c45c0e4bf4c",
   "useInferencePlugins": false,
   "parallel": 5,
   "namedInputs": {
@@ -42,17 +42,17 @@
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true
     },
-    "test:knip": {
+    "test:docs": {
       "cache": true,
-      "inputs": ["{workspaceRoot}/**/*"]
+      "inputs": ["{workspaceRoot}/docs/**/*"]
     },
-    "test:format": {
+    "test:knip": {
       "cache": true,
       "inputs": ["{workspaceRoot}/**/*"]
     },
     "test:sherif": {
       "cache": true,
-      "inputs": ["{workspaceRoot}/**/*"]
+      "inputs": ["{workspaceRoot}/**/package.json"]
     }
   }
 }
