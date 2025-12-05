@@ -10,14 +10,14 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Grouping API](../../api/features/grouping.md)
+[Grouping API](../api/features/grouping.md)
 
 ## Grouping Guide
 
 There are 3 table features that can reorder columns, which happen in the following order:
 
-1. [Column Pinning](../column-pinning.md) - If pinning, columns are split into left, center (unpinned), and right pinned columns.
-2. Manual [Column Ordering](../column-ordering.md) - A manually specified column order is applied.
+1. [Column Pinning](./column-pinning.md) - If pinning, columns are split into left, center (unpinned), and right pinned columns.
+2. Manual [Column Ordering](./column-ordering.md) - A manually specified column order is applied.
 3. **Grouping** - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
 
 Grouping in TanStack table is a feature that applies to columns and allows you to categorize and organize the table rows based on specific columns. This can be useful in cases where you have a large amount of data and you want to group them together based on certain criteria.
