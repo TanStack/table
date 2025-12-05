@@ -62,7 +62,7 @@ function relativeLinkExists(link: string, file: string): boolean {
     // Transform /docs/framework/{framework}/examples/ to /examples/{framework}/
     absPath = absPath.replace(
       /\/docs\/framework\/([^/]+)\/examples\//,
-      '/examples/$1/',
+      '/examples/$1/'
     )
     // For examples, we want to check if the directory exists
     exists = existsSync(absPath) && statSync(absPath).isDirectory()
@@ -103,7 +103,7 @@ async function verifyMarkdownLinks() {
     })
 
     if (relativeLinks.length > 0) {
-      relativeLinks.forEach((link) => {
+      relativeLinks.forEach(link => {
         relativeLinkExists(link, file)
       })
     }
@@ -111,9 +111,9 @@ async function verifyMarkdownLinks() {
 
   if (errors.length > 0) {
     console.log(`\n❌ Found ${errors.length} broken links:`)
-    errors.forEach((err) => {
+    errors.forEach(err => {
       console.log(
-        `${err.file}\n  link:      ${err.link}\n  resolved:  ${err.resolvedPath}\n  why:       ${err.reason}\n`,
+        `${err.file}\n  link:      ${err.link}\n  resolved:  ${err.resolvedPath}\n  why:       ${err.reason}\n`
       )
     })
     process.exit(1)
