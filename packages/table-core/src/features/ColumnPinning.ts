@@ -1,3 +1,4 @@
+import { getRowProto } from '..'
 import {
   OnChangeFn,
   Updater,
@@ -9,6 +10,7 @@ import {
   TableFeature,
 } from '../types'
 import { getMemoOptions, makeStateUpdater, memo } from '../utils'
+import { RowPinningRow } from './RowPinning'
 
 export type ColumnPinningPosition = false | 'left' | 'right'
 
@@ -236,49 +238,6 @@ export const ColumnPinning: TableFeature = {
     }
   },
 
-  createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>
-  ): void => {
-    row.getCenterVisibleCells = memo(
-      () => [
-        row._getAllVisibleCells(),
-        table.getState().columnPinning.left,
-        table.getState().columnPinning.right,
-      ],
-      (allCells, left, right) => {
-        const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
-
-        return allCells.filter(d => !leftAndRight.includes(d.column.id))
-      },
-      getMemoOptions(table.options, 'debugRows', 'getCenterVisibleCells')
-    )
-    row.getLeftVisibleCells = memo(
-      () => [row._getAllVisibleCells(), table.getState().columnPinning.left],
-      (allCells, left) => {
-        const cells = (left ?? [])
-          .map(columnId => allCells.find(cell => cell.column.id === columnId)!)
-          .filter(Boolean)
-          .map(d => ({ ...d, position: 'left' }) as Cell<TData, unknown>)
-
-        return cells
-      },
-      getMemoOptions(table.options, 'debugRows', 'getLeftVisibleCells')
-    )
-    row.getRightVisibleCells = memo(
-      () => [row._getAllVisibleCells(), table.getState().columnPinning.right],
-      (allCells, right) => {
-        const cells = (right ?? [])
-          .map(columnId => allCells.find(cell => cell.column.id === columnId)!)
-          .filter(Boolean)
-          .map(d => ({ ...d, position: 'right' }) as Cell<TData, unknown>)
-
-        return cells
-      },
-      getMemoOptions(table.options, 'debugRows', 'getRightVisibleCells')
-    )
-  },
-
   createTable: <TData extends RowData>(table: Table<TData>): void => {
     table.setColumnPinning = updater =>
       table.options.onColumnPinningChange?.(updater)
@@ -332,5 +291,63 @@ export const ColumnPinning: TableFeature = {
       },
       getMemoOptions(table.options, 'debugColumns', 'getCenterLeafColumns')
     )
+
+    Object.assign(getRowProto(table), {
+      getCenterVisibleCells: memo(
+        function (this: Row<TData>) {
+          return [
+            this._getAllVisibleCells(),
+            table.getState().columnPinning.left,
+            table.getState().columnPinning.right,
+          ]
+        },
+        (allCells, left, right) => {
+          const leftAndRight: string[] = [...(left ?? []), ...(right ?? [])]
+
+          return allCells.filter(d => !leftAndRight.includes(d.column.id))
+        },
+        getMemoOptions(table.options, 'debugRows', 'getCenterVisibleCells')
+      ),
+
+      getLeftVisibleCells: memo(
+        function (this: Row<TData>) {
+          return [
+            this._getAllVisibleCells(),
+            table.getState().columnPinning.left,
+          ]
+        },
+        (allCells, left) => {
+          const cells = (left ?? [])
+            .map(
+              columnId => allCells.find(cell => cell.column.id === columnId)!
+            )
+            .filter(Boolean)
+            .map(d => ({ ...d, position: 'left' }) as Cell<TData, unknown>)
+
+          return cells
+        },
+        getMemoOptions(table.options, 'debugRows', 'getLeftVisibleCells')
+      ),
+
+      getRightVisibleCells: memo(
+        function (this: Row<TData>) {
+          return [
+            this._getAllVisibleCells(),
+            table.getState().columnPinning.right,
+          ]
+        },
+        (allCells, right) => {
+          const cells = (right ?? [])
+            .map(
+              columnId => allCells.find(cell => cell.column.id === columnId)!
+            )
+            .filter(Boolean)
+            .map(d => ({ ...d, position: 'right' }) as Cell<TData, unknown>)
+
+          return cells
+        },
+        getMemoOptions(table.options, 'debugRows', 'getRightVisibleCells')
+      ),
+    } as RowPinningRow & Row<any>)
   },
 }

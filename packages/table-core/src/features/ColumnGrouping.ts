@@ -1,4 +1,4 @@
-import { RowModel } from '..'
+import { getRowProto, RowModel } from '..'
 import { BuiltInAggregationFn, aggregationFns } from '../aggregationFns'
 import {
   AggregationFns,
@@ -353,31 +353,37 @@ export const ColumnGrouping: TableFeature = {
 
       return table._getGroupedRowModel()
     }
-  },
 
-  createRow: <TData extends RowData>(
-    row: Row<TData>,
-    table: Table<TData>
-  ): void => {
-    row.getIsGrouped = () => !!row.groupingColumnId
-    row.getGroupingValue = columnId => {
-      if (row._groupingValuesCache.hasOwnProperty(columnId)) {
-        return row._groupingValuesCache[columnId]
-      }
+    Object.defineProperty(getRowProto(table), '_groupingValuesCache', {
+      get() {
+        // Lazy-init the backing cache on the instance so we don't take up memory for rows that don't need it
+        return (this.__groupingValuesCache ??= {})
+      },
+      enumerable: true,
+    })
 
-      const column = table.getColumn(columnId)
+    Object.assign(getRowProto(table), {
+      getIsGrouped() {
+        return !!this.groupingColumnId
+      },
+      getGroupingValue(columnId) {
+        if (this._groupingValuesCache.hasOwnProperty(columnId)) {
+          return this._groupingValuesCache[columnId]
+        }
 
-      if (!column?.columnDef.getGroupingValue) {
-        return row.getValue(columnId)
-      }
+        const column = table.getColumn(columnId)
 
-      row._groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
-        row.original
-      )
+        if (!column?.columnDef.getGroupingValue) {
+          return this.getValue(columnId)
+        }
 
-      return row._groupingValuesCache[columnId]
-    }
-    row._groupingValuesCache = {}
+        this._groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
+          this.original
+        )
+
+        return this._groupingValuesCache[columnId]
+      },
+    } as GroupingRow & Row<any>)
   },
 
   createCell: <TData extends RowData, TValue>(
