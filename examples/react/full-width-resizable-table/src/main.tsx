@@ -13,30 +13,30 @@ import { makeData, Person } from './makeData'
 const columns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -44,17 +44,17 @@ const columns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -81,9 +81,9 @@ function App() {
       <div className="h-2" />
       <table className="w-full ">
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th
                     key={header.id}
@@ -94,7 +94,7 @@ function App() {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                     {header.column.getCanResize() && (
                       <div
@@ -112,15 +112,15 @@ function App() {
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => {
+                {row.getVisibleCells().map((cell) => {
                   return (
                     <td key={cell.id} style={{ width: cell.column.getSize() }}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   )
@@ -141,5 +141,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

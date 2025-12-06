@@ -205,7 +205,7 @@ export const RowSelection: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): RowSelectionOptions<TData> => {
     return {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
@@ -219,14 +219,14 @@ export const RowSelection: TableFeature = {
   },
 
   createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setRowSelection = updater =>
+    table.setRowSelection = (updater) =>
       table.options.onRowSelectionChange?.(updater)
-    table.resetRowSelection = defaultState =>
+    table.resetRowSelection = (defaultState) =>
       table.setRowSelection(
-        defaultState ? {} : table.initialState.rowSelection ?? {}
+        defaultState ? {} : (table.initialState.rowSelection ?? {}),
       )
-    table.toggleAllRowsSelected = value => {
-      table.setRowSelection(old => {
+    table.toggleAllRowsSelected = (value) => {
+      table.setRowSelection((old) => {
         value =
           typeof value !== 'undefined' ? value : !table.getIsAllRowsSelected()
 
@@ -237,14 +237,14 @@ export const RowSelection: TableFeature = {
         // We don't use `mutateRowIsSelected` here for performance reasons.
         // All of the rows are flat already, so it wouldn't be worth it
         if (value) {
-          preGroupedFlatRows.forEach(row => {
+          preGroupedFlatRows.forEach((row) => {
             if (!row.getCanSelect()) {
               return
             }
             rowSelection[row.id] = true
           })
         } else {
-          preGroupedFlatRows.forEach(row => {
+          preGroupedFlatRows.forEach((row) => {
             delete rowSelection[row.id]
           })
         }
@@ -252,8 +252,8 @@ export const RowSelection: TableFeature = {
         return rowSelection
       })
     }
-    table.toggleAllPageRowsSelected = value =>
-      table.setRowSelection(old => {
+    table.toggleAllPageRowsSelected = (value) =>
+      table.setRowSelection((old) => {
         const resolvedValue =
           typeof value !== 'undefined'
             ? value
@@ -261,7 +261,7 @@ export const RowSelection: TableFeature = {
 
         const rowSelection: RowSelectionState = { ...old }
 
-        table.getRowModel().rows.forEach(row => {
+        table.getRowModel().rows.forEach((row) => {
           mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
         })
 
@@ -340,7 +340,7 @@ export const RowSelection: TableFeature = {
 
         return selectRowsFn(table, rowModel)
       },
-      getMemoOptions(table.options, 'debugTable', 'getSelectedRowModel')
+      getMemoOptions(table.options, 'debugTable', 'getSelectedRowModel'),
     )
 
     table.getFilteredSelectedRowModel = memo(
@@ -356,7 +356,11 @@ export const RowSelection: TableFeature = {
 
         return selectRowsFn(table, rowModel)
       },
-      getMemoOptions(table.options, 'debugTable', 'getFilteredSelectedRowModel')
+      getMemoOptions(
+        table.options,
+        'debugTable',
+        'getFilteredSelectedRowModel',
+      ),
     )
 
     table.getGroupedSelectedRowModel = memo(
@@ -372,7 +376,7 @@ export const RowSelection: TableFeature = {
 
         return selectRowsFn(table, rowModel)
       },
-      getMemoOptions(table.options, 'debugTable', 'getGroupedSelectedRowModel')
+      getMemoOptions(table.options, 'debugTable', 'getGroupedSelectedRowModel'),
     )
 
     ///
@@ -396,13 +400,13 @@ export const RowSelection: TableFeature = {
       const { rowSelection } = table.getState()
 
       let isAllRowsSelected = Boolean(
-        preGroupedFlatRows.length && Object.keys(rowSelection).length
+        preGroupedFlatRows.length && Object.keys(rowSelection).length,
       )
 
       if (isAllRowsSelected) {
         if (
           preGroupedFlatRows.some(
-            row => row.getCanSelect() && !rowSelection[row.id]
+            (row) => row.getCanSelect() && !rowSelection[row.id],
           )
         ) {
           isAllRowsSelected = false
@@ -415,14 +419,14 @@ export const RowSelection: TableFeature = {
     table.getIsAllPageRowsSelected = () => {
       const paginationFlatRows = table
         .getPaginationRowModel()
-        .flatRows.filter(row => row.getCanSelect())
+        .flatRows.filter((row) => row.getCanSelect())
       const { rowSelection } = table.getState()
 
       let isAllPageRowsSelected = !!paginationFlatRows.length
 
       if (
         isAllPageRowsSelected &&
-        paginationFlatRows.some(row => !rowSelection[row.id])
+        paginationFlatRows.some((row) => !rowSelection[row.id])
       ) {
         isAllPageRowsSelected = false
       }
@@ -432,7 +436,7 @@ export const RowSelection: TableFeature = {
 
     table.getIsSomeRowsSelected = () => {
       const totalSelected = Object.keys(
-        table.getState().rowSelection ?? {}
+        table.getState().rowSelection ?? {},
       ).length
       return (
         totalSelected > 0 &&
@@ -445,14 +449,14 @@ export const RowSelection: TableFeature = {
       return table.getIsAllPageRowsSelected()
         ? false
         : paginationFlatRows
-            .filter(row => row.getCanSelect())
-            .some(d => d.getIsSelected() || d.getIsSomeSelected())
+            .filter((row) => row.getCanSelect())
+            .some((d) => d.getIsSelected() || d.getIsSomeSelected())
     }
 
     table.getToggleAllRowsSelectedHandler = () => {
       return (e: unknown) => {
         table.toggleAllRowsSelected(
-          ((e as MouseEvent).target as HTMLInputElement).checked
+          ((e as MouseEvent).target as HTMLInputElement).checked,
         )
       }
     }
@@ -460,7 +464,7 @@ export const RowSelection: TableFeature = {
     table.getToggleAllPageRowsSelectedHandler = () => {
       return (e: unknown) => {
         table.toggleAllPageRowsSelected(
-          ((e as MouseEvent).target as HTMLInputElement).checked
+          ((e as MouseEvent).target as HTMLInputElement).checked,
         )
       }
     }
@@ -468,12 +472,12 @@ export const RowSelection: TableFeature = {
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     row.toggleSelected = (value, opts) => {
       const isSelected = row.getIsSelected()
 
-      table.setRowSelection(old => {
+      table.setRowSelection((old) => {
         value = typeof value !== 'undefined' ? value : !isSelected
 
         if (row.getCanSelect() && isSelected === value) {
@@ -487,7 +491,7 @@ export const RowSelection: TableFeature = {
           row.id,
           value,
           opts?.selectChildren ?? true,
-          table
+          table,
         )
 
         return selectedRowIds
@@ -537,7 +541,7 @@ export const RowSelection: TableFeature = {
       return (e: unknown) => {
         if (!canSelect) return
         row.toggleSelected(
-          ((e as MouseEvent).target as HTMLInputElement)?.checked
+          ((e as MouseEvent).target as HTMLInputElement)?.checked,
         )
       }
     }
@@ -549,7 +553,7 @@ const mutateRowIsSelected = <TData extends RowData>(
   id: string,
   value: boolean,
   includeChildren: boolean,
-  table: Table<TData>
+  table: Table<TData>,
 ) => {
   const row = table.getRow(id, true)
 
@@ -561,7 +565,7 @@ const mutateRowIsSelected = <TData extends RowData>(
   // ) {
   if (value) {
     if (!row.getCanMultiSelect()) {
-      Object.keys(selectedRowIds).forEach(key => delete selectedRowIds[key])
+      Object.keys(selectedRowIds).forEach((key) => delete selectedRowIds[key])
     }
     if (row.getCanSelect()) {
       selectedRowIds[id] = true
@@ -572,15 +576,21 @@ const mutateRowIsSelected = <TData extends RowData>(
   // }
 
   if (includeChildren && row.subRows?.length && row.getCanSelectSubRows()) {
-    row.subRows.forEach(row =>
-      mutateRowIsSelected(selectedRowIds, row.id, value, includeChildren, table)
+    row.subRows.forEach((row) =>
+      mutateRowIsSelected(
+        selectedRowIds,
+        row.id,
+        value,
+        includeChildren,
+        table,
+      ),
     )
   }
 }
 
 export function selectRowsFn<TData extends RowData>(
   table: Table<TData>,
-  rowModel: RowModel<TData>
+  rowModel: RowModel<TData>,
 ): RowModel<TData> {
   const rowSelection = table.getState().rowSelection
 
@@ -590,7 +600,7 @@ export function selectRowsFn<TData extends RowData>(
   // Filters top level and nested rows
   const recurseRows = (rows: Row<TData>[], depth = 0): Row<TData>[] => {
     return rows
-      .map(row => {
+      .map((row) => {
         const isSelected = isRowSelected(row, rowSelection)
 
         if (isSelected) {
@@ -621,7 +631,7 @@ export function selectRowsFn<TData extends RowData>(
 
 export function isRowSelected<TData extends RowData>(
   row: Row<TData>,
-  selection: Record<string, boolean>
+  selection: Record<string, boolean>,
 ): boolean {
   return selection[row.id] ?? false
 }
@@ -629,14 +639,14 @@ export function isRowSelected<TData extends RowData>(
 export function isSubRowSelected<TData extends RowData>(
   row: Row<TData>,
   selection: Record<string, boolean>,
-  table: Table<TData>
+  table: Table<TData>,
 ): boolean | 'some' | 'all' {
   if (!row.subRows?.length) return false
 
   let allChildrenSelected = true
   let someSelected = false
 
-  row.subRows.forEach(subRow => {
+  row.subRows.forEach((subRow) => {
     // Bail out early if we know both of these
     if (someSelected && !allChildrenSelected) {
       return

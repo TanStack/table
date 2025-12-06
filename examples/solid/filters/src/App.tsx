@@ -17,30 +17,30 @@ import { createSignal, For } from 'solid-js'
 const columns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -48,17 +48,17 @@ const columns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -72,7 +72,7 @@ function App() {
   const [globalFilter, setGlobalFilter] = createSignal('')
   const debounceSetGlobalFilter = debounce(
     (value: string) => setGlobalFilter(value),
-    500
+    500,
   )
   const refreshData = () => setData(makeData(50000))
 
@@ -107,23 +107,23 @@ function App() {
       <input
         class="p-2 font-lg shadow border border-block"
         value={globalFilter() ?? ''}
-        onInput={e => debounceSetGlobalFilter(e.currentTarget.value)}
+        onInput={(e) => debounceSetGlobalFilter(e.currentTarget.value)}
         placeholder="Search all columns..."
       />
       <div className="h-2" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
-            {headerGroup => (
+            {(headerGroup) => (
               <tr>
                 <For each={headerGroup.headers}>
-                  {header => (
+                  {(header) => (
                     <th colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <>
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           {header.column.getCanFilter() ? (
                             <div>
@@ -144,14 +144,14 @@ function App() {
         </thead>
         <tbody>
           <For each={table.getRowModel().rows.slice(0, 10)}>
-            {row => (
+            {(row) => (
               <tr>
                 <For each={row.getVisibleCells()}>
-                  {cell => (
+                  {(cell) => (
                     <td>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   )}

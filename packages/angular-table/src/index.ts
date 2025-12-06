@@ -26,7 +26,7 @@ export {
 } from './flex-render/flex-render-component'
 
 export function createAngularTable<TData extends RowData>(
-  options: () => TableOptions<TData>
+  options: () => TableOptions<TData>,
 ): Table<TData> & Signal<Table<TData>> {
   return lazyInit(() => {
     const resolvedOptions = {
@@ -53,7 +53,7 @@ export function createAngularTable<TData extends RowData>(
         ...resolvedOptions,
         ...tableOptions,
         state: { ...tableState, ...tableOptions.state },
-        onStateChange: updater => {
+        onStateChange: (updater) => {
           const value =
             updater instanceof Function ? updater(tableState) : updater
           state.set(value)
@@ -70,7 +70,7 @@ export function createAngularTable<TData extends RowData>(
       },
       {
         equal: () => false,
-      }
+      },
     )
 
     // proxify Table instance to provide ability for consumer to listen to any table state changes

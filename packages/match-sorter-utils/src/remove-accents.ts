@@ -404,7 +404,7 @@ const chars = Object.keys(characterMap).join('|')
 const allAccents = new RegExp(chars, 'g')
 
 export function removeAccents(str: string) {
-  return str.replace(allAccents, match => {
+  return str.replace(allAccents, (match) => {
     return characterMap[match]!
   })
 }

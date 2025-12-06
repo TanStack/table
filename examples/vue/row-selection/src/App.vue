@@ -39,42 +39,42 @@ const columns = [
   },
   columnHelper.group({
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       columnHelper.accessor('firstName', {
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       }),
-      columnHelper.accessor(row => row.lastName, {
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => 'Last Name',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
     ],
   }),
   columnHelper.group({
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       columnHelper.accessor('age', {
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
       columnHelper.group({
         header: 'More Info',
         columns: [
           columnHelper.accessor('visits', {
             header: () => 'Visits',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('status', {
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('progress', {
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
         ],
       }),
@@ -101,7 +101,7 @@ const table = useVueTable({
   },
   enableRowSelection: true, //enable row selection for all rows
   // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-  onRowSelectionChange: updateOrValue => {
+  onRowSelectionChange: (updateOrValue) => {
     rowSelection.value =
       typeof updateOrValue === 'function'
         ? updateOrValue(rowSelection.value)

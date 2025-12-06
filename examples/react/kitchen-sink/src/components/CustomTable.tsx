@@ -13,7 +13,7 @@ type TableGroup = 'center' | 'left' | 'right'
 
 function getTableHeaderGroups<T extends RowData>(
   table: Table<T>,
-  tg?: TableGroup
+  tg?: TableGroup,
 ): [HeaderGroup<T>[], HeaderGroup<T>[]] {
   if (tg === 'left') {
     return [table.getLeftHeaderGroups(), table.getLeftFooterGroups()]
@@ -51,9 +51,9 @@ export function CustomTable<T extends RowData>({
   return (
     <table>
       <thead>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <tr key={headerGroup.id}>
-            {headerGroup.headers.map(header => (
+            {headerGroup.headers.map((header) => (
               <th
                 className="relative"
                 key={header.id}
@@ -80,7 +80,7 @@ export function CustomTable<T extends RowData>({
                       ) : null}{' '}
                       {flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}{' '}
                       <button
                         onClick={header.column.getToggleSortingHandler()}
@@ -120,9 +120,9 @@ export function CustomTable<T extends RowData>({
         ))}
       </thead>
       <tbody>
-        {table.getRowModel().rows.map(row => (
+        {table.getRowModel().rows.map((row) => (
           <tr key={row.id}>
-            {getRowGroup(row, tableGroup).map(cell => (
+            {getRowGroup(row, tableGroup).map((cell) => (
               <td
                 key={cell.id}
                 style={{
@@ -136,15 +136,15 @@ export function CustomTable<T extends RowData>({
         ))}
       </tbody>
       <tfoot>
-        {footerGroup.map(footerGroup => (
+        {footerGroup.map((footerGroup) => (
           <tr key={footerGroup.id}>
-            {footerGroup.headers.map(header => (
+            {footerGroup.headers.map((header) => (
               <th key={header.id} colSpan={header.colSpan}>
                 {header.isPlaceholder
                   ? null
                   : flexRender(
                       header.column.columnDef.footer,
-                      header.getContext()
+                      header.getContext(),
                     )}
               </th>
             ))}
