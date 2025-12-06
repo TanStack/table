@@ -3,7 +3,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/tanstack/table.git"
+    "url": "git+https://github.com/TanStack/table.git"
   },
   "packageManager": "pnpm@10.24.0",
   "type": "module",
