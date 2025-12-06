@@ -26,7 +26,8 @@ export {
 } from './flex-render/flex-render-component'
 
 export function createAngularTable<TData extends RowData>(
-  options: () => TableOptions<TData>
+  options: () => TableOptions<TData>,
+  existingTable?: Table<TData>
 ): Table<TData> & Signal<Table<TData>> {
   return lazyInit(() => {
     const resolvedOptions = {
@@ -36,7 +37,7 @@ export function createAngularTable<TData extends RowData>(
       ...options(),
     }
 
-    const table = createTable(resolvedOptions)
+    const table = existingTable ?? createTable(resolvedOptions)
 
     // By default, manage table state here using the table's initial state
     const state = signal<TableState>(table.initialState)

@@ -31,7 +31,8 @@ export function flexRender<TProps extends object>(
 }
 
 export function useQwikTable<TData extends RowData>(
-  options: TableOptions<TData>
+  options: TableOptions<TData>,
+  existingTable?: Table<TData>
 ) {
   // Compose in the generic options to the user options
   const resolvedOptions: TableOptionsResolved<TData> = {
@@ -41,32 +42,38 @@ export function useQwikTable<TData extends RowData>(
     ...options,
   }
 
-  // Create a new table instance and store it in a Qwik store
-  const table = Qwik.useStore<{
-    instance: Qwik.NoSerialize<Table<TData>>
+  // Create or reuse the table instance and store it.
+  const tableStore = Qwik.useStore<{
+    instance: Qwik.NoSerialize<Table<TData>> | null
   }>({
-    instance: Qwik.noSerialize(createTable(resolvedOptions)),
+    instance: null,
   })
 
+  if (!tableStore.instance) {
+    tableStore.instance = Qwik.noSerialize(
+      existingTable ?? createTable(resolvedOptions)
+    )
+  }
+
+  const table = tableStore.instance!
+
   // By default, manage table state here using the table's initial state
-  const state = Qwik.useSignal(table.instance!.initialState)
+  const state = Qwik.useSignal(table.initialState)
 
   // Compose the default state above with any user state. This will allow the user
   // to only control a subset of the state if desired.
-  table.instance!.setOptions(prev => ({
+  table.setOptions(prev => ({
     ...prev,
     ...options,
     state: {
       ...state.value,
       ...options.state,
     },
-    // Similarly, we'll maintain both our internal state and any user-provided
-    // state.
     onStateChange: updater => {
       state.value = updater instanceof Function ? updater(state.value) : updater
       options.onStateChange?.(updater)
     },
   }))
 
-  return table.instance!
+  return table
 }
