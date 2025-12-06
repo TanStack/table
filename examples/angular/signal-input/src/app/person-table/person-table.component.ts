@@ -28,13 +28,13 @@ export class PersonTableComponent {
     {
       accessorKey: 'firstName',
       header: 'First Name',
-      cell: info => info.getValue(),
+      cell: (info) => info.getValue(),
     },
     {
-      accessorFn: row => row.lastName,
+      accessorFn: (row) => row.lastName,
       id: 'lastName',
       header: () => `Last Name`,
-      cell: info => info.getValue(),
+      cell: (info) => info.getValue(),
     },
   ]
 
@@ -45,7 +45,7 @@ export class PersonTableComponent {
       state: {
         pagination: this.pagination(),
       },
-      onPaginationChange: updaterOrValue => {
+      onPaginationChange: (updaterOrValue) => {
         typeof updaterOrValue === 'function'
           ? this.pagination.update(updaterOrValue)
           : this.pagination.set(updaterOrValue)

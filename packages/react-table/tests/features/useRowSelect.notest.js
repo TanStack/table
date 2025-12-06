@@ -77,8 +77,8 @@ function Table({ columns, data }) {
       },
       useRowSelect,
       useExpanded,
-      hooks => {
-        hooks.leafColumns.push(columns => [
+      (hooks) => {
+        hooks.leafColumns.push((columns) => [
           // Let's make a column for selection
           {
             id: 'selection',
@@ -105,7 +105,7 @@ function Table({ columns, data }) {
           },
           ...columns,
         ])
-      }
+      },
     )
 
   // Render the UI for your table
@@ -113,9 +113,9 @@ function Table({ columns, data }) {
     <>
       <table {...getTableProps()}>
         <thead>
-          {headerGroups.map(headerGroup => (
+          {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()}>{column.render('Header')}</th>
               ))}
             </tr>
@@ -126,13 +126,13 @@ function Table({ columns, data }) {
             (row, i) =>
               prepareRow(row) || (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
+                  {row.cells.map((cell) => {
                     return (
                       <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                     )
                   })}
                 </tr>
-              )
+              ),
           )}
         </tbody>
       </table>
@@ -150,7 +150,7 @@ const IndeterminateCheckbox = React.forwardRef(
     }, [resolvedRef, indeterminate])
 
     return <input type="checkbox" ref={resolvedRef} {...rest} />
-  }
+  },
 )
 
 function App() {
@@ -201,7 +201,7 @@ function App() {
         ],
       },
     ],
-    []
+    [],
   )
 
   return <Table columns={columns} data={data} />

@@ -17,30 +17,30 @@ import { makeData, Person } from './makeData'
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -48,17 +48,17 @@ const defaultColumns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -97,7 +97,7 @@ function App() {
 
   const randomizeColumns = () => {
     table.setColumnOrder(
-      faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
     )
   }
 
@@ -116,7 +116,7 @@ function App() {
             Toggle All
           </label>
         </div>
-        {table.getAllLeafColumns().map(column => {
+        {table.getAllLeafColumns().map((column) => {
           return (
             <div key={column.id} className="px-1">
               <label>
@@ -148,7 +148,7 @@ function App() {
           <input
             type="checkbox"
             checked={isSplit}
-            onChange={e => setIsSplit(e.target.checked)}
+            onChange={(e) => setIsSplit(e.target.checked)}
           />{' '}
           Split Mode
         </label>
@@ -157,16 +157,16 @@ function App() {
         {isSplit ? (
           <table className="border-2 border-black">
             <thead>
-              {table.getLeftHeaderGroups().map(headerGroup => (
+              {table.getLeftHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
+                  {headerGroup.headers.map((header) => (
                     <th key={header.id} colSpan={header.colSpan}>
                       <div className="whitespace-nowrap">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                       </div>
                       {!header.isPlaceholder && header.column.getCanPin() && (
@@ -212,15 +212,15 @@ function App() {
               {table
                 .getRowModel()
                 .rows.slice(0, 20)
-                .map(row => {
+                .map((row) => {
                   return (
                     <tr key={row.id}>
-                      {row.getLeftVisibleCells().map(cell => {
+                      {row.getLeftVisibleCells().map((cell) => {
                         return (
                           <td key={cell.id}>
                             {flexRender(
                               cell.column.columnDef.cell,
-                              cell.getContext()
+                              cell.getContext(),
                             )}
                           </td>
                         )
@@ -236,16 +236,16 @@ function App() {
             {(isSplit
               ? table.getCenterHeaderGroups()
               : table.getHeaderGroups()
-            ).map(headerGroup => (
+            ).map((headerGroup) => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
+                {headerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
                     <div className="whitespace-nowrap">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </div>
                     {!header.isPlaceholder && header.column.getCanPin() && (
@@ -291,18 +291,18 @@ function App() {
             {table
               .getRowModel()
               .rows.slice(0, 20)
-              .map(row => {
+              .map((row) => {
                 return (
                   <tr key={row.id}>
                     {(isSplit
                       ? row.getCenterVisibleCells()
                       : row.getVisibleCells()
-                    ).map(cell => {
+                    ).map((cell) => {
                       return (
                         <td key={cell.id}>
                           {flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </td>
                       )
@@ -315,16 +315,16 @@ function App() {
         {isSplit ? (
           <table className="border-2 border-black">
             <thead>
-              {table.getRightHeaderGroups().map(headerGroup => (
+              {table.getRightHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
+                  {headerGroup.headers.map((header) => (
                     <th key={header.id} colSpan={header.colSpan}>
                       <div className="whitespace-nowrap">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                       </div>
                       {!header.isPlaceholder && header.column.getCanPin() && (
@@ -370,15 +370,15 @@ function App() {
               {table
                 .getRowModel()
                 .rows.slice(0, 20)
-                .map(row => {
+                .map((row) => {
                   return (
                     <tr key={row.id}>
-                      {row.getRightVisibleCells().map(cell => {
+                      {row.getRightVisibleCells().map((cell) => {
                         return (
                           <td key={cell.id}>
                             {flexRender(
                               cell.column.columnDef.cell,
-                              cell.getContext()
+                              cell.getContext(),
                             )}
                           </td>
                         )
@@ -401,5 +401,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

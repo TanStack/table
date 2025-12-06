@@ -12,7 +12,7 @@ export * from '@tanstack/table-core'
 
 export function flexRender<TProps>(
   Comp: ((props: TProps) => string) | string | TemplateResult | undefined,
-  props: TProps
+  props: TProps,
 ): TemplateResult | string | null {
   if (!Comp) return null
 
@@ -23,9 +23,9 @@ export function flexRender<TProps>(
   return Comp
 }
 
-export class TableController<TData extends RowData>
-  implements ReactiveController
-{
+export class TableController<
+  TData extends RowData,
+> implements ReactiveController {
   host: ReactiveControllerHost
 
   private tableInstance: Table<TData> | null = null
@@ -52,7 +52,7 @@ export class TableController<TData extends RowData>
       }
     }
 
-    this.tableInstance.setOptions(prev => ({
+    this.tableInstance.setOptions((prev) => ({
       ...prev,
       ...options,
       state: { ...this._tableState, ...options.state },

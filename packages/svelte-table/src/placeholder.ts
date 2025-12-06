@@ -7,7 +7,7 @@ type X = typeof PlaceholderClient
 const PlaceholderServer = create_ssr_component(
   ($$result: any, $$props: any, $$bindings: any, slots: any) => {
     return `${escape($$props.content)}`
-  }
+  },
 ) as any as typeof SvelteComponentDev
 
 export default typeof document === 'undefined'

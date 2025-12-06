@@ -27,14 +27,14 @@ export class AppComponent {
   }
 
   previousPage(): void {
-    this.pagination.update(pagination => ({
+    this.pagination.update((pagination) => ({
       ...pagination,
       pageIndex: pagination.pageIndex - 1,
     }))
   }
 
   nextPage(): void {
-    this.pagination.update(pagination => ({
+    this.pagination.update((pagination) => ({
       ...pagination,
       pageIndex: pagination.pageIndex + 1,
     }))

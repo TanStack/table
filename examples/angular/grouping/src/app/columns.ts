@@ -17,18 +17,18 @@ export const columns: ColumnDef<Person>[] = [
       {
         accessorKey: 'firstName',
         header: 'First Name',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         /**
          * override the value used for row grouping
          * (otherwise, defaults to the value derived from accessorKey / accessorFn)
          */
-        getGroupingValue: row => `${row.firstName} ${row.lastName}`,
+        getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
         header: () => `Last Name`,
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
       },
     ],
   },

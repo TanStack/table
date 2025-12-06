@@ -113,12 +113,12 @@ describe('lazyInit', () => {
 
     setFixtureSignalInputs(fixture, { title: 'updatedValue' })
     expect(fixture.debugElement.nativeElement.textContent).toBe(
-      '1 - updatedValue'
+      '1 - updatedValue',
     )
 
     setFixtureSignalInputs(fixture, { title: 'newUpdatedValue' })
     expect(fixture.debugElement.nativeElement.textContent).toBe(
-      '1 - newUpdatedValue'
+      '1 - newUpdatedValue',
     )
   })
 })
