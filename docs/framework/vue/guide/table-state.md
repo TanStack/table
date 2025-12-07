@@ -114,7 +114,7 @@ const sorting = ref([{
   id: 'age',
   desc: true, //sort by age in descending order by default
 }])
-const pagination = ref({ pageIndex: 0, pageSize: 15 }
+const pagination = ref({ pageIndex: 0, pageSize: 15 })
 
 //Use our controlled state values to fetch data
 const tableQuery = useQuery({
