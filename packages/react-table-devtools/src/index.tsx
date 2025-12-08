@@ -82,7 +82,7 @@ export function ReactTableDevtools({
   const panelRef = React.useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useLocalStorage(
     'reactTableDevtoolsOpen',
-    initialIsOpen
+    initialIsOpen,
   )
   const isMounted = useIsMounted()
 
@@ -105,7 +105,7 @@ export function ReactTableDevtools({
             type="button"
             {...otherToggleButtonProps}
             aria-label="Open React Table Devtools"
-            onClick={e => {
+            onClick={(e) => {
               setIsOpen(true)
               onToggleClick && onToggleClick(e)
             }}

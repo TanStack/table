@@ -51,7 +51,7 @@ type Styles =
 export function styled<T extends keyof HTMLElementTagNameMap>(
   type: T,
   newStyles: Styles,
-  queries: Record<string, Styles> = {}
+  queries: Record<string, Styles> = {},
 ) {
   return React.forwardRef<HTMLElementTagNameMap[T], StyledComponent<T>>(
     ({ style, ...rest }, ref) => {
@@ -67,7 +67,7 @@ export function styled<T extends keyof HTMLElementTagNameMap>(
               }
             : current
         },
-        {}
+        {},
       )
 
       return React.createElement(type, {
@@ -81,7 +81,7 @@ export function styled<T extends keyof HTMLElementTagNameMap>(
         },
         ref,
       })
-    }
+    },
   )
 }
 
@@ -116,7 +116,7 @@ function useSafeState<T>(initialState: T): [T, (value: T) => void] {
         }
       })
     },
-    [isMounted]
+    [isMounted],
   )
 
   return [state, safeSetState]
@@ -129,9 +129,9 @@ function useSafeState<T>(initialState: T): [T, (value: T) => void] {
 function scheduleMicrotask(callback: () => void) {
   Promise.resolve()
     .then(callback)
-    .catch(error =>
+    .catch((error) =>
       setTimeout(() => {
         throw error
-      })
+      }),
     )
 }

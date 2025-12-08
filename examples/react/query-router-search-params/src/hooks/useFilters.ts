@@ -7,7 +7,7 @@ import {
 import { cleanEmptyParams } from '../utils/cleanEmptyParams'
 
 export function useFilters<T extends RouteIds<RegisteredRouter['routeTree']>>(
-  routeId: T
+  routeId: T,
 ) {
   const routeApi = getRouteApi<T>(routeId)
   const navigate = useNavigate()
@@ -16,7 +16,7 @@ export function useFilters<T extends RouteIds<RegisteredRouter['routeTree']>>(
   const setFilters = (partialFilters: Partial<typeof filters>) =>
     navigate({
       to: '.',
-      search: prev => cleanEmptyParams({ ...prev, ...partialFilters }),
+      search: (prev) => cleanEmptyParams({ ...prev, ...partialFilters }),
     })
   const resetFilters = () => navigate({ to: '.', search: {} })
 

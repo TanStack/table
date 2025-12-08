@@ -3,13 +3,13 @@ import { Table, Row, RowModel, RowData } from '../types'
 import { getMemoOptions, memo } from '../utils'
 
 export function getCoreRowModel<TData extends RowData>(): (
-  table: Table<TData>
+  table: Table<TData>,
 ) => () => RowModel<TData> {
-  return table =>
+  return (table) =>
     memo(
       () => [table.options.data],
       (
-        data
+        data,
       ): {
         rows: Row<TData>[]
         flatRows: Row<TData>[]
@@ -24,7 +24,7 @@ export function getCoreRowModel<TData extends RowData>(): (
         const accessRows = (
           originalRows: TData[],
           depth = 0,
-          parentRow?: Row<TData>
+          parentRow?: Row<TData>,
         ): Row<TData>[] => {
           const rows = [] as Row<TData>[]
 
@@ -44,7 +44,7 @@ export function getCoreRowModel<TData extends RowData>(): (
               i,
               depth,
               undefined,
-              parentRow?.id
+              parentRow?.id,
             )
 
             // Keep track of every row in a flat array
@@ -58,7 +58,7 @@ export function getCoreRowModel<TData extends RowData>(): (
             if (table.options.getSubRows) {
               row.originalSubRows = table.options.getSubRows(
                 originalRows[i]!,
-                i
+                i,
               )
 
               // Then recursively access them
@@ -76,7 +76,7 @@ export function getCoreRowModel<TData extends RowData>(): (
         return rowModel
       },
       getMemoOptions(table.options, 'debugTable', 'getRowModel', () =>
-        table._autoResetPageIndex()
-      )
+        table._autoResetPageIndex(),
+      ),
     )
 }

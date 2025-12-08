@@ -25,31 +25,31 @@ const columnHelper = createColumnHelper<Person>()
 
 const columns = [
   columnHelper.accessor('firstName', {
-    cell: info => info.getValue(),
-    footer: info => info.column.id,
+    cell: (info) => info.getValue(),
+    footer: (info) => info.column.id,
   }),
-  columnHelper.accessor(row => row.lastName, {
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
-    cell: info => html`<i>${info.getValue()}</i>`,
+    cell: (info) => html`<i>${info.getValue()}</i>`,
     header: () => html`<span>Last Name</span>`,
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('age', {
     header: () => 'Age',
-    cell: info => info.renderValue(),
-    footer: info => info.column.id,
+    cell: (info) => info.renderValue(),
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('visits', {
     header: () => html`<span>Visits</span>`,
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
 ]
 
@@ -105,66 +105,66 @@ class LitTableExample extends LitElement {
         <thead>
           ${repeat(
             table.getHeaderGroups(),
-            headerGroup => headerGroup.id,
-            headerGroup =>
+            (headerGroup) => headerGroup.id,
+            (headerGroup) =>
               html`${repeat(
                 headerGroup.headers,
-                header => header.id,
-                header =>
+                (header) => header.id,
+                (header) =>
                   html` <th>
                     ${header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
-                  </th>`
-              )}`
+                  </th>`,
+              )}`,
           )}
         </thead>
         <tbody>
           ${repeat(
             table.getRowModel().rows,
-            row => row.id,
-            row => html`
+            (row) => row.id,
+            (row) => html`
               <tr>
                 ${repeat(
                   row.getVisibleCells(),
-                  cell => cell.id,
-                  cell =>
+                  (cell) => cell.id,
+                  (cell) =>
                     html` <td>
                       ${flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
-                    </td>`
+                    </td>`,
                 )}
               </tr>
-            `
+            `,
           )}
         </tbody>
         <tfoot>
           ${repeat(
             table.getFooterGroups(),
-            footerGroup => footerGroup.id,
-            footerGroup => html`
+            (footerGroup) => footerGroup.id,
+            (footerGroup) => html`
               <tr>
                 ${repeat(
                   footerGroup.headers,
-                  header => header.id,
-                  header => html`
+                  (header) => header.id,
+                  (header) => html`
                     <th>
                       ${header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.footer,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </th>
-                  `
+                  `,
                 )}
               </tr>
-            `
+            `,
           )}
         </tfoot>
       </table>

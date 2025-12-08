@@ -29,7 +29,7 @@ function makeData(amount: number): User[] {
 const data = makeData(1000)
 
 export async function fetchUsers(
-  filtersAndPagination: UserFilters
+  filtersAndPagination: UserFilters,
 ): Promise<PaginatedData<User>> {
   console.log('fetchUsers', filtersAndPagination)
   const {
@@ -52,8 +52,8 @@ export async function fetchUsers(
     })
   }
 
-  const filteredData = requestedData.filter(user => {
-    return Object.keys(filters).every(key => {
+  const filteredData = requestedData.filter((user) => {
+    return Object.keys(filters).every((key) => {
       const filter = filters[key as keyof User]
       if (filter === undefined || filter === '') return true
 
@@ -64,12 +64,12 @@ export async function fetchUsers(
     })
   })
 
-  await new Promise(resolve => setTimeout(resolve, 100))
+  await new Promise((resolve) => setTimeout(resolve, 100))
 
   return {
     result: filteredData.slice(
       pageIndex * pageSize,
-      (pageIndex + 1) * pageSize
+      (pageIndex + 1) * pageSize,
     ),
     rowCount: filteredData.length,
   }

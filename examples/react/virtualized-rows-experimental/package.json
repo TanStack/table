@@ -1,6 +1,5 @@
 {
   "name": "tanstack-table-example-virtualized-rows-experimental",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",

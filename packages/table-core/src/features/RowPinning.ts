@@ -71,7 +71,7 @@ export interface RowPinningRow {
   pin: (
     position: RowPinningPosition,
     includeLeafRows?: boolean,
-    includeParentRows?: boolean
+    includeParentRows?: boolean,
   ) => void
 }
 
@@ -79,7 +79,7 @@ export interface RowPinningInstance<TData extends RowData> {
   _getPinnedRows: (
     visiblePinnedRows: Array<Row<TData>>,
     pinnedRowIds: Array<string> | undefined,
-    position: 'top' | 'bottom'
+    position: 'top' | 'bottom',
   ) => Row<TData>[]
   /**
    * Returns all bottom pinned rows.
@@ -135,7 +135,7 @@ export const RowPinning: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): RowPinningDefaultOptions => {
     return {
       onRowPinningChange: makeStateUpdater('rowPinning', table),
@@ -144,7 +144,7 @@ export const RowPinning: TableFeature = {
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     row.pin = (position, includeLeafRows, includeParentRows) => {
       const leafRowIds = includeLeafRows
@@ -155,12 +155,12 @@ export const RowPinning: TableFeature = {
         : []
       const rowIds = new Set([...parentRowIds, row.id, ...leafRowIds])
 
-      table.setRowPinning(old => {
+      table.setRowPinning((old) => {
         if (position === 'bottom') {
           return {
-            top: (old?.top ?? []).filter(d => !rowIds?.has(d)),
+            top: (old?.top ?? []).filter((d) => !rowIds?.has(d)),
             bottom: [
-              ...(old?.bottom ?? []).filter(d => !rowIds?.has(d)),
+              ...(old?.bottom ?? []).filter((d) => !rowIds?.has(d)),
               ...Array.from(rowIds),
             ],
           }
@@ -169,16 +169,16 @@ export const RowPinning: TableFeature = {
         if (position === 'top') {
           return {
             top: [
-              ...(old?.top ?? []).filter(d => !rowIds?.has(d)),
+              ...(old?.top ?? []).filter((d) => !rowIds?.has(d)),
               ...Array.from(rowIds),
             ],
-            bottom: (old?.bottom ?? []).filter(d => !rowIds?.has(d)),
+            bottom: (old?.bottom ?? []).filter((d) => !rowIds?.has(d)),
           }
         }
 
         return {
-          top: (old?.top ?? []).filter(d => !rowIds?.has(d)),
-          bottom: (old?.bottom ?? []).filter(d => !rowIds?.has(d)),
+          top: (old?.top ?? []).filter((d) => !rowIds?.has(d)),
+          bottom: (old?.bottom ?? []).filter((d) => !rowIds?.has(d)),
         }
       })
     }
@@ -194,8 +194,8 @@ export const RowPinning: TableFeature = {
 
       const { top, bottom } = table.getState().rowPinning
 
-      const isTop = rowIds.some(d => top?.includes(d))
-      const isBottom = rowIds.some(d => bottom?.includes(d))
+      const isTop = rowIds.some((d) => top?.includes(d))
+      const isBottom = rowIds.some((d) => bottom?.includes(d))
 
       return isTop ? 'top' : isBottom ? 'bottom' : false
     }
@@ -212,16 +212,17 @@ export const RowPinning: TableFeature = {
   },
 
   createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setRowPinning = updater => table.options.onRowPinningChange?.(updater)
+    table.setRowPinning = (updater) =>
+      table.options.onRowPinningChange?.(updater)
 
-    table.resetRowPinning = defaultState =>
+    table.resetRowPinning = (defaultState) =>
       table.setRowPinning(
         defaultState
           ? getDefaultRowPinningState()
-          : table.initialState?.rowPinning ?? getDefaultRowPinningState()
+          : (table.initialState?.rowPinning ?? getDefaultRowPinningState()),
       )
 
-    table.getIsSomeRowsPinned = position => {
+    table.getIsSomeRowsPinned = (position) => {
       const pinningState = table.getState().rowPinning
 
       if (!position) {
@@ -232,33 +233,35 @@ export const RowPinning: TableFeature = {
 
     table._getPinnedRows = (visibleRows, pinnedRowIds, position) => {
       const rows =
-        table.options.keepPinnedRows ?? true
+        (table.options.keepPinnedRows ?? true)
           ? //get all rows that are pinned even if they would not be otherwise visible
             //account for expanded parent rows, but not pagination or filtering
-            (pinnedRowIds ?? []).map(rowId => {
+            (pinnedRowIds ?? []).map((rowId) => {
               const row = table.getRow(rowId, true)
               return row.getIsAllParentsExpanded() ? row : null
             })
           : //else get only visible rows that are pinned
             (pinnedRowIds ?? []).map(
-              rowId => visibleRows.find(row => row.id === rowId)!
+              (rowId) => visibleRows.find((row) => row.id === rowId)!,
             )
 
-      return rows.filter(Boolean).map(d => ({ ...d, position })) as Row<TData>[]
+      return rows
+        .filter(Boolean)
+        .map((d) => ({ ...d, position })) as Row<TData>[]
     }
 
     table.getTopRows = memo(
       () => [table.getRowModel().rows, table.getState().rowPinning.top],
       (allRows, topPinnedRowIds) =>
         table._getPinnedRows(allRows, topPinnedRowIds, 'top'),
-      getMemoOptions(table.options, 'debugRows', 'getTopRows')
+      getMemoOptions(table.options, 'debugRows', 'getTopRows'),
     )
 
     table.getBottomRows = memo(
       () => [table.getRowModel().rows, table.getState().rowPinning.bottom],
       (allRows, bottomPinnedRowIds) =>
         table._getPinnedRows(allRows, bottomPinnedRowIds, 'bottom'),
-      getMemoOptions(table.options, 'debugRows', 'getBottomRows')
+      getMemoOptions(table.options, 'debugRows', 'getBottomRows'),
     )
 
     table.getCenterRows = memo(
@@ -269,9 +272,9 @@ export const RowPinning: TableFeature = {
       ],
       (allRows, top, bottom) => {
         const topAndBottom = new Set([...(top ?? []), ...(bottom ?? [])])
-        return allRows.filter(d => !topAndBottom.has(d.id))
+        return allRows.filter((d) => !topAndBottom.has(d.id))
       },
-      getMemoOptions(table.options, 'debugRows', 'getCenterRows')
+      getMemoOptions(table.options, 'debugRows', 'getCenterRows'),
     )
   },
 }

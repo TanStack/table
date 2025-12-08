@@ -41,19 +41,19 @@ function UsersPage() {
         columns={columns}
         pagination={paginationState}
         paginationOptions={{
-          onPaginationChange: pagination => {
+          onPaginationChange: (pagination) => {
             setFilters(
               typeof pagination === 'function'
                 ? pagination(paginationState)
-                : pagination
+                : pagination,
             )
           },
           rowCount: data?.rowCount,
         }}
         filters={filters}
-        onFilterChange={filters => setFilters(filters)}
+        onFilterChange={(filters) => setFilters(filters)}
         sorting={sortingState}
-        onSortingChange={updaterOrValue => {
+        onSortingChange={(updaterOrValue) => {
           const newSortingState =
             typeof updaterOrValue === 'function'
               ? updaterOrValue(sortingState)

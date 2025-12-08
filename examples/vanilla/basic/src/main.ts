@@ -44,31 +44,31 @@ const columnHelper = createColumnHelper<Person>()
 
 const columns = [
   columnHelper.accessor('firstName', {
-    cell: info => info.getValue(),
-    footer: info => info.column.id,
+    cell: (info) => info.getValue(),
+    footer: (info) => info.column.id,
   }),
-  columnHelper.accessor(row => row.lastName, {
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
-    cell: info => `<i>${info.getValue()}</i>`,
+    cell: (info) => `<i>${info.getValue()}</i>`,
     header: () => '<span>Last Name</span>',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('age', {
     header: () => 'Age',
-    cell: info => info.renderValue(),
-    footer: info => info.column.id,
+    cell: (info) => info.renderValue(),
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('visits', {
     header: () => '<span>Visits</span>',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
-    footer: info => info.column.id,
+    footer: (info) => info.column.id,
   }),
 ]
 
@@ -84,9 +84,9 @@ const renderTable = () => {
   tableElement.appendChild(tfootElement)
 
   // Render table headers
-  table.getHeaderGroups().forEach(headerGroup => {
+  table.getHeaderGroups().forEach((headerGroup) => {
     const trElement = document.createElement('tr')
-    headerGroup.headers.forEach(header => {
+    headerGroup.headers.forEach((header) => {
       const thElement = document.createElement('th')
       thElement.innerHTML = header.isPlaceholder
         ? ''
@@ -97,13 +97,13 @@ const renderTable = () => {
   })
 
   // Render table rows
-  table.getRowModel().rows.forEach(row => {
+  table.getRowModel().rows.forEach((row) => {
     const trElement = document.createElement('tr')
-    row.getVisibleCells().forEach(cell => {
+    row.getVisibleCells().forEach((cell) => {
       const tdElement = document.createElement('td')
       tdElement.innerHTML = flexRender(
         cell.column.columnDef.cell,
-        cell.getContext()
+        cell.getContext(),
       )
       trElement.appendChild(tdElement)
     })
@@ -111,9 +111,9 @@ const renderTable = () => {
   })
 
   // Render table footers
-  table.getFooterGroups().forEach(footerGroup => {
+  table.getFooterGroups().forEach((footerGroup) => {
     const trElement = document.createElement('tr')
-    footerGroup.headers.forEach(header => {
+    footerGroup.headers.forEach((header) => {
       const thElement = document.createElement('th')
       thElement.innerHTML = header.isPlaceholder
         ? ''

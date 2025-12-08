@@ -65,11 +65,12 @@ type DeepKeysPrefix<
   ? `${TPrefix}.${DeepKeys<T[TPrefix], [...TDepth, any]> & string}`
   : never
 
-export type DeepValue<T, TProp> = T extends Record<string | number, any>
-  ? TProp extends `${infer TBranch}.${infer TDeepProp}`
-    ? DeepValue<T[TBranch], TDeepProp>
-    : T[TProp & string]
-  : never
+export type DeepValue<T, TProp> =
+  T extends Record<string | number, any>
+    ? TProp extends `${infer TBranch}.${infer TDeepProp}`
+      ? DeepValue<T[TBranch], TDeepProp>
+      : T[TProp & string]
+    : never
 
 export type NoInfer<T> = [T][T extends any ? 0 : never]
 
@@ -89,7 +90,7 @@ export function noop() {
 
 export function makeStateUpdater<K extends keyof TableState>(
   key: K,
-  instance: unknown
+  instance: unknown,
 ) {
   return (updater: Updater<TableState[K]>) => {
     ;(instance as any).setState(<TTableState>(old: TTableState) => {
@@ -108,17 +109,17 @@ export function isFunction<T extends AnyFunction>(d: any): d is T {
 }
 
 export function isNumberArray(d: any): d is number[] {
-  return Array.isArray(d) && d.every(val => typeof val === 'number')
+  return Array.isArray(d) && d.every((val) => typeof val === 'number')
 }
 
 export function flattenBy<TNode>(
   arr: TNode[],
-  getChildren: (item: TNode) => TNode[]
+  getChildren: (item: TNode) => TNode[],
 ) {
   const flat: TNode[] = []
 
   const recurse = (subArr: TNode[]) => {
-    subArr.forEach(item => {
+    subArr.forEach((item) => {
       flat.push(item)
       const children = getChildren(item)
       if (children?.length) {
@@ -139,12 +140,12 @@ export function memo<TDeps extends readonly any[], TDepArgs, TResult>(
     key: any
     debug?: () => any
     onChange?: (result: TResult) => void
-  }
+  },
 ): (depArgs?: TDepArgs) => TResult {
   let deps: any[] = []
   let result: TResult | undefined
 
-  return depArgs => {
+  return (depArgs) => {
     let depTime: number
     if (opts.key && opts.debug) depTime = Date.now()
 
@@ -187,9 +188,9 @@ export function memo<TDeps extends readonly any[], TDepArgs, TResult>(
             font-weight: bold;
             color: hsl(${Math.max(
               0,
-              Math.min(120 - 120 * resultFpsPercentage, 120)
+              Math.min(120 - 120 * resultFpsPercentage, 120),
             )}deg 100% 31%);`,
-          opts?.key
+          opts?.key,
         )
       }
     }
@@ -208,7 +209,7 @@ export function getMemoOptions(
     | 'debugRows'
     | 'debugHeaders',
   key: string,
-  onChange?: (result: any) => void
+  onChange?: (result: any) => void,
 ) {
   return {
     debug: () => tableOptions?.debugAll ?? tableOptions[debugLevel],

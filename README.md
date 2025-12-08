@@ -1,144 +1,118 @@
-![TanStack Table Header](https://github.com/tanstack/table/raw/main/media/repo-header.png)
+<div align="center">
+  <img src="./media/header_table.png" alt="TanStack Table">
+</div>
 
-# [TanStack](https://tanstack.com) Table v8
+<br />
 
-Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue, Svelte, Qwik and TS/JS**.
-
-<a href="https://twitter.com/intent/tweet?button_hashtag=TanStack" target="\_parent">
-  <img alt="#TanStack" src="https://img.shields.io/twitter/url?color=%2308a0e9&label=%23TanStack&style=social&url=https%3A%2F%2Ftwitter.com%2Fintent%2Ftweet%3Fbutton_hashtag%3DTanStack" />
-</a>
-<a href="https://github.com/tanstack/table/actions?table=workflow%3A%22react-table+tests%22">
-  <img src="https://github.com/tanstack/table/workflows/react-table%20tests/badge.svg" />
-</a>
+<div align="center">
 <a href="https://npmjs.com/package/@tanstack/react-table" target="\_parent">
-  <img alt="" src="https://img.shields.io/npm/dm/@tanstack/react-table.svg" />
+  <img alt="npm downloads" src="https://img.shields.io/npm/dm/@tanstack/react-table.svg" />
+</a>
+<a href="https://github.com/tanstack/table" target="\_parent">
+  <img alt="github stars" src="https://img.shields.io/github/stars/tanstack/react-table.svg?style=social&label=Star" />
 </a>
 <a href="https://bundlephobia.com/result?p=@tanstack/react-table@latest" target="\_parent">
-  <img alt="" src="https://badgen.net/bundlephobia/minzip/@tanstack/react-table@latest" />
+  <img alt="bundle size" src="https://badgen.net/bundlephobia/minzip/@tanstack/react-table@latest" />
 </a>
+</div>
+
+<div align="center">
 <a href="#badge">
   <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
 </a>
-<a href="https://github.com/tanstack/table/discussions">
-  <img alt="Join the discussion on Github" src="https://img.shields.io/badge/Github%20Discussions%20%26%20Support-Chat%20now!-blue" />
-</a>
-<a href="https://github.com/tanstack/table" target="\_parent">
-  <img alt="" src="https://img.shields.io/github/stars/tanstack/react-table.svg?style=social&label=Star" />
-</a>
-<a href="https://twitter.com/tannerlinsley" target="\_parent">
-  <img alt="" src="https://img.shields.io/twitter/follow/tannerlinsley.svg?style=social&label=Follow" />
-</a>
-<a href="https://www.coderabbit.ai">
-  <img alt="" src="https://img.shields.io/coderabbit/prs/github/TanStack/table?utm_source=oss&utm_medium=github&utm_campaign=TanStack%2Ftable&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews" />
-</a>
+<a href="https://bestofjs.org/projects/tanstack-table"><img alt="Best of JS" src="https://img.shields.io/endpoint?url=https://bestofjs-serverless.now.sh/api/project-badge?fullName=TanStack%2Ftable%26since=daily" /></a>
+  <a href="https://twitter.com/tan_stack"><img src="https://img.shields.io/twitter/follow/tan_stack.svg?style=social" alt="Follow @TanStack"/></a>
+</div>
 
-> [Looking for version 7 of `react-table`? Click here!](https://github.com/tanstack/table/tree/v7)
+### [Become a Sponsor!](https://github.com/sponsors/tannerlinsley/)
 
-## Enjoy this library?
+</div>
 
-Try other [TanStack](https://tanstack.com) libraries:
+# TanStack Table
 
-- [TanStack Query](https://github.com/TanStack/query) <img alt="" src="https://img.shields.io/github/stars/tanstack/query.svg" />
-- [TanStack Table](https://github.com/TanStack/table) <img alt="" src="https://img.shields.io/github/stars/tanstack/table.svg" />
-- [TanStack Router](https://github.com/TanStack/router) <img alt="" src="https://img.shields.io/github/stars/tanstack/router.svg" />
-- [TanStack Virtual](https://github.com/TanStack/virtual) <img alt="" src="https://img.shields.io/github/stars/tanstack/virtual.svg" />
-- [TanStack Form](https://github.com/TanStack/form) <img alt="" src="https://img.shields.io/github/stars/tanstack/form.svg" />
-- [TanStack Ranger](https://github.com/TanStack/ranger) <img alt="" src="https://img.shields.io/github/stars/tanstack/ranger.svg" />
+> [!NOTE]
+> You may know TanStack Table by the adapter names:
+>
+> - [Angular Table](https://tanstack.com/table/v8/docs/framework/angular/angular-table)
+> - [Lit Table](https://tanstack.com/table/v8/docs/framework/lit/lit-table)
+> - [Qwik Table](https://tanstack.com/table/v8/docs/framework/qwik/qwik-table)
+> - [React Table](https://tanstack.com/table/v8/docs/framework/react/react-table)
+> - [Solid Table](https://tanstack.com/table/v8/docs/framework/solid/solid-table)
+> - [Svelte Table](https://tanstack.com/table/v8/docs/framework/svelte/svelte-table)
+> - [Vue Table](https://tanstack.com/table/v8/docs/framework/vue/vue-table)
 
-## Visit [tanstack.com/table](https://tanstack.com/table) for docs, guides, API and more!
+A headless table library for building powerful datagrids with full control over markup, styles, and behavior.
 
-You may know **TanStack Table** by our adapter names, too!
+- Framework‑agnostic core with bindings for React, Vue & Solid
+- 100% customizable — bring your own UI, components, and styles
+- Sorting, filtering, grouping, aggregation & row selection
+- Lightweight, virtualizable & server‑side friendly
 
-- [Angular Table](https://tanstack.com/table/v8/docs/framework/angular/angular-table)
-- [Lit Table](https://tanstack.com/table/v8/docs/framework/lit/lit-table)
-- [Qwik Table](https://tanstack.com/table/v8/docs/framework/qwik/qwik-table)
-- [**React Table**](https://tanstack.com/table/v8/docs/framework/react/react-table)
-- [Solid Table](https://tanstack.com/table/v8/docs/framework/solid/solid-table)
-- [Svelte Table](https://tanstack.com/table/v8/docs/framework/svelte/svelte-table)
-- [Vue Table](https://tanstack.com/table/v8/docs/framework/vue/vue-table)
+### <a href="https://tanstack.com/table">Read the Docs →</a>
 
-## Summary
+## Get Involved
 
-TanStack Table is a **headless** table library, which means it does not ship with components, markup or styles. This means that you have **full control** over markup and styles (CSS, CSS-in-JS, UI Component Libraries, etc) and this is also what gives it its portable nature. You can even use it in React Native!
+- We welcome issues and pull requests!
+- Participate in [GitHub discussions](https://github.com/TanStack/table/discussions)
+- Chat with the community on [Discord](https://discord.com/invite/WrRKjPJ)
+- See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup instructions
 
-If you want a **lightweight table with full control over markup and implementation**, then you should consider using **TanStack Table, a headless table library**.
+## Partners
 
-If you want a **ready-to-use component-based table with more power but more constraints around markup/styles/implementation**, you should consider using [AG Grid](https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable), a component-based table library from our OSS partner [AG Grid](https://ag-grid.com).
+<table align="center">
+  <tr>
+    <td>
+        <a href="https://www.coderabbit.ai/?via=tanstack&dub_id=aCcEEdAOqqutX6OS">
+			<picture>
+			  <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/coderabbit-dark-CMcuvjEy.svg" height="40" />
+			  <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/coderabbit-light-DVMJ2jHi.svg" height="40" />
+			  <img src="https://tanstack.com/assets/coderabbit-light-DVMJ2jHi.svg" height="40" alt="CodeRabbit" />
+			</picture>        
+		</a>
+    </td>
+    <td padding="20">
+      <a href="https://www.cloudflare.com?utm_source=tanstack">
+         <picture>
+		  <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/cloudflare-white-DQDB7UaL.svg" height="60" />
+		  <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/cloudflare-black-CPufaW0B.svg" height="60" />
+		  <img src="https://tanstack.com/assets/cloudflare-black-CPufaW0B.svg" height="60" alt="Cloudflare" />
+		</picture>
+      </a>
+    </td>
+    <td>
+     <a href="https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable" style="display: flex; align-items: center; border: none;">
+       <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="./media/ag-grid-dark.svg" height="40" />
+        <source media="(prefers-color-scheme: light)" srcset="./media/ag-grid-light.svg" height="40" />
+        <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/partners/ag-grid.svg" height="60" alt="AG Grid" />
+      </picture>
+      </a>
+    </td>
+  </tr>
+</table>
 
-TanStack Table and AG Grid are respectfully the
-**best table/datagrid libraries around**. Instead
-of competing, we're working together to ensure the highest
-quality table/datagrid options are available for the entire
-JS/TS ecosystem and every use-case.
+<div align="center">
+<img src="./media/partner_logo.svg" alt="Table & you?" height="65">
+<p>
+We're looking for TanStack Table Partners to join our mission! Partner with us to push the boundaries of TanStack Table and build amazing things together.
+</p>
+<a href="mailto:partners@tanstack.com?subject=TanStack Table Partnership"><b>LET'S CHAT</b></a>
+</div>
 
-## Quick Features
+## Explore the TanStack Ecosystem
 
-- Agnostic core (JS/TS)
-- 1st-class framework bindings for React, Vue, Solid
-- ~15kb or less (with tree-shaking)
-- 100% TypeScript (but not required)
-- Headless (100% customizable, Bring-your-own-UI)
-- Auto out of the box, opt-in controllable state
-- Filters (column and global)
-- Sorting (multi-column, multi-directional)
-- Grouping & Aggregation
-- Pivoting (coming soon!)
-- Row Selection
-- Row Expansion
-- Column Visibility/Ordering/Pinning/Resizing
-- Table Splitting
-- Animatable
-- Virtualizable
-- Server-side/external data model support
+- <a href="https://github.com/tanstack/config"><b>TanStack Config</b></a> – Tooling for JS/TS packages
+- <a href="https://github.com/tanstack/db"><b>TanStack DB</b></a> – Reactive sync client store
+- <a href="https://github.com/tanstack/devtools"><b>TanStack DevTools</b></a> – Unified devtools panel
+- <a href="https://github.com/tanstack/form"><b>TanStack Form</b></a> – Type‑safe form state
+- <a href="https://github.com/tanstack/pacer"><b>TanStack Pacer</b></a> – Debouncing, throttling, batching <br/>
+- <a href="https://github.com/tanstack/query"><b>TanStack Query</b></a> – Async state & caching
+- <a href="https://github.com/tanstack/ranger"><b>TanStack Ranger</b></a> – Range & slider primitives
+- <a href="https://github.com/tanstack/router"><b>TanStack Router</b></a> – Type‑safe routing, caching & URL state
+- <a href="https://github.com/tanstack/router"><b>TanStack Start</b></a> – Full‑stack SSR & streaming
+- <a href="https://github.com/tanstack/store"><b>TanStack Store</b></a> – Reactive data store
+- <a href="https://github.com/tanstack/virtual"><b>TanStack Virtual</b></a> – Virtualized rendering
 
-# Migrating from React Table v7
-
-## Notable Changes
-
-- Full rewrite to TypeScript with types included in the base package
-- Removal of plugin system to favor more inversion of control
-- Vastly larger and improved API (and new features like pinning)
-- Better controlled state management
-- Better support for server-side operations
-- Complete (but optional) data pipeline control
-- Agnostic core with framework adapters for React, Solid, Svelte, Vue, and potentially more in the future
-- New Dev Tools
-
-## Migration
-
-There are a fair amount of breaking changes (they're worth it, trust us!):
-
-- Turns out that TypeScript makes your code **a lot** better/safer, but also usually requires breaking changes to architecture.
-- Plugin system has been removed so plugins must be rewritten to wrap/compose the new functional API. Contact us if you need help!
-- Column configuration options have changed, but only slightly.
-- Table options are mostly the same, with some larger changes around optional state management/control and data pipeline control
-- The `table` instance while similar in spirit to v7 has been reconfigured to be much faster.
-
-## Installation
-
-Install one of the following packages based on your framework of choice:
-
-```bash
-# Npm
-npm install @tanstack/angular-table
-npm install @tanstack/lit-table
-npm install @tanstack/qwik-table
-npm install @tanstack/react-table
-npm install @tanstack/solid-table
-npm install @tanstack/svelte-table
-npm install @tanstack/vue-table
-npm install @tanstack/table-core #vanilla js that can work with any framework
-```
-
-## How to help?
-
-- Try out the already-migrated examples
-- Try it out in your own projects.
-- Introspect the types! Even without the docs finished, the library ships with 100% typescript to help you explore its capabilities.
-- [Read the contribution guidelines](https://github.com/tanstack/table/tree/main/CONTRIBUTING.md)
-- Write some docs! Start with the [API docs](https://github.com/TanStack/react-table/tree/main/docs/api) and try adding some information about one or more of the features. The types do a decent job of showing what's supported and the capabilities of the library.
-- **Using a plugin?** Try rewriting your plugin (v8 doesn't have a plugin system any more) as a functional wrapper that uses TanStack Table internally. The new API is much more powerful and easier to compose. If you find something you can't figure out, let us know and we'll add it to the API.
-
-### [Become a Sponsor](https://github.com/sponsors/tannerlinsley/)
+… and more at <a href="https://tanstack.com"><b>TanStack.com »</b></a>
 
 <!-- USE THE FORCE LUKE -->

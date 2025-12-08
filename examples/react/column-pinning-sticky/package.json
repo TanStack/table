@@ -1,6 +1,5 @@
 {
   "name": "tanstack-table-example-column-pinning-sticky",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",

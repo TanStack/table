@@ -12,15 +12,14 @@ const props = defineProps({
     required: true,
   },
 })
-const firstValue = computed(
-  () =>
-    props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id)
+const firstValue = computed(() =>
+  props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id),
 )
 const columnFilterValue = computed(() => props.column.getFilterValue())
 const sortedUniqueValues = computed(() =>
   typeof firstValue.value === 'number'
     ? []
-    : Array.from(props.column.getFacetedUniqueValues().keys()).sort()
+    : Array.from(props.column.getFacetedUniqueValues().keys()).sort(),
 )
 </script>
 
@@ -33,7 +32,7 @@ const sortedUniqueValues = computed(() =>
         :max="Number(column.getFacetedMinMaxValues()?.[1] ?? '')"
         :modelValue="(columnFilterValue as [number, number])?.[0] ?? ''"
         @update:modelValue="
-          value =>
+          (value) =>
             column.setFilterValue((old: [number, number]) => [value, old?.[1]])
         "
         :placeholder="`Min ${
@@ -49,7 +48,7 @@ const sortedUniqueValues = computed(() =>
         :max="Number(column.getFacetedMinMaxValues()?.[1] ?? '')"
         :modelValue="(columnFilterValue as [number, number])?.[1] ?? ''"
         @update:modelValue="
-          value =>
+          (value) =>
             column.setFilterValue((old: [number, number]) => [old?.[0], value])
         "
         :placeholder="`Max ${
@@ -73,7 +72,7 @@ const sortedUniqueValues = computed(() =>
     <DebouncedInput
       type="text"
       :modelValue="(columnFilterValue ?? '') as string"
-      @update:modelValue="value => column.setFilterValue(value)"
+      @update:modelValue="(value) => column.setFilterValue(value)"
       :placeholder="`Search... (${column.getFacetedUniqueValues().size})`"
       class="w-36 border shadow rounded"
       :list="column.id + 'list'"

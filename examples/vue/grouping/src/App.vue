@@ -76,14 +76,14 @@ const columns: ColumnDef<Task>[] = [
     accessorKey: 'status',
     header: 'Status',
     enableGrouping: true,
-    accessorFn: row => row.status.name,
+    accessorFn: (row) => row.status.name,
     cell: ({ row }) => row.original.status.name,
   },
   {
     accessorKey: 'priority',
     header: 'Priority',
     enableGrouping: true,
-    accessorFn: row => row.priority.name,
+    accessorFn: (row) => row.priority.name,
     cell: ({ row }) => row.original.priority.name,
   },
   {
@@ -117,13 +117,13 @@ const table = useVueTable({
       return expanded.value
     },
   },
-  onGroupingChange: updaterOrValue => {
+  onGroupingChange: (updaterOrValue) => {
     grouping.value =
       typeof updaterOrValue === 'function'
         ? updaterOrValue(grouping.value)
         : updaterOrValue
   },
-  onExpandedChange: updaterOrValue => {
+  onExpandedChange: (updaterOrValue) => {
     expanded.value =
       typeof updaterOrValue === 'function'
         ? updaterOrValue(expanded.value)
