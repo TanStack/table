@@ -53,7 +53,7 @@ export function createCell<TData extends RowData, TValue>(
   table: Table<TData>,
   row: Row<TData>,
   column: Column<TData, TValue>,
-  columnId: string
+  columnId: string,
 ): Cell<TData, TValue> {
   const getRenderValue = () =>
     cell.getValue() ?? table.options.renderFallbackValue
@@ -74,16 +74,16 @@ export function createCell<TData extends RowData, TValue>(
         getValue: cell.getValue,
         renderValue: cell.renderValue,
       }),
-      getMemoOptions(table.options, 'debugCells', 'cell.getContext')
+      getMemoOptions(table.options, 'debugCells', 'cell.getContext'),
     ),
   }
 
-  table._features.forEach(feature => {
+  table._features.forEach((feature) => {
     feature.createCell?.(
       cell as Cell<TData, TValue>,
       column,
       row as Row<TData>,
-      table
+      table,
     )
   }, {})
 

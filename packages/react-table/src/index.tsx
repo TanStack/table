@@ -17,7 +17,7 @@ export type Renderable<TProps> = React.ReactNode | React.ComponentType<TProps>
  */
 export function flexRender<TProps extends object>(
   Comp: Renderable<TProps>,
-  props: TProps
+  props: TProps,
 ): React.ReactNode | React.JSX.Element {
   return !Comp ? null : isReactComponent<TProps>(Comp) ? (
     <Comp {...props} />
@@ -27,7 +27,7 @@ export function flexRender<TProps extends object>(
 }
 
 function isReactComponent<TProps>(
-  component: unknown
+  component: unknown,
 ): component is React.ComponentType<TProps> {
   return (
     isClassComponent(component) ||
@@ -55,7 +55,7 @@ function isExoticComponent(component: any) {
 }
 
 export function useReactTable<TData extends RowData>(
-  options: TableOptions<TData>
+  options: TableOptions<TData>,
 ) {
   // Compose in the generic options to the user options
   const resolvedOptions: TableOptionsResolved<TData> = {
@@ -75,7 +75,7 @@ export function useReactTable<TData extends RowData>(
 
   // Compose the default state above with any user state. This will allow the user
   // to only control a subset of the state if desired.
-  tableRef.current.setOptions(prev => ({
+  tableRef.current.setOptions((prev) => ({
     ...prev,
     ...options,
     state: {
@@ -84,7 +84,7 @@ export function useReactTable<TData extends RowData>(
     },
     // Similarly, we'll maintain both our internal state and any user-provided
     // state.
-    onStateChange: updater => {
+    onStateChange: (updater) => {
       setState(updater)
       options.onStateChange?.(updater)
     },

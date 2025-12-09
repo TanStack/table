@@ -11,7 +11,7 @@ type PersonColumn = ColumnDef<Person, string | number | Person[] | undefined>
 function generateColumns(people: Person[]): PersonColumn[] {
   const columnHelper = createColumnHelper<Person>()
   const person = people[0]
-  return Object.keys(person).map(key => {
+  return Object.keys(person).map((key) => {
     const typedKey = key as personKeys
     return columnHelper.accessor(typedKey, { id: typedKey })
   })
@@ -24,9 +24,9 @@ describe('#getGroupedRowModel', () => {
     const grouping = ['firstName', 'lastName', 'age']
     const start = new Date()
 
-    data.forEach(p => (p.firstName = 'Fixed'))
-    data.forEach(p => (p.lastName = 'Name'))
-    data.forEach(p => (p.age = 123))
+    data.forEach((p) => (p.firstName = 'Fixed'))
+    data.forEach((p) => (p.lastName = 'Name'))
+    data.forEach((p) => (p.age = 123))
 
     const table = createTable<Person>({
       onStateChange() {},
@@ -42,10 +42,10 @@ describe('#getGroupedRowModel', () => {
 
     expect(groupedById['firstName:Fixed'].leafRows.length).toEqual(50000)
     expect(
-      groupedById['firstName:Fixed>lastName:Name'].leafRows.length
+      groupedById['firstName:Fixed>lastName:Name'].leafRows.length,
     ).toEqual(50000)
     expect(
-      groupedById['firstName:Fixed>lastName:Name>age:123'].leafRows.length
+      groupedById['firstName:Fixed>lastName:Name>age:123'].leafRows.length,
     ).toEqual(50000)
     expect(end.valueOf() - start.valueOf()).toBeLessThan(5000)
   })

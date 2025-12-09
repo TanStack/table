@@ -31,13 +31,13 @@ function App() {
     () => [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         //this column will sort in ascending order by default since it is a string column
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         sortUndefined: 'last', //force undefined values to the end
         sortDescFirst: false, //first sort order will be ascending (nullable values can mess up auto detection of sort order)
@@ -73,7 +73,7 @@ function App() {
         // sortingFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
       },
     ],
-    []
+    [],
   )
 
   const [data, setData] = React.useState(() => makeData(1_000))
@@ -109,9 +109,9 @@ function App() {
       <div className="h-2" />
       <table>
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 return (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
@@ -134,7 +134,7 @@ function App() {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                         {{
                           asc: ' 🔼',
@@ -152,15 +152,15 @@ function App() {
           {table
             .getRowModel()
             .rows.slice(0, 10)
-            .map(row => {
+            .map((row) => {
               return (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => {
+                  {row.getVisibleCells().map((cell) => {
                     return (
                       <td key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </td>
                     )
@@ -189,5 +189,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

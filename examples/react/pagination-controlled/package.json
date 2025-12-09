@@ -1,6 +1,5 @@
 {
   "name": "tanstack-table-example-pagination-controlled",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignoreDependencies": ["@size-limit/preset-small-lib"],
+  "ignoreDependencies": ["@size-limit/preset-small-lib", "@tanstack/config"],
   "ignoreWorkspaces": ["examples/**"],
   "workspaces": {
     "packages/match-sorter-utils": {

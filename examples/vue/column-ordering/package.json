@@ -1,6 +1,6 @@
 {
   "name": "tanstack-table-example-vue-column-ordering",
-  "version": "0.0.0",
+  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
-    "vue": "^3.4.31",
-    "@tanstack/vue-table": "^8.21.3"
+    "@tanstack/vue-table": "^8.21.3",
+    "vue": "^3.4.31"
   },
   "devDependencies": {
     "@types/node": "^20.14.9",

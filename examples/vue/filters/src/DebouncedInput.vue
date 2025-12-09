@@ -26,7 +26,7 @@ const localValue = computed({
     }
     timeout.value = setTimeout(
       () => emit('update:modelValue', newValue),
-      props.debounce
+      props.debounce,
     )
   },
 })

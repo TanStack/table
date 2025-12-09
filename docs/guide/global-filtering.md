@@ -6,7 +6,7 @@ title: Global Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [Global Filters](../framework/react/examples/filters-global)
+- [Global Filters](https://github.com/TanStack/table/tree/main/examples/react/filters-global)
 
 ## API
 

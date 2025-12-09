@@ -7,7 +7,7 @@ id: filters
 
 The Filtering API docs are now split into multiple API doc pages:
 
-- [Column Faceting](../api/features/column-faceting)
-- [Global Faceting](../api/features/global-faceting)
-- [Column Filtering](../api/features/column-filtering)
-- [Global Filtering](../api/features/global-filtering)
+- [Column Faceting](../../guide/column-faceting.md)
+- [Global Faceting](../../guide/global-faceting.md)
+- [Column Filtering](../../guide/column-filtering.md)
+- [Global Filtering](../../guide/global-filtering.md)
