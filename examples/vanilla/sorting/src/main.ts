@@ -24,19 +24,19 @@ const columnHelper = createColumnHelper<Person>()
 
 const columns = [
   columnHelper.accessor('firstName', {
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     // This column will sort in ascending order by default since it is a string column
   }),
-  columnHelper.accessor(row => row.lastName, {
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
-    cell: info => `<i>${info.getValue()}</i>`,
+    cell: (info) => `<i>${info.getValue()}</i>`,
     header: () => '<span>Last Name</span>',
     sortUndefined: 'last', // Force undefined values to the end
     sortDescFirst: false, // First sort order will be ascending (nullable values can mess up auto detection of sort order)
   }),
   columnHelper.accessor('age', {
     header: () => 'Age',
-    cell: info => info.renderValue(),
+    cell: (info) => info.renderValue(),
     // This column will sort in descending order by default since it is a number column
   }),
   columnHelper.accessor('visits', {
@@ -72,20 +72,23 @@ const renderTable = () => {
   tableElement.appendChild(tbodyElement)
 
   // Render table headers
-  table.getHeaderGroups().forEach(headerGroup => {
+  table.getHeaderGroups().forEach((headerGroup) => {
     const trElement = document.createElement('tr')
-    headerGroup.headers.forEach(header => {
+    headerGroup.headers.forEach((header) => {
       const thElement = document.createElement('th')
       thElement.colSpan = header.colSpan
       const divElement = document.createElement('div')
       divElement.classList.add(
         'w-36',
-        ...(header.column.getCanSort() ? ['cursor-pointer', 'select-none'] : [])
+        ...(header.column.getCanSort()
+          ? ['cursor-pointer', 'select-none']
+          : []),
       )
-      ;(divElement.onclick = e => header.column.getToggleSortingHandler()?.(e)),
+      ;((divElement.onclick = (e) =>
+        header.column.getToggleSortingHandler()?.(e)),
         (divElement.innerHTML = header.isPlaceholder
           ? ''
-          : flexRender(header.column.columnDef.header, header.getContext()))
+          : flexRender(header.column.columnDef.header, header.getContext())))
       divElement.innerHTML +=
         {
           asc: ' 🔼',
@@ -101,13 +104,13 @@ const renderTable = () => {
   table
     .getRowModel()
     .rows.slice(0, 10)
-    .forEach(row => {
+    .forEach((row) => {
       const trElement = document.createElement('tr')
-      row.getVisibleCells().forEach(cell => {
+      row.getVisibleCells().forEach((cell) => {
         const tdElement = document.createElement('td')
         tdElement.innerHTML = flexRender(
           cell.column.columnDef.cell,
-          cell.getContext()
+          cell.getContext(),
         )
         trElement.appendChild(tdElement)
       })
@@ -121,7 +124,7 @@ const renderTable = () => {
       sorting: table.getState().sorting,
     },
     null,
-    2
+    2,
   )
 
   // Clear previous content and append new content

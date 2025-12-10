@@ -13,7 +13,7 @@ export class TableResizableHeader {
   })
 
   readonly width = computed(
-    () => `calc(var(--header-${this.cellId()}-size) * 1px)`
+    () => `calc(var(--header-${this.cellId()}-size) * 1px)`,
   )
 }
 
@@ -30,6 +30,6 @@ export class TableResizableCell {
   })
 
   readonly width = computed(
-    () => `calc(var(--col-${this.cellId()}-size) * 1px)`
+    () => `calc(var(--col-${this.cellId()}-size) * 1px)`,
   )
 }

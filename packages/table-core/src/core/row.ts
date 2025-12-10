@@ -99,7 +99,7 @@ export const createRow = <TData extends RowData>(
   rowIndex: number,
   depth: number,
   subRows?: Row<TData>[],
-  parentId?: string
+  parentId?: string,
 ): Row<TData> => {
   let row: CoreRow<TData> = {
     id,
@@ -109,7 +109,7 @@ export const createRow = <TData extends RowData>(
     parentId,
     _valuesCache: {},
     _uniqueValuesCache: {},
-    getValue: columnId => {
+    getValue: (columnId) => {
       if (row._valuesCache.hasOwnProperty(columnId)) {
         return row._valuesCache[columnId]
       }
@@ -122,12 +122,12 @@ export const createRow = <TData extends RowData>(
 
       row._valuesCache[columnId] = column.accessorFn(
         row.original as TData,
-        rowIndex
+        rowIndex,
       )
 
       return row._valuesCache[columnId] as any
     },
-    getUniqueValues: columnId => {
+    getUniqueValues: (columnId) => {
       if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
         return row._uniqueValuesCache[columnId]
       }
@@ -145,15 +145,15 @@ export const createRow = <TData extends RowData>(
 
       row._uniqueValuesCache[columnId] = column.columnDef.getUniqueValues(
         row.original as TData,
-        rowIndex
+        rowIndex,
       )
 
       return row._uniqueValuesCache[columnId] as any
     },
-    renderValue: columnId =>
+    renderValue: (columnId) =>
       row.getValue(columnId) ?? table.options.renderFallbackValue,
     subRows: subRows ?? [],
-    getLeafRows: () => flattenBy(row.subRows, d => d.subRows),
+    getLeafRows: () => flattenBy(row.subRows, (d) => d.subRows),
     getParentRow: () =>
       row.parentId ? table.getRow(row.parentId, true) : undefined,
     getParentRows: () => {
@@ -169,26 +169,26 @@ export const createRow = <TData extends RowData>(
     },
     getAllCells: memo(
       () => [table.getAllLeafColumns()],
-      leafColumns => {
-        return leafColumns.map(column => {
+      (leafColumns) => {
+        return leafColumns.map((column) => {
           return createCell(table, row as Row<TData>, column, column.id)
         })
       },
-      getMemoOptions(table.options, 'debugRows', 'getAllCells')
+      getMemoOptions(table.options, 'debugRows', 'getAllCells'),
     ),
 
     _getAllCellsByColumnId: memo(
       () => [row.getAllCells()],
-      allCells => {
+      (allCells) => {
         return allCells.reduce(
           (acc, cell) => {
             acc[cell.column.id] = cell
             return acc
           },
-          {} as Record<string, Cell<TData, unknown>>
+          {} as Record<string, Cell<TData, unknown>>,
         )
       },
-      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId')
+      getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId'),
     ),
   }
 

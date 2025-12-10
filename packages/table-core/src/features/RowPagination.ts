@@ -204,7 +204,7 @@ export const RowPagination: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): PaginationDefaultOptions => {
     return {
       onPaginationChange: makeStateUpdater('pagination', table),
@@ -236,8 +236,8 @@ export const RowPagination: TableFeature = {
         })
       }
     }
-    table.setPagination = updater => {
-      const safeUpdater: Updater<PaginationState> = old => {
+    table.setPagination = (updater) => {
+      const safeUpdater: Updater<PaginationState> = (old) => {
         let newState = functionalUpdate(updater, old)
 
         return newState
@@ -245,15 +245,15 @@ export const RowPagination: TableFeature = {
 
       return table.options.onPaginationChange?.(safeUpdater)
     }
-    table.resetPagination = defaultState => {
+    table.resetPagination = (defaultState) => {
       table.setPagination(
         defaultState
           ? getDefaultPaginationState()
-          : table.initialState.pagination ?? getDefaultPaginationState()
+          : (table.initialState.pagination ?? getDefaultPaginationState()),
       )
     }
-    table.setPageIndex = updater => {
-      table.setPagination(old => {
+    table.setPageIndex = (updater) => {
+      table.setPagination((old) => {
         let pageIndex = functionalUpdate(updater, old.pageIndex)
 
         const maxPageIndex =
@@ -270,22 +270,22 @@ export const RowPagination: TableFeature = {
         }
       })
     }
-    table.resetPageIndex = defaultState => {
+    table.resetPageIndex = (defaultState) => {
       table.setPageIndex(
         defaultState
           ? defaultPageIndex
-          : table.initialState?.pagination?.pageIndex ?? defaultPageIndex
+          : (table.initialState?.pagination?.pageIndex ?? defaultPageIndex),
       )
     }
-    table.resetPageSize = defaultState => {
+    table.resetPageSize = (defaultState) => {
       table.setPageSize(
         defaultState
           ? defaultPageSize
-          : table.initialState?.pagination?.pageSize ?? defaultPageSize
+          : (table.initialState?.pagination?.pageSize ?? defaultPageSize),
       )
     }
-    table.setPageSize = updater => {
-      table.setPagination(old => {
+    table.setPageSize = (updater) => {
+      table.setPagination((old) => {
         const pageSize = Math.max(1, functionalUpdate(updater, old.pageSize))
         const topRowIndex = old.pageSize * old.pageIndex!
         const pageIndex = Math.floor(topRowIndex / pageSize)
@@ -298,11 +298,11 @@ export const RowPagination: TableFeature = {
       })
     }
     //deprecated
-    table.setPageCount = updater =>
-      table.setPagination(old => {
+    table.setPageCount = (updater) =>
+      table.setPagination((old) => {
         let newPageCount = functionalUpdate(
           updater,
-          table.options.pageCount ?? -1
+          table.options.pageCount ?? -1,
         )
 
         if (typeof newPageCount === 'number') {
@@ -317,14 +317,14 @@ export const RowPagination: TableFeature = {
 
     table.getPageOptions = memo(
       () => [table.getPageCount()],
-      pageCount => {
+      (pageCount) => {
         let pageOptions: number[] = []
         if (pageCount && pageCount > 0) {
           pageOptions = [...new Array(pageCount)].fill(null).map((_, i) => i)
         }
         return pageOptions
       },
-      getMemoOptions(table.options, 'debugTable', 'getPageOptions')
+      getMemoOptions(table.options, 'debugTable', 'getPageOptions'),
     )
 
     table.getCanPreviousPage = () => table.getState().pagination.pageIndex > 0
@@ -346,11 +346,11 @@ export const RowPagination: TableFeature = {
     }
 
     table.previousPage = () => {
-      return table.setPageIndex(old => old - 1)
+      return table.setPageIndex((old) => old - 1)
     }
 
     table.nextPage = () => {
-      return table.setPageIndex(old => {
+      return table.setPageIndex((old) => {
         return old + 1
       })
     }

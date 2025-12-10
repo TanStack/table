@@ -242,8 +242,7 @@ type ResolvedSortingFns = keyof SortingFns extends never
     }
 
 export interface SortingOptions<TData extends RowData>
-  extends SortingOptionsBase,
-    ResolvedSortingFns {}
+  extends SortingOptionsBase, ResolvedSortingFns {}
 
 export interface SortingInstance<TData extends RowData> {
   _getSortedRowModel?: () => RowModel<TData>
@@ -291,7 +290,7 @@ export const RowSorting: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): SortingOptions<TData> => {
     return {
       onSortingChange: makeStateUpdater('sorting', table),
@@ -303,7 +302,7 @@ export const RowSorting: TableFeature = {
 
   createColumn: <TData extends RowData, TValue>(
     column: Column<TData, TValue>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getAutoSortingFn = () => {
       const firstRows = table.getFilteredRowModel().flatRows.slice(10)
@@ -352,8 +351,8 @@ export const RowSorting: TableFeature = {
         ? column.columnDef.sortingFn
         : column.columnDef.sortingFn === 'auto'
           ? column.getAutoSortingFn()
-          : table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
-            sortingFns[column.columnDef.sortingFn as BuiltInSortingFn]
+          : (table.options.sortingFns?.[column.columnDef.sortingFn as string] ??
+            sortingFns[column.columnDef.sortingFn as BuiltInSortingFn])
     }
     column.toggleSorting = (desc, multi) => {
       // if (column.columns.length) {
@@ -369,10 +368,10 @@ export const RowSorting: TableFeature = {
       const nextSortingOrder = column.getNextSortingOrder()
       const hasManualValue = typeof desc !== 'undefined' && desc !== null
 
-      table.setSorting(old => {
+      table.setSorting((old) => {
         // Find any existing sorting for this column
-        const existingSorting = old?.find(d => d.id === column.id)
-        const existingIndex = old?.findIndex(d => d.id === column.id)
+        const existingSorting = old?.find((d) => d.id === column.id)
+        const existingIndex = old?.findIndex((d) => d.id === column.id)
 
         let newSorting: SortingState = []
 
@@ -421,11 +420,11 @@ export const RowSorting: TableFeature = {
           newSorting.splice(
             0,
             newSorting.length -
-              (table.options.maxMultiSortColCount ?? Number.MAX_SAFE_INTEGER)
+              (table.options.maxMultiSortColCount ?? Number.MAX_SAFE_INTEGER),
           )
         } else if (sortAction === 'toggle') {
           // This flips (or sets) the
-          newSorting = old.map(d => {
+          newSorting = old.map((d) => {
             if (d.id === column.id) {
               return {
                 ...d,
@@ -435,7 +434,7 @@ export const RowSorting: TableFeature = {
             return d
           })
         } else if (sortAction === 'remove') {
-          newSorting = old.filter(d => d.id !== column.id)
+          newSorting = old.filter((d) => d.id !== column.id)
         } else {
           newSorting = [
             {
@@ -468,7 +467,7 @@ export const RowSorting: TableFeature = {
       if (
         isSorted !== firstSortDirection &&
         (table.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
-        (multi ? table.options.enableMultiRemove ?? true : true) // If multi, don't allow if enableMultiRemove))
+        (multi ? (table.options.enableMultiRemove ?? true) : true) // If multi, don't allow if enableMultiRemove))
       ) {
         return false
       }
@@ -492,18 +491,20 @@ export const RowSorting: TableFeature = {
     }
 
     column.getIsSorted = () => {
-      const columnSort = table.getState().sorting?.find(d => d.id === column.id)
+      const columnSort = table
+        .getState()
+        .sorting?.find((d) => d.id === column.id)
 
       return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
     }
 
     column.getSortIndex = () =>
-      table.getState().sorting?.findIndex(d => d.id === column.id) ?? -1
+      table.getState().sorting?.findIndex((d) => d.id === column.id) ?? -1
 
     column.clearSorting = () => {
       //clear sorting for just 1 column
-      table.setSorting(old =>
-        old?.length ? old.filter(d => d.id !== column.id) : []
+      table.setSorting((old) =>
+        old?.length ? old.filter((d) => d.id !== column.id) : [],
       )
     }
 
@@ -515,16 +516,18 @@ export const RowSorting: TableFeature = {
         ;(e as any).persist?.()
         column.toggleSorting?.(
           undefined,
-          column.getCanMultiSort() ? table.options.isMultiSortEvent?.(e) : false
+          column.getCanMultiSort()
+            ? table.options.isMultiSortEvent?.(e)
+            : false,
         )
       }
     }
   },
 
   createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setSorting = updater => table.options.onSortingChange?.(updater)
-    table.resetSorting = defaultState => {
-      table.setSorting(defaultState ? [] : table.initialState?.sorting ?? [])
+    table.setSorting = (updater) => table.options.onSortingChange?.(updater)
+    table.resetSorting = (defaultState) => {
+      table.setSorting(defaultState ? [] : (table.initialState?.sorting ?? []))
     }
     table.getPreSortedRowModel = () => table.getGroupedRowModel()
     table.getSortedRowModel = () => {

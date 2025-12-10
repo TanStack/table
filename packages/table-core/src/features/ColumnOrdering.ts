@@ -54,7 +54,7 @@ export interface ColumnOrderDefaultOptions {
 
 export interface ColumnOrderInstance<TData extends RowData> {
   _getOrderColumnsFn: () => (
-    columns: Column<TData, unknown>[]
+    columns: Column<TData, unknown>[],
   ) => Column<TData, unknown>[]
   /**
    * Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be passed to force a default blank state reset to `[]`.
@@ -81,7 +81,7 @@ export const ColumnOrdering: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): ColumnOrderDefaultOptions => {
     return {
       onColumnOrderChange: makeStateUpdater('columnOrder', table),
@@ -90,29 +90,29 @@ export const ColumnOrdering: TableFeature = {
 
   createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getIndex = memo(
-      position => [_getVisibleLeafColumns(table, position)],
-      columns => columns.findIndex(d => d.id === column.id),
-      getMemoOptions(table.options, 'debugColumns', 'getIndex')
+      (position) => [_getVisibleLeafColumns(table, position)],
+      (columns) => columns.findIndex((d) => d.id === column.id),
+      getMemoOptions(table.options, 'debugColumns', 'getIndex'),
     )
-    column.getIsFirstColumn = position => {
+    column.getIsFirstColumn = (position) => {
       const columns = _getVisibleLeafColumns(table, position)
       return columns[0]?.id === column.id
     }
-    column.getIsLastColumn = position => {
+    column.getIsLastColumn = (position) => {
       const columns = _getVisibleLeafColumns(table, position)
       return columns[columns.length - 1]?.id === column.id
     }
   },
 
   createTable: <TData extends RowData>(table: Table<TData>): void => {
-    table.setColumnOrder = updater =>
+    table.setColumnOrder = (updater) =>
       table.options.onColumnOrderChange?.(updater)
-    table.resetColumnOrder = defaultState => {
+    table.resetColumnOrder = (defaultState) => {
       table.setColumnOrder(
-        defaultState ? [] : table.initialState.columnOrder ?? []
+        defaultState ? [] : (table.initialState.columnOrder ?? []),
       )
     }
     table._getOrderColumnsFn = memo(
@@ -142,7 +142,7 @@ export const ColumnOrdering: TableFeature = {
             while (columnsCopy.length && columnOrderCopy.length) {
               const targetColumnId = columnOrderCopy.shift()
               const foundIndex = columnsCopy.findIndex(
-                d => d.id === targetColumnId
+                (d) => d.id === targetColumnId,
               )
               if (foundIndex > -1) {
                 orderedColumns.push(columnsCopy.splice(foundIndex, 1)[0]!)
@@ -155,7 +155,7 @@ export const ColumnOrdering: TableFeature = {
 
           return orderColumns(orderedColumns, grouping, groupedColumnMode)
         },
-      getMemoOptions(table.options, 'debugTable', '_getOrderColumnsFn')
+      getMemoOptions(table.options, 'debugTable', '_getOrderColumnsFn'),
     )
   },
 }

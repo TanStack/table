@@ -4,7 +4,7 @@ title: Table Instance Guide
 
 ## API
 
-[Table API](../../api/core/table.md)
+[Table API](../api/core/table.md)
 
 ## Table Instance Guide
 
@@ -71,7 +71,7 @@ const data = ref<User[]>([])
 
 #### Defining Columns
 
-Column definitions are covered in detail in the next section in the [Column Def Guide](../column-defs.md). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for you data.
+Column definitions are covered in detail in the next section in the [Column Def Guide](./column-defs.md). We'll note here, however, that when you define the type of your columns, you should use the same `TData` type that you used for you data.
 
 ```ts
 const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
@@ -79,7 +79,7 @@ const columns: ColumnDef<User>[] = [] //Pass User type as the generic TData type
 const columnHelper = createColumnHelper<User>() //Pass User type as the generic TData type
 ```
 
-The column definitions are where we will tell TanStack Table how each column should access and/or transform row data with either an `accessorKey` or `accessorFn`. See the [Column Def Guide](../column-defs.md) for more info.
+The column definitions are where we will tell TanStack Table how each column should access and/or transform row data with either an `accessorKey` or `accessorFn`. See the [Column Def Guide](./column-defs.md) for more info.
 
 #### Creating the Table Instance
 
@@ -122,8 +122,8 @@ There are dozens of table APIs created by each feature to help you either read o
 
 API reference docs for the core table instance and all other feature APIs can be found throughout the API docs.
 
-For example, you can find the core table instance API docs here: [Table API](../../api/core/table#table-api)
+For example, you can find the core table instance API docs here: [Table API](../api/core/table#table-api)
 
 ### Table Row Models
 
-There is a special set of table instance APIs for reading rows out of the table instance called row models. TanStack Table has advanced features where the rows that are generated may be very different than the array of `data` that you originally passed in. To learn more about the different row models that you can pass in as a table option, see the [Row Models Guide](../row-models.md).
+There is a special set of table instance APIs for reading rows out of the table instance called row models. TanStack Table has advanced features where the rows that are generated may be very different than the array of `data` that you originally passed in. To learn more about the different row models that you can pass in as a table option, see the [Row Models Guide](./row-models.md).

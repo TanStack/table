@@ -11,5 +11,5 @@ export default defineConfig(
     entryFile: 'src/index.ts',
     external: [],
     globals: {},
-  })
+  }),
 )
