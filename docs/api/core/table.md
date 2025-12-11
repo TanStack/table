@@ -19,7 +19,7 @@ These are **core** options and API properties for the table. More options and AP
 ### `data`
 
 ```tsx
-data: TData[]
+data: readonly TData[]
 ```
 
 The data for the table to display. This array should match the type you provided to `table.setRowType<...>`, but in theory could be an array of anything. It's common for each item in the array to be an object of key/values but this is not required. Columns can access this data via string/index or a functional accessor to return anything they want.
@@ -31,7 +31,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 ### `columns`
 
 ```tsx
-type columns = ColumnDef<TData>[]
+type columns = readonly ColumnDef<TData>[]
 ```
 
 The array of column defs to use for the table. See the [Column Def Guide](../../guide/column-defs.md) for more information on creating column definitions.
