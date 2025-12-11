@@ -54,7 +54,7 @@ For simple headers with no advanced nested or grouped headers logic, the `header
 
 There are a few properties on `header` objects that are only useful if the header is part of a nested or grouped header structure. These properties include:
 
-- `colspan`: The number of columns that the header should span. This is useful for rendering the `colSpan` attribute on the `<th>` element.
+- `colSpan`: The number of columns that the header should span. This is useful for rendering the `colSpan` attribute on the `<th>` element.
 - `rowSpan`: The number of rows that the header should span. This is useful for rendering the `rowSpan` attribute on the `<th>` element. (Currently not implemented in default TanStack Table)
 - `depth`: The header group "row index" that the header group belongs to.
 - `isPlaceholder`: A boolean flag that is true if the header is a placeholder header. Placeholder headers are used to fill in the gaps when a column is hidden or when a column is part of a group column.
