@@ -27,6 +27,7 @@ export * from './features/RowSorting'
 
 //utils
 export * from './utils'
+export * from './utils/filterRowsUtils'
 export * from './utils/getCoreRowModel'
 export * from './utils/getExpandedRowModel'
 export * from './utils/getFacetedMinMaxValues'
