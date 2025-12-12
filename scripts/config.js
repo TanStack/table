@@ -25,10 +25,6 @@ export const packages = [
     packageDir: 'packages/preact-table',
   },
   {
-    name: '@tanstack/qwik-table',
-    packageDir: 'packages/qwik-table',
-  },
-  {
     name: '@tanstack/react-table',
     packageDir: 'packages/react-table',
   },

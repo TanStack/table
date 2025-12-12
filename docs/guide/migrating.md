@@ -12,7 +12,6 @@ Here are the expected breaking changes for the most common use cases of TanStack
   - `createAngularTable` -> `injectTable`
   - `createSolidTable` -> `createTable`
   - `createSvelteTable` -> `createTable`
-  - `useQwikTable` -> `useTable`
   - `useReactTable` -> `useTable`
   - `useVueTable` -> `useTable`
 

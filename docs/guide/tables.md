@@ -56,9 +56,6 @@ this.table = injectTable({ columns: this.columns, data: this.data(), getCoreRowM
 //lit
 const table = this.tableController.table({ columns, data, getCoreRowModel: createCoreRowModel() })
 
-//qwik
-const table = useTable({ columns, data, getCoreRowModel: createCoreRowModel() })
-
 //react
 const table = useTable({ columns, data, getCoreRowModel: createCoreRowModel() })
 

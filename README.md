@@ -2,7 +2,7 @@
 
 # [TanStack](https://tanstack.com) Table v8
 
-Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue, Svelte, Qwik and TS/JS**.
+Headless UI for building **powerful tables & datagrids** for **React, Solid, Vue, Svelte and TS/JS**.
 
 <a href="https://twitter.com/intent/tweet?button_hashtag=TanStack" target="\_parent">
   <img alt="#TanStack" src="https://img.shields.io/twitter/url?color=%2308a0e9&label=%23TanStack&style=social&url=https%3A%2F%2Ftwitter.com%2Fintent%2Ftweet%3Fbutton_hashtag%3DTanStack" />
@@ -48,7 +48,6 @@ You may know **TanStack Table** by our adapter names, too!
 
 - [Angular Table](https://tanstack.com/table/v8/docs/framework/angular/angular-table)
 - [Lit Table](https://tanstack.com/table/v8/docs/framework/lit/lit-table)
-- [Qwik Table](https://tanstack.com/table/v8/docs/framework/qwik/qwik-table)
 - [**React Table**](https://tanstack.com/table/v8/docs/framework/react/react-table)
 - [Solid Table](https://tanstack.com/table/v8/docs/framework/solid/solid-table)
 - [Svelte Table](https://tanstack.com/table/v8/docs/framework/svelte/svelte-table)
@@ -119,7 +118,6 @@ Install one of the following packages based on your framework of choice:
 # Npm
 npm install @tanstack/angular-table
 npm install @tanstack/lit-table
-npm install @tanstack/qwik-table
 npm install @tanstack/react-table
 npm install @tanstack/solid-table
 npm install @tanstack/svelte-table

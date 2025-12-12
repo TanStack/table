@@ -44,18 +44,6 @@ The `@tanstack/svelte-table` package works with Svelte 3 and Svelte 4.
 
 > NOTE: There is not a built-in Svelte 5 adapter yet, but you can still use TanStack Table with Svelte 5 by installing the `@tanstack/table-core` package and using a custom adapter from the community. See this [PR](https://github.com/TanStack/table/pull/5403) for inspiration.
 
-## Qwik Table
-
-```bash
-npm install @tanstack/qwik-table
-```
-
-The `@tanstack/qwik-table` package works with Qwik 1.
-
-> NOTE: There will be a "breaking change" release in the near future to support Qwik 2. This will be released as a minor version bump, but will be documented. Qwik 2 itself will have no breaking changes, but its name on the npm registry will change, and require different peer dependencies.
-
-> NOTE: The current qwik adapter only works with CSR. More improvements may not be available until a future table version.
-
 ## Angular Table
 
 ```bash

@@ -1,8 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "@builder.io/qwik"
-  },
-  "include": ["src", "eslint.config.js", "vite.config.ts"]
-}
