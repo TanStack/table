@@ -58,11 +58,11 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^1.17.3",
-    "@types/react": "^19.0.1",
-    "@vitejs/plugin-react": "^4.3.4",
-    "eslint-plugin-react-hooks": "^5.1.0",
-    "react": "^19.0.0"
+    "@eslint-react/eslint-plugin": "^2.3.13",
+    "@types/react": "^19.2.7",
+    "@vitejs/plugin-react": "^5.1.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "react": "^19.2.3"
   },
   "peerDependencies": {
     "react": ">=16.8",

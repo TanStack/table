@@ -10,14 +10,14 @@
     "lint": "eslint ./src"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.3.0",
+    "@faker-js/faker": "^10.1.0",
     "@tanstack/lit-table": "^9.0.0-alpha.10",
-    "@tanstack/lit-virtual": "^3.10.9",
-    "lit": "^3.2.1"
+    "@tanstack/lit-virtual": "^3.13.14",
+    "lit": "^3.3.1"
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^6.0.1",
-    "typescript": "5.6.3",
-    "vite": "^5.4.11"
+    "@rollup/plugin-replace": "^6.0.3",
+    "typescript": "5.9.3",
+    "vite": "^7.2.7"
   }
 }

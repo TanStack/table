@@ -58,8 +58,8 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@preact/preset-vite": "^2.9.3",
-    "preact": "^10.25.4"
+    "@preact/preset-vite": "^2.10.2",
+    "preact": "^10.28.0"
   },
   "peerDependencies": {
     "preact": ">=10"

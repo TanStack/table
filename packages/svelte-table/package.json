@@ -50,11 +50,11 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@sveltejs/package": "^2.3.7",
-    "@sveltejs/vite-plugin-svelte": "^4.0.4",
-    "eslint-plugin-svelte": "^2.46.1",
-    "svelte": "^5.19.3",
-    "svelte-check": "^4.1.4"
+    "@sveltejs/package": "^2.5.7",
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
+    "eslint-plugin-svelte": "^3.13.1",
+    "svelte": "^5.45.10",
+    "svelte-check": "^4.3.4"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"
