@@ -2,34 +2,41 @@ import {
   ChangeDetectorRef,
   Directive,
   DoCheck,
-  effect,
-  type EffectRef,
   Inject,
-  inject,
   Injector,
   Input,
   OnChanges,
-  runInInjectionContext,
   SimpleChanges,
   TemplateRef,
   Type,
   ViewContainerRef,
+  effect,
+  inject,
+  runInInjectionContext,
 } from '@angular/core'
+import { memo } from '@tanstack/table-core'
 import { FlexRenderComponentProps } from './flex-render/context'
 import { FlexRenderFlags } from './flex-render/flags'
 import {
-  flexRenderComponent,
   FlexRenderComponent,
+  flexRenderComponent,
 } from './flex-render/flex-render-component'
 import { FlexRenderComponentFactory } from './flex-render/flex-render-component-ref'
 import {
   FlexRenderComponentView,
   FlexRenderTemplateView,
-  type FlexRenderTypedContent,
   FlexRenderView,
   mapToFlexRenderTypedContent,
 } from './flex-render/view'
-import { memo } from '@tanstack/table-core'
+import type { FlexRenderTypedContent } from './flex-render/view'
+import type {
+  CellContext,
+  HeaderContext,
+  Table,
+  TableFeatures,
+} from '@tanstack/table-core'
+import type { EffectRef } from '@angular/core'
+import { isReactive } from './reactivityUtils'
 
 export {
   injectFlexRenderContext,
@@ -51,7 +58,12 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
   providers: [FlexRenderComponentFactory],
 })
-export class FlexRenderDirective<TProps extends NonNullable<unknown>>
+export class FlexRenderDirective<
+    TProps extends
+      | NonNullable<unknown>
+      | CellContext<TableFeatures, any>
+      | HeaderContext<TableFeatures, any>,
+  >
   implements OnChanges, DoCheck
 {
   readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
@@ -68,9 +80,13 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   @Input({ required: true, alias: 'flexRenderProps' })
   props: TProps = {} as TProps
 
+  @Input({ required: false, alias: 'flexRenderNotifier' })
+  notifier: 'doCheck' | 'tableChange' = 'doCheck'
+
   @Input({ required: false, alias: 'flexRenderInjector' })
   injector: Injector = inject(Injector)
 
+  table: Table<TableFeatures, any>
   renderFlags = FlexRenderFlags.ViewFirstRender
   renderView: FlexRenderView<any> | null = null
 
@@ -97,7 +113,9 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['props']) {
+      this.table = 'table' in this.props ? this.props.table : null
       this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
+      this.bindTableDirtyCheck()
     }
     if (changes['content']) {
       this.renderFlags |=
@@ -114,8 +132,13 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       return
     }
 
-    this.renderFlags |= FlexRenderFlags.DirtyCheck
+    if (this.notifier === 'doCheck') {
+      this.renderFlags |= FlexRenderFlags.DirtyCheck
+      this.doCheck()
+    }
+  }
 
+  private doCheck() {
     const latestContent = this.#getContentValue()
     if (latestContent.kind === 'null' || !this.renderView) {
       this.renderFlags |= FlexRenderFlags.ContentChanged
@@ -127,6 +150,32 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
       }
     }
     this.update()
+  }
+
+  #tableChangeEffect: EffectRef | null = null
+
+  private bindTableDirtyCheck() {
+    this.#tableChangeEffect?.destroy()
+    this.#tableChangeEffect = null
+    let firstCheck = !!(this.renderFlags & FlexRenderFlags.ViewFirstRender)
+    if (
+      this.table &&
+      this.notifier === 'tableChange' &&
+      isReactive(this.table)
+    ) {
+      this.#tableChangeEffect = effect(
+        () => {
+          this.table.get()
+          if (firstCheck) {
+            firstCheck = false
+            return
+          }
+          this.renderFlags |= FlexRenderFlags.DirtyCheck
+          this.doCheck()
+        },
+        { injector: this.injector, forceRoot: true },
+      )
+    }
   }
 
   update() {

@@ -1,6 +1,6 @@
 import { input } from '@angular/core'
 import { test } from 'vitest'
-import { flexRenderComponent } from '../src'
+import { flexRenderComponent } from '../../src'
 
 test('Infer component inputs', () => {
   class Test {

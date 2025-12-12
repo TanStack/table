@@ -93,8 +93,8 @@ export function flexRenderComponent<
  */
 export class FlexRenderComponent<TComponent = any> {
   readonly mirror: ComponentMirror<TComponent>
-  readonly allowedInputNames: string[] = []
-  readonly allowedOutputNames: string[] = []
+  readonly allowedInputNames: Array<string> = []
+  readonly allowedOutputNames: Array<string> = []
 
   constructor(
     readonly component: Type<TComponent>,

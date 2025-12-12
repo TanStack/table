@@ -46,6 +46,7 @@
     "test:build": "publint --strict",
     "test:eslint": "eslint ./src",
     "test:lib": "vitest",
+    "test:benchmark": "vitest bench",
     "test:lib:dev": "vitest --watch",
     "test:types": "tsc && vitest --typecheck"
   },
