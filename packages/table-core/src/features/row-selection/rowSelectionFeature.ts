@@ -178,7 +178,5 @@ export function constructRowSelectionFeature<
 
 /**
  * The Row Selection feature adds row selection state and APIs to the table and row objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection)
- * [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
  */
 export const rowSelectionFeature = constructRowSelectionFeature()

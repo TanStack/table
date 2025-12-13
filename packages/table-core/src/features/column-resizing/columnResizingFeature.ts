@@ -88,9 +88,6 @@ export function constructColumnResizingFeature<
 
 /**
  * The Column Resizing feature adds column resizing state and APIs to the table and column objects.
- *
  * **Note:** This is dependent on the Column Sizing feature.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-resizing)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
  */
 export const columnResizingFeature = constructColumnResizingFeature()

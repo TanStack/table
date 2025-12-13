@@ -343,7 +343,5 @@ export function constructColumnPinningFeature<
 
 /**
  * The Column Pinning feature adds column pinning state and APIs to the table, row, and column objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-pinning)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-pinning)
  */
 export const columnPinningFeature = constructColumnPinningFeature()

@@ -94,7 +94,5 @@ export function constructColumnOrderingFeature<
 
 /**
  * The Column Ordering feature adds column ordering state and APIs to the table and column objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-ordering)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-ordering)
  */
 export const columnOrderingFeature = constructColumnOrderingFeature()

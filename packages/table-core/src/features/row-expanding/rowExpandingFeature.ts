@@ -128,7 +128,5 @@ export function constructRowExpandingFeature<
 
 /**
  * The Row Expanding feature adds row expanding state and APIs to the table and row objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/row-expanding)
- * [Guide](https://tanstack.com/table/v8/docs/guide/row-expanding)
  */
 export const rowExpandingFeature = constructRowExpandingFeature()

@@ -43,9 +43,7 @@ interface FeatureConstructors {
 export interface Plugins {}
 
 export interface TableFeatures
-  extends Partial<CoreFeatures>,
-    Partial<StockFeatures>,
-    Partial<Plugins> {}
+  extends Partial<CoreFeatures>, Partial<StockFeatures>, Partial<Plugins> {}
 
 export type ConstructCellAPIs<TConstructors extends FeatureConstructors> = <
   TFeatures extends TableFeatures,

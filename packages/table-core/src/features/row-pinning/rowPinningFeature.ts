@@ -123,7 +123,5 @@ export function constructRowPinningFeature<
 
 /**
  * The Row Pinning feature adds row pinning state and APIs to the table and row objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/row-pinning)
- * [Guide](https://tanstack.com/table/v8/docs/guide/row-pinning)
  */
 export const rowPinningFeature = constructRowPinningFeature()

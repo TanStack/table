@@ -17,8 +17,7 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit'
 export class TableController<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> implements ReactiveController
-{
+> implements ReactiveController {
   host: ReactiveControllerHost
 
   private _features: TableFeatures | null = null

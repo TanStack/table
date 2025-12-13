@@ -137,7 +137,5 @@ export function constructRowPaginationFeature<
 
 /**
  * The (Row) Pagination feature adds pagination state and APIs to the table object.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/pagination)
- * [Guide](https://tanstack.com/table/v8/docs/guide/pagination)
  */
 export const rowPaginationFeature = constructRowPaginationFeature()

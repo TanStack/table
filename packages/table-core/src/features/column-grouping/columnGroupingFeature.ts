@@ -155,7 +155,5 @@ export function constructColumnGroupingFeature<
 
 /**
  * The (Column) Grouping feature adds column grouping state and APIs to the table, row, column, and cell objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-grouping)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-grouping)
  */
 export const columnGroupingFeature = constructColumnGroupingFeature()

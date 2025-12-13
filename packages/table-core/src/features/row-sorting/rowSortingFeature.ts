@@ -141,7 +141,5 @@ export function constructRowSortingFeature<
 
 /**
  * The (Row) Sorting feature adds sorting state and APIs to the table and column objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/sorting)
- * [Guide](https://tanstack.com/table/v8/docs/guide/sorting)
  */
 export const rowSortingFeature = constructRowSortingFeature()

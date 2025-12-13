@@ -160,6 +160,5 @@ export function constructColumnVisibilityFeature<
 
 /**
  * The Column Visibility feature adds column visibility state and APIs to the table, row, and column objects.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-visibility)
  */
 export const columnVisibilityFeature = constructColumnVisibilityFeature()

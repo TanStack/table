@@ -77,11 +77,11 @@ const renderTable = (table: Table<typeof _features, Person>) => {
           ? ['cursor-pointer', 'select-none']
           : []),
       )
-      ;(divElement.onclick = (e) =>
+      ;((divElement.onclick = (e) =>
         header.column.getToggleSortingHandler()?.(e)),
         (divElement.innerHTML = header.isPlaceholder
           ? ''
-          : flexRender(header.column.columnDef.header, header.getContext()))
+          : flexRender(header.column.columnDef.header, header.getContext())))
       divElement.innerHTML +=
         {
           asc: ' 🔼',

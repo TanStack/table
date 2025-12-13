@@ -88,9 +88,6 @@ export function constructGlobalFilteringFeature<
 
 /**
  * The Global Filtering feature adds global filtering state and APIs to the table and column objects.
- *
  * **Note:** This is dependent on the columnFilteringFeature feature.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering)
- * [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
  */
 export const globalFilteringFeature = constructGlobalFilteringFeature()

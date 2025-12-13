@@ -121,9 +121,6 @@ export function constructColumnFilteringFeature<
 
 /**
  * The Column Filtering feature adds column filtering state and APIs to the table, row, and column objects.
- *
  * **Note:** This does not include Global Filtering. The globalFilteringFeature feature has been split out into its own standalone feature.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-filtering)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-filtering)
  */
 export const columnFilteringFeature = constructColumnFilteringFeature()

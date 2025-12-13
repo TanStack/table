@@ -68,8 +68,9 @@ function useFacetedContext(name: keyof typeof ERRORS) {
   return context
 }
 
-interface FacetedProps<Multiple extends boolean = false>
-  extends React.ComponentPropsWithoutRef<typeof Popover> {
+interface FacetedProps<
+  Multiple extends boolean = false,
+> extends React.ComponentPropsWithoutRef<typeof Popover> {
   value?: FacetedValue<Multiple>
   onValueChange?: (value: FacetedValue<Multiple> | undefined) => void
   children?: React.ReactNode
@@ -291,8 +292,9 @@ FacetedEmpty.displayName = EMPTY_NAME
 const FacetedGroup = CommandGroup
 FacetedGroup.displayName = GROUP_NAME
 
-interface FacetedItemProps
-  extends React.ComponentPropsWithoutRef<typeof CommandItem> {
+interface FacetedItemProps extends React.ComponentPropsWithoutRef<
+  typeof CommandItem
+> {
   value: string
 }
 
