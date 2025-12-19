@@ -16,7 +16,7 @@
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.561.0",
+    "lucide-react": "^0.562.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "tailwind-merge": "^3.4.0",
@@ -29,6 +29,6 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "typescript": "5.9.3",
-    "vite": "^7.2.7"
+    "vite": "^7.3.0"
   }
 }

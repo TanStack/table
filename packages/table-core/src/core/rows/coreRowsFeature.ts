@@ -71,7 +71,6 @@ export function constructCoreRowsFeature<
         },
       ])
     },
-
     constructTableAPIs: (table) => {
       assignAPIs('coreRowsFeature', table, [
         {

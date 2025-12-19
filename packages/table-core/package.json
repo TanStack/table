@@ -59,5 +59,8 @@
     "test:types": "tsc",
     "test:build": "publint --strict",
     "build": "vite build"
+  },
+  "dependencies": {
+    "@tanstack/store": "^0.8.0"
   }
 }

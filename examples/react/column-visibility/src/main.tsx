@@ -104,8 +104,6 @@ function App() {
   const [columns] = React.useState<typeof defaultColumns>(() => [
     ...defaultColumns,
   ])
-  const [columnVisibility, setColumnVisibility] = React.useState({})
-
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
@@ -113,96 +111,103 @@ function App() {
     _rowModels: {},
     columns,
     data,
-    state: {
-      columnVisibility,
-    },
-    onColumnVisibilityChange: setColumnVisibility,
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
   })
 
   return (
-    <div className="p-2">
-      <div className="inline-block border border-black shadow rounded">
-        <div className="px-1 border-b border-black">
-          <label>
-            <input
-              type="checkbox"
-              checked={table.getIsAllColumnsVisible()}
-              onChange={table.getToggleAllColumnsVisibilityHandler()}
-            />{' '}
-            Toggle All
-          </label>
-        </div>
-        {table.getAllLeafColumns().map((column) => {
-          return (
-            <div key={column.id} className="px-1">
+    <table.Subscribe
+      selector={(state) => ({
+        columnVisibility: state.columnVisibility,
+      })}
+    >
+      {(state) => (
+        <div className="p-2">
+          <div className="inline-block border border-black shadow rounded">
+            <div className="px-1 border-b border-black">
               <label>
                 <input
                   type="checkbox"
-                  checked={column.getIsVisible()}
-                  onChange={column.getToggleVisibilityHandler()}
+                  checked={table.getIsAllColumnsVisible()}
+                  onChange={table.getToggleAllColumnsVisibilityHandler()}
                 />{' '}
-                {column.id}
+                Toggle All
               </label>
             </div>
-          )
-        })}
-      </div>
-      <div className="h-4" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
+            {table.getAllLeafColumns().map((column) => {
+              return (
+                <div key={column.id} className="px-1">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={column.getIsVisible()}
+                      onChange={column.getToggleVisibilityHandler()}
+                    />{' '}
+                    {column.id}
+                  </label>
+                </div>
+              )
+            })}
+          </div>
+          <div className="h-4" />
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
                       )}
-                </th>
+                    </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+            </tbody>
+            <tfoot>
+              {table.getFooterGroups().map((footerGroup) => (
+                <tr key={footerGroup.id}>
+                  {footerGroup.headers.map((header) => (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext(),
+                          )}
+                    </th>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext(),
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
-      <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
-        Rerender
-      </button>
-      <div className="h-4" />
-      <pre>{JSON.stringify(table.getState().columnVisibility, null, 2)}</pre>
-    </div>
+            </tfoot>
+          </table>
+          <div className="h-4" />
+          <button onClick={() => rerender()} className="border p-2">
+            Rerender
+          </button>
+          <div className="h-4" />
+          <pre>{JSON.stringify(state.columnVisibility, null, 2)}</pre>
+        </div>
+      )}
+    </table.Subscribe>
   )
 }
 

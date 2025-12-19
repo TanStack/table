@@ -49,14 +49,9 @@ export interface TableOptions_Table<
    */
   meta?: TableMeta<TFeatures, TData>
   /**
-   * The `onStateChange` option can be used to optionally listen to state changes within the table.
+   * Optionally, provide your own external TanStack Store instance if you want to manage the table state externally.
    */
-  onStateChange?: (updater: Updater<TableState<TFeatures>>) => void
-  /**
-   * The `state` option can be used to optionally _control_ part or all of the table state. The state you pass here will merge with and overwrite the internal automatically-managed state to produce the final state for the table. You can also listen to state changes via the `onStateChange` option.
-   * > Note: Any state passed in here will override both the internal state and any other `initialState` you provide.
-   */
-  state?: Partial<TableState<TFeatures>>
+  store?: Store<TableState<TFeatures>>
 }
 
 export interface Table_CoreProperties<
@@ -94,10 +89,6 @@ export interface Table_Table<
   TData extends RowData,
 > extends Table_CoreProperties<TFeatures, TData> {
   /**
-   * Call this function to get the table's current state. It's recommended to use this function and its state, especially when managing the table state manually. It is the exact same state used internally by the table for every feature and function it provides.
-   */
-  getState: () => TableState<TFeatures>
-  /**
    * Call this function to reset the table state to the initial state.
    */
   reset: () => void
@@ -105,8 +96,4 @@ export interface Table_Table<
    * This function can be used to update the table options.
    */
   setOptions: (newOptions: Updater<TableOptions<TFeatures, TData>>) => void
-  /**
-   * Call this function to update the table state.
-   */
-  setState: (updater: Updater<TableState<TFeatures>>) => void
 }

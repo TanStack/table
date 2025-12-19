@@ -156,7 +156,7 @@ TanStack Table keeps track of an state object called `columnSizingInfo` that you
 <ColumnResizeIndicator
   style={{
     transform: header.column.getIsResizing()
-      ? `translateX(${table.getState().columnSizingInfo.deltaOffset}px)`
+      ? `translateX(${table.store.state.columnSizingInfo.deltaOffset}px)`
       : '',
   }}
 />

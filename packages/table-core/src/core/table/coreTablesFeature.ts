@@ -1,10 +1,5 @@
 import { assignAPIs } from '../../utils'
-import {
-  table_getState,
-  table_reset,
-  table_setOptions,
-  table_setState,
-} from './coreTablesFeature.utils'
+import { table_reset, table_setOptions } from './coreTablesFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type { TableOptions_Table, Table_Table } from './coreTablesFeature.types'
@@ -25,20 +20,12 @@ export function constructCoreTablesFeature<
     constructTableAPIs: (table) => {
       assignAPIs('coreTablesFeature', table, [
         {
-          fn: () => table_getState(table),
-          fnName: 'table_getState',
-        },
-        {
           fn: () => table_reset(table),
           fnName: 'table_reset',
         },
         {
           fn: (updater) => table_setOptions(table, updater),
           fnName: 'table_setOptions',
-        },
-        {
-          fn: (updater) => table_setState(table, updater),
-          fnName: 'table_setState',
         },
       ])
     },

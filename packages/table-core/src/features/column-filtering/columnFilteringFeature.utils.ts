@@ -100,7 +100,7 @@ export function column_getFilterValue<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  return column._table.options.state?.columnFilters?.find(
+  return column._table.store.state.columnFilters?.find(
     (d) => d.id === column.id,
   )?.value
 }
@@ -111,7 +111,7 @@ export function column_getFilterIndex<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): number {
   return (
-    column._table.options.state?.columnFilters?.findIndex(
+    column._table.store.state.columnFilters?.findIndex(
       (d) => d.id === column.id,
     ) ?? -1
   )

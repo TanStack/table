@@ -4,7 +4,7 @@ import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table_Internal } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { SortFn, SortFns } from './rowSortingFeature.types'
 import type { RowData } from '../../types/type-utils'
@@ -14,19 +14,15 @@ export function createSortedRowModel<
   TData extends RowData,
 >(
   sortFns: Record<keyof SortFns, SortFn<TFeatures, TData>>,
-): (
-  table: Table_Internal<TFeatures, TData>,
-) => () => RowModel<TFeatures, TData> {
-  return (table) => {
+): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+  return (_table) => {
+    const table = _table as Table_Internal<TFeatures, TData>
     if (!table._rowModelFns.sortFns) table._rowModelFns.sortFns = sortFns
     return tableMemo({
       feature: 'rowSortingFeature',
       table,
       fnName: 'table.getSortedRowModel',
-      memoDeps: () => [
-        table.options.state?.sorting,
-        table.getPreSortedRowModel(),
-      ],
+      memoDeps: () => [table.store.state.sorting, table.getPreSortedRowModel()],
       fn: () => _createSortedRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
     })
@@ -38,7 +34,7 @@ function _createSortedRowModel<
   TData extends RowData = any,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const preSortedRowModel = table.getPreSortedRowModel()
-  const sorting = table.options.state?.sorting
+  const sorting = table.store.state.sorting
 
   if (!preSortedRowModel.rows.length || !sorting?.length) {
     return preSortedRowModel

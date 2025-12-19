@@ -127,7 +127,7 @@ export function constructRowSelectionFeature<
           fn: () => table_getSelectedRowModel(table),
           fnName: 'table_getSelectedRowModel',
           memoDeps: () => [
-            table.options.state?.rowSelection,
+            table.store.state.rowSelection,
             table.getCoreRowModel(),
           ],
         },
@@ -135,7 +135,7 @@ export function constructRowSelectionFeature<
           fn: () => table_getFilteredSelectedRowModel(table),
           fnName: 'table_getFilteredSelectedRowModel',
           memoDeps: () => [
-            table.options.state?.rowSelection,
+            table.store.state.rowSelection,
             table.getFilteredRowModel(),
           ],
         },
@@ -143,7 +143,7 @@ export function constructRowSelectionFeature<
           fn: () => table_getGroupedSelectedRowModel(table),
           fnName: 'table_getGroupedSelectedRowModel',
           memoDeps: () => [
-            table.options.state?.rowSelection,
+            table.store.state.rowSelection,
             table.getSortedRowModel(),
           ],
         },

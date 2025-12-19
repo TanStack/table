@@ -18,6 +18,7 @@ import {
 } from './rowSortingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import { TableState_All } from '../../types/TableState'
 // import type {
 //   CachedRowModel_Sorted,
 //   ColumnDef_RowSorting,

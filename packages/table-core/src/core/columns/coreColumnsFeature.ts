@@ -43,8 +43,8 @@ export function constructCoreColumnsFeature<
           fn: () => column_getLeafColumns(column),
           fnName: 'column_getLeafColumns',
           memoDeps: () => [
-            table.options.state?.columnOrder,
-            table.options.state?.grouping,
+            table.store.state.columnOrder,
+            table.store.state.grouping,
             table.options.columns,
             table.options.groupedColumnMode,
           ],
@@ -78,8 +78,8 @@ export function constructCoreColumnsFeature<
           fn: () => table_getAllLeafColumns(table),
           fnName: 'table_getAllLeafColumns',
           memoDeps: () => [
-            table.options.state?.columnOrder,
-            table.options.state?.grouping,
+            table.store.state.columnOrder,
+            table.store.state.grouping,
             table.options.columns,
             table.options.groupedColumnMode,
           ],

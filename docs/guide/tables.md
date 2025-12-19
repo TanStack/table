@@ -73,12 +73,12 @@ So what's in the `table` instance? Let's take a look at what interactions we can
 
 ### Table State
 
-The table instance contains all of the table state, which can be accessed via the `table.getState()` API. Each table feature registers various states in the table state. For example, the row selection feature registers `rowSelection` state, the pagination feature registers `pagination` state, etc.
+The table instance contains all of the table state, which can be accessed via the `table.store.state` API. Each table feature registers various states in the table state. For example, the row selection feature registers `rowSelection` state, the pagination feature registers `pagination` state, etc.
 
 Each feature will also have corresponding state setter APIs and state resetter APIs on the table instance. For example, the row selection feature will have a `setRowSelection` API and a `resetRowSelection`.
 
 ```ts
-table.getState().rowSelection //read the row selection state
+table.store.state.rowSelection //read the row selection state
 table.setRowSelection((old) => ({...old})) //set the row selection state
 table.resetRowSelection() //reset the row selection state
 ```

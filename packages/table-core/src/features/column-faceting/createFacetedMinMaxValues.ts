@@ -1,7 +1,7 @@
 import { tableMemo } from '../../utils'
 import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table_Internal } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 
@@ -9,11 +9,12 @@ export function createFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
 ) => () => undefined | [number, number] {
-  return (table, columnId) =>
-    tableMemo({
+  return (_table, columnId) => {
+    const table = _table as Table_Internal<TFeatures, TData>
+    return tableMemo({
       feature: 'columnFacetingFeature',
       fn: (facetedRowModel) =>
         _createFacetedMinMaxValues(columnId, facetedRowModel),
@@ -24,6 +25,7 @@ export function createFacetedMinMaxValues<
       ],
       table,
     })
+  }
 }
 
 function _createFacetedMinMaxValues<

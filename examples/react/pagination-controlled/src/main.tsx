@@ -186,7 +186,7 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.store.state.pagination.pageIndex + 1} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -196,7 +196,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
+            defaultValue={table.store.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -205,7 +205,7 @@ function App() {
           />
         </span>
         <select
-          value={table.getState().pagination.pageSize}
+          value={table.store.state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}

@@ -271,7 +271,7 @@ export function column_getIsSorted<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): false | SortDirection {
-  const columnSort = column._table.options.state?.sorting?.find(
+  const columnSort = column._table.store.state.sorting?.find(
     (d) => d.id === column.id,
   )
   return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
@@ -283,9 +283,8 @@ export function column_getSortIndex<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): number {
   return (
-    column._table.options.state?.sorting?.findIndex(
-      (d) => d.id === column.id,
-    ) ?? -1
+    column._table.store.state.sorting?.findIndex((d) => d.id === column.id) ??
+    -1
   )
 }
 

@@ -54,20 +54,20 @@
     "@size-limit/preset-small-lib": "^12.0.0",
     "@tanstack/config": "0.14.2",
     "@testing-library/jest-dom": "^6.9.1",
-    "@types/node": "^25.0.1",
-    "eslint": "^9.39.1",
+    "@types/node": "^25.0.3",
+    "eslint": "^9.39.2",
     "eslint-plugin-unused-imports": "^4.3.0",
     "jsdom": "^27.3.0",
-    "knip": "^5.73.3",
-    "nx": "^22.2.1",
+    "knip": "^5.75.2",
+    "nx": "^22.3.2",
     "prettier": "^3.7.4",
-    "prettier-plugin-svelte": "^3.4.0",
+    "prettier-plugin-svelte": "^3.4.1",
     "publint": "^0.3.16",
     "rimraf": "^6.1.2",
     "sherif": "^1.9.0",
     "size-limit": "^12.0.0",
     "typescript": "5.9.3",
-    "vite": "^7.2.7",
-    "vitest": "^4.0.15"
+    "vite": "^7.3.0",
+    "vitest": "^4.0.16"
   }
 }

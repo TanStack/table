@@ -51,6 +51,7 @@ export function constructTableHelper<
 >(
   tableCreator: (
     tableOptions: TableOptions<TFeatures, TData>,
+    selector?: any,
   ) => Table<TFeatures, TData>,
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper_Core<TFeatures, TData> {

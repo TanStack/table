@@ -52,9 +52,9 @@ export function constructColumnOrderingFeature<
           fnName: 'column_getIndex',
           memoDeps: (position) => [
             position,
-            column._table.options.state?.columnOrder,
-            column._table.options.state?.columnPinning,
-            column._table.options.state?.grouping,
+            column._table.store.state.columnOrder,
+            column._table.store.state.columnPinning,
+            column._table.store.state.grouping,
           ],
         },
         {
@@ -82,8 +82,8 @@ export function constructColumnOrderingFeature<
           fn: () => table_getOrderColumnsFn(table),
           fnName: 'table_getOrderColumnsFn',
           memoDeps: () => [
-            table.options.state?.columnOrder,
-            table.options.state?.grouping,
+            table.store.state.columnOrder,
+            table.store.state.grouping,
             table.options.groupedColumnMode,
           ],
         },

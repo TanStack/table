@@ -69,7 +69,7 @@ export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { columnOrder = [] } = table.options.state ?? {}
+  const { columnOrder = [] } = table.store.state
 
   return (columns: Array<Column_Internal<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
@@ -111,7 +111,7 @@ export function orderColumns<
   table: Table_Internal<TFeatures, TData>,
   leafColumns: Array<Column_Internal<TFeatures, TData, unknown>>,
 ) {
-  const grouping = table.options.state?.grouping ?? ([] as GroupingState)
+  const grouping = table.store.state.grouping ?? ([] as GroupingState)
   const { groupedColumnMode } = table.options
 
   if (!grouping.length || !groupedColumnMode) {

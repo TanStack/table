@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.12",
-    "@tanstack/react-router": "^1.141.1",
+    "@tanstack/react-router": "^1.141.6",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
@@ -19,11 +19,11 @@
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",
     "@rollup/plugin-replace": "^6.0.3",
-    "@tanstack/router-vite-plugin": "^1.141.1",
+    "@tanstack/router-vite-plugin": "^1.141.7",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "typescript": "5.9.3",
-    "vite": "^7.2.7"
+    "vite": "^7.3.0"
   }
 }

@@ -143,26 +143,25 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(20))
-  const [columnOrder, setColumnOrder] = React.useState<Array<string>>(() =>
-    columns.map((c) => c.id!),
-  )
 
   const rerender = () => setData(() => makeData(20))
 
-  const table = tableHelper.useTable({
-    columns,
-    data,
-    state: {
-      columnOrder,
+  const table = tableHelper.useTable(
+    {
+      columns,
+      data,
+      initialState: {
+        columnOrder: columns.map((c) => c.id!),
+      },
     },
-    onColumnOrderChange: setColumnOrder,
-  })
+    (state) => state,
+  )
 
   // reorder columns after drag & drop
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (over && active.id !== over.id) {
-      setColumnOrder((prevColumnOrder) => {
+      table.setColumnOrder((prevColumnOrder) => {
         const oldIndex = prevColumnOrder.indexOf(active.id as string)
         const newIndex = prevColumnOrder.indexOf(over.id as string)
         return arrayMove(prevColumnOrder, oldIndex, newIndex) // this is just a splice util
@@ -197,7 +196,7 @@ function App() {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 <SortableContext
-                  items={columnOrder}
+                  items={table.store.state.columnOrder}
                   strategy={horizontalListSortingStrategy}
                 >
                   {headerGroup.headers.map((header) => (
@@ -213,7 +212,7 @@ function App() {
                 {row.getAllCells().map((cell) => (
                   <SortableContext
                     key={cell.id}
-                    items={columnOrder}
+                    items={table.store.state.columnOrder}
                     strategy={horizontalListSortingStrategy}
                   >
                     <DragAlongCell key={cell.id} cell={cell} />
@@ -223,7 +222,7 @@ function App() {
             ))}
           </tbody>
         </table>
-        <pre>{JSON.stringify(columnOrder, null, 2)}</pre>
+        <pre>{JSON.stringify(table.store.state.columnOrder, null, 2)}</pre>
       </div>
     </DndContext>
   )

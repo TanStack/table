@@ -3,30 +3,30 @@ import { expandRows } from '../row-expanding/createExpandedRowModel'
 import { getDefaultPaginationState } from './rowPaginationFeature.utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table_Internal } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
 export function createPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(): (
-  table: Table_Internal<TFeatures, TData>,
-) => () => RowModel<TFeatures, TData> {
-  return (table) =>
-    tableMemo({
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+  return (_table) => {
+    const table = _table as Table_Internal<TFeatures, TData>
+    return tableMemo({
       feature: 'rowPaginationFeature',
       table,
       fnName: 'table.getPaginatedRowModel',
       memoDeps: () => [
         table.getPrePaginatedRowModel(),
-        table.options.state?.pagination,
+        table.store.state.pagination,
         table.options.paginateExpandedRows
-          ? table.options.state?.expanded
+          ? table.store.state.expanded
           : undefined,
       ],
       fn: () => _createPaginatedRowModel(table),
     })
+  }
 }
 
 function _createPaginatedRowModel<
@@ -34,7 +34,7 @@ function _createPaginatedRowModel<
   TData extends RowData = any,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const prePaginatedRowModel = table.getPrePaginatedRowModel()
-  const pagination = table.options.state?.pagination
+  const pagination = table.store.state.pagination
 
   if (!prePaginatedRowModel.rows.length) {
     return prePaginatedRowModel

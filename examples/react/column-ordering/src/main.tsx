@@ -9,11 +9,7 @@ import {
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type {
-  ColumnDef,
-  ColumnOrderState,
-  ColumnVisibilityState,
-} from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 import type { Person } from './makeData'
 import './index.css'
 
@@ -78,10 +74,6 @@ function App() {
   const [data, setData] = React.useState(() => makeData(20))
   const [columns] = React.useState(() => [...defaultColumns])
 
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<ColumnVisibilityState>({})
-  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([])
-
   const rerender = () => setData(() => makeData(20))
 
   const table = useTable({
@@ -89,12 +81,6 @@ function App() {
     _rowModels: {},
     columns,
     data,
-    state: {
-      columnVisibility,
-      columnOrder,
-    },
-    onColumnVisibilityChange: setColumnVisibility,
-    onColumnOrderChange: setColumnOrder,
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
@@ -107,90 +93,103 @@ function App() {
   }
 
   return (
-    <div className="p-2">
-      <div className="inline-block border border-black shadow rounded">
-        <div className="px-1 border-b border-black">
-          <label>
-            <input
-              type="checkbox"
-              checked={table.getIsAllColumnsVisible()}
-              onChange={table.getToggleAllColumnsVisibilityHandler()}
-            />{' '}
-            Toggle All
-          </label>
-        </div>
-        {table.getAllLeafColumns().map((column) => {
-          return (
-            <div key={column.id} className="px-1">
+    <table.Subscribe
+      selector={(state) => ({
+        // subscribe to only the column order and visibility state changes at root level
+        columnOrder: state.columnOrder,
+        columnVisibility: state.columnVisibility,
+      })}
+    >
+      {(state) => (
+        <div className="p-2">
+          <div className="inline-block border border-black shadow rounded">
+            <div className="px-1 border-b border-black">
               <label>
                 <input
                   type="checkbox"
-                  checked={column.getIsVisible()}
-                  onChange={column.getToggleVisibilityHandler()}
+                  checked={table.getIsAllColumnsVisible()}
+                  onChange={table.getToggleAllColumnsVisibilityHandler()}
                 />{' '}
-                {column.id}
+                Toggle All
               </label>
             </div>
-          )
-        })}
-      </div>
-      <div className="h-4" />
-      <div className="flex flex-wrap gap-2">
-        <button onClick={() => rerender()} className="border p-1">
-          Regenerate
-        </button>
-        <button onClick={() => randomizeColumns()} className="border p-1">
-          Shuffle Columns
-        </button>
-      </div>
-      <div className="h-4" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
+            {table.getAllLeafColumns().map((column) => {
+              return (
+                <div key={column.id} className="px-1">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={column.getIsVisible()}
+                      onChange={column.getToggleVisibilityHandler()}
+                    />{' '}
+                    {column.id}
+                  </label>
+                </div>
+              )
+            })}
+          </div>
+          <div className="h-4" />
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => rerender()} className="border p-1">
+              Regenerate
+            </button>
+            <button onClick={() => randomizeColumns()} className="border p-1">
+              Shuffle Columns
+            </button>
+          </div>
+          <div className="h-4" />
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
                       )}
-                </th>
+                    </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
+            </tbody>
+            <tfoot>
+              {table.getFooterGroups().map((footerGroup) => (
+                <tr key={footerGroup.id}>
+                  {footerGroup.headers.map((header) => (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.footer,
+                            header.getContext(),
+                          )}
+                    </th>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext(),
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
-      </table>
-      <pre>{JSON.stringify(table.getState().columnOrder, null, 2)}</pre>
-    </div>
+            </tfoot>
+          </table>
+          <pre>{JSON.stringify(state.columnOrder, null, 2)}</pre>
+        </div>
+      )}
+    </table.Subscribe>
   )
 }
 

@@ -49,7 +49,7 @@ export function table_getIsSomeRowsPinned<
   table: Table_Internal<TFeatures, TData>,
   position?: RowPinningPosition,
 ): boolean {
-  const rowPinning = table.options.state?.rowPinning
+  const rowPinning = table.store.state.rowPinning
 
   if (!position) {
     return Boolean(rowPinning?.top.length || rowPinning?.bottom.length)
@@ -65,7 +65,7 @@ function table_getPinnedRows<
   position: 'top' | 'bottom',
 ): Array<Row<TFeatures, TData>> {
   const visibleRows = table.getRowModel().rows
-  const pinnedRowIds = table.options.state?.rowPinning?.[position] ?? []
+  const pinnedRowIds = table.store.state.rowPinning?.[position] ?? []
 
   const rows =
     (table.options.keepPinnedRows ?? true)
@@ -102,7 +102,7 @@ export function table_getCenterRows<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): Array<Row<TFeatures, TData>> {
   const { top, bottom } =
-    table.options.state?.rowPinning ?? getDefaultRowPinningState()
+    table.store.state.rowPinning ?? getDefaultRowPinningState()
   const allRows = table.getRowModel().rows
 
   const topAndBottom = new Set([...top, ...bottom])
@@ -127,7 +127,7 @@ export function row_getIsPinned<
   TData extends RowData,
 >(row: Row<TFeatures, TData>): RowPinningPosition {
   const { top, bottom } =
-    row._table.options.state?.rowPinning ?? getDefaultRowPinningState()
+    row._table.store.state.rowPinning ?? getDefaultRowPinningState()
 
   return top.includes(row.id)
     ? 'top'

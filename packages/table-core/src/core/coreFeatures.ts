@@ -18,7 +18,7 @@ export const coreFeatures: CoreFeatures = {
   coreCellsFeature,
   coreColumnsFeature,
   coreHeadersFeature,
-  coreRowsFeature,
   coreRowModelsFeature,
+  coreRowsFeature,
   coreTablesFeature,
 }

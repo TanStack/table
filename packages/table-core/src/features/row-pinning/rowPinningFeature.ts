@@ -67,7 +67,7 @@ export function constructRowPinningFeature<
           fnName: 'row_getPinnedIndex',
           memoDeps: () => [
             row._table.getRowModel().rows,
-            row._table.options.state?.rowPinning,
+            row._table.store.state.rowPinning,
           ],
         },
         {
@@ -97,7 +97,7 @@ export function constructRowPinningFeature<
           fnName: 'table_getTopRows',
           memoDeps: () => [
             table.getRowModel().rows,
-            table.options.state?.rowPinning?.top,
+            table.store.state.rowPinning?.top,
           ],
         },
         {
@@ -105,7 +105,7 @@ export function constructRowPinningFeature<
           fnName: 'table_getBottomRows',
           memoDeps: () => [
             table.getRowModel().rows,
-            table.options.state?.rowPinning?.bottom,
+            table.store.state.rowPinning?.bottom,
           ],
         },
         {
@@ -113,7 +113,7 @@ export function constructRowPinningFeature<
           fnName: 'table_getCenterRows',
           memoDeps: () => [
             table.getRowModel().rows,
-            table.options.state?.rowPinning,
+            table.store.state.rowPinning,
           ],
         },
       ])

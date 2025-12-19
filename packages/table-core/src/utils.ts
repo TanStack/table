@@ -1,7 +1,7 @@
 import type { Table_Internal } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
-import type { TableState } from './types/TableState'
+import type { TableState, TableState_All } from './types/TableState'
 
 export const isDev = process.env.NODE_ENV === 'development'
 
@@ -13,17 +13,19 @@ export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
 
 export function noop() {}
 
-export function makeStateUpdater<K extends keyof TableState<any>>(
+export function makeStateUpdater<K extends keyof TableState_All>(
   key: K,
   instance: unknown,
 ) {
   return (updater: Updater<TableState<any>[K]>) => {
-    ;(instance as any).setState(<TTableState>(old: TTableState) => {
-      return {
-        ...old,
-        [key]: functionalUpdate(updater, (old as any)[key]),
-      }
-    })
+    ;(instance as Table_Internal<any, any>).store.setState(
+      <TTableState extends TableState_All>(old: TTableState) => {
+        return {
+          ...old,
+          [key]: functionalUpdate(updater, old[key]),
+        }
+      },
+    )
   }
 }
 
@@ -191,7 +193,7 @@ export function tableMemo<
     )
     console.info({
       feature,
-      state: table.getState(),
+      state: table.store.state,
       deps: memoOptions.memoDeps?.toString(),
     })
     console.trace()

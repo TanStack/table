@@ -48,7 +48,7 @@ export function column_getIsGrouped<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): boolean {
-  return !!column._table.options.state?.grouping?.includes(column.id)
+  return !!column._table.store.state.grouping?.includes(column.id)
 }
 
 export function column_getGroupedIndex<
@@ -56,7 +56,7 @@ export function column_getGroupedIndex<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): number {
-  return column._table.options.state?.grouping?.indexOf(column.id) ?? -1
+  return column._table.store.state.grouping?.indexOf(column.id) ?? -1
 }
 
 export function column_getToggleGroupingHandler<

@@ -96,7 +96,7 @@ You can also define your own custom filter functions either as the globalFilterF
 
 ### Global Filter State
 
-The global filter state is stored in the table's internal state and can be accessed via the table.getState().globalFilter property. If you want to persist the global filter state outside of the table, you can use the onGlobalFilterChange option to provide a callback function that will be called whenever the global filter state changes.
+The global filter state is stored in the table's internal state and can be accessed via the table.store.state.globalFilter property. If you want to persist the global filter state outside of the table, you can use the onGlobalFilterChange option to provide a callback function that will be called whenever the global filter state changes.
 
 ```jsx
 const [globalFilter, setGlobalFilter] = useState<any>([])

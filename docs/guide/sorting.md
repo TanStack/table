@@ -33,7 +33,7 @@ Since the sorting state is an array, it is possible to sort by multiple columns 
 
 #### Accessing Sorting State
 
-You can access the sorting state directly from the table instance just like any other state using the `table.getState()` API.
+You can access the sorting state directly from the table instance just like any other state using the `table.store.state` API.
 
 ```tsx
 const table = useTable({
@@ -42,7 +42,7 @@ const table = useTable({
   //...
 })
 
-console.log(table.getState().sorting) // access the sorting state from the table instance
+console.log(table.store.state.sorting) // access the sorting state from the table instance
 ```
 
 However, if you need to access the sorting state before the table is initialized, you can "control" the sorting state like down below.

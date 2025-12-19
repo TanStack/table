@@ -102,8 +102,8 @@ export function constructColumnPinningFeature<
           fnName: 'row_getCenterVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
-            row._table.options.state?.columnPinning,
-            row._table.options.state?.columnVisibility,
+            row._table.store.state.columnPinning,
+            row._table.store.state.columnVisibility,
           ],
         },
         {
@@ -111,8 +111,8 @@ export function constructColumnPinningFeature<
           fnName: 'row_getLeftVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
-            row._table.options.state?.columnPinning?.left,
-            row._table.options.state?.columnVisibility,
+            row._table.store.state.columnPinning?.left,
+            row._table.store.state.columnVisibility,
           ],
         },
         {
@@ -120,8 +120,8 @@ export function constructColumnPinningFeature<
           fnName: 'row_getRightVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
-            row._table.options.state?.columnPinning?.right,
-            row._table.options.state?.columnVisibility,
+            row._table.store.state.columnPinning?.right,
+            row._table.store.state.columnVisibility,
           ],
         },
       ])
@@ -152,7 +152,7 @@ export function constructColumnPinningFeature<
               'getVisibleLeafColumns',
               table_getVisibleLeafColumns,
             ),
-            table.options.state?.columnPinning?.left,
+            table.store.state.columnPinning?.left,
           ],
         },
         {
@@ -165,7 +165,7 @@ export function constructColumnPinningFeature<
               'getVisibleLeafColumns',
               table_getVisibleLeafColumns,
             ),
-            table.options.state?.columnPinning,
+            table.store.state.columnPinning,
           ],
         },
         {
@@ -178,7 +178,7 @@ export function constructColumnPinningFeature<
               'getVisibleLeafColumns',
               table_getVisibleLeafColumns,
             ),
-            table.options.state?.columnPinning?.right,
+            table.store.state.columnPinning?.right,
           ],
         },
         // footer groups
@@ -289,7 +289,7 @@ export function constructColumnPinningFeature<
           fnName: 'table_getLeftLeafColumns',
           memoDeps: () => [
             table.options.columns,
-            table.options.state?.columnPinning,
+            table.store.state.columnPinning,
           ],
         },
         {
@@ -297,7 +297,7 @@ export function constructColumnPinningFeature<
           fnName: 'table_getRightLeafColumns',
           memoDeps: () => [
             table.options.columns,
-            table.options.state?.columnPinning,
+            table.store.state.columnPinning,
           ],
         },
         {
@@ -305,7 +305,7 @@ export function constructColumnPinningFeature<
           fnName: 'table_getCenterLeafColumns',
           memoDeps: () => [
             table.options.columns,
-            table.options.state?.columnPinning,
+            table.store.state.columnPinning,
           ],
         },
         // visible leaf columns
@@ -314,8 +314,8 @@ export function constructColumnPinningFeature<
           fnName: 'table_getLeftVisibleLeafColumns',
           memoDeps: () => [
             table.options.columns,
-            table.options.state?.columnPinning,
-            table.options.state?.columnVisibility,
+            table.store.state.columnPinning,
+            table.store.state.columnVisibility,
           ],
         },
         {
@@ -323,8 +323,8 @@ export function constructColumnPinningFeature<
           fnName: 'table_getCenterVisibleLeafColumns',
           memoDeps: () => [
             table.options.columns,
-            table.options.state?.columnPinning,
-            table.options.state?.columnVisibility,
+            table.store.state.columnPinning,
+            table.store.state.columnVisibility,
           ],
         },
         {
@@ -332,8 +332,8 @@ export function constructColumnPinningFeature<
           fnName: 'table_getRightVisibleLeafColumns',
           memoDeps: () => [
             table.options.columns,
-            table.options.state?.columnPinning,
-            table.options.state?.columnVisibility,
+            table.store.state.columnPinning,
+            table.store.state.columnVisibility,
           ],
         },
       ])

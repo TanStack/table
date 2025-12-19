@@ -106,7 +106,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.getState().columnResizing, table.getState().columnSizing])
+  }, [table.store.state.columnResizing, table.store.state.columnSizing])
 
   // demo purposes
   const [enableMemo, setEnableMemo] = React.useState(true)
@@ -133,7 +133,7 @@ function App() {
       <pre style={{ minHeight: '10rem' }}>
         {JSON.stringify(
           {
-            columnSizing: table.getState().columnSizing,
+            columnSizing: table.store.state.columnSizing,
           },
           null,
           2,
@@ -180,7 +180,7 @@ function App() {
             ))}
           </div>
           {/* When resizing any column we will render this special memoized version of our table body */}
-          {table.getState().columnResizing.isResizingColumn && enableMemo ? (
+          {table.store.state.columnResizing.isResizingColumn && enableMemo ? (
             <MemoizedTableBody table={table} />
           ) : (
             <TableBody table={table} />

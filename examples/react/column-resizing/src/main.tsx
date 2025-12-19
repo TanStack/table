@@ -189,7 +189,7 @@ function App() {
                                   (table.options.columnResizeDirection === 'rtl'
                                     ? -1
                                     : 1) *
-                                  (table.getState().columnResizing
+                                  (table.store.state.columnResizing
                                     .deltaOffset ?? 0)
                                 }px)`
                               : '',
@@ -257,7 +257,7 @@ function App() {
                                   (table.options.columnResizeDirection === 'rtl'
                                     ? -1
                                     : 1) *
-                                  (table.getState().columnResizing
+                                  (table.store.state.columnResizing
                                     .deltaOffset ?? 0)
                                 }px)`
                               : '',
@@ -339,7 +339,7 @@ function App() {
                                   (table.options.columnResizeDirection === 'rtl'
                                     ? -1
                                     : 1) *
-                                  (table.getState().columnResizing
+                                  (table.store.state.columnResizing
                                     .deltaOffset ?? 0)
                                 }px)`
                               : '',
@@ -388,8 +388,8 @@ function App() {
       <pre>
         {JSON.stringify(
           {
-            columnSizing: table.getState().columnSizing,
-            columnResizing: table.getState().columnResizing,
+            columnSizing: table.store.state.columnSizing,
+            columnResizing: table.store.state.columnResizing,
           },
           null,
           2,

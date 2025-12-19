@@ -40,7 +40,7 @@ export function column_getIsResizing<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
   return (
-    column._table.options.state?.columnResizing?.isResizingColumn === column.id
+    column._table.store.state.columnResizing?.isResizingColumn === column.id
   )
 }
 

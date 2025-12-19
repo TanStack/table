@@ -122,6 +122,11 @@ export type GetInitialState<TConstructors extends FeatureConstructors> = (
   initialState: Partial<TableState_All> & Partial<TConstructors['TableState']>,
 ) => TableState_All & Partial<TConstructors['TableState']>
 
+export type GetDefaultStateSelector<TConstructors extends FeatureConstructors> =
+  (
+    state: TableState_All,
+  ) => Partial<TableState_All> & Partial<TConstructors['TableState']>
+
 export interface TableFeature<TConstructors extends FeatureConstructors> {
   constructCellAPIs?: ConstructCellAPIs<TConstructors>
   constructColumnAPIs?: ConstructColumnAPIs<TConstructors>

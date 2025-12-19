@@ -69,7 +69,7 @@ export function constructColumnVisibilityFeature<
           fnName: 'column_getIsVisible',
           memoDeps: () => [
             column._table.options.columns,
-            column._table.options.state?.columnVisibility,
+            column._table.store.state.columnVisibility,
             column.columns,
           ],
         },
@@ -95,7 +95,7 @@ export function constructColumnVisibilityFeature<
           fnName: 'row_getAllVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
-            row._table.options.state?.columnVisibility,
+            row._table.store.state.columnVisibility,
           ],
         },
         {
@@ -116,7 +116,7 @@ export function constructColumnVisibilityFeature<
           fn: () => table_getVisibleFlatColumns(table),
           fnName: 'table_getVisibleFlatColumns',
           memoDeps: () => [
-            table.options.state?.columnVisibility,
+            table.store.state.columnVisibility,
             table.options.columns,
           ],
         },
@@ -124,7 +124,7 @@ export function constructColumnVisibilityFeature<
           fn: () => table_getVisibleLeafColumns(table),
           fnName: 'table_getVisibleLeafColumns',
           memoDeps: () => [
-            table.options.state?.columnVisibility,
+            table.store.state.columnVisibility,
             table.options.columns,
           ],
         },

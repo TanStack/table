@@ -201,7 +201,7 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
 
   React.useLayoutEffect(() => {
     rowVirtualizer.measure()
-  }, [table.getState()])
+  }, [table.store.state])
 
   return (
     <TableBody

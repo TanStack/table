@@ -55,6 +55,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@tanstack/preact-store": "^0.10.1",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {

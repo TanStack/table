@@ -263,7 +263,7 @@ function TableBody({
 
   React.useLayoutEffect(() => {
     rowVirtualizer.measure()
-  }, [table.getState()])
+  }, [table.store.state])
 
   const virtualRowIndexes = rowVirtualizer.getVirtualIndexes()
 

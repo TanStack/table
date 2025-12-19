@@ -123,7 +123,7 @@ function App() {
                   // Don't actually do this to resize columns. This is just for demonstration purposes.
                   // See the Column Resizing Example for how to do this with dedicated resizing APIs efficiently.
                   table.setColumnSizing({
-                    ...table.getState().columnSizing,
+                    ...table.store.state.columnSizing,
                     [column.id]: Number(e.target.value),
                   })
                 }}
@@ -308,7 +308,7 @@ function App() {
       <pre>
         {JSON.stringify(
           {
-            columnSizing: table.getState().columnSizing,
+            columnSizing: table.store.state.columnSizing,
           },
           null,
           2,

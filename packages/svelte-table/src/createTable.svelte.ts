@@ -1,15 +1,5 @@
-import {
-  constructTable,
-  coreFeatures,
-  getInitialTableState,
-  isFunction,
-} from '@tanstack/table-core'
-import type {
-  RowData,
-  TableFeatures,
-  TableOptions,
-  TableState,
-} from '@tanstack/table-core'
+import { constructTable, coreFeatures } from '@tanstack/table-core'
+import type { RowData, TableFeatures, TableOptions } from '@tanstack/table-core'
 
 export function createTable<
   TFeatures extends TableFeatures,
@@ -17,17 +7,13 @@ export function createTable<
 >(tableOptions: TableOptions<TFeatures, TData>) {
   const _features = { ...coreFeatures, ...tableOptions._features }
 
-  let state = $state<Partial<TableState<TFeatures>>>(
-    getInitialTableState(_features, tableOptions.initialState),
-  )
-
   const statefulOptions: TableOptions<TFeatures, TData> = mergeObjects(
     tableOptions,
     {
       _features,
-      get state() {
-        return { ...state, ...tableOptions.state }
-      },
+      // Remove state and onStateChange - store handles it internally
+      // But keep onStateChange if user provided for backward compatibility
+      onStateChange: tableOptions.onStateChange,
       mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
         newOptions: Partial<TableOptions<TFeatures, TData>>,
@@ -41,23 +27,16 @@ export function createTable<
 
   function updateOptions() {
     table.setOptions((prev) => {
-      return mergeObjects(prev, tableOptions, {
-        get state() {
-          return mergeObjects(state, tableOptions.state || {})
-        },
-        onStateChange: (updater: any) => {
-          if (isFunction(updater)) state = updater(state)
-          else state = mergeObjects(state, updater)
-
-          tableOptions.onStateChange?.(updater)
-        },
-      })
+      return mergeObjects(prev, tableOptions)
     })
   }
 
   updateOptions()
 
+  // Subscribe to store changes for Svelte reactivity
   $effect.pre(() => {
+    // Access store.state to create reactive dependency
+    table.store.state
     updateOptions() // re-render the table whenever the state or options change
   })
 

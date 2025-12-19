@@ -17,9 +17,9 @@
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/svelte-table": "^9.0.0-alpha.10",
     "@tsconfig/svelte": "^5.0.6",
-    "svelte": "^5.45.10",
+    "svelte": "^5.46.0",
     "svelte-check": "^4.3.4",
     "typescript": "5.9.3",
-    "vite": "^7.2.7"
+    "vite": "^7.3.0"
   }
 }

@@ -51,9 +51,9 @@ export function constructCoreHeadersFeature<
           fnName: 'table_getHeaderGroups',
           memoDeps: () => [
             table.options.columns,
-            table.options.state?.columnOrder,
-            table.options.state?.grouping,
-            table.options.state?.columnPinning,
+            table.store.state?.columnOrder,
+            table.store.state.grouping,
+            table.store.state.columnPinning,
             table.options.groupedColumnMode,
           ],
         },

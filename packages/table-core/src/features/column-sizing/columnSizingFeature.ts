@@ -78,7 +78,7 @@ export function constructColumnSizingFeature<
               table_getPinnedVisibleLeafColumns,
               position,
             ),
-            column._table.options.state?.columnSizing,
+            column._table.store.state.columnSizing,
           ],
         },
         {
@@ -92,7 +92,7 @@ export function constructColumnSizingFeature<
               table_getPinnedVisibleLeafColumns,
               position,
             ),
-            column._table.options.state?.columnSizing,
+            column._table.store.state.columnSizing,
           ],
         },
         {
