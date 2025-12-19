@@ -44,7 +44,7 @@ const defaultColumn = {
   Filter: ({ column: { filterValue, setFilter } }) => (
     <input
       value={filterValue || ''}
-      onChange={e => {
+      onChange={(e) => {
         setFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
       }}
       placeholder="Search..."
@@ -113,7 +113,7 @@ function App(props) {
       defaultColumn,
     },
     useFilters,
-    useGlobalFilter
+    useGlobalFilter,
   )
 
   const reset = () => setData(makeData())
@@ -123,9 +123,9 @@ function App(props) {
       <button onClick={reset}>Reset Data</button>
       <table {...getTableProps()}>
         <thead>
-          {headerGroups.map(headerGroup => (
+          {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()}>
                   {column.render('Header')}
                   {column.canFilter ? column.render('Filter') : null}
@@ -143,7 +143,7 @@ function App(props) {
               <span>
                 <input
                   value={state.globalFilter || ''}
-                  onChange={e => {
+                  onChange={(e) => {
                     setGlobalFilter(e.target.value || undefined) // Set undefined to remove the filter entirely
                   }}
                   placeholder={`Global search...`}
@@ -161,11 +161,11 @@ function App(props) {
             (row, i) =>
               prepareRow(row) || (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => (
+                  {row.cells.map((cell) => (
                     <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                   ))}
                 </tr>
-              )
+              ),
           )}
         </tbody>
       </table>
@@ -187,7 +187,7 @@ test('renders a filterable table', async () => {
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual(['firstName: tanner', 'firstName: jaylen'])
 
   fireEvent.change(filterInputs[1], { target: { value: 'er' } })
@@ -195,7 +195,7 @@ test('renders a filterable table', async () => {
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual(['firstName: derek', 'firstName: joe'])
 
   fireEvent.change(filterInputs[2], { target: { value: 'nothing' } })
@@ -203,7 +203,7 @@ test('renders a filterable table', async () => {
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual([])
 
   fireEvent.change(filterInputs[1], { target: { value: '' } })
@@ -211,7 +211,7 @@ test('renders a filterable table', async () => {
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual([])
 
   fireEvent.change(filterInputs[2], { target: { value: '' } })
@@ -219,7 +219,7 @@ test('renders a filterable table', async () => {
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual([
     'firstName: tanner',
     'firstName: derek',
@@ -232,7 +232,7 @@ test('renders a filterable table', async () => {
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual(['firstName: tanner', 'firstName: joe', 'firstName: jaylen'])
 
   fireEvent.click(resetButton)
@@ -240,7 +240,7 @@ test('renders a filterable table', async () => {
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual([
     'firstName: tanner',
     'firstName: derek',
@@ -300,7 +300,7 @@ test('does not filter columns marked as disableFilters', () => {
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual(['firstName: joe'])
 
   fireEvent.change(filterInputs[0], { target: { value: '' } })
@@ -308,7 +308,7 @@ test('does not filter columns marked as disableFilters', () => {
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual([
     'firstName: tanner',
     'firstName: derek',
@@ -365,7 +365,7 @@ test('does not filter columns with GlobalFilter if marked disableGlobalFilter', 
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual([
     'firstName: tanner',
     'firstName: derek',
@@ -379,7 +379,7 @@ test('does not filter columns with GlobalFilter if marked disableGlobalFilter', 
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual(['firstName: joe'])
 
   // double check global filter ignore (should ignore joe bergevin)
@@ -388,6 +388,6 @@ test('does not filter columns with GlobalFilter if marked disableGlobalFilter', 
     rendered
       .queryAllByRole('row')
       .slice(3)
-      .map(row => Array.from(row.children)[0].textContent)
+      .map((row) => Array.from(row.children)[0].textContent),
   ).toEqual(['firstName: tanner', 'firstName: derek', 'firstName: jaylen'])
 })

@@ -93,13 +93,13 @@ function App() {
     () => [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         id: 'firstName',
         size: 150,
       },
       {
-        accessorFn: row => row.lastName,
-        cell: info => info.getValue(),
+        accessorFn: (row) => row.lastName,
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         id: 'lastName',
         size: 150,
@@ -129,12 +129,12 @@ function App() {
         size: 180,
       },
     ],
-    []
+    [],
   )
 
   const [data, setData] = React.useState(() => makeData(20))
   const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
-    columns.map(c => c.id!)
+    columns.map((c) => c.id!),
   )
 
   const rerender = () => setData(() => makeData(20))
@@ -156,7 +156,7 @@ function App() {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (active && over && active.id !== over.id) {
-      setColumnOrder(columnOrder => {
+      setColumnOrder((columnOrder) => {
         const oldIndex = columnOrder.indexOf(active.id as string)
         const newIndex = columnOrder.indexOf(over.id as string)
         return arrayMove(columnOrder, oldIndex, newIndex) //this is just a splice util
@@ -167,7 +167,7 @@ function App() {
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
-    useSensor(KeyboardSensor, {})
+    useSensor(KeyboardSensor, {}),
   )
 
   return (
@@ -188,13 +188,13 @@ function App() {
         <div className="h-4" />
         <table>
           <thead>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 <SortableContext
                   items={columnOrder}
                   strategy={horizontalListSortingStrategy}
                 >
-                  {headerGroup.headers.map(header => (
+                  {headerGroup.headers.map((header) => (
                     <DraggableTableHeader key={header.id} header={header} />
                   ))}
                 </SortableContext>
@@ -202,9 +202,9 @@ function App() {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map(row => (
+            {table.getRowModel().rows.map((row) => (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
+                {row.getVisibleCells().map((cell) => (
                   <SortableContext
                     key={cell.id}
                     items={columnOrder}
@@ -229,5 +229,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

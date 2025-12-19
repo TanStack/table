@@ -51,30 +51,30 @@ const defaultData: Person[] = [
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         header: 'More Info',
@@ -82,17 +82,17 @@ const defaultColumns: ColumnDef<Person>[] = [
           {
             accessorKey: 'visits',
             header: () => <span>Visits</span>,
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'status',
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
           {
             accessorKey: 'progress',
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           },
         ],
       },
@@ -129,7 +129,9 @@ function App() {
     <div className="p-2">
       <select
         value={columnResizeMode}
-        onChange={e => setColumnResizeMode(e.target.value as ColumnResizeMode)}
+        onChange={(e) =>
+          setColumnResizeMode(e.target.value as ColumnResizeMode)
+        }
         className="border p-2 border-black rounded"
       >
         <option value="onEnd">Resize: "onEnd"</option>
@@ -137,7 +139,7 @@ function App() {
       </select>
       <select
         value={columnResizeDirection}
-        onChange={e =>
+        onChange={(e) =>
           setColumnResizeDirection(e.target.value as ColumnResizeDirection)
         }
         className="border p-2 border-black rounded"
@@ -157,9 +159,9 @@ function App() {
             }}
           >
             <thead>
-              {table.getHeaderGroups().map(headerGroup => (
+              {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => (
+                  {headerGroup.headers.map((header) => (
                     <th
                       {...{
                         key: header.id,
@@ -173,7 +175,7 @@ function App() {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                       <div
                         {...{
@@ -207,9 +209,9 @@ function App() {
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map(row => (
+              {table.getRowModel().rows.map((row) => (
                 <tr key={row.id}>
-                  {row.getVisibleCells().map(cell => (
+                  {row.getVisibleCells().map((cell) => (
                     <td
                       {...{
                         key: cell.id,
@@ -220,7 +222,7 @@ function App() {
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </td>
                   ))}
@@ -241,14 +243,14 @@ function App() {
             }}
           >
             <div className="thead">
-              {table.getHeaderGroups().map(headerGroup => (
+              {table.getHeaderGroups().map((headerGroup) => (
                 <div
                   {...{
                     key: headerGroup.id,
                     className: 'tr',
                   }}
                 >
-                  {headerGroup.headers.map(header => (
+                  {headerGroup.headers.map((header) => (
                     <div
                       {...{
                         key: header.id,
@@ -262,7 +264,7 @@ function App() {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                       <div
                         {...{
@@ -300,14 +302,14 @@ function App() {
                 className: 'tbody',
               }}
             >
-              {table.getRowModel().rows.map(row => (
+              {table.getRowModel().rows.map((row) => (
                 <div
                   {...{
                     key: row.id,
                     className: 'tr',
                   }}
                 >
-                  {row.getVisibleCells().map(cell => (
+                  {row.getVisibleCells().map((cell) => (
                     <div
                       {...{
                         key: cell.id,
@@ -319,7 +321,7 @@ function App() {
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </div>
                   ))}
@@ -340,7 +342,7 @@ function App() {
             }}
           >
             <div className="thead">
-              {table.getHeaderGroups().map(headerGroup => (
+              {table.getHeaderGroups().map((headerGroup) => (
                 <div
                   {...{
                     key: headerGroup.id,
@@ -350,7 +352,7 @@ function App() {
                     },
                   }}
                 >
-                  {headerGroup.headers.map(header => (
+                  {headerGroup.headers.map((header) => (
                     <div
                       {...{
                         key: header.id,
@@ -366,7 +368,7 @@ function App() {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                       <div
                         {...{
@@ -404,7 +406,7 @@ function App() {
                 className: 'tbody',
               }}
             >
-              {table.getRowModel().rows.map(row => (
+              {table.getRowModel().rows.map((row) => (
                 <div
                   {...{
                     key: row.id,
@@ -414,7 +416,7 @@ function App() {
                     },
                   }}
                 >
-                  {row.getVisibleCells().map(cell => (
+                  {row.getVisibleCells().map((cell) => (
                     <div
                       {...{
                         key: cell.id,
@@ -428,7 +430,7 @@ function App() {
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </div>
                   ))}
@@ -449,7 +451,7 @@ function App() {
             columnSizingInfo: table.getState().columnSizingInfo,
           },
           null,
-          2
+          2,
         )}
       </pre>
     </div>
@@ -462,5 +464,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

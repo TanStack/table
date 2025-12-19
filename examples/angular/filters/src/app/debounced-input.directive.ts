@@ -9,11 +9,11 @@ import {
 import { outputFromObservable, toObservable } from '@angular/core/rxjs-interop'
 
 export function runOutsideAngular<T>(
-  zone: NgZone
+  zone: NgZone,
 ): MonoTypeOperatorFunction<T> {
-  return source =>
-    new Observable(subscriber =>
-      zone.runOutsideAngular(() => source.subscribe(subscriber))
+  return (source) =>
+    new Observable((subscriber) =>
+      zone.runOutsideAngular(() => source.subscribe(subscriber)),
     )
 }
 
@@ -29,9 +29,9 @@ export class DebouncedInputDirective {
 
   readonly changeEvent = outputFromObservable(
     this.debounce$.pipe(
-      switchMap(debounce => {
+      switchMap((debounce) => {
         return fromEvent(this.#ref, 'change').pipe(debounceTime(debounce))
-      })
-    )
+      }),
+    ),
   )
 }

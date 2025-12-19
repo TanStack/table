@@ -13,5 +13,5 @@ export default defineConfig(
     globals: {
       '@builder.io/qwik': 'Qwik',
     },
-  })
+  }),
 )

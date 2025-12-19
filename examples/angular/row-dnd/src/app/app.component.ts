@@ -32,12 +32,12 @@ const defaultColumns: ColumnDef<Person>[] = [
   },
   {
     accessorKey: 'firstName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => `Last Name`,
   },
   {
@@ -73,7 +73,7 @@ export class AppComponent {
     return {
       data: this.data(),
       columns: defaultColumns,
-      getRowId: row => row.userId, //required because row indexes will change
+      getRowId: (row) => row.userId, //required because row indexes will change
       debugTable: true,
       debugHeaders: true,
       debugColumns: true,
@@ -83,7 +83,7 @@ export class AppComponent {
     }
   })
 
-  readonly sortedIds = computed(() => this.data().map(data => data.userId))
+  readonly sortedIds = computed(() => this.data().map((data) => data.userId))
 
   drop(event: CdkDragDrop<Person[]>) {
     const data = [...this.data()]

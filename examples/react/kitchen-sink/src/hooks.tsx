@@ -15,7 +15,7 @@ export function useSkipper() {
 
   const result = React.useMemo(
     () => [Boolean(shouldSkip), skip] as const,
-    [shouldSkip, skip]
+    [shouldSkip, skip],
   )
 
   return result

@@ -35,7 +35,7 @@ export interface FilterFn<TData extends RowData> {
     row: Row<TData>,
     columnId: string,
     filterValue: any,
-    addMeta: (meta: FilterMeta) => void
+    addMeta: (meta: FilterMeta) => void,
   ): boolean
   autoRemove?: ColumnFilterAutoRemoveTestFn<TData>
   resolveFilterValue?: TransformFilterValueFn<TData>
@@ -43,12 +43,12 @@ export interface FilterFn<TData extends RowData> {
 
 export type TransformFilterValueFn<TData extends RowData> = (
   value: any,
-  column?: Column<TData, unknown>
+  column?: Column<TData, unknown>,
 ) => unknown
 
 export type ColumnFilterAutoRemoveTestFn<TData extends RowData> = (
   value: any,
-  column?: Column<TData, unknown>
+  column?: Column<TData, unknown>,
 ) => boolean
 
 export type CustomFilterFns<TData extends RowData> = Record<
@@ -195,8 +195,7 @@ type ResolvedFilterFns = keyof FilterFns extends never
     }
 
 export interface ColumnFiltersOptions<TData extends RowData>
-  extends ColumnFiltersOptionsBase<TData>,
-    ResolvedFilterFns {}
+  extends ColumnFiltersOptionsBase<TData>, ResolvedFilterFns {}
 
 export interface ColumnFiltersInstance<TData extends RowData> {
   _getFilteredRowModel?: () => RowModel<TData>
@@ -257,7 +256,7 @@ export const ColumnFiltering: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): ColumnFiltersOptions<TData> => {
     return {
       onColumnFiltersChange: makeStateUpdater('columnFilters', table),
@@ -268,7 +267,7 @@ export const ColumnFiltering: TableFeature = {
 
   createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column.getAutoFilterFn = () => {
       const firstRow = table.getCoreRowModel().flatRows[0]
@@ -303,8 +302,8 @@ export const ColumnFiltering: TableFeature = {
         : column.columnDef.filterFn === 'auto'
           ? column.getAutoFilterFn()
           : // @ts-ignore
-            table.options.filterFns?.[column.columnDef.filterFn as string] ??
-            filterFns[column.columnDef.filterFn as BuiltInFilterFn]
+            (table.options.filterFns?.[column.columnDef.filterFn as string] ??
+            filterFns[column.columnDef.filterFn as BuiltInFilterFn])
     }
     column.getCanFilter = () => {
       return (
@@ -318,33 +317,33 @@ export const ColumnFiltering: TableFeature = {
     column.getIsFiltered = () => column.getFilterIndex() > -1
 
     column.getFilterValue = () =>
-      table.getState().columnFilters?.find(d => d.id === column.id)?.value
+      table.getState().columnFilters?.find((d) => d.id === column.id)?.value
 
     column.getFilterIndex = () =>
-      table.getState().columnFilters?.findIndex(d => d.id === column.id) ?? -1
+      table.getState().columnFilters?.findIndex((d) => d.id === column.id) ?? -1
 
-    column.setFilterValue = value => {
-      table.setColumnFilters(old => {
+    column.setFilterValue = (value) => {
+      table.setColumnFilters((old) => {
         const filterFn = column.getFilterFn()
-        const previousFilter = old?.find(d => d.id === column.id)
+        const previousFilter = old?.find((d) => d.id === column.id)
 
         const newFilter = functionalUpdate(
           value,
-          previousFilter ? previousFilter.value : undefined
+          previousFilter ? previousFilter.value : undefined,
         )
 
         //
         if (
           shouldAutoRemoveFilter(filterFn as FilterFn<TData>, newFilter, column)
         ) {
-          return old?.filter(d => d.id !== column.id) ?? []
+          return old?.filter((d) => d.id !== column.id) ?? []
         }
 
         const newFilterObj = { id: column.id, value: newFilter }
 
         if (previousFilter) {
           return (
-            old?.map(d => {
+            old?.map((d) => {
               if (d.id === column.id) {
                 return newFilterObj
               }
@@ -364,7 +363,7 @@ export const ColumnFiltering: TableFeature = {
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
-    _table: Table<TData>
+    _table: Table<TData>,
   ): void => {
     row.columnFilters = {}
     row.columnFiltersMeta = {}
@@ -375,8 +374,8 @@ export const ColumnFiltering: TableFeature = {
       const leafColumns = table.getAllLeafColumns()
 
       const updateFn = (old: ColumnFiltersState) => {
-        return functionalUpdate(updater, old)?.filter(filter => {
-          const column = leafColumns.find(d => d.id === filter.id)
+        return functionalUpdate(updater, old)?.filter((filter) => {
+          const column = leafColumns.find((d) => d.id === filter.id)
 
           if (column) {
             const filterFn = column.getFilterFn()
@@ -393,9 +392,9 @@ export const ColumnFiltering: TableFeature = {
       table.options.onColumnFiltersChange?.(updateFn)
     }
 
-    table.resetColumnFilters = defaultState => {
+    table.resetColumnFilters = (defaultState) => {
       table.setColumnFilters(
-        defaultState ? [] : table.initialState?.columnFilters ?? []
+        defaultState ? [] : (table.initialState?.columnFilters ?? []),
       )
     }
 
@@ -417,7 +416,7 @@ export const ColumnFiltering: TableFeature = {
 export function shouldAutoRemoveFilter<TData extends RowData>(
   filterFn?: FilterFn<TData>,
   value?: any,
-  column?: Column<TData, unknown>
+  column?: Column<TData, unknown>,
 ) {
   return (
     (filterFn && filterFn.autoRemove

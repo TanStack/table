@@ -64,7 +64,7 @@ const DraggableRow = ({ row }: { row: Row<Person> }) => {
   return (
     // connect row ref to dnd-kit, apply important styles
     <tr ref={setNodeRef} style={style}>
-      {row.getVisibleCells().map(cell => (
+      {row.getVisibleCells().map((cell) => (
         <td key={cell.id} style={{ width: cell.column.getSize() }}>
           {flexRender(cell.column.columnDef.cell, cell.getContext())}
         </td>
@@ -86,12 +86,12 @@ function App() {
       },
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
       },
       {
@@ -111,13 +111,13 @@ function App() {
         header: 'Profile Progress',
       },
     ],
-    []
+    [],
   )
   const [data, setData] = React.useState(() => makeData(20))
 
   const dataIds = React.useMemo<UniqueIdentifier[]>(
     () => data?.map(({ userId }) => userId),
-    [data]
+    [data],
   )
 
   const rerender = () => setData(() => makeData(20))
@@ -126,7 +126,7 @@ function App() {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getRowId: row => row.userId, //required because row indexes will change
+    getRowId: (row) => row.userId, //required because row indexes will change
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
@@ -136,7 +136,7 @@ function App() {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (active && over && active.id !== over.id) {
-      setData(data => {
+      setData((data) => {
         const oldIndex = dataIds.indexOf(active.id)
         const newIndex = dataIds.indexOf(over.id)
         return arrayMove(data, oldIndex, newIndex) //this is just a splice util
@@ -147,7 +147,7 @@ function App() {
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
-    useSensor(KeyboardSensor, {})
+    useSensor(KeyboardSensor, {}),
   )
 
   return (
@@ -168,15 +168,15 @@ function App() {
         <div className="h-4" />
         <table>
           <thead>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
+                {headerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </th>
                 ))}
@@ -188,7 +188,7 @@ function App() {
               items={dataIds}
               strategy={verticalListSortingStrategy}
             >
-              {table.getRowModel().rows.map(row => (
+              {table.getRowModel().rows.map((row) => (
                 <DraggableRow key={row.id} row={row} />
               ))}
             </SortableContext>
@@ -206,5 +206,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

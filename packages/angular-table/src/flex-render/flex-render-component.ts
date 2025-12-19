@@ -100,12 +100,12 @@ export class FlexRenderComponent<TComponent = any> {
     readonly component: Type<TComponent>,
     readonly inputs?: Inputs<TComponent>,
     readonly injector?: Injector,
-    readonly outputs?: Outputs<TComponent>
+    readonly outputs?: Outputs<TComponent>,
   ) {
     const mirror = reflectComponentType(component)
     if (!mirror) {
       throw new Error(
-        `[@tanstack-table/angular] The provided symbol is not a component`
+        `[@tanstack-table/angular] The provided symbol is not a component`,
       )
     }
     this.mirror = mirror

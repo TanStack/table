@@ -1,6 +1,5 @@
 {
   "name": "tanstack-table-example-query-router-search-params",
-  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -11,14 +10,14 @@
   "dependencies": {
     "@tanstack/react-query": "^5.49.0",
     "@tanstack/react-router": "^1.43.2",
-    "@tanstack/react-table": "^8.21.2",
+    "@tanstack/react-table": "^8.21.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "@tanstack/router-vite-plugin": "^1.43.1",
     "@rollup/plugin-replace": "^5.0.7",
+    "@tanstack/router-vite-plugin": "^1.43.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

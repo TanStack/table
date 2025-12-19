@@ -4,7 +4,7 @@ title: Header Groups Guide
 
 ## API
 
-[Header Group API](../../api/core/header-group)
+[Header Group API](../api/core/header-group)
 
 ## Header Groups Guide
 
@@ -12,7 +12,7 @@ This quick guide will discuss the different ways you can retrieve and interact w
 
 ### What are Header Groups?
 
-Header Groups are simply "rows" of headers. Don't let the name confuse you, it's just that simple. The large majority of tables will only have one row of headers (a single header group), but if you define your column structure with nested columns as with the [Column Groups example](../../framework/react/examples/column-groups), you can have multiple rows of headers (multiple header groups).
+Header Groups are simply "rows" of headers. Don't let the name confuse you, it's just that simple. The large majority of tables will only have one row of headers (a single header group), but if you define your column structure with nested columns as with the [Column Groups example](../framework/react/examples/column-groups), you can have multiple rows of headers (multiple header groups).
 
 ### Where to Get Header Groups From
 
@@ -20,13 +20,13 @@ There are multiple `table` instance APIs you can use to retrieve header groups f
 
 ### Header Group Objects
 
-Header Group objects are similar to [Row](../rows) objects, though simpler since there is not as much going on in header rows as there are in the body rows.
+Header Group objects are similar to [Row](../guide/rows) objects, though simpler since there is not as much going on in header rows as there are in the body rows.
 
 By default, header groups only have three properties:
 
 - `id`: The unique identifier for the header group that is generated from its depth (index). This is useful as a key for React components.
 - `depth`: The depth of the header group, zero-indexed based. Think of this as the row index amongst all header rows.
-- `headers`: An array of [Header](../headers) cell objects that belong to this header group (row).
+- `headers`: An array of [Header](../guide/headers) cell objects that belong to this header group (row).
 
 ### Access Header Cells
 

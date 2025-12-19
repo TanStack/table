@@ -54,12 +54,12 @@ export async function fetchData(options: {
   pageSize: number
 }) {
   // Simulate some network latency
-  await new Promise(r => setTimeout(r, 500))
+  await new Promise((r) => setTimeout(r, 500))
 
   return {
     rows: data.slice(
       options.pageIndex * options.pageSize,
-      (options.pageIndex + 1) * options.pageSize
+      (options.pageIndex + 1) * options.pageSize,
     ),
     pageCount: Math.ceil(data.length / options.pageSize),
     rowCount: data.length,

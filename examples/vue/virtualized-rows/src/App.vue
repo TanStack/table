@@ -22,8 +22,8 @@ const filteredData = computed<Person[]>(() => {
   // If no search value is present, return all data
   if (!searchValue) return data.value
 
-  return data.value.filter(row => {
-    return Object.values(row).some(value => {
+  return data.value.filter((row) => {
+    return Object.values(row).some((value) => {
       if (value instanceof Date) {
         return value.toLocaleString().toLowerCase().includes(searchValue)
       }
@@ -51,12 +51,12 @@ const columns = computed<ColumnDef<Person>[]>(() => [
   },
   {
     accessorKey: 'firstName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => h('span', 'Last Name'),
   },
   {
@@ -78,7 +78,7 @@ const columns = computed<ColumnDef<Person>[]>(() => [
   {
     accessorKey: 'createdAt',
     header: 'Created At',
-    cell: info => info.getValue<Date>().toLocaleString(),
+    cell: (info) => info.getValue<Date>().toLocaleString(),
   },
 ])
 
@@ -176,7 +176,7 @@ function measureElement(el?: Element) {
                 :class="{
                   'cursor-pointer select-none': header.column.getCanSort(),
                 }"
-                @click="e => header.column.getToggleSortingHandler()?.(e)"
+                @click="(e) => header.column.getToggleSortingHandler()?.(e)"
               >
                 <FlexRender
                   :render="header.column.columnDef.header"

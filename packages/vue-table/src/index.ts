@@ -43,7 +43,7 @@ export const FlexRender = defineComponent({
 })
 
 function getOptionsWithReactiveData<TData extends RowData>(
-  options: TableOptionsWithReactiveData<TData>
+  options: TableOptionsWithReactiveData<TData>,
 ) {
   return mergeProxy(options, {
     data: unref(options.data),
@@ -51,7 +51,7 @@ function getOptionsWithReactiveData<TData extends RowData>(
 }
 
 export function useVueTable<TData extends RowData>(
-  initialOptions: TableOptionsWithReactiveData<TData>
+  initialOptions: TableOptionsWithReactiveData<TData>,
 ) {
   const IS_REACTIVE = isRef(initialOptions.data)
 
@@ -62,7 +62,7 @@ export function useVueTable<TData extends RowData>(
       renderFallbackValue: null,
       mergeOptions(
         defaultOptions: TableOptions<TData>,
-        options: TableOptions<TData>
+        options: TableOptions<TData>,
       ) {
         return IS_REACTIVE
           ? {
@@ -72,11 +72,11 @@ export function useVueTable<TData extends RowData>(
           : mergeProxy(defaultOptions, options)
       },
     },
-    IS_REACTIVE ? getOptionsWithReactiveData(initialOptions) : initialOptions
+    IS_REACTIVE ? getOptionsWithReactiveData(initialOptions) : initialOptions,
   )
 
   const table = createTable<TData>(
-    resolvedOptions as TableOptionsResolved<TData>
+    resolvedOptions as TableOptionsResolved<TData>,
   )
 
   // Add reactivity support
@@ -85,12 +85,12 @@ export function useVueTable<TData extends RowData>(
     watch(
       dataRef,
       () => {
-        table.setState(prev => ({
+        table.setState((prev) => ({
           ...prev,
           data: dataRef.value,
         }))
       },
-      { immediate: true }
+      { immediate: true },
     )
   }
 
@@ -98,7 +98,7 @@ export function useVueTable<TData extends RowData>(
   const state = ref(table.initialState)
 
   watchEffect(() => {
-    table.setOptions(prev => {
+    table.setOptions((prev) => {
       const stateProxy = new Proxy({} as typeof state.value, {
         get: (_, prop) => state.value[prop as keyof typeof state.value],
       })
@@ -124,7 +124,7 @@ export function useVueTable<TData extends RowData>(
 
             initialOptions.onStateChange?.(updater)
           },
-        }
+        },
       )
     })
   })

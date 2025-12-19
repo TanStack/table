@@ -760,6 +760,10 @@
             {
               "to": "framework/vue/examples/virtualized-rows",
               "label": "Virtualized Rows"
+            },
+            {
+              "to": "framework/vue/examples/grouping",
+              "label": "Grouping"
             }
           ]
         },

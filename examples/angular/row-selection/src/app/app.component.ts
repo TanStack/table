@@ -51,31 +51,31 @@ export class AppComponent {
     },
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
           header: 'First name',
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
+          cell: (info) => info.getValue(),
           header: () => 'Last Name',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
           header: () => this.ageHeaderCell(),
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
@@ -83,17 +83,17 @@ export class AppComponent {
             {
               accessorKey: 'visits',
               header: () => 'Visits',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
               header: 'Status',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
               header: 'Profile Progress',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
           ],
         },
@@ -109,11 +109,11 @@ export class AppComponent {
     },
     enableRowSelection: true, // enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-    onRowSelectionChange: updaterOrValue => {
+    onRowSelectionChange: (updaterOrValue) => {
       this.rowSelection.set(
         typeof updaterOrValue === 'function'
           ? updaterOrValue(this.rowSelection())
-          : updaterOrValue
+          : updaterOrValue,
       )
     },
     getCoreRowModel: getCoreRowModel(),
@@ -123,11 +123,11 @@ export class AppComponent {
   }))
 
   readonly stringifiedRowSelection = computed(() =>
-    JSON.stringify(this.rowSelection(), null, 2)
+    JSON.stringify(this.rowSelection(), null, 2),
   )
 
   readonly rowSelectionLength = computed(
-    () => Object.keys(this.rowSelection()).length
+    () => Object.keys(this.rowSelection()).length,
   )
 
   onPageInputChange(event: Event): void {
@@ -143,7 +143,7 @@ export class AppComponent {
   logSelectedFlatRows(): void {
     console.info(
       'table.getSelectedRowModel().flatRows',
-      this.table.getSelectedRowModel().flatRows
+      this.table.getSelectedRowModel().flatRows,
     )
   }
 

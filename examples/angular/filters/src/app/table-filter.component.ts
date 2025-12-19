@@ -90,7 +90,7 @@ export class FilterComponent<T> {
   })
 
   readonly columnFilterValue = computed<any>(() =>
-    this.column().getFilterValue()
+    this.column().getFilterValue(),
   )
 
   readonly minRangePlaceholder = computed(() => {

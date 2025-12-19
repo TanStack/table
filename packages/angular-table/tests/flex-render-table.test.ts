@@ -33,12 +33,12 @@ const defaultColumns: ColumnDef<TestData>[] = [
     id: 'title',
     accessorKey: 'title',
     header: 'Title',
-    cell: props => props.renderValue(),
+    cell: (props) => props.renderValue(),
   },
 ]
 
 describe('FlexRenderDirective', () => {
-  test.each([null, undefined])('Render %s as empty', value => {
+  test.each([null, undefined])('Render %s as empty', (value) => {
     const { fixture, dom } = createTestTable(defaultData, [
       { id: 'first_cell', header: 'header', cell: () => value },
     ])
@@ -62,7 +62,7 @@ describe('FlexRenderDirective', () => {
 
     expectPrimitiveValueIs(
       firstCell,
-      String(typeof columnValue === 'function' ? columnValue() : columnValue)
+      String(typeof columnValue === 'function' ? columnValue() : columnValue),
     )
   })
 
@@ -144,7 +144,7 @@ describe('FlexRenderDirective', () => {
     statusComponent.set(
       flexRenderComponent(TestBadgeComponent, {
         inputs: { status: 'Updated status' },
-      })
+      }),
     )
     fixture.detectChanges()
     const el = firstCell!.firstElementChild as HTMLElement
@@ -170,7 +170,7 @@ describe('FlexRenderDirective', () => {
         {
           id: 'cell',
           header: 'Header',
-          cell: context => {
+          cell: (context) => {
             contextCaptor(context)
             return flexRenderComponent(EmptyCell)
           },
@@ -178,12 +178,12 @@ describe('FlexRenderDirective', () => {
       ],
       () => ({
         state: tableState(),
-        onStateChange: updater => {
+        onStateChange: (updater) => {
           return typeof updater === 'function'
             ? tableState.update(updater as any)
             : tableState.set(updater)
         },
-      })
+      }),
     )
 
     const latestCall = () =>
@@ -276,7 +276,7 @@ describe('FlexRenderDirective', () => {
           data: defaultData,
           getCoreRowModel: getCoreRowModel(),
           state: { expanded: this.expandState() },
-          onExpandedChange: updaterOrValue => {
+          onExpandedChange: (updaterOrValue) => {
             typeof updaterOrValue === 'function'
               ? this.expandState.update(updaterOrValue)
               : this.expandState.set(updaterOrValue)
@@ -305,7 +305,7 @@ describe('FlexRenderDirective', () => {
 
 function expectPrimitiveValueIs(
   cell: HTMLTableCellElement | null,
-  value: unknown
+  value: unknown,
 ) {
   expect(cell).not.toBeNull()
   expect(cell!.matches(':empty')).toBe(false)
@@ -319,7 +319,7 @@ type TestData = { id: string; title: string }
 export function createTestTable(
   data: TestData[],
   columns: ColumnDef<TestData, any>[],
-  optionsFn?: () => Partial<TableOptions<TestData>>
+  optionsFn?: () => Partial<TableOptions<TestData>>,
 ) {
   @Component({
     template: `

@@ -14,7 +14,7 @@ export type FlexRenderTypedContent =
   | { kind: 'component'; content: Type<unknown> }
 
 export function mapToFlexRenderTypedContent(
-  content: FlexRenderContent<any>
+  content: FlexRenderContent<any>,
 ): FlexRenderTypedContent {
   if (content === null || content === undefined) {
     return { kind: 'null' }
@@ -42,7 +42,7 @@ export abstract class FlexRenderView<
 
   protected constructor(
     initialContent: Exclude<FlexRenderTypedContent, { kind: 'null' }>,
-    view: TView
+    view: TView,
   ) {
     this.#content = initialContent
     this.view = view
@@ -76,7 +76,7 @@ export class FlexRenderTemplateView extends FlexRenderView<
       FlexRenderTypedContent,
       { kind: 'primitive' | 'templateRef' }
     >,
-    view: EmbeddedViewRef<unknown>
+    view: EmbeddedViewRef<unknown>,
   ) {
     super(initialContent, view)
   }
@@ -107,7 +107,7 @@ export class FlexRenderComponentView extends FlexRenderView<
       FlexRenderTypedContent,
       { kind: 'component' | 'flexRenderComponent' }
     >,
-    view: FlexRenderComponentRef<unknown>
+    view: FlexRenderComponentRef<unknown>,
   ) {
     super(initialContent, view)
   }

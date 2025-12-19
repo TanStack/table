@@ -97,30 +97,30 @@ const columns: ColumnDef<Person, any>[] = [
     },
   },
   columnHelper.accessor('firstName', {
-    cell: info => info.getValue(),
-    footer: props => props.column.id,
+    cell: (info) => info.getValue(),
+    footer: (props) => props.column.id,
   }),
-  columnHelper.accessor(row => row.lastName, {
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => <span>Last Name</span>,
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   }),
   columnHelper.accessor('age', {
     header: () => 'Age',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   }),
   columnHelper.accessor('visits', {
     header: () => <span>Visits</span>,
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
   }),
 ]
 
@@ -133,7 +133,7 @@ const App = component$(() => {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     enableSorting: true,
-    onRowSelectionChange: updater => {
+    onRowSelectionChange: (updater) => {
       rowSelection.value =
         updater instanceof Function ? updater(rowSelection.value) : updater
     },
@@ -148,9 +148,9 @@ const App = component$(() => {
     <div>
       <table class="table">
         <thead>
-          {table.getHeaderGroups().map(headerGroup => (
+          {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
+              {headerGroup.headers.map((header) => {
                 const { column } = header
                 const id = column.id
                 return (
@@ -166,7 +166,7 @@ const App = component$(() => {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </th>
                 )
@@ -176,10 +176,10 @@ const App = component$(() => {
         </thead>
 
         <tbody>
-          {table.getRowModel().rows.map(row => {
+          {table.getRowModel().rows.map((row) => {
             return (
               <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
+                {row.getVisibleCells().map((cell) => (
                   <td key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
@@ -204,7 +204,7 @@ const App = component$(() => {
           onClick$={() =>
             console.info(
               'table.getSelectedRowModel().flatRows',
-              table.getSelectedRowModel().flatRows
+              table.getSelectedRowModel().flatRows,
             )
           }
         >

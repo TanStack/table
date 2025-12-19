@@ -31,15 +31,15 @@ export interface FacetedColumn<TData extends RowData> {
 export interface FacetedOptions<TData extends RowData> {
   getFacetedMinMaxValues?: (
     table: Table<TData>,
-    columnId: string
+    columnId: string,
   ) => () => undefined | [number, number]
   getFacetedRowModel?: (
     table: Table<TData>,
-    columnId: string
+    columnId: string,
   ) => () => RowModel<TData>
   getFacetedUniqueValues?: (
     table: Table<TData>,
-    columnId: string
+    columnId: string,
   ) => () => Map<any, number>
 }
 
@@ -48,7 +48,7 @@ export interface FacetedOptions<TData extends RowData> {
 export const ColumnFaceting: TableFeature = {
   createColumn: <TData extends RowData>(
     column: Column<TData, unknown>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
     column._getFacetedRowModel =
       table.options.getFacetedRowModel &&
