@@ -16,8 +16,9 @@ import type { TableOptions_RowPagination } from '../features/row-pagination/rowP
 import type { TableOptions_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { TableOptions_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
-import type { RowData, UnionToIntersection } from './type-utils'
+import type { RowData, UnionToIntersection, Updater } from './type-utils'
 import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
+import type { TableState } from './TableState'
 
 export interface TableOptions_Plugins<
   TFeatures extends TableFeatures,
@@ -95,7 +96,11 @@ export type TableOptions<
   > &
   ExtractFeatureTypes<'TableOptions', TFeatures> &
   TableOptions_Plugins<TFeatures, TData> &
-  DebugOptions<TFeatures>
+  DebugOptions<TFeatures> &
+  // Temporary backward compatibility for onStateChange
+  {
+    onStateChange?: (updater: Updater<TableState<TFeatures>>) => void
+  }
 
 // export type TableOptions<
 //   TFeatures extends TableFeatures,
