@@ -6,13 +6,13 @@ title: Expanding Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [expanding](../../framework/react/examples/expanding)
-- [grouping](../../framework/react/examples/grouping)
-- [sub-components](../../framework/react/examples/sub-components)
+- [expanding](../framework/react/examples/expanding)
+- [grouping](../framework/react/examples/grouping)
+- [sub-components](../framework/react/examples/sub-components)
 
 ## API
 
-[Expanding API](../../api/features/expanding)
+[Expanding API](../api/features/expanding)
 
 ## Expanding Feature Guide
 
@@ -211,7 +211,7 @@ const table = useReactTable({
 
 ### Pinning Expanded Rows
 
-Pinning expanded rows works the same way as pinning regular rows. You can pin expanded rows to the top or bottom of the table. Please refer to the [Pinning Guide](../pinning.md) for more information on row pinning.
+Pinning expanded rows works the same way as pinning regular rows. You can pin expanded rows to the top or bottom of the table. Please refer to the [Pinning Guide](./pinning.md) for more information on row pinning.
 
 ### Sorting Expanded Rows
 

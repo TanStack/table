@@ -29,7 +29,7 @@ export function DebouncedInput({
     <input
       {...props}
       value={value ?? ''}
-      onChange={e => {
+      onChange={(e) => {
         if (e.target.value === '') return setValue('')
         if (props.type === 'number') {
           setValue(e.target.valueAsNumber)

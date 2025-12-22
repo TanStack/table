@@ -19,9 +19,9 @@ describe('match-sorter-utils', () => {
       it('CASE_SENSITIVE_EQUAL', () => {
         const ranking = rankItem(testPerson, 'John', {
           accessors: [
-            item => item.firstName,
-            item => item.lastName,
-            item => item.email,
+            (item) => item.firstName,
+            (item) => item.lastName,
+            (item) => item.email,
           ],
         })
         expect(ranking.rank).toBe(rankings.CASE_SENSITIVE_EQUAL)
@@ -34,9 +34,9 @@ describe('match-sorter-utils', () => {
       it('NO_MATCH', () => {
         const ranking = rankItem(testPerson, 'Tom', {
           accessors: [
-            item => item.firstName,
-            item => item.lastName,
-            item => item.email,
+            (item) => item.firstName,
+            (item) => item.lastName,
+            (item) => item.email,
           ],
         })
         expect(ranking.rank).toBe(rankings.NO_MATCH)
@@ -52,15 +52,15 @@ describe('match-sorter-utils', () => {
         const ranking = rankItem(testPerson, 'John', {
           accessors: [
             {
-              accessor: item => item.firstName,
+              accessor: (item) => item.firstName,
               threshold: rankings.CONTAINS,
             },
             {
-              accessor: item => item.lastName,
+              accessor: (item) => item.lastName,
               threshold: rankings.CONTAINS,
             },
             {
-              accessor: item => item.email,
+              accessor: (item) => item.email,
               threshold: rankings.MATCHES,
             },
           ],
@@ -77,19 +77,19 @@ describe('match-sorter-utils', () => {
           threshold: rankings.ACRONYM,
           accessors: [
             {
-              accessor: item => item.firstName,
+              accessor: (item) => item.firstName,
               threshold: rankings.CONTAINS,
             },
             {
-              accessor: item => item.lastName,
+              accessor: (item) => item.lastName,
               threshold: rankings.CONTAINS,
             },
             {
-              accessor: item => `${item.firstName} ${item.lastName}`,
+              accessor: (item) => `${item.firstName} ${item.lastName}`,
               threshold: rankings.CONTAINS,
             },
             {
-              accessor: item => item.email,
+              accessor: (item) => item.email,
               threshold: rankings.CONTAINS,
             },
           ],
@@ -105,15 +105,15 @@ describe('match-sorter-utils', () => {
         const ranking = rankItem(testPerson, 'Tom', {
           accessors: [
             {
-              accessor: item => item.firstName,
+              accessor: (item) => item.firstName,
               threshold: rankings.CONTAINS,
             },
             {
-              accessor: item => item.lastName,
+              accessor: (item) => item.lastName,
               threshold: rankings.CONTAINS,
             },
             {
-              accessor: item => item.email,
+              accessor: (item) => item.email,
               threshold: rankings.MATCHES,
             },
           ],

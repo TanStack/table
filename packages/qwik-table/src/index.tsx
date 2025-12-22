@@ -19,7 +19,7 @@ const isQwikComponent = (comp: unknown): comp is QwikComps =>
 
 export function flexRender<TProps extends object>(
   Comp: any, // TODO: add renderable type
-  props: TProps
+  props: TProps,
 ) {
   return !Comp ? null : isQwikComponent(Comp) ? (
     <Comp {...props} />
@@ -31,7 +31,7 @@ export function flexRender<TProps extends object>(
 }
 
 export function useQwikTable<TData extends RowData>(
-  options: TableOptions<TData>
+  options: TableOptions<TData>,
 ) {
   // Compose in the generic options to the user options
   const resolvedOptions: TableOptionsResolved<TData> = {
@@ -53,7 +53,7 @@ export function useQwikTable<TData extends RowData>(
 
   // Compose the default state above with any user state. This will allow the user
   // to only control a subset of the state if desired.
-  table.instance!.setOptions(prev => ({
+  table.instance!.setOptions((prev) => ({
     ...prev,
     ...options,
     state: {
@@ -62,7 +62,7 @@ export function useQwikTable<TData extends RowData>(
     },
     // Similarly, we'll maintain both our internal state and any user-provided
     // state.
-    onStateChange: updater => {
+    onStateChange: (updater) => {
       state.value = updater instanceof Function ? updater(state.value) : updater
       options.onStateChange?.(updater)
     },

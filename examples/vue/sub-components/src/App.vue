@@ -54,13 +54,13 @@ function renderExpanded(row: Row<Person>) {
       onClick: row.getToggleExpandedHandler(),
       style: { cursor: 'pointer' },
     },
-    row.getIsExpanded() ? '👇' : '👉'
+    row.getIsExpanded() ? '👇' : '👉',
   )
 }
 const columns = [
   columnHelper.group({
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       columnHelper.display({
         id: 'expander',
@@ -68,38 +68,38 @@ const columns = [
         cell: ({ row }) => renderExpanded(row),
       }),
       columnHelper.accessor('firstName', {
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
-      columnHelper.accessor(row => row.lastName, {
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => 'Last Name',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
     ],
   }),
   columnHelper.group({
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       columnHelper.accessor('age', {
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       }),
       columnHelper.group({
         header: 'More Info',
         columns: [
           columnHelper.accessor('visits', {
             header: () => 'Visits',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('status', {
             header: 'Status',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
           columnHelper.accessor('progress', {
             header: 'Profile Progress',
-            footer: props => props.column.id,
+            footer: (props) => props.column.id,
           }),
         ],
       }),
@@ -124,7 +124,7 @@ const table = useVueTable({
   getRowCanExpand: () => true,
   getCoreRowModel: getCoreRowModel(),
   getExpandedRowModel: getExpandedRowModel(),
-  onExpandedChange: updaterOrValue => {
+  onExpandedChange: (updaterOrValue) => {
     expanded.value =
       typeof updaterOrValue === 'function'
         ? updaterOrValue(expanded.value)

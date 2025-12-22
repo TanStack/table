@@ -18,30 +18,30 @@
   const columns: ColumnDef<Person>[] = [
     {
       header: 'Name',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'firstName',
-          cell: info => info.getValue(),
-          footer: props => props.column.id,
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
         },
         {
-          accessorFn: row => row.lastName,
+          accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: info => info.getValue(),
+          cell: (info) => info.getValue(),
           header: () => 'Last Name',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
       ],
     },
     {
       header: 'Info',
-      footer: props => props.column.id,
+      footer: (props) => props.column.id,
       columns: [
         {
           accessorKey: 'age',
           header: () => 'Age',
-          footer: props => props.column.id,
+          footer: (props) => props.column.id,
         },
         {
           header: 'More Info',
@@ -49,17 +49,17 @@
             {
               accessorKey: 'visits',
               header: () => 'Visits',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'status',
               header: 'Status',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
             {
               accessorKey: 'progress',
               header: 'Profile Progress',
-              footer: props => props.column.id,
+              footer: (props) => props.column.id,
             },
           ],
         },
@@ -71,13 +71,13 @@
 
   let sorting: SortingState = []
 
-  const setSorting: OnChangeFn<SortingState> = updater => {
+  const setSorting: OnChangeFn<SortingState> = (updater) => {
     if (updater instanceof Function) {
       sorting = updater(sorting)
     } else {
       sorting = updater
     }
-    options.update(old => ({
+    options.update((old) => ({
       ...old,
       state: {
         ...old.state,
@@ -100,14 +100,14 @@
 
   const refreshData = () => {
     console.info('refresh')
-    options.update(prev => ({
+    options.update((prev) => ({
       ...prev,
       data: makeData(100_000),
     }))
   }
 
   const rerender = () => {
-    options.update(options => ({
+    options.update((options) => ({
       ...options,
       data,
     }))
@@ -133,7 +133,7 @@
                   <svelte:component
                     this={flexRender(
                       header.column.columnDef.header,
-                      header.getContext()
+                      header.getContext(),
                     )}
                   />
                   {#if header.column.getIsSorted().toString() === 'asc'}
@@ -170,7 +170,7 @@
                 <svelte:component
                   this={flexRender(
                     header.column.columnDef.footer,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 />
               {/if}

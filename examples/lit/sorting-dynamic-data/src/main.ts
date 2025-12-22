@@ -24,13 +24,13 @@ const sortStatusFn: SortingFn<Person> = (rowA, rowB, _columnId) => {
 const columns: ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     //this column will sort in ascending order by default since it is a string column
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => html`<span>Last Name</span>`,
     sortUndefined: 'last', //force undefined values to the end
     sortDescFirst: false, //first sort order will be ascending (nullable values can mess up auto detection of sort order)
@@ -88,11 +88,11 @@ class LitTableExample extends LitElement {
   }
 
   protected willUpdate(
-    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>,
   ): void {
     super.willUpdate(_changedProperties)
     if (_changedProperties.has('_multiplier')) {
-      const newData: Person[] = data.map(d => {
+      const newData: Person[] = data.map((d) => {
         const p: Person = {
           ...d,
           visits: d.visits ? d.visits * this._multiplier : undefined,
@@ -110,7 +110,7 @@ class LitTableExample extends LitElement {
       state: {
         sorting: this._sorting,
       },
-      onSortingChange: updaterOrValue => {
+      onSortingChange: (updaterOrValue) => {
         if (typeof updaterOrValue === 'function') {
           this._sorting = updaterOrValue(this._sorting)
         } else {
@@ -139,11 +139,11 @@ class LitTableExample extends LitElement {
         <thead>
           ${repeat(
             table.getHeaderGroups(),
-            headerGroup => headerGroup.id,
-            headerGroup => html`
+            (headerGroup) => headerGroup.id,
+            (headerGroup) => html`
               <tr>
                 ${headerGroup.headers.map(
-                  header => html`
+                  (header) => html`
                     <th colspan="${header.colSpan}">
                       ${header.isPlaceholder
                         ? null
@@ -162,17 +162,17 @@ class LitTableExample extends LitElement {
                           >
                             ${flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                             ${{ asc: ' 🔼', desc: ' 🔽' }[
                               header.column.getIsSorted() as string
                             ] ?? null}
                           </div>`}
                     </th>
-                  `
+                  `,
                 )}
               </tr>
-            `
+            `,
           )}
         </thead>
         <tbody>
@@ -180,22 +180,22 @@ class LitTableExample extends LitElement {
             .getRowModel()
             .rows.slice(0, 10)
             .map(
-              row => html`
+              (row) => html`
                 <tr>
                   ${row
                     .getVisibleCells()
                     .map(
-                      cell => html`
+                      (cell) => html`
                         <td>
                           ${flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </td>
-                      `
+                      `,
                     )}
                 </tr>
-              `
+              `,
             )}
         </tbody>
       </table>

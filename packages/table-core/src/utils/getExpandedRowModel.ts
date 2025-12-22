@@ -2,9 +2,9 @@ import { Table, Row, RowModel, RowData } from '../types'
 import { getMemoOptions, memo } from '../utils'
 
 export function getExpandedRowModel<TData extends RowData>(): (
-  table: Table<TData>
+  table: Table<TData>,
 ) => () => RowModel<TData> {
-  return table =>
+  return (table) =>
     memo(
       () => [
         table.getState().expanded,
@@ -26,7 +26,7 @@ export function getExpandedRowModel<TData extends RowData>(): (
 
         return expandRows(rowModel)
       },
-      getMemoOptions(table.options, 'debugTable', 'getExpandedRowModel')
+      getMemoOptions(table.options, 'debugTable', 'getExpandedRowModel'),
     )
 }
 

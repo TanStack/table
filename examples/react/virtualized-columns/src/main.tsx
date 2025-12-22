@@ -23,7 +23,7 @@ import { makeColumns, makeData, Person } from './makeData'
 function App() {
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => makeColumns(1_000),
-    []
+    [],
   )
 
   const [data, setData] = React.useState(() => makeData(1_000, columns))
@@ -74,7 +74,7 @@ function TableContainer({ table }: TableContainerProps) {
     HTMLTableCellElement
   >({
     count: visibleColumns.length,
-    estimateSize: index => visibleColumns[index].getSize(), //estimate width of each column for accurate scrollbar dragging
+    estimateSize: (index) => visibleColumns[index].getSize(), //estimate width of each column for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
     horizontal: true,
     overscan: 3, //how many columns to render on each side off screen each way (adjust this for performance)
@@ -145,7 +145,7 @@ function TableHead({
         zIndex: 1,
       }}
     >
-      {table.getHeaderGroups().map(headerGroup => (
+      {table.getHeaderGroups().map((headerGroup) => (
         <TableHeadRow
           columnVirtualizer={columnVirtualizer}
           headerGroup={headerGroup}
@@ -178,7 +178,7 @@ function TableHeadRow({
         //fake empty column to the left for virtualization scroll padding
         <th style={{ display: 'flex', width: virtualPaddingLeft }} />
       ) : null}
-      {virtualColumns.map(virtualColumn => {
+      {virtualColumns.map((virtualColumn) => {
         const header = headerGroup.headers[virtualColumn.index]
         return <TableHeadCell key={header.id} header={header} />
       })}
@@ -247,7 +247,7 @@ function TableBody({
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? element => element?.getBoundingClientRect().height
+        ? (element) => element?.getBoundingClientRect().height
         : undefined,
     overscan: 5,
   })
@@ -262,7 +262,7 @@ function TableBody({
         position: 'relative', //needed for absolute positioning of rows
       }}
     >
-      {virtualRows.map(virtualRow => {
+      {virtualRows.map((virtualRow) => {
         const row = rows[virtualRow.index] as Row<Person>
 
         return (
@@ -303,7 +303,7 @@ function TableBodyRow({
   return (
     <tr
       data-index={virtualRow.index} //needed for dynamic row height measurement
-      ref={node => rowVirtualizer.measureElement(node)} //measure dynamic row height
+      ref={(node) => rowVirtualizer.measureElement(node)} //measure dynamic row height
       key={row.id}
       style={{
         display: 'flex',
@@ -316,7 +316,7 @@ function TableBodyRow({
         //fake empty column to the left for virtualization scroll padding
         <td style={{ display: 'flex', width: virtualPaddingLeft }} />
       ) : null}
-      {virtualColumns.map(vc => {
+      {virtualColumns.map((vc) => {
         const cell = visibleCells[vc.index]
         return <TableBodyCell key={cell.id} cell={cell} />
       })}
@@ -353,5 +353,5 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

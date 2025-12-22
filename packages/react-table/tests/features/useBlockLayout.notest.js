@@ -45,15 +45,15 @@ function Table({ columns, data }) {
         data,
         defaultColumn,
       },
-      useBlockLayout
+      useBlockLayout,
     )
 
   return (
     <div {...getTableProps()} className="table">
       <div>
-        {headerGroups.map(headerGroup => (
+        {headerGroups.map((headerGroup) => (
           <div {...headerGroup.getHeaderGroupProps()} className="row">
-            {headerGroup.headers.map(column => (
+            {headerGroup.headers.map((column) => (
               <div {...column.getHeaderProps()} className="cell header">
                 {column.render('Header')}
               </div>
@@ -67,7 +67,7 @@ function Table({ columns, data }) {
           (row, i) =>
             prepareRow(row) || (
               <div {...row.getRowProps()} className="row">
-                {row.cells.map(cell => {
+                {row.cells.map((cell) => {
                   return (
                     <div {...cell.getCellProps()} className="cell">
                       {cell.render('Cell')}
@@ -75,7 +75,7 @@ function Table({ columns, data }) {
                   )
                 })}
               </div>
-            )
+            ),
         )}
       </div>
     </div>
@@ -124,7 +124,7 @@ function App() {
         ],
       },
     ],
-    []
+    [],
   )
 
   return <Table columns={columns} data={data} />
@@ -136,15 +136,15 @@ test('renders a table', () => {
   expect(
     rtl
       .getAllByRole('columnheader')
-      .every(d => d.style.display === 'inline-block')
+      .every((d) => d.style.display === 'inline-block'),
   ).toBe(true)
 
-  expect(rtl.getAllByRole('row').every(d => d.style.display === 'flex')).toBe(
-    true
+  expect(rtl.getAllByRole('row').every((d) => d.style.display === 'flex')).toBe(
+    true,
   )
 
   expect(
-    rtl.getAllByRole('columnheader').map(d => d.style.width)
+    rtl.getAllByRole('columnheader').map((d) => d.style.width),
   ).toStrictEqual([
     '550px',
     '850px',

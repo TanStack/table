@@ -81,7 +81,7 @@ export const App = () => {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnPinning, setColumnPinning] = React.useState({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   )
   const [globalFilter, setGlobalFilter] = React.useState('')
 
@@ -134,7 +134,7 @@ export const App = () => {
 
   const randomizeColumns = () => {
     table.setColumnOrder(
-      faker.helpers.shuffle(table.getAllLeafColumns().map(d => d.id))
+      faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
     )
   }
 
@@ -145,7 +145,7 @@ export const App = () => {
           Search:
           <DebouncedInput
             value={globalFilter ?? ''}
-            onChange={value => setGlobalFilter(String(value))}
+            onChange={(value) => setGlobalFilter(String(value))}
             className="mx-1 p-2 font-lg shadow border border-block"
             placeholder="Search all columns..."
           />
@@ -162,7 +162,7 @@ export const App = () => {
               Toggle All
             </label>
           </div>
-          {table.getAllLeafColumns().map(column => {
+          {table.getAllLeafColumns().map((column) => {
             return (
               <div key={column.id} className="px-1">
                 <label>
@@ -183,7 +183,7 @@ export const App = () => {
             <input
               type="checkbox"
               checked={isSplit}
-              onChange={e => setIsSplit(e.target.checked)}
+              onChange={(e) => setIsSplit(e.target.checked)}
               className="mx-1"
             />
             Split Mode

@@ -14,7 +14,7 @@ These functions are used to create a table. Which one you use depends on which f
 
 ## Options
 
-These are **core** options and API properties for the table. More options and API properties are available for other [table features](../../../guide/features.md).
+These are **core** options and API properties for the table. More options and API properties are available for other [table features](../../guide/features.md).
 
 ### `data`
 
@@ -34,7 +34,7 @@ When the `data` option changes reference (compared via `Object.is`), the table w
 type columns = ColumnDef<TData>[]
 ```
 
-The array of column defs to use for the table. See the [Column Def Guide](../../../guide/column-defs.md) for more information on creating column definitions.
+The array of column defs to use for the table. See the [Column Def Guide](../../guide/column-defs.md) for more information on creating column definitions.
 
 ### `defaultColumn`
 

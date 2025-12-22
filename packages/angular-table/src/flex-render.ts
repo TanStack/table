@@ -83,17 +83,17 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   #getContentValue = memo(
     () => [this.#latestContent(), this.props, this.content],
-    latestContent => {
+    (latestContent) => {
       return mapToFlexRenderTypedContent(latestContent)
     },
-    { key: 'flexRenderContentValue', debug: () => false }
+    { key: 'flexRenderContentValue', debug: () => false },
   )
 
   constructor(
     @Inject(ViewContainerRef)
     private readonly viewContainerRef: ViewContainerRef,
     @Inject(TemplateRef)
-    private readonly templateRef: TemplateRef<any>
+    private readonly templateRef: TemplateRef<any>,
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -190,7 +190,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
           // so we'll try to check for updates into ngDoCheck
           this.#changeDetectorRef.markForCheck()
         },
-        { injector: this.viewContainerRef.injector }
+        { injector: this.viewContainerRef.injector },
       )
     }
   }
@@ -204,7 +204,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   #renderViewByContent(
-    content: FlexRenderTypedContent
+    content: FlexRenderTypedContent,
   ): FlexRenderView<any> | null {
     if (content.kind === 'primitive') {
       return this.#renderStringContent(content)
@@ -220,7 +220,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   #renderStringContent(
-    template: Extract<FlexRenderTypedContent, { kind: 'primitive' }>
+    template: Extract<FlexRenderTypedContent, { kind: 'primitive' }>,
   ): FlexRenderTemplateView {
     const context = () => {
       return typeof this.content === 'string' ||
@@ -237,7 +237,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 
   #renderTemplateRefContent(
-    template: Extract<FlexRenderTypedContent, { kind: 'templateRef' }>
+    template: Extract<FlexRenderTypedContent, { kind: 'templateRef' }>,
   ): FlexRenderTemplateView {
     const latestContext = () => this.props
     const view = this.viewContainerRef.createEmbeddedView(template.content, {
@@ -252,7 +252,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     flexRenderComponent: Extract<
       FlexRenderTypedContent,
       { kind: 'flexRenderComponent' }
-    >
+    >,
   ): FlexRenderComponentView {
     const { inputs, outputs, injector } = flexRenderComponent.content
 
@@ -266,20 +266,20 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     })
     const view = this.#flexRenderComponentFactory.createComponent(
       flexRenderComponent.content,
-      componentInjector
+      componentInjector,
     )
     return new FlexRenderComponentView(flexRenderComponent, view)
   }
 
   #renderCustomComponent(
-    component: Extract<FlexRenderTypedContent, { kind: 'component' }>
+    component: Extract<FlexRenderTypedContent, { kind: 'component' }>,
   ): FlexRenderComponentView {
     const view = this.#flexRenderComponentFactory.createComponent(
       flexRenderComponent(component.content, {
         inputs: this.props,
         injector: this.injector,
       }),
-      this.injector
+      this.injector,
     )
     return new FlexRenderComponentView(component, view)
   }

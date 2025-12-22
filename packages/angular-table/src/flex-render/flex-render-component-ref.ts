@@ -18,18 +18,18 @@ export class FlexRenderComponentFactory {
 
   createComponent<T>(
     flexRenderComponent: FlexRenderComponent<T>,
-    componentInjector: Injector
+    componentInjector: Injector,
   ): FlexRenderComponentRef<T> {
     const componentRef = this.#viewContainerRef.createComponent(
       flexRenderComponent.component,
       {
         injector: componentInjector,
-      }
+      },
     )
     const view = new FlexRenderComponentRef(
       componentRef,
       flexRenderComponent,
-      componentInjector
+      componentInjector,
     )
 
     const { inputs, outputs } = flexRenderComponent
@@ -51,14 +51,14 @@ export class FlexRenderComponentRef<T> {
   constructor(
     readonly componentRef: ComponentRef<T>,
     componentData: FlexRenderComponent<T>,
-    readonly componentInjector: Injector
+    readonly componentInjector: Injector,
   ) {
     this.#componentData = componentData
     this.#keyValueDiffersFactory = componentInjector.get(KeyValueDiffers)
 
     this.#outputRegistry = new FlexRenderComponentOutputManager(
       this.#keyValueDiffersFactory,
-      this.outputs
+      this.outputs,
     )
 
     this.#inputValueDiffer = this.#keyValueDiffersFactory
@@ -106,26 +106,26 @@ export class FlexRenderComponentRef<T> {
     if (!eq) return
     const { inputDiff, outputDiff } = this.diff(content)
     if (inputDiff) {
-      inputDiff.forEachAddedItem(item =>
-        this.setInput(item.key, item.currentValue)
+      inputDiff.forEachAddedItem((item) =>
+        this.setInput(item.key, item.currentValue),
       )
-      inputDiff.forEachChangedItem(item =>
-        this.setInput(item.key, item.currentValue)
+      inputDiff.forEachChangedItem((item) =>
+        this.setInput(item.key, item.currentValue),
       )
-      inputDiff.forEachRemovedItem(item => this.setInput(item.key, undefined))
+      inputDiff.forEachRemovedItem((item) => this.setInput(item.key, undefined))
     }
     if (outputDiff) {
-      outputDiff.forEachAddedItem(item => {
+      outputDiff.forEachAddedItem((item) => {
         this.setOutput(item.key, item.currentValue)
       })
-      outputDiff.forEachChangedItem(item => {
+      outputDiff.forEachChangedItem((item) => {
         if (item.currentValue) {
           this.#outputRegistry.setListener(item.key, item.currentValue)
         } else {
           this.#outputRegistry.unsubscribe(item.key)
         }
       })
-      outputDiff.forEachRemovedItem(item => {
+      outputDiff.forEachRemovedItem((item) => {
         this.#outputRegistry.unsubscribe(item.key)
       })
     }
@@ -153,7 +153,7 @@ export class FlexRenderComponentRef<T> {
     outputs: Record<
       string,
       OutputEmitterRef<unknown>['emit'] | null | undefined
-    >
+    >,
   ) {
     this.#outputRegistry.unsubscribeAll()
     for (const prop in outputs) {
@@ -163,7 +163,7 @@ export class FlexRenderComponentRef<T> {
 
   setOutput(
     outputName: string,
-    emit: OutputEmitterRef<unknown>['emit'] | undefined | null
+    emit: OutputEmitterRef<unknown>['emit'] | undefined | null,
   ): void {
     if (!this.#componentData.allowedOutputNames.includes(outputName)) return
     if (!emit) {
@@ -181,7 +181,7 @@ export class FlexRenderComponentRef<T> {
     const instance = this.componentRef.instance
     const output = instance[outputName as keyof typeof instance]
     if (output && output instanceof OutputEmitterRef) {
-      output.subscribe(value => {
+      output.subscribe((value) => {
         this.#outputRegistry.getListener(outputName)?.(value)
       })
     }

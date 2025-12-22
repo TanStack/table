@@ -14,12 +14,12 @@ import { makeData, Person } from './makeData'
 const columns: ColumnDef<Person>[] = [
   {
     accessorKey: 'firstName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => html`<span>Last Name</span>`,
   },
   {
@@ -73,18 +73,18 @@ class LitTableExample extends LitElement {
         <thead>
           ${repeat(
             table.getHeaderGroups(),
-            headerGroup => headerGroup.id,
-            headerGroup => html`
+            (headerGroup) => headerGroup.id,
+            (headerGroup) => html`
               <tr>
                 ${headerGroup.headers.map(
-                  header => html`
+                  (header) => html`
                     <th
                       colspan="${header.colSpan}"
                       style="width: ${header.getSize()}px"
                     >
                       ${flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                       ${header.isPlaceholder
                         ? null
@@ -98,10 +98,10 @@ class LitTableExample extends LitElement {
                             @touchstart="${header.getResizeHandler()}"
                           />`}
                     </th>
-                  `
+                  `,
                 )}
               </tr>
-            `
+            `,
           )}
         </thead>
         <tbody>
@@ -109,22 +109,22 @@ class LitTableExample extends LitElement {
             .getRowModel()
             .rows.slice(0, 10)
             .map(
-              row => html`
+              (row) => html`
                 <tr>
                   ${row
                     .getVisibleCells()
                     .map(
-                      cell => html`
+                      (cell) => html`
                         <td>
                           ${flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </td>
-                      `
+                      `,
                     )}
                 </tr>
-              `
+              `,
             )}
         </tbody>
       </table>
@@ -135,7 +135,7 @@ ${JSON.stringify(
             columnSizingInfo: table.getState().columnSizingInfo,
           },
           null,
-          2
+          2,
         )}</pre
       >
       <style>

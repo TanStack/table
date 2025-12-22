@@ -17,45 +17,45 @@ import { TableResizableCell, TableResizableHeader } from './resizable-cell'
 const defaultColumns: ColumnDef<Person>[] = [
   {
     header: 'Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'firstName',
-        cell: info => info.getValue(),
-        footer: props => props.column.id,
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
       },
       {
-        accessorFn: row => row.lastName,
+        accessorFn: (row) => row.lastName,
         id: 'lastName',
-        cell: info => info.getValue(),
+        cell: (info) => info.getValue(),
         header: () => 'Last Name',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
   {
     header: 'Info',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     columns: [
       {
         accessorKey: 'age',
         header: () => 'Age',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'visits',
         header: () => 'Visits',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
       {
         accessorKey: 'progress',
         header: 'Profile Progress',
-        footer: props => props.column.id,
+        footer: (props) => props.column.id,
       },
     ],
   },
@@ -72,7 +72,7 @@ export class AppComponent {
   readonly data = signal<Person[]>(makeData(200))
 
   readonly columnSizingInfo = computed(
-    () => this.table.getState().columnSizingInfo
+    () => this.table.getState().columnSizingInfo,
   )
   readonly columnSizing = computed(() => this.table.getState().columnSizing)
 
@@ -116,7 +116,7 @@ export class AppComponent {
         columnSizing: this.table.getState().columnSizing,
       },
       null,
-      2
-    )
+      2,
+    ),
   )
 }

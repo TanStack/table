@@ -18,19 +18,19 @@ import { makeData, Person } from './makeData'
 const columns: ColumnDef<Person, any>[] = [
   {
     accessorKey: 'firstName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => html`<span>Last Name</span>`,
   },
   {
-    accessorFn: row => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     id: 'fullName',
     header: 'Full Name',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
   },
   {
     accessorKey: 'age',
@@ -142,7 +142,7 @@ class LitTableExample extends LitElement {
       state: {
         columnFilters: this._columnFilters,
       },
-      onColumnFiltersChange: updater => {
+      onColumnFiltersChange: (updater) => {
         if (typeof updater === 'function') {
           this._columnFilters = updater(this._columnFilters)
         } else {
@@ -163,13 +163,13 @@ class LitTableExample extends LitElement {
         <thead>
           ${repeat(
             table.getHeaderGroups(),
-            headerGroup => headerGroup.id,
-            headerGroup => html`
+            (headerGroup) => headerGroup.id,
+            (headerGroup) => html`
               <tr>
                 ${repeat(
                   headerGroup.headers,
-                  header => header.id,
-                  header => html`
+                  (header) => header.id,
+                  (header) => html`
                     <th colspan="${header.colSpan}">
                       ${header.isPlaceholder
                         ? null
@@ -189,7 +189,7 @@ class LitTableExample extends LitElement {
                             >
                               ${flexRender(
                                 header.column.columnDef.header,
-                                header.getContext()
+                                header.getContext(),
                               )}
                               ${{ asc: ' 🔼', desc: ' 🔽' }[
                                 header.column.getIsSorted() as string
@@ -203,10 +203,10 @@ class LitTableExample extends LitElement {
                                 </div>`
                               : null} `}
                     </th>
-                  `
+                  `,
                 )}
               </tr>
-            `
+            `,
           )}
         </thead>
         <tbody>
@@ -214,22 +214,22 @@ class LitTableExample extends LitElement {
             .getRowModel()
             .rows.slice(0, 10)
             .map(
-              row => html`
+              (row) => html`
                 <tr>
                   ${row
                     .getVisibleCells()
                     .map(
-                      cell => html`
+                      (cell) => html`
                         <td>
                           ${flexRender(
                             cell.column.columnDef.cell,
-                            cell.getContext()
+                            cell.getContext(),
                           )}
                         </td>
-                      `
+                      `,
                     )}
                 </tr>
-              `
+              `,
             )}
         </tbody>
       </table>

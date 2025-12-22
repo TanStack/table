@@ -10,7 +10,7 @@ While TanStack Table is written in [TypeScript](https://www.typescriptlang.org/)
 
 ## Headless
 
-As it was mentioned extensively in the [Intro](../introduction.md) section, TanStack Table is **headless**. This means that it doesn't render any DOM elements, and instead relies on you, the UI/UX developer to provide the table's markup and styles. This is a great way to build a table that can be used in any UI framework, including React, Vue, Solid, Svelte, Qwik, and even JS-to-native platforms like React Native!
+As it was mentioned extensively in the [Intro](./introduction.md) section, TanStack Table is **headless**. This means that it doesn't render any DOM elements, and instead relies on you, the UI/UX developer to provide the table's markup and styles. This is a great way to build a table that can be used in any UI framework, including React, Vue, Solid, Svelte, Qwik, and even JS-to-native platforms like React Native!
 
 ## Core Objects and Types
 
@@ -33,4 +33,4 @@ The table core uses the following abstractions, commonly exposed by adapters:
 - Cells
   - Each cell mirrors its respective row-column intersection and provides cell-specific APIs
 
-There are even more structures that pertain to specific features like filtering, sorting, grouping, etc, which you can find in the [features](../guide/features.md) section.
+There are even more structures that pertain to specific features like filtering, sorting, grouping, etc, which you can find in the [features](./guide/features.md) section.

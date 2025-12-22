@@ -4,7 +4,7 @@ import { type Table } from '@tanstack/table-core'
 type TableSignal<T> = Table<T> & Signal<Table<T>>
 
 export function proxifyTable<T>(
-  tableSignal: Signal<Table<T>>
+  tableSignal: Signal<Table<T>>,
 ): Table<T> & Signal<Table<T>> {
   const internalState = tableSignal as TableSignal<T>
 

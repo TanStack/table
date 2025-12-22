@@ -32,44 +32,44 @@ const defaultColumns: ColumnDef<Person>[] = [
     accessorKey: 'firstName',
     id: 'firstName',
     header: 'First Name',
-    cell: info => info.getValue(),
-    footer: props => props.column.id,
+    cell: (info) => info.getValue(),
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => 'Last Name',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
     accessorKey: 'age',
     id: 'age',
     header: 'Age',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
     accessorKey: 'visits',
     id: 'visits',
     header: 'Visits',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
     accessorKey: 'status',
     id: 'status',
     header: 'Status',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
   {
     accessorKey: 'progress',
     id: 'progress',
     header: 'Profile Progress',
-    footer: props => props.column.id,
+    footer: (props) => props.column.id,
     size: 180,
   },
 ]
@@ -103,7 +103,7 @@ export class AppComponent {
   })
 
   readonly getCommonPinningStyles = (
-    column: Column<Person>
+    column: Column<Person>,
   ): Record<string, any> => {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
@@ -128,7 +128,7 @@ export class AppComponent {
 
   randomizeColumns() {
     this.table.setColumnOrder(
-      faker.helpers.shuffle(this.table.getAllLeafColumns().map(d => d.id))
+      faker.helpers.shuffle(this.table.getAllLeafColumns().map((d) => d.id)),
     )
   }
 

@@ -20,5 +20,5 @@ export default defineConfig(
       'svelte/internal': 'SvelteInternal',
       'svelte/store': 'SvelteStore',
     },
-  })
+  }),
 )

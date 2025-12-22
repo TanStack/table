@@ -15,7 +15,7 @@ export const flexRender = <TProps extends object>(comp: any, props: TProps) => {
 }
 
 export const useTable = <TData extends RowData>(
-  options: TableOptions<TData>
+  options: TableOptions<TData>,
 ) => {
   // Compose in the generic options to the user options
   const resolvedOptions: TableOptionsResolved<TData> = {
@@ -32,8 +32,8 @@ export const useTable = <TData extends RowData>(
   const state = atom(table.initialState)
 
   // Subscribe to state changes
-  state.subscribe(currentState => {
-    table.setOptions(prev => ({
+  state.subscribe((currentState) => {
+    table.setOptions((prev) => ({
       ...prev,
       ...options,
       state: {
@@ -41,7 +41,7 @@ export const useTable = <TData extends RowData>(
         ...options.state,
       },
       // Similarly, we'll maintain both our internal state and any user-provided state
-      onStateChange: updater => {
+      onStateChange: (updater) => {
         if (typeof updater === 'function') {
           const newState = updater(currentState)
           state.set(newState)

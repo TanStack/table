@@ -23,12 +23,12 @@ const columns: ColumnDef<Person>[] = [
   },
   {
     accessorKey: 'firstName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
   },
   {
-    accessorFn: row => row.lastName,
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     header: () => html`<span>Last Name</span>`,
   },
   {
@@ -53,7 +53,7 @@ const columns: ColumnDef<Person>[] = [
   {
     accessorKey: 'createdAt',
     header: 'Created At',
-    cell: info => info.getValue<Date>().toLocaleString(),
+    cell: (info) => info.getValue<Date>().toLocaleString(),
     size: 250,
   },
 ]
@@ -110,13 +110,13 @@ class LitTableExample extends LitElement {
             >
               ${repeat(
                 table.getHeaderGroups(),
-                headerGroup => headerGroup.id,
-                headerGroup => html`
+                (headerGroup) => headerGroup.id,
+                (headerGroup) => html`
                   <tr style="${styleMap({ display: 'flex', width: '100%' })}">
                     ${repeat(
                       headerGroup.headers,
-                      header => header.id,
-                      header => html`
+                      (header) => header.id,
+                      (header) => html`
                         <th
                           style="${styleMap({
                             display: 'flex',
@@ -126,16 +126,16 @@ class LitTableExample extends LitElement {
                         >
                           ${flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                           ${{ asc: ' 🔼', desc: ' 🔽' }[
                             header.column.getIsSorted() as string
                           ] ?? null}
                         </th>
-                      `
+                      `,
                     )}
                   </tr>
-                `
+                `,
               )}
             </thead>
             <tbody
@@ -149,8 +149,8 @@ class LitTableExample extends LitElement {
                 this.rowVirtualizerController
                   .getVirtualizer()
                   .getVirtualItems(),
-                item => item.key,
-                item => {
+                (item) => item.key,
+                (item) => {
                   const row = rows[item.index] as Row<Person>
                   return html`
                     <tr
@@ -160,16 +160,16 @@ class LitTableExample extends LitElement {
                         transform: `translateY(${item.start}px)`,
                         width: '100%',
                       })}
-                      ${ref(node =>
+                      ${ref((node) =>
                         this.rowVirtualizerController
                           .getVirtualizer()
-                          .measureElement(node)
+                          .measureElement(node),
                       )}
                     >
                       ${repeat(
                         row.getVisibleCells(),
-                        cell => cell.id,
-                        cell => html`
+                        (cell) => cell.id,
+                        (cell) => html`
                           <td
                             style=${styleMap({
                               display: 'flex',
@@ -178,14 +178,14 @@ class LitTableExample extends LitElement {
                           >
                             ${flexRender(
                               cell.column.columnDef.cell,
-                              cell.getContext()
+                              cell.getContext(),
                             )}
                           </td>
-                        `
+                        `,
                       )}
                     </tr>
                   `
-                }
+                },
               )}
             </tbody>
           </table>

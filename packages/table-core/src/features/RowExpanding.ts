@@ -175,7 +175,7 @@ export const RowExpanding: TableFeature = {
   },
 
   getDefaultOptions: <TData extends RowData>(
-    table: Table<TData>
+    table: Table<TData>,
   ): ExpandedOptions<TData> => {
     return {
       onExpandedChange: makeStateUpdater('expanded', table),
@@ -208,21 +208,23 @@ export const RowExpanding: TableFeature = {
         })
       }
     }
-    table.setExpanded = updater => table.options.onExpandedChange?.(updater)
-    table.toggleAllRowsExpanded = expanded => {
+    table.setExpanded = (updater) => table.options.onExpandedChange?.(updater)
+    table.toggleAllRowsExpanded = (expanded) => {
       if (expanded ?? !table.getIsAllRowsExpanded()) {
         table.setExpanded(true)
       } else {
         table.setExpanded({})
       }
     }
-    table.resetExpanded = defaultState => {
-      table.setExpanded(defaultState ? {} : table.initialState?.expanded ?? {})
+    table.resetExpanded = (defaultState) => {
+      table.setExpanded(
+        defaultState ? {} : (table.initialState?.expanded ?? {}),
+      )
     }
     table.getCanSomeRowsExpand = () => {
       return table
         .getPrePaginationRowModel()
-        .flatRows.some(row => row.getCanExpand())
+        .flatRows.some((row) => row.getCanExpand())
     }
     table.getToggleAllRowsExpandedHandler = () => {
       return (e: unknown) => {
@@ -247,7 +249,7 @@ export const RowExpanding: TableFeature = {
       }
 
       // If any row is not expanded, return false
-      if (table.getRowModel().flatRows.some(row => !row.getIsExpanded())) {
+      if (table.getRowModel().flatRows.some((row) => !row.getIsExpanded())) {
         return false
       }
 
@@ -262,7 +264,7 @@ export const RowExpanding: TableFeature = {
           ? Object.keys(table.getRowModel().rowsById)
           : Object.keys(table.getState().expanded)
 
-      rowIds.forEach(id => {
+      rowIds.forEach((id) => {
         const splitId = id.split('.')
         maxDepth = Math.max(maxDepth, splitId.length)
       })
@@ -285,16 +287,16 @@ export const RowExpanding: TableFeature = {
 
   createRow: <TData extends RowData>(
     row: Row<TData>,
-    table: Table<TData>
+    table: Table<TData>,
   ): void => {
-    row.toggleExpanded = expanded => {
-      table.setExpanded(old => {
+    row.toggleExpanded = (expanded) => {
+      table.setExpanded((old) => {
         const exists = old === true ? true : !!old?.[row.id]
 
         let oldExpanded: ExpandedStateList = {}
 
         if (old === true) {
-          Object.keys(table.getRowModel().rowsById).forEach(rowId => {
+          Object.keys(table.getRowModel().rowsById).forEach((rowId) => {
             oldExpanded[rowId] = true
           })
         } else {
