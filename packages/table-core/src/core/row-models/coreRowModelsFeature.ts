@@ -30,56 +30,44 @@ export function constructCoreRowModelsFeature<
 >(): TableFeature<CoreRowModelsFeatureConstructors<TFeatures, TData>> {
   return {
     constructTableAPIs: (table) => {
-      assignAPIs('coreRowModelsFeature', table, [
-        {
+      assignAPIs('coreRowModelsFeature', table, {
+        table_getCoreRowModel: {
           fn: () => table_getCoreRowModel(table),
-          fnName: 'table_getCoreRowModel',
         },
-        {
+        table_getPreFilteredRowModel: {
           fn: () => table_getPreFilteredRowModel(table),
-          fnName: 'table_getPreFilteredRowModel',
         },
-        {
+        table_getFilteredRowModel: {
           fn: () => table_getFilteredRowModel(table),
-          fnName: 'table_getFilteredRowModel',
         },
-        {
+        table_getPreGroupedRowModel: {
           fn: () => table_getPreGroupedRowModel(table),
-          fnName: 'table_getPreGroupedRowModel',
         },
-        {
+        table_getGroupedRowModel: {
           fn: () => table_getGroupedRowModel(table),
-          fnName: 'table_getGroupedRowModel',
         },
-        {
+        table_getPreSortedRowModel: {
           fn: () => table_getPreSortedRowModel(table),
-          fnName: 'table_getPreSortedRowModel',
         },
-        {
+        table_getSortedRowModel: {
           fn: () => table_getSortedRowModel(table),
-          fnName: 'table_getSortedRowModel',
         },
-        {
+        table_getPreExpandedRowModel: {
           fn: () => table_getPreExpandedRowModel(table),
-          fnName: 'table_getPreExpandedRowModel',
         },
-        {
+        table_getExpandedRowModel: {
           fn: () => table_getExpandedRowModel(table),
-          fnName: 'table_getExpandedRowModel',
         },
-        {
+        table_getPrePaginatedRowModel: {
           fn: () => table_getPrePaginatedRowModel(table),
-          fnName: 'table_getPrePaginatedRowModel',
         },
-        {
+        table_getPaginatedRowModel: {
           fn: () => table_getPaginatedRowModel(table),
-          fnName: 'table_getPaginatedRowModel',
         },
-        {
+        table_getRowModel: {
           fn: () => table_getRowModel(table),
-          fnName: 'table_getRowModel',
         },
-      ])
+      })
     },
   }
 }

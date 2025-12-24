@@ -30,37 +30,31 @@ export function constructColumnFacetingFeature<
 >(): TableFeature<ColumnFacetingFeatureConstructors<TFeatures, TData>> {
   return {
     constructColumnAPIs: (column) => {
-      assignAPIs('columnFacetingFeature', column, [
-        {
+      assignAPIs('columnFacetingFeature', column, {
+        column_getFacetedMinMaxValues: {
           fn: () => column_getFacetedMinMaxValues(column, column._table),
-          fnName: 'column_getFacetedMinMaxValues',
         },
-        {
+        column_getFacetedRowModel: {
           fn: () => column_getFacetedRowModel(column, column._table),
-          fnName: 'column_getFacetedRowModel',
         },
-        {
+        column_getFacetedUniqueValues: {
           fn: () => column_getFacetedUniqueValues(column, column._table),
-          fnName: 'column_getFacetedUniqueValues',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnFacetingFeature', table, [
-        {
+      assignAPIs('columnFacetingFeature', table, {
+        table_getGlobalFacetedMinMaxValues: {
           fn: () => table_getGlobalFacetedMinMaxValues(table),
-          fnName: 'table_getGlobalFacetedMinMaxValues',
         },
-        {
+        table_getGlobalFacetedRowModel: {
           fn: () => table_getGlobalFacetedRowModel(table),
-          fnName: 'table_getGlobalFacetedRowModel',
         },
-        {
+        table_getGlobalFacetedUniqueValues: {
           fn: () => table_getGlobalFacetedUniqueValues(table),
-          fnName: 'table_getGlobalFacetedUniqueValues',
         },
-      ])
+      })
     },
   }
 }

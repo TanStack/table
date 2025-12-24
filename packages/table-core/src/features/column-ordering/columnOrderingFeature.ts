@@ -46,10 +46,9 @@ export function constructColumnOrderingFeature<
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs('columnOrderingFeature', column, [
-        {
+      assignAPIs('columnOrderingFeature', column, {
+        column_getIndex: {
           fn: (position) => column_getIndex(column, position),
-          fnName: 'column_getIndex',
           memoDeps: (position) => [
             position,
             column._table.store.state.columnOrder,
@@ -57,37 +56,32 @@ export function constructColumnOrderingFeature<
             column._table.store.state.grouping,
           ],
         },
-        {
+        column_getIsFirstColumn: {
           fn: (position) => column_getIsFirstColumn(column, position),
-          fnName: 'column_getIsFirstColumn',
         },
-        {
+        column_getIsLastColumn: {
           fn: (position) => column_getIsLastColumn(column, position),
-          fnName: 'column_getIsLastColumn',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnOrderingFeature', table, [
-        {
+      assignAPIs('columnOrderingFeature', table, {
+        table_setColumnOrder: {
           fn: (updater) => table_setColumnOrder(table, updater),
-          fnName: 'table_setColumnOrder',
         },
-        {
+        table_resetColumnOrder: {
           fn: (defaultState) => table_resetColumnOrder(table, defaultState),
-          fnName: 'table_resetColumnOrder',
         },
-        {
+        table_getOrderColumnsFn: {
           fn: () => table_getOrderColumnsFn(table),
-          fnName: 'table_getOrderColumnsFn',
           memoDeps: () => [
             table.store.state.columnOrder,
             table.store.state.grouping,
             table.options.groupedColumnMode,
           ],
         },
-      ])
+      })
     },
   }
 }

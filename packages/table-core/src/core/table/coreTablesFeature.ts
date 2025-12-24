@@ -18,16 +18,14 @@ export function constructCoreTablesFeature<
 >(): TableFeature<CoreTablesFeatureConstructors<TFeatures, TData>> {
   return {
     constructTableAPIs: (table) => {
-      assignAPIs('coreTablesFeature', table, [
-        {
+      assignAPIs('coreTablesFeature', table, {
+        table_reset: {
           fn: () => table_reset(table),
-          fnName: 'table_reset',
         },
-        {
+        table_setOptions: {
           fn: (updater) => table_setOptions(table, updater),
-          fnName: 'table_setOptions',
         },
-      ])
+      })
     },
   }
 }

@@ -55,33 +55,28 @@ export function constructGlobalFilteringFeature<
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs('globalFilteringFeature', column, [
-        {
+      assignAPIs('globalFilteringFeature', column, {
+        column_getCanGlobalFilter: {
           fn: () => column_getCanGlobalFilter(column),
-          fnName: 'column_getCanGlobalFilter',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('globalFilteringFeature', table, [
-        {
+      assignAPIs('globalFilteringFeature', table, {
+        table_getGlobalAutoFilterFn: {
           fn: () => table_getGlobalAutoFilterFn(),
-          fnName: 'table_getGlobalAutoFilterFn',
         },
-        {
+        table_getGlobalFilterFn: {
           fn: () => table_getGlobalFilterFn(table),
-          fnName: 'table_getGlobalFilterFn',
         },
-        {
+        table_setGlobalFilter: {
           fn: (updater) => table_setGlobalFilter(table, updater),
-          fnName: 'table_setGlobalFilter',
         },
-        {
+        table_resetGlobalFilter: {
           fn: (defaultState) => table_resetGlobalFilter(table, defaultState),
-          fnName: 'table_resetGlobalFilter',
         },
-      ])
+      })
     },
   }
 }

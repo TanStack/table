@@ -73,69 +73,55 @@ export function constructRowSortingFeature<
     },
 
     constructColumnAPIs(column) {
-      assignAPIs('rowSortingFeature', column, [
-        {
+      assignAPIs('rowSortingFeature', column, {
+        'column.getAutoSortFn': {
           fn: () => column_getAutoSortFn(column),
-          fnName: 'column.getAutoSortFn',
         },
-        {
+        'column.getAutoSortDir': {
           fn: () => column_getAutoSortDir(column),
-          fnName: 'column.getAutoSortDir',
         },
-        {
+        column_getSortFn: {
           fn: () => column_getSortFn(column),
-          fnName: 'column_getSortFn',
         },
-        {
+        column_toggleSorting: {
           fn: (desc, multi) => column_toggleSorting(column, desc, multi),
-          fnName: 'column_toggleSorting',
         },
-        {
+        column_getFirstSortDir: {
           fn: () => column_getFirstSortDir(column),
-          fnName: 'column_getFirstSortDir',
         },
-        {
+        column_getNextSortingOrder: {
           fn: (multi) => column_getNextSortingOrder(column, multi),
-          fnName: 'column_getNextSortingOrder',
         },
-        {
+        column_getCanSort: {
           fn: () => column_getCanSort(column),
-          fnName: 'column_getCanSort',
         },
-        {
+        column_getCanMultiSort: {
           fn: () => column_getCanMultiSort(column),
-          fnName: 'column_getCanMultiSort',
         },
-        {
+        column_getIsSorted: {
           fn: () => column_getIsSorted(column),
-          fnName: 'column_getIsSorted',
         },
-        {
+        column_getSortIndex: {
           fn: () => column_getSortIndex(column),
-          fnName: 'column_getSortIndex',
         },
-        {
+        column_clearSorting: {
           fn: () => column_clearSorting(column),
-          fnName: 'column_clearSorting',
         },
-        {
+        column_getToggleSortingHandler: {
           fn: () => column_getToggleSortingHandler(column),
-          fnName: 'column_getToggleSortingHandler',
         },
-      ])
+      })
     },
 
     constructTableAPIs(table) {
-      assignAPIs('rowSortingFeature', table, [
-        {
+      assignAPIs('rowSortingFeature', table, {
+        table_setSorting: {
           fn: (updater) => table_setSorting(table, updater),
-          fnName: 'table_setSorting',
         },
-        {
+        table_resetSorting: {
           fn: (defaultState) => table_resetSorting(table, defaultState),
-          fnName: 'table_resetSorting',
         },
-      ])
+      })
     },
   }
 }

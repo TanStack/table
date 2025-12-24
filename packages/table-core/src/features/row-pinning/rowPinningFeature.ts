@@ -53,70 +53,60 @@ export function constructRowPinningFeature<
     },
 
     constructRowAPIs: (row) => {
-      assignAPIs('rowPinningFeature', row, [
-        {
+      assignAPIs('rowPinningFeature', row, {
+        row_getCanPin: {
           fn: () => row_getCanPin(row),
-          fnName: 'row_getCanPin',
         },
-        {
+        row_getIsPinned: {
           fn: () => row_getIsPinned(row),
-          fnName: 'row_getIsPinned',
         },
-        {
+        row_getPinnedIndex: {
           fn: () => row_getPinnedIndex(row),
-          fnName: 'row_getPinnedIndex',
           memoDeps: () => [
             row._table.getRowModel().rows,
             row._table.store.state.rowPinning,
           ],
         },
-        {
+        row_pin: {
           fn: (position, includeLeafRows, includeParentRows) =>
             row_pin(row, position, includeLeafRows, includeParentRows),
-          fnName: 'row_pin',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('rowPinningFeature', table, [
-        {
+      assignAPIs('rowPinningFeature', table, {
+        table_setRowPinning: {
           fn: (updater) => table_setRowPinning(table, updater),
-          fnName: 'table_setRowPinning',
         },
-        {
+        table_resetRowPinning: {
           fn: (defaultState) => table_resetRowPinning(table, defaultState),
-          fnName: 'table_resetRowPinning',
         },
-        {
+        table_getIsSomeRowsPinned: {
           fn: (position) => table_getIsSomeRowsPinned(table, position),
-          fnName: 'table_getIsSomeRowsPinned',
         },
-        {
+        table_getTopRows: {
           fn: () => table_getTopRows(table),
-          fnName: 'table_getTopRows',
           memoDeps: () => [
             table.getRowModel().rows,
             table.store.state.rowPinning?.top,
           ],
         },
-        {
+        table_getBottomRows: {
           fn: () => table_getBottomRows(table),
-          fnName: 'table_getBottomRows',
           memoDeps: () => [
             table.getRowModel().rows,
             table.store.state.rowPinning?.bottom,
           ],
         },
-        {
+        table_getCenterRows: {
           fn: () => table_getCenterRows(table),
-          fnName: 'table_getCenterRows',
           memoDeps: () => [
             table.getRowModel().rows,
             table.store.state.rowPinning,
           ],
         },
-      ])
+      })
     },
   }
 }

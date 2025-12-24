@@ -244,11 +244,15 @@ export function tableMemo<
   })
 }
 
-interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
+export interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
   fn: (...args: any) => any
   memoDeps?: (depArgs?: any) => [...any] | undefined
-  fnName: string
 }
+
+export type APIObject<TDeps extends ReadonlyArray<any>, TDepArgs> = Record<
+  string,
+  API<TDeps, TDepArgs>
+>
 
 /**
  * Assumes that a function name is in the format of `parentName_fnKey` and returns the `fnKey` and `fnName` in the format of `parentName.fnKey`.
@@ -267,7 +271,8 @@ export function getFunctionNameInfo(
 }
 
 /**
- * Takes a static function, looks at its name and assigns it to an object with optional memoization and debugging.
+ * Takes an object of API definitions keyed by function name (e.g., 'row_getValue')
+ * and assigns them to the target object with optional memoization and debugging.
  */
 export function assignAPIs<
   TFeatures extends TableFeatures,
@@ -278,10 +283,10 @@ export function assignAPIs<
 >(
   feature: keyof TFeatures & string,
   obj: TObject extends Record<string, infer U> ? U : never, // table, row, cell, column, header
-  apis: Array<API<TDeps, NoInfer<TDepArgs>>>,
+  apis: APIObject<TDeps, NoInfer<TDepArgs>>,
 ): void {
   const table = (obj._table ?? obj) as Table_Internal<TFeatures, TData>
-  apis.forEach(({ fn, memoDeps, fnName: staticFnName }) => {
+  for (const [staticFnName, { fn, memoDeps }] of Object.entries(apis)) {
     const { fnKey, fnName } = getFunctionNameInfo(staticFnName)
 
     obj[fnKey] = memoDeps
@@ -294,7 +299,7 @@ export function assignAPIs<
           feature,
         })
       : fn
-  })
+  }
 }
 
 /**

@@ -33,15 +33,13 @@ export function constructCoreColumnsFeature<
   return {
     constructColumnAPIs: (column) => {
       const { _table: table } = column
-      assignAPIs('coreColumnsFeature', column, [
-        {
+      assignAPIs('coreColumnsFeature', column, {
+        column_getFlatColumns: {
           fn: () => column_getFlatColumns(column),
-          fnName: 'column_getFlatColumns',
           memoDeps: () => [table.options.columns],
         },
-        {
+        column_getLeafColumns: {
           fn: () => column_getLeafColumns(column),
-          fnName: 'column_getLeafColumns',
           memoDeps: () => [
             table.store.state.columnOrder,
             table.store.state.grouping,
@@ -49,34 +47,29 @@ export function constructCoreColumnsFeature<
             table.options.groupedColumnMode,
           ],
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('coreColumnsFeature', table, [
-        {
+      assignAPIs('coreColumnsFeature', table, {
+        table_getDefaultColumnDef: {
           fn: () => table_getDefaultColumnDef(table),
-          fnName: 'table_getDefaultColumnDef',
           memoDeps: () => [table.options.defaultColumn],
         },
-        {
+        table_getAllColumns: {
           fn: () => table_getAllColumns(table),
-          fnName: 'table_getAllColumns',
           memoDeps: () => [table.options.columns],
         },
-        {
+        table_getAllFlatColumns: {
           fn: () => table_getAllFlatColumns(table),
-          fnName: 'table_getAllFlatColumns',
           memoDeps: () => [table.options.columns],
         },
-        {
+        table_getAllFlatColumnsById: {
           fn: () => table_getAllFlatColumnsById(table),
-          fnName: 'table_getAllFlatColumnsById',
           memoDeps: () => [table.options.columns],
         },
-        {
+        table_getAllLeafColumns: {
           fn: () => table_getAllLeafColumns(table),
-          fnName: 'table_getAllLeafColumns',
           memoDeps: () => [
             table.store.state.columnOrder,
             table.store.state.grouping,
@@ -84,11 +77,10 @@ export function constructCoreColumnsFeature<
             table.options.groupedColumnMode,
           ],
         },
-        {
+        table_getColumn: {
           fn: (columnId) => table_getColumn(table, columnId),
-          fnName: 'table_getColumn',
         },
-      ])
+      })
     },
   }
 }

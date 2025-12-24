@@ -98,12 +98,9 @@ function App() {
     debugColumns: false,
   })
 
-  const debounceSetGlobalFilter = debounce(
-    (value: string) => {
-      table.setGlobalFilter(value)
-    },
-    500,
-  )
+  const debounceSetGlobalFilter = debounce((value: string) => {
+    table.setGlobalFilter(value)
+  }, 500)
 
   return (
     <table.Subscribe
@@ -120,61 +117,61 @@ function App() {
             onInput={(e) => debounceSetGlobalFilter(e.currentTarget.value)}
             placeholder="Search all columns..."
           />
-      <div class="h-2" />
-      <table>
-        <thead>
-          <For each={table.getHeaderGroups()}>
-            {(headerGroup) => (
-              <tr>
-                <For each={headerGroup.headers}>
-                  {(header) => (
-                    <th colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : (
-                        <>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
+          <div class="h-2" />
+          <table>
+            <thead>
+              <For each={table.getHeaderGroups()}>
+                {(headerGroup) => (
+                  <tr>
+                    <For each={headerGroup.headers}>
+                      {(header) => (
+                        <th colSpan={header.colSpan}>
+                          {header.isPlaceholder ? null : (
+                            <>
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                              {header.column.getCanFilter() ? (
+                                <div>
+                                  <ColumnFilter
+                                    column={header.column}
+                                    table={table as any}
+                                  />
+                                </div>
+                              ) : null}
+                            </>
                           )}
-                          {header.column.getCanFilter() ? (
-                            <div>
-                              <ColumnFilter
-                                column={header.column}
-                                table={table as any}
-                              />
-                            </div>
-                          ) : null}
-                        </>
+                        </th>
                       )}
-                    </th>
-                  )}
-                </For>
-              </tr>
-            )}
-          </For>
-        </thead>
-        <tbody>
-          <For each={table.getRowModel().rows.slice(0, 10)}>
-            {(row) => (
-              <tr>
-                <For each={row.getAllCells()}>
-                  {(cell) => (
-                    <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
+                    </For>
+                  </tr>
+                )}
+              </For>
+            </thead>
+            <tbody>
+              <For each={table.getRowModel().rows.slice(0, 10)}>
+                {(row) => (
+                  <tr>
+                    <For each={row.getAllCells()}>
+                      {(cell) => (
+                        <td>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </td>
                       )}
-                    </td>
-                  )}
-                </For>
-              </tr>
-            )}
-          </For>
-        </tbody>
-      </table>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
+                    </For>
+                  </tr>
+                )}
+              </For>
+            </tbody>
+          </table>
+          <div>{table.getRowModel().rows.length} Rows</div>
+          <div>
+            <button onClick={() => refreshData()}>Refresh Data</button>
+          </div>
           <table.Subscribe selector={(state) => state}>
             {(state) => <pre>{JSON.stringify(state(), null, 2)}</pre>}
           </table.Subscribe>

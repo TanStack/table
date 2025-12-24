@@ -22,21 +22,18 @@ export function constructCoreCellsFeature<
 >(): TableFeature<CoreCellsFeatureConstructors<TFeatures, TData>> {
   return {
     constructCellAPIs: (cell) => {
-      assignAPIs('coreCellsFeature', cell, [
-        {
+      assignAPIs('coreCellsFeature', cell, {
+        cell_getValue: {
           fn: () => cell_getValue(cell),
-          fnName: 'cell_getValue',
         },
-        {
+        cell_renderValue: {
           fn: () => cell_renderValue(cell),
-          fnName: 'cell_renderValue',
         },
-        {
+        cell_getContext: {
           fn: () => cell_getContext(cell),
-          fnName: 'cell_getContext',
           memoDeps: () => [cell],
         },
-      ])
+      })
     },
   }
 }

@@ -49,39 +49,34 @@ export function constructColumnResizingFeature<
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs('columnResizingFeature', column, [
-        {
+      assignAPIs('columnResizingFeature', column, {
+        column_getCanResize: {
           fn: () => column_getCanResize(column),
-          fnName: 'column_getCanResize',
         },
-        {
+        column_getIsResizing: {
           fn: () => column_getIsResizing(column),
-          fnName: 'column_getIsResizing',
         },
-      ])
+      })
     },
 
     constructHeaderAPIs: (header) => {
-      assignAPIs('columnResizingFeature', header, [
-        {
+      assignAPIs('columnResizingFeature', header, {
+        header_getResizeHandler: {
           fn: (_contextDocument) =>
             header_getResizeHandler(header, _contextDocument),
-          fnName: 'header_getResizeHandler',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnResizingFeature', table, [
-        {
+      assignAPIs('columnResizingFeature', table, {
+        table_setColumnResizing: {
           fn: (updater) => table_setColumnResizing(table, updater),
-          fnName: 'table_setColumnResizing',
         },
-        {
+        table_resetHeaderSizeInfo: {
           fn: (defaultState) => table_resetHeaderSizeInfo(table, defaultState),
-          fnName: 'table_resetHeaderSizeInfo',
         },
-      ])
+      })
     },
   }
 }

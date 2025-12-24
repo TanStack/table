@@ -74,81 +74,67 @@ export function constructColumnGroupingFeature<
     },
 
     constructCellAPIs: (cell) => {
-      assignAPIs('columnGroupingFeature', cell, [
-        {
+      assignAPIs('columnGroupingFeature', cell, {
+        cell_getIsGrouped: {
           fn: () => cell_getIsGrouped(cell),
-          fnName: 'cell_getIsGrouped',
         },
-        {
+        cell_getIsPlaceholder: {
           fn: () => cell_getIsPlaceholder(cell),
-          fnName: 'cell_getIsPlaceholder',
         },
-        {
+        cell_getIsAggregated: {
           fn: () => cell_getIsAggregated(cell),
-          fnName: 'cell_getIsAggregated',
         },
-      ])
+      })
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs('columnGroupingFeature', column, [
-        {
+      assignAPIs('columnGroupingFeature', column, {
+        column_toggleGrouping: {
           fn: () => column_toggleGrouping(column),
-          fnName: 'column_toggleGrouping',
         },
-        {
+        column_getCanGroup: {
           fn: () => column_getCanGroup(column),
-          fnName: 'column_getCanGroup',
         },
-        {
+        column_getIsGrouped: {
           fn: () => column_getIsGrouped(column),
-          fnName: 'column_getIsGrouped',
         },
-        {
+        column_getGroupedIndex: {
           fn: () => column_getGroupedIndex(column),
-          fnName: 'column_getGroupedIndex',
         },
-        {
+        column_getToggleGroupingHandler: {
           fn: () => column_getToggleGroupingHandler(column),
-          fnName: 'column_getToggleGroupingHandler',
         },
-        {
+        column_getAutoAggregationFn: {
           fn: () => column_getAutoAggregationFn(column),
-          fnName: 'column_getAutoAggregationFn',
         },
-        {
+        column_getAggregationFn: {
           fn: () => column_getAggregationFn(column),
-          fnName: 'column_getAggregationFn',
         },
-      ])
+      })
     },
 
     constructRowAPIs: (row) => {
       ;(row as any)._groupingValuesCache = {}
 
-      assignAPIs('columnGroupingFeature', row, [
-        {
+      assignAPIs('columnGroupingFeature', row, {
+        row_getIsGrouped: {
           fn: () => row_getIsGrouped(row),
-          fnName: 'row_getIsGrouped',
         },
-        {
+        row_getGroupingValue: {
           fn: (columnId) => row_getGroupingValue(row, columnId),
-          fnName: 'row_getGroupingValue',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnGroupingFeature', table, [
-        {
+      assignAPIs('columnGroupingFeature', table, {
+        table_setGrouping: {
           fn: (updater) => table_setGrouping(table, updater),
-          fnName: 'table_setGrouping',
         },
-        {
+        table_resetGrouping: {
           fn: (defaultState) => table_resetGrouping(table, defaultState),
-          fnName: 'table_resetGrouping',
         },
-      ])
+      })
     },
   }
 }

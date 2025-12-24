@@ -26,6 +26,7 @@ import {
   table_getVisibleLeafColumns,
   table_resetColumnPinning,
   table_setColumnPinning,
+  type Header,
 } from '../../../../src'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
@@ -464,7 +465,7 @@ describe('table_getCenterHeaderGroups', () => {
 
     const headerGroups = table_getCenterHeaderGroups(table as any)
     const centerColumnIds = headerGroups[0]?.headers.map(
-      (header) => header.column.id,
+      (header: Header<any, any>) => header.column.id,
     )
 
     expect(centerColumnIds).not.toContain('firstName')
@@ -664,7 +665,7 @@ describe('table_getFooterGroups', () => {
 
     const footerGroups = table_getCenterFooterGroups(table as any)
     const centerColumnIds = footerGroups[0]?.headers.map(
-      (header) => header.column.id,
+      (header: Header<any, any>) => header.column.id,
     )
 
     expect(centerColumnIds).not.toContain('firstName')

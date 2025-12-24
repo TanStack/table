@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createPaginatedRowModel, rowPaginationFeature } from '../../../../src'
+import {
+  createPaginatedRowModel,
+  rowPaginationFeature,
+  type Row,
+} from '../../../../src'
 import { createRowPinningTable } from '../../../helpers/rowPinningHelpers'
 
 const ROW = {
@@ -115,7 +119,10 @@ describe('table methods', () => {
 
       expect(centerRows).toHaveLength(8)
       expect(
-        centerRows.every((row) => row.id !== ROW[0] && row.id !== ROW[2]),
+        centerRows.every(
+          (row: (typeof centerRows)[number]) =>
+            row.id !== ROW[0] && row.id !== ROW[2],
+        ),
       ).toBe(true)
     })
 
@@ -195,7 +202,7 @@ describe('row methods', () => {
     it('should use enableRowPinning function when provided', () => {
       const table = createRowPinningTable({
         _features: {},
-        enableRowPinning: (row) => row.id === ROW[1],
+        enableRowPinning: (row: Row<any, any>) => row.id === ROW[1],
       })
 
       expect(table.getRow(ROW[0]).getCanPin()).toBe(false)

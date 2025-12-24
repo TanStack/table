@@ -75,76 +75,65 @@ export function constructColumnPinningFeature<
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs('columnPinningFeature', column, [
-        {
+      assignAPIs('columnPinningFeature', column, {
+        column_pin: {
           fn: (position) => column_pin(column, position),
-          fnName: 'column_pin',
         },
-        {
+        column_getCanPin: {
           fn: () => column_getCanPin(column),
-          fnName: 'column_getCanPin',
         },
-        {
+        column_getPinnedIndex: {
           fn: () => column_getPinnedIndex(column),
-          fnName: 'column_getPinnedIndex',
         },
-        {
+        column_getIsPinned: {
           fn: () => column_getIsPinned(column),
-          fnName: 'column_getIsPinned',
         },
-      ])
+      })
     },
 
     constructRowAPIs: (row) => {
-      assignAPIs('columnPinningFeature', row, [
-        {
+      assignAPIs('columnPinningFeature', row, {
+        row_getCenterVisibleCells: {
           fn: () => row_getCenterVisibleCells(row),
-          fnName: 'row_getCenterVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
             row._table.store.state.columnPinning,
             row._table.store.state.columnVisibility,
           ],
         },
-        {
+        row_getLeftVisibleCells: {
           fn: () => row_getLeftVisibleCells(row),
-          fnName: 'row_getLeftVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
             row._table.store.state.columnPinning?.left,
             row._table.store.state.columnVisibility,
           ],
         },
-        {
+        row_getRightVisibleCells: {
           fn: () => row_getRightVisibleCells(row),
-          fnName: 'row_getRightVisibleCells',
           memoDeps: () => [
             row.getAllCells(),
             row._table.store.state.columnPinning?.right,
             row._table.store.state.columnVisibility,
           ],
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnPinningFeature', table, [
-        {
+      assignAPIs('columnPinningFeature', table, {
+        table_setColumnPinning: {
           fn: (updater) => table_setColumnPinning(table, updater),
-          fnName: 'table_setColumnPinning',
         },
-        {
+        table_resetColumnPinning: {
           fn: (defaultState) => table_resetColumnPinning(table, defaultState),
-          fnName: 'table_resetColumnPinning',
         },
-        {
+        table_getIsSomeColumnsPinned: {
           fn: (position) => table_getIsSomeColumnsPinned(table, position),
-          fnName: 'table_getIsSomeColumnsPinned',
         },
         // header groups
-        {
+        table_getLeftHeaderGroups: {
           fn: () => table_getLeftHeaderGroups(table),
-          fnName: 'table_getLeftHeaderGroups',
           memoDeps: () => [
             table.getAllColumns(),
             callMemoOrStaticFn(
@@ -155,9 +144,8 @@ export function constructColumnPinningFeature<
             table.store.state.columnPinning?.left,
           ],
         },
-        {
+        table_getCenterHeaderGroups: {
           fn: () => table_getCenterHeaderGroups(table),
-          fnName: 'table_getCenterHeaderGroups',
           memoDeps: () => [
             table.getAllColumns(),
             callMemoOrStaticFn(
@@ -168,9 +156,8 @@ export function constructColumnPinningFeature<
             table.store.state.columnPinning,
           ],
         },
-        {
+        table_getRightHeaderGroups: {
           fn: () => table_getRightHeaderGroups(table),
-          fnName: 'table_getRightHeaderGroups',
           memoDeps: () => [
             table.getAllColumns(),
             callMemoOrStaticFn(
@@ -182,9 +169,8 @@ export function constructColumnPinningFeature<
           ],
         },
         // footer groups
-        {
+        table_getLeftFooterGroups: {
           fn: () => table_getLeftFooterGroups(table),
-          fnName: 'table_getLeftFooterGroups',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -193,9 +179,8 @@ export function constructColumnPinningFeature<
             ),
           ],
         },
-        {
+        table_getCenterFooterGroups: {
           fn: () => table_getCenterFooterGroups(table),
-          fnName: 'table_getCenterFooterGroups',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -204,9 +189,8 @@ export function constructColumnPinningFeature<
             ),
           ],
         },
-        {
+        table_getRightFooterGroups: {
           fn: () => table_getRightFooterGroups(table),
-          fnName: 'table_getRightFooterGroups',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -216,9 +200,8 @@ export function constructColumnPinningFeature<
           ],
         },
         // flat headers
-        {
+        table_getLeftFlatHeaders: {
           fn: () => table_getLeftFlatHeaders(table),
-          fnName: 'table_getLeftFlatHeaders',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -227,9 +210,8 @@ export function constructColumnPinningFeature<
             ),
           ],
         },
-        {
+        table_getRightFlatHeaders: {
           fn: () => table_getRightFlatHeaders(table),
-          fnName: 'table_getRightFlatHeaders',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -238,9 +220,8 @@ export function constructColumnPinningFeature<
             ),
           ],
         },
-        {
+        table_getCenterFlatHeaders: {
           fn: () => table_getCenterFlatHeaders(table),
-          fnName: 'table_getCenterFlatHeaders',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -250,9 +231,8 @@ export function constructColumnPinningFeature<
           ],
         },
         // leaf headers
-        {
+        table_getLeftLeafHeaders: {
           fn: () => table_getLeftLeafHeaders(table),
-          fnName: 'table_getLeftLeafHeaders',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -261,9 +241,8 @@ export function constructColumnPinningFeature<
             ),
           ],
         },
-        {
+        table_getRightLeafHeaders: {
           fn: () => table_getRightLeafHeaders(table),
-          fnName: 'table_getRightLeafHeaders',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -272,9 +251,8 @@ export function constructColumnPinningFeature<
             ),
           ],
         },
-        {
+        table_getCenterLeafHeaders: {
           fn: () => table_getCenterLeafHeaders(table),
-          fnName: 'table_getCenterLeafHeaders',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -284,59 +262,53 @@ export function constructColumnPinningFeature<
           ],
         },
         // leaf columns
-        {
+        table_getLeftLeafColumns: {
           fn: () => table_getLeftLeafColumns(table),
-          fnName: 'table_getLeftLeafColumns',
           memoDeps: () => [
             table.options.columns,
             table.store.state.columnPinning,
           ],
         },
-        {
+        table_getRightLeafColumns: {
           fn: () => table_getRightLeafColumns(table),
-          fnName: 'table_getRightLeafColumns',
           memoDeps: () => [
             table.options.columns,
             table.store.state.columnPinning,
           ],
         },
-        {
+        table_getCenterLeafColumns: {
           fn: () => table_getCenterLeafColumns(table),
-          fnName: 'table_getCenterLeafColumns',
           memoDeps: () => [
             table.options.columns,
             table.store.state.columnPinning,
           ],
         },
         // visible leaf columns
-        {
+        table_getLeftVisibleLeafColumns: {
           fn: () => table_getLeftVisibleLeafColumns(table),
-          fnName: 'table_getLeftVisibleLeafColumns',
           memoDeps: () => [
             table.options.columns,
             table.store.state.columnPinning,
             table.store.state.columnVisibility,
           ],
         },
-        {
+        table_getCenterVisibleLeafColumns: {
           fn: () => table_getCenterVisibleLeafColumns(table),
-          fnName: 'table_getCenterVisibleLeafColumns',
           memoDeps: () => [
             table.options.columns,
             table.store.state.columnPinning,
             table.store.state.columnVisibility,
           ],
         },
-        {
+        table_getRightVisibleLeafColumns: {
           fn: () => table_getRightVisibleLeafColumns(table),
-          fnName: 'table_getRightVisibleLeafColumns',
           memoDeps: () => [
             table.options.columns,
             table.store.state.columnPinning,
             table.store.state.columnVisibility,
           ],
         },
-      ])
+      })
     },
   }
 }

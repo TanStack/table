@@ -67,36 +67,29 @@ export function constructColumnFilteringFeature<
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs('columnFilteringFeature', column, [
-        {
+      assignAPIs('columnFilteringFeature', column, {
+        column_getAutoFilterFn: {
           fn: () => column_getAutoFilterFn(column),
-          fnName: 'column_getAutoFilterFn',
         },
-        {
+        column_getFilterFn: {
           fn: () => column_getFilterFn(column),
-          fnName: 'column_getFilterFn',
         },
-        {
+        column_getCanFilter: {
           fn: () => column_getCanFilter(column),
-          fnName: 'column_getCanFilter',
         },
-        {
+        column_getIsFiltered: {
           fn: () => column_getIsFiltered(column),
-          fnName: 'column_getIsFiltered',
         },
-        {
+        column_getFilterValue: {
           fn: () => column_getFilterValue(column),
-          fnName: 'column_getFilterValue',
         },
-        {
+        column_getFilterIndex: {
           fn: () => column_getFilterIndex(column),
-          fnName: 'column_getFilterIndex',
         },
-        {
+        column_setFilterValue: {
           fn: (value) => column_setFilterValue(column, value),
-          fnName: 'column_setFilterValue',
         },
-      ])
+      })
     },
 
     constructRowAPIs: (row) => {
@@ -105,16 +98,14 @@ export function constructColumnFilteringFeature<
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnFilteringFeature', table, [
-        {
+      assignAPIs('columnFilteringFeature', table, {
+        table_setColumnFilters: {
           fn: (updater) => table_setColumnFilters(table, updater),
-          fnName: 'table_setColumnFilters',
         },
-        {
+        table_resetColumnFilters: {
           fn: (defaultState) => table_resetColumnFilters(table, defaultState),
-          fnName: 'table_resetColumnFilters',
         },
-      ])
+      })
     },
   }
 }

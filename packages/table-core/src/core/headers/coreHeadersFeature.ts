@@ -30,25 +30,22 @@ export function constructCoreHeadersFeature<
 >(): TableFeature<CoreHeadersFeatureConstructors<TFeatures, TData>> {
   return {
     constructHeaderAPIs: (header) => {
-      assignAPIs('coreHeadersFeature', header, [
-        {
+      assignAPIs('coreHeadersFeature', header, {
+        header_getLeafHeaders: {
           fn: () => header_getLeafHeaders(header),
-          fnName: 'header_getLeafHeaders',
           memoDeps: () => [header.column._table.options.columns],
         },
-        {
+        header_getContext: {
           fn: () => header_getContext(header),
-          fnName: 'header_getContext',
           memoDeps: () => [header.column._table.options.columns],
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('coreHeadersFeature', table, [
-        {
+      assignAPIs('coreHeadersFeature', table, {
+        table_getHeaderGroups: {
           fn: () => table_getHeaderGroups(table),
-          fnName: 'table_getHeaderGroups',
           memoDeps: () => [
             table.options.columns,
             table.store.state?.columnOrder,
@@ -58,19 +55,16 @@ export function constructCoreHeadersFeature<
             table.options.groupedColumnMode,
           ],
         },
-        {
+        table_getFooterGroups: {
           fn: () => table_getFooterGroups(table),
-          fnName: 'table_getFooterGroups',
           memoDeps: () => [table.getHeaderGroups()],
         },
-        {
+        table_getFlatHeaders: {
           fn: () => table_getFlatHeaders(table),
-          fnName: 'table_getFlatHeaders',
           memoDeps: () => [table.getHeaderGroups()],
         },
-        {
+        table_getLeafHeaders: {
           fn: () => table_getLeafHeaders(table),
-          fnName: 'table_getLeafHeaders',
           memoDeps: () => [
             callMemoOrStaticFn(
               table,
@@ -89,7 +83,7 @@ export function constructCoreHeadersFeature<
             ),
           ],
         },
-      ])
+      })
     },
   }
 }

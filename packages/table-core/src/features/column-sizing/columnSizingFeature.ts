@@ -62,14 +62,12 @@ export function constructColumnSizingFeature<
     },
 
     constructColumnAPIs: (column) => {
-      assignAPIs('columnSizingFeature', column, [
-        {
+      assignAPIs('columnSizingFeature', column, {
+        column_getSize: {
           fn: () => column_getSize(column),
-          fnName: 'column_getSize',
         },
-        {
+        column_getStart: {
           fn: (position) => column_getStart(column, position),
-          fnName: 'column_getStart',
           memoDeps: (position) => [
             position,
             callMemoOrStaticFn(
@@ -81,9 +79,8 @@ export function constructColumnSizingFeature<
             column._table.store.state.columnSizing,
           ],
         },
-        {
+        column_getAfter: {
           fn: (position) => column_getAfter(column, position),
-          fnName: 'column_getAfter',
           memoDeps: (position) => [
             position,
             callMemoOrStaticFn(
@@ -95,53 +92,44 @@ export function constructColumnSizingFeature<
             column._table.store.state.columnSizing,
           ],
         },
-        {
+        column_resetSize: {
           fn: () => column_resetSize(column),
-          fnName: 'column_resetSize',
         },
-      ])
+      })
     },
 
     constructHeaderAPIs: (header) => {
-      assignAPIs('columnSizingFeature', header, [
-        {
+      assignAPIs('columnSizingFeature', header, {
+        header_getSize: {
           fn: () => header_getSize(header),
-          fnName: 'header_getSize',
         },
-        {
+        header_getStart: {
           fn: () => header_getStart(header),
-          fnName: 'header_getStart',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnSizingFeature', table, [
-        {
+      assignAPIs('columnSizingFeature', table, {
+        table_setColumnSizing: {
           fn: (updater) => table_setColumnSizing(table, updater),
-          fnName: 'table_setColumnSizing',
         },
-        {
+        table_resetColumnSizing: {
           fn: (defaultState) => table_resetColumnSizing(table, defaultState),
-          fnName: 'table_resetColumnSizing',
         },
-        {
+        table_getTotalSize: {
           fn: () => table_getTotalSize(table),
-          fnName: 'table_getTotalSize',
         },
-        {
+        table_getLeftTotalSize: {
           fn: () => table_getLeftTotalSize(table),
-          fnName: 'table_getLeftTotalSize',
         },
-        {
+        table_getCenterTotalSize: {
           fn: () => table_getCenterTotalSize(table),
-          fnName: 'table_getCenterTotalSize',
         },
-        {
+        table_getRightTotalSize: {
           fn: () => table_getRightTotalSize(table),
-          fnName: 'table_getRightTotalSize',
         },
-      ])
+      })
     },
   }
 }

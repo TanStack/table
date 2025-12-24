@@ -34,55 +34,46 @@ export function constructCoreRowsFeature<
 >(): TableFeature<CoreRowsFeatureConstructors<TFeatures, TData>> {
   return {
     constructRowAPIs: (row) => {
-      assignAPIs('coreRowsFeature', row, [
-        {
+      assignAPIs('coreRowsFeature', row, {
+        row_getAllCellsByColumnId: {
           fn: () => row_getAllCellsByColumnId(row),
-          fnName: 'row_getAllCellsByColumnId',
           memoDeps: () => [row.getAllCells()],
         },
-        {
+        row_getAllCells: {
           fn: () => row_getAllCells(row),
-          fnName: 'row_getAllCells',
           memoDeps: () => [row._table.getAllLeafColumns()],
         },
-        {
+        row_getLeafRows: {
           fn: () => row_getLeafRows(row),
-          fnName: 'row_getLeafRows',
         },
-        {
+        row_getParentRow: {
           fn: () => row_getParentRow(row),
-          fnName: 'row_getParentRow',
         },
-        {
+        row_getParentRows: {
           fn: () => row_getParentRows(row),
-          fnName: 'row_getParentRows',
         },
-        {
+        row_getUniqueValues: {
           fn: (columnId) => row_getUniqueValues(row, columnId),
-          fnName: 'row_getUniqueValues',
         },
-        {
+        row_getValue: {
           fn: (columnId) => row_getValue(row, columnId),
-          fnName: 'row_getValue',
         },
-        {
+        row_renderValue: {
           fn: (columnId) => row_renderValue(row, columnId),
-          fnName: 'row_renderValue',
         },
-      ])
+      })
     },
     constructTableAPIs: (table) => {
-      assignAPIs('coreRowsFeature', table, [
-        {
-          fn: (row, index, parent) => table_getRowId(row, table, index, parent),
-          fnName: 'table_getRowId',
+      assignAPIs('coreRowsFeature', table, {
+        table_getRowId: {
+          fn: (originalRow, index, parent) =>
+            table_getRowId(originalRow, table, index, parent),
         },
-        {
+        table_getRow: {
           fn: (id: string, searchAll?: boolean) =>
             table_getRow(table, id, searchAll),
-          fnName: 'table_getRow',
         },
-      ])
+      })
     },
   }
 }

@@ -44,11 +44,10 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
         getSubRows: (row) => row.subRows,
-        state: {
+        initialState: {
           rowSelection: {
             '0': true,
             '2': true,
@@ -74,11 +73,10 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
         getSubRows: (row) => row.subRows,
-        state: {
+        initialState: {
           rowSelection: {
             '0': true,
             '0.0': true,
@@ -104,11 +102,10 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
         getSubRows: (row) => row.subRows,
-        state: {
+        initialState: {
           rowSelection: {},
         },
         columns,
@@ -131,10 +128,9 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
-        state: {
+        initialState: {
           rowSelection: {
             '123': true,
             '456': false,
@@ -157,10 +153,9 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
-        state: {
+        initialState: {
           rowSelection: {
             '123': true,
             '456': false,
@@ -183,10 +178,9 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
-        state: {
+        initialState: {
           rowSelection: {
             '123': true,
             '456': false,
@@ -209,10 +203,9 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
-        state: {},
+        initialState: {},
         columns,
       })
 
@@ -231,10 +224,9 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
-        state: {},
+        initialState: {},
         columns,
       })
 
@@ -253,11 +245,10 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
         getSubRows: (row) => row.subRows,
-        state: {
+        initialState: {
           rowSelection: {},
         },
         columns,
@@ -278,11 +269,10 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
         getSubRows: (row) => row.subRows,
-        state: {
+        initialState: {
           rowSelection: {
             '0.0': true,
           },
@@ -305,11 +295,10 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
         getSubRows: (row) => row.subRows,
-        state: {
+        initialState: {
           rowSelection: {
             '0.0': true,
             '0.1': true,
@@ -332,11 +321,10 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: (row) => row.index === 0, // only first row is selectable (of 2 sub-rows)
-        onStateChange() {},
         renderFallbackValue: '',
         data,
         getSubRows: (row) => row.subRows,
-        state: {
+        initialState: {
           rowSelection: {
             '0.0': true, // first sub-row
           },
@@ -358,11 +346,10 @@ describe('rowSelectionFeature', () => {
         _features,
         _rowModels: {},
         enableRowSelection: true,
-        onStateChange() {},
         renderFallbackValue: '',
         data,
         getSubRows: (row) => row.subRows,
-        state: {
+        initialState: {
           rowSelection: {
             '0.0.0': true, // first nested sub-row
           },

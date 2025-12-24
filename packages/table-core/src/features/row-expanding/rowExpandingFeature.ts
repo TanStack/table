@@ -59,69 +59,55 @@ export function constructRowExpandingFeature<
     },
 
     constructRowAPIs: (row) => {
-      assignAPIs('rowExpandingFeature', row, [
-        {
+      assignAPIs('rowExpandingFeature', row, {
+        row_toggleExpanded: {
           fn: (expanded) => row_toggleExpanded(row, expanded),
-          fnName: 'row_toggleExpanded',
         },
-        {
+        row_getIsExpanded: {
           fn: () => row_getIsExpanded(row),
-          fnName: 'row_getIsExpanded',
         },
-        {
+        row_getCanExpand: {
           fn: () => row_getCanExpand(row),
-          fnName: 'row_getCanExpand',
         },
-        {
+        row_getIsAllParentsExpanded: {
           fn: () => row_getIsAllParentsExpanded(row),
-          fnName: 'row_getIsAllParentsExpanded',
         },
-        {
+        row_getToggleExpandedHandler: {
           fn: () => row_getToggleExpandedHandler(row),
-          fnName: 'row_getToggleExpandedHandler',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('rowExpandingFeature', table, [
-        {
+      assignAPIs('rowExpandingFeature', table, {
+        table_autoResetExpanded: {
           fn: () => table_autoResetExpanded(table),
-          fnName: 'table_autoResetExpanded',
         },
-        {
+        table_setExpanded: {
           fn: (updater) => table_setExpanded(table, updater),
-          fnName: 'table_setExpanded',
         },
-        {
+        table_toggleAllRowsExpanded: {
           fn: (expanded) => table_toggleAllRowsExpanded(table, expanded),
-          fnName: 'table_toggleAllRowsExpanded',
         },
-        {
+        table_resetExpanded: {
           fn: (defaultState) => table_resetExpanded(table, defaultState),
-          fnName: 'table_resetExpanded',
         },
-        {
+        table_getCanSomeRowsExpand: {
           fn: () => table_getCanSomeRowsExpand(table),
-          fnName: 'table_getCanSomeRowsExpand',
         },
-        {
+        table_getToggleAllRowsExpandedHandler: {
           fn: () => table_getToggleAllRowsExpandedHandler(table),
-          fnName: 'table_getToggleAllRowsExpandedHandler',
         },
-        {
+        table_getIsSomeRowsExpanded: {
           fn: () => table_getIsSomeRowsExpanded(table),
-          fnName: 'table_getIsSomeRowsExpanded',
         },
-        {
+        table_getIsAllRowsExpanded: {
           fn: () => table_getIsAllRowsExpanded(table),
-          fnName: 'table_getIsAllRowsExpanded',
         },
-        {
+        table_getExpandedDepth: {
           fn: () => table_getExpandedDepth(table),
-          fnName: 'table_getExpandedDepth',
         },
-      ])
+      })
     },
   }
 }
