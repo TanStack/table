@@ -54,6 +54,7 @@ export function constructCoreHeadersFeature<
             table.store.state?.columnOrder,
             table.store.state.grouping,
             table.store.state.columnPinning,
+            table.store.state.columnVisibility,
             table.options.groupedColumnMode,
           ],
         },

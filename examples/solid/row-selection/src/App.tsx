@@ -130,203 +130,211 @@ function App() {
   })
 
   return (
-    <table.Subscribe
-      selector={(state) => ({
-        // don't include row selection state to optimize re-renders
-        columnFilters: state.columnFilters,
-        globalFilter: state.globalFilter,
-        pagination: state.pagination,
-      })}
-    >
-      {(state) => (
-        <div class="p-2">
-          <div>
+    // <table.Subscribe
+    //   selector={(state) => ({
+    //     // don't include row selection state to optimize re-renders
+    //     columnFilters: state.columnFilters,
+    //     globalFilter: state.globalFilter,
+    //     pagination: state.pagination,
+    //   })}
+    // >
+    //   {(state) => (
+    <div class="p-2">
+      <div>
+        <table.Subscribe
+          selector={(state) => ({ globalFilter: state.globalFilter })}
+        >
+          {(state) => (
             <input
               value={state().globalFilter ?? ''}
               onInput={(e) => table.setGlobalFilter(e.target.value)}
               class="p-2 font-lg shadow border border-block"
               placeholder="Search all columns..."
             />
-          </div>
-          <div class="h-2" />
-          <table>
-            <thead>
-              <For each={table.getHeaderGroups()}>
-                {(headerGroup) => (
-                  <tr>
-                    <For each={headerGroup.headers}>
-                      {(header) => (
-                        <th colSpan={header.colSpan}>
-                          <Show when={!header.isPlaceholder}>
-                            <>
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                              <Show when={header.column.getCanFilter()}>
-                                <div>
-                                  <Filter
-                                    column={header.column}
-                                    table={table}
-                                  />
-                                </div>
-                              </Show>
-                            </>
+          )}
+        </table.Subscribe>
+      </div>
+      <div class="h-2" />
+      <table>
+        <thead>
+          <For each={table.getHeaderGroups()}>
+            {(headerGroup) => (
+              <tr>
+                <For each={headerGroup.headers}>
+                  {(header) => (
+                    <th colSpan={header.colSpan}>
+                      <Show when={!header.isPlaceholder}>
+                        <>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                          <Show when={header.column.getCanFilter()}>
+                            <div>
+                              <Filter column={header.column} table={table} />
+                            </div>
                           </Show>
-                        </th>
+                        </>
+                      </Show>
+                    </th>
+                  )}
+                </For>
+              </tr>
+            )}
+          </For>
+        </thead>
+        <tbody>
+          <For each={table.getRowModel().rows}>
+            {(row) => (
+              <table.Subscribe
+                selector={(state) => state.rowSelection[row.id]} // only re-render row when row selection changes (could down move to cell render too)
+              >
+                {() => (
+                  <tr>
+                    <For each={row.getAllCells()}>
+                      {(cell) => (
+                        <td>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </td>
                       )}
                     </For>
                   </tr>
                 )}
-              </For>
-            </thead>
-            <tbody>
-              <For each={table.getRowModel().rows}>
-                {(row) => (
-                  <table.Subscribe
-                    selector={(state) => state.rowSelection[row.id]} // only re-render row when row selection changes (could down move to cell render too)
-                  >
-                    {() => (
-                      <tr>
-                        <For each={row.getAllCells()}>
-                          {(cell) => (
-                            <td>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext(),
-                              )}
-                            </td>
-                          )}
-                        </For>
-                      </tr>
-                    )}
-                  </table.Subscribe>
+              </table.Subscribe>
+            )}
+          </For>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td class="p-1">
+              <table.Subscribe selector={(state) => state.rowSelection}>
+                {() => (
+                  <IndeterminateCheckbox
+                    checked={table.getIsAllPageRowsSelected()}
+                    indeterminate={table.getIsSomePageRowsSelected()}
+                    onChange={table.getToggleAllPageRowsSelectedHandler()}
+                  />
                 )}
-              </For>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td class="p-1">
-                  <table.Subscribe selector={(state) => state.rowSelection}>
-                    {() => (
-                      <IndeterminateCheckbox
-                        checked={table.getIsAllPageRowsSelected()}
-                        indeterminate={table.getIsSomePageRowsSelected()}
-                        onChange={table.getToggleAllPageRowsSelectedHandler()}
-                      />
-                    )}
-                  </table.Subscribe>
-                </td>
-                <td colSpan={20}>
-                  Page Rows ({table.getRowModel().rows.length})
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-          <div class="h-2" />
-          <div class="flex items-center gap-2">
-            <button
-              class="border rounded p-1"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {'<<'}
-            </button>
-            <button
-              class="border rounded p-1"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {'<'}
-            </button>
-            <button
-              class="border rounded p-1"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {'>'}
-            </button>
-            <button
-              class="border rounded p-1"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              {'>>'}
-            </button>
-            <span class="flex items-center gap-1">
-              <div>Page</div>
-              <strong>
-                {state().pagination.pageIndex + 1} of {table.getPageCount()}
-              </strong>
-            </span>
-            <span class="flex items-center gap-1">
-              | Go to page:
-              <input
-                type="number"
-                min="1"
-                max={table.getPageCount()}
-                value={state().pagination.pageIndex + 1}
-                onInput={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0
-                  table.setPageIndex(page)
+              </table.Subscribe>
+            </td>
+            <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="h-2" />
+      <div class="flex items-center gap-2">
+        <button
+          class="border rounded p-1"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          class="border rounded p-1"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          class="border rounded p-1"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          class="border rounded p-1"
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>>'}
+        </button>
+        <table.Subscribe
+          selector={(state) => ({ pagination: state.pagination })}
+        >
+          {(state) => (
+            <>
+              <span class="flex items-center gap-1">
+                <div>Page</div>
+                <strong>
+                  {state().pagination.pageIndex + 1} of {table.getPageCount()}
+                </strong>
+              </span>
+              <span class="flex items-center gap-1">
+                | Go to page:
+                <input
+                  type="number"
+                  min="1"
+                  max={table.getPageCount()}
+                  value={state().pagination.pageIndex + 1}
+                  onInput={(e) => {
+                    const page = e.target.value ? Number(e.target.value) - 1 : 0
+                    table.setPageIndex(page)
+                  }}
+                  class="border p-1 rounded w-16"
+                />
+              </span>
+              <select
+                value={state().pagination.pageSize}
+                onChange={(e) => {
+                  table.setPageSize(
+                    Number((e.target as HTMLSelectElement).value),
+                  )
                 }}
-                class="border p-1 rounded w-16"
-              />
-            </span>
-            <select
-              value={state().pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number((e.target as HTMLSelectElement).value))
-              }}
-            >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <option value={pageSize}>Show {pageSize}</option>
-              ))}
-            </select>
-          </div>
-          <br />
-          <div>
-            <table.Subscribe
-              selector={(state) => ({
-                numSelected: Object.keys(state.rowSelection).length,
-              })}
-            >
-              {(state) => <>{state().numSelected} of </>}
-            </table.Subscribe>
-            {table.getPreFilteredRowModel().rows.length} Total Rows Selected
-          </div>
-          <hr />
-          <br />
-          <div>
-            <button
-              class="border rounded p-2 mb-2"
-              onClick={() => refreshData()}
-            >
-              Refresh Data
-            </button>
-          </div>
-          <div>
-            <button
-              class="border rounded p-2 mb-2"
-              onClick={() =>
-                console.info(
-                  'table.getSelectedRowModel().flatRows',
-                  table.getSelectedRowModel().flatRows,
-                )
-              }
-            >
-              Log table.getSelectedRowModel().flatRows
-            </button>
-          </div>
-          <div>
-            <label>Row Selection State:</label>
-            <table.Subscribe selector={(state) => state}>
-              {(state) => <pre>{JSON.stringify(state(), null, 2)}</pre>}
-            </table.Subscribe>
-          </div>
-        </div>
-      )}
-    </table.Subscribe>
+              >
+                {[10, 20, 30, 40, 50].map((pageSize) => (
+                  <option value={pageSize}>Show {pageSize}</option>
+                ))}
+              </select>
+            </>
+          )}
+        </table.Subscribe>
+      </div>
+      <br />
+      <div>
+        <table.Subscribe
+          selector={(state) => ({
+            numSelected: Object.keys(state.rowSelection).length,
+          })}
+        >
+          {(state) => <>{state().numSelected} of </>}
+        </table.Subscribe>
+        {table.getPreFilteredRowModel().rows.length} Total Rows Selected
+      </div>
+      <hr />
+      <br />
+      <div>
+        <button class="border rounded p-2 mb-2" onClick={() => refreshData()}>
+          Refresh Data
+        </button>
+      </div>
+      <div>
+        <button
+          class="border rounded p-2 mb-2"
+          onClick={() =>
+            console.info(
+              'table.getSelectedRowModel().flatRows',
+              table.getSelectedRowModel().flatRows,
+            )
+          }
+        >
+          Log table.getSelectedRowModel().flatRows
+        </button>
+      </div>
+      <div>
+        <label>Row Selection State:</label>
+        <table.Subscribe selector={(state) => state}>
+          {(state) => <pre>{JSON.stringify(state(), null, 2)}</pre>}
+        </table.Subscribe>
+      </div>
+    </div>
+    //   )}
+    // </table.Subscribe>
   )
 }
 

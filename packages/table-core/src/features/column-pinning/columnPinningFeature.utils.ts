@@ -213,7 +213,7 @@ export function table_getLeftHeaderGroups<
     table,
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
-  ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
+  ) as Array<Column_Internal<TFeatures, TData, unknown>>
   const { left } =
     table.store.state.columnPinning ?? getDefaultColumnPinningState()
 
