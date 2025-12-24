@@ -74,9 +74,6 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 
 function App() {
   const [data, setData] = createSignal(makeData(20))
-  const [columnOrder, setColumnOrder] = createSignal<ColumnOrderState>([])
-  const [columnVisibility, setColumnVisibility] =
-    createSignal<ColumnVisibilityState>({})
   const rerender = () => setData(() => makeData(20))
 
   const table = createTable({
@@ -85,16 +82,6 @@ function App() {
       return data()
     },
     columns: defaultColumns,
-    state: {
-      get columnOrder() {
-        return columnOrder()
-      },
-      get columnVisibility() {
-        return columnVisibility()
-      },
-    },
-    onColumnOrderChange: setColumnOrder,
-    onColumnVisibilityChange: setColumnVisibility,
   })
 
   const randomizeColumns = () => {
@@ -104,7 +91,14 @@ function App() {
   }
 
   return (
-    <div class="p-2">
+    <table.Subscribe
+      selector={(state) => ({
+        columnOrder: state.columnOrder,
+        columnVisibility: state.columnVisibility,
+      })}
+    >
+      {(state) => (
+        <div class="p-2">
       <div class="inline-block border border-black shadow rounded">
         <div class="px-1 border-b border-black">
           <label>
@@ -202,8 +196,10 @@ function App() {
         </tfoot>
       </table>
       <div class="h-4" />
-      <pre>{JSON.stringify(table.getState().columnOrder, null, 2)}</pre>
-    </div>
+          <pre>{JSON.stringify(table.getState().columnOrder, null, 2)}</pre>
+        </div>
+      )}
+    </table.Subscribe>
   )
 }
 

@@ -2647,6 +2647,28 @@ importers:
         specifier: ^2.11.10
         version: 2.11.10(@testing-library/jest-dom@6.9.1)(solid-js@1.9.10)(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.1))
 
+  examples/solid/row-selection:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.10
+        version: 1.9.10
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.1.0
+        version: 10.1.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^7.3.0
+        version: 7.3.0(@types/node@25.0.3)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.1)
+      vite-plugin-solid:
+        specifier: ^2.11.10
+        version: 2.11.10(@testing-library/jest-dom@6.9.1)(solid-js@1.9.10)(vite@7.3.0(@types/node@25.0.3)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.1))
+
   examples/solid/sorting:
     dependencies:
       '@tanstack/solid-table':
@@ -3375,6 +3397,9 @@ importers:
 
   packages/solid-table:
     dependencies:
+      '@tanstack/solid-store':
+        specifier: ^0.8.0
+        version: 0.8.0(solid-js@1.9.10)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -7035,6 +7060,11 @@ packages:
   '@tanstack/router-vite-plugin@1.141.7':
     resolution: {integrity: sha512-/ySoPfbiX1/iEuxz+WAmEzgx+nQUN/tAnjYYkjnSNq4bImEyHf/Wr95UgGMt97OWF3vokFCtfpkX7yHaJQZxkg==}
     engines: {node: '>=12'}
+
+  '@tanstack/solid-store@0.8.0':
+    resolution: {integrity: sha512-JwqTedbxyOGw7mfmdGkB0RGgefRCw/tNauc8tlMcaS1mV5wTFT8c1KIB3LgttuHaanMJEBeqQJ7bc/R0WTP1fA==}
+    peerDependencies:
+      solid-js: ^1.6.0
 
   '@tanstack/store@0.8.0':
     resolution: {integrity: sha512-Om+BO0YfMZe//X2z0uLF2j+75nQga6TpTJgLJQBiq85aOyZNIhkCgleNcud2KQg4k4v9Y9l+Uhru3qWMPGTOzQ==}
@@ -15760,6 +15790,11 @@ snapshots:
       - vite
       - vite-plugin-solid
       - webpack
+
+  '@tanstack/solid-store@0.8.0(solid-js@1.9.10)':
+    dependencies:
+      '@tanstack/store': 0.8.0
+      solid-js: 1.9.10
 
   '@tanstack/store@0.8.0': {}
 
