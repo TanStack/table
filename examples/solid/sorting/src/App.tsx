@@ -83,7 +83,7 @@ function App() {
 
   return (
     <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
-      {(state) => (
+      {(_state) => (
         <div class="p-2">
           <table>
             <thead>
@@ -142,7 +142,9 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
-          <pre>{JSON.stringify(state().sorting, null, 2)}</pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state(), null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>

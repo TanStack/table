@@ -175,7 +175,9 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
-          <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state(), null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>
