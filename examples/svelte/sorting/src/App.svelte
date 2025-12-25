@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { ColumnDef, SortingState } from '@tanstack/svelte-table'
+  import type { ColumnDef } from '@tanstack/svelte-table'
   import {
     FlexRender,
+    Subscribe,
     createSortedRowModel,
     createTable,
-    createTableState,
     rowSortingFeature,
     renderComponent,
     sortFns,
@@ -13,7 +13,10 @@
   import Header from './Header.svelte'
   import './index.css'
   import { makeData, type Person } from './makeData'
-  import { _features } from './tableHelper.svelte'
+
+  const _features = tableFeatures({
+    rowSortingFeature,
+  })
 
   const columns: ColumnDef<typeof _features, Person>[] = [
     {
@@ -75,30 +78,25 @@
 
   let data = $state(makeData(1_000))
 
-  const [sorting, setSorting] = createTableState<SortingState>([])
-
   const refreshData = () => {
     console.info('refresh')
     data = makeData(100_000) // stress test
   }
 
-  const table = createTable({
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
-    get data() {
-      return data
-    },
-    columns,
-    state: {
-      get sorting() {
-        return sorting()
+  const table = createTable(
+    {
+      _features,
+      _rowModels: {
+        sortedRowModel: createSortedRowModel(sortFns),
       },
+      get data() {
+        return data
+      },
+      columns,
+      debugTable: true,
     },
-    onSortingChange: setSorting,
-    debugTable: true,
-  })
+    (state) => state, // Select all state for reactivity
+  )
 </script>
 
 <div class="p-2">
@@ -155,5 +153,9 @@
   <div>
     <button onclick={() => refreshData()}>Refresh Data</button>
   </div>
-  <pre>{JSON.stringify(table.getState().sorting, null, 2)}</pre>
+  <Subscribe selector={(state) => state} {table}>
+    {#snippet children(state)}
+      <pre>{JSON.stringify(state, null, 2)}</pre>
+    {/snippet}
+  </Subscribe>
 </div>
