@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   getDefaultRowSelectionState,
   row_getCanMultiSelect,
@@ -64,37 +68,37 @@ export function constructRowSelectionFeature<
       }
     },
 
-    constructRowAPIs: (row) => {
-      assignAPIs('rowSelectionFeature', row, {
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('rowSelectionFeature', prototype, table, {
         row_toggleSelected: {
-          fn: (value, opts) => row_toggleSelected(row, value, opts),
+          fn: (row, value, opts) => row_toggleSelected(row, value, opts),
         },
         row_getIsSelected: {
-          fn: () => row_getIsSelected(row),
+          fn: (row) => row_getIsSelected(row),
         },
         row_getIsSomeSelected: {
-          fn: () => row_getIsSomeSelected(row),
+          fn: (row) => row_getIsSomeSelected(row),
         },
         row_getIsAllSubRowsSelected: {
-          fn: () => row_getIsAllSubRowsSelected(row),
+          fn: (row) => row_getIsAllSubRowsSelected(row),
         },
         row_getCanSelect: {
-          fn: () => row_getCanSelect(row),
+          fn: (row) => row_getCanSelect(row),
         },
         row_getCanSelectSubRows: {
-          fn: () => row_getCanSelectSubRows(row),
+          fn: (row) => row_getCanSelectSubRows(row),
         },
         row_getCanMultiSelect: {
-          fn: () => row_getCanMultiSelect(row),
+          fn: (row) => row_getCanMultiSelect(row),
         },
         row_getToggleSelectedHandler: {
-          fn: () => row_getToggleSelectedHandler(row),
+          fn: (row) => row_getToggleSelectedHandler(row),
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('rowSelectionFeature', table, {
+      assignTableAPIs('rowSelectionFeature', table, {
         table_setRowSelection: {
           fn: (updater) => table_setRowSelection(table, updater),
         },

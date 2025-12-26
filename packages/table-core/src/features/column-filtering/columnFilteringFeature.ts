@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   column_getAutoFilterFn,
   column_getCanFilter,
@@ -66,39 +70,39 @@ export function constructColumnFilteringFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnFilteringFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnFilteringFeature', prototype, table, {
         column_getAutoFilterFn: {
-          fn: () => column_getAutoFilterFn(column),
+          fn: (column) => column_getAutoFilterFn(column),
         },
         column_getFilterFn: {
-          fn: () => column_getFilterFn(column),
+          fn: (column) => column_getFilterFn(column),
         },
         column_getCanFilter: {
-          fn: () => column_getCanFilter(column),
+          fn: (column) => column_getCanFilter(column),
         },
         column_getIsFiltered: {
-          fn: () => column_getIsFiltered(column),
+          fn: (column) => column_getIsFiltered(column),
         },
         column_getFilterValue: {
-          fn: () => column_getFilterValue(column),
+          fn: (column) => column_getFilterValue(column),
         },
         column_getFilterIndex: {
-          fn: () => column_getFilterIndex(column),
+          fn: (column) => column_getFilterIndex(column),
         },
         column_setFilterValue: {
-          fn: (value) => column_setFilterValue(column, value),
+          fn: (column, value) => column_setFilterValue(column, value),
         },
       })
     },
 
-    constructRowAPIs: (row) => {
+    initRowInstanceData: (row) => {
       ;(row as any).columnFilters = {}
       ;(row as any).columnFiltersMeta = {}
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnFilteringFeature', table, {
+      assignTableAPIs('columnFilteringFeature', table, {
         table_setColumnFilters: {
           fn: (updater) => table_setColumnFilters(table, updater),
         },

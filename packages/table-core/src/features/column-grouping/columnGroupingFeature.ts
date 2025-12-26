@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   cell_getIsAggregated,
   cell_getIsGrouped,
@@ -73,61 +77,63 @@ export function constructColumnGroupingFeature<
       }
     },
 
-    constructCellAPIs: (cell) => {
-      assignAPIs('columnGroupingFeature', cell, {
+    assignCellPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnGroupingFeature', prototype, table, {
         cell_getIsGrouped: {
-          fn: () => cell_getIsGrouped(cell),
+          fn: (cell) => cell_getIsGrouped(cell),
         },
         cell_getIsPlaceholder: {
-          fn: () => cell_getIsPlaceholder(cell),
+          fn: (cell) => cell_getIsPlaceholder(cell),
         },
         cell_getIsAggregated: {
-          fn: () => cell_getIsAggregated(cell),
+          fn: (cell) => cell_getIsAggregated(cell),
         },
       })
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnGroupingFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnGroupingFeature', prototype, table, {
         column_toggleGrouping: {
-          fn: () => column_toggleGrouping(column),
+          fn: (column) => column_toggleGrouping(column),
         },
         column_getCanGroup: {
-          fn: () => column_getCanGroup(column),
+          fn: (column) => column_getCanGroup(column),
         },
         column_getIsGrouped: {
-          fn: () => column_getIsGrouped(column),
+          fn: (column) => column_getIsGrouped(column),
         },
         column_getGroupedIndex: {
-          fn: () => column_getGroupedIndex(column),
+          fn: (column) => column_getGroupedIndex(column),
         },
         column_getToggleGroupingHandler: {
-          fn: () => column_getToggleGroupingHandler(column),
+          fn: (column) => column_getToggleGroupingHandler(column),
         },
         column_getAutoAggregationFn: {
-          fn: () => column_getAutoAggregationFn(column),
+          fn: (column) => column_getAutoAggregationFn(column),
         },
         column_getAggregationFn: {
-          fn: () => column_getAggregationFn(column),
+          fn: (column) => column_getAggregationFn(column),
         },
       })
     },
 
-    constructRowAPIs: (row) => {
-      ;(row as any)._groupingValuesCache = {}
-
-      assignAPIs('columnGroupingFeature', row, {
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnGroupingFeature', prototype, table, {
         row_getIsGrouped: {
-          fn: () => row_getIsGrouped(row),
+          fn: (row) => row_getIsGrouped(row),
         },
         row_getGroupingValue: {
-          fn: (columnId) => row_getGroupingValue(row, columnId),
+          fn: (row, columnId) => row_getGroupingValue(row, columnId),
         },
       })
+    },
+
+    initRowInstanceData: (row) => {
+      ;(row as any)._groupingValuesCache = {}
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnGroupingFeature', table, {
+      assignTableAPIs('columnGroupingFeature', table, {
         table_setGrouping: {
           fn: (updater) => table_setGrouping(table, updater),
         },

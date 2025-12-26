@@ -6,4 +6,3 @@ if (!rootElement) throw new Error('Failed to find the root element')
 new App({
   target: rootElement,
 })
-

@@ -48,4 +48,3 @@ export function makeData(...lens: Array<number>) {
 
   return makeDataLevel()
 }
-

@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   row_getCenterVisibleCells,
   row_getLeftVisibleCells,
@@ -62,40 +66,41 @@ export function constructColumnVisibilityFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnVisibilityFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnVisibilityFeature', prototype, table, {
         column_getIsVisible: {
-          fn: () => column_getIsVisible(column),
-          memoDeps: () => [
-            column._table.options.columns,
-            column._table.store.state.columnVisibility,
+          fn: (column) => column_getIsVisible(column),
+          memoDeps: (column) => [
+            column.table.options.columns,
+            column.table.store.state.columnVisibility,
             column.columns,
           ],
         },
         column_getCanHide: {
-          fn: () => column_getCanHide(column),
+          fn: (column) => column_getCanHide(column),
         },
         column_getToggleVisibilityHandler: {
-          fn: () => column_getToggleVisibilityHandler(column),
+          fn: (column) => column_getToggleVisibilityHandler(column),
         },
         column_toggleVisibility: {
-          fn: (visible) => column_toggleVisibility(column, visible),
+          fn: (column, visible) => column_toggleVisibility(column, visible),
         },
       })
     },
 
-    constructRowAPIs: (row) => {
-      assignAPIs('columnVisibilityFeature', row, {
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnVisibilityFeature', prototype, table, {
         row_getAllVisibleCells: {
-          fn: () => row_getAllVisibleCells(row),
-          memoDeps: () => [
+          fn: (row) => row_getAllVisibleCells(row),
+          memoDeps: (row) => [
             row.getAllCells(),
-            row._table.store.state.columnVisibility,
+            row.table.store.state.columnVisibility,
           ],
         },
         row_getVisibleCells: {
-          fn: (left, center, right) => row_getVisibleCells(left, center, right),
-          memoDeps: () => [
+          fn: (row, left, center, right) =>
+            row_getVisibleCells(left, center, right),
+          memoDeps: (row) => [
             row_getLeftVisibleCells(row),
             row_getCenterVisibleCells(row),
             row_getRightVisibleCells(row),
@@ -105,7 +110,7 @@ export function constructColumnVisibilityFeature<
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnVisibilityFeature', table, {
+      assignTableAPIs('columnVisibilityFeature', table, {
         table_getVisibleFlatColumns: {
           fn: () => table_getVisibleFlatColumns(table),
           memoDeps: () => [

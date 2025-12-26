@@ -78,7 +78,7 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(200))
 
-  readonly columnSizing = computed(() => this.table.getState().columnSizing)
+  readonly columnSizing = computed(() => this.table.store.state.columnSizing)
 
   /**
    * Instead of calling `column.getSize()` on every render for every header
@@ -116,7 +116,7 @@ export class AppComponent {
   readonly columnSizingDebugInfo = computed(() =>
     JSON.stringify(
       {
-        columnSizing: this.table.getState().columnSizing,
+        columnSizing: this.table.store.state.columnSizing,
       },
       null,
       2,

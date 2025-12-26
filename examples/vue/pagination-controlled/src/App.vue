@@ -158,7 +158,7 @@ function handlePageSizeChange(e: any) {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {{ table.getState().pagination.pageIndex + 1 }} of
+            {{ table.store.state.pagination.pageIndex + 1 }} of
             {{ table.getPageCount() }}
           </strong>
         </span>
@@ -172,7 +172,7 @@ function handlePageSizeChange(e: any) {
           />
         </span>
         <select
-          :value="table.getState().pagination.pageSize"
+          :value="table.store.state.pagination.pageSize"
           @change="handlePageSizeChange"
         >
           <option

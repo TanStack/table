@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   column_clearSorting,
   column_getAutoSortDir,
@@ -72,49 +76,50 @@ export function constructRowSortingFeature<
       }
     },
 
-    constructColumnAPIs(column) {
-      assignAPIs('rowSortingFeature', column, {
+    assignColumnPrototype(prototype, table) {
+      assignPrototypeAPIs('rowSortingFeature', prototype, table, {
         'column.getAutoSortFn': {
-          fn: () => column_getAutoSortFn(column),
+          fn: (column) => column_getAutoSortFn(column),
         },
         'column.getAutoSortDir': {
-          fn: () => column_getAutoSortDir(column),
+          fn: (column) => column_getAutoSortDir(column),
         },
         column_getSortFn: {
-          fn: () => column_getSortFn(column),
+          fn: (column) => column_getSortFn(column),
         },
         column_toggleSorting: {
-          fn: (desc, multi) => column_toggleSorting(column, desc, multi),
+          fn: (column, desc, multi) =>
+            column_toggleSorting(column, desc, multi),
         },
         column_getFirstSortDir: {
-          fn: () => column_getFirstSortDir(column),
+          fn: (column) => column_getFirstSortDir(column),
         },
         column_getNextSortingOrder: {
-          fn: (multi) => column_getNextSortingOrder(column, multi),
+          fn: (column, multi) => column_getNextSortingOrder(column, multi),
         },
         column_getCanSort: {
-          fn: () => column_getCanSort(column),
+          fn: (column) => column_getCanSort(column),
         },
         column_getCanMultiSort: {
-          fn: () => column_getCanMultiSort(column),
+          fn: (column) => column_getCanMultiSort(column),
         },
         column_getIsSorted: {
-          fn: () => column_getIsSorted(column),
+          fn: (column) => column_getIsSorted(column),
         },
         column_getSortIndex: {
-          fn: () => column_getSortIndex(column),
+          fn: (column) => column_getSortIndex(column),
         },
         column_clearSorting: {
-          fn: () => column_clearSorting(column),
+          fn: (column) => column_clearSorting(column),
         },
         column_getToggleSortingHandler: {
-          fn: () => column_getToggleSortingHandler(column),
+          fn: (column) => column_getToggleSortingHandler(column),
         },
       })
     },
 
     constructTableAPIs(table) {
-      assignAPIs('rowSortingFeature', table, {
+      assignTableAPIs('rowSortingFeature', table, {
         table_setSorting: {
           fn: (updater) => table_setSorting(table, updater),
         },

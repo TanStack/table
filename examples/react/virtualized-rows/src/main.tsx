@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import './index.css'
 
 import {
   columnSizingFeature,
-  columnVisibilityFeature,
   createSortedRowModel,
   flexRender,
   rowSortingFeature,
@@ -19,7 +18,6 @@ import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 
 const features = {
-  columnVisibilityFeature,
   columnSizingFeature,
   rowSortingFeature,
 }
@@ -76,10 +74,10 @@ function App() {
   // The virtualizer will need a reference to the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  const [data, setData] = React.useState(() => makeData(50_000))
+  const [data, setData] = React.useState(() => makeData(100_000))
 
   const refreshData = React.useCallback(() => {
-    setData(makeData(50_000))
+    setData(makeData(100_000))
   }, [])
 
   const table = useTable({
@@ -92,76 +90,89 @@ function App() {
 
   // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
   return (
-    <div className="app">
-      {process.env.NODE_ENV === 'development' ? (
-        <p>
-          <strong>Notice:</strong> You are currently running React in
-          development mode. Virtualized rendering performance will be slightly
-          degraded until this application is built for production.
-        </p>
-      ) : null}
-      ({data.length} rows)
-      <button onClick={refreshData}>Refresh Data</button>
-      <div
-        className="container"
-        ref={tableContainerRef}
-        style={{
-          overflow: 'auto', // our scrollable table container
-          position: 'relative', // needed for sticky header
-          height: '800px', // should be a fixed height
-        }}
-      >
-        {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
-        <table style={{ display: 'grid' }}>
-          <thead
-            style={{
-              display: 'grid',
-              position: 'sticky',
-              top: 0,
-              zIndex: 1,
-            }}
-          >
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr
-                key={headerGroup.id}
-                style={{ display: 'flex', width: '100%' }}
-              >
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <th
-                      key={header.id}
-                      style={{
-                        display: 'flex',
-                        width: header.getSize(),
-                      }}
+    <>
+      <div className="app">
+        {process.env.NODE_ENV === 'development' ? (
+          <p>
+            <strong>Notice:</strong> You are currently running React in
+            development mode. Virtualized rendering performance will be slightly
+            degraded until this application is built for production.
+          </p>
+        ) : null}
+        ({data.length.toLocaleString()} rows)
+        <button onClick={refreshData}>Refresh Data</button>
+        <div
+          className="container"
+          ref={tableContainerRef}
+          style={{
+            overflow: 'auto', // our scrollable table container
+            position: 'relative', // needed for sticky header
+            height: '800px', // should be a fixed height
+          }}
+        >
+          <table.Subscribe selector={(state) => state}>
+            {() => (
+              // Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights
+              <table style={{ display: 'grid' }}>
+                <thead
+                  style={{
+                    display: 'grid',
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 1,
+                  }}
+                >
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr
+                      key={headerGroup.id}
+                      style={{ display: 'flex', width: '100%' }}
                     >
-                      <div
-                        {...{
-                          className: header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : '',
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    </th>
-                  )
-                })}
-              </tr>
-            ))}
-          </thead>
-          <TableBody table={table} tableContainerRef={tableContainerRef} />
-        </table>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <th
+                            key={header.id}
+                            style={{
+                              display: 'flex',
+                              width: header.getSize(),
+                            }}
+                          >
+                            <div
+                              {...{
+                                className: header.column.getCanSort()
+                                  ? 'cursor-pointer select-none'
+                                  : '',
+                                onClick:
+                                  header.column.getToggleSortingHandler(),
+                              }}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                              {{
+                                asc: ' 🔼',
+                                desc: ' 🔽',
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </div>
+                          </th>
+                        )
+                      })}
+                    </tr>
+                  ))}
+                </thead>
+                <TableBody
+                  table={table}
+                  tableContainerRef={tableContainerRef}
+                />
+              </table>
+            )}
+          </table.Subscribe>
+        </div>
       </div>
-    </div>
+      <table.Subscribe selector={(state) => state}>
+        {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+      </table.Subscribe>
+    </>
   )
 }
 
@@ -186,6 +197,10 @@ function TableBody({ table, tableContainerRef }: TableBodyProps) {
         : undefined,
     overscan: 5,
   })
+
+  useEffect(() => {
+    rowVirtualizer.measure()
+  }, [])
 
   return (
     <tbody
@@ -229,7 +244,7 @@ function TableBodyRow({ row, virtualRow, rowVirtualizer }: TableBodyRowProps) {
         width: '100%',
       }}
     >
-      {row.getVisibleCells().map((cell) => {
+      {row.getAllCells().map((cell) => {
         return (
           <td
             key={cell.id}

@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   column_getCanGlobalFilter,
   table_getGlobalAutoFilterFn,
@@ -54,16 +58,16 @@ export function constructGlobalFilteringFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('globalFilteringFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('globalFilteringFeature', prototype, table, {
         column_getCanGlobalFilter: {
-          fn: () => column_getCanGlobalFilter(column),
+          fn: (column) => column_getCanGlobalFilter(column),
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('globalFilteringFeature', table, {
+      assignTableAPIs('globalFilteringFeature', table, {
         table_getGlobalAutoFilterFn: {
           fn: () => table_getGlobalAutoFilterFn(),
         },

@@ -1,4 +1,9 @@
-import { assignAPIs, callMemoOrStaticFn, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  callMemoOrStaticFn,
+  makeStateUpdater,
+} from '../../utils'
 import { table_getPinnedVisibleLeafColumns } from '../column-pinning/columnPinningFeature.utils'
 import {
   column_getAfter,
@@ -61,56 +66,56 @@ export function constructColumnSizingFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnSizingFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnSizingFeature', prototype, table, {
         column_getSize: {
-          fn: () => column_getSize(column),
+          fn: (column) => column_getSize(column),
         },
         column_getStart: {
-          fn: (position) => column_getStart(column, position),
-          memoDeps: (position) => [
+          fn: (column, position) => column_getStart(column, position),
+          memoDeps: (column, position) => [
             position,
             callMemoOrStaticFn(
-              column._table,
+              column.table,
               'getPinnedVisibleLeafColumns',
               table_getPinnedVisibleLeafColumns,
               position,
             ),
-            column._table.store.state.columnSizing,
+            column.table.store.state.columnSizing,
           ],
         },
         column_getAfter: {
-          fn: (position) => column_getAfter(column, position),
-          memoDeps: (position) => [
+          fn: (column, position) => column_getAfter(column, position),
+          memoDeps: (column, position) => [
             position,
             callMemoOrStaticFn(
-              column._table,
+              column.table,
               'getPinnedVisibleLeafColumns',
               table_getPinnedVisibleLeafColumns,
               position,
             ),
-            column._table.store.state.columnSizing,
+            column.table.store.state.columnSizing,
           ],
         },
         column_resetSize: {
-          fn: () => column_resetSize(column),
+          fn: (column) => column_resetSize(column),
         },
       })
     },
 
-    constructHeaderAPIs: (header) => {
-      assignAPIs('columnSizingFeature', header, {
+    assignHeaderPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnSizingFeature', prototype, table, {
         header_getSize: {
-          fn: () => header_getSize(header),
+          fn: (header) => header_getSize(header),
         },
         header_getStart: {
-          fn: () => header_getStart(header),
+          fn: (header) => header_getStart(header),
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnSizingFeature', table, {
+      assignTableAPIs('columnSizingFeature', table, {
         table_setColumnSizing: {
           fn: (updater) => table_setColumnSizing(table, updater),
         },

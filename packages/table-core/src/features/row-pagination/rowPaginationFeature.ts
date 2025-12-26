@@ -1,4 +1,4 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import { assignTableAPIs, makeStateUpdater } from '../../utils'
 import {
   getDefaultPaginationState,
   table_autoResetPageIndex,
@@ -61,7 +61,7 @@ export function constructRowPaginationFeature<
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('rowPaginationFeature', table, {
+      assignTableAPIs('rowPaginationFeature', table, {
         table_autoResetPageIndex: {
           fn: () => table_autoResetPageIndex(table),
         },

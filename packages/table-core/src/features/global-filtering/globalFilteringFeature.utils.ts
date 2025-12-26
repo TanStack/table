@@ -11,12 +11,11 @@ export function column_getCanGlobalFilter<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): boolean {
-  const { _table: table } = column
   return (
     (column.columnDef.enableGlobalFilter ?? true) &&
-    (table.options.enableGlobalFilter ?? true) &&
-    (table.options.enableFilters ?? true) &&
-    (table.options.getColumnCanGlobalFilter?.(column) ?? true) &&
+    (column.table.options.enableGlobalFilter ?? true) &&
+    (column.table.options.enableFilters ?? true) &&
+    (column.table.options.getColumnCanGlobalFilter?.(column) ?? true) &&
     !!column.accessorFn
   )
 }

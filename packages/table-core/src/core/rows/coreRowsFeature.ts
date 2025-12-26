@@ -1,4 +1,4 @@
-import { assignAPIs } from '../../utils'
+import { assignTableAPIs, assignPrototypeAPIs } from '../../utils'
 import {
   row_getAllCells,
   row_getAllCellsByColumnId,
@@ -33,38 +33,38 @@ export function constructCoreRowsFeature<
   TData extends RowData,
 >(): TableFeature<CoreRowsFeatureConstructors<TFeatures, TData>> {
   return {
-    constructRowAPIs: (row) => {
-      assignAPIs('coreRowsFeature', row, {
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('coreRowsFeature', prototype, table, {
         row_getAllCellsByColumnId: {
-          fn: () => row_getAllCellsByColumnId(row),
-          memoDeps: () => [row.getAllCells()],
+          fn: (row) => row_getAllCellsByColumnId(row),
+          memoDeps: (row) => [row.getAllCells()],
         },
         row_getAllCells: {
-          fn: () => row_getAllCells(row),
-          memoDeps: () => [row._table.getAllLeafColumns()],
+          fn: (row) => row_getAllCells(row),
+          memoDeps: (row) => [row.table.getAllLeafColumns()],
         },
         row_getLeafRows: {
-          fn: () => row_getLeafRows(row),
+          fn: (row) => row_getLeafRows(row),
         },
         row_getParentRow: {
-          fn: () => row_getParentRow(row),
+          fn: (row) => row_getParentRow(row),
         },
         row_getParentRows: {
-          fn: () => row_getParentRows(row),
+          fn: (row) => row_getParentRows(row),
         },
         row_getUniqueValues: {
-          fn: (columnId) => row_getUniqueValues(row, columnId),
+          fn: (row, columnId) => row_getUniqueValues(row, columnId),
         },
         row_getValue: {
-          fn: (columnId) => row_getValue(row, columnId),
+          fn: (row, columnId) => row_getValue(row, columnId),
         },
         row_renderValue: {
-          fn: (columnId) => row_renderValue(row, columnId),
+          fn: (row, columnId) => row_renderValue(row, columnId),
         },
       })
     },
     constructTableAPIs: (table) => {
-      assignAPIs('coreRowsFeature', table, {
+      assignTableAPIs('coreRowsFeature', table, {
         table_getRowId: {
           fn: (originalRow, index, parent) =>
             table_getRowId(originalRow, table, index, parent),

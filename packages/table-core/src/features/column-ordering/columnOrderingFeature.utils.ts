@@ -19,8 +19,7 @@ export function column_getIndex<
   column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const { _table: table } = column
-  const columns = table_getPinnedVisibleLeafColumns(table, position)
+  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
   return columns.findIndex((d) => d.id === column.id)
 }
 
@@ -32,7 +31,7 @@ export function column_getIsFirstColumn<
   column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = table_getPinnedVisibleLeafColumns(column._table, position)
+  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
   return columns[0]?.id === column.id
 }
 
@@ -44,7 +43,7 @@ export function column_getIsLastColumn<
   column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = table_getPinnedVisibleLeafColumns(column._table, position)
+  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
   return columns[columns.length - 1]?.id === column.id
 }
 

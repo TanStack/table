@@ -189,7 +189,7 @@ class LitTableExample extends LitElement {
         <span style="display: flex;gap:2px">
           <span>Page</span>
           <strong>
-            ${table.getState().pagination.pageIndex + 1} of
+            ${table.store.state.pagination.pageIndex + 1} of
             ${table.getPageCount()}
           </strong>
         </span>

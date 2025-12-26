@@ -1,4 +1,4 @@
-import { assignAPIs } from '../../utils'
+import { assignTableAPIs, assignPrototypeAPIs } from '../../utils'
 import {
   column_getFacetedMinMaxValues,
   column_getFacetedRowModel,
@@ -29,22 +29,22 @@ export function constructColumnFacetingFeature<
   TData extends RowData,
 >(): TableFeature<ColumnFacetingFeatureConstructors<TFeatures, TData>> {
   return {
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnFacetingFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnFacetingFeature', prototype, table, {
         column_getFacetedMinMaxValues: {
-          fn: () => column_getFacetedMinMaxValues(column, column._table),
+          fn: (column) => column_getFacetedMinMaxValues(column, column.table),
         },
         column_getFacetedRowModel: {
-          fn: () => column_getFacetedRowModel(column, column._table),
+          fn: (column) => column_getFacetedRowModel(column, column.table),
         },
         column_getFacetedUniqueValues: {
-          fn: () => column_getFacetedUniqueValues(column, column._table),
+          fn: (column) => column_getFacetedUniqueValues(column, column.table),
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnFacetingFeature', table, {
+      assignTableAPIs('columnFacetingFeature', table, {
         table_getGlobalFacetedMinMaxValues: {
           fn: () => table_getGlobalFacetedMinMaxValues(table),
         },

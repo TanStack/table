@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   column_getCanResize,
   column_getIsResizing,
@@ -48,28 +52,28 @@ export function constructColumnResizingFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnResizingFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnResizingFeature', prototype, table, {
         column_getCanResize: {
-          fn: () => column_getCanResize(column),
+          fn: (column) => column_getCanResize(column),
         },
         column_getIsResizing: {
-          fn: () => column_getIsResizing(column),
+          fn: (column) => column_getIsResizing(column),
         },
       })
     },
 
-    constructHeaderAPIs: (header) => {
-      assignAPIs('columnResizingFeature', header, {
+    assignHeaderPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnResizingFeature', prototype, table, {
         header_getResizeHandler: {
-          fn: (_contextDocument) =>
+          fn: (header, _contextDocument) =>
             header_getResizeHandler(header, _contextDocument),
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnResizingFeature', table, {
+      assignTableAPIs('columnResizingFeature', table, {
         table_setColumnResizing: {
           fn: (updater) => table_setColumnResizing(table, updater),
         },

@@ -63,6 +63,18 @@ export interface Table_CoreProperties<
    */
   _features: Partial<CoreFeatures> & TFeatures
   /**
+   * Prototype cache for Cell objects - shared by all cells in this table
+   */
+  _cellPrototype?: object
+  /**
+   * Prototype cache for Column objects - shared by all columns in this table
+   */
+  _columnPrototype?: object
+  /**
+   * Prototype cache for Header objects - shared by all headers in this table
+   */
+  _headerPrototype?: object
+  /**
    * The row model processing functions that are used to process the data by features.
    */
   _rowModelFns: RowModelFns<TFeatures, TData>
@@ -70,6 +82,10 @@ export interface Table_CoreProperties<
    * The row models that are enabled for the table.
    */
   _rowModels: CachedRowModels<TFeatures, TData>
+  /**
+   * Prototype cache for Row objects - shared by all rows in this table
+   */
+  _rowPrototype?: object
   /**
    * This is the resolved initial state of the table.
    */

@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   column_getIndex,
   column_getIsFirstColumn,
@@ -45,28 +49,28 @@ export function constructColumnOrderingFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnOrderingFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnOrderingFeature', prototype, table, {
         column_getIndex: {
-          fn: (position) => column_getIndex(column, position),
-          memoDeps: (position) => [
+          fn: (column, position) => column_getIndex(column, position),
+          memoDeps: (column, position) => [
             position,
-            column._table.store.state.columnOrder,
-            column._table.store.state.columnPinning,
-            column._table.store.state.grouping,
+            column.table.store.state.columnOrder,
+            column.table.store.state.columnPinning,
+            column.table.store.state.grouping,
           ],
         },
         column_getIsFirstColumn: {
-          fn: (position) => column_getIsFirstColumn(column, position),
+          fn: (column, position) => column_getIsFirstColumn(column, position),
         },
         column_getIsLastColumn: {
-          fn: (position) => column_getIsLastColumn(column, position),
+          fn: (column, position) => column_getIsLastColumn(column, position),
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnOrderingFeature', table, {
+      assignTableAPIs('columnOrderingFeature', table, {
         table_setColumnOrder: {
           fn: (updater) => table_setColumnOrder(table, updater),
         },

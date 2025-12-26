@@ -30,7 +30,7 @@ export function column_getCanResize<
 >(column: Column_Internal<TFeatures, TData, TValue>) {
   return (
     (column.columnDef.enableResizing ?? true) &&
-    (column._table.options.enableColumnResizing ?? true)
+    (column.table.options.enableColumnResizing ?? true)
   )
 }
 
@@ -39,9 +39,7 @@ export function column_getIsResizing<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  return (
-    column._table.store.state.columnResizing?.isResizingColumn === column.id
-  )
+  return column.table.store.state.columnResizing?.isResizingColumn === column.id
 }
 
 export function header_getResizeHandler<
@@ -49,7 +47,7 @@ export function header_getResizeHandler<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(header: Header<TFeatures, TData, TValue>, _contextDocument?: Document) {
-  const column = table_getColumn(header.column._table, header.column.id)!
+  const column = table_getColumn(header.column.table, header.column.id)!
   const canResize = column_getCanResize(column)
 
   return (event: unknown) => {
@@ -86,9 +84,9 @@ export function header_getResizeHandler<
         return
       }
 
-      table_setColumnResizing(column._table, (old) => {
+      table_setColumnResizing(column.table, (old) => {
         const deltaDirection =
-          column._table.options.columnResizeDirection === 'rtl' ? -1 : 1
+          column.table.options.columnResizeDirection === 'rtl' ? -1 : 1
         const deltaOffset =
           (clientXPos - (old.startOffset ?? 0)) * deltaDirection
         const deltaPercentage = Math.max(
@@ -111,10 +109,10 @@ export function header_getResizeHandler<
       })
 
       if (
-        column._table.options.columnResizeMode === 'onChange' ||
+        column.table.options.columnResizeMode === 'onChange' ||
         eventType === 'end'
       ) {
-        table_setColumnSizing(column._table, (old) => ({
+        table_setColumnSizing(column.table, (old) => ({
           ...old,
           ...newColumnSizing,
         }))
@@ -126,7 +124,7 @@ export function header_getResizeHandler<
     const onEnd = (clientXPos?: number) => {
       updateOffset('end', clientXPos)
 
-      table_setColumnResizing(column._table, (old) => ({
+      table_setColumnResizing(column.table, (old) => ({
         ...old,
         isResizingColumn: false,
         startOffset: null,
@@ -203,7 +201,7 @@ export function header_getResizeHandler<
       )
     }
 
-    table_setColumnResizing(column._table, (old) => ({
+    table_setColumnResizing(column.table, (old) => ({
       ...old,
       startOffset: clientX,
       startSize,

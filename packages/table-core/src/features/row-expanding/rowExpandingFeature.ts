@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   getDefaultExpandedState,
   row_getCanExpand,
@@ -58,28 +62,28 @@ export function constructRowExpandingFeature<
       }
     },
 
-    constructRowAPIs: (row) => {
-      assignAPIs('rowExpandingFeature', row, {
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('rowExpandingFeature', prototype, table, {
         row_toggleExpanded: {
-          fn: (expanded) => row_toggleExpanded(row, expanded),
+          fn: (row, expanded) => row_toggleExpanded(row, expanded),
         },
         row_getIsExpanded: {
-          fn: () => row_getIsExpanded(row),
+          fn: (row) => row_getIsExpanded(row),
         },
         row_getCanExpand: {
-          fn: () => row_getCanExpand(row),
+          fn: (row) => row_getCanExpand(row),
         },
         row_getIsAllParentsExpanded: {
-          fn: () => row_getIsAllParentsExpanded(row),
+          fn: (row) => row_getIsAllParentsExpanded(row),
         },
         row_getToggleExpandedHandler: {
-          fn: () => row_getToggleExpandedHandler(row),
+          fn: (row) => row_getToggleExpandedHandler(row),
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('rowExpandingFeature', table, {
+      assignTableAPIs('rowExpandingFeature', table, {
         table_autoResetExpanded: {
           fn: () => table_autoResetExpanded(table),
         },

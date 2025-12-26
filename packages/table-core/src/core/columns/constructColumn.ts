@@ -10,6 +10,23 @@ import type {
 import type { Column } from '../../types/Column'
 import type { Column_CoreProperties } from './coreColumnsFeature.types'
 
+/**
+ * Creates or retrieves the column prototype for a table.
+ * The prototype is cached on the table and shared by all column instances.
+ */
+function getColumnPrototype<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): object {
+  if (!table._columnPrototype) {
+    table._columnPrototype = { table }
+    for (const feature of Object.values(table._features)) {
+      feature.assignColumnPrototype?.(table._columnPrototype, table)
+    }
+  }
+  return table._columnPrototype
+}
+
 export function constructColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -74,19 +91,21 @@ export function constructColumn<
     throw new Error()
   }
 
-  const column: Column_CoreProperties<TFeatures, TData, TValue> = {
-    accessorFn,
-    columnDef: resolvedColumnDef as ColumnDef<TFeatures, TData, TValue>,
-    columns: [],
-    depth,
-    id: `${String(id)}`,
-    parent: parent,
-    _table: table,
-  }
+  // Create column with shared prototype for memory efficiency
+  const columnPrototype = getColumnPrototype(table)
+  const column = Object.create(columnPrototype) as Column_CoreProperties<
+    TFeatures,
+    TData,
+    TValue
+  >
 
-  for (const feature of Object.values(table._features)) {
-    feature.constructColumnAPIs?.(column as Column<TFeatures, TData, TValue>)
-  }
+  // Only assign instance-specific properties
+  column.accessorFn = accessorFn
+  column.columnDef = resolvedColumnDef as ColumnDef<TFeatures, TData, TValue>
+  column.columns = []
+  column.depth = depth
+  column.id = `${String(id)}`
+  column.parent = parent
 
   return column as Column<TFeatures, TData, TValue>
 }

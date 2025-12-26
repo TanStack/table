@@ -326,9 +326,8 @@ export const dynamicFilterFn: FilterFn<any, any> = <
   let value = filterValue
   let joinOperator: JoinOperator = 'and'
 
-  const filters: Array<ExtendedColumnFilter> = row._table
-    .getState()
-    .columnFilters.filter((f) => f.id === columnId)
+  const filters: Array<ExtendedColumnFilter> =
+    row.table.store.state.columnFilters.filter((f) => f.id === columnId)
 
   if (!filters.length) return true
 

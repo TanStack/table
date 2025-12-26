@@ -1,4 +1,9 @@
-import { assignAPIs, callMemoOrStaticFn, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  callMemoOrStaticFn,
+  makeStateUpdater,
+} from '../../utils'
 import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
 import {
   column_getCanPin,
@@ -74,54 +79,54 @@ export function constructColumnPinningFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnPinningFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnPinningFeature', prototype, table, {
         column_pin: {
-          fn: (position) => column_pin(column, position),
+          fn: (column, position) => column_pin(column, position),
         },
         column_getCanPin: {
-          fn: () => column_getCanPin(column),
+          fn: (column) => column_getCanPin(column),
         },
         column_getPinnedIndex: {
-          fn: () => column_getPinnedIndex(column),
+          fn: (column) => column_getPinnedIndex(column),
         },
         column_getIsPinned: {
-          fn: () => column_getIsPinned(column),
+          fn: (column) => column_getIsPinned(column),
         },
       })
     },
 
-    constructRowAPIs: (row) => {
-      assignAPIs('columnPinningFeature', row, {
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnPinningFeature', prototype, table, {
         row_getCenterVisibleCells: {
-          fn: () => row_getCenterVisibleCells(row),
-          memoDeps: () => [
+          fn: (row) => row_getCenterVisibleCells(row),
+          memoDeps: (row) => [
             row.getAllCells(),
-            row._table.store.state.columnPinning,
-            row._table.store.state.columnVisibility,
+            row.table.store.state.columnPinning,
+            row.table.store.state.columnVisibility,
           ],
         },
         row_getLeftVisibleCells: {
-          fn: () => row_getLeftVisibleCells(row),
-          memoDeps: () => [
+          fn: (row) => row_getLeftVisibleCells(row),
+          memoDeps: (row) => [
             row.getAllCells(),
-            row._table.store.state.columnPinning?.left,
-            row._table.store.state.columnVisibility,
+            row.table.store.state.columnPinning?.left,
+            row.table.store.state.columnVisibility,
           ],
         },
         row_getRightVisibleCells: {
-          fn: () => row_getRightVisibleCells(row),
-          memoDeps: () => [
+          fn: (row) => row_getRightVisibleCells(row),
+          memoDeps: (row) => [
             row.getAllCells(),
-            row._table.store.state.columnPinning?.right,
-            row._table.store.state.columnVisibility,
+            row.table.store.state.columnPinning?.right,
+            row.table.store.state.columnVisibility,
           ],
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnPinningFeature', table, {
+      assignTableAPIs('columnPinningFeature', table, {
         table_setColumnPinning: {
           fn: (updater) => table_setColumnPinning(table, updater),
         },

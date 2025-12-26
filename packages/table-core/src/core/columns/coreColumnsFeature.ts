@@ -1,4 +1,4 @@
-import { assignAPIs } from '../../utils'
+import { assignTableAPIs, assignPrototypeAPIs } from '../../utils'
 import {
   column_getFlatColumns,
   column_getLeafColumns,
@@ -31,27 +31,26 @@ export function constructCoreColumnsFeature<
   TData extends RowData,
 >(): TableFeature<CoreColumnsFeatureConstructors<TFeatures, TData>> {
   return {
-    constructColumnAPIs: (column) => {
-      const { _table: table } = column
-      assignAPIs('coreColumnsFeature', column, {
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('coreColumnsFeature', prototype, table, {
         column_getFlatColumns: {
-          fn: () => column_getFlatColumns(column),
-          memoDeps: () => [table.options.columns],
+          fn: (column) => column_getFlatColumns(column),
+          memoDeps: (column) => [column.table.options.columns],
         },
         column_getLeafColumns: {
-          fn: () => column_getLeafColumns(column),
-          memoDeps: () => [
-            table.store.state.columnOrder,
-            table.store.state.grouping,
-            table.options.columns,
-            table.options.groupedColumnMode,
+          fn: (column) => column_getLeafColumns(column),
+          memoDeps: (column) => [
+            column.table.store.state.columnOrder,
+            column.table.store.state.grouping,
+            column.table.options.columns,
+            column.table.options.groupedColumnMode,
           ],
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('coreColumnsFeature', table, {
+      assignTableAPIs('coreColumnsFeature', table, {
         table_getDefaultColumnDef: {
           fn: () => table_getDefaultColumnDef(table),
           memoDeps: () => [table.options.defaultColumn],

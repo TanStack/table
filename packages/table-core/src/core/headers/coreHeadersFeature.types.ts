@@ -94,7 +94,7 @@ export interface Header_CoreProperties<
   /**
    * Reference to the parent table instance.
    */
-  _table: Table<TFeatures, TData>
+  table: Table<TFeatures, TData>
 }
 
 export interface Header_Header<

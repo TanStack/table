@@ -1,4 +1,8 @@
-import { assignAPIs, callMemoOrStaticFn } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  callMemoOrStaticFn,
+} from '../../utils'
 import {
   table_getCenterHeaderGroups,
   table_getLeftHeaderGroups,
@@ -29,21 +33,21 @@ export function constructCoreHeadersFeature<
   TData extends RowData,
 >(): TableFeature<CoreHeadersFeatureConstructors<TFeatures, TData>> {
   return {
-    constructHeaderAPIs: (header) => {
-      assignAPIs('coreHeadersFeature', header, {
+    assignHeaderPrototype: (prototype, table) => {
+      assignPrototypeAPIs('coreHeadersFeature', prototype, table, {
         header_getLeafHeaders: {
-          fn: () => header_getLeafHeaders(header),
-          memoDeps: () => [header.column._table.options.columns],
+          fn: (header) => header_getLeafHeaders(header),
+          memoDeps: (header) => [header.column.table.options.columns],
         },
         header_getContext: {
-          fn: () => header_getContext(header),
-          memoDeps: () => [header.column._table.options.columns],
+          fn: (header) => header_getContext(header),
+          memoDeps: (header) => [header.column.table.options.columns],
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('coreHeadersFeature', table, {
+      assignTableAPIs('coreHeadersFeature', table, {
         table_getHeaderGroups: {
           fn: () => table_getHeaderGroups(table),
           memoDeps: () => [

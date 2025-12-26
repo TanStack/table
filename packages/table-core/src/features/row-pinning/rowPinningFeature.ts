@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   getDefaultRowPinningState,
   row_getCanPin,
@@ -52,30 +56,30 @@ export function constructRowPinningFeature<
       }
     },
 
-    constructRowAPIs: (row) => {
-      assignAPIs('rowPinningFeature', row, {
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('rowPinningFeature', prototype, table, {
         row_getCanPin: {
-          fn: () => row_getCanPin(row),
+          fn: (row) => row_getCanPin(row),
         },
         row_getIsPinned: {
-          fn: () => row_getIsPinned(row),
+          fn: (row) => row_getIsPinned(row),
         },
         row_getPinnedIndex: {
-          fn: () => row_getPinnedIndex(row),
-          memoDeps: () => [
-            row._table.getRowModel().rows,
-            row._table.store.state.rowPinning,
+          fn: (row) => row_getPinnedIndex(row),
+          memoDeps: (row) => [
+            row.table.getRowModel().rows,
+            row.table.store.state.rowPinning,
           ],
         },
         row_pin: {
-          fn: (position, includeLeafRows, includeParentRows) =>
+          fn: (row, position, includeLeafRows, includeParentRows) =>
             row_pin(row, position, includeLeafRows, includeParentRows),
         },
       })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('rowPinningFeature', table, {
+      assignTableAPIs('rowPinningFeature', table, {
         table_setRowPinning: {
           fn: (updater) => table_setRowPinning(table, updater),
         },

@@ -6,6 +6,7 @@
 **/dist
 **/docs
 **/old-examples
+**/examples/**/*.svelte
 pnpm-lock.yaml
 
 .angular

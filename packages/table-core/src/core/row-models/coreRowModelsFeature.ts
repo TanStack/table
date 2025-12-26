@@ -1,4 +1,4 @@
-import { assignAPIs } from '../../utils'
+import { assignTableAPIs } from '../../utils'
 import {
   table_getCoreRowModel,
   table_getExpandedRowModel,
@@ -30,7 +30,7 @@ export function constructCoreRowModelsFeature<
 >(): TableFeature<CoreRowModelsFeatureConstructors<TFeatures, TData>> {
   return {
     constructTableAPIs: (table) => {
-      assignAPIs('coreRowModelsFeature', table, {
+      assignTableAPIs('coreRowModelsFeature', table, {
         table_getCoreRowModel: {
           fn: () => table_getCoreRowModel(table),
         },

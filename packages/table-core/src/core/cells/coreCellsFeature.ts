@@ -1,4 +1,4 @@
-import { assignAPIs } from '../../utils'
+import { assignPrototypeAPIs } from '../../utils'
 import {
   cell_getContext,
   cell_getValue,
@@ -21,17 +21,17 @@ export function constructCoreCellsFeature<
   TData extends RowData,
 >(): TableFeature<CoreCellsFeatureConstructors<TFeatures, TData>> {
   return {
-    constructCellAPIs: (cell) => {
-      assignAPIs('coreCellsFeature', cell, {
+    assignCellPrototype: (prototype, table) => {
+      assignPrototypeAPIs('coreCellsFeature', prototype, table, {
         cell_getValue: {
-          fn: () => cell_getValue(cell),
+          fn: (cell) => cell_getValue(cell),
         },
         cell_renderValue: {
-          fn: () => cell_renderValue(cell),
+          fn: (cell) => cell_renderValue(cell),
         },
         cell_getContext: {
-          fn: () => cell_getContext(cell),
-          memoDeps: () => [cell],
+          fn: (cell) => cell_getContext(cell),
+          memoDeps: (cell) => [cell],
         },
       })
     },
