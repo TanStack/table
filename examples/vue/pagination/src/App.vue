@@ -71,19 +71,20 @@ const columns = ref(
   ]),
 )
 
-const table = useTable({
-  _features,
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
+const table = useTable(
+  {
+    _features,
+    _rowModels: {
+      paginatedRowModel: createPaginatedRowModel(),
+    },
+    data,
+    get columns() {
+      return columns.value
+    },
+    debugTable: true,
   },
-  get data() {
-    return data.value
-  },
-  get columns() {
-    return columns.value
-  },
-  debugTable: true,
-})
+  (state) => ({ pagination: state.pagination }),
+)
 
 function rerender() {
   data.value = defaultData
@@ -183,7 +184,7 @@ function handlePageSizeChange(e: any) {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {{ table.store.state.pagination.pageIndex + 1 }} of
+            {{ table.state.pagination.pageIndex + 1 }} of
             {{ table.getPageCount() }}
           </strong>
         </span>
@@ -197,7 +198,7 @@ function handlePageSizeChange(e: any) {
           />
         </span>
         <select
-          :value="table.store.state.pagination.pageSize"
+          :value="table.state.pagination.pageSize"
           @change="handlePageSizeChange"
         >
           <option
@@ -210,7 +211,7 @@ function handlePageSizeChange(e: any) {
         </select>
       </div>
       <div>{{ table.getRowModel().rows.length }} Rows</div>
-      <pre>{{ JSON.stringify(table.store.state.pagination, null, 2) }}</pre>
+      <pre>{{ JSON.stringify(table.state.pagination, null, 2) }}</pre>
     </div>
     <div class="h-2" />
     <button @click="rerender" class="border p-2">Rerender</button>

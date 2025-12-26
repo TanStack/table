@@ -6,11 +6,7 @@ import {
   createColumnHelper,
   tableFeatures,
   type Column,
-  type ColumnOrderState,
-  type ColumnVisibilityState,
   useTable,
-  Updater,
-  isFunction,
 } from '@tanstack/vue-table'
 import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
@@ -73,36 +69,24 @@ const columns = ref(
   ]),
 )
 
-const columnVisibility = ref<ColumnVisibilityState>({})
-const columnOrder = ref<ColumnOrderState>([])
-
 const rerender = () => (data.value = makeData(20))
 
-const table = useTable({
-  _features,
-  get data() {
-    return data.value
-  },
-  get columns() {
-    return columns.value
-  },
-  state: {
-    get columnVisibility() {
-      return columnVisibility.value
+const table = useTable(
+  {
+    _features,
+    data,
+    get columns() {
+      return columns.value
     },
-    get columnOrder() {
-      return columnOrder.value
-    },
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   },
-  onColumnOrderChange: (updaterOrValue: Updater<ColumnOrderState>) => {
-    columnOrder.value = isFunction(updaterOrValue)
-      ? updaterOrValue(columnOrder.value)
-      : updaterOrValue
-  },
-  debugTable: true,
-  debugHeaders: true,
-  debugColumns: true,
-})
+  (state) => ({
+    columnOrder: state.columnOrder,
+    columnVisibility: state.columnVisibility,
+  }),
+)
 
 const randomizeColumns = () => {
   table.setColumnOrder(
@@ -111,10 +95,10 @@ const randomizeColumns = () => {
 }
 
 function toggleColumnVisibility(column: Column<any, any>) {
-  columnVisibility.value = {
-    ...columnVisibility.value,
+  table.setColumnVisibility({
+    ...table.state.columnVisibility,
     [column.id]: !column.getIsVisible(),
-  }
+  })
 }
 
 function toggleAllColumnsVisibility() {
@@ -210,7 +194,7 @@ function toggleAllColumnsVisibility() {
         </tr>
       </tfoot>
     </table>
-    <pre>{{ JSON.stringify(table.store.state.columnOrder, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.state.columnOrder, null, 2) }}</pre>
   </div>
 </template>
 
