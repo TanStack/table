@@ -54,8 +54,8 @@
     "@sveltejs/package": "^2.5.7",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "eslint-plugin-svelte": "^3.13.1",
-    "svelte": "^5.46.0",
-    "svelte-check": "^4.3.4"
+    "svelte": "^5.46.1",
+    "svelte-check": "^4.3.5"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"

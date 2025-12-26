@@ -1,24 +1,29 @@
 import { constructTableHelper } from '@tanstack/table-core'
-import { useTable } from './useTable'
+import {
+  useTable,
+  VueTable,
+  type TableOptionsWithReactiveData,
+} from './useTable'
 import type {
   RowData,
-  Table,
   TableFeatures,
   TableHelperOptions,
   TableHelper_Core,
   TableOptions,
+  TableState,
 } from '@tanstack/table-core'
 
 export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
-  useTable: (
+  useTable: <TSelected = {}>(
     tableOptions: Omit<
-      TableOptions<TFeatures, TData>,
+      TableOptionsWithReactiveData<TFeatures, TData>,
       '_features' | '_rowModels'
     >,
-  ) => Table<TFeatures, TData>
+    selector?: (state: TableState<TFeatures>) => TSelected,
+  ) => VueTable<TFeatures, TData, TSelected>
 }
 
 export function createTableHelper<
@@ -30,8 +35,22 @@ export function createTableHelper<
   const tableHelper = constructTableHelper(useTable, tableHelperOptions)
   return {
     ...tableHelper,
-    useTable: tableHelper.tableCreator,
-  } as unknown as TableHelper<TFeatures, TData>
+    useTable: <TSelected = {}>(
+      tableOptions: Omit<
+        TableOptionsWithReactiveData<TFeatures, TData>,
+        '_features' | '_rowModels'
+      >,
+      selector?: (state: TableState<TFeatures>) => TSelected,
+    ) => {
+      return useTable<TFeatures, TData, TSelected>(
+        {
+          ...tableHelper.options,
+          ...tableOptions,
+        } as TableOptionsWithReactiveData<TFeatures, TData>,
+        selector,
+      )
+    },
+  }
 }
 
 // test
