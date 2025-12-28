@@ -1,15 +1,21 @@
-import { untracked } from '@angular/core'
+import { runInInjectionContext, untracked } from '@angular/core'
+import type { Injector } from '@angular/core'
 
 /**
  * Implementation from @tanstack/angular-query
  * {https://github.com/TanStack/query/blob/main/packages/angular-query-experimental/src/util/lazy-init/lazy-init.ts}
  */
-export function lazyInit<T extends object>(initializer: () => T): T {
+export function lazyInit<T extends object>(
+  initializer: () => T,
+  injector?: Injector,
+): T {
   let object: T | null = null
 
   const initializeObject = () => {
     if (!object) {
-      object = untracked(() => initializer())
+      object = untracked(() =>
+        injector ? runInInjectionContext(injector, initializer) : initializer(),
+      )
     }
   }
 

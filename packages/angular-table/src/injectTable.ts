@@ -1,4 +1,9 @@
-import { computed } from '@angular/core'
+import {
+  Injector,
+  assertInInjectionContext,
+  computed,
+  inject,
+} from '@angular/core'
 import { constructTable } from '@tanstack/table-core'
 import { injectStore } from '@tanstack/angular-store'
 import { lazyInit } from './lazy-signal-initializer'
@@ -41,6 +46,9 @@ export function injectTable<
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): AngularTable<TFeatures, TData, TSelected> {
+  assertInInjectionContext(injectTable)
+  const injector = inject(Injector)
+
   return lazyInit(() => {
     const resolvedOptions: TableOptions<TFeatures, TData> = {
       ...options(),
@@ -98,11 +106,12 @@ export function injectTable<
       table.store,
       (state: TableState<TFeatures>) => state,
     )
+
     Object.keys(table).forEach((key) => {
       const value = (table as any)[key]
       if (typeof value === 'function' && key.startsWith('get')) {
         const originalMethod = value.bind(table)
-        ;(table as any)[key] = (...args: any[]) => {
+        ;(table as any)[key] = (...args: Array<any>) => {
           // Access state to create reactive dependency
           allState()
           return originalMethod(...args)
@@ -141,5 +150,5 @@ export function injectTable<
     })
 
     return proxifiedTable
-  })
+  }, injector)
 }
