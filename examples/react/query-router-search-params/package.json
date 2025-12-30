@@ -10,8 +10,8 @@
     "lint": "eslint ./src"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.90.12",
-    "@tanstack/react-router": "^1.143.11",
+    "@tanstack/react-query": "^5.90.16",
+    "@tanstack/react-router": "^1.144.0",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",
     "@rollup/plugin-replace": "^6.0.3",
-    "@tanstack/router-vite-plugin": "^1.143.11",
+    "@tanstack/router-vite-plugin": "^1.145.2",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",

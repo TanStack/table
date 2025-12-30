@@ -112,7 +112,7 @@ describe('column_getCanResize', () => {
 describe('column_getIsResizing', () => {
   it('should return true when column is being resized', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnResizing: {
           isResizingColumn: 'firstName',
           columnSizingStart: [],
@@ -233,7 +233,7 @@ describe('header_getResizeHandler', () => {
 
   it('should return a function', () => {
     const table = generateTestTableWithData<TestFeatures>(1, {
-      state: {
+      initialState: {
         columnSizing: {},
       },
     })

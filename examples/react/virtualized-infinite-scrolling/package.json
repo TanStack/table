@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.1.0",
-    "@tanstack/react-query": "^5.90.12",
+    "@tanstack/react-query": "^5.90.16",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "@tanstack/react-virtual": "^3.13.13",
     "react": "^19.2.3",

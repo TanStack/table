@@ -13,16 +13,14 @@ export function createTableWithPinningState(
   rowCount = 10,
   pinningState?: RowPinningState,
 ) {
-  const table = generateTestTableWithData(rowCount)
-  if (pinningState) {
-    table.options.state = {
-      rowPinning: pinningState,
-    }
-  } else {
-    table.options.state = {
-      rowPinning: getDefaultRowPinningState(),
-    }
-  }
+  const table = generateTestTableWithData(rowCount, {
+    initialState: {
+      rowPinning: pinningState ?? getDefaultRowPinningState(),
+    },
+    _features: {
+      rowPinningFeature,
+    },
+  } as any)
   return table
 }
 

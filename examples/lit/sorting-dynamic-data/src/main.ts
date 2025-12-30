@@ -19,7 +19,11 @@ const _features = tableFeatures({
   rowSortingFeature,
 })
 
-const sortStatusFn: SortFn<typeof _features, Person> = (rowA, rowB, _columnId) => {
+const sortStatusFn: SortFn<typeof _features, Person> = (
+  rowA,
+  rowB,
+  _columnId,
+) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']

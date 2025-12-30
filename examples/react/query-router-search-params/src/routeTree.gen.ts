@@ -8,65 +8,34 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as AnotherRouteRouteImport } from './routes/anotherRoute'
+import { Route as IndexRouteImport } from './routes/index'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as AnotherRouteImport } from './routes/anotherRoute'
-import { Route as IndexImport } from './routes/index'
-
-// Create/Update Routes
-
-const AnotherRouteRoute = AnotherRouteImport.update({
+const AnotherRouteRoute = AnotherRouteRouteImport.update({
   id: '/anotherRoute',
   path: '/anotherRoute',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/anotherRoute': {
-      id: '/anotherRoute'
-      path: '/anotherRoute'
-      fullPath: '/anotherRoute'
-      preLoaderRoute: typeof AnotherRouteImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/anotherRoute': typeof AnotherRouteRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/anotherRoute': typeof AnotherRouteRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/anotherRoute': typeof AnotherRouteRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths: '/' | '/anotherRoute'
@@ -75,37 +44,34 @@ export interface FileRouteTypes {
   id: '__root__' | '/' | '/anotherRoute'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnotherRouteRoute: typeof AnotherRouteRoute
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/anotherRoute': {
+      id: '/anotherRoute'
+      path: '/anotherRoute'
+      fullPath: '/anotherRoute'
+      preLoaderRoute: typeof AnotherRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnotherRouteRoute: AnotherRouteRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/anotherRoute"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/anotherRoute": {
-      "filePath": "anotherRoute.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */

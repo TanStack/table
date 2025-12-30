@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.1.0",
-    "@tanstack/lit-table": "^8.21.1",
+    "@tanstack/lit-table": "^9.0.0-alpha.10",
     "lit": "^3.3.2"
   },
   "devDependencies": {

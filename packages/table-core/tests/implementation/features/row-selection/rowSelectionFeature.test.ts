@@ -139,7 +139,7 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const row = { id: '123', data: {}, _table: table } as any
+      const row = { id: '123', data: {}, table } as any
 
       const result = RowSelectionUtils.isRowSelected(row)
       expect(result).toEqual(true)
@@ -164,7 +164,7 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const row = { id: '456', data: {}, _table: table } as any
+      const row = { id: '456', data: {}, table } as any
 
       const result = RowSelectionUtils.isRowSelected(row)
       expect(result).toEqual(false)
@@ -189,7 +189,7 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const row = { id: '789', data: {}, _table: table } as any
+      const row = { id: '789', data: {}, table } as any
 
       const result = RowSelectionUtils.isRowSelected(row)
       expect(result).toEqual(false)
@@ -209,7 +209,7 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
-      const row = { id: '789', data: {}, _table: table } as any
+      const row = { id: '789', data: {}, table } as any
 
       const result = RowSelectionUtils.isRowSelected(row)
       expect(result).toEqual(false)

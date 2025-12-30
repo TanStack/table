@@ -49,7 +49,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should return false when column is hidden', () => {
       const table = generateTestTableWithData(1, {
         _features,
-        state: {
+        initialState: {
           columnVisibility: {
             firstName: false,
           },
@@ -68,11 +68,12 @@ describe('columnVisibilityFeature.utils', () => {
 
     it('should return true if any child column is visible', () => {
       const table = generateTestTableWithData(1, { _features })
+      const baseColumn = table.getAllColumns()[0]!
       const parentColumn = {
-        ...table.getAllColumns()[0]!,
+        ...baseColumn,
         columns: [
-          { ...table.getAllColumns()[0]!, id: 'child1' },
-          { ...table.getAllColumns()[1]!, id: 'child2' },
+          { ...baseColumn, id: 'child1', columns: [], table },
+          { ...table.getAllColumns()[1]!, id: 'child2', columns: [], table },
         ],
       }
 
@@ -198,7 +199,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should return only visible cells', () => {
       const table = generateTestTableWithData(1, {
         _features,
-        state: {
+        initialState: {
           columnVisibility: {
             firstName: false,
           },
@@ -234,7 +235,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should return only visible flat columns', () => {
       const table = generateTestTableWithData(1, {
         _features,
-        state: {
+        initialState: {
           columnVisibility: {
             firstName: false,
           },
@@ -253,7 +254,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should return only visible leaf columns', () => {
       const table = generateTestTableWithData(1, {
         _features,
-        state: {
+        initialState: {
           columnVisibility: {
             firstName: false,
           },
@@ -365,7 +366,7 @@ describe('columnVisibilityFeature.utils', () => {
 
     it('should return false when some columns are hidden', () => {
       const table = generateTestTableWithData(1, {
-        state: {
+        initialState: {
           columnVisibility: {
             firstName: false,
           },
@@ -382,7 +383,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should return true when some columns are visible', () => {
       const table = generateTestTableWithData(1, {
         _features,
-        state: {
+        initialState: {
           columnVisibility: {
             firstName: false,
           },
@@ -405,7 +406,7 @@ describe('columnVisibilityFeature.utils', () => {
 
       const tableWithHiddenColumns = generateTestTableWithData(1, {
         _features,
-        state: {
+        initialState: {
           columnVisibility: hideAllColumns,
         },
       })

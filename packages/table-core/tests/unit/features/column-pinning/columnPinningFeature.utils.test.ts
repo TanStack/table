@@ -46,7 +46,7 @@ describe('column_pin', () => {
     const onColumnPinningChange = vi.fn()
     const table = generateTestTableWithData(1, {
       onColumnPinningChange,
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: [],
@@ -72,7 +72,7 @@ describe('column_pin', () => {
     const onColumnPinningChange = vi.fn()
     const table = generateTestTableWithData(1, {
       onColumnPinningChange,
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: [],
@@ -98,7 +98,7 @@ describe('column_pin', () => {
     const onColumnPinningChange = vi.fn()
     const table = generateTestTableWithData(1, {
       onColumnPinningChange,
-      state: {
+      initialState: {
         columnPinning: {
           left: ['id'],
           right: [],
@@ -165,7 +165,7 @@ describe('column_getCanPin', () => {
 describe('column_getIsPinned', () => {
   it('should return left when column is pinned left', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -181,7 +181,7 @@ describe('column_getIsPinned', () => {
 
   it('should return right when column is pinned right', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['firstName'],
@@ -264,7 +264,7 @@ describe('table_resetColumnPinning', () => {
 describe('table_getIsSomeColumnsPinned', () => {
   it('should return true when columns are pinned left', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -279,7 +279,7 @@ describe('table_getIsSomeColumnsPinned', () => {
 
   it('should return true when columns are pinned right', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['firstName'],
@@ -302,7 +302,7 @@ describe('table_getIsSomeColumnsPinned', () => {
 
   it('should check specific position when position parameter is provided', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -318,7 +318,7 @@ describe('table_getIsSomeColumnsPinned', () => {
 describe('column_getPinnedIndex', () => {
   it('should return index of pinned column', () => {
     const table = generateTestTableWithData(2, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName', 'lastName'],
           right: [],
@@ -345,7 +345,7 @@ describe('column_getPinnedIndex', () => {
 describe('row_getCenterVisibleCells', () => {
   it('should return only unpinned visible cells', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -365,7 +365,7 @@ describe('row_getCenterVisibleCells', () => {
 describe('row_getLeftVisibleCells', () => {
   it('should return only left pinned cells', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -393,7 +393,7 @@ describe('row_getLeftVisibleCells', () => {
 describe('row_getRightVisibleCells', () => {
   it('should return only right pinned cells', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -421,7 +421,7 @@ describe('row_getRightVisibleCells', () => {
 describe('table_getLeftHeaderGroups', () => {
   it('should return header groups for left pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -438,7 +438,7 @@ describe('table_getLeftHeaderGroups', () => {
 describe('table_getRightHeaderGroups', () => {
   it('should return header groups for right pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -455,7 +455,7 @@ describe('table_getRightHeaderGroups', () => {
 describe('table_getCenterHeaderGroups', () => {
   it('should return header groups for unpinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -477,7 +477,7 @@ describe('table_getCenterHeaderGroups', () => {
 describe('table_getLeftLeafColumns', () => {
   it('should return left pinned leaf columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -495,7 +495,7 @@ describe('table_getLeftLeafColumns', () => {
 describe('table_getRightLeafColumns', () => {
   it('should return right pinned leaf columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -513,7 +513,7 @@ describe('table_getRightLeafColumns', () => {
 describe('table_getCenterLeafColumns', () => {
   it('should return unpinned leaf columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -533,7 +533,7 @@ describe('table_getCenterLeafColumns', () => {
 describe('table_getPinnedLeafColumns', () => {
   it('should return left pinned leaf columns when position is left', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -549,7 +549,7 @@ describe('table_getPinnedLeafColumns', () => {
 
   it('should return right pinned leaf columns when position is right', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -565,7 +565,7 @@ describe('table_getPinnedLeafColumns', () => {
 
   it('should return center leaf columns when position is center', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -584,7 +584,7 @@ describe('table_getPinnedLeafColumns', () => {
 describe('table_getPinnedVisibleLeafColumns', () => {
   it('should return visible leaf columns for specified position', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -606,7 +606,7 @@ describe('table_getPinnedVisibleLeafColumns', () => {
 
   it('should return all visible leaf columns when no position specified', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnVisibility: {
           age: false,
         },
@@ -625,7 +625,7 @@ describe('table_getPinnedVisibleLeafColumns', () => {
 describe('table_getFooterGroups', () => {
   it('should return footer groups for left pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -640,7 +640,7 @@ describe('table_getFooterGroups', () => {
 
   it('should return footer groups for right pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -655,7 +655,7 @@ describe('table_getFooterGroups', () => {
 
   it('should return footer groups for center columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -677,7 +677,7 @@ describe('table_getFooterGroups', () => {
 describe('table_getFlatHeaders', () => {
   it('should return flat headers for left pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -693,7 +693,7 @@ describe('table_getFlatHeaders', () => {
 
   it('should return flat headers for right pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -709,7 +709,7 @@ describe('table_getFlatHeaders', () => {
 
   it('should return flat headers for center columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],

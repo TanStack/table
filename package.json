@@ -58,7 +58,7 @@
     "eslint": "^9.39.2",
     "eslint-plugin-unused-imports": "^4.3.0",
     "jsdom": "^27.4.0",
-    "knip": "^5.77.2",
+    "knip": "^5.78.0",
     "nx": "^22.3.3",
     "prettier": "^3.7.4",
     "prettier-plugin-svelte": "^3.4.1",
