@@ -28,6 +28,6 @@
     "prettier.config.js",
     "scripts",
     "eslint.config.js",
-    "vitest.workspace.js"
+    "vitest.workspace.mjs"
   ]
 }
