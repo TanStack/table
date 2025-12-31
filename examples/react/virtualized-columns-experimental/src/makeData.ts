@@ -1,6 +1,8 @@
 import { faker } from '@faker-js/faker'
 
-export const makeColumns = (num) =>
+export type Person = Record<string, string>
+
+export const makeColumns = (num: number) =>
   [...Array(num)].map((_, i) => {
     return {
       accessorKey: i.toString(),
@@ -9,11 +11,15 @@ export const makeColumns = (num) =>
     }
   })
 
-export const makeData = (num, columns) =>
+export const makeData = (
+  num: number,
+  columns: Array<unknown>,
+): Array<Person> =>
   [...Array(num)].map(() => ({
     ...Object.fromEntries(
-      columns.map((col) => [col.accessorKey, faker.person.firstName()]),
+      columns.map((col) => [
+        (col as { accessorKey?: string }).accessorKey,
+        faker.person.firstName(),
+      ]),
     ),
   }))
-
-export type Person = ReturnType<typeof makeData>[0]

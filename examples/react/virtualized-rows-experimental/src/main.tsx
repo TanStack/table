@@ -4,10 +4,12 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  columnSizingFeature,
+  createSortedRowModel,
   flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
+  rowSortingFeature,
+  sortFns,
+  useTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { makeData } from './makeData'
@@ -15,10 +17,15 @@ import type { ColumnDef, Row, Table } from '@tanstack/react-table'
 import type { Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 
+const _features = {
+  columnSizingFeature,
+  rowSortingFeature,
+}
+
 // This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
 // See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'id',
@@ -78,11 +85,11 @@ function App() {
     return () => clearInterval(interval)
   }, [refreshData])
 
-  const table = useReactTable({
-    data,
+  const table = useTable({
+    _features,
+    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    data,
     debugTable: true,
   })
 
@@ -110,66 +117,80 @@ function App() {
           height: '800px', // should be a fixed height
         }}
       >
-        {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
-        <table style={{ display: 'grid' }}>
-          <thead
-            style={{
-              display: 'grid',
-              position: 'sticky',
-              top: 0,
-              zIndex: 1,
-            }}
-          >
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr
-                key={headerGroup.id}
-                style={{ display: 'flex', width: '100%' }}
+        <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
+          {() => (
+            // Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights
+            <table style={{ display: 'grid' }}>
+              <thead
+                style={{
+                  display: 'grid',
+                  position: 'sticky',
+                  top: 0,
+                  zIndex: 1,
+                }}
               >
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <th
-                      key={header.id}
-                      style={{
-                        display: 'flex',
-                        width: header.getSize(),
-                      }}
-                    >
-                      <div
-                        {...{
-                          className: header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : '',
-                          onClick: header.column.getToggleSortingHandler(),
-                        }}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    </th>
-                  )
-                })}
-              </tr>
-            ))}
-          </thead>
-          <TableBodyWrapper
-            table={table}
-            tableContainerRef={tableContainerRef}
-          />
-        </table>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr
+                    key={headerGroup.id}
+                    style={{ display: 'flex', width: '100%' }}
+                  >
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <th
+                          key={header.id}
+                          style={{
+                            display: 'flex',
+                            width: header.getSize(),
+                          }}
+                        >
+                          <div
+                            className={
+                              header.column.getCanSort()
+                                ? 'cursor-pointer select-none'
+                                : ''
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                            title={
+                              header.column.getCanSort()
+                                ? header.column.getNextSortingOrder() === 'asc'
+                                  ? 'Sort ascending'
+                                  : header.column.getNextSortingOrder() ===
+                                      'desc'
+                                    ? 'Sort descending'
+                                    : 'Clear sort'
+                                : undefined
+                            }
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                            {{
+                              asc: ' 🔼',
+                              desc: ' 🔽',
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                        </th>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </thead>
+              <TableBodyWrapper
+                table={table}
+                tableContainerRef={tableContainerRef}
+              />
+            </table>
+          )}
+        </table.Subscribe>
       </div>
     </div>
   )
 }
 
 interface TableBodyWrapperProps {
-  table: Table<Person>
-  tableContainerRef: React.RefObject<HTMLDivElement>
+  table: Table<typeof _features, Person>
+  tableContainerRef: React.RefObject<HTMLDivElement | null>
 }
 
 function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
@@ -213,7 +234,7 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
 }
 
 interface TableBodyProps {
-  table: Table<Person>
+  table: Table<typeof _features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   rowRefsMap: React.MutableRefObject<Map<number, HTMLTableRowElement>>
 }
@@ -247,7 +268,7 @@ function TableBody({ rowVirtualizer, table, rowRefsMap }: TableBodyProps) {
 }
 
 interface TableBodyRowProps {
-  row: Row<Person>
+  row: Row<typeof _features, Person>
   rowRefsMap: React.MutableRefObject<Map<number, HTMLTableRowElement>>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   virtualRowIndex: number
@@ -263,7 +284,7 @@ function TableBodyRow({
     <tr
       data-index={virtualRowIndex} // needed for dynamic row height measurement
       ref={(node) => {
-        if (node && virtualRowIndex) {
+        if (node && typeof virtualRowIndex !== 'undefined') {
           rowVirtualizer.measureElement(node) // measure dynamic row height
           rowRefsMap.current.set(virtualRowIndex, node) // store ref for virtualizer to apply scrolling transforms
         }
@@ -275,7 +296,7 @@ function TableBodyRow({
         width: '100%',
       }}
     >
-      {row.getVisibleCells().map((cell) => {
+      {row.getAllCells().map((cell) => {
         return (
           <td
             key={cell.id}

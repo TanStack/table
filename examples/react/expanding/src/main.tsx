@@ -5,7 +5,6 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  createTableHelper,
   filterFns,
   flexRender,
   rowExpandingFeature,
@@ -13,6 +12,8 @@ import {
   rowSelectionFeature,
   rowSortingFeature,
   sortFns,
+  tableFeatures,
+  useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
@@ -20,27 +21,18 @@ import type { Person } from './makeData'
 import type { Column, ColumnDef, Table } from '@tanstack/react-table'
 import './index.css'
 
-const tableHelper = createTableHelper({
-  _features: {
-    columnFilteringFeature,
-    rowExpandingFeature,
-    rowPaginationFeature,
-    rowSortingFeature,
-    rowSelectionFeature,
-  },
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+const _features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+  rowSelectionFeature,
 })
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof tableHelper.features, Person>>
-  >(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -124,9 +116,15 @@ function App() {
   const [data, setData] = React.useState(() => makeData(100, 5, 3))
   const refreshData = () => setData(() => makeData(100, 5, 3))
 
-  const table = tableHelper.useTable({
+  const table = useTable({
+    _features,
     columns,
     data,
+    _rowModels: {
+      filteredRowModel: createFilteredRowModel(filterFns),
+      paginatedRowModel: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel(sortFns),
+    },
     getSubRows: (row) => row.subRows,
     // filterFromLeafRows: true,
     // maxLeafRowFilterDepth: 0,
@@ -272,8 +270,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof tableHelper.features, Person>
-  table: Table<typeof tableHelper.features, Person>
+  column: Column<typeof _features, Person>
+  table: Table<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
