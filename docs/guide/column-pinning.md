@@ -9,8 +9,9 @@ Want to skip to the implementation? Check out these examples:
 - [column-pinning](../framework/react/examples/column-pinning)
 - [sticky-column-pinning](../framework/react/examples/column-pinning-sticky)
 
- ### Other Examples
- 
+### Other Examples
+
+
 - [Svelte column-pinning](../framework/svelte/examples/column-pinning)
 - [Vue column-pinning](../framework/vue/examples/column-pinning)
 
@@ -55,7 +56,7 @@ const table = useReactTable({
 
 ### Pin Columns by Default
 
-A very common use case is to pin some columns by default. You can do this by either initializing the `columnPinning` state with the pinned columnIds, or by using the `initialState` table option
+A very common use case is to pin some columns by default. You can do this by either initializing the `columnPinning` state with the pinned columnIds, or by using the `initialState` table option.
 
 ```jsx
 const table = useReactTable({

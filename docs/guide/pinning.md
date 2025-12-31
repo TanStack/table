@@ -2,7 +2,7 @@
 title: Pinning Guide
 ---
 
-<!-- Deprecated  -->
+<!-- Deprecated -->
 
 Pinning is split into 2 different feature guides:
 

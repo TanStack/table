@@ -164,7 +164,7 @@ const table = useReactTable({
   // other options...
   initialState: {
     globalFilter: 'search term', // if not managing globalFilter state, set initial state here
-  }
+  },
   state: {
     globalFilter, // pass our managed globalFilter state to the table
   }

@@ -52,7 +52,7 @@ type Person = {
   children?: Person[] | undefined
 }
 
-const data: Person[] =  [
+const data: Person[] = [
   { id: 1, 
   name: 'John', 
   age: 30, 

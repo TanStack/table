@@ -37,7 +37,7 @@ When grouping state is active, the table will add matching rows as subRows to th
 To allow the user to expand and collapse the grouped rows, you can use the expanding feature.
 
 ```tsx
-import { getGroupedRowModel, getExpandedRowModel} from '@tanstack/react-table'
+import { getGroupedRowModel, getExpandedRowModel } from '@tanstack/react-table'
 
 const table = useReactTable({
   // other options...

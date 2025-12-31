@@ -84,7 +84,7 @@ The aggregation function to use with this column.
 
 Options:
 
-- A `string` referencing a [built-in aggregation function](#aggregation-functions))
+- A `string` referencing a [built-in aggregation function](#aggregation-functions)
 - A [custom aggregation function](#aggregation-functions)
 
 ### `aggregatedCell`

@@ -168,7 +168,7 @@ const table = useReactTable({
   state: {
     pagination,
     sorting,
-  }
+  },
   //syntax 1
   onPaginationChange: (updater) => {
     setPagination(old => {

@@ -152,7 +152,7 @@ The dragging and release events are automatically handled for you.
 enableColumnResizing?: boolean
 ```
 
-Enables/disables column resizing for \*all columns\*\*.
+Enables/disables column resizing for **all columns**.
 
 ### `columnResizeMode`
 

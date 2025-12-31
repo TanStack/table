@@ -99,7 +99,7 @@ This optional "hanging" method on any given `filterFn` allows the filter functio
 
 ### `filterFn.autoRemove`
 
-This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. eg. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`.
+This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. e.g. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`.
 
 #### Using Filter Functions
 
@@ -169,7 +169,7 @@ The filter function to use with this column.
 
 Options:
 
-- A `string` referencing a [built-in filter function](#filter-functions))
+- A `string` referencing a [built-in filter function](#filter-functions)
 - A [custom filter function](#filter-functions)
 
 ### `enableColumnFilter`
