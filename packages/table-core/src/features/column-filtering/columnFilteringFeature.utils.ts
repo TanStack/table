@@ -17,11 +17,11 @@ export function column_getAutoFilterFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  const filterFns = column._table._rowModelFns.filterFns as
+  const filterFns = column.table._rowModelFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
 
-  const firstRow = column._table.getCoreRowModel().flatRows[0]
+  const firstRow = column.table.getCoreRowModel().flatRows[0]
 
   const value = firstRow ? firstRow.getValue(column.id) : undefined
 
@@ -56,7 +56,7 @@ export function column_getFilterFn<
   column: Column_Internal<TFeatures, TData, TValue>,
 ): FilterFn<TFeatures, TData> | undefined {
   let filterFn = null
-  const filterFns = column._table._rowModelFns.filterFns as
+  const filterFns = column.table._rowModelFns.filterFns as
     | Record<string, FilterFn<TFeatures, TData>>
     | undefined
   filterFn = isFunction(column.columnDef.filterFn)
@@ -81,8 +81,8 @@ export function column_getCanFilter<
 >(column: Column_Internal<TFeatures, TData, TValue>) {
   return (
     (column.columnDef.enableColumnFilter ?? true) &&
-    (column._table.options.enableColumnFilters ?? true) &&
-    (column._table.options.enableFilters ?? true) &&
+    (column.table.options.enableColumnFilters ?? true) &&
+    (column.table.options.enableFilters ?? true) &&
     !!column.accessorFn
   )
 }
@@ -100,9 +100,8 @@ export function column_getFilterValue<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  return column._table.store.state.columnFilters?.find(
-    (d) => d.id === column.id,
-  )?.value
+  return column.table.store.state.columnFilters?.find((d) => d.id === column.id)
+    ?.value
 }
 
 export function column_getFilterIndex<
@@ -111,7 +110,7 @@ export function column_getFilterIndex<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): number {
   return (
-    column._table.store.state.columnFilters?.findIndex(
+    column.table.store.state.columnFilters?.findIndex(
       (d) => d.id === column.id,
     ) ?? -1
   )
@@ -122,7 +121,7 @@ export function column_setFilterValue<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>, value: any) {
-  table_setColumnFilters(column._table, (old) => {
+  table_setColumnFilters(column.table, (old) => {
     const filterFn = column_getFilterFn(column)
     const previousFilter = old.find((d) => d.id === column.id)
 

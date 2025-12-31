@@ -84,14 +84,17 @@ class LitTableExample extends LitElement {
   }
 
   protected render() {
-    const table = this.tableController.table({
-      _features,
-      _rowModels: {
-        sortedRowModel: createSortedRowModel(sortFns),
+    const table = this.tableController.table(
+      {
+        _features,
+        _rowModels: {
+          sortedRowModel: createSortedRowModel(sortFns),
+        },
+        columns,
+        data,
       },
-      columns,
-      data,
-    })
+      () => ({}), // selector - empty since we don't need any state
+    )
     const { rows } = table.getRowModel()
 
     const virtualizer = this.rowVirtualizerController.getVirtualizer()

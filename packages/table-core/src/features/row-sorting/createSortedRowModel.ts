@@ -74,7 +74,11 @@ function _createSortedRowModel<
   const sortData = (rows: Array<Row<TFeatures, TData>>) => {
     // This will also perform a stable sorting using the row index
     // if needed.
-    const sortedData = rows.map((row) => ({ ...row }))
+    // Preserve prototype chain so methods like getValue() remain accessible
+    const sortedData = rows.map((row) => {
+      const cloned = Object.create(Object.getPrototypeOf(row))
+      return Object.assign(cloned, row)
+    })
 
     sortedData.sort((rowA, rowB) => {
       for (const sortEntry of availableSorting) {

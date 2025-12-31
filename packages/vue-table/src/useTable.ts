@@ -1,13 +1,16 @@
-import { isRef, ref, shallowRef, unref, watch, watchEffect } from 'vue'
-import {
-  constructTable,
-  coreFeatures,
-  getInitialTableState,
-  isFunction,
-} from '@tanstack/table-core'
+import { isRef, unref, watch } from 'vue'
+import { constructTable } from '@tanstack/table-core'
+import { useStore } from '@tanstack/vue-store'
 import { mergeProxy } from './merge-proxy'
-import type { RowData, TableFeatures, TableOptions } from '@tanstack/table-core'
-import type { MaybeRef } from 'vue'
+import type {
+  NoInfer,
+  RowData,
+  Table,
+  TableFeatures,
+  TableOptions,
+  TableState,
+} from '@tanstack/table-core'
+import type { MaybeRef, VNode } from 'vue'
 
 export type TableOptionsWithReactiveData<
   TFeatures extends TableFeatures,
@@ -25,26 +28,62 @@ function getOptionsWithReactiveData<
   })
 }
 
+export type VueTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TSelected = {},
+> = Table<TFeatures, TData> & {
+  /**
+   * A Vue component that allows you to subscribe to the table state.
+   *
+   * This is useful for opting into state subscriptions for specific parts of the table state.
+   *
+   * @example
+   * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
+   *   {(state) => (
+   *     <tr>
+   *       // render the row
+   *     </tr>
+   *   )}
+   * </table.Subscribe>
+   */
+  Subscribe: <TSelected>(props: {
+    selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
+    children:
+      | ((state: Readonly<TSelected>) => VNode | VNode[])
+      | VNode
+      | VNode[]
+  }) => VNode | VNode[]
+  /**
+   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
+   *
+   * @example
+   * const table = useTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
+   *
+   * console.log(table.state.globalFilter)
+   */
+  readonly state: Readonly<TSelected>
+}
+
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(tableOptions: TableOptionsWithReactiveData<TFeatures, TData>) {
-  const _features = { ...coreFeatures, ...tableOptions._features }
-
+  TSelected = {},
+>(
+  tableOptions: TableOptionsWithReactiveData<TFeatures, TData>,
+  selector: (state: TableState<TFeatures>) => TSelected = () =>
+    ({}) as TSelected,
+): VueTable<TFeatures, TData, TSelected> {
   const IS_REACTIVE = isRef(tableOptions.data)
-
-  // can't use `reactive` because update needs to be immutable
-  const state = ref(getInitialTableState(_features, tableOptions.initialState))
 
   const statefulOptions = mergeProxy(
     IS_REACTIVE ? getOptionsWithReactiveData(tableOptions) : tableOptions,
     {
-      _features,
-      state,
-      mergeOptions(
+      // Remove state and onStateChange - store handles it internally
+      mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
-        newOptions: TableOptions<TFeatures, TData>,
-      ) {
+        newOptions: Partial<TableOptions<TFeatures, TData>>,
+      ) => {
         return IS_REACTIVE
           ? {
               ...defaultOptions,
@@ -53,56 +92,78 @@ export function useTable<
           : mergeProxy(defaultOptions, newOptions)
       },
     },
-  )
+  ) as TableOptions<TFeatures, TData>
 
-  const table = constructTable(
-    statefulOptions as TableOptions<TFeatures, TData>,
-  )
+  const table = constructTable(statefulOptions) as VueTable<
+    TFeatures,
+    TData,
+    TSelected
+  >
 
-  // Add reactivity support
+  function updateOptions() {
+    table.setOptions((prev) => {
+      return mergeProxy(
+        prev,
+        IS_REACTIVE ? getOptionsWithReactiveData(tableOptions) : tableOptions,
+      ) as TableOptions<TFeatures, TData>
+    })
+  }
+
+  updateOptions()
+
+  // Add reactivity support for reactive data
   if (IS_REACTIVE) {
-    const dataRef = shallowRef(tableOptions.data)
     watch(
-      dataRef,
+      () => tableOptions.data,
       () => {
-        table.setState((prev) => ({
+        table.store.setState((prev: TableState<TFeatures>) => ({
           ...prev,
-          data: dataRef.value,
+          data: unref(tableOptions.data),
         }))
       },
       { immediate: true },
     )
   }
 
-  watchEffect(() => {
-    table.setOptions((prev: any) => {
-      const stateProxy = new Proxy({} as typeof state.value, {
-        get: (_, prop) => state.value[prop as keyof typeof state.value],
-      })
+  /**
+   * Temp force reactivity to all state changes on every table.get* method
+   */
+  const allState = useStore(table.store, (state) => state)
 
-      return mergeProxy(
-        prev,
-        IS_REACTIVE ? getOptionsWithReactiveData(tableOptions) : tableOptions,
-        {
-          // merge the initialState and `options.state`
-          // create a new proxy on each `setOptions` call
-          // and get the value from state on each property access
-          state: mergeProxy(stateProxy, tableOptions.state ?? {}),
-          // Similarly, we'll maintain both our internal state and any user-provided
-          // state.
-          onStateChange: (updater: any) => {
-            if (isFunction(updater)) {
-              state.value = updater(state.value)
-            } else {
-              state.value = updater
-            }
-
-            tableOptions.onStateChange?.(updater)
-          },
-        },
-      )
-    })
+  // Wrap all "get*" methods to make them reactive
+  // Access allState.value directly to create reactive dependency
+  Object.keys(table).forEach((key) => {
+    const value = (table as any)[key]
+    if (typeof value === 'function' && key.startsWith('get')) {
+      const originalMethod = value.bind(table)
+      ;(table as any)[key] = (...args: any[]) => {
+        // Access state to create reactive dependency
+        allState.value
+        return originalMethod(...args)
+      }
+    }
   })
 
-  return table
+  table.Subscribe = function Subscribe<TSelected>(props: {
+    selector: (state: TableState<TFeatures>) => TSelected
+    children:
+      | ((state: Readonly<TSelected>) => VNode | VNode[])
+      | VNode
+      | VNode[]
+  }): VNode | VNode[] {
+    const selected = useStore(table.store, props.selector)
+    if (typeof props.children === 'function') {
+      return props.children(selected.value)
+    }
+    return props.children
+  }
+
+  const stateStore = useStore(table.store, selector)
+
+  return {
+    ...table,
+    get state() {
+      return stateStore.value
+    },
+  } as VueTable<TFeatures, TData, TSelected>
 }

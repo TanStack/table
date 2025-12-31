@@ -15,7 +15,7 @@ export function cell_renderValue<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>) {
-  return cell.getValue() ?? cell._table.options.renderFallbackValue
+  return cell.getValue() ?? cell.table.options.renderFallbackValue
 }
 
 export function cell_getContext<
@@ -24,11 +24,12 @@ export function cell_getContext<
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>) {
   return {
-    table: cell._table,
+    table: cell.table,
     column: cell.column,
     row: cell.row,
     cell: cell,
-    getValue: cell.getValue,
-    renderValue: cell.renderValue,
+    // Wrap in arrow functions to preserve `this` binding (methods are on prototype)
+    getValue: () => cell.getValue(),
+    renderValue: () => cell.renderValue(),
   }
 }

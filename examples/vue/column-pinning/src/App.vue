@@ -5,16 +5,10 @@ import {
   columnPinningFeature,
   columnVisibilityFeature,
   createColumnHelper,
-  isFunction,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
-import type {
-  Column,
-  ColumnOrderState,
-  ColumnPinningState,
-  Updater,
-} from '@tanstack/vue-table'
+import type { Column } from '@tanstack/vue-table'
 import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import { faker } from '@faker-js/faker'
@@ -77,48 +71,27 @@ const columns = ref(
   ]),
 )
 
-const columnVisibility = ref({})
-const columnOrder = ref<ColumnOrderState>([])
-
-const columnPinning = ref<ColumnPinningState>({ left: [], right: [] })
 const isSplit = ref(false)
 
 const rerender = () => (data.value = makeData(5000))
 
-const table = useTable({
-  _features,
-  get data() {
-    return data.value
-  },
-  get columns() {
-    return columns.value
-  },
-  state: {
-    get columnVisibility() {
-      return columnVisibility.value
+const table = useTable(
+  {
+    _features,
+    data,
+    get columns() {
+      return columns.value
     },
-    get columnOrder() {
-      return columnOrder.value
-    },
-    get columnPinning() {
-      return columnPinning.value
-    },
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
   },
-
-  onColumnOrderChange: (updaterOrValue: Updater<ColumnOrderState>) => {
-    columnOrder.value = isFunction(updaterOrValue)
-      ? updaterOrValue(columnOrder.value)
-      : updaterOrValue
-  },
-  onColumnPinningChange: (updaterOrValue: Updater<ColumnPinningState>) => {
-    columnPinning.value = isFunction(updaterOrValue)
-      ? updaterOrValue(columnPinning.value)
-      : updaterOrValue
-  },
-  debugTable: true,
-  debugHeaders: true,
-  debugColumns: true,
-})
+  (state) => ({
+    columnOrder: state.columnOrder,
+    columnPinning: state.columnPinning,
+    columnVisibility: state.columnVisibility,
+  }),
+)
 
 const randomizeColumns = () => {
   table.setColumnOrder(
@@ -127,10 +100,10 @@ const randomizeColumns = () => {
 }
 
 function toggleColumnVisibility(column: Column<typeof _features, Person>) {
-  columnVisibility.value = {
-    ...columnVisibility.value,
+  table.setColumnVisibility({
+    ...table.state.columnVisibility,
     [column.id]: !column.getIsVisible(),
-  }
+  })
 }
 
 function toggleAllColumnsVisibility() {
@@ -378,7 +351,7 @@ function toggleAllColumnsVisibility() {
         </tbody>
       </table>
     </div>
-    <pre>{{ JSON.stringify(table.getState().columnOrder, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.state.columnOrder, null, 2) }}</pre>
   </div>
 </template>
 

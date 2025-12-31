@@ -1,4 +1,4 @@
-import { assignAPIs } from '../../utils'
+import { assignTableAPIs, assignPrototypeAPIs } from '../../utils'
 import {
   column_getFacetedMinMaxValues,
   column_getFacetedRowModel,
@@ -29,38 +29,32 @@ export function constructColumnFacetingFeature<
   TData extends RowData,
 >(): TableFeature<ColumnFacetingFeatureConstructors<TFeatures, TData>> {
   return {
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnFacetingFeature', column, [
-        {
-          fn: () => column_getFacetedMinMaxValues(column, column._table),
-          fnName: 'column_getFacetedMinMaxValues',
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnFacetingFeature', prototype, table, {
+        column_getFacetedMinMaxValues: {
+          fn: (column) => column_getFacetedMinMaxValues(column, column.table),
         },
-        {
-          fn: () => column_getFacetedRowModel(column, column._table),
-          fnName: 'column_getFacetedRowModel',
+        column_getFacetedRowModel: {
+          fn: (column) => column_getFacetedRowModel(column, column.table),
         },
-        {
-          fn: () => column_getFacetedUniqueValues(column, column._table),
-          fnName: 'column_getFacetedUniqueValues',
+        column_getFacetedUniqueValues: {
+          fn: (column) => column_getFacetedUniqueValues(column, column.table),
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnFacetingFeature', table, [
-        {
+      assignTableAPIs('columnFacetingFeature', table, {
+        table_getGlobalFacetedMinMaxValues: {
           fn: () => table_getGlobalFacetedMinMaxValues(table),
-          fnName: 'table_getGlobalFacetedMinMaxValues',
         },
-        {
+        table_getGlobalFacetedRowModel: {
           fn: () => table_getGlobalFacetedRowModel(table),
-          fnName: 'table_getGlobalFacetedRowModel',
         },
-        {
+        table_getGlobalFacetedUniqueValues: {
           fn: () => table_getGlobalFacetedUniqueValues(table),
-          fnName: 'table_getGlobalFacetedUniqueValues',
         },
-      ])
+      })
     },
   }
 }

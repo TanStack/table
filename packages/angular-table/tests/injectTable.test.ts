@@ -15,12 +15,13 @@ import {
   stockFeatures,
 } from '@tanstack/table-core'
 import { injectTable } from '../src/injectTable'
+import { RowModel } from '../src'
 import {
   experimentalReactivity_testShouldBeComputedProperty,
   setFixtureSignalInputs,
   testShouldBeComputedProperty,
 } from './test-utils'
-import { type PaginationState, RowModel } from '../src'
+import type { PaginationState } from '../src'
 
 describe('injectTable', () => {
   test('should render with required signal inputs', () => {
@@ -54,12 +55,15 @@ describe('injectTable', () => {
       { id: 'id', header: 'Id', cell: (context) => context.getValue() },
       { id: 'title', header: 'Title', cell: (context) => context.getValue() },
     ]
-    const table = injectTable(() => ({
-      data: data(),
-      _features: stockFeatures,
-      columns: columns,
-      getRowId: (row) => row.id,
-    }))
+    const table = TestBed.runInInjectionContext(() =>
+      injectTable(() => ({
+        data: data(),
+        _features: stockFeatures,
+        columns: columns,
+        getRowId: (row) => row.id,
+      })),
+    )
+
     const tablePropertyKeys = Object.keys(table())
 
     test('table must be a signal', () => {
@@ -124,11 +128,11 @@ describe('injectTable', () => {
         effect(() => coreRowModelFn(table.getCoreRowModel()))
         effect(() => rowModelFn(table.getRowModel()))
 
-        TestBed.flushEffects()
+        TestBed.tick()
 
         pagination.set({ pageIndex: 0, pageSize: 3 })
 
-        TestBed.flushEffects()
+        TestBed.tick()
       })
 
       expect(coreRowModelFn).toHaveBeenCalledOnce()
@@ -148,13 +152,15 @@ describe('injectTable - Experimental reactivity', () => {
     { id: 'id', header: 'Id', cell: (context) => context.getValue() },
     { id: 'title', header: 'Title', cell: (context) => context.getValue() },
   ]
-  const table = injectTable(() => ({
-    data: data(),
-    _features: { ...stockFeatures },
-    columns: columns,
-    getRowId: (row) => row.id,
-    enableExperimentalReactivity: true,
-  }))
+  const table = TestBed.runInInjectionContext(() =>
+    injectTable(() => ({
+      data: data(),
+      _features: { ...stockFeatures },
+      columns: columns,
+      getRowId: (row) => row.id,
+      enableExperimentalReactivity: true,
+    })),
+  )
   const tablePropertyKeys = Object.keys(table)
 
   describe('Proxy', () => {

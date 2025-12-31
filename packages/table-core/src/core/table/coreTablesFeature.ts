@@ -1,4 +1,4 @@
-import { assignAPIs } from '../../utils'
+import { assignTableAPIs } from '../../utils'
 import { table_reset, table_setOptions } from './coreTablesFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -18,16 +18,14 @@ export function constructCoreTablesFeature<
 >(): TableFeature<CoreTablesFeatureConstructors<TFeatures, TData>> {
   return {
     constructTableAPIs: (table) => {
-      assignAPIs('coreTablesFeature', table, [
-        {
+      assignTableAPIs('coreTablesFeature', table, {
+        table_reset: {
           fn: () => table_reset(table),
-          fnName: 'table_reset',
         },
-        {
+        table_setOptions: {
           fn: (updater) => table_setOptions(table, updater),
-          fnName: 'table_setOptions',
         },
-      ])
+      })
     },
   }
 }

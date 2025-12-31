@@ -41,7 +41,7 @@ export function header_getContext<
   return {
     column: header.column,
     header,
-    table: header.column._table,
+    table: header.column.table,
   }
 }
 

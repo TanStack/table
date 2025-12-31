@@ -5,6 +5,23 @@ import type { Header } from '../../types/Header'
 import type { Column } from '../../types/Column'
 import type { Header_CoreProperties } from './coreHeadersFeature.types'
 
+/**
+ * Creates or retrieves the header prototype for a table.
+ * The prototype is cached on the table and shared by all header instances.
+ */
+function getHeaderPrototype<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): object {
+  if (!table._headerPrototype) {
+    table._headerPrototype = { table }
+    for (const feature of Object.values(table._features)) {
+      feature.assignHeaderPrototype?.(table._headerPrototype, table)
+    }
+  }
+  return table._headerPrototype
+}
+
 export function constructHeader<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -20,23 +37,25 @@ export function constructHeader<
     depth: number
   },
 ): Header<TFeatures, TData, TValue> {
-  const header: Header_CoreProperties<TFeatures, TData, TValue> = {
-    colSpan: 0,
-    column,
-    depth: options.depth,
-    headerGroup: null,
-    id: options.id ?? column.id,
-    index: options.index,
-    isPlaceholder: !!options.isPlaceholder,
-    placeholderId: options.placeholderId,
-    rowSpan: 0,
-    subHeaders: [],
-    _table: table,
-  }
+  // Create header with shared prototype for memory efficiency
+  const headerPrototype = getHeaderPrototype(table)
+  const header = Object.create(headerPrototype) as Header_CoreProperties<
+    TFeatures,
+    TData,
+    TValue
+  >
 
-  for (const feature of Object.values(table._features)) {
-    feature.constructHeaderAPIs?.(header as Header<TFeatures, TData, TValue>)
-  }
+  // Only assign instance-specific properties
+  header.colSpan = 0
+  header.column = column
+  header.depth = options.depth
+  header.headerGroup = null
+  header.id = options.id ?? column.id
+  header.index = options.index
+  header.isPlaceholder = !!options.isPlaceholder
+  header.placeholderId = options.placeholderId
+  header.rowSpan = 0
+  header.subHeaders = []
 
   return header as Header<TFeatures, TData, TValue>
 }

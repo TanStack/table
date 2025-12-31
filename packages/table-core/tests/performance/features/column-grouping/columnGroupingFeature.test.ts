@@ -49,7 +49,7 @@ describe('#getGroupedRowModel', () => {
       onStateChange() {},
       renderFallbackValue: '',
       data,
-      state: { grouping },
+      initialState: { grouping },
       columns,
     })
     const groupedById = table.getGroupedRowModel().rowsById

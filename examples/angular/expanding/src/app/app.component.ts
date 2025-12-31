@@ -106,7 +106,7 @@ export class AppComponent {
   )
 
   readonly rawRowSelectionState = computed(() =>
-    JSON.stringify(this.table.getState().rowSelection, undefined, 2),
+    JSON.stringify(this.table.store.state.rowSelection, undefined, 2),
   )
 
   onPageInputChange(event: Event): void {

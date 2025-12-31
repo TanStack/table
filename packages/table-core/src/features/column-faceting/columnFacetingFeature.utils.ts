@@ -39,11 +39,11 @@ export function column_getFacetedUniqueValues<
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
-): () => Map<any, number> {
-  return (
+): Map<any, number> {
+  const facetedUniqueValuesFn =
     table.options._rowModels?.facetedUniqueValues?.(table, column.id) ??
     (() => new Map<any, number>())
-  )
+  return facetedUniqueValuesFn()
 }
 
 export function table_getGlobalFacetedMinMaxValues<

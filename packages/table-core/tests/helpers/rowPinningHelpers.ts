@@ -13,20 +13,21 @@ export function createTableWithPinningState(
   rowCount = 10,
   pinningState?: RowPinningState,
 ) {
-  const table = generateTestTableWithData(rowCount)
-  if (pinningState) {
-    table.options.state = {
-      rowPinning: pinningState,
-    }
-  } else {
-    table.options.state = {
-      rowPinning: getDefaultRowPinningState(),
-    }
-  }
+  const table = generateTestTableWithData(rowCount, {
+    initialState: {
+      rowPinning: pinningState ?? getDefaultRowPinningState(),
+    },
+    _features: {
+      rowPinningFeature,
+    },
+  } as any)
   return table
 }
 
-export function createTableWithMockOnPinningChange(rowCount = 10) {
+export function createTableWithMockOnPinningChange(rowCount = 10): {
+  table: ReturnType<typeof generateTestTableWithData>
+  onRowPinningChangeMock: ReturnType<typeof vi.fn>
+} {
   const onRowPinningChangeMock = vi.fn()
   const table = generateTestTableWithData(rowCount)
   table.options.onRowPinningChange = onRowPinningChangeMock

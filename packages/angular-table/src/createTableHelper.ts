@@ -1,5 +1,5 @@
 import { constructTableHelper } from './constructTableHelper'
-import { injectTable } from './injectTable'
+import { injectTable, AngularTable } from './injectTable'
 import type { TableHelperOptions } from './constructTableHelper'
 import type { Signal } from '@angular/core'
 import type {
@@ -8,18 +8,20 @@ import type {
   TableFeatures,
   TableHelper_Core,
   TableOptions,
+  TableState,
 } from '@tanstack/table-core'
 
 export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
-  injectTable: <TInferData extends TData>(
+  injectTable: <TInferData extends TData, TSelected = {}>(
     tableOptions: () => Omit<
       TableOptions<TFeatures, TInferData>,
       '_features' | '_rowModels'
     >,
-  ) => Table<TFeatures, TInferData>
+    selector?: (state: TableState<TFeatures>) => TSelected,
+  ) => AngularTable<TFeatures, TInferData, TSelected>
 }
 
 export function createTableHelper<
@@ -31,13 +33,29 @@ export function createTableHelper<
   const tableHelper = constructTableHelper(
     injectTable as unknown as (
       tableOptions: () => TableOptions<TFeatures, TData>,
-    ) => Table<TFeatures, TData> & Signal<Table<TFeatures, TData>>,
+      selector?: (state: TableState<TFeatures>) => any,
+    ) => AngularTable<TFeatures, TData, any>,
     tableHelperOptions,
   )
   return {
     ...tableHelper,
-    injectTable: tableHelper.tableCreator,
-  } as any
+    injectTable: <TInferData extends TData, TSelected = {}>(
+      tableOptions: () => Omit<
+        TableOptions<TFeatures, TInferData>,
+        '_features' | '_rowModels'
+      >,
+      selector?: (state: TableState<TFeatures>) => TSelected,
+    ) => {
+      return injectTable<TFeatures, TInferData, TSelected>(
+        () =>
+          ({
+            ...tableHelper.options,
+            ...tableOptions(),
+          }) as TableOptions<TFeatures, TInferData>,
+        selector,
+      )
+    },
+  } as TableHelper<TFeatures, TData>
 }
 
 // test

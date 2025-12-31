@@ -129,7 +129,7 @@ const renderTable = () => {
   const stateInfoElement = document.createElement('pre')
   stateInfoElement.textContent = JSON.stringify(
     {
-      sorting: table.getState().sorting,
+      sorting: table.store.state.sorting,
     },
     null,
     2,

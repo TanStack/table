@@ -41,7 +41,7 @@ export function column_pin<
     .map((d) => d.id)
     .filter(Boolean)
 
-  table_setColumnPinning(column._table, (old) => {
+  table_setColumnPinning(column.table, (old) => {
     if (position === 'right') {
       return {
         left: old.left.filter((d) => !columnIds.includes(d)),
@@ -78,7 +78,7 @@ export function column_getCanPin<
   return leafColumns.some(
     (leafColumn) =>
       (leafColumn.columnDef.enablePinning ?? true) &&
-      (column._table.options.enableColumnPinning ?? true),
+      (column.table.options.enableColumnPinning ?? true),
   )
 }
 
@@ -92,7 +92,7 @@ export function column_getIsPinned<
   const leafColumnIds = column.getLeafColumns().map((d) => d.id)
 
   const { left, right } =
-    column._table.store.state.columnPinning ?? getDefaultColumnPinningState()
+    column.table.store.state.columnPinning ?? getDefaultColumnPinningState()
 
   const isLeft = leafColumnIds.some((d) => left.includes(d))
   const isRight = leafColumnIds.some((d) => right.includes(d))
@@ -108,7 +108,7 @@ export function column_getPinnedIndex<
   const position = column_getIsPinned(column)
 
   return position
-    ? (column._table.store.state.columnPinning?.[position].indexOf(column.id) ??
+    ? (column.table.store.state.columnPinning?.[position].indexOf(column.id) ??
         -1)
     : 0
 }
@@ -125,7 +125,7 @@ export function row_getCenterVisibleCells<
     row_getAllVisibleCells,
   )
   const { left, right } =
-    row._table.store.state.columnPinning ?? getDefaultColumnPinningState()
+    row.table.store.state.columnPinning ?? getDefaultColumnPinningState()
   const leftAndRight: Array<string> = [...left, ...right]
   return allCells.filter((d) => !leftAndRight.includes(d.column.id))
 }
@@ -140,7 +140,7 @@ export function row_getLeftVisibleCells<
     row_getAllVisibleCells,
   )
   const { left } =
-    row._table.store.state.columnPinning ?? getDefaultColumnPinningState()
+    row.table.store.state.columnPinning ?? getDefaultColumnPinningState()
   const cells = left
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
@@ -158,7 +158,7 @@ export function row_getRightVisibleCells<
     row_getAllVisibleCells,
   )
   const { right } =
-    row._table.store.state.columnPinning ?? getDefaultColumnPinningState()
+    row.table.store.state.columnPinning ?? getDefaultColumnPinningState()
   const cells = right
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
@@ -213,7 +213,7 @@ export function table_getLeftHeaderGroups<
     table,
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
-  ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
+  ) as Array<Column_Internal<TFeatures, TData, unknown>>
   const { left } =
     table.store.state.columnPinning ?? getDefaultColumnPinningState()
 

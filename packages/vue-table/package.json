@@ -53,7 +53,8 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@tanstack/table-core": "workspace:*"
+    "@tanstack/table-core": "workspace:*",
+    "@tanstack/vue-store": "^0.8.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.3",

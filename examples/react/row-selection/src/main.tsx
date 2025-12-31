@@ -129,8 +129,6 @@ function App() {
     // (state) => state, // uncomment to subscribe to the entire table state (this is how v8 used to work by default)
   )
 
-  table.state.rowSelection
-
   return (
     <table.Subscribe
       selector={(state) => ({

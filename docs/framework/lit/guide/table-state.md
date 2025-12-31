@@ -120,12 +120,12 @@ render() {
     getCoreRowModel: createCoreRowModel(),
     getSortedRowModel: createSortedRowModel(sortFns)
   })
-  const state = { ...table.initialState, ...this._tableState };
+  const state = { ...table.initialState, ...this.tableState };
   table.setOptions(prev => ({
     ...prev,
     state,
     onStateChange: updater => {
-      this._tableState =
+      this.tableState =
         updater instanceof Function ? updater(state) : updater //any state changes will be pushed up to our own state management
     },
   }))

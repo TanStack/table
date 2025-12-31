@@ -101,14 +101,17 @@ class LitTableExample extends LitElement {
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render(): unknown {
-    const table = this.tableController.table({
-      _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
-      _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
-      columns,
-      data,
-      // add additional table options here
-      debugTable: true,
-    })
+    const table = this.tableController.table(
+      {
+        _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
+        _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
+        columns,
+        data,
+        // add additional table options here
+        debugTable: true,
+      },
+      () => ({}), // selector - empty since we don't need any state
+    )
 
     return html`
       <table>

@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   row_getCenterVisibleCells,
   row_getLeftVisibleCells,
@@ -62,98 +66,85 @@ export function constructColumnVisibilityFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnVisibilityFeature', column, [
-        {
-          fn: () => column_getIsVisible(column),
-          fnName: 'column_getIsVisible',
-          memoDeps: () => [
-            column._table.options.columns,
-            column._table.store.state.columnVisibility,
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnVisibilityFeature', prototype, table, {
+        column_getIsVisible: {
+          fn: (column) => column_getIsVisible(column),
+          memoDeps: (column) => [
+            column.table.options.columns,
+            column.table.store.state.columnVisibility,
             column.columns,
           ],
         },
-        {
-          fn: () => column_getCanHide(column),
-          fnName: 'column_getCanHide',
+        column_getCanHide: {
+          fn: (column) => column_getCanHide(column),
         },
-        {
-          fn: () => column_getToggleVisibilityHandler(column),
-          fnName: 'column_getToggleVisibilityHandler',
+        column_getToggleVisibilityHandler: {
+          fn: (column) => column_getToggleVisibilityHandler(column),
         },
-        {
-          fn: (visible) => column_toggleVisibility(column, visible),
-          fnName: 'column_toggleVisibility',
+        column_toggleVisibility: {
+          fn: (column, visible) => column_toggleVisibility(column, visible),
         },
-      ])
+      })
     },
 
-    constructRowAPIs: (row) => {
-      assignAPIs('columnVisibilityFeature', row, [
-        {
-          fn: () => row_getAllVisibleCells(row),
-          fnName: 'row_getAllVisibleCells',
-          memoDeps: () => [
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnVisibilityFeature', prototype, table, {
+        row_getAllVisibleCells: {
+          fn: (row) => row_getAllVisibleCells(row),
+          memoDeps: (row) => [
             row.getAllCells(),
-            row._table.store.state.columnVisibility,
+            row.table.store.state.columnVisibility,
           ],
         },
-        {
-          fn: (left, center, right) => row_getVisibleCells(left, center, right),
-          fnName: 'row_getVisibleCells',
-          memoDeps: () => [
+        row_getVisibleCells: {
+          fn: (row, left, center, right) =>
+            row_getVisibleCells(left, center, right),
+          memoDeps: (row) => [
             row_getLeftVisibleCells(row),
             row_getCenterVisibleCells(row),
             row_getRightVisibleCells(row),
           ],
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnVisibilityFeature', table, [
-        {
+      assignTableAPIs('columnVisibilityFeature', table, {
+        table_getVisibleFlatColumns: {
           fn: () => table_getVisibleFlatColumns(table),
-          fnName: 'table_getVisibleFlatColumns',
           memoDeps: () => [
             table.store.state.columnVisibility,
             table.options.columns,
           ],
         },
-        {
+        table_getVisibleLeafColumns: {
           fn: () => table_getVisibleLeafColumns(table),
-          fnName: 'table_getVisibleLeafColumns',
           memoDeps: () => [
             table.store.state.columnVisibility,
             table.options.columns,
           ],
         },
-        {
+        table_setColumnVisibility: {
           fn: (updater) => table_setColumnVisibility(table, updater),
-          fnName: 'table_setColumnVisibility',
         },
-        {
+        table_resetColumnVisibility: {
           fn: (defaultState) =>
             table_resetColumnVisibility(table, defaultState),
-          fnName: 'table_resetColumnVisibility',
         },
-        {
+        table_toggleAllColumnsVisible: {
           fn: (value) => table_toggleAllColumnsVisible(table, value),
-          fnName: 'table_toggleAllColumnsVisible',
         },
-        {
+        table_getIsAllColumnsVisible: {
           fn: () => table_getIsAllColumnsVisible(table),
-          fnName: 'table_getIsAllColumnsVisible',
         },
-        {
+        table_getIsSomeColumnsVisible: {
           fn: () => table_getIsSomeColumnsVisible(table),
-          fnName: 'table_getIsSomeColumnsVisible',
         },
-        {
+        table_getToggleAllColumnsVisibilityHandler: {
           fn: () => table_getToggleAllColumnsVisibilityHandler(table),
-          fnName: 'table_getToggleAllColumnsVisibilityHandler',
         },
-      ])
+      })
     },
   }
 }

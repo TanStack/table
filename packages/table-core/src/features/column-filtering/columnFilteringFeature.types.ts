@@ -172,7 +172,7 @@ export interface TableOptions_ColumnFiltering<
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
 }
 
-export interface Table_ColumnFiltering<> {
+export interface Table_ColumnFiltering {
   /**
    * Resets the **columnFilters** state to `initialState.columnFilters`, or `true` can be passed to force a default blank state reset to `[]`.
    */

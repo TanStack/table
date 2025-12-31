@@ -77,7 +77,11 @@ const sortedUniqueValues = computed(() =>
       type="text"
       :modelValue="(columnFilterValue ?? '') as string"
       @update:modelValue="(value) => column.setFilterValue(value)"
-      :placeholder="`Search... (${column.getFacetedUniqueValues().size})`"
+      :placeholder="`Search... (${
+        column.getFacetedUniqueValues() instanceof Map
+          ? column.getFacetedUniqueValues().size
+          : 0
+      })`"
       class="w-36 border shadow rounded"
       :list="column.id + 'list'"
     />

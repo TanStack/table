@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   getDefaultRowPinningState,
   row_getCanPin,
@@ -52,71 +56,61 @@ export function constructRowPinningFeature<
       }
     },
 
-    constructRowAPIs: (row) => {
-      assignAPIs('rowPinningFeature', row, [
-        {
-          fn: () => row_getCanPin(row),
-          fnName: 'row_getCanPin',
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('rowPinningFeature', prototype, table, {
+        row_getCanPin: {
+          fn: (row) => row_getCanPin(row),
         },
-        {
-          fn: () => row_getIsPinned(row),
-          fnName: 'row_getIsPinned',
+        row_getIsPinned: {
+          fn: (row) => row_getIsPinned(row),
         },
-        {
-          fn: () => row_getPinnedIndex(row),
-          fnName: 'row_getPinnedIndex',
-          memoDeps: () => [
-            row._table.getRowModel().rows,
-            row._table.store.state.rowPinning,
+        row_getPinnedIndex: {
+          fn: (row) => row_getPinnedIndex(row),
+          memoDeps: (row) => [
+            row.table.getRowModel().rows,
+            row.table.store.state.rowPinning,
           ],
         },
-        {
-          fn: (position, includeLeafRows, includeParentRows) =>
+        row_pin: {
+          fn: (row, position, includeLeafRows, includeParentRows) =>
             row_pin(row, position, includeLeafRows, includeParentRows),
-          fnName: 'row_pin',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('rowPinningFeature', table, [
-        {
+      assignTableAPIs('rowPinningFeature', table, {
+        table_setRowPinning: {
           fn: (updater) => table_setRowPinning(table, updater),
-          fnName: 'table_setRowPinning',
         },
-        {
+        table_resetRowPinning: {
           fn: (defaultState) => table_resetRowPinning(table, defaultState),
-          fnName: 'table_resetRowPinning',
         },
-        {
+        table_getIsSomeRowsPinned: {
           fn: (position) => table_getIsSomeRowsPinned(table, position),
-          fnName: 'table_getIsSomeRowsPinned',
         },
-        {
+        table_getTopRows: {
           fn: () => table_getTopRows(table),
-          fnName: 'table_getTopRows',
           memoDeps: () => [
             table.getRowModel().rows,
             table.store.state.rowPinning?.top,
           ],
         },
-        {
+        table_getBottomRows: {
           fn: () => table_getBottomRows(table),
-          fnName: 'table_getBottomRows',
           memoDeps: () => [
             table.getRowModel().rows,
             table.store.state.rowPinning?.bottom,
           ],
         },
-        {
+        table_getCenterRows: {
           fn: () => table_getCenterRows(table),
-          fnName: 'table_getCenterRows',
           memoDeps: () => [
             table.getRowModel().rows,
             table.store.state.rowPinning,
           ],
         },
-      ])
+      })
     },
   }
 }

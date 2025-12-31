@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignTableAPIs,
+  assignPrototypeAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   column_getIndex,
   column_getIsFirstColumn,
@@ -45,49 +49,43 @@ export function constructColumnOrderingFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnOrderingFeature', column, [
-        {
-          fn: (position) => column_getIndex(column, position),
-          fnName: 'column_getIndex',
-          memoDeps: (position) => [
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnOrderingFeature', prototype, table, {
+        column_getIndex: {
+          fn: (column, position) => column_getIndex(column, position),
+          memoDeps: (column, position) => [
             position,
-            column._table.store.state.columnOrder,
-            column._table.store.state.columnPinning,
-            column._table.store.state.grouping,
+            column.table.store.state.columnOrder,
+            column.table.store.state.columnPinning,
+            column.table.store.state.grouping,
           ],
         },
-        {
-          fn: (position) => column_getIsFirstColumn(column, position),
-          fnName: 'column_getIsFirstColumn',
+        column_getIsFirstColumn: {
+          fn: (column, position) => column_getIsFirstColumn(column, position),
         },
-        {
-          fn: (position) => column_getIsLastColumn(column, position),
-          fnName: 'column_getIsLastColumn',
+        column_getIsLastColumn: {
+          fn: (column, position) => column_getIsLastColumn(column, position),
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnOrderingFeature', table, [
-        {
+      assignTableAPIs('columnOrderingFeature', table, {
+        table_setColumnOrder: {
           fn: (updater) => table_setColumnOrder(table, updater),
-          fnName: 'table_setColumnOrder',
         },
-        {
+        table_resetColumnOrder: {
           fn: (defaultState) => table_resetColumnOrder(table, defaultState),
-          fnName: 'table_resetColumnOrder',
         },
-        {
+        table_getOrderColumnsFn: {
           fn: () => table_getOrderColumnsFn(table),
-          fnName: 'table_getOrderColumnsFn',
           memoDeps: () => [
             table.store.state.columnOrder,
             table.store.state.grouping,
             table.options.groupedColumnMode,
           ],
         },
-      ])
+      })
     },
   }
 }

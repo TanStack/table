@@ -126,13 +126,13 @@ export function row_toggleExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, expanded?: boolean) {
-  table_setExpanded(row._table, (old) => {
+  table_setExpanded(row.table, (old) => {
     const exists = old === true ? true : !!old[row.id]
 
     let oldExpanded: ExpandedStateList = {}
 
     if (old === true) {
-      Object.keys(row._table.getRowModel().rowsById).forEach((rowId) => {
+      Object.keys(row.table.getRowModel().rowsById).forEach((rowId) => {
         oldExpanded[rowId] = true
       })
     } else {
@@ -161,10 +161,10 @@ export function row_getIsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const expanded = row._table.store.state.expanded ?? ({} as ExpandedState)
+  const expanded = row.table.store.state.expanded ?? ({} as ExpandedState)
 
   return !!(
-    row._table.options.getIsRowExpanded?.(row) ??
+    row.table.options.getIsRowExpanded?.(row) ??
     (expanded === true || expanded[row.id])
   )
 }
@@ -174,8 +174,8 @@ export function row_getCanExpand<
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
   return (
-    row._table.options.getRowCanExpand?.(row) ??
-    ((row._table.options.enableExpanding ?? true) && !!row.subRows.length)
+    row.table.options.getRowCanExpand?.(row) ??
+    ((row.table.options.enableExpanding ?? true) && !!row.subRows.length)
   )
 }
 
@@ -187,7 +187,7 @@ export function row_getIsAllParentsExpanded<
   let currentRow = row
 
   while (isFullyExpanded && currentRow.parentId) {
-    currentRow = row._table.getRow(currentRow.parentId, true)
+    currentRow = row.table.getRow(currentRow.parentId, true)
     isFullyExpanded = row_getIsExpanded(row)
   }
 

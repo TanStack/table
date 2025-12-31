@@ -250,7 +250,7 @@ export function row_toggleSelected<
 ) {
   const isSelected = row_getIsSelected(row)
 
-  table_setRowSelection(row._table, (old) => {
+  table_setRowSelection(row.table, (old) => {
     value = typeof value !== 'undefined' ? value : !isSelected
 
     if (row_getCanSelect(row) && isSelected === value) {
@@ -264,7 +264,7 @@ export function row_toggleSelected<
       row.id,
       value,
       opts?.selectChildren ?? true,
-      row._table,
+      row.table,
     )
 
     return selectedRowIds
@@ -296,7 +296,7 @@ export function row_getCanSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const options = row._table.options
+  const options = row.table.options
   if (typeof options.enableRowSelection === 'function') {
     return options.enableRowSelection(row)
   }
@@ -308,7 +308,7 @@ export function row_getCanSelectSubRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const options = row._table.options
+  const options = row.table.options
   if (typeof options.enableSubRowSelection === 'function') {
     return options.enableSubRowSelection(row)
   }
@@ -320,7 +320,7 @@ export function row_getCanMultiSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const options = row._table.options
+  const options = row.table.options
   if (typeof options.enableMultiRowSelection === 'function') {
     return options.enableMultiRowSelection(row)
   }
@@ -419,7 +419,7 @@ export function isRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean {
-  return (row._table.store.state.rowSelection ?? {})[row.id] ?? false
+  return (row.table.store.state.rowSelection ?? {})[row.id] ?? false
 }
 
 export function isSubRowSelected<

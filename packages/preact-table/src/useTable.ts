@@ -55,24 +55,24 @@ export function useTable<
     ({}) as TSelected,
 ): PreactTable<TFeatures, TData, TSelected> {
   const [table] = useState(() => {
-    const table = constructTable(tableOptions) as PreactTable<
+    const instance = constructTable(tableOptions) as PreactTable<
       TFeatures,
       TData,
       TSelected
     >
 
-    table.Subscribe = function Subscribe<TSelected>(props: {
+    instance.Subscribe = function Subscribe<TSelected>(props: {
       selector: (state: TableState<TFeatures>) => TSelected
       children: ((state: TSelected) => ComponentChildren) | ComponentChildren
     }) {
-      const selected = useStore(table.store, props.selector)
+      const selected = useStore(instance.store, props.selector)
 
       return typeof props.children === 'function'
         ? props.children(selected)
         : props.children
     }
 
-    return table
+    return instance
   })
 
   const state = useStore(table.store, selector)
