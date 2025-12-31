@@ -112,7 +112,7 @@ const table = useQwikTable({
 })
 
 
-const sate = Qwik.useSignal({
+const state = Qwik.useSignal({
   ...table.initialState, //populate the initial state with all of the default state values from the table instance
   pagination: {
     pageIndex: 0,

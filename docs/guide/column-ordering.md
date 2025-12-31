@@ -91,7 +91,7 @@ const reorderColumn = <TData extends RowData>(
 };
 
 const handleDragEnd = (e: DragEvent) => {
-  if(!movingColumnId || !targetColumnId) return;
+  if (!movingColumnId || !targetColumnId) return;
   setColumnOrder(reorderColumn(movingColumnId, targetColumnId));
 };
 
@@ -100,7 +100,7 @@ const handleDragEnd = (e: DragEvent) => {
 
 #### Drag and Drop Column Reordering Suggestions (React)
 
-There are undoubtedly many ways to implement drag and drop features along-side TanStack Table. Here are a few suggestions in order for you to not have a bad time:
+There are undoubtedly many ways to implement drag and drop features alongside TanStack Table. Here are a few suggestions in order for you to not have a bad time:
 
 1. Do NOT try to use [`"react-dnd"`](https://react-dnd.github.io/react-dnd/docs/overview) _if you are using React 18 or newer_. React DnD was an important library for its time, but it now does not get updated very often, and it has incompatibilities with React 18, especially in React Strict Mode. It is still possible to get it to work, but there are newer alternatives that have better compatibility and are more actively maintained. React DnD's Provider may also interfere and conflict with any other DnD solutions you may want to try in your app.
 

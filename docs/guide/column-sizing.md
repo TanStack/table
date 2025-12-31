@@ -15,7 +15,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## Column Sizing Guide
 
-The column sizing feature allows you to optionally specify the width of each column including min and max widths. It also allows you and your users the ability to dynamically change the width of all columns at will, eg. by dragging the column headers.
+The column sizing feature allows you to optionally specify the width of each column including min and max widths. It also allows you and your users the ability to dynamically change the width of all columns at will, e.g. by dragging the column headers.
 
 ### Column Widths
 

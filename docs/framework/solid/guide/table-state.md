@@ -185,7 +185,7 @@ const table = createSolidTable({
     get sorting() {
       return sorting()
     },
-  }
+  },
   //syntax 1
   onPaginationChange: (updater) => {
     setPagination(old => {

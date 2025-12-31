@@ -85,7 +85,7 @@ The sorting function to use with this column.
 
 Options:
 
-- A `string` referencing a [built-in sorting function](#sorting-functions))
+- A `string` referencing a [built-in sorting function](#sorting-functions)
 - A [custom sorting function](#sorting-functions)
 
 ### `sortDescFirst`
@@ -118,7 +118,7 @@ Enables/Disables multi-sorting for this column.
 invertSorting?: boolean
 ```
 
-Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, eg. a ranking (1st, 2nd, 3rd) or golf-like scoring
+Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, e.g. a ranking (1st, 2nd, 3rd) or golf-like scoring
 
 ### `sortUndefined`
 

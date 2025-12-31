@@ -211,7 +211,7 @@ The filter function to use for global filtering.
 
 Options:
 
-- A `string` referencing a [built-in filter function](#filter-functions))
+- A `string` referencing a [built-in filter function](#filter-functions)
 - A `string` that references a custom filter functions provided via the `tableOptions.filterFns` option
 - A [custom filter function](#filter-functions)
 
