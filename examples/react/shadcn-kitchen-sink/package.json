@@ -8,6 +8,7 @@
     "serve": "vite preview",
     "start": "vite",
     "lint": "eslint ./src",
+    "test:types": "tsc",
     "shadcn": "pnpm dlx shadcn@latest"
   },
   "dependencies": {
