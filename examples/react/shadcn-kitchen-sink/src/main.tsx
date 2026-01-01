@@ -31,7 +31,6 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
-  flexRender,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
@@ -411,10 +410,7 @@ function App() {
                               )}
                               onClick={header.column.getToggleSortingHandler()}
                             >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
+                              <table.FlexRender header={header} />
                               {header.column.getIsSorted() && (
                                 <>
                                   {header.column.getIsSorted() === 'asc' ? (
@@ -458,10 +454,7 @@ function App() {
                             width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                           }}
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
+                          <table.FlexRender cell={cell} />
                         </TableCell>
                       )
                     })}

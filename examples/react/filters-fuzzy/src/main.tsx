@@ -7,7 +7,6 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
-  flexRender,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
@@ -87,7 +86,7 @@ function App() {
       {
         accessorKey: 'firstName',
         cell: (info) => info.getValue(),
-        filterFn: 'includesStringSensitive', //note: normal non-fuzzy filter column - case sensitive
+        filterFn: 'includesStringSensitive', // note: normal non-fuzzy filter column - case sensitive
       },
       {
         accessorFn: (row) => row.lastName,
@@ -175,10 +174,7 @@ function App() {
                               }
                               onClick={header.column.getToggleSortingHandler()}
                             >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
+                              <table.FlexRender header={header} />
                               {{
                                 asc: ' 🔼',
                                 desc: ' 🔽',
@@ -204,10 +200,7 @@ function App() {
                     {row.getAllCells().map((cell) => {
                       return (
                         <td key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
+                          <table.FlexRender cell={cell} />
                         </td>
                       )
                     })}

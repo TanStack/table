@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
   createSortedRowModel,
-  flexRender,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -131,10 +130,7 @@ function App() {
                                 : undefined
                             }
                           >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            <table.FlexRender header={header} />
                             {{
                               asc: ' 🔼',
                               desc: ' 🔽',
@@ -157,10 +153,7 @@ function App() {
                       {row.getAllCells().map((cell) => {
                         return (
                           <td key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
+                            <table.FlexRender cell={cell} />
                           </td>
                         )
                       })}

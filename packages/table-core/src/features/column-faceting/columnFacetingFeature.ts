@@ -1,4 +1,4 @@
-import { assignTableAPIs, assignPrototypeAPIs } from '../../utils'
+import { assignPrototypeAPIs, assignTableAPIs } from '../../utils'
 import {
   column_getFacetedMinMaxValues,
   column_getFacetedRowModel,

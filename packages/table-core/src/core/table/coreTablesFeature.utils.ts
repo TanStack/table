@@ -3,7 +3,6 @@ import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
-import type { TableState_All } from '../../types/TableState'
 
 export function table_reset<
   TFeatures extends TableFeatures,
@@ -37,7 +36,5 @@ export function table_setOptions<
   updater: Updater<TableOptions<TFeatures, TData>>,
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
-  // any used to override type error with looser options available with _rowModels
-  // This is needed atm for allowing _rowModels to use TData or not
-  table.options = table_mergeOptions(table, newOptions) as any
+  table.options = table_mergeOptions(table, newOptions)
 }

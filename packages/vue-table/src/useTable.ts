@@ -50,10 +50,10 @@ export type VueTable<
   Subscribe: <TSelected>(props: {
     selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
     children:
-      | ((state: Readonly<TSelected>) => VNode | VNode[])
+      | ((state: Readonly<TSelected>) => VNode | Array<VNode>)
       | VNode
-      | VNode[]
-  }) => VNode | VNode[]
+      | Array<VNode>
+  }) => VNode | Array<VNode>
   /**
    * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
    *
@@ -136,7 +136,7 @@ export function useTable<
     const value = (table as any)[key]
     if (typeof value === 'function' && key.startsWith('get')) {
       const originalMethod = value.bind(table)
-      ;(table as any)[key] = (...args: any[]) => {
+      ;(table as any)[key] = (...args: Array<any>) => {
         // Access state to create reactive dependency
         allState.value
         return originalMethod(...args)
@@ -147,10 +147,10 @@ export function useTable<
   table.Subscribe = function Subscribe<TSelected>(props: {
     selector: (state: TableState<TFeatures>) => TSelected
     children:
-      | ((state: Readonly<TSelected>) => VNode | VNode[])
+      | ((state: Readonly<TSelected>) => VNode | Array<VNode>)
       | VNode
-      | VNode[]
-  }): VNode | VNode[] {
+      | Array<VNode>
+  }): VNode | Array<VNode> {
     const selected = useStore(table.store, props.selector)
     if (typeof props.children === 'function') {
       return props.children(selected.value)

@@ -11,10 +11,7 @@ export const makeColumns = (num: number) =>
     }
   })
 
-export const makeData = (
-  num: number,
-  columns: Array<unknown>,
-): Array<Person> =>
+export const makeData = (num: number, columns: Array<unknown>): Array<Person> =>
   [...Array(num)].map(() => ({
     ...Object.fromEntries(
       columns.map((col) => [

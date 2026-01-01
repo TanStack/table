@@ -1,12 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-
-import './index.css'
-
 import {
   columnSizingFeature,
   createSortedRowModel,
-  flexRender,
+  FlexRender,
   rowSortingFeature,
   sortFns,
   useTable,
@@ -16,6 +13,7 @@ import { makeData } from './makeData'
 import type { ColumnDef, Row, Table } from '@tanstack/react-table'
 import type { Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
+import './index.css'
 
 const _features = {
   columnSizingFeature,
@@ -84,6 +82,8 @@ function App() {
     }, 5000)
     return () => clearInterval(interval)
   }, [refreshData])
+
+  console.log('data', data[0].firstName)
 
   const table = useTable({
     _features,
@@ -161,10 +161,7 @@ function App() {
                                 : undefined
                             }
                           >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            <FlexRender header={header} />
                             {{
                               asc: ' 🔼',
                               desc: ' 🔽',
@@ -305,7 +302,7 @@ function TableBodyRow({
               width: cell.column.getSize(),
             }}
           >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            <FlexRender cell={cell} />
           </td>
         )
       })}
@@ -324,7 +321,7 @@ const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <App />,
+  // </React.StrictMode>,
 )

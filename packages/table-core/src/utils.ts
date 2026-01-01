@@ -292,7 +292,6 @@ export function assignTableAPIs<
           memoDeps,
           fn,
           fnName,
-          objectId: 'table',
           table,
           feature,
         })
@@ -336,7 +335,7 @@ export function assignPrototypeAPIs<
       // the memo on first access and stores it on the instance
       const memoKey = `_memo_${fnKey}`
 
-      prototype[fnKey] = function (this: any, ...args: any[]) {
+      prototype[fnKey] = function (this: any, ...args: Array<any>) {
         // Lazily create memo on first access for this instance
         if (!this[memoKey]) {
           const self = this
@@ -353,7 +352,7 @@ export function assignPrototypeAPIs<
       }
     } else {
       // Non-memoized methods just call the static function with `this`
-      prototype[fnKey] = function (this: any, ...args: any[]) {
+      prototype[fnKey] = function (this: any, ...args: Array<any>) {
         return fn(this, ...args)
       }
     }

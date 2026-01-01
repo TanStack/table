@@ -1,15 +1,11 @@
 import { constructTableHelper } from '@tanstack/table-core'
-import {
-  useTable,
-  VueTable,
-  type TableOptionsWithReactiveData,
-} from './useTable'
+import { useTable } from './useTable'
+import type { TableOptionsWithReactiveData, VueTable } from './useTable'
 import type {
   RowData,
   TableFeatures,
   TableHelperOptions,
   TableHelper_Core,
-  TableOptions,
   TableState,
 } from '@tanstack/table-core'
 

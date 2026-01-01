@@ -4,7 +4,7 @@ import './index.css'
 import {
   columnSizingFeature,
   createSortedRowModel,
-  flexRender,
+  FlexRender,
   rowSortingFeature,
   sortFns,
   useTable,
@@ -228,7 +228,7 @@ function TableHeadCell({
             : undefined
         }
       >
-        {flexRender(header.column.columnDef.header, header.getContext())}
+        <FlexRender header={header} />
         {{
           asc: ' 🔼',
           desc: ' 🔽',
@@ -305,9 +305,9 @@ function TableBody({
             columnVirtualizer={columnVirtualizer}
             key={row.id}
             row={row}
+            rowRefsMap={rowRefsMap}
             rowVirtualizer={rowVirtualizer}
             virtualRowIndex={virtualRowIndex}
-            rowRefsMap={rowRefsMap}
           />
         )
       })}
@@ -390,7 +390,7 @@ function TableBodyCell({
         width: cell.column.getSize(),
       }}
     >
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      <FlexRender cell={cell} />
     </td>
   )
 }

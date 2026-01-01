@@ -1,4 +1,4 @@
-import { assignTableAPIs, assignPrototypeAPIs } from '../../utils'
+import { assignPrototypeAPIs, assignTableAPIs } from '../../utils'
 import {
   row_getAllCells,
   row_getAllCellsByColumnId,

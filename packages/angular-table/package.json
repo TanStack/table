@@ -22,10 +22,10 @@
   ],
   "type": "module",
   "module": "dist/fesm2022/tanstack-angular-table.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/types/tanstack-angular-table.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/tanstack-angular-table.d.ts",
       "default": "./dist/fesm2022/tanstack-angular-table.mjs"
     },
     "./package.json": {
@@ -59,7 +59,6 @@
     "@analogjs/vitest-angular": "^2.2.0",
     "@angular/core": "^21.0.6",
     "@angular/platform-browser": "^21.0.6",
-    "@angular/platform-browser-dynamic": "^21.0.6",
     "ng-packagr": "^21.0.1",
     "typescript": "5.9.3"
   },

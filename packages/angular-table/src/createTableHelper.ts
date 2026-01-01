@@ -1,10 +1,9 @@
 import { constructTableHelper } from './constructTableHelper'
-import { injectTable, AngularTable } from './injectTable'
+import { injectTable } from './injectTable'
+import type { AngularTable } from './injectTable'
 import type { TableHelperOptions } from './constructTableHelper'
-import type { Signal } from '@angular/core'
 import type {
   RowData,
-  Table,
   TableFeatures,
   TableHelper_Core,
   TableOptions,

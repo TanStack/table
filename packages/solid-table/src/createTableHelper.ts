@@ -1,5 +1,6 @@
 import { constructTableHelper } from '@tanstack/table-core'
-import { SolidTable, createTable } from './createTable'
+import { createTable } from './createTable'
+import type { SolidTable } from './createTable'
 import type {
   RowData,
   TableFeatures,

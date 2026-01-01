@@ -1,6 +1,6 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
-import { createTableHelper, flexRender } from '@tanstack/react-table'
+import { createTableHelper } from '@tanstack/react-table'
 import './index.css'
 
 // This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
@@ -120,12 +120,9 @@ function App() {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender header={header} />
+                  )}
                 </th>
               ))}
             </tr>
@@ -136,7 +133,7 @@ function App() {
             <tr key={row.id}>
               {row.getAllCells().map((cell) => (
                 <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <table.FlexRender cell={cell} />
                 </td>
               ))}
             </tr>
@@ -147,12 +144,9 @@ function App() {
             <tr key={footerGroup.id}>
               {footerGroup.headers.map((header) => (
                 <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext(),
-                      )}
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender footer={header} />
+                  )}
                 </th>
               ))}
             </tr>

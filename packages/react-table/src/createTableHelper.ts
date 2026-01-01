@@ -1,5 +1,6 @@
 import { constructTableHelper } from '@tanstack/table-core'
-import { ReactTable, useTable } from './useTable'
+import { useTable } from './useTable'
+import type { ReactTable } from './useTable'
 import type {
   RowData,
   TableFeatures,

@@ -13,10 +13,10 @@ import {
 import { For, Show, createEffect, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type {
-  ColumnDef,
   Column,
-  Table,
+  ColumnDef,
   SolidTable,
+  Table,
 } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 import './index.css'

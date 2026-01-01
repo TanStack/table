@@ -1,6 +1,5 @@
 import {
   columnFilteringFeature,
-  flexRender,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
@@ -84,10 +83,7 @@ export default function Table<T extends Record<string, string | number>>({
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          <table.FlexRender header={header} />
                           {{
                             asc: ' 🔼',
                             desc: ' 🔽',
@@ -127,10 +123,7 @@ export default function Table<T extends Record<string, string | number>>({
                 {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <table.FlexRender cell={cell} />
                     </td>
                   )
                 })}

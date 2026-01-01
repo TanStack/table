@@ -1,3 +1,4 @@
+import { constructTable, coreFeatures } from '@tanstack/table-core'
 import type {
   RowData,
   Table,
@@ -5,7 +6,6 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import { constructTable, coreFeatures } from '@tanstack/table-core'
 import type { ReactiveController, ReactiveControllerHost } from 'lit'
 
 export class TableController<
@@ -44,7 +44,7 @@ export class TableController<
         },
       }
 
-      this._table = constructTable(statefulOptions) as Table<TFeatures, TData>
+      this._table = constructTable(statefulOptions)
       this._allState = this._table.store.state
 
       // Wrap all "get*" methods to make them reactive
@@ -52,7 +52,7 @@ export class TableController<
         const value = (this._table as any)[key]
         if (typeof value === 'function' && key.startsWith('get')) {
           const originalMethod = value.bind(this._table)
-          ;(this._table as any)[key] = (...args: any[]) => {
+          ;(this._table as any)[key] = (...args: Array<any>) => {
             // Access state to create reactive dependency
             this._allState
             return originalMethod(...args)
@@ -104,7 +104,7 @@ export class TableController<
     // Only set up if not already subscribed
     if (this._table && !this._subscription) {
       this._subscription = this._table.store.subscribe(({ currentVal }) => {
-        this._allState = currentVal as TableState<TFeatures>
+        this._allState = currentVal
         // Request update to trigger re-render
         this.host.requestUpdate()
       })

@@ -39,7 +39,7 @@
   // Subscribe to the store and get the selected state
   // Access table and selector from props object to avoid closure warnings
   const selectedState = useStore(
-    (props.table as any).store,
+    props.table.store,
     props.selector as (state: any) => any,
   )
 </script>
