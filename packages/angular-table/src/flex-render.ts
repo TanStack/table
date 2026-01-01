@@ -283,3 +283,5 @@ export class FlexRender<TProps extends NonNullable<unknown>>
     return new FlexRenderComponentView(component, view)
   }
 }
+
+export { FlexRender as FlexRenderDirective }
