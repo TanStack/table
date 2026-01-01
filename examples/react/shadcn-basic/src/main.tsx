@@ -1,6 +1,6 @@
-import { tableFeatures, useTable } from '@tanstack/react-table'
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
+import { tableFeatures, useTable } from '@tanstack/react-table'
 import { Button } from './components/ui/button'
 import {
   Table,
