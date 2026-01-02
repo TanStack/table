@@ -99,7 +99,7 @@ function App() {
         columnVisibility: state.columnVisibility,
       })}
     >
-      {(state) => (
+      {(_state) => (
         <div className="p-2">
           <div className="inline-block border border-black shadow rounded">
             <div className="px-1 border-b border-black">
@@ -176,7 +176,9 @@ function App() {
               ))}
             </tfoot>
           </table>
-          <pre>{JSON.stringify(state.columnOrder, null, 2)}</pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>

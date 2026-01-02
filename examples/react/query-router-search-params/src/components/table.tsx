@@ -6,6 +6,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import { useEffect } from 'react'
 import { DebouncedInput } from './debouncedInput'
 import type {
   ColumnDef,
@@ -50,18 +51,29 @@ export default function Table<T extends Record<string, string | number>>({
   paginationOptions,
   sorting,
 }: Props<T>) {
-  const table = useTable({
-    _features,
-    _rowModels: {}, // no client-side row models since we're doing server-side sorting, filtering, and pagination
-    columns,
-    data,
-    manualFiltering: true,
-    manualPagination: true,
-    manualSorting: true,
-    onSortingChange,
-    state: { pagination, sorting },
-    ...paginationOptions,
-  })
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {}, // no client-side row models since we're doing server-side sorting, filtering, and pagination
+      columns,
+      data,
+      manualFiltering: true,
+      manualPagination: true,
+      manualSorting: true,
+      onSortingChange,
+      ...paginationOptions,
+    },
+    (state) => state,
+  )
+
+  // Sync controlled state with table store
+  useEffect(() => {
+    table.store.setState((prev) => ({
+      ...prev,
+      pagination,
+      sorting,
+    }))
+  }, [table, pagination, sorting])
 
   return (
     <div>

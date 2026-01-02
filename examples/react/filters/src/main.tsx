@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
   columnFilteringFeature,
+  createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -17,7 +18,6 @@ import { makeData } from './makeData'
 import type {
   CellData,
   Column,
-  ColumnDef,
   RowData,
   TableFeatures,
 } from '@tanstack/react-table'
@@ -40,56 +40,52 @@ const _features = tableFeatures({
   rowPaginationFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-      },
-      {
-        accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-        id: 'fullName',
-        header: 'Full Name',
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        meta: {
-          filterVariant: 'select',
-        },
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+        }),
+        columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
+          id: 'fullName',
+          header: 'Full Name',
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          meta: {
+            filterVariant: 'range',
+          },
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          meta: {
+            filterVariant: 'range',
+          },
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          meta: {
+            filterVariant: 'select',
+          },
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          meta: {
+            filterVariant: 'range',
+          },
+        }),
+      ]),
     [],
   )
 
@@ -240,9 +236,9 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
-          <pre>
-            {JSON.stringify({ columnFilters: state.columnFilters }, null, 2)}
-          </pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>

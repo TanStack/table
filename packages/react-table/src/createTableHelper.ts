@@ -10,11 +10,11 @@ import type {
   TableState,
 } from '@tanstack/table-core'
 
-export type TableHelper<
-  TFeatures extends TableFeatures,
-  TData extends RowData = any,
-> = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
-  useTable: <TSelected = {}>(
+export type ReactTableHelper<TFeatures extends TableFeatures> = Omit<
+  TableHelper_Core<TFeatures>,
+  'tableCreator'
+> & {
+  useTable: <TData extends RowData, TSelected = {}>(
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
@@ -23,16 +23,13 @@ export type TableHelper<
   ) => ReactTable<TFeatures, TData, TSelected>
 }
 
-export function createTableHelper<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  tableHelperOptions: TableHelperOptions<TFeatures, TData>,
-): TableHelper<TFeatures, TData> {
-  const tableHelper = constructTableHelper(useTable, tableHelperOptions)
+export function createTableHelper<TFeatures extends TableFeatures>(
+  tableHelperOptions: TableHelperOptions<TFeatures>,
+): ReactTableHelper<TFeatures> {
+  const tableHelper = constructTableHelper(useTable as any, tableHelperOptions)
   return {
     ...tableHelper,
-    useTable: <TSelected = {}>(
+    useTable: <TData extends RowData, TSelected = {}>(
       tableOptions: Omit<
         TableOptions<TFeatures, TData>,
         '_features' | '_rowModels'

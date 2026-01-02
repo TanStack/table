@@ -3,11 +3,12 @@ import ReactDOM from 'react-dom/client'
 import {
   columnResizingFeature,
   columnSizingFeature,
+  createColumnHelper,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef, Table } from '@tanstack/react-table'
+import type { Table } from '@tanstack/react-table'
 import './index.css'
 
 const _features = tableFeatures({ columnSizingFeature, columnResizingFeature })
@@ -21,52 +22,48 @@ type Person = {
   progress: number
 }
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
-  {
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const defaultColumns = columnHelper.columns([
+  columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'firstName',
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
-      },
-    ],
-  },
-  {
+      }),
+    ]),
+  }),
+  columnHelper.group({
     header: 'Info',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
         header: () => 'Age',
         footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: 'visits',
+      }),
+      columnHelper.accessor('visits', {
         header: () => <span>Visits</span>,
         footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: 'status',
+      }),
+      columnHelper.accessor('status', {
         header: 'Status',
         footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: 'progress',
+      }),
+      columnHelper.accessor('progress', {
         header: 'Profile Progress',
         footer: (props) => props.column.id,
-      },
-    ],
-  },
-]
+      }),
+    ]),
+  }),
+])
 
 function App() {
   const [data, _setData] = React.useState(() => makeData(200))
@@ -129,15 +126,13 @@ function App() {
       <button onClick={() => rerender()} className="border p-2">
         Rerender
       </button>
-      <pre style={{ minHeight: '10rem' }}>
-        {JSON.stringify(
-          {
-            columnSizing: table.store.state.columnSizing,
-          },
-          null,
-          2,
+      <table.Subscribe selector={(state) => state}>
+        {(state) => (
+          <pre style={{ minHeight: '10rem' }}>
+            {JSON.stringify(state, null, 2)}
+          </pre>
         )}
-      </pre>
+      </table.Subscribe>
       <div className="h-4" />({data.length} rows)
       <div className="overflow-x-auto">
         {/* Here in the <table> equivalent element (surrounds all table head and data cells), we will define our CSS variables for column sizes */}

@@ -80,7 +80,12 @@ function table_getPinnedRows<
           (rowId) => visibleRows.find((row) => row.id === rowId)!,
         )
 
-  return rows.filter((r) => !!r).map((d) => ({ ...d, position }))
+  const filteredRows = rows.filter((r) => !!r)
+  // Assign position property directly to preserve prototype chain
+  filteredRows.forEach((row) => {
+    ;(row as any).position = position
+  })
+  return filteredRows
 }
 
 export function table_getTopRows<

@@ -2,6 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   columnFilteringFeature,
+  createColumnHelper,
+  createExpandedRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -17,7 +19,7 @@ import {
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
 import type { Person } from './makeData'
-import type { Column, ColumnDef, Table } from '@tanstack/react-table'
+import type { Column, Table } from '@tanstack/react-table'
 import './index.css'
 
 const _features = tableFeatures({
@@ -28,87 +30,84 @@ const _features = tableFeatures({
   rowSelectionFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        header: ({ table }) => (
-          <>
-            <IndeterminateCheckbox
-              checked={table.getIsAllRowsSelected()}
-              indeterminate={table.getIsSomeRowsSelected()}
-              onChange={table.getToggleAllRowsSelectedHandler()}
-            />{' '}
-            <button onClick={table.getToggleAllRowsExpandedHandler()}>
-              {table.getIsAllRowsExpanded() ? '👇' : '👉'}
-            </button>{' '}
-            First Name
-          </>
-        ),
-        cell: ({ row, getValue }) => (
-          <div
-            style={{
-              // Since rows are flattened by default,
-              // we can use the row.depth property
-              // and paddingLeft to visually indicate the depth
-              // of the row
-              paddingLeft: `${row.depth * 2}rem`,
-            }}
-          >
-            <div>
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          header: ({ table }) => (
+            <>
               <IndeterminateCheckbox
-                checked={row.getIsSelected()}
-                indeterminate={row.getIsSomeSelected()}
-                onChange={row.getToggleSelectedHandler()}
+                checked={table.getIsAllRowsSelected()}
+                indeterminate={table.getIsSomeRowsSelected()}
+                onChange={table.getToggleAllRowsSelectedHandler()}
               />{' '}
-              {row.getCanExpand() ? (
-                <button
-                  onClick={row.getToggleExpandedHandler()}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {row.getIsExpanded() ? '👇' : '👉'}
-                </button>
-              ) : (
-                '🔵'
-              )}{' '}
-              {getValue<boolean>()}
+              <button onClick={table.getToggleAllRowsExpandedHandler()}>
+                {table.getIsAllRowsExpanded() ? '👇' : '👉'}
+              </button>{' '}
+              First Name
+            </>
+          ),
+          cell: ({ row, getValue }) => (
+            <div
+              style={{
+                // Since rows are flattened by default,
+                // we can use the row.depth property
+                // and paddingLeft to visually indicate the depth
+                // of the row
+                paddingLeft: `${row.depth * 2}rem`,
+              }}
+            >
+              <div>
+                <IndeterminateCheckbox
+                  checked={row.getIsSelected()}
+                  indeterminate={row.getIsSomeSelected()}
+                  onChange={row.getToggleSelectedHandler()}
+                />{' '}
+                {row.getCanExpand() ? (
+                  <button
+                    onClick={row.getToggleExpandedHandler()}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {row.getIsExpanded() ? '👇' : '👉'}
+                  </button>
+                ) : (
+                  '🔵'
+                )}{' '}
+                {getValue<boolean>()}
+              </div>
             </div>
-          </div>
-        ),
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-        filterFn: 'between',
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        footer: (props) => props.column.id,
-      },
-    ],
+          ),
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+          filterFn: 'between',
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          footer: (props) => props.column.id,
+        }),
+      ]),
     [],
   )
 
@@ -117,13 +116,14 @@ function App() {
 
   const table = useTable({
     _features,
-    columns,
-    data,
     _rowModels: {
+      expandedRowModel: createExpandedRowModel(),
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(sortFns),
     },
+    columns,
+    data,
     getSubRows: (row) => row.subRows,
     // filterFromLeafRows: true,
     // maxLeafRowFilterDepth: 0,
@@ -249,10 +249,9 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
-          <label>Expanded State:</label>
-          <pre>{JSON.stringify(state.expanded, null, 2)}</pre>
-          <label>Row Selection State:</label>
-          <pre>{JSON.stringify(table.store.state.rowSelection, null, 2)}</pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>

@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
+  createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
   sortFns,
@@ -9,12 +10,14 @@ import {
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef, SortFn } from '@tanstack/react-table'
+import type { SortFn } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
   rowSortingFeature,
 })
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
 
 // custom sorting logic for one of our enum columns
 const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
@@ -27,52 +30,45 @@ const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-        // this column will sort in ascending order by default since it is a string column
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        sortUndefined: 'last', // force undefined values to the end
-        sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        // this column will sort in descending order by default since it is a number column
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        sortUndefined: 'last', // force undefined values to the end
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        sortFn: sortStatusFn, // use our custom sorting function for this enum column
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        // enableSorting: false, //disable sorting for this column
-      },
-      {
-        accessorKey: 'rank',
-        header: 'Rank',
-        invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created At',
-        // sortFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          // this column will sort in ascending order by default since it is a string column
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          sortUndefined: 'last', // force undefined values to the end
+          sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          // this column will sort in descending order by default since it is a number column
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          sortUndefined: 'last', // force undefined values to the end
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          sortFn: sortStatusFn, // use our custom sorting function for this enum column
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          // enableSorting: false, //disable sorting for this column
+        }),
+        columnHelper.accessor('rank', {
+          header: 'Rank',
+          invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
+        }),
+        columnHelper.accessor('createdAt', {
+          header: 'Created At',
+          // sortFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
+        }),
+      ]),
     [],
   )
 
@@ -101,7 +97,7 @@ function App() {
 
   return (
     <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
-      {(state) => (
+      {(_state) => (
         <div className="p-2">
           <div className="h-2" />
           <table>
@@ -169,7 +165,9 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
-          <pre>{JSON.stringify(state.sorting, null, 2)}</pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>

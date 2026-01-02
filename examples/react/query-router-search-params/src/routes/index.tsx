@@ -52,14 +52,19 @@ function UsersPage() {
           rowCount: data?.rowCount,
         }}
         filters={filters}
-        onFilterChange={(filters) => setFilters(filters)}
+        onFilterChange={(filters) =>
+          setFilters({ ...filters, pageIndex: DEFAULT_PAGE_INDEX })
+        }
         sorting={sortingState}
         onSortingChange={(updaterOrValue) => {
           const newSortingState =
             typeof updaterOrValue === 'function'
               ? updaterOrValue(sortingState)
               : updaterOrValue
-          return setFilters({ sortBy: stateToSortBy(newSortingState) })
+          return setFilters({
+            sortBy: stateToSortBy(newSortingState),
+            pageIndex: DEFAULT_PAGE_INDEX,
+          })
         }}
       />
       <div className="flex items-center gap-2">

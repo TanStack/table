@@ -4,6 +4,7 @@ import './index.css'
 import {
   columnFacetingFeature,
   columnFilteringFeature,
+  createColumnHelper,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
@@ -21,7 +22,6 @@ import { makeData } from './makeData'
 import type {
   CellData,
   Column,
-  ColumnDef,
   RowData,
   TableFeatures,
 } from '@tanstack/react-table'
@@ -33,6 +33,8 @@ const _features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
 
 declare module '@tanstack/react-table' {
   // allows us to define custom properties for our columns
@@ -46,47 +48,42 @@ declare module '@tanstack/react-table' {
 }
 
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        meta: {
-          filterVariant: 'select',
-        },
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        meta: {
-          filterVariant: 'range',
-        },
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          meta: {
+            filterVariant: 'range',
+          },
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          meta: {
+            filterVariant: 'range',
+          },
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          meta: {
+            filterVariant: 'select',
+          },
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          meta: {
+            filterVariant: 'range',
+          },
+        }),
+      ]),
     [],
   )
 
@@ -240,9 +237,9 @@ function App() {
           <div>
             <button onClick={refreshData}>Refresh Data</button>
           </div>
-          <pre>
-            {JSON.stringify({ columnFilters: state.columnFilters }, null, 2)}
-          </pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>
@@ -275,7 +272,10 @@ function Filter({ column }: { column: Column<typeof _features, Person> }) {
           max={Number(minMaxValues?.[1] ?? '')}
           value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
           onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [value, old[1]])
+            column.setFilterValue((old: [number, number] | undefined) => [
+              value,
+              old?.[1],
+            ])
           }
           placeholder={`Min ${
             minMaxValues?.[0] !== undefined ? `(${minMaxValues[0]})` : ''
@@ -288,7 +288,10 @@ function Filter({ column }: { column: Column<typeof _features, Person> }) {
           max={Number(minMaxValues?.[1] ?? '')}
           value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
           onChange={(value) =>
-            column.setFilterValue((old: [number, number]) => [old[0], value])
+            column.setFilterValue((old: [number, number] | undefined) => [
+              old?.[0],
+              value,
+            ])
           }
           placeholder={`Max ${minMaxValues?.[1] ? `(${minMaxValues[1]})` : ''}`}
           className="w-24 border shadow rounded"

@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   columnFilteringFeature,
+  createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
   filterFns,
@@ -14,7 +15,7 @@ import {
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
 import type { Person } from './makeData'
-import type { Column, ColumnDef, Table } from '@tanstack/react-table'
+import type { Column, Table } from '@tanstack/react-table'
 import './index.css'
 
 const _features = tableFeatures({
@@ -24,87 +25,84 @@ const _features = tableFeatures({
   globalFilteringFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        id: 'select',
-        header: () => {
-          return (
-            <table.Subscribe selector={(state) => state.rowSelection}>
-              {() => (
-                <IndeterminateCheckbox
-                  checked={table.getIsAllRowsSelected()}
-                  indeterminate={table.getIsSomeRowsSelected()}
-                  onChange={table.getToggleAllRowsSelectedHandler()}
-                />
-              )}
-            </table.Subscribe>
-          )
-        },
-        cell: ({ row }) => (
-          <div className="px-1">
-            <IndeterminateCheckbox
-              checked={row.getIsSelected()}
-              disabled={!row.getCanSelect()}
-              indeterminate={row.getIsSomeSelected()}
-              onChange={row.getToggleSelectedHandler()}
-            />
-          </div>
-        ),
-      },
-      {
-        header: 'Name',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            cell: (info) => info.getValue(),
-            footer: (props) => props.column.id,
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'select',
+          header: () => {
+            return (
+              <table.Subscribe selector={(state) => state.rowSelection}>
+                {() => (
+                  <IndeterminateCheckbox
+                    checked={table.getIsAllRowsSelected()}
+                    indeterminate={table.getIsSomeRowsSelected()}
+                    onChange={table.getToggleAllRowsSelectedHandler()}
+                  />
+                )}
+              </table.Subscribe>
+            )
           },
-          {
-            accessorFn: (row) => row.lastName,
-            id: 'lastName',
-            cell: (info) => info.getValue(),
-            header: () => <span>Last Name</span>,
-            footer: (props) => props.column.id,
-          },
-        ],
-      },
-      {
-        header: 'Info',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            footer: (props) => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: (props) => props.column.id,
-              },
-            ],
-          },
-        ],
-      },
-    ],
+          cell: ({ row }) => (
+            <div className="px-1">
+              <IndeterminateCheckbox
+                checked={row.getIsSelected()}
+                disabled={!row.getCanSelect()}
+                indeterminate={row.getIsSomeSelected()}
+                onChange={row.getToggleSelectedHandler()}
+              />
+            </div>
+          ),
+        }),
+        columnHelper.group({
+          header: 'Name',
+          footer: (props) => props.column.id,
+          columns: columnHelper.columns([
+            columnHelper.accessor('firstName', {
+              cell: (info) => info.getValue(),
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.accessor((row) => row.lastName, {
+              id: 'lastName',
+              cell: (info) => info.getValue(),
+              header: () => <span>Last Name</span>,
+              footer: (props) => props.column.id,
+            }),
+          ]),
+        }),
+        columnHelper.group({
+          header: 'Info',
+          footer: (props) => props.column.id,
+          columns: columnHelper.columns([
+            columnHelper.accessor('age', {
+              header: () => 'Age',
+              footer: (props) => props.column.id,
+            }),
+            columnHelper.group({
+              header: 'More Info',
+              columns: columnHelper.columns([
+                columnHelper.accessor('visits', {
+                  header: () => <span>Visits</span>,
+                  footer: (props) => props.column.id,
+                }),
+                columnHelper.accessor('status', {
+                  header: 'Status',
+                  footer: (props) => props.column.id,
+                }),
+                columnHelper.accessor('progress', {
+                  header: 'Profile Progress',
+                  footer: (props) => props.column.id,
+                }),
+              ]),
+            }),
+          ]),
+        }),
+      ]),
     [],
   )
 

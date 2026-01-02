@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
   columnFilteringFeature,
+  createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -17,7 +18,7 @@ import {
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
-import type { Column, ColumnDef, FilterFn, SortFn } from '@tanstack/react-table'
+import type { Column, FilterFn, SortFn } from '@tanstack/react-table'
 
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
@@ -28,6 +29,8 @@ const _features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
 })
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
 
 // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
 const fuzzyFilter: FilterFn<typeof _features, Person> = (
@@ -77,34 +80,31 @@ declare module '@tanstack/react-table' {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        accessorKey: 'id',
-        filterFn: 'equalsString', // note: normal non-fuzzy filter column - exact match required
-      },
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-        filterFn: 'includesStringSensitive', // note: normal non-fuzzy filter column - case sensitive
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        filterFn: 'includesString', // note: normal non-fuzzy filter column - case insensitive
-      },
-      {
-        accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-        id: 'fullName',
-        header: 'Full Name',
-        cell: (info) => info.getValue(),
-        filterFn: 'fuzzy', // using our custom fuzzy filter function
-        // filterFn: fuzzyFilter, //or just define with the function
-        sortFn: fuzzySort, // sort by fuzzy rank (falls back to alphanumeric)
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('id', {
+          filterFn: 'equalsString', // note: normal non-fuzzy filter column - exact match required
+        }),
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          filterFn: 'includesStringSensitive', // note: normal non-fuzzy filter column - case sensitive
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          filterFn: 'includesString', // note: normal non-fuzzy filter column - case insensitive
+        }),
+        columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
+          id: 'fullName',
+          header: 'Full Name',
+          cell: (info) => info.getValue(),
+          filterFn: 'fuzzy', // using our custom fuzzy filter function
+          // filterFn: fuzzyFilter, //or just define with the function
+          sortFn: fuzzySort, // sort by fuzzy rank (falls back to alphanumeric)
+        }),
+      ]),
     [],
   )
 
@@ -277,16 +277,9 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
-          <pre>
-            {JSON.stringify(
-              {
-                columnFilters: state.columnFilters,
-                globalFilter: state.globalFilter,
-              },
-              null,
-              2,
-            )}
-          </pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>

@@ -144,7 +144,10 @@ export function row_getLeftVisibleCells<
   const cells = left
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
-    .map((d) => ({ ...d, position: 'left' }))
+  // Assign position property directly to preserve prototype chain
+  cells.forEach((cell) => {
+    cell.position = 'left'
+  })
   return cells as any
 }
 
@@ -162,7 +165,10 @@ export function row_getRightVisibleCells<
   const cells = right
     .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
     .filter(Boolean)
-    .map((d) => ({ ...d, position: 'right' }))
+  // Assign position property directly to preserve prototype chain
+  cells.forEach((cell) => {
+    cell.position = 'right'
+  })
   return cells as any
 }
 

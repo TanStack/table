@@ -11,11 +11,11 @@ export function column_getFacetedMinMaxValues<
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
-): () => [number, number] | undefined {
-  return (
+): [number, number] | undefined {
+  const facetedMinMaxValuesFn =
     table.options._rowModels?.facetedMinMaxValues?.(table, column.id) ??
     (() => undefined)
-  )
+  return facetedMinMaxValuesFn()
 }
 
 export function column_getFacetedRowModel<
@@ -25,11 +25,11 @@ export function column_getFacetedRowModel<
 >(
   column: Column_Internal<TFeatures, TData, TValue> | undefined,
   table: Table_Internal<TFeatures, TData>,
-): () => RowModel<TFeatures, TData> {
-  return (
+): RowModel<TFeatures, TData> {
+  const facetedRowModelFn =
     table.options._rowModels?.facetedRowModel?.(table, column?.id ?? '') ??
     (() => table.getPreFilteredRowModel())
-  )
+  return facetedRowModelFn()
 }
 
 export function column_getFacetedUniqueValues<
@@ -49,29 +49,29 @@ export function column_getFacetedUniqueValues<
 export function table_getGlobalFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): () => undefined | [number, number] {
-  return (
+>(table: Table_Internal<TFeatures, TData>): undefined | [number, number] {
+  const facetedMinMaxValuesFn =
     table.options._rowModels?.facetedMinMaxValues?.(table, '__global__') ??
     (() => undefined)
-  )
+  return facetedMinMaxValuesFn()
 }
 
 export function table_getGlobalFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): () => RowModel<TFeatures, TData> {
-  return (
+>(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+  const facetedRowModelFn =
     table.options._rowModels?.facetedRowModel?.(table, '__global__') ??
     (() => table.getPreFilteredRowModel())
-  )
+  return facetedRowModelFn()
 }
 
 export function table_getGlobalFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): () => Map<any, number> {
-  return (
+>(table: Table_Internal<TFeatures, TData>): Map<any, number> {
+  const facetedUniqueValuesFn =
     table.options._rowModels?.facetedUniqueValues?.(table, '__global__') ??
     (() => new Map())
-  )
+  return facetedUniqueValuesFn()
 }

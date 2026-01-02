@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
 import { useStore } from '@tanstack/react-store'
 import { FlexRender } from './FlexRender'
+import { Subscribe } from './Subscribe'
 import type {
   CellData,
   NoInfer,
@@ -13,6 +14,7 @@ import type {
 } from '@tanstack/table-core'
 import type { FunctionComponent, ReactNode } from 'react'
 import type { FlexRenderProps } from './FlexRender'
+import type { SubscribeProps } from './Subscribe'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -88,15 +90,10 @@ export function useTable<
       TSelected
     >
 
-    tableInstance.Subscribe = function Subscribe<TSelected>(props: {
-      selector: (state: TableState<TFeatures>) => TSelected
-      children: ((state: TSelected) => ReactNode) | ReactNode
-    }) {
-      const selected = useStore(tableInstance.store, props.selector)
-
-      return typeof props.children === 'function'
-        ? props.children(selected)
-        : props.children
+    tableInstance.Subscribe = function SubscribeBound<TSelected>(
+      props: Omit<SubscribeProps<TFeatures, TData, TSelected>, 'table'>,
+    ) {
+      return Subscribe({ ...props, table: tableInstance })
     }
 
     tableInstance.FlexRender = FlexRender

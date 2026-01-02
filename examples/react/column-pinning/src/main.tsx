@@ -6,70 +6,73 @@ import {
   columnOrderingFeature,
   columnPinningFeature,
   columnVisibilityFeature,
-  tableFeatures,
-  useTable,
+  createTableHelper,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
-  columnVisibilityFeature,
-  columnPinningFeature,
-  columnOrderingFeature,
+// Create table helper with features
+const tableHelper = createTableHelper({
+  _features: {
+    columnVisibilityFeature,
+    columnPinningFeature,
+    columnOrderingFeature,
+  },
+  _rowModels: {},
+  debugTable: true,
+  debugHeaders: true,
+  debugColumns: true,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
-  {
+// Create column helper
+const columnHelper = tableHelper.createColumnHelper<Person>()
+
+// Define columns using columnHelper
+const defaultColumns = columnHelper.columns([
+  columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'firstName',
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
-      },
-    ],
-  },
-  {
+      }),
+    ]),
+  }),
+  columnHelper.group({
     header: 'Info',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
         header: () => 'Age',
         footer: (props) => props.column.id,
-      },
-      {
+      }),
+      columnHelper.group({
         header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
             header: () => <span>Visits</span>,
             footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'status',
+          }),
+          columnHelper.accessor('status', {
             header: 'Status',
             footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
+          }),
+          columnHelper.accessor('progress', {
             header: 'Profile Progress',
             footer: (props) => props.column.id,
-          },
-        ],
-      },
-    ],
-  },
-]
+          }),
+        ]),
+      }),
+    ]),
+  }),
+])
 
 function App() {
   const [data, setData] = React.useState(() => makeData(5000))
@@ -77,14 +80,9 @@ function App() {
 
   const rerender = () => setData(() => makeData(5000))
 
-  const table = useTable({
-    _features,
-    _rowModels: {},
+  const table = tableHelper.useTable({
     columns,
     data,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
   })
 
   const randomizeColumns = () => {
@@ -101,7 +99,7 @@ function App() {
         columnPinning: state.columnPinning,
       })}
     >
-      {(state) => (
+      {(_state) => (
         <div className="p-2">
           <div className="inline-block border border-black shadow rounded">
             <div className="px-1 border-b border-black">
@@ -214,7 +212,9 @@ function App() {
               </tbody>
             </table>
           </div>
-          <pre>{JSON.stringify(state, null, 2)}</pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>

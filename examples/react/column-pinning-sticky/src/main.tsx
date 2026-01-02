@@ -104,16 +104,19 @@ function App() {
 
   const rerender = () => setData(() => makeData(30))
 
-  const table = useTable({
-    _features,
-    _rowModels: {},
-    columns,
-    data,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-    columnResizeMode: 'onChange',
-  })
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {},
+      columns,
+      data,
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
+      columnResizeMode: 'onChange',
+    },
+    (state) => state,
+  )
 
   const randomizeColumns = () => {
     table.setColumnOrder(
@@ -127,6 +130,8 @@ function App() {
         columnVisibility: state.columnVisibility,
         columnOrder: state.columnOrder,
         columnPinning: state.columnPinning,
+        columnSizing: state.columnSizing,
+        columnResizing: state.columnResizing,
       })}
     >
       {(_topLevelState) => (

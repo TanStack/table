@@ -6,14 +6,16 @@ import {
   keepPreviousData,
   useQuery,
 } from '@tanstack/react-query'
+import { Store, useStore } from '@tanstack/react-store'
 import './index.css'
 import {
+  createColumnHelper,
+  getInitialTableState,
   rowPaginationFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { fetchData } from './fetchData'
-import type { ColumnDef, PaginationState } from '@tanstack/react-table'
 import type { Person } from './fetchData'
 
 const queryClient = new QueryClient()
@@ -22,72 +24,46 @@ const _features = tableFeatures({
   rowPaginationFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('lastName', {
+    header: 'Last Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('age', {
+    header: 'Age',
+  }),
+  columnHelper.accessor('visits', {
+    header: 'Visits',
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+  }),
+])
+
+const myTableStore = new Store(
+  getInitialTableState(_features, {
+    pagination: { pageIndex: 0, pageSize: 10 },
+  }),
+)
+
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        header: 'Name',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'firstName',
-            cell: (info) => info.getValue(),
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorFn: (row) => row.lastName,
-            id: 'lastName',
-            cell: (info) => info.getValue(),
-            header: () => <span>Last Name</span>,
-            footer: (props) => props.column.id,
-          },
-        ],
-      },
-      {
-        header: 'Info',
-        footer: (props) => props.column.id,
-        columns: [
-          {
-            accessorKey: 'age',
-            header: () => 'Age',
-            footer: (props) => props.column.id,
-          },
-          {
-            header: 'More Info',
-            columns: [
-              {
-                accessorKey: 'visits',
-                header: () => <span>Visits</span>,
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'status',
-                header: 'Status',
-                footer: (props) => props.column.id,
-              },
-              {
-                accessorKey: 'progress',
-                header: 'Profile Progress',
-                footer: (props) => props.column.id,
-              },
-            ],
-          },
-        ],
-      },
-    ],
-    [],
-  )
-
-  const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
+  // Subscribe to store state for reactive updates
+  const state = useStore(myTableStore, (state) => state)
 
   const dataQuery = useQuery({
-    queryKey: ['data', pagination],
-    queryFn: () => fetchData(pagination),
+    queryKey: ['data', state.pagination],
+    queryFn: () => fetchData(state.pagination),
     placeholderData: keepPreviousData, // don't have 0 rows flash while changing pages/loading next page
   })
 
@@ -98,14 +74,9 @@ function App() {
     _rowModels: {},
     columns,
     data: dataQuery.data?.rows ?? defaultData,
-    rowCount: dataQuery.data?.rowCount, // alternatively, just pass in `pageCount` directly
-    // pageCount: dataQuery.data?.pageCount, //recommended to use `rowCount` instead like just above
-    state: {
-      pagination,
-    },
-    onPaginationChange: setPagination,
+    rowCount: dataQuery.data?.rowCount,
+    store: myTableStore,
     manualPagination: true, // we're doing manual "server-side" pagination
-    // getPaginatedRowModel: createPaginatedRowModel(), // If only doing manual pagination, you don't need this
     debugTable: true,
   })
 
@@ -116,34 +87,26 @@ function App() {
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <div>
-                        <table.FlexRender header={header} />
-                      </div>
-                    )}
-                  </th>
-                )
-              })}
+              {headerGroup.headers.map((header) => (
+                <th key={header.id} colSpan={header.colSpan}>
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender header={header} />
+                  )}
+                </th>
+              ))}
             </tr>
           ))}
         </thead>
         <tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr key={row.id}>
-                {row.getAllCells().map((cell) => {
-                  return (
-                    <td key={cell.id}>
-                      <table.FlexRender cell={cell} />
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-          })}
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getAllCells().map((cell) => (
+                <td key={cell.id}>
+                  <table.FlexRender cell={cell} />
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
       <div className="h-2" />
@@ -179,7 +142,7 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
+            {state.pagination.pageIndex + 1} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -189,7 +152,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.store.state.pagination.pageIndex + 1}
+            defaultValue={state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -198,7 +161,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
@@ -218,7 +181,7 @@ function App() {
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
-      <pre>{JSON.stringify(pagination, null, 2)}</pre>
+      <pre>{JSON.stringify(state, null, 2)}</pre>
     </div>
   )
 }

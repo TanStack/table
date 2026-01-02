@@ -1,4 +1,8 @@
-import { assignPrototypeAPIs, assignTableAPIs } from '../../utils'
+import {
+  assignPrototypeAPIs,
+  assignTableAPIs,
+  callMemoOrStaticFn,
+} from '../../utils'
 import {
   column_getFacetedMinMaxValues,
   column_getFacetedRowModel,
@@ -9,6 +13,7 @@ import {
 } from './columnFacetingFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Column_Internal } from '../../types/Column'
 // import type {
 //   CachedRowModel_Faceted,
 //   Column_ColumnFaceting,
@@ -31,13 +36,35 @@ export function constructColumnFacetingFeature<
   return {
     assignColumnPrototype: (prototype, table) => {
       assignPrototypeAPIs('columnFacetingFeature', prototype, table, {
-        column_getFacetedMinMaxValues: {
-          fn: (column) => column_getFacetedMinMaxValues(column, column.table),
-        },
         column_getFacetedRowModel: {
+          memoDeps: () => [
+            table.getPreFilteredRowModel().rows,
+            table.store.state.columnFilters,
+            table.store.state.globalFilter,
+            table.getFilteredRowModel().rows,
+          ],
           fn: (column) => column_getFacetedRowModel(column, column.table),
         },
+        column_getFacetedMinMaxValues: {
+          memoDeps: (column: Column_Internal<TFeatures, TData>) => [
+            callMemoOrStaticFn(
+              column,
+              'getFacetedRowModel',
+              column_getFacetedRowModel,
+              column.table,
+            ).flatRows,
+          ],
+          fn: (column) => column_getFacetedMinMaxValues(column, column.table),
+        },
         column_getFacetedUniqueValues: {
+          memoDeps: (column: Column_Internal<TFeatures, TData>) => [
+            callMemoOrStaticFn(
+              column,
+              'getFacetedRowModel',
+              column_getFacetedRowModel,
+              column.table,
+            ).flatRows,
+          ],
           fn: (column) => column_getFacetedUniqueValues(column, column.table),
         },
       })
@@ -45,13 +72,33 @@ export function constructColumnFacetingFeature<
 
     constructTableAPIs: (table) => {
       assignTableAPIs('columnFacetingFeature', table, {
-        table_getGlobalFacetedMinMaxValues: {
-          fn: () => table_getGlobalFacetedMinMaxValues(table),
-        },
         table_getGlobalFacetedRowModel: {
+          memoDeps: () => [
+            table.getPreFilteredRowModel().rows,
+            table.store.state.columnFilters,
+            table.store.state.globalFilter,
+            table.getFilteredRowModel().rows,
+          ],
           fn: () => table_getGlobalFacetedRowModel(table),
         },
+        table_getGlobalFacetedMinMaxValues: {
+          memoDeps: () => [
+            callMemoOrStaticFn(
+              table,
+              'getGlobalFacetedRowModel',
+              table_getGlobalFacetedRowModel,
+            ).flatRows,
+          ],
+          fn: () => table_getGlobalFacetedMinMaxValues(table),
+        },
         table_getGlobalFacetedUniqueValues: {
+          memoDeps: () => [
+            callMemoOrStaticFn(
+              table,
+              'getGlobalFacetedRowModel',
+              table_getGlobalFacetedRowModel,
+            ).flatRows,
+          ],
           fn: () => table_getGlobalFacetedUniqueValues(table),
         },
       })

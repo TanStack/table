@@ -1,14 +1,19 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
+import { Store, useStore } from '@tanstack/react-store'
 import {
+  createColumnHelper,
   createPaginatedRowModel,
+  createSortedRowModel,
+  getInitialTableState,
   rowPaginationFeature,
+  rowSortingFeature,
+  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef } from '@tanstack/react-table'
 
 type Person = {
   firstName: string
@@ -21,94 +26,67 @@ type Person = {
 
 const _features = tableFeatures({
   rowPaginationFeature,
+  rowSortingFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
-  {
-    header: 'Name',
-    footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: (props) => props.column.id,
-      },
-    ],
-  },
-  {
-    header: 'Info',
-    footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-      },
-      {
-        header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
-            header: () => <span>Visits</span>,
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'status',
-            header: 'Status',
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
-            header: 'Profile Progress',
-            footer: (props) => props.column.id,
-          },
-        ],
-      },
-    ],
-  },
-]
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('lastName', {
+    header: 'Last Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('age', {
+    header: 'Age',
+  }),
+  columnHelper.accessor('visits', {
+    header: 'Visits',
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+  }),
+])
+
+const myTableStore = new Store(
+  getInitialTableState(
+    _features, // get default initial state from features
+    // custom initial state
+    {
+      pagination: { pageIndex: 0, pageSize: 10 },
+      sorting: [],
+    },
+  ),
+)
 
 function App() {
   const [data] = React.useState(() => makeData(1000))
-  const [columns] = React.useState<typeof defaultColumns>(() => [
-    ...defaultColumns,
-  ])
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  // Create the table and pass your options
+  // Subscribe to store state for reactive updates, custom selector available too
+  const state = useStore(myTableStore, (state) => state)
+
+  console.log('state', state)
+
+  // Create the table and pass your store
   const table = useTable({
     _features,
     _rowModels: {
+      sortedRowModel: createSortedRowModel(sortFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,
     data,
-  })
-
-  // Manage your own state
-  const [state, setState] = React.useState(table.initialState)
-
-  // Override the state managers for the table to your own
-  table.setOptions((prev) => ({
-    ...prev,
-    state,
-    onStateChange: setState,
-    // These are just table options, so if things
-    // need to change based on your state, you can
-    // derive them here
-
-    // Just for fun, let's debug everything if the pageIndex
-    // is greater than 2
+    store: myTableStore,
     debugTable: state.pagination.pageIndex > 2,
-  }))
+  })
 
   return (
     <div className="p-2">
@@ -119,7 +97,20 @@ function App() {
               {headerGroup.headers.map((header) => (
                 <th key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : (
-                    <table.FlexRender header={header} />
+                    <div
+                      className={
+                        header.column.getCanSort()
+                          ? 'cursor-pointer select-none'
+                          : ''
+                      }
+                      onClick={header.column.getToggleSortingHandler()}
+                    >
+                      <table.FlexRender header={header} />
+                      {{
+                        asc: ' 🔼',
+                        desc: ' 🔽',
+                      }[header.column.getIsSorted() as string] ?? null}
+                    </div>
                   )}
                 </th>
               ))}
@@ -129,7 +120,7 @@ function App() {
         <tbody>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
+              {row.getAllCells().map((cell) => (
                 <td key={cell.id}>
                   <table.FlexRender cell={cell} />
                 </td>
@@ -137,19 +128,6 @@ function App() {
             </tr>
           ))}
         </tbody>
-        <tfoot>
-          {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : (
-                    <table.FlexRender footer={header} />
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </tfoot>
       </table>
       <div className="h-2" />
       <div className="flex items-center gap-2">
@@ -184,8 +162,7 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {state.pagination.pageIndex + 1} of {table.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
@@ -194,7 +171,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.store.state.pagination.pageIndex + 1}
+            defaultValue={state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -203,7 +180,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
@@ -219,6 +196,7 @@ function App() {
       <button onClick={() => rerender()} className="border p-2">
         Rerender
       </button>
+      <pre>{JSON.stringify(state, null, 2)}</pre>
     </div>
   )
 }

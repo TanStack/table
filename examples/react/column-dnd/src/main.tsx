@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
+  FlexRender,
   columnOrderingFeature,
   columnSizingFeature,
+  createColumnHelper,
   createTableHelper,
 } from '@tanstack/react-table'
 import {
@@ -26,17 +28,18 @@ import { makeData } from './makeData'
 import type { DragEndEvent } from '@dnd-kit/core'
 import type { CSSProperties } from 'react'
 import type { Person } from './makeData'
-import type { Cell, ColumnDef, Header } from '@tanstack/react-table'
+import type { Cell, Header } from '@tanstack/react-table'
 import './index.css'
 
 const tableHelper = createTableHelper({
   _features: { columnOrderingFeature, columnSizingFeature },
   _rowModels: {},
-  TData: {} as Person,
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,
 })
+
+const columnHelper = createColumnHelper<typeof tableHelper.features, Person>()
 
 const DraggableTableHeader = ({
   header,
@@ -60,7 +63,7 @@ const DraggableTableHeader = ({
 
   return (
     <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-      {header.isPlaceholder ? null : <table.FlexRender header={header} />}
+      {header.isPlaceholder ? null : <FlexRender header={header} />}
       <button {...attributes} {...listeners}>
         🟰
       </button>
@@ -88,54 +91,47 @@ const DragAlongCell = ({
 
   return (
     <td style={style} ref={setNodeRef}>
-      <table.FlexRender cell={cell} />
+      <FlexRender cell={cell} />
     </td>
   )
 }
 
 function App() {
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof tableHelper.features, Person>>
-  >(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-        id: 'firstName',
-        size: 150,
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        id: 'lastName',
-        size: 150,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        id: 'age',
-        size: 120,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        id: 'visits',
-        size: 120,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        id: 'status',
-        size: 150,
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        id: 'progress',
-        size: 180,
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          id: 'firstName',
+          size: 150,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          id: 'lastName',
+          size: 150,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          id: 'age',
+          size: 120,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          id: 'visits',
+          size: 120,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          id: 'status',
+          size: 150,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          id: 'progress',
+          size: 180,
+        }),
+      ]),
     [],
   )
 
@@ -219,7 +215,9 @@ function App() {
             ))}
           </tbody>
         </table>
-        <pre>{JSON.stringify(table.store.state.columnOrder, null, 2)}</pre>
+        <table.Subscribe selector={(state) => state}>
+          {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+        </table.Subscribe>
       </div>
     </DndContext>
   )

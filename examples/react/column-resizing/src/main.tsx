@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom/client'
 import {
   columnResizingFeature,
   columnSizingFeature,
+  createColumnHelper,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import type {
-  ColumnDef,
   ColumnResizeDirection,
   ColumnResizeMode,
 } from '@tanstack/react-table'
@@ -51,57 +51,53 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
-  {
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const defaultColumns = columnHelper.columns([
+  columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'firstName',
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
-      },
-    ],
-  },
-  {
+      }),
+    ]),
+  }),
+  columnHelper.group({
     header: 'Info',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
         header: () => 'Age',
         footer: (props) => props.column.id,
-      },
-      {
+      }),
+      columnHelper.group({
         header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
             header: () => <span>Visits</span>,
             footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'status',
+          }),
+          columnHelper.accessor('status', {
             header: 'Status',
             footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
+          }),
+          columnHelper.accessor('progress', {
             header: 'Profile Progress',
             footer: (props) => props.column.id,
-          },
-        ],
-      },
-    ],
-  },
-]
+          }),
+        ]),
+      }),
+    ]),
+  }),
+])
 
 function App() {
   const [data] = React.useState(() => [...defaultData])
@@ -366,16 +362,9 @@ function App() {
       <button onClick={() => rerender()} className="border p-2">
         Rerender
       </button>
-      <pre>
-        {JSON.stringify(
-          {
-            columnSizing: table.store.state.columnSizing,
-            columnResizing: table.store.state.columnResizing,
-          },
-          null,
-          2,
-        )}
-      </pre>
+      <table.Subscribe selector={(state) => state}>
+        {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+      </table.Subscribe>
     </div>
   )
 }
