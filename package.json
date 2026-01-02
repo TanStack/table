@@ -34,6 +34,7 @@
     "test:pr": "nx affected --targets=test:format,test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build",
     "test:sherif": "sherif",
     "test:types": "nx affected --targets=test:types --exclude=examples/**",
+    "test:types:custom": "pnpm -r --filter './examples/react/*' exec tsc --noEmit",
     "watch": "pnpm run build:all && nx watch --all -- pnpm run build:all"
   },
   "nx": {
