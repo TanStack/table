@@ -16,7 +16,7 @@ import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import ColumnFilter from './ColumnFilter'
 import type { Person } from './makeData'
-import type { ColumnDef, ColumnFiltersState } from '@tanstack/solid-table'
+import type { ColumnDef } from '@tanstack/solid-table'
 
 export const _features = tableFeatures({
   columnFilteringFeature,

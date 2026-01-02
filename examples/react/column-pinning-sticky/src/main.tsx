@@ -6,7 +6,6 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
-  flexRender,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -198,12 +197,11 @@ function App() {
                               style={{ ...getCommonPinningStyles(column) }}
                             >
                               <div className="whitespace-nowrap">
-                                {header.isPlaceholder
-                                  ? null
-                                  : flexRender(
-                                      header.column.columnDef.header,
-                                      header.getContext(),
-                                    )}{' '}
+                                {header.isPlaceholder ? null : (
+                                  <>
+                                    <table.FlexRender header={header} />{' '}
+                                  </>
+                                )}
                                 {/* Demo getIndex behavior */}
                                 {column.getIndex(
                                   column.getIsPinned() || 'center',
@@ -283,10 +281,7 @@ function App() {
                               // IMPORTANT: This is where the magic happens!
                               style={{ ...getCommonPinningStyles(column) }}
                             >
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext(),
-                              )}
+                              <table.FlexRender cell={cell} />
                             </td>
                           )}
                         </table.Subscribe>

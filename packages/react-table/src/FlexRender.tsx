@@ -1,4 +1,11 @@
 import React from 'react'
+import type {
+  Cell,
+  CellData,
+  Header,
+  RowData,
+  TableFeatures,
+} from '@tanstack/table-core'
 import type { ComponentType, JSX, ReactNode } from 'react'
 
 export type Renderable<TProps> = ReactNode | ComponentType<TProps>
@@ -47,15 +54,65 @@ export function flexRender<TProps extends object>(
 }
 
 /**
- * Component version of `flexRender`. Use this utility component to render headers, cells, or footers with custom markup.
- * @example <FlexRender Component={cell.column.columnDef.cell} props={cell.getContext()} />
+ * Simplified component wrapper of `flexRender`. Use this utility component to render headers, cells, or footers with custom markup.
+ * Only one prop (`cell`, `header`, or `footer`) may be passed.
+ * @example <FlexRender cell={cell} />
+ * @example <FlexRender header={header} />
+ * @example <FlexRender footer={footer} />
  */
-export function FlexRender<TProps extends object>({
-  Component,
-  props,
-}: {
-  Component: Renderable<TProps>
-  props: TProps
-}) {
-  return flexRender(Component, props)
+export type FlexRenderProps<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> =
+  | { cell: Cell<TFeatures, TData, TValue>; header?: never; footer?: never }
+  | {
+      header: Header<TFeatures, TData, TValue>
+      cell?: never
+      footer?: never
+    }
+  | {
+      footer: Header<TFeatures, TData, TValue>
+      cell?: never
+      header?: never
+    }
+
+/**
+ * Simplified component wrapper of `flexRender`. Use this utility component to render headers, cells, or footers with custom markup.
+ * Only one prop (`cell`, `header`, or `footer`) may be passed.
+ * @example
+ * ```tsx
+ * <FlexRender cell={cell} />
+ * <FlexRender header={header} />
+ * <FlexRender footer={footer} />
+ * ```
+ *
+ * This replaces calling `flexRender` directly like this:
+ * ```tsx
+ * flexRender(cell.column.columnDef.cell, cell.getContext())
+ * flexRender(header.column.columnDef.header, header.getContext())
+ * flexRender(footer.column.columnDef.footer, footer.getContext())
+ * ```
+ */
+export function FlexRender<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(props: FlexRenderProps<TFeatures, TData, TValue>) {
+  if ('cell' in props && props.cell) {
+    return flexRender(props.cell.column.columnDef.cell, props.cell.getContext())
+  }
+  if ('header' in props && props.header) {
+    return flexRender(
+      props.header.column.columnDef.header,
+      props.header.getContext(),
+    )
+  }
+  if ('footer' in props && props.footer) {
+    return flexRender(
+      props.footer.column.columnDef.footer,
+      props.footer.getContext(),
+    )
+  }
+  return null
 }

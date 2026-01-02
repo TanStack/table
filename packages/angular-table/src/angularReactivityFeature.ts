@@ -170,7 +170,7 @@ function setReactivePropsOnPrototype(
       Object.defineProperty(prototype, property, {
         enumerable: descriptor.enumerable,
         configurable: descriptor.configurable,
-        value: function (this: any, ...args: any[]) {
+        value: function (this: any, ...args: Array<any>) {
           // Get the table from the instance
           const table = this.table
           if (table && table._rootNotifier) {
@@ -181,7 +181,7 @@ function setReactivePropsOnPrototype(
             )
             if (
               instanceDescriptor &&
-              (instanceDescriptor.value as any)?.__angularWrapped
+              instanceDescriptor.value?.__angularWrapped
             ) {
               return instanceDescriptor.value.apply(this, args)
             }
@@ -190,10 +190,10 @@ function setReactivePropsOnPrototype(
             const boundMethod = originalMethod.bind(this)
             const wrapped = toComputed(
               table._rootNotifier,
-              boundMethod as any,
+              boundMethod,
               property,
             ) as any
-            ;(wrapped as any).__angularWrapped = true
+            wrapped.__angularWrapped = true
             // Cache the wrapped version on the instance
             Object.defineProperty(this, property, {
               enumerable: true,

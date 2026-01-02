@@ -1,4 +1,6 @@
 import { constructTable } from '@tanstack/table-core'
+import { useStore } from '@tanstack/solid-store'
+import { createComputed, createSignal } from 'solid-js'
 import type {
   NoInfer,
   RowData,
@@ -7,8 +9,6 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import { useStore } from '@tanstack/solid-store'
-import { createComputed, createSignal, mergeProps } from 'solid-js'
 import type { Accessor, JSX } from 'solid-js'
 
 export type SolidTable<
@@ -82,7 +82,7 @@ export function createTable<
     const value = (table as any)[key]
     if (typeof value === 'function' && key.startsWith('get')) {
       const originalMethod = value.bind(table)
-      ;(table as any)[key] = (...args: any[]) => {
+      ;(table as any)[key] = (...args: Array<any>) => {
         renderVersion()
         return originalMethod(...args)
       }

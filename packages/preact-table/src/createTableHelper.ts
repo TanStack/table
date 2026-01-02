@@ -1,5 +1,6 @@
 import { constructTableHelper } from '@tanstack/table-core'
-import { PreactTable, useTable } from './useTable'
+import { useTable } from './useTable'
+import type { PreactTable } from './useTable'
 import type {
   RowData,
   TableFeatures,

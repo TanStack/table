@@ -159,41 +159,21 @@ describe('FlexRenderDirective', () => {
   test('Cell content always get the latest context value', async () => {
     const contextCaptor = vi.fn()
 
-    const tableState = signal<Partial<TableState<typeof stockFeatures>>>({
-      rowSelection: {},
-      expanded: {},
-      pagination: {
-        pageIndex: 0,
-        pageSize: 10,
-      },
-    })
-
     @Component({
       template: ``,
     })
     class EmptyCell {}
 
-    const { dom, fixture } = createTestTable(
-      defaultData,
-      [
-        {
-          id: 'cell',
-          header: 'Header',
-          cell: (context) => {
-            contextCaptor(context)
-            return flexRenderComponent(EmptyCell)
-          },
+    const { dom, fixture } = createTestTable(defaultData, [
+      {
+        id: 'cell',
+        header: 'Header',
+        cell: (context) => {
+          contextCaptor(context)
+          return flexRenderComponent(EmptyCell)
         },
-      ],
-      () => ({
-        state: tableState(),
-        onStateChange: (updater) => {
-          return typeof updater === 'function'
-            ? tableState.update(updater as any)
-            : tableState.set(updater)
-        },
-      }),
-    )
+      },
+    ])
 
     const latestCall = () =>
       contextCaptor.mock.lastCall![0] as CellContext<
@@ -209,13 +189,14 @@ describe('FlexRenderDirective', () => {
     expect(latestCall().row.getIsExpanded()).toEqual(false)
     expect(latestCall().row.getIsSelected()).toEqual(false)
 
-    fixture.componentInstance.table.getRow('0').toggleSelected(true)
+    const table = fixture.componentInstance.table
+    table.getRow('0').toggleSelected(true)
     dom.clickTriggerCdButton2()
     expect(contextCaptor).toHaveBeenCalledTimes(3)
     expect(latestCall().row.getIsSelected()).toEqual(true)
 
-    fixture.componentInstance.table.getRow('0').toggleSelected(false)
-    fixture.componentInstance.table.getRow('0').toggleExpanded(true)
+    table.getRow('0').toggleSelected(false)
+    table.getRow('0').toggleExpanded(true)
     dom.clickTriggerCdButton2()
     expect(contextCaptor).toHaveBeenCalledTimes(4)
     expect(latestCall().row.getIsSelected()).toEqual(false)
@@ -227,14 +208,14 @@ describe('FlexRenderDirective', () => {
       {
         id: 'expand',
         header: 'Expand',
-        cell: ({ row }) => {
+        cell: ({ row }: any) => {
           return flexRenderComponent(ExpandCell, {
             inputs: { expanded: row.getIsExpanded() },
             outputs: { toggleExpand: () => row.toggleExpanded() },
           })
         },
       },
-    ] satisfies Array<ColumnDef<TestData>>
+    ] satisfies Array<ColumnDef<typeof stockFeatures, TestData>>
 
     @Component({
       selector: 'expand-cell',
@@ -297,7 +278,7 @@ describe('FlexRenderDirective', () => {
               ? this.expandState.update(updaterOrValue)
               : this.expandState.set(updaterOrValue)
           },
-        }
+        } as TableOptions<typeof stockFeatures, TestData>
       })
     }
 
@@ -412,10 +393,12 @@ export function createTestTable(
       return {
         ...(optionsFn?.() ?? {}),
         _features: stockFeatures,
-        _rowModels: {},
+        _rowModels: {
+          coreRowModel: createCoreRowModel(),
+        },
         columns: this.columns(),
         data: this.data(),
-      }
+      } as TableOptions<typeof stockFeatures, TestData>
     })
   }
 

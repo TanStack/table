@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import {
   columnResizingFeature,
   columnSizingFeature,
-  flexRender,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -160,12 +159,9 @@ function App() {
                       width: `calc(var(--header-${header.id}-size) * 1px)`,
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                     <div
                       onDoubleClick={() => header.column.resetSize()}
                       onMouseDown={header.getResizeHandler()}

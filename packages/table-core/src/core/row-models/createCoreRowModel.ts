@@ -1,7 +1,7 @@
 import { constructRow } from '../rows/constructRow'
 import { tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/rowPaginationFeature.utils'
-import type { Table_Internal } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { RowModel } from './coreRowModelsFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
@@ -10,18 +10,18 @@ import type { RowData } from '../../types/type-utils'
 export function createCoreRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): (
-  table: Table_Internal<TFeatures, TData>,
-) => () => RowModel<TFeatures, TData> {
-  return (table: Table_Internal<TFeatures, TData>) =>
-    tableMemo({
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+  return (_table) => {
+    const table = _table as Table_Internal<TFeatures, TData>
+    return tableMemo({
       feature: 'coreRowModelsFeature',
-      fn: (data) => _createCoreRowModel(table, data),
+      table,
       fnName: 'table.getCoreRowModel',
       memoDeps: () => [table.options.data],
+      fn: () => _createCoreRowModel(table, table.options.data),
       onAfterUpdate: () => table_autoResetPageIndex(table),
-      table,
     })
+  }
 }
 
 function _createCoreRowModel<

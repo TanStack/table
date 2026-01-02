@@ -12,7 +12,6 @@ import {
   createSortedRowModel,
   createTableHelper,
   filterFns,
-  flexRender,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
@@ -134,10 +133,7 @@ function App() {
                                   : `👊 `}
                               </button>
                             ) : null}{' '}
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            <table.FlexRender header={header} />
                           </div>
                         )}
                       </th>
@@ -176,27 +172,17 @@ function App() {
                                 }}
                               >
                                 {row.getIsExpanded() ? '👇' : '👉'}{' '}
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext(),
-                                )}{' '}
-                                ({row.subRows.length})
+                                <table.FlexRender cell={cell} /> (
+                                {row.subRows.length})
                               </button>
                             </>
                           ) : cell.getIsAggregated() ? (
                             // If the cell is aggregated, use the Aggregated
                             // renderer for cell
-                            flexRender(
-                              cell.column.columnDef.aggregatedCell ??
-                                cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )
+                            <table.FlexRender cell={cell} />
                           ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                             // Otherwise, just render the regular cell
-                            flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )
+                            <table.FlexRender cell={cell} />
                           )}
                         </td>
                       )

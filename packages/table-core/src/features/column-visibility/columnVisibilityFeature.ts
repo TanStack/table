@@ -1,6 +1,6 @@
 import {
-  assignTableAPIs,
   assignPrototypeAPIs,
+  assignTableAPIs,
   makeStateUpdater,
 } from '../../utils'
 import {

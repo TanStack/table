@@ -1,7 +1,6 @@
 import {
   ChangeDetectorRef,
   ComponentRef,
-  inject,
   Injectable,
   Injector,
   KeyValueDiffer,
@@ -9,6 +8,7 @@ import {
   OutputEmitterRef,
   OutputRefSubscription,
   ViewContainerRef,
+  inject,
 } from '@angular/core'
 import { FlexRenderComponent } from './flex-render-component'
 
@@ -190,7 +190,7 @@ export class FlexRenderComponentRef<T> {
 
 class FlexRenderComponentOutputManager {
   readonly #outputSubscribers: Record<string, OutputRefSubscription> = {}
-  readonly #outputListeners: Record<string, (...args: any[]) => void> = {}
+  readonly #outputListeners: Record<string, (...args: Array<any>) => void> = {}
 
   readonly #valueDiffer: KeyValueDiffer<
     string,
@@ -208,7 +208,7 @@ class FlexRenderComponentOutputManager {
     return outputName in this.#outputListeners
   }
 
-  setListener(outputName: string, callback: (...args: any[]) => void) {
+  setListener(outputName: string, callback: (...args: Array<any>) => void) {
     this.#outputListeners[outputName] = callback
   }
 

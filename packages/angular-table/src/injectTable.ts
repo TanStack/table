@@ -101,23 +101,36 @@ export function injectTable<
 
     table._setRootNotifier?.(tableSignal as any)
 
-    // Wrap all "get*" methods to make them reactive
+    // Wrap all "get*" methods to make them reactive (only for non-experimental mode)
     const allState = injectStore(
       table.store,
       (state: TableState<TFeatures>) => state,
     )
 
-    Object.keys(table).forEach((key) => {
-      const value = (table as any)[key]
-      if (typeof value === 'function' && key.startsWith('get')) {
-        const originalMethod = value.bind(table)
-        ;(table as any)[key] = (...args: Array<any>) => {
-          // Access state to create reactive dependency
-          allState()
-          return originalMethod(...args)
+    // Only apply manual reactivity wrapper if experimental reactivity is disabled
+    if (!table.options.enableExperimentalReactivity) {
+      Object.keys(table).forEach((key) => {
+        const value = (table as any)[key]
+        if (typeof value === 'function' && key.startsWith('get')) {
+          const originalMethod = value.bind(table)
+          if (originalMethod.length === 0 && !key.endsWith('Handler')) {
+            // Methods with no arguments (except handlers) become computed signals
+            ;(table as any)[key] = computed(() => {
+              // Access state to create reactive dependency
+              allState()
+              return originalMethod()
+            })
+          } else {
+            // Methods with arguments or handlers stay as functions but still track state
+            ;(table as any)[key] = (...args: Array<any>) => {
+              // Access state to create reactive dependency
+              allState()
+              return originalMethod(...args)
+            }
+          }
         }
-      }
-    })
+      })
+    }
 
     // Add Subscribe function
     ;(table as any).Subscribe = function Subscribe<TSubSelected = {}>(props: {

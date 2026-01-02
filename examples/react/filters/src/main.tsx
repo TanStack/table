@@ -7,7 +7,6 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
-  flexRender,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -136,10 +135,7 @@ function App() {
                               }
                               onClick={header.column.getToggleSortingHandler()}
                             >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
+                              <table.FlexRender header={header} />
                               {{
                                 asc: ' 🔼',
                                 desc: ' 🔽',
@@ -165,10 +161,7 @@ function App() {
                     {row.getAllCells().map((cell) => {
                       return (
                         <td key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
+                          <table.FlexRender cell={cell} />
                         </td>
                       )
                     })}

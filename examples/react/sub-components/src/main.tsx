@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
   createExpandedRowModel,
-  flexRender,
   rowExpandingFeature,
   tableFeatures,
   useTable,
@@ -139,10 +138,7 @@ function Table({
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                        <table.FlexRender header={header} />
                       </div>
                     )}
                   </th>
@@ -160,10 +156,7 @@ function Table({
                   {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
+                        <table.FlexRender cell={cell} />
                       </td>
                     )
                   })}

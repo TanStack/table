@@ -7,7 +7,6 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
-  flexRender,
   functionalUpdate,
   makeStateUpdater,
   rowPaginationFeature,
@@ -207,10 +206,7 @@ function App() {
                       }
                       onClick={header.column.getToggleSortingHandler()}
                     >
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                      <table.FlexRender header={header} />
                       {{
                         asc: ' 🔼',
                         desc: ' 🔽',
@@ -246,10 +242,7 @@ function App() {
                         transition: 'padding 0.2s',
                       }}
                     >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <table.FlexRender cell={cell} />
                     </td>
                   )
                 })}
