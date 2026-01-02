@@ -2,34 +2,34 @@ import {
   ChangeDetectorRef,
   Directive,
   DoCheck,
-  effect,
-  type EffectRef,
   Inject,
-  inject,
   Injector,
   Input,
   OnChanges,
-  runInInjectionContext,
   SimpleChanges,
   TemplateRef,
   Type,
   ViewContainerRef,
+  effect,
+  inject,
+  runInInjectionContext,
 } from '@angular/core'
+import { memo } from '@tanstack/table-core'
 import { FlexRenderComponentProps } from './flex-render/context'
 import { FlexRenderFlags } from './flex-render/flags'
 import {
-  flexRenderComponent,
   FlexRenderComponent,
+  flexRenderComponent,
 } from './flex-render/flex-render-component'
 import { FlexRenderComponentFactory } from './flex-render/flex-render-component-ref'
 import {
   FlexRenderComponentView,
   FlexRenderTemplateView,
-  type FlexRenderTypedContent,
   FlexRenderView,
   mapToFlexRenderTypedContent,
 } from './flex-render/view'
-import { memo } from '@tanstack/table-core'
+import type { EffectRef } from '@angular/core'
+import type { FlexRenderTypedContent } from './flex-render/view'
 
 export {
   injectFlexRenderContext,
@@ -51,7 +51,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
   providers: [FlexRenderComponentFactory],
 })
-export class FlexRenderDirective<TProps extends NonNullable<unknown>>
+export class FlexRender<TProps extends NonNullable<unknown>>
   implements OnChanges, DoCheck
 {
   readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
@@ -284,4 +284,4 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   }
 }
 
-export const FlexRender = FlexRenderDirective
+export { FlexRender as FlexRenderDirective }

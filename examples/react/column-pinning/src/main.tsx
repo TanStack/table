@@ -6,7 +6,6 @@ import {
   columnOrderingFeature,
   columnPinningFeature,
   columnVisibilityFeature,
-  flexRender,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -152,12 +151,9 @@ function App() {
                     {headerGroup.headers.map((header) => (
                       <th key={header.id} colSpan={header.colSpan}>
                         <div className="whitespace-nowrap">
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
+                          {header.isPlaceholder ? null : (
+                            <table.FlexRender header={header} />
+                          )}
                         </div>
                         {!header.isPlaceholder && header.column.getCanPin() && (
                           <div className="flex gap-1 justify-center">
@@ -208,10 +204,7 @@ function App() {
                         {row.getVisibleCells().map((cell) => {
                           return (
                             <td key={cell.id}>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext(),
-                              )}
+                              <table.FlexRender cell={cell} />
                             </td>
                           )
                         })}

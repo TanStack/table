@@ -1,3 +1,4 @@
+import type { Store } from '@tanstack/store'
 import type { Table_ColumnFaceting } from '../features/column-faceting/columnFacetingFeature.types'
 import type { Table_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 import type { Table_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -23,7 +24,6 @@ import type { Table_Headers } from '../core/headers/coreHeadersFeature.types'
 import type { Table_Rows } from '../core/rows/coreRowsFeature.types'
 import type { Table_Table } from '../core/table/coreTablesFeature.types'
 import type { TableOptions_All } from './TableOptions'
-import { Store } from '@tanstack/store'
 
 /**
  * Use this interface as a target for declaration merging to add your own plugin properties.

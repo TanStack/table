@@ -1,6 +1,6 @@
 import {
-  assignTableAPIs,
   assignPrototypeAPIs,
+  assignTableAPIs,
   callMemoOrStaticFn,
 } from '../../utils'
 import {
@@ -52,7 +52,7 @@ export function constructCoreHeadersFeature<
           fn: () => table_getHeaderGroups(table),
           memoDeps: () => [
             table.options.columns,
-            table.store.state?.columnOrder,
+            table.store.state.columnOrder,
             table.store.state.grouping,
             table.store.state.columnPinning,
             table.store.state.columnVisibility,

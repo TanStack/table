@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "vite",
+    "test:types": "tsc"
   },
   "dependencies": {
     "@faker-js/faker": "^10.1.0",

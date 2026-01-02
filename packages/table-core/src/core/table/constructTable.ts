@@ -1,5 +1,6 @@
 import { Store } from '@tanstack/store'
 import { isDev } from '../../utils'
+import { coreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { CachedRowModels } from '../../types/RowModel'
 import type { Table_CoreProperties } from './coreTablesFeature.types'
@@ -8,7 +9,6 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
-import { coreFeatures } from '../coreFeatures'
 
 export function getInitialTableState<TFeatures extends TableFeatures>(
   features: TFeatures,

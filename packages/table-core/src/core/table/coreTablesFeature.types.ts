@@ -1,3 +1,4 @@
+import type { Store } from '@tanstack/store'
 import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
@@ -5,7 +6,6 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { CachedRowModels, CreateRowModels_All } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
-import { Store } from '@tanstack/store'
 
 export interface TableMeta<
   TFeatures extends TableFeatures,

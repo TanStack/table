@@ -1,9 +1,9 @@
-import {
+import { reflectComponentType } from '@angular/core'
+import type {
   ComponentMirror,
   Injector,
   InputSignal,
   OutputEmitterRef,
-  reflectComponentType,
   Type,
 } from '@angular/core'
 
@@ -82,7 +82,7 @@ export function flexRenderComponent<
     ? [FlexRenderOptions<TInputs, TOutputs>?]
     : [FlexRenderRequiredOptions<TInputs, TOutputs>]
 ) {
-  const { inputs, injector, outputs } = options?.[0] ?? {}
+  const { inputs, injector, outputs } = options[0] ?? {}
   return new FlexRenderComponent(component, inputs, injector, outputs)
 }
 
@@ -93,8 +93,8 @@ export function flexRenderComponent<
  */
 export class FlexRenderComponent<TComponent = any> {
   readonly mirror: ComponentMirror<TComponent>
-  readonly allowedInputNames: string[] = []
-  readonly allowedOutputNames: string[] = []
+  readonly allowedInputNames: Array<string> = []
+  readonly allowedOutputNames: Array<string> = []
 
   constructor(
     readonly component: Type<TComponent>,

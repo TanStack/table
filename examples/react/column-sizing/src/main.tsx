@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   columnSizingFeature,
-  flexRender,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -153,12 +152,9 @@ function App() {
                       width: header.getSize(),
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                     <div />
                   </th>
                 ))}
@@ -175,7 +171,7 @@ function App() {
                       width: cell.column.getSize(),
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <table.FlexRender cell={cell} />
                   </td>
                 ))}
               </tr>
@@ -203,12 +199,9 @@ function App() {
                       width: header.getSize(),
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                     <div />
                   </div>
                 ))}
@@ -226,7 +219,7 @@ function App() {
                       width: cell.column.getSize(),
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <table.FlexRender cell={cell} />
                   </div>
                 ))}
               </div>
@@ -262,12 +255,9 @@ function App() {
                       width: header.getSize(),
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                     <div />
                   </div>
                 ))}
@@ -293,7 +283,7 @@ function App() {
                       width: cell.column.getSize(),
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <table.FlexRender cell={cell} />
                   </div>
                 ))}
               </div>

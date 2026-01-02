@@ -1,6 +1,6 @@
 import {
-  assignTableAPIs,
   assignPrototypeAPIs,
+  assignTableAPIs,
   callMemoOrStaticFn,
   makeStateUpdater,
 } from '../../utils'

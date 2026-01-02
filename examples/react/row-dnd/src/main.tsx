@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { flexRender, useTable } from '@tanstack/react-table'
+import { useTable } from '@tanstack/react-table'
 
 // needed for table body level scope DnD setup
 import {
@@ -60,7 +60,7 @@ const DraggableRow = ({ row }: { row: Row<any, Person> }) => {
     <tr ref={setNodeRef} style={style}>
       {row.getVisibleCells().map((cell) => (
         <td key={cell.id} style={{ width: cell.column.getSize() }}>
-          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          <table.FlexRender cell={cell} />
         </td>
       ))}
     </tr>
@@ -167,12 +167,9 @@ function App() {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                   </th>
                 ))}
               </tr>

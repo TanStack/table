@@ -8,7 +8,6 @@ import {
 } from '@tanstack/react-query'
 import './index.css'
 import {
-  flexRender,
   rowPaginationFeature,
   tableFeatures,
   useTable,
@@ -122,10 +121,7 @@ function App() {
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <div>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                        <table.FlexRender header={header} />
                       </div>
                     )}
                   </th>
@@ -141,10 +137,7 @@ function App() {
                 {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <table.FlexRender cell={cell} />
                     </td>
                   )
                 })}

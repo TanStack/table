@@ -4,7 +4,6 @@ import {
   columnOrderingFeature,
   columnSizingFeature,
   createTableHelper,
-  flexRender,
 } from '@tanstack/react-table'
 import {
   DndContext,
@@ -61,9 +60,7 @@ const DraggableTableHeader = ({
 
   return (
     <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-      {header.isPlaceholder
-        ? null
-        : flexRender(header.column.columnDef.header, header.getContext())}
+      {header.isPlaceholder ? null : <table.FlexRender header={header} />}
       <button {...attributes} {...listeners}>
         🟰
       </button>
@@ -91,7 +88,7 @@ const DragAlongCell = ({
 
   return (
     <td style={style} ref={setNodeRef}>
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      <table.FlexRender cell={cell} />
     </td>
   )
 }

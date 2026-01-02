@@ -6,7 +6,6 @@ import './index.css'
 import {
   columnSizingFeature,
   createSortedRowModel,
-  flexRender,
   rowSortingFeature,
   sortFns,
   useTable,
@@ -145,10 +144,7 @@ function App() {
                                   header.column.getToggleSortingHandler(),
                               }}
                             >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
+                              <table.FlexRender header={header} />
                               {{
                                 asc: ' 🔼',
                                 desc: ' 🔽',
@@ -253,7 +249,7 @@ function TableBodyRow({ row, virtualRow, rowVirtualizer }: TableBodyRowProps) {
               width: cell.column.getSize(),
             }}
           >
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            <table.FlexRender cell={cell} />
           </td>
         )
       })}

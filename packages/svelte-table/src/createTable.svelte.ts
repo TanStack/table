@@ -1,4 +1,5 @@
 import { constructTable } from '@tanstack/table-core'
+import { useStore } from '@tanstack/svelte-store'
 import type {
   NoInfer,
   RowData,
@@ -7,7 +8,6 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import { useStore } from '@tanstack/svelte-store'
 import type { Snippet } from 'svelte'
 
 export type SvelteTable<
@@ -91,7 +91,7 @@ export function createTable<
     const value = (table as any)[key]
     if (typeof value === 'function' && key.startsWith('get')) {
       const originalMethod = value.bind(table)
-      ;(table as any)[key] = (...args: any[]) => {
+      ;(table as any)[key] = (...args: Array<any>) => {
         // Access state to create reactive dependency
         allState.current
         return originalMethod(...args)

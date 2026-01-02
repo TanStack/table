@@ -1,6 +1,4 @@
-import { defineWorkspace } from 'vitest/config'
-
-export default defineWorkspace([
+export default [
   './packages/angular-table/vite.config.ts',
   './packages/lit-table/vite.config.ts',
   './packages/match-sorter-utils/vite.config.ts',
@@ -9,4 +7,4 @@ export default defineWorkspace([
   './packages/svelte-table/vite.config.ts',
   './packages/table-core/vite.config.ts',
   './packages/vue-table/vite.config.ts',
-])
+]
