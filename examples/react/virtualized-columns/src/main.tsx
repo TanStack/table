@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
+  FlexRender,
   columnSizingFeature,
   createSortedRowModel,
   rowSortingFeature,
@@ -214,7 +215,7 @@ function TableHeadCell({ header }: TableHeadCellProps) {
           onClick: header.column.getToggleSortingHandler(),
         }}
       >
-        <table.FlexRender header={header} />
+        <FlexRender header={header} />
         {{
           asc: ' 🔼',
           desc: ' 🔽',
@@ -344,7 +345,7 @@ function TableBodyCell({ cell }: TableBodyCellProps) {
         width: cell.column.getSize(),
       }}
     >
-      <table.FlexRender cell={cell} />
+      <FlexRender cell={cell} />
     </td>
   )
 }

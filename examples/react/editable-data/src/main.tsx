@@ -4,10 +4,10 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
-  createTableHelper,
   filterFns,
   rowPaginationFeature,
   tableFeatures,
+  useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type {
@@ -25,14 +25,6 @@ const _features = tableFeatures({
   columnFilteringFeature,
 })
 
-const tableHelper = createTableHelper({
-  _features,
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
-})
-
 declare module '@tanstack/react-table' {
   interface TableMeta<TFeatures extends TableFeatures, TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
@@ -40,7 +32,7 @@ declare module '@tanstack/react-table' {
 }
 
 // Give our default column cell renderer editing superpowers!
-const defaultColumn: Partial<ColumnDef<typeof tableHelper.features, Person>> = {
+const defaultColumn: Partial<ColumnDef<typeof _features, Person>> = {
   cell: ({ getValue, row: { index }, column: { id }, table }) => {
     const initialValue = getValue()
     // We need to keep and update the state of the cell normally
@@ -85,9 +77,7 @@ function useSkipper() {
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof tableHelper.features, Person>>
-  >(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         header: 'Name',
@@ -145,9 +135,14 @@ function App() {
 
   const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper()
 
-  const table = tableHelper.useTable({
+  const table = useTable({
+    _features,
     columns,
     data,
+    _rowModels: {
+      filteredRowModel: createFilteredRowModel(filterFns),
+      paginatedRowModel: createPaginatedRowModel(),
+    },
     defaultColumn,
     autoResetPageIndex,
     // Provide our updateData function to our table meta

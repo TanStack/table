@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
+  FlexRender,
   columnOrderingFeature,
   columnSizingFeature,
-  createTableHelper,
+  useTable,
 } from '@tanstack/react-table'
 import {
   DndContext,
@@ -29,19 +30,15 @@ import type { Person } from './makeData'
 import type { Cell, ColumnDef, Header } from '@tanstack/react-table'
 import './index.css'
 
-const tableHelper = createTableHelper({
-  _features: { columnOrderingFeature, columnSizingFeature },
-  _rowModels: {},
-  TData: {} as Person,
-  debugTable: true,
-  debugHeaders: true,
-  debugColumns: true,
-})
+const _features = {
+  columnOrderingFeature,
+  columnSizingFeature,
+}
 
 const DraggableTableHeader = ({
   header,
 }: {
-  header: Header<typeof tableHelper.features, Person, unknown>
+  header: Header<typeof _features, Person, unknown>
 }) => {
   const { attributes, isDragging, listeners, setNodeRef, transform } =
     useSortable({
@@ -60,7 +57,7 @@ const DraggableTableHeader = ({
 
   return (
     <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-      {header.isPlaceholder ? null : <table.FlexRender header={header} />}
+      {header.isPlaceholder ? null : <FlexRender header={header} />}
       <button {...attributes} {...listeners}>
         🟰
       </button>
@@ -71,7 +68,7 @@ const DraggableTableHeader = ({
 const DragAlongCell = ({
   cell,
 }: {
-  cell: Cell<typeof tableHelper.features, Person, unknown>
+  cell: Cell<typeof _features, Person, unknown>
 }) => {
   const { isDragging, setNodeRef, transform } = useSortable({
     id: cell.column.id,
@@ -88,15 +85,13 @@ const DragAlongCell = ({
 
   return (
     <td style={style} ref={setNodeRef}>
-      <table.FlexRender cell={cell} />
+      <FlexRender cell={cell} />
     </td>
   )
 }
 
 function App() {
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof tableHelper.features, Person>>
-  >(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       {
         accessorKey: 'firstName',
@@ -143,16 +138,18 @@ function App() {
 
   const rerender = () => setData(() => makeData(20))
 
-  const table = tableHelper.useTable(
-    {
-      columns,
-      data,
-      initialState: {
-        columnOrder: columns.map((c) => c.id!),
-      },
+  const table = useTable({
+    _features,
+    columns,
+    data,
+    _rowModels: {},
+    initialState: {
+      columnOrder: columns.map((c) => c.id!),
     },
-    (state) => state,
-  )
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   // reorder columns after drag & drop
   function handleDragEnd(event: DragEndEvent) {

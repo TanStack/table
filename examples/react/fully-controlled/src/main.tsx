@@ -129,7 +129,7 @@ function App() {
         <tbody>
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
+              {row.getAllCells().map((cell) => (
                 <td key={cell.id}>
                   <table.FlexRender cell={cell} />
                 </td>

@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 
 import {
+  FlexRender,
   columnSizingFeature,
   createSortedRowModel,
   rowSortingFeature,
@@ -249,7 +250,7 @@ function TableBodyRow({ row, virtualRow, rowVirtualizer }: TableBodyRowProps) {
               width: cell.column.getSize(),
             }}
           >
-            <table.FlexRender cell={cell} />
+            <FlexRender cell={cell} />
           </td>
         )
       })}

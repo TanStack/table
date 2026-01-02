@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { useTable } from '@tanstack/react-table'
+import { FlexRender, useTable } from '@tanstack/react-table'
 
 // needed for table body level scope DnD setup
 import {
@@ -29,6 +29,8 @@ import type { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core'
 import type { Person } from './makeData'
 import type { ColumnDef, Row } from '@tanstack/react-table'
 
+const _features = {}
+
 // Cell Component
 const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
   const { attributes, listeners } = useSortable({
@@ -43,7 +45,7 @@ const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
 }
 
 // Row Component
-const DraggableRow = ({ row }: { row: Row<any, Person> }) => {
+const DraggableRow = ({ row }: { row: Row<typeof _features, Person> }) => {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.userId,
   })
@@ -58,9 +60,9 @@ const DraggableRow = ({ row }: { row: Row<any, Person> }) => {
   return (
     // connect row ref to dnd-kit, apply important styles
     <tr ref={setNodeRef} style={style}>
-      {row.getVisibleCells().map((cell) => (
-        <td key={cell.id} style={{ width: cell.column.getSize() }}>
-          <table.FlexRender cell={cell} />
+      {row.getAllCells().map((cell) => (
+        <td key={cell.id}>
+          <FlexRender cell={cell} />
         </td>
       ))}
     </tr>
@@ -69,7 +71,7 @@ const DraggableRow = ({ row }: { row: Row<any, Person> }) => {
 
 // Table Component
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
+  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
       // Create a dedicated drag handle column. Alternatively, you could just set up dnd events on the rows themselves.
       {

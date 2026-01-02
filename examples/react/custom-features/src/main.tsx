@@ -8,7 +8,6 @@ import {
   createSortedRowModel,
   filterFns,
   functionalUpdate,
-  makeStateUpdater,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -19,7 +18,6 @@ import { makeData } from './makeData'
 import type {
   Column,
   ColumnDef,
-  OnChangeFn,
   Table,
   TableFeature,
   Updater,
@@ -37,7 +35,6 @@ export interface TableState_Density {
 // define types for our new feature's table options
 export interface TableOptions_Density {
   enableDensity?: boolean
-  onDensityChange?: OnChangeFn<DensityState>
 }
 
 // Define types for our new feature's table APIs
@@ -63,10 +60,9 @@ export const densityPlugin: TableFeature<DensityPluginConstructors> = {
   },
 
   // define the new feature's default options
-  getDefaultTableOptions: (table) => {
+  getDefaultTableOptions: () => {
     return {
       enableDensity: true,
-      onDensityChange: makeStateUpdater('density', table),
     }
   },
   // if you need to add a default column definition...
@@ -75,11 +71,15 @@ export const densityPlugin: TableFeature<DensityPluginConstructors> = {
   // define the new feature's table instance methods
   constructTableAPIs: (table) => {
     table.setDensity = (updater) => {
-      const safeUpdater: Updater<DensityState> = (old) => {
-        const newState = functionalUpdate(updater, old)
-        return newState
-      }
-      return table.options.onDensityChange?.(safeUpdater)
+      table.store.setState((prev) => {
+        const prevState = prev as TableState_Density & typeof prev
+        const oldDensity = prevState.density
+        const newDensity = functionalUpdate(updater, oldDensity)
+        return {
+          ...prev,
+          density: newDensity,
+        }
+      })
     }
     table.toggleDensity = (value) => {
       table.setDensity?.((old) => {
@@ -151,7 +151,6 @@ function App() {
   )
 
   const [data, _setData] = React.useState(() => makeData(1000))
-  const [density, setDensity] = React.useState<DensityState>('md')
 
   const table = useTable({
     _features,
@@ -163,162 +162,162 @@ function App() {
     columns,
     data,
     debugTable: true,
-    state: {
-      density, // passing the density state to the table, TS is still happy :)
-    },
-    onDensityChange: setDensity, // using the new onDensityChange option, TS is still happy :)
   })
 
   return (
-    <div className="p-2">
-      <div className="h-2" />
-      <button
-        onClick={() => table.toggleDensity()}
-        className="border rounded p-1 bg-blue-500 text-white mb-2 w-64"
-      >
-        Toggle Density
-      </button>
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
+    <table.Subscribe selector={(state) => ({ density: state.density })}>
+      {({ density }) => (
+        <div className="p-2">
+          <div className="h-2" />
+          <button
+            onClick={() => table.toggleDensity()}
+            className="border rounded p-1 bg-blue-500 text-white mb-2 w-64"
+          >
+            Toggle Density
+          </button>
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        style={{
+                          // using our new feature
+                          padding:
+                            density === 'sm'
+                              ? '4px'
+                              : density === 'md'
+                                ? '8px'
+                                : '16px',
+                          transition: 'padding 0.2s',
+                        }}
+                      >
+                        <div
+                          className={
+                            header.column.getCanSort()
+                              ? 'cursor-pointer select-none'
+                              : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          <table.FlexRender header={header} />
+                          {{
+                            asc: ' 🔼',
+                            desc: ' 🔽',
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} table={table} />
+                          </div>
+                        ) : null}
+                      </th>
+                    )
+                  })}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => {
                 return (
-                  <th
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    style={{
-                      // using our new feature
-                      padding:
-                        density === 'sm'
-                          ? '4px'
-                          : density === 'md'
-                            ? '8px'
-                            : '16px',
-                      transition: 'padding 0.2s',
-                    }}
-                  >
-                    <div
-                      className={
-                        header.column.getCanSort()
-                          ? 'cursor-pointer select-none'
-                          : ''
-                      }
-                      onClick={header.column.getToggleSortingHandler()}
-                    >
-                      <table.FlexRender header={header} />
-                      {{
-                        asc: ' 🔼',
-                        desc: ' 🔽',
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </div>
-                    {header.column.getCanFilter() ? (
-                      <div>
-                        <Filter column={header.column} table={table} />
-                      </div>
-                    ) : null}
-                  </th>
+                  <tr key={row.id}>
+                    {row.getAllCells().map((cell) => {
+                      return (
+                        <td
+                          key={cell.id}
+                          style={{
+                            // using our new feature
+                            padding:
+                              density === 'sm'
+                                ? '4px'
+                                : density === 'md'
+                                  ? '8px'
+                                  : '16px',
+                            transition: 'padding 0.2s',
+                          }}
+                        >
+                          <table.FlexRender cell={cell} />
+                        </td>
+                      )
+                    })}
+                  </tr>
                 )
               })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <tr key={row.id}>
-                {row.getAllCells().map((cell) => {
-                  return (
-                    <td
-                      key={cell.id}
-                      style={{
-                        // using our new feature
-                        padding:
-                          density === 'sm'
-                            ? '4px'
-                            : density === 'md'
-                              ? '8px'
-                              : '16px',
-                        transition: 'padding 0.2s',
-                      }}
-                    >
-                      <table.FlexRender cell={cell} />
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
-        <button
-          className="border rounded p-1"
-          onClick={() => table.firstPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<<'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>'}
-        </button>
-        <button
-          className="border rounded p-1"
-          onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>>'}
-        </button>
-        <span className="flex items-center gap-1">
-          <div>Page</div>
-          <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
-            {table.getPageCount().toLocaleString()}
-          </strong>
-        </span>
-        <span className="flex items-center gap-1">
-          | Go to page:
-          <input
-            type="number"
-            defaultValue={table.store.state.pagination.pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              table.setPageIndex(page)
-            }}
-            className="border p-1 rounded w-16"
-          />
-        </span>
-        <select
-          value={table.store.state.pagination.pageSize}
-          onChange={(e) => {
-            table.setPageSize(Number(e.target.value))
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
-        {table.getRowCount().toLocaleString()} Rows
-      </div>
-      <pre>{JSON.stringify(table.store.state.pagination, null, 2)}</pre>
-    </div>
+            </tbody>
+          </table>
+          <div className="h-2" />
+          <div className="flex items-center gap-2">
+            <button
+              className="border rounded p-1"
+              onClick={() => table.firstPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {'<<'}
+            </button>
+            <button
+              className="border rounded p-1"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {'<'}
+            </button>
+            <button
+              className="border rounded p-1"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {'>'}
+            </button>
+            <button
+              className="border rounded p-1"
+              onClick={() => table.lastPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {'>>'}
+            </button>
+            <span className="flex items-center gap-1">
+              <div>Page</div>
+              <strong>
+                {table.store.state.pagination.pageIndex + 1} of{' '}
+                {table.getPageCount().toLocaleString()}
+              </strong>
+            </span>
+            <span className="flex items-center gap-1">
+              | Go to page:
+              <input
+                type="number"
+                defaultValue={table.store.state.pagination.pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0
+                  table.setPageIndex(page)
+                }}
+                className="border p-1 rounded w-16"
+              />
+            </span>
+            <select
+              value={table.store.state.pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value))
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
+            {table.getRowCount().toLocaleString()} Rows
+          </div>
+          <pre>{JSON.stringify(table.store.state.pagination, null, 2)}</pre>
+        </div>
+      )}
+    </table.Subscribe>
   )
 }
 
