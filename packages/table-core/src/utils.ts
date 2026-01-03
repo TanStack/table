@@ -1,4 +1,4 @@
-import type { Table_Internal } from './types/Table'
+import type { Table, Table_Internal } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState, TableState_All } from './types/TableState'
@@ -13,16 +13,16 @@ export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
 
 export function noop() {}
 
-export function makeStateUpdater<K extends keyof TableState_All>(
-  key: K,
-  instance: unknown,
-) {
-  return (updater: Updater<TableState<any>[K]>) => {
+export function makeStateUpdater<
+  TFeatures extends TableFeatures,
+  K extends (string & {}) | keyof TableState_All | keyof TableState<TFeatures>,
+>(key: K, instance: Table<TFeatures, any>) {
+  return (updater: Updater<TableState<any>[K & keyof TableState<any>]>) => {
     ;(instance as Table_Internal<any, any>).store.setState(
       <TTableState extends TableState_All>(old: TTableState) => {
         return {
           ...old,
-          [key]: functionalUpdate(updater, old[key]),
+          [key]: functionalUpdate(updater, (old as any)[key]),
         }
       },
     )

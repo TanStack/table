@@ -160,9 +160,9 @@ function App() {
     columns,
     data,
     debugTable: true,
-    state: {
-      density, // passing the density state to the table, TS is still happy :)
-    },
+    // state: {
+    //   density, // passing the density state to the table, TS is still happy :)
+    // },
     onDensityChange: setDensity, // using the new onDensityChange option, TS is still happy :)
   })
 
