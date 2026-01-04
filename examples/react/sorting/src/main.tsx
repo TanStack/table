@@ -75,11 +75,6 @@ function App() {
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(100_000)) // stress test with 100k rows
 
-  // optionally, manage sorting state in your own state management (although react state causes more re-renders here than necessary )
-  const [sorting, setSorting] = React.useState<SortingState>([])
-
-  console.log('sorting', sorting)
-
   const table = useTable(
     {
       _features,
@@ -89,10 +84,6 @@ function App() {
       columns,
       data,
       debugTable: true,
-      // state: {
-      //   sorting,
-      // },
-      // onSortingChange: setSorting,
       // no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
       // autoResetPageIndex: false, // turn off page index reset when sorting or filtering - default on/true
       // enableMultiSort: false, //Don't allow shift key to sort multiple columns - default on/true

@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-fully-controlled",
+  "name": "tanstack-table-example-state-external-store",
   "version": "0.0.0",
   "private": true,
   "scripts": {

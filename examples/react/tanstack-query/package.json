@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-editable-data",
+  "name": "tanstack-table-example-pagination-controlled",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.1.0",
+    "@tanstack/react-query": "^5.90.16",
+    "@tanstack/react-store": "^0.8.0",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
