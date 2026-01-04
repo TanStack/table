@@ -9,7 +9,7 @@ import {
   useTable,
 } from '@tanstack/preact-table'
 import { makeData } from './makeData'
-import type { ColumnDef, SortFn } from '@tanstack/preact-table'
+import type { ColumnDef, SortFn, SortingState } from '@tanstack/preact-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
@@ -79,6 +79,11 @@ function App() {
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(100_000)) // stress test with 100k rows
 
+  // optionally, manage sorting state in your own state management (although preact state causes more re-renders here than necessary)
+  const [sorting, setSorting] = useState<SortingState>([])
+
+  console.log('sorting', sorting)
+
   const table = useTable(
     {
       _features,
@@ -88,6 +93,10 @@ function App() {
       columns,
       data,
       debugTable: true,
+      state: {
+        sorting,
+      },
+      onSortingChange: setSorting,
       // no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
       // autoResetPageIndex: false, // turn off page index reset when sorting or filtering - default on/true
       // enableMultiSort: false, //Don't allow shift key to sort multiple columns - default on/true
@@ -101,7 +110,7 @@ function App() {
 
   return (
     <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
-      {(state) => (
+      {(_state) => (
         <div className="p-2">
           <div className="h-2" />
           <table>
@@ -169,7 +178,9 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
-          <pre>{JSON.stringify(state.sorting, null, 2)}</pre>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
         </div>
       )}
     </table.Subscribe>

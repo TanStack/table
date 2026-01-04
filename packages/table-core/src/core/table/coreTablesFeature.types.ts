@@ -1,4 +1,4 @@
-import type { Store } from '@tanstack/store'
+import type { Derived, Store } from '@tanstack/store'
 import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
@@ -49,6 +49,10 @@ export interface TableOptions_Table<
    */
   meta?: TableMeta<TFeatures, TData>
   /**
+   * Pass in individual self-managed state to the table.
+   */
+  state?: Partial<TableState<TFeatures>>
+  /**
    * Optionally, provide your own external TanStack Store instance if you want to manage the table state externally.
    */
   store?: Store<TableState<TFeatures>>
@@ -87,6 +91,10 @@ export interface Table_CoreProperties<
    */
   _rowPrototype?: object
   /**
+   * The base store for the table. This can be used to write to the table state.
+   */
+  baseStore: Store<TableState<TFeatures>>
+  /**
    * This is the resolved initial state of the table.
    */
   initialState: TableState<TFeatures>
@@ -97,7 +105,7 @@ export interface Table_CoreProperties<
   /**
    * Where the table state is stored.
    */
-  store: Store<TableState<TFeatures>>
+  store: Derived<TableState<TFeatures>, [Store<TableState<TFeatures>>]>
 }
 
 export interface Table_Table<

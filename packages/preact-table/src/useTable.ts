@@ -91,10 +91,7 @@ export function useTable<
     >
 
     tableInstance.Subscribe = function SubscribeBound<TSelected>(
-      props: Omit<
-        SubscribeProps<TFeatures, TData, TSelected>,
-        'table'
-      >,
+      props: Omit<SubscribeProps<TFeatures, TData, TSelected>, 'table'>,
     ) {
       return Subscribe({ ...props, table: tableInstance })
     }
@@ -110,14 +107,24 @@ export function useTable<
     ...tableOptions,
   }))
 
-  // Update store state when data or columns change
+  // Mount the derived store to register it on the dependency graph
   useIsomorphicLayoutEffect(() => {
+    const cleanup = table.store.mount()
+    return cleanup
+  }, [table])
+
+  useIsomorphicLayoutEffect(() => {
+    // prevent race condition between table.setOptions and table.baseStore.setState
     queueMicrotask(() => {
-      table.store.setState((prev) => ({
+      table.baseStore.setState((prev) => ({
         ...prev,
       }))
     })
-  }, [tableOptions.columns, tableOptions.data])
+  }, [
+    tableOptions.columns, // re-render when columns change
+    tableOptions.data, // re-render when data changes
+    tableOptions.state, // sync react state to the table store
+  ])
 
   const state = useStore(table.store, selector)
 
