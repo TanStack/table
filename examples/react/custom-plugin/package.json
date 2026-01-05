@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-custom-features",
+  "name": "tanstack-table-example-custom-plugin",
   "version": "0.0.0",
   "private": true,
   "scripts": {

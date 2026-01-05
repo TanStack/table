@@ -10,7 +10,7 @@ import {
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { SortFn, SortingState } from '@tanstack/react-table'
+import type { SortFn } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({

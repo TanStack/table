@@ -58,13 +58,10 @@ export function Subscribe<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = {},
->(
-  props: SubscribeProps<TFeatures, TData, TSelected>,
-): ComponentChildren {
+>(props: SubscribeProps<TFeatures, TData, TSelected>): ComponentChildren {
   const selected = useStore(props.table.store, props.selector)
 
   return typeof props.children === 'function'
     ? props.children(selected)
     : props.children
 }
-
