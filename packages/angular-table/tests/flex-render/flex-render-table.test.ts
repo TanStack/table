@@ -19,13 +19,12 @@ import {
   flexRenderComponent,
   injectFlexRenderContext,
   injectTable,
-} from '../src'
-import type { FlexRenderContent } from '../src'
+} from '../../src'
+import type { FlexRenderContent } from '../../src'
 import type {
   CellContext,
   ExpandedState,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 import type { TemplateRef } from '@angular/core'
 
@@ -142,7 +141,7 @@ describe('FlexRenderDirective', () => {
     expect(firstCell!.textContent).toEqual('Initial status')
 
     statusComponent.set(null)
-    fixture.detectChanges()
+    await fixture.whenRenderingDone()
     expect(firstCell!.matches(':empty')).toBe(true)
 
     statusComponent.set(
@@ -150,7 +149,8 @@ describe('FlexRenderDirective', () => {
         inputs: { status: 'Updated status' },
       }),
     )
-    fixture.detectChanges()
+    await fixture.whenRenderingDone()
+
     const el = firstCell!.firstElementChild as HTMLElement
     expect(el.tagName).toEqual('APP-TEST-BADGE')
     expect(el.textContent).toEqual('Updated status')
@@ -204,11 +204,14 @@ describe('FlexRenderDirective', () => {
   })
 
   test('Support cell with component output', async () => {
+    const callExpandRender = vi.fn<(val: boolean) => void>()
+
     const columns = [
       {
         id: 'expand',
         header: 'Expand',
         cell: ({ row }: any) => {
+          callExpandRender(row.getIsExpanded())
           return flexRenderComponent(ExpandCell, {
             inputs: { expanded: row.getIsExpanded() },
             outputs: { toggleExpand: () => row.toggleExpanded() },
@@ -297,6 +300,17 @@ describe('FlexRenderDirective', () => {
       '0': true,
     })
     fixture.detectChanges()
+
+    // TODO: As a perf improvement / better maintenability,
+    //  check in a future if we can avoid evaluating the cell twice during the first render. done during comparison
+    expect(callExpandRender).toHaveBeenCalledTimes(5)
+    expect(callExpandRender).toHaveBeenNthCalledWith(1, false)
+    expect(callExpandRender).toHaveBeenNthCalledWith(2, false)
+    expect(callExpandRender).toHaveBeenNthCalledWith(3, true)
+    // TODO: fix. caused by running the content(props) in a effect on flex-render.ts#226
+    expect(callExpandRender).toHaveBeenNthCalledWith(4, true)
+    expect(callExpandRender).toHaveBeenNthCalledWith(5, true)
+
     expect(buttonEl.nativeElement.innerHTML).toEqual(' Expanded ')
   })
 })

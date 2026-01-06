@@ -13,7 +13,7 @@ import type {
 export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
-> = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
+> = Omit<TableHelper_Core<TFeatures>, 'tableCreator'> & {
   injectTable: <TInferData extends TData, TSelected = {}>(
     tableOptions: () => Omit<
       TableOptions<TFeatures, TInferData>,
@@ -30,10 +30,7 @@ export function createTableHelper<
   tableHelperOptions: TableHelperOptions<TFeatures, TData>,
 ): TableHelper<TFeatures, TData> {
   const tableHelper = constructTableHelper(
-    injectTable as unknown as (
-      tableOptions: () => TableOptions<TFeatures, TData>,
-      selector?: (state: TableState<TFeatures>) => any,
-    ) => AngularTable<TFeatures, TData, any>,
+    injectTable as unknown as any,
     tableHelperOptions,
   )
   return {

@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { lazyInit } from '../src/lazy-signal-initializer'
+import { lazyInit } from '../src/lazySignalInitializer'
 import { flushQueue, setFixtureSignalInputs } from './test-utils'
 import type { WritableSignal } from '@angular/core'
 

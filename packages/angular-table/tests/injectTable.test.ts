@@ -1,23 +1,14 @@
+import { isProxy } from 'node:util/types'
 import { describe, expect, test, vi } from 'vitest'
-import {
-  Component,
-  effect,
-  input,
-  isSignal,
-  signal,
-  untracked,
-} from '@angular/core'
+import { Component, effect, input, isSignal, signal } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import {
   ColumnDef,
-  createCoreRowModel,
   createPaginatedRowModel,
   stockFeatures,
 } from '@tanstack/table-core'
-import { injectTable } from '../src/injectTable'
-import { RowModel } from '../src'
+import { RowModel, injectTable } from '../src'
 import {
-  experimentalReactivity_testShouldBeComputedProperty,
   setFixtureSignalInputs,
   testShouldBeComputedProperty,
 } from './test-utils'
@@ -64,10 +55,8 @@ describe('injectTable', () => {
       })),
     )
 
-    const tablePropertyKeys = Object.keys(table())
-
     test('table must be a signal', () => {
-      expect(isSignal(table)).toEqual(true)
+      expect(isSignal(table.get)).toEqual(true)
     })
 
     test('supports "in" operator', () => {
@@ -77,18 +66,8 @@ describe('injectTable', () => {
     })
 
     test('supports "Object.keys"', () => {
-      const keys = Object.keys(table())
+      const keys = Object.keys(table.get())
       expect(Object.keys(table)).toEqual(keys)
-    })
-
-    test.each(
-      tablePropertyKeys.map((property) => [
-        property,
-        testShouldBeComputedProperty(untracked(table), property),
-      ]),
-    )('property (%s) is computed -> (%s)', (name, expected) => {
-      const tableProperty = table[name as keyof typeof table]
-      expect(isSignal(tableProperty)).toEqual(expected)
     })
 
     test('Row model is reactive', () => {
@@ -111,7 +90,6 @@ describe('injectTable', () => {
           columns: columns,
           _features: stockFeatures,
           _rowModels: {
-            coreRowModel: createCoreRowModel(),
             paginatedRowModel: createPaginatedRowModel(),
           },
           getRowId: (row) => row.id,
@@ -133,14 +111,14 @@ describe('injectTable', () => {
         pagination.set({ pageIndex: 0, pageSize: 3 })
 
         TestBed.tick()
+
+        expect(coreRowModelFn).toHaveBeenCalledOnce()
+        expect(coreRowModelFn.mock.calls[0]![0].rows.length).toEqual(10)
+
+        expect(rowModelFn).toHaveBeenCalledTimes(2)
+        expect(rowModelFn.mock.calls[0]![0].rows.length).toEqual(5)
+        expect(rowModelFn.mock.calls[1]![0].rows.length).toEqual(3)
       })
-
-      expect(coreRowModelFn).toHaveBeenCalledOnce()
-      expect(coreRowModelFn.mock.calls[0]![0].rows.length).toEqual(10)
-
-      expect(rowModelFn).toHaveBeenCalledTimes(2)
-      expect(rowModelFn.mock.calls[0]![0].rows.length).toEqual(5)
-      expect(rowModelFn.mock.calls[1]![0].rows.length).toEqual(3)
     })
   })
 })
@@ -158,14 +136,19 @@ describe('injectTable - Experimental reactivity', () => {
       _features: { ...stockFeatures },
       columns: columns,
       getRowId: (row) => row.id,
-      enableExperimentalReactivity: true,
+      reactivity: {
+        column: true,
+        cell: true,
+        row: true,
+        header: true,
+      },
     })),
   )
   const tablePropertyKeys = Object.keys(table)
 
   describe('Proxy', () => {
-    test('table must be a signal', () => {
-      expect(isSignal(table)).toEqual(true)
+    test('table is proxy', () => {
+      expect(isProxy(table)).toBe(true)
     })
 
     test('supports "in" operator', () => {
@@ -178,13 +161,18 @@ describe('injectTable - Experimental reactivity', () => {
       const keys = Object.keys(table)
       expect(Object.keys(table)).toEqual(keys)
     })
+
+    test('supports "Object.has"', () => {
+      const keys = Object.keys(table)
+      expect(Object.keys(table)).toEqual(keys)
+    })
   })
 
   describe('Table property reactivity', () => {
     test.each(
       tablePropertyKeys.map((property) => [
         property,
-        experimentalReactivity_testShouldBeComputedProperty(table, property),
+        testShouldBeComputedProperty(table, property),
       ]),
     )('property (%s) is computed -> (%s)', (name, expected) => {
       const tableProperty = table[name as keyof typeof table]
@@ -199,10 +187,7 @@ describe('injectTable - Experimental reactivity', () => {
       test.each(
         headerPropertyKeys.map((property) => [
           property,
-          experimentalReactivity_testShouldBeComputedProperty(
-            headerGroup,
-            property,
-          ),
+          testShouldBeComputedProperty(headerGroup, property),
         ]),
       )(
         `HeaderGroup ${headerGroup.id} (${index}) - property (%s) is computed -> (%s)`,
@@ -218,10 +203,7 @@ describe('injectTable - Experimental reactivity', () => {
         test.each(
           headerPropertyKeys.map((property) => [
             property,
-            experimentalReactivity_testShouldBeComputedProperty(
-              header,
-              property,
-            ),
+            testShouldBeComputedProperty(header, property),
           ]),
         )(
           `HeaderGroup ${headerGroup.id} (${index}) / Header ${header.id} - property (%s) is computed -> (%s)`,
@@ -241,7 +223,7 @@ describe('injectTable - Experimental reactivity', () => {
       test.each(
         columnPropertyKeys.map((property) => [
           property,
-          experimentalReactivity_testShouldBeComputedProperty(column, property),
+          testShouldBeComputedProperty(column, property),
         ]),
       )(
         `Column ${column.id} (${index}) - property (%s) is computed -> (%s)`,
@@ -260,7 +242,7 @@ describe('injectTable - Experimental reactivity', () => {
       test.each(
         rowsPropertyKeys.map((property) => [
           property,
-          experimentalReactivity_testShouldBeComputedProperty(row, property),
+          testShouldBeComputedProperty(row, property),
         ]),
       )(
         `Row ${row.id} (${index}) - property (%s) is computed -> (%s)`,
@@ -276,7 +258,7 @@ describe('injectTable - Experimental reactivity', () => {
         test.each(
           cellPropertyKeys.map((property) => [
             property,
-            experimentalReactivity_testShouldBeComputedProperty(cell, property),
+            testShouldBeComputedProperty(cell, property),
           ]),
         )(
           `Row ${row.id} (${index}) / Cell ${cell.id} - property (%s) is computed -> (%s)`,
