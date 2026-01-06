@@ -48,7 +48,7 @@ export async function flushQueue() {
   await new Promise(setImmediate)
 }
 
-const staticComputedProperties = ['get']
+const staticComputedProperties = ['get', 'state']
 export const testShouldBeComputedProperty = (
   testObj: any,
   propertyName: string,
