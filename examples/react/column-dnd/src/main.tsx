@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
+  FlexRender,
   columnOrderingFeature,
   columnSizingFeature,
+  createColumnHelper,
   createTableHelper,
-  flexRender,
 } from '@tanstack/react-table'
 import {
   DndContext,
@@ -27,17 +28,18 @@ import { makeData } from './makeData'
 import type { DragEndEvent } from '@dnd-kit/core'
 import type { CSSProperties } from 'react'
 import type { Person } from './makeData'
-import type { Cell, ColumnDef, Header } from '@tanstack/react-table'
+import type { Cell, Header } from '@tanstack/react-table'
 import './index.css'
 
 const tableHelper = createTableHelper({
   _features: { columnOrderingFeature, columnSizingFeature },
   _rowModels: {},
-  TData: {} as Person,
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,
 })
+
+const columnHelper = createColumnHelper<typeof tableHelper.features, Person>()
 
 const DraggableTableHeader = ({
   header,
@@ -61,9 +63,7 @@ const DraggableTableHeader = ({
 
   return (
     <th colSpan={header.colSpan} ref={setNodeRef} style={style}>
-      {header.isPlaceholder
-        ? null
-        : flexRender(header.column.columnDef.header, header.getContext())}
+      {header.isPlaceholder ? null : <FlexRender header={header} />}
       <button {...attributes} {...listeners}>
         🟰
       </button>
@@ -91,78 +91,70 @@ const DragAlongCell = ({
 
   return (
     <td style={style} ref={setNodeRef}>
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      <FlexRender cell={cell} />
     </td>
   )
 }
 
 function App() {
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof tableHelper.features, Person>>
-  >(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-        id: 'firstName',
-        size: 150,
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        id: 'lastName',
-        size: 150,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        id: 'age',
-        size: 120,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        id: 'visits',
-        size: 120,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        id: 'status',
-        size: 150,
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        id: 'progress',
-        size: 180,
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          id: 'firstName',
+          size: 150,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          id: 'lastName',
+          size: 150,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          id: 'age',
+          size: 120,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          id: 'visits',
+          size: 120,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          id: 'status',
+          size: 150,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          id: 'progress',
+          size: 180,
+        }),
+      ]),
     [],
   )
 
   const [data, setData] = React.useState(() => makeData(20))
-  const [columnOrder, setColumnOrder] = React.useState<Array<string>>(() =>
-    columns.map((c) => c.id!),
-  )
 
   const rerender = () => setData(() => makeData(20))
 
-  const table = tableHelper.useTable({
-    columns,
-    data,
-    state: {
-      columnOrder,
+  const table = tableHelper.useTable(
+    {
+      columns,
+      data,
+      initialState: {
+        columnOrder: columns.map((c) => c.id!),
+      },
     },
-    onColumnOrderChange: setColumnOrder,
-  })
+    (state) => state,
+  )
 
   // reorder columns after drag & drop
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
     if (over && active.id !== over.id) {
-      setColumnOrder((prevColumnOrder) => {
+      table.setColumnOrder((prevColumnOrder) => {
         const oldIndex = prevColumnOrder.indexOf(active.id as string)
         const newIndex = prevColumnOrder.indexOf(over.id as string)
         return arrayMove(prevColumnOrder, oldIndex, newIndex) // this is just a splice util
@@ -197,7 +189,7 @@ function App() {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 <SortableContext
-                  items={columnOrder}
+                  items={table.store.state.columnOrder}
                   strategy={horizontalListSortingStrategy}
                 >
                   {headerGroup.headers.map((header) => (
@@ -213,7 +205,7 @@ function App() {
                 {row.getAllCells().map((cell) => (
                   <SortableContext
                     key={cell.id}
-                    items={columnOrder}
+                    items={table.store.state.columnOrder}
                     strategy={horizontalListSortingStrategy}
                   >
                     <DragAlongCell key={cell.id} cell={cell} />
@@ -223,7 +215,9 @@ function App() {
             ))}
           </tbody>
         </table>
-        <pre>{JSON.stringify(columnOrder, null, 2)}</pre>
+        <table.Subscribe selector={(state) => state}>
+          {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+        </table.Subscribe>
       </div>
     </DndContext>
   )

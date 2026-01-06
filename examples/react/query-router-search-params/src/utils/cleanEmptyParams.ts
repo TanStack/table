@@ -2,7 +2,7 @@ import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '../components/table'
 
 export const cleanEmptyParams = <T extends Record<string, unknown>>(
   search: T,
-) => {
+): T => {
   const newSearch = { ...search }
   Object.keys(newSearch).forEach((key) => {
     const value = newSearch[key]

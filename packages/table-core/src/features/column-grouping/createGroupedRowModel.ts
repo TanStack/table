@@ -15,7 +15,7 @@ import type {
 } from './columnGroupingFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table_Internal } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
@@ -24,10 +24,9 @@ export function createGroupedRowModel<
   TData extends RowData = any,
 >(
   aggregationFns: Record<keyof AggregationFns, AggregationFn<TFeatures, TData>>,
-): (
-  table: Table_Internal<TFeatures, TData>,
-) => () => RowModel<TFeatures, TData> {
-  return (table) => {
+): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+  return (_table) => {
+    const table = _table as Table_Internal<TFeatures, TData>
     if (!table._rowModelFns.aggregationFns)
       table._rowModelFns.aggregationFns = aggregationFns
     return tableMemo({
@@ -35,7 +34,7 @@ export function createGroupedRowModel<
       table,
       fnName: 'table.getGroupedRowModel',
       memoDeps: () => [
-        table.options.state?.grouping,
+        table.store.state.grouping,
         table.getPreGroupedRowModel(),
       ],
       fn: () => _createGroupedRowModel(table),
@@ -52,7 +51,7 @@ function _createGroupedRowModel<
   TData extends RowData = any,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreGroupedRowModel()
-  const grouping = table.options.state?.grouping
+  const grouping = table.store.state.grouping
 
   if (!rowModel.rows.length || !grouping?.length) {
     rowModel.rows.forEach((row) => {

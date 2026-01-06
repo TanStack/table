@@ -1,4 +1,9 @@
-import { assignAPIs, callMemoOrStaticFn, makeStateUpdater } from '../../utils'
+import {
+  assignPrototypeAPIs,
+  assignTableAPIs,
+  callMemoOrStaticFn,
+  makeStateUpdater,
+} from '../../utils'
 import { table_getPinnedVisibleLeafColumns } from '../column-pinning/columnPinningFeature.utils'
 import {
   column_getAfter,
@@ -61,96 +66,81 @@ export function constructColumnSizingFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnSizingFeature', column, [
-        {
-          fn: () => column_getSize(column),
-          fnName: 'column_getSize',
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnSizingFeature', prototype, table, {
+        column_getSize: {
+          fn: (column) => column_getSize(column),
         },
-        {
-          fn: (position) => column_getStart(column, position),
-          fnName: 'column_getStart',
-          memoDeps: (position) => [
+        column_getStart: {
+          fn: (column, position) => column_getStart(column, position),
+          memoDeps: (column, position) => [
             position,
             callMemoOrStaticFn(
-              column._table,
+              column.table,
               'getPinnedVisibleLeafColumns',
               table_getPinnedVisibleLeafColumns,
               position,
             ),
-            column._table.options.state?.columnSizing,
+            column.table.store.state.columnSizing,
           ],
         },
-        {
-          fn: (position) => column_getAfter(column, position),
-          fnName: 'column_getAfter',
-          memoDeps: (position) => [
+        column_getAfter: {
+          fn: (column, position) => column_getAfter(column, position),
+          memoDeps: (column, position) => [
             position,
             callMemoOrStaticFn(
-              column._table,
+              column.table,
               'getPinnedVisibleLeafColumns',
               table_getPinnedVisibleLeafColumns,
               position,
             ),
-            column._table.options.state?.columnSizing,
+            column.table.store.state.columnSizing,
           ],
         },
-        {
-          fn: () => column_resetSize(column),
-          fnName: 'column_resetSize',
+        column_resetSize: {
+          fn: (column) => column_resetSize(column),
         },
-      ])
+      })
     },
 
-    constructHeaderAPIs: (header) => {
-      assignAPIs('columnSizingFeature', header, [
-        {
-          fn: () => header_getSize(header),
-          fnName: 'header_getSize',
+    assignHeaderPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnSizingFeature', prototype, table, {
+        header_getSize: {
+          fn: (header) => header_getSize(header),
         },
-        {
-          fn: () => header_getStart(header),
-          fnName: 'header_getStart',
+        header_getStart: {
+          fn: (header) => header_getStart(header),
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnSizingFeature', table, [
-        {
+      assignTableAPIs('columnSizingFeature', table, {
+        table_setColumnSizing: {
           fn: (updater) => table_setColumnSizing(table, updater),
-          fnName: 'table_setColumnSizing',
         },
-        {
+        table_resetColumnSizing: {
           fn: (defaultState) => table_resetColumnSizing(table, defaultState),
-          fnName: 'table_resetColumnSizing',
         },
-        {
+        table_getTotalSize: {
           fn: () => table_getTotalSize(table),
-          fnName: 'table_getTotalSize',
         },
-        {
+        table_getLeftTotalSize: {
           fn: () => table_getLeftTotalSize(table),
-          fnName: 'table_getLeftTotalSize',
         },
-        {
+        table_getCenterTotalSize: {
           fn: () => table_getCenterTotalSize(table),
-          fnName: 'table_getCenterTotalSize',
         },
-        {
+        table_getRightTotalSize: {
           fn: () => table_getRightTotalSize(table),
-          fnName: 'table_getRightTotalSize',
         },
-      ])
+      })
     },
   }
 }
 
 /**
  * The Column Sizing feature adds column sizing state and APIs to the table, header, and column objects.
- *
  * **Note:** This does not include column resizing. The columnResizingFeature feature has been split out into its own standalone feature.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-sizing)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-sizing)
  */
 export const columnSizingFeature = constructColumnSizingFeature()

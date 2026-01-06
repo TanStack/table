@@ -19,7 +19,6 @@
     "vue",
     "solid",
     "svelte",
-    "qwik",
     "lit",
     "angular",
     "table",
@@ -28,18 +27,12 @@
   ],
   "type": "module",
   "types": "dist/esm/index.d.ts",
-  "main": "dist/cjs/index.cjs",
+  "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/index.d.cts",
-        "default": "./dist/cjs/index.cjs"
-      }
+      "types": "./dist/esm/index.d.ts",
+      "default": "./dist/esm/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -60,5 +53,8 @@
     "test:types": "tsc",
     "test:build": "publint --strict",
     "build": "vite build"
+  },
+  "dependencies": {
+    "@tanstack/store": "^0.8.0"
   }
 }

@@ -1,59 +1,138 @@
-import { useRef, useState } from 'react'
-import {
-  constructTable,
-  coreFeatures,
-  getInitialTableState,
-} from '@tanstack/table-core'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { constructTable } from '@tanstack/table-core'
+import { useStore } from '@tanstack/react-store'
+import { FlexRender } from './FlexRender'
+import { Subscribe } from './Subscribe'
 import type {
+  CellData,
+  NoInfer,
   RowData,
   Table,
   TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
+import type { FunctionComponent, ReactNode } from 'react'
+import type { FlexRenderProps } from './FlexRender'
+import type { SubscribeProps } from './Subscribe'
 
-/**
- * Creates a table instance and caches it in a ref so that it will only be constructed once.
- */
-function useTableRef<TFeatures extends TableFeatures, TData extends RowData>(
-  options: TableOptions<TFeatures, TData>,
-): Table<TFeatures, TData> {
-  const tableRef = useRef<Table<TFeatures, TData>>(null)
+const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
-  if (!tableRef.current) {
-    tableRef.current = constructTable(options)
-  }
-
-  return tableRef.current
+export type ReactTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TSelected = {},
+> = Table<TFeatures, TData> & {
+  /**
+   * A React HOC (Higher Order Component) that allows you to subscribe to the table state.
+   *
+   * This is useful for opting into state re-renders for specific parts of the table state.
+   *
+   * @example
+   * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
+   *   {({ rowSelection }) => ( // important to include `{() => {()}}` syntax
+   *     <tr key={row.id}>
+            // render the row
+   *     </tr>
+   *   ))}
+   * </table.Subscribe>
+   */
+  Subscribe: <TSelected>(props: {
+    selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
+    children: ((state: TSelected) => ReactNode) | ReactNode
+  }) => ReturnType<FunctionComponent>
+  /**
+   * A React component that renders headers, cells, or footers with custom markup.
+   * Use this utility component instead of manually calling flexRender.
+   *
+   * @example
+   * ```tsx
+   * <table.FlexRender cell={cell} />
+   * <table.FlexRender header={header} />
+   * <table.FlexRender footer={footer} />
+   * ```
+   *
+   * This replaces calling `flexRender` directly like this:
+   * ```tsx
+   * flexRender(cell.column.columnDef.cell, cell.getContext())
+   * flexRender(header.column.columnDef.header, header.getContext())
+   * flexRender(footer.column.columnDef.footer, footer.getContext())
+   * ```
+   */
+  FlexRender: <TValue extends CellData = CellData>(
+    props: FlexRenderProps<TFeatures, TData, TValue>,
+  ) => ReactNode
+  /**
+   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
+   *
+   * @example
+   * const table = useTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
+   *
+   * console.log(table.state.globalFilter)
+   */
+  readonly state: Readonly<TSelected>
 }
 
-/**
- * Will re-render the table whenever the state or options change. Works just like the `useReactTable` from v8.
- * @example const table = useTable({ columns, data, state, ...options })
- */
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
-  const _features = { ...coreFeatures, ...tableOptions._features }
+  TSelected = {},
+>(
+  tableOptions: TableOptions<TFeatures, TData>,
+  selector: (state: TableState<TFeatures>) => TSelected = () =>
+    ({}) as TSelected,
+): ReactTable<TFeatures, TData, TSelected> {
+  const [table] = useState(() => {
+    const tableInstance = constructTable(tableOptions) as ReactTable<
+      TFeatures,
+      TData,
+      TSelected
+    >
 
-  const [state, setState] = useState<TableState<TFeatures>>(() =>
-    getInitialTableState(_features, tableOptions.initialState),
-  )
+    tableInstance.Subscribe = function SubscribeBound<TSelected>(
+      props: Omit<SubscribeProps<TFeatures, TData, TSelected>, 'table'>,
+    ) {
+      return Subscribe({ ...props, table: tableInstance })
+    }
 
-  const statefulOptions: TableOptions<TFeatures, TData> = {
+    tableInstance.FlexRender = FlexRender
+
+    return tableInstance
+  })
+
+  // sync table options on every render
+  table.setOptions((prev) => ({
+    ...prev,
     ...tableOptions,
-    _features,
-    state: { ...state, ...tableOptions.state },
-    onStateChange: (updater) => {
-      setState(updater)
-      tableOptions.onStateChange?.(updater)
-    },
-  }
+  }))
 
-  const table = useTableRef(statefulOptions)
+  // Mount the derived store to register it on the dependency graph
+  useIsomorphicLayoutEffect(() => {
+    const cleanup = table.store.mount()
+    return cleanup
+  }, [table])
 
-  table.setOptions((prev) => ({ ...prev, ...statefulOptions })) // force re-render when state or options change
+  useIsomorphicLayoutEffect(() => {
+    // prevent race condition between table.setOptions and table.baseStore.setState
+    queueMicrotask(() => {
+      table.baseStore.setState((prev) => ({
+        ...prev,
+      }))
+    })
+  }, [
+    table.options.columns, // re-render when columns change
+    table.options.data, // re-render when data changes
+    table.options.state, // sync react state to the table store
+  ])
 
-  return table
+  const state = useStore(table.store, selector)
+
+  return useMemo(
+    () => ({
+      ...table,
+      state,
+    }),
+    [state, table],
+  )
 }

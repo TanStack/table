@@ -50,15 +50,6 @@
           ]
         },
         {
-          "label": "qwik",
-          "children": [
-            {
-              "label": "Qwik Table Adapter",
-              "to": "framework/qwik/qwik-table"
-            }
-          ]
-        },
-        {
           "label": "react",
           "children": [
             {
@@ -161,15 +152,6 @@
             {
               "label": "Table State",
               "to": "framework/lit/guide/table-state"
-            }
-          ]
-        },
-        {
-          "label": "qwik",
-          "children": [
-            {
-              "label": "Table State",
-              "to": "framework/qwik/guide/table-state"
             }
           ]
         },
@@ -491,27 +473,6 @@
             {
               "to": "framework/lit/examples/virtualized-rows",
               "label": "Virtualized Rows"
-            }
-          ]
-        },
-        {
-          "label": "qwik",
-          "children": [
-            {
-              "to": "framework/qwik/examples/basic",
-              "label": "Basic"
-            },
-            {
-              "to": "framework/qwik/examples/filters",
-              "label": "Filters"
-            },
-            {
-              "to": "framework/qwik/examples/row-selection",
-              "label": "Row Selection"
-            },
-            {
-              "to": "framework/qwik/examples/sorting",
-              "label": "Sorting"
             }
           ]
         },

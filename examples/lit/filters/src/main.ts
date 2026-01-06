@@ -1,4 +1,4 @@
-import { customElement, property, state } from 'lit/decorators.js'
+import { customElement, property } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -19,7 +19,6 @@ import type {
   CellData,
   Column,
   ColumnDef,
-  ColumnFiltersState,
   RowData,
   TableFeatures,
 } from '@tanstack/lit-table'
@@ -155,33 +154,23 @@ class ColumnFilter extends LitElement {
 class LitTableExample extends LitElement {
   private tableController = new TableController<typeof _features, Person>(this)
 
-  @state()
-  private _columnFilters: ColumnFiltersState = []
-
   protected render() {
-    const table = this.tableController.table({
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
+    const table = this.tableController.table(
+      {
+        _features,
+        _rowModels: {
+          filteredRowModel: createFilteredRowModel(filterFns),
+          paginatedRowModel: createPaginatedRowModel(),
+          sortedRowModel: createSortedRowModel(sortFns),
+        },
+        data,
+        columns,
+        debugTable: true,
+        debugHeaders: true,
+        debugColumns: false,
       },
-      data,
-      columns,
-      state: {
-        columnFilters: this._columnFilters,
-      },
-      onColumnFiltersChange: (updater) => {
-        if (typeof updater === 'function') {
-          this._columnFilters = updater(this._columnFilters)
-        } else {
-          this._columnFilters = updater
-        }
-      },
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: false,
-    })
+      (state) => ({ columnFilters: state.columnFilters }),
+    )
 
     return html`
       <table>
@@ -286,12 +275,12 @@ class LitTableExample extends LitElement {
         <span style="display: flex;gap:2px">
           <span>Page</span>
           <strong>
-            ${table.getState().pagination.pageIndex + 1} of
+            ${table.store.state.pagination.pageIndex + 1} of
             ${table.getPageCount()}
           </strong>
         </span>
       </div>
-      <pre>${JSON.stringify(this._columnFilters, null, 2)}</pre>
+      <pre>${JSON.stringify(table.state.columnFilters, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;

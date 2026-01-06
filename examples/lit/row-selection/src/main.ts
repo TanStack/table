@@ -1,4 +1,4 @@
-import { customElement, state } from 'lit/decorators.js'
+import { customElement } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -13,7 +13,7 @@ import {
   tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
-import type { ColumnDef, RowSelectionState } from '@tanstack/lit-table'
+import type { ColumnDef } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
@@ -83,31 +83,21 @@ const data = makeData(50_000)
 class LitTableExample extends LitElement {
   private tableController = new TableController<typeof _features, Person>(this)
 
-  @state()
-  private _rowSelection: RowSelectionState = {}
-
   protected render() {
-    const table = this.tableController.table({
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
+    const table = this.tableController.table(
+      {
+        _features,
+        _rowModels: {
+          filteredRowModel: createFilteredRowModel(filterFns),
+          paginatedRowModel: createPaginatedRowModel(),
+        },
+        data,
+        columns,
+        enableRowSelection: true,
+        debugTable: true,
       },
-      data,
-      columns,
-      state: {
-        rowSelection: this._rowSelection,
-      },
-      enableRowSelection: true,
-      onRowSelectionChange: (updaterOrValue) => {
-        if (typeof updaterOrValue === 'function') {
-          this._rowSelection = updaterOrValue(this._rowSelection)
-        } else {
-          this._rowSelection = updaterOrValue
-        }
-      },
-      debugTable: true,
-    })
+      (state) => ({ rowSelection: state.rowSelection }),
+    )
 
     return html`
       <table>
@@ -189,7 +179,7 @@ class LitTableExample extends LitElement {
         <span style="display: flex;gap:2px">
           <span>Page</span>
           <strong>
-            ${table.getState().pagination.pageIndex + 1} of
+            ${table.store.state.pagination.pageIndex + 1} of
             ${table.getPageCount()}
           </strong>
         </span>

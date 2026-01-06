@@ -6,7 +6,6 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
-  flexRender,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -18,11 +17,11 @@ import type { Person } from './makeData'
 import './index.css'
 
 const _features = tableFeatures({
-  columnVisibilityFeature,
-  columnPinningFeature,
   columnOrderingFeature,
-  columnSizingFeature,
+  columnPinningFeature,
   columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
 })
 
 // These are the important styles to make sticky column pinning work!
@@ -105,16 +104,19 @@ function App() {
 
   const rerender = () => setData(() => makeData(30))
 
-  const table = useTable({
-    _features,
-    _rowModels: {},
-    columns,
-    data,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-    columnResizeMode: 'onChange',
-  })
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {},
+      columns,
+      data,
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
+      columnResizeMode: 'onChange',
+    },
+    (state) => state,
+  )
 
   const randomizeColumns = () => {
     table.setColumnOrder(
@@ -123,145 +125,184 @@ function App() {
   }
 
   return (
-    <div className="p-2">
-      <div className="inline-block border border-black shadow rounded">
-        <div className="px-1 border-b border-black">
-          <label>
-            <input
-              type="checkbox"
-              checked={table.getIsAllColumnsVisible()}
-              onChange={table.getToggleAllColumnsVisibilityHandler()}
-            />{' '}
-            Toggle All
-          </label>
-        </div>
-        {table.getAllLeafColumns().map((column) => {
-          return (
-            <div key={column.id} className="px-1">
+    <table.Subscribe
+      selector={(state) => ({
+        columnVisibility: state.columnVisibility,
+        columnOrder: state.columnOrder,
+        columnPinning: state.columnPinning,
+        columnSizing: state.columnSizing,
+        columnResizing: state.columnResizing,
+      })}
+    >
+      {(_topLevelState) => (
+        <div className="p-2">
+          <div className="inline-block border border-black shadow rounded">
+            <div className="px-1 border-b border-black">
               <label>
                 <input
                   type="checkbox"
-                  checked={column.getIsVisible()}
-                  onChange={column.getToggleVisibilityHandler()}
+                  checked={table.getIsAllColumnsVisible()}
+                  onChange={table.getToggleAllColumnsVisibilityHandler()}
                 />{' '}
-                {column.id}
+                Toggle All
               </label>
             </div>
-          )
-        })}
-      </div>
-      <div className="h-4" />
-      <div className="flex flex-wrap gap-2">
-        <button onClick={() => rerender()} className="border p-1">
-          Regenerate
-        </button>
-        <button onClick={() => randomizeColumns()} className="border p-1">
-          Shuffle Columns
-        </button>
-      </div>
-      <div className="h-4" />
-      <div className="table-container">
-        <table
-          style={{
-            width: table.getTotalSize(),
-          }}
-        >
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  const { column } = header
+            {table.getAllLeafColumns().map((column) => {
+              return (
+                <div key={column.id} className="px-1">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={column.getIsVisible()}
+                      onChange={column.getToggleVisibilityHandler()}
+                    />{' '}
+                    {column.id}
+                  </label>
+                </div>
+              )
+            })}
+          </div>
+          <div className="h-4" />
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => rerender()} className="border p-1">
+              Regenerate
+            </button>
+            <button onClick={() => randomizeColumns()} className="border p-1">
+              Shuffle Columns
+            </button>
+          </div>
+          <div className="h-4" />
+          <div className="table-container">
+            <table
+              style={{
+                width: table.getTotalSize(),
+              }}
+            >
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      const { column } = header
 
-                  return (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      // IMPORTANT: This is where the magic happens!
-                      style={{ ...getCommonPinningStyles(column) }}
-                    >
-                      <div className="whitespace-nowrap">
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}{' '}
-                        {/* Demo getIndex behavior */}
-                        {column.getIndex(column.getIsPinned() || 'center')}
-                      </div>
-                      {!header.isPlaceholder && header.column.getCanPin() && (
-                        <div className="flex gap-1 justify-center">
-                          {header.column.getIsPinned() !== 'left' ? (
-                            <button
-                              className="border rounded px-2"
-                              onClick={() => {
-                                header.column.pin('left')
-                              }}
+                      return (
+                        <table.Subscribe
+                          // subscribe only to the column resizing and sizing state changes
+                          selector={(state) => ({
+                            isResizingColumn:
+                              state.columnResizing.isResizingColumn ===
+                              column.id,
+                            columnSize: state.columnSizing[column.id],
+                          })}
+                        >
+                          {() => (
+                            <th
+                              key={header.id}
+                              colSpan={header.colSpan}
+                              // IMPORTANT: This is where the magic happens!
+                              style={{ ...getCommonPinningStyles(column) }}
                             >
-                              {'<='}
-                            </button>
-                          ) : null}
-                          {header.column.getIsPinned() ? (
-                            <button
-                              className="border rounded px-2"
-                              onClick={() => {
-                                header.column.pin(false)
-                              }}
+                              <div className="whitespace-nowrap">
+                                {header.isPlaceholder ? null : (
+                                  <>
+                                    <table.FlexRender header={header} />{' '}
+                                  </>
+                                )}
+                                {/* Demo getIndex behavior */}
+                                {column.getIndex(
+                                  column.getIsPinned() || 'center',
+                                )}
+                              </div>
+                              {!header.isPlaceholder &&
+                                header.column.getCanPin() && (
+                                  <div className="flex gap-1 justify-center">
+                                    {header.column.getIsPinned() !== 'left' ? (
+                                      <button
+                                        className="border rounded px-2"
+                                        onClick={() => {
+                                          header.column.pin('left')
+                                        }}
+                                      >
+                                        {'<='}
+                                      </button>
+                                    ) : null}
+                                    {header.column.getIsPinned() ? (
+                                      <button
+                                        className="border rounded px-2"
+                                        onClick={() => {
+                                          header.column.pin(false)
+                                        }}
+                                      >
+                                        X
+                                      </button>
+                                    ) : null}
+                                    {header.column.getIsPinned() !== 'right' ? (
+                                      <button
+                                        className="border rounded px-2"
+                                        onClick={() => {
+                                          header.column.pin('right')
+                                        }}
+                                      >
+                                        {'=>'}
+                                      </button>
+                                    ) : null}
+                                  </div>
+                                )}
+                              <div
+                                onDoubleClick={() => header.column.resetSize()}
+                                onMouseDown={header.getResizeHandler()}
+                                onTouchStart={header.getResizeHandler()}
+                                className={`resizer ${
+                                  header.column.getIsResizing()
+                                    ? 'isResizing'
+                                    : ''
+                                }`}
+                              />
+                            </th>
+                          )}
+                        </table.Subscribe>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table.getRowModel().rows.map((row) => (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => {
+                      const { column } = cell
+                      return (
+                        <table.Subscribe
+                          // subscribe only to the column resizing and sizing state changes
+                          selector={(state) => ({
+                            isResizingColumn:
+                              state.columnResizing.isResizingColumn ===
+                              column.id,
+                            columnSize: state.columnSizing[column.id],
+                          })}
+                        >
+                          {() => (
+                            <td
+                              key={cell.id}
+                              // IMPORTANT: This is where the magic happens!
+                              style={{ ...getCommonPinningStyles(column) }}
                             >
-                              X
-                            </button>
-                          ) : null}
-                          {header.column.getIsPinned() !== 'right' ? (
-                            <button
-                              className="border rounded px-2"
-                              onClick={() => {
-                                header.column.pin('right')
-                              }}
-                            >
-                              {'=>'}
-                            </button>
-                          ) : null}
-                        </div>
-                      )}
-                      <div
-                        onDoubleClick={() => header.column.resetSize()}
-                        onMouseDown={header.getResizeHandler()}
-                        onTouchStart={header.getResizeHandler()}
-                        className={`resizer ${
-                          header.column.getIsResizing() ? 'isResizing' : ''
-                        }`}
-                      />
-                    </th>
-                  )
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell) => {
-                  const { column } = cell
-                  return (
-                    <td
-                      key={cell.id}
-                      // IMPORTANT: This is where the magic happens!
-                      style={{ ...getCommonPinningStyles(column) }}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </td>
-                  )
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <pre>{JSON.stringify(table.getState().columnPinning, null, 2)}</pre>
-    </div>
+                              <table.FlexRender cell={cell} />
+                            </td>
+                          )}
+                        </table.Subscribe>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
+        </div>
+      )}
+    </table.Subscribe>
   )
 }
 

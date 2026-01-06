@@ -52,11 +52,12 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
+    "@tanstack/solid-store": "^0.8.0",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "solid-js": "^1.9.3",
-    "vite-plugin-solid": "^2.11.0"
+    "solid-js": "^1.9.10",
+    "vite-plugin-solid": "^2.11.10"
   },
   "peerDependencies": {
     "solid-js": ">=1.3"

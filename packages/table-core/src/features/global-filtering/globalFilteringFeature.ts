@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignPrototypeAPIs,
+  assignTableAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   column_getCanGlobalFilter,
   table_getGlobalAutoFilterFn,
@@ -54,43 +58,35 @@ export function constructGlobalFilteringFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('globalFilteringFeature', column, [
-        {
-          fn: () => column_getCanGlobalFilter(column),
-          fnName: 'column_getCanGlobalFilter',
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('globalFilteringFeature', prototype, table, {
+        column_getCanGlobalFilter: {
+          fn: (column) => column_getCanGlobalFilter(column),
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('globalFilteringFeature', table, [
-        {
+      assignTableAPIs('globalFilteringFeature', table, {
+        table_getGlobalAutoFilterFn: {
           fn: () => table_getGlobalAutoFilterFn(),
-          fnName: 'table_getGlobalAutoFilterFn',
         },
-        {
+        table_getGlobalFilterFn: {
           fn: () => table_getGlobalFilterFn(table),
-          fnName: 'table_getGlobalFilterFn',
         },
-        {
+        table_setGlobalFilter: {
           fn: (updater) => table_setGlobalFilter(table, updater),
-          fnName: 'table_setGlobalFilter',
         },
-        {
+        table_resetGlobalFilter: {
           fn: (defaultState) => table_resetGlobalFilter(table, defaultState),
-          fnName: 'table_resetGlobalFilter',
         },
-      ])
+      })
     },
   }
 }
 
 /**
  * The Global Filtering feature adds global filtering state and APIs to the table and column objects.
- *
  * **Note:** This is dependent on the columnFilteringFeature feature.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/global-filtering)
- * [Guide](https://tanstack.com/table/v8/docs/guide/global-filtering)
  */
 export const globalFilteringFeature = constructGlobalFilteringFeature()

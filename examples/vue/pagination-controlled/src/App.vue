@@ -43,34 +43,43 @@ const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 
 const { data, isLoading, pageCount } = useService(pagination)
 
-const table = useTable({
-  _features,
-  _rowModels: {}, // no client-side row models since we're using server-side pagination
-  get data() {
-    return data.value ?? []
+const table = useTable(
+  {
+    _features,
+    _rowModels: {}, // no client-side row models since we're using server-side pagination
+    get data() {
+      return data.value ?? []
+    },
+    get pageCount() {
+      return pageCount.value ?? -1
+    },
+    columns,
+    initialState: {
+      pagination: {
+        pageIndex: INITIAL_PAGE_INDEX,
+        pageSize: INITIAL_PAGE_SIZE,
+      },
+    },
+    state: {
+      pagination: pagination.value,
+    },
+    manualPagination: true,
+    onPaginationChange: (updater: Updater<PaginationState>) => {
+      if (typeof updater === 'function') {
+        setPagination(
+          updater({
+            pageIndex: pagination.value.pageIndex,
+            pageSize: pagination.value.pageSize,
+          }),
+        )
+      } else {
+        setPagination(updater)
+      }
+    },
+    debugTable: true,
   },
-  get pageCount() {
-    return pageCount.value ?? -1
-  },
-  columns,
-  state: {
-    pagination: pagination.value,
-  },
-  manualPagination: true,
-  onPaginationChange: (updater: Updater<PaginationState>) => {
-    if (typeof updater === 'function') {
-      setPagination(
-        updater({
-          pageIndex: pagination.value.pageIndex,
-          pageSize: pagination.value.pageSize,
-        }),
-      )
-    } else {
-      setPagination(updater)
-    }
-  },
-  debugTable: true,
-})
+  (state) => ({ pagination: state.pagination }),
+)
 
 function setPagination({
   pageIndex,
@@ -158,7 +167,7 @@ function handlePageSizeChange(e: any) {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {{ table.getState().pagination.pageIndex + 1 }} of
+            {{ table.state.pagination.pageIndex + 1 }} of
             {{ table.getPageCount() }}
           </strong>
         </span>
@@ -172,7 +181,7 @@ function handlePageSizeChange(e: any) {
           />
         </span>
         <select
-          :value="table.getState().pagination.pageSize"
+          :value="table.state.pagination.pageSize"
           @change="handlePageSizeChange"
         >
           <option

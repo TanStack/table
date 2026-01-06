@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { createPaginatedRowModel, rowPaginationFeature } from '../../../../src'
+import {
+  createPaginatedRowModel,
+  rowPaginationFeature,
+  type Row,
+} from '../../../../src'
 import { createRowPinningTable } from '../../../helpers/rowPinningHelpers'
 
 const ROW = {
@@ -29,7 +33,7 @@ describe('table methods', () => {
 
       table.setRowPinning(newState)
 
-      expect(table.getState().rowPinning).toEqual(newState)
+      expect(table.store.state.rowPinning).toEqual(newState)
     })
   })
 
@@ -44,7 +48,7 @@ describe('table methods', () => {
 
       table.resetRowPinning(true)
 
-      expect(table.getState().rowPinning).toEqual(EMPTY_PINNING_STATE)
+      expect(table.store.state.rowPinning).toEqual(EMPTY_PINNING_STATE)
     })
 
     it('should reset to initial state when defaultState is false', () => {
@@ -66,7 +70,7 @@ describe('table methods', () => {
 
       table.resetRowPinning(false)
 
-      expect(table.getState().rowPinning).toEqual(initialState)
+      expect(table.store.state.rowPinning).toEqual(initialState)
     })
   })
 
@@ -115,7 +119,10 @@ describe('table methods', () => {
 
       expect(centerRows).toHaveLength(8)
       expect(
-        centerRows.every((row) => row.id !== ROW[0] && row.id !== ROW[2]),
+        centerRows.every(
+          (row: (typeof centerRows)[number]) =>
+            row.id !== ROW[0] && row.id !== ROW[2],
+        ),
       ).toBe(true)
     })
 
@@ -195,7 +202,7 @@ describe('row methods', () => {
     it('should use enableRowPinning function when provided', () => {
       const table = createRowPinningTable({
         _features: {},
-        enableRowPinning: (row) => row.id === ROW[1],
+        enableRowPinning: (row: Row<any, any>) => row.id === ROW[1],
       })
 
       expect(table.getRow(ROW[0]).getCanPin()).toBe(false)
@@ -258,11 +265,11 @@ describe('row methods', () => {
       const row = table.getRow(ROW[0])
 
       row.pin('top')
-      expect(table.getState().rowPinning.top).toEqual([ROW[0]])
+      expect(table.store.state.rowPinning.top).toEqual([ROW[0]])
 
       row.pin('bottom')
-      expect(table.getState().rowPinning.bottom).toEqual([ROW[0]])
-      expect(table.getState().rowPinning.top).toEqual([])
+      expect(table.store.state.rowPinning.bottom).toEqual([ROW[0]])
+      expect(table.store.state.rowPinning.top).toEqual([])
     })
 
     it('should unpin row when position is false', () => {
@@ -278,7 +285,7 @@ describe('row methods', () => {
       const row = table.getRow(ROW[0])
 
       row.pin(false)
-      expect(table.getState().rowPinning).toEqual(EMPTY_PINNING_STATE)
+      expect(table.store.state.rowPinning).toEqual(EMPTY_PINNING_STATE)
     })
 
     it('should include leaf rows when includeLeafRows is true', () => {
@@ -289,11 +296,11 @@ describe('row methods', () => {
       row.pin('top', true)
 
       // Verify the row was pinned
-      expect(table.getState().rowPinning.top).toContain(ROW[0])
+      expect(table.store.state.rowPinning.top).toContain(ROW[0])
 
       // Verify the leaf rows were pinned
-      expect(table.getState().rowPinning.top).toContain(SUB_ROW[0])
-      expect(table.getState().rowPinning.top).toContain(SUB_ROW[1])
+      expect(table.store.state.rowPinning.top).toContain(SUB_ROW[0])
+      expect(table.store.state.rowPinning.top).toContain(SUB_ROW[1])
     })
 
     it('should include parent rows when includeParentRows is true', () => {
@@ -304,10 +311,10 @@ describe('row methods', () => {
       row.pin('top', false, true)
 
       // Verify the row was pinned
-      expect(table.getState().rowPinning.top).toContain(SUB_ROW[0])
+      expect(table.store.state.rowPinning.top).toContain(SUB_ROW[0])
 
       // Verify the parent row was pinned
-      expect(table.getState().rowPinning.top).toContain(ROW[0])
+      expect(table.store.state.rowPinning.top).toContain(ROW[0])
     })
   })
 })

@@ -31,7 +31,6 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
-  flexRender,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
@@ -343,7 +342,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.getState().columnSizing])
+  }, [table.store.state.columnSizing])
 
   return (
     <div className="container mx-auto p-4 flex flex-col gap-4">
@@ -411,10 +410,7 @@ function App() {
                               )}
                               onClick={header.column.getToggleSortingHandler()}
                             >
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
+                              <table.FlexRender header={header} />
                               {header.column.getIsSorted() && (
                                 <>
                                   {header.column.getIsSorted() === 'asc' ? (
@@ -458,10 +454,7 @@ function App() {
                             width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                           }}
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
+                          <table.FlexRender cell={cell} />
                         </TableCell>
                       )
                     })}

@@ -6,7 +6,6 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   filterFns,
-  flexRender,
   rowExpandingFeature,
   rowPaginationFeature,
   rowPinningFeature,
@@ -187,10 +186,7 @@ function App() {
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          <table.FlexRender header={header} />
                           {header.column.getCanFilter() ? (
                             <div>
                               <Filter column={header.column} table={table} />
@@ -217,10 +213,7 @@ function App() {
                   {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
+                        <table.FlexRender cell={cell} />
                       </td>
                     )
                   })}
@@ -267,7 +260,7 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.store.state.pagination.pageIndex + 1} of{' '}
             {table.getPageCount()}
           </strong>
         </span>
@@ -277,7 +270,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
+            defaultValue={table.store.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -286,7 +279,7 @@ function App() {
           />
         </span>
         <select
-          value={table.getState().pagination.pageSize}
+          value={table.store.state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
@@ -384,7 +377,7 @@ function PinnedRow({
       {row.getAllCells().map((cell) => {
         return (
           <td key={cell.id}>
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            <table.FlexRender cell={cell} />
           </td>
         )
       })}

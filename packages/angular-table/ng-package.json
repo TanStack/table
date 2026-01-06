@@ -5,5 +5,8 @@
     "entryFile": "src/index.ts"
   },
   "deleteDestPath": false,
-  "allowedNonPeerDependencies": ["@tanstack/table-core"]
+  "allowedNonPeerDependencies": [
+    "@tanstack/table-core",
+    "@tanstack/angular-store"
+  ]
 }

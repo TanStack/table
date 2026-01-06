@@ -3,7 +3,6 @@ import { useMemo, useReducer, useState } from 'preact/hooks'
 import './index.css'
 import {
   createSortedRowModel,
-  flexRender,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -27,9 +26,6 @@ const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
 
 function App() {
   const rerender = useReducer(() => ({}), {})[1]
-
-  // optionally, manage sorting state in your own state management
-  const [sorting, setSorting] = useState<SortingState>([])
 
   const columns = useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
@@ -83,105 +79,111 @@ function App() {
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(100_000)) // stress test with 100k rows
 
-  const table = useTable({
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns), // client-side sorting
+  // optionally, manage sorting state in your own state management (although preact state causes more re-renders here than necessary)
+  const [sorting, setSorting] = useState<SortingState>([])
+
+  console.log('sorting', sorting)
+
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {
+        sortedRowModel: createSortedRowModel(sortFns), // client-side sorting
+      },
+      columns,
+      data,
+      debugTable: true,
+      state: {
+        sorting,
+      },
+      onSortingChange: setSorting,
+      // no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
+      // autoResetPageIndex: false, // turn off page index reset when sorting or filtering - default on/true
+      // enableMultiSort: false, //Don't allow shift key to sort multiple columns - default on/true
+      // enableSorting: false, // - default on/true
+      // enableSortingRemoval: false, //Don't allow - default on/true
+      // isMultiSortEvent: (e) => true, //Make all clicks multi-sort - default requires `shift` key
+      // maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once - default is Infinity
     },
-    columns,
-    data,
-    debugTable: true,
-    onSortingChange: setSorting, // optionally control sorting state in your own scope for easy access
-    // sortFns: {
-    //   sortStatusFn, //or provide our custom sorting function globally for all columns to be able to use
-    // },
-    // no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
-    state: {
-      sorting,
-    },
-    // autoResetPageIndex: false, // turn off page index reset when sorting or filtering - default on/true
-    // enableMultiSort: false, //Don't allow shift key to sort multiple columns - default on/true
-    // enableSorting: false, // - default on/true
-    // enableSortingRemoval: false, //Don't allow - default on/true
-    // isMultiSortEvent: (e) => true, //Make all clicks multi-sort - default requires `shift` key
-    // maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once - default is Infinity
-  })
+    // (state) => ({ state }), // uncomment to subscribe to the entire table state (this is how it worked in v8 by default)
+  )
 
   return (
-    <div className="p-2">
-      <div className="h-2" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={
-                          header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : ''
-                        }
-                        onClick={header.column.getToggleSortingHandler()}
-                        title={
-                          header.column.getCanSort()
-                            ? header.column.getNextSortingOrder() === 'asc'
-                              ? 'Sort ascending'
-                              : header.column.getNextSortingOrder() === 'desc'
-                                ? 'Sort descending'
-                                : 'Clear sort'
-                            : undefined
-                        }
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: ' 🔼',
-                          desc: ' 🔽',
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    )}
-                  </th>
-                )
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table
-            .getRowModel()
-            .rows.slice(0, 10)
-            .map((row) => {
-              return (
-                <tr key={row.id}>
-                  {row.getAllCells().map((cell) => {
+    <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
+      {(_state) => (
+        <div className="p-2">
+          <div className="h-2" />
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
                     return (
-                      <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
+                      <th key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={
+                              header.column.getCanSort()
+                                ? 'cursor-pointer select-none'
+                                : ''
+                            }
+                            onClick={header.column.getToggleSortingHandler()}
+                            title={
+                              header.column.getCanSort()
+                                ? header.column.getNextSortingOrder() === 'asc'
+                                  ? 'Sort ascending'
+                                  : header.column.getNextSortingOrder() ===
+                                      'desc'
+                                    ? 'Sort descending'
+                                    : 'Clear sort'
+                                : undefined
+                            }
+                          >
+                            <table.FlexRender header={header} />
+                            {{
+                              asc: ' 🔼',
+                              desc: ' 🔽',
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
                         )}
-                      </td>
+                      </th>
                     )
                   })}
                 </tr>
-              )
-            })}
-        </tbody>
-      </table>
-      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <div>
-        <button onClick={() => rerender(0)}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
-      <pre>{JSON.stringify(sorting, null, 2)}</pre>
-    </div>
+              ))}
+            </thead>
+            <tbody>
+              {table
+                .getRowModel()
+                .rows.slice(0, 10)
+                .map((row) => {
+                  return (
+                    <tr key={row.id}>
+                      {row.getAllCells().map((cell) => {
+                        return (
+                          <td key={cell.id}>
+                            <table.FlexRender cell={cell} />
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  )
+                })}
+            </tbody>
+          </table>
+          <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+          <div>
+            <button onClick={() => rerender(0)}>Force Rerender</button>
+          </div>
+          <div>
+            <button onClick={() => refreshData()}>Refresh Data</button>
+          </div>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
+        </div>
+      )}
+    </table.Subscribe>
   )
 }
 

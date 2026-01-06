@@ -257,7 +257,7 @@ const table = useTable({
   onDensityChange: setDensity, //using the new onDensityChange option, TS is still happy :)
 })
 //...
-const { density } = table.getState()
+const { density } = table.store.state
 return(
   <td
     key={cell.id}

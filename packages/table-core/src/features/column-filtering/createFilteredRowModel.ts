@@ -10,7 +10,7 @@ import { column_getFilterFn } from './columnFilteringFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table_Internal } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
   FilterFn,
@@ -24,10 +24,9 @@ export function createFilteredRowModel<
   TData extends RowData = any,
 >(
   filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>,
-): (
-  table: Table_Internal<TFeatures, TData>,
-) => () => RowModel<TFeatures, TData> {
-  return (table) => {
+): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+  return (_table) => {
+    const table = _table as Table_Internal<TFeatures, TData>
     if (!table._rowModelFns.filterFns) table._rowModelFns.filterFns = filterFns
     return tableMemo({
       feature: 'columnFilteringFeature',
@@ -35,8 +34,8 @@ export function createFilteredRowModel<
       fnName: 'table.getFilteredRowModel',
       memoDeps: () => [
         table.getPreFilteredRowModel(),
-        table.options.state?.columnFilters,
-        table.options.state?.globalFilter,
+        table.store.state.columnFilters,
+        table.store.state.globalFilter,
       ],
       fn: () => _createFilteredRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
@@ -49,7 +48,7 @@ function _createFilteredRowModel<
   TData extends RowData = any,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreFilteredRowModel()
-  const { columnFilters, globalFilter } = table.options.state ?? {}
+  const { columnFilters, globalFilter } = table.store.state
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
     for (const row of rowModel.flatRows as Array<

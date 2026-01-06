@@ -4,7 +4,6 @@ import {
   createExpandedRowModel,
   createTableHelper,
   rowExpandingFeature,
-  type ExpandedState,
   type Row,
 } from '@tanstack/vue-table'
 import { Text, h, ref } from 'vue'
@@ -50,6 +49,7 @@ const tableHelper = createTableHelper({
   _rowModels: {
     expandedRowModel: createExpandedRowModel(),
   },
+  TData: {} as Person,
 })
 
 const columnHelper = tableHelper.createColumnHelper<Person>()
@@ -102,31 +102,20 @@ const columns = columnHelper.columns([
 ])
 
 const data = ref(defaultData)
-const expanded = ref<ExpandedState>({})
 
 const rerender = () => {
   data.value = defaultData
 }
 
-const table = tableHelper.useTable({
-  // features and row models are already defined in the tableHelper
-  get data() {
-    return data.value
+const table = tableHelper.useTable(
+  {
+    // features and row models are already defined in the tableHelper
+    data,
+    columns,
+    getRowCanExpand: () => true,
   },
-  state: {
-    get expanded() {
-      return expanded.value
-    },
-  },
-  columns,
-  getRowCanExpand: () => true,
-  onExpandedChange: (updaterOrValue) => {
-    expanded.value =
-      typeof updaterOrValue === 'function'
-        ? updaterOrValue(expanded.value)
-        : updaterOrValue
-  },
-})
+  (state) => ({ expanded: state.expanded }),
+)
 </script>
 
 <template>

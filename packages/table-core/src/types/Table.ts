@@ -1,3 +1,4 @@
+import type { Derived, Store } from '@tanstack/store'
 import type { Table_ColumnFaceting } from '../features/column-faceting/columnFacetingFeature.types'
 import type { Table_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 import type { Table_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -119,4 +120,6 @@ export type Table_Internal<
     initialState?: TableState_All
   }
   initialState: TableState_All
+  baseStore: Store<TableState_All>
+  store: Derived<TableState_All>
 }

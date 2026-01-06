@@ -1,7 +1,7 @@
-import { tableMemo } from '../../utils'
+import { callMemoOrStaticFn, tableMemo } from '../../utils'
 import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
-import type { Table_Internal } from '../../types/Table'
-import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
+import type { Row } from '../../types/Row'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 
@@ -9,34 +9,39 @@ export function createFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
 ) => () => Map<any, number> {
-  return (table, columnId) =>
-    tableMemo({
+  return (_table, columnId) => {
+    const table = _table as Table_Internal<TFeatures, TData>
+    return tableMemo({
       feature: 'columnFacetingFeature',
       table,
       fnName: 'table.getFacetedUniqueValues',
-      memoDeps: () => [
-        column_getFacetedRowModel(table.getColumn(columnId), table)(),
-      ],
-      fn: (facetedRowModel) =>
-        _createFacetedUniqueValues(columnId, facetedRowModel),
+      memoDeps: () => {
+        const column = table.getColumn(columnId)
+        if (!column) return [table.getPreFilteredRowModel().flatRows]
+        return [
+          callMemoOrStaticFn(
+            column,
+            'getFacetedRowModel',
+            column_getFacetedRowModel,
+            table,
+          ).flatRows,
+        ]
+      },
+      fn: (flatRows) => _createFacetedUniqueValues(columnId, flatRows),
     })
+  }
 }
 
 function _createFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(
-  columnId: string,
-  facetedRowModel: RowModel<TFeatures, TData> | undefined,
-): Map<any, number> {
-  if (!facetedRowModel) return new Map()
-
+>(columnId: string, flatRows: Array<Row<TFeatures, TData>>): Map<any, number> {
   const facetedUniqueValues = new Map<any, number>()
 
-  for (const row of facetedRowModel.flatRows) {
+  for (const row of flatRows) {
     const values = row.getUniqueValues(columnId)
 
     for (const value of values) {

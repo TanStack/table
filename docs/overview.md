@@ -12,13 +12,13 @@ If you use TypeScript, you will get top-notch type safety and editor autocomplet
 
 ## Headless
 
-As it was mentioned extensively in the [Intro](../introduction) section, TanStack Table is **headless**. This means that it doesn't render any DOM elements, and instead relies on you, the UI/UX developer to provide the table's markup and styles. This is a great way to build a table that can be used in any UI framework, including React, Vue, Solid, Svelte, Qwik, Angular, and even JS-to-native platforms like React Native!
+As it was mentioned extensively in the [Intro](../introduction) section, TanStack Table is **headless**. This means that it doesn't render any DOM elements, and instead relies on you, the UI/UX developer to provide the table's markup and styles. This is a great way to build a table that can be used in any UI framework, including React, Vue, Solid, Svelte, Angular, and even JS-to-native platforms like React Native!
 
 ## Agnostic
 
 Since TanStack Table is headless and runs on a vanilla JavaScript core, it is agnostic in a couple of ways:
 
-1. TanStack Table is **Framework Agnostic**, which means you can use it with any JavaScript framework (or library) that you want. TanStack Table provides ready-to-use adapters for React, Vue, Solid, Svelte, and Qwik out of the box, but you can create your own adapter if you need to.
+1. TanStack Table is **Framework Agnostic**, which means you can use it with any JavaScript framework (or library) that you want. TanStack Table provides ready-to-use adapters for React, Vue, Solid, Svelte out of the box, but you can create your own adapter if you need to.
 2. TanStack Table is **CSS / Component Library Agnostic**, which means that you can use TanStack Table with whatever CSS strategy or component library you want. TanStack Table itself does not render any table markup or styles. You bring your own! Want to use Tailwind or ShadCN? No problem! Want to use Material UI or Bootstrap? No problem! Have your own custom design system? TanStack Table was made for you!
 
 ## Core Objects and Types

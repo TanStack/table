@@ -1,12 +1,12 @@
 import {
   columnFilteringFeature,
-  flexRender,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import { useEffect } from 'react'
 import { DebouncedInput } from './debouncedInput'
 import type {
   ColumnDef,
@@ -51,18 +51,29 @@ export default function Table<T extends Record<string, string | number>>({
   paginationOptions,
   sorting,
 }: Props<T>) {
-  const table = useTable({
-    _features,
-    _rowModels: {}, // no client-side row models since we're doing server-side sorting, filtering, and pagination
-    columns,
-    data,
-    manualFiltering: true,
-    manualPagination: true,
-    manualSorting: true,
-    onSortingChange,
-    state: { pagination, sorting },
-    ...paginationOptions,
-  })
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {}, // no client-side row models since we're doing server-side sorting, filtering, and pagination
+      columns,
+      data,
+      manualFiltering: true,
+      manualPagination: true,
+      manualSorting: true,
+      onSortingChange,
+      ...paginationOptions,
+    },
+    (state) => state,
+  )
+
+  // Sync controlled state with table store
+  useEffect(() => {
+    table.store.setState((prev) => ({
+      ...prev,
+      pagination,
+      sorting,
+    }))
+  }, [table, pagination, sorting])
 
   return (
     <div>
@@ -84,10 +95,7 @@ export default function Table<T extends Record<string, string | number>>({
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          <table.FlexRender header={header} />
                           {{
                             asc: ' 🔼',
                             desc: ' 🔽',
@@ -127,10 +135,7 @@ export default function Table<T extends Record<string, string | number>>({
                 {row.getAllCells().map((cell) => {
                   return (
                     <td key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <table.FlexRender cell={cell} />
                     </td>
                   )
                 })}
@@ -171,7 +176,7 @@ export default function Table<T extends Record<string, string | number>>({
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.store.state.pagination.pageIndex + 1} of{' '}
             {table.getPageCount()}
           </strong>
         </span>
@@ -179,7 +184,7 @@ export default function Table<T extends Record<string, string | number>>({
           | Go to page:
           <input
             type="number"
-            value={table.getState().pagination.pageIndex + 1}
+            value={table.store.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -188,7 +193,7 @@ export default function Table<T extends Record<string, string | number>>({
           />
         </span>
         <select
-          value={table.getState().pagination.pageSize}
+          value={table.store.state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}

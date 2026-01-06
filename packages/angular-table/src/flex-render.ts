@@ -333,4 +333,4 @@ export class FlexRenderDirective<
   }
 }
 
-export const FlexRender = FlexRenderDirective
+export { FlexRender as FlexRenderDirective }

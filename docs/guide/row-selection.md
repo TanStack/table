@@ -28,7 +28,7 @@ The table instance already manages the row selection state for you (though as se
 - `getGroupedSelectedRowModel()` - returns selected rows after grouping and sorting
 
 ```ts
-console.log(table.getState().rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
+console.log(table.store.state.rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
 console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
 console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
 console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows

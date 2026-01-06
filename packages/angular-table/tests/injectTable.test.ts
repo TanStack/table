@@ -47,13 +47,16 @@ describe('injectTable', () => {
       { id: 'id', header: 'Id', cell: (context) => context.getValue() },
       { id: 'title', header: 'Title', cell: (context) => context.getValue() },
     ]
-    const table = injectTable(() => ({
-      data: data(),
-      _features: stockFeatures,
-      columns: columns,
-      getRowId: (row) => row.id,
-    }))
-    const tablePropertyKeys = Object.keys(table.get())
+    const table = TestBed.runInInjectionContext(() =>
+      injectTable(() => ({
+        data: data(),
+        _features: stockFeatures,
+        columns: columns,
+        getRowId: (row) => row.id,
+      })),
+    )
+
+    const tablePropertyKeys = Object.keys(table())
 
     test('table must be a signal', () => {
       expect(isSignal(table.get)).toEqual(true)
@@ -107,11 +110,11 @@ describe('injectTable', () => {
         effect(() => coreRowModelFn(table.getCoreRowModel()))
         effect(() => rowModelFn(table.getRowModel()))
 
-        TestBed.flushEffects()
+        TestBed.tick()
 
         pagination.set({ pageIndex: 0, pageSize: 3 })
 
-        TestBed.flushEffects()
+        TestBed.tick()
       })
 
       expect(coreRowModelFn).toHaveBeenCalledOnce()
@@ -131,17 +134,19 @@ describe('injectTable - Experimental reactivity', () => {
     { id: 'id', header: 'Id', cell: (context) => context.getValue() },
     { id: 'title', header: 'Title', cell: (context) => context.getValue() },
   ]
-  const table = injectTable(() => ({
-    data: data(),
-    _features: { ...stockFeatures },
-    columns: columns,
-    getRowId: (row) => row.id,
-    enableExperimentalReactivity: true,
-    enableColumnAutoReactivity: true,
-    enableCellAutoReactivity: true,
-    enableRowAutoReactivity: true,
-    enableHeaderAutoReactivity: true,
-  }))
+  const table = TestBed.runInInjectionContext(() =>
+    injectTable(() => ({
+      data: data(),
+      _features: { ...stockFeatures },
+      columns: columns,
+      getRowId: (row) => row.id,
+      enableExperimentalReactivity: true,
+      enableColumnAutoReactivity: true,
+      enableCellAutoReactivity: true,
+      enableRowAutoReactivity: true,
+      enableHeaderAutoReactivity: true,
+    })),
+  )
   const tablePropertyKeys = Object.keys(table)
 
   describe('Proxy', () => {

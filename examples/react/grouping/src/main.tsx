@@ -12,14 +12,12 @@ import {
   createSortedRowModel,
   createTableHelper,
   filterFns,
-  flexRender,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef, GroupingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const tableHelper = createTableHelper({
@@ -37,78 +35,67 @@ const tableHelper = createTableHelper({
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
-  TData: {} as Person,
 })
+
+const columnHelper = tableHelper.createColumnHelper<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const columns = React.useMemo<
-    Array<ColumnDef<typeof tableHelper.features, Person>>
-  >(
-    () => [
-      {
-        accessorKey: 'firstName',
-        header: 'First Name',
-        cell: (info) => info.getValue(),
-        /**
-         * override the value used for row grouping
-         * (otherwise, defaults to the value derived from accessorKey / accessorFn)
-         */
-        getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        header: () => <span>Last Name</span>,
-        cell: (info) => info.getValue(),
-      },
-
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        aggregatedCell: ({ getValue }) =>
-          Math.round(getValue<number>() * 100) / 100,
-        aggregationFn: 'median',
-      },
-
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        aggregationFn: 'sum',
-        aggregatedCell: ({ getValue }) => getValue<number>().toLocaleString(),
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        cell: ({ getValue }) =>
-          Math.round(getValue<number>() * 100) / 100 + '%',
-        aggregationFn: 'mean',
-        aggregatedCell: ({ getValue }) =>
-          Math.round(getValue<number>() * 100) / 100 + '%',
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          header: 'First Name',
+          cell: (info) => info.getValue(),
+          /**
+           * override the value used for row grouping
+           * (otherwise, defaults to the value derived from accessorKey / accessorFn)
+           */
+          getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          header: () => <span>Last Name</span>,
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          aggregatedCell: ({ getValue }) =>
+            Math.round(getValue<number>() * 100) / 100,
+          aggregationFn: 'median',
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          aggregationFn: 'sum',
+          aggregatedCell: ({ getValue }) => getValue<number>().toLocaleString(),
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          cell: ({ getValue }) =>
+            Math.round(getValue<number>() * 100) / 100 + '%',
+          aggregationFn: 'mean',
+          aggregatedCell: ({ getValue }) =>
+            Math.round(getValue<number>() * 100) / 100 + '%',
+        }),
+      ]),
     [],
   )
 
   const [data, setData] = React.useState(() => makeData(10_000))
   const refreshData = () => setData(() => makeData(100_000)) // stress test
 
-  const [grouping, setGrouping] = React.useState<GroupingState>([])
-
-  const table = tableHelper.useTable({
-    columns,
-    data,
-    state: {
-      grouping,
+  const table = tableHelper.useTable(
+    {
+      columns,
+      data,
+      debugTable: true,
     },
-    onGroupingChange: setGrouping,
-    debugTable: true,
-  })
+    (state) => state, // subscribe to all state changes
+  )
 
   return (
     <div className="p-2">
@@ -133,10 +120,7 @@ function App() {
                               : `👊 `}
                           </button>
                         ) : null}{' '}
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                        <table.FlexRender header={header} />
                       </div>
                     )}
                   </th>
@@ -173,27 +157,17 @@ function App() {
                             }}
                           >
                             {row.getIsExpanded() ? '👇' : '👉'}{' '}
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}{' '}
-                            ({row.subRows.length})
+                            <table.FlexRender cell={cell} /> (
+                            {row.subRows.length})
                           </button>
                         </>
                       ) : cell.getIsAggregated() ? (
                         // If the cell is aggregated, use the Aggregated
                         // renderer for cell
-                        flexRender(
-                          cell.column.columnDef.aggregatedCell ??
-                            cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )
+                        <table.FlexRender cell={cell} />
                       ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
-                        flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )
+                        <table.FlexRender cell={cell} />
                       )}
                     </td>
                   )
@@ -236,8 +210,7 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {table.state.pagination.pageIndex + 1} of {table.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
@@ -246,7 +219,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
+            defaultValue={table.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -255,7 +228,7 @@ function App() {
           />
         </span>
         <select
-          value={table.getState().pagination.pageSize}
+          value={table.state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
@@ -274,7 +247,9 @@ function App() {
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
-      <pre>{JSON.stringify(grouping, null, 2)}</pre>
+      <table.Subscribe selector={(state) => state}>
+        {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+      </table.Subscribe>
     </div>
   )
 }

@@ -94,7 +94,7 @@ Since the column filter state is an array of objects, you can have multiple colu
 
 #### Accessing Column Filter State
 
-You can access the column filter state from the table instance just like any other table state using the `table.getState()` API.
+You can access the column filter state from the table instance just like any other table state using the `table.store.state` API.
 
 ```jsx
 const table = useTable({
@@ -103,7 +103,7 @@ const table = useTable({
   //...
 })
 
-console.log(table.getState().columnFilters) // access the column filters state from the table instance
+console.log(table.store.state.columnFilters) // access the column filters state from the table instance
 ```
 
 However, if you need to access the column filter state before the table is initialized, you can "control" the column filter state like down below.

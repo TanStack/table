@@ -6,107 +6,83 @@ import {
   columnOrderingFeature,
   columnPinningFeature,
   columnVisibilityFeature,
-  flexRender,
-  tableFeatures,
-  useTable,
+  createTableHelper,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type {
-  ColumnDef,
-  ColumnOrderState,
-  ColumnPinningState,
-  ColumnVisibilityState,
-} from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
-  columnVisibilityFeature,
-  columnPinningFeature,
-  columnOrderingFeature,
+// Create table helper with features
+const tableHelper = createTableHelper({
+  _features: {
+    columnVisibilityFeature,
+    columnPinningFeature,
+    columnOrderingFeature,
+  },
+  _rowModels: {},
+  debugTable: true,
+  debugHeaders: true,
+  debugColumns: true,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
-  {
+// Create column helper
+const columnHelper = tableHelper.createColumnHelper<Person>()
+
+// Define columns using columnHelper
+const defaultColumns = columnHelper.columns([
+  columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'firstName',
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
-      },
-    ],
-  },
-  {
+      }),
+    ]),
+  }),
+  columnHelper.group({
     header: 'Info',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
         header: () => 'Age',
         footer: (props) => props.column.id,
-      },
-      {
+      }),
+      columnHelper.group({
         header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
             header: () => <span>Visits</span>,
             footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'status',
+          }),
+          columnHelper.accessor('status', {
             header: 'Status',
             footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
+          }),
+          columnHelper.accessor('progress', {
             header: 'Profile Progress',
             footer: (props) => props.column.id,
-          },
-        ],
-      },
-    ],
-  },
-]
+          }),
+        ]),
+      }),
+    ]),
+  }),
+])
 
 function App() {
   const [data, setData] = React.useState(() => makeData(5000))
   const [columns] = React.useState(() => [...defaultColumns])
 
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<ColumnVisibilityState>({})
-  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([])
-  const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>({
-    left: [],
-    right: [],
-  })
-
   const rerender = () => setData(() => makeData(5000))
 
-  const table = useTable({
-    _features,
-    _rowModels: {},
+  const table = tableHelper.useTable({
     columns,
     data,
-    state: {
-      columnVisibility,
-      columnOrder,
-      columnPinning,
-    },
-    onColumnVisibilityChange: setColumnVisibility,
-    onColumnOrderChange: setColumnOrder,
-    onColumnPinningChange: setColumnPinning,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
   })
 
   const randomizeColumns = () => {
@@ -116,126 +92,132 @@ function App() {
   }
 
   return (
-    <div className="p-2">
-      <div className="inline-block border border-black shadow rounded">
-        <div className="px-1 border-b border-black">
-          <label>
-            <input
-              type="checkbox"
-              checked={table.getIsAllColumnsVisible()}
-              onChange={table.getToggleAllColumnsVisibilityHandler()}
-            />{' '}
-            Toggle All
-          </label>
-        </div>
-        {table.getAllLeafColumns().map((column) => {
-          return (
-            <div key={column.id} className="px-1">
+    <table.Subscribe
+      selector={(state) => ({
+        columnVisibility: state.columnVisibility,
+        columnOrder: state.columnOrder,
+        columnPinning: state.columnPinning,
+      })}
+    >
+      {(_state) => (
+        <div className="p-2">
+          <div className="inline-block border border-black shadow rounded">
+            <div className="px-1 border-b border-black">
               <label>
                 <input
                   type="checkbox"
-                  checked={column.getIsVisible()}
-                  onChange={column.getToggleVisibilityHandler()}
+                  checked={table.getIsAllColumnsVisible()}
+                  onChange={table.getToggleAllColumnsVisibilityHandler()}
                 />{' '}
-                {column.id}
+                Toggle All
               </label>
             </div>
-          )
-        })}
-      </div>
-      <div className="h-4" />
-      <div className="flex flex-wrap gap-2">
-        <button onClick={() => rerender()} className="border p-1">
-          Regenerate
-        </button>
-        <button onClick={() => randomizeColumns()} className="border p-1">
-          Shuffle Columns
-        </button>
-      </div>
-      <div className="h-4" />
-      <p className="text-sm mb-2">
-        This example using the non-split APIs. Columns are just reordered within
-        1 table instead of being split into 3 different tables.
-      </p>
-      <div className="flex">
-        <table className="border-2 border-black">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    <div className="whitespace-nowrap">
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
+            {table.getAllLeafColumns().map((column) => {
+              return (
+                <div key={column.id} className="px-1">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={column.getIsVisible()}
+                      onChange={column.getToggleVisibilityHandler()}
+                    />{' '}
+                    {column.id}
+                  </label>
+                </div>
+              )
+            })}
+          </div>
+          <div className="h-4" />
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => rerender()} className="border p-1">
+              Regenerate
+            </button>
+            <button onClick={() => randomizeColumns()} className="border p-1">
+              Shuffle Columns
+            </button>
+          </div>
+          <div className="h-4" />
+          <p className="text-sm mb-2">
+            This example using the non-split APIs. Columns are just reordered
+            within 1 table instead of being split into 3 different tables.
+          </p>
+          <div className="flex">
+            <table className="border-2 border-black">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => (
+                      <th key={header.id} colSpan={header.colSpan}>
+                        <div className="whitespace-nowrap">
+                          {header.isPlaceholder ? null : (
+                            <table.FlexRender header={header} />
                           )}
-                    </div>
-                    {!header.isPlaceholder && header.column.getCanPin() && (
-                      <div className="flex gap-1 justify-center">
-                        {header.column.getIsPinned() !== 'left' ? (
-                          <button
-                            className="border rounded px-2"
-                            onClick={() => {
-                              header.column.pin('left')
-                            }}
-                          >
-                            {'<='}
-                          </button>
-                        ) : null}
-                        {header.column.getIsPinned() ? (
-                          <button
-                            className="border rounded px-2"
-                            onClick={() => {
-                              header.column.pin(false)
-                            }}
-                          >
-                            X
-                          </button>
-                        ) : null}
-                        {header.column.getIsPinned() !== 'right' ? (
-                          <button
-                            className="border rounded px-2"
-                            onClick={() => {
-                              header.column.pin('right')
-                            }}
-                          >
-                            {'=>'}
-                          </button>
-                        ) : null}
-                      </div>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table
-              .getRowModel()
-              .rows.slice(0, 20)
-              .map((row) => {
-                return (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <td key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      )
-                    })}
+                        </div>
+                        {!header.isPlaceholder && header.column.getCanPin() && (
+                          <div className="flex gap-1 justify-center">
+                            {header.column.getIsPinned() !== 'left' ? (
+                              <button
+                                className="border rounded px-2"
+                                onClick={() => {
+                                  header.column.pin('left')
+                                }}
+                              >
+                                {'<='}
+                              </button>
+                            ) : null}
+                            {header.column.getIsPinned() ? (
+                              <button
+                                className="border rounded px-2"
+                                onClick={() => {
+                                  header.column.pin(false)
+                                }}
+                              >
+                                X
+                              </button>
+                            ) : null}
+                            {header.column.getIsPinned() !== 'right' ? (
+                              <button
+                                className="border rounded px-2"
+                                onClick={() => {
+                                  header.column.pin('right')
+                                }}
+                              >
+                                {'=>'}
+                              </button>
+                            ) : null}
+                          </div>
+                        )}
+                      </th>
+                    ))}
                   </tr>
-                )
-              })}
-          </tbody>
-        </table>
-      </div>
-      <pre>{JSON.stringify(table.getState().columnPinning, null, 2)}</pre>
-    </div>
+                ))}
+              </thead>
+              <tbody>
+                {table
+                  .getRowModel()
+                  .rows.slice(0, 20)
+                  .map((row) => {
+                    return (
+                      <tr key={row.id}>
+                        {row.getVisibleCells().map((cell) => {
+                          return (
+                            <td key={cell.id}>
+                              <table.FlexRender cell={cell} />
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    )
+                  })}
+              </tbody>
+            </table>
+          </div>
+          <table.Subscribe selector={(state) => state}>
+            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+          </table.Subscribe>
+        </div>
+      )}
+    </table.Subscribe>
   )
 }
 

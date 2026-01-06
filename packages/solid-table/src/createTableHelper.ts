@@ -1,24 +1,26 @@
 import { constructTableHelper } from '@tanstack/table-core'
 import { createTable } from './createTable'
+import type { SolidTable } from './createTable'
 import type {
   RowData,
-  Table,
   TableFeatures,
   TableHelperOptions,
   TableHelper_Core,
   TableOptions,
+  TableState,
 } from '@tanstack/table-core'
 
 export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 > = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
-  createTable: (
+  createTable: <TSelected = {}>(
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
     >,
-  ) => Table<TFeatures, TData>
+    selector?: (state: TableState<TFeatures>) => TSelected,
+  ) => SolidTable<TFeatures, TData, TSelected>
 }
 
 export function createTableHelper<
@@ -30,7 +32,21 @@ export function createTableHelper<
   const tableHelper = constructTableHelper(createTable, tableHelperOptions)
   return {
     ...tableHelper,
-    createTable: tableHelper.tableCreator,
+    createTable: <TSelected = {}>(
+      tableOptions: Omit<
+        TableOptions<TFeatures, TData>,
+        '_features' | '_rowModels'
+      >,
+      selector?: (state: TableState<TFeatures>) => TSelected,
+    ) => {
+      return createTable<TFeatures, TData, TSelected>(
+        { ...tableHelper.options, ...tableOptions } as TableOptions<
+          TFeatures,
+          TData
+        >,
+        selector,
+      )
+    },
   } as any
 }
 

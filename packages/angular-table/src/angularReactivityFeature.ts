@@ -79,10 +79,6 @@ export function constructAngularReactivityFeature<
     constructTableAPIs: (table) => {
       const rootNotifier = signal<Signal<any> | null>(null)
 
-      table._setTableNotifier = (notifier) => {
-        rootNotifier.set(notifier)
-      }
-
       table.get = computed(() => rootNotifier()!(), {
         equal: () => false,
       })
@@ -99,55 +95,87 @@ export function constructAngularReactivityFeature<
       })
     },
 
-    constructCellAPIs(cell) {
-      if (cell._table.options.reactivity?.cell === false) {
+    assignCellPrototype: (prototype, table) => {
+      // if (cell._table.options.reactivity?.cell === false) {
+      //   return
+      // }
+      // markReactive(cell)
+      // setReactiveProps(cell._table.get, cell, {
+      //   skipProperty: getUserSkipPropertyFn(
+      //     cell._table.options.reactivity?.cell,
+      //     skipBaseProperties,
+      //   ),
+      // })
+      if (!table.options.enableExperimentalReactivity) {
         return
       }
-      markReactive(cell)
-      setReactiveProps(cell._table.get, cell, {
-        skipProperty: getUserSkipPropertyFn(
-          cell._table.options.reactivity?.cell,
-          skipBaseProperties,
-        ),
+      // Store reference to table for runtime access
+      ;(prototype as any).__angularTable = table
+      setReactivePropsOnPrototype(prototype, {
+        skipProperty: skipBaseProperties,
       })
     },
 
-    constructColumnAPIs(column) {
-      if (column._table.options.reactivity?.column === false) {
+    assignColumnPrototype: (prototype, table) => {
+      // if (column._table.options.reactivity?.column === false) {
+      //   return
+      // }
+      // markReactive(column)
+      // setReactiveProps(column._table.get, column, {
+      //   skipProperty: getUserSkipPropertyFn(
+      //     column._table.options.reactivity?.cell,
+      //     skipBaseProperties,
+      //   ),
+      // })
+      if (!table.options.enableExperimentalReactivity) {
         return
       }
-      markReactive(column)
-      setReactiveProps(column._table.get, column, {
-        skipProperty: getUserSkipPropertyFn(
-          column._table.options.reactivity?.cell,
-          skipBaseProperties,
-        ),
+      // Store reference to table for runtime access
+      ;(prototype as any).__angularTable = table
+      setReactivePropsOnPrototype(prototype, {
+        skipProperty: skipBaseProperties,
       })
     },
 
-    constructHeaderAPIs(header) {
-      if (header._table.options.reactivity?.header === false) {
+    assignHeaderPrototype: (prototype, table) => {
+      // if (header._table.options.reactivity?.header === false) {
+      //   return
+      // }
+      // markReactive(header)
+      // setReactiveProps(header._table.get, header, {
+      //   skipProperty: getUserSkipPropertyFn(
+      //     header._table.options.reactivity?.cell,
+      //     skipBaseProperties,
+      //   ),
+      // })
+      if (!table.options.enableExperimentalReactivity) {
         return
       }
-      markReactive(header)
-      setReactiveProps(header._table.get, header, {
-        skipProperty: getUserSkipPropertyFn(
-          header._table.options.reactivity?.cell,
-          skipBaseProperties,
-        ),
+      // Store reference to table for runtime access
+      ;(prototype as any).__angularTable = table
+      setReactivePropsOnPrototype(prototype, {
+        skipProperty: skipBaseProperties,
       })
     },
 
-    constructRowAPIs(row) {
-      if (row._table.options.reactivity?.row === false) {
+    assignRowPrototype: (prototype, table) => {
+      // if (row._table.options.reactivity?.row === false) {
+      //   return
+      // }
+      // markReactive(row)
+      // setReactiveProps(row._table.get, row, {
+      //   skipProperty: getUserSkipPropertyFn(
+      //     row._table.options.reactivity?.cell,
+      //     skipBaseProperties,
+      //   ),
+      // })
+      if (!table.options.enableExperimentalReactivity) {
         return
       }
-      markReactive(row)
-      setReactiveProps(row._table.get, row, {
-        skipProperty: getUserSkipPropertyFn(
-          row._table.options.reactivity?.cell,
-          skipBaseProperties,
-        ),
+      // Store reference to table for runtime access
+      ;(prototype as any).__angularTable = table
+      setReactivePropsOnPrototype(prototype, {
+        skipProperty: skipBaseProperties,
       })
     },
   }
@@ -190,5 +218,77 @@ function setReactiveProps(
       property,
       originalObject: obj,
     })
+  }
+}
+
+function setReactivePropsOnPrototype(
+  prototype: Record<string, any>,
+  options: {
+    skipProperty: (property: string) => boolean
+  },
+) {
+  const { skipProperty } = options
+
+  // Wrap methods on the prototype that will be lazily wrapped at instance access time
+  // We intercept property access on the prototype to wrap methods when they're first accessed
+  const propertyNames = Object.getOwnPropertyNames(prototype)
+  for (const property of propertyNames) {
+    if (property === 'table' || property.startsWith('__angular')) {
+      continue
+    }
+    const descriptor = Object.getOwnPropertyDescriptor(prototype, property)
+    if (descriptor && typeof descriptor.value === 'function') {
+      if (skipProperty(property)) {
+        continue
+      }
+      // Store original method
+      const originalMethod = descriptor.value
+      // Replace with a function that will be wrapped at instance creation time
+      Object.defineProperty(prototype, property, {
+        enumerable: descriptor.enumerable,
+        configurable: descriptor.configurable,
+        value: function (this: any, ...args: Array<any>) {
+          // Get the table from the instance
+          const table = this.table
+          if (table && table._rootNotifier) {
+            // Check if already wrapped on this instance
+            const instanceDescriptor = Object.getOwnPropertyDescriptor(
+              this,
+              property,
+            )
+            if (
+              instanceDescriptor &&
+              instanceDescriptor.value?.__angularWrapped
+            ) {
+              return instanceDescriptor.value.apply(this, args)
+            }
+            // Wrap the method with toComputed using the table's rootNotifier
+            // Create a wrapper function that calls the original method
+            const boundMethod = originalMethod.bind(this)
+            const wrapped = toComputed(
+              table._rootNotifier,
+              boundMethod,
+              property,
+            ) as any
+            wrapped.__angularWrapped = true
+            // Cache the wrapped version on the instance
+            Object.defineProperty(this, property, {
+              enumerable: true,
+              configurable: true,
+              value: wrapped,
+            })
+            // Call the wrapped function with args
+            if (args.length === 0) {
+              return wrapped()
+            } else if (args.length === 1) {
+              return wrapped(args[0])
+            } else {
+              return wrapped(args[0], ...args.slice(1))
+            }
+          }
+          return originalMethod.apply(this, args)
+        },
+      })
+    }
   }
 }

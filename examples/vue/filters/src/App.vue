@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  ColumnFiltersState,
-  FlexRender,
-  Updater,
-  isFunction,
-} from '@tanstack/vue-table'
+import { FlexRender } from '@tanstack/vue-table'
 import { ref } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
 import Filter from './Filter.vue'
@@ -91,43 +86,27 @@ const data = ref(defaultData)
 const rerender = () => {
   data.value = defaultData
 }
-const columnFilters = ref<ColumnFiltersState>([])
-const globalFilter = ref('')
 
-const table = tableHelper.useTable({
-  get data() {
-    return data.value
-  },
-  get columns() {
-    return columns.value
-  },
-  state: {
-    get columnFilters() {
-      return columnFilters.value
-    },
-    get globalFilter() {
-      return globalFilter.value
+const table = tableHelper.useTable(
+  {
+    data,
+    get columns() {
+      return columns.value
     },
   },
-  onColumnFiltersChange: (updaterOrValue: Updater<ColumnFiltersState>) => {
-    columnFilters.value = isFunction(updaterOrValue)
-      ? updaterOrValue(columnFilters.value)
-      : updaterOrValue
-  },
-  onGlobalFilterChange: (updaterOrValue: Updater<string>) => {
-    globalFilter.value = isFunction(updaterOrValue)
-      ? updaterOrValue(globalFilter.value)
-      : updaterOrValue
-  },
-})
+  (state) => ({
+    columnFilters: state.columnFilters,
+    globalFilter: state.globalFilter,
+  }),
+)
 </script>
 
 <template>
   <div class="p-2">
     <div>
       <DebouncedInput
-        :modelValue="globalFilter ?? ''"
-        @update:modelValue="(value) => (globalFilter = String(value))"
+        :modelValue="table.state.globalFilter ?? ''"
+        @update:modelValue="(value) => table.setGlobalFilter(String(value))"
         className="p-2 font-lg shadow border border-block"
         placeholder="Search all columns..."
       />

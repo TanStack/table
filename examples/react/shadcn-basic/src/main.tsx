@@ -1,6 +1,6 @@
-import { flexRender, tableFeatures, useTable } from '@tanstack/react-table'
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
+import { tableFeatures, useTable } from '@tanstack/react-table'
 import { Button } from './components/ui/button'
 import {
   Table,
@@ -121,12 +121,9 @@ function App() {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender header={header} />
+                  )}
                 </th>
               ))}
             </tr>
@@ -137,7 +134,7 @@ function App() {
             <TableRow key={row.id}>
               {row.getAllCells().map((cell) => (
                 <TableCell key={cell.id} className="border">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <table.FlexRender cell={cell} />
                 </TableCell>
               ))}
             </TableRow>
@@ -148,12 +145,9 @@ function App() {
             <tr key={footerGroup.id}>
               {footerGroup.headers.map((header) => (
                 <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext(),
-                      )}
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender footer={header} />
+                  )}
                 </th>
               ))}
             </tr>

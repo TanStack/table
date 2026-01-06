@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignPrototypeAPIs,
+  assignTableAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   column_getCanResize,
   column_getIsResizing,
@@ -48,49 +52,41 @@ export function constructColumnResizingFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnResizingFeature', column, [
-        {
-          fn: () => column_getCanResize(column),
-          fnName: 'column_getCanResize',
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnResizingFeature', prototype, table, {
+        column_getCanResize: {
+          fn: (column) => column_getCanResize(column),
         },
-        {
-          fn: () => column_getIsResizing(column),
-          fnName: 'column_getIsResizing',
+        column_getIsResizing: {
+          fn: (column) => column_getIsResizing(column),
         },
-      ])
+      })
     },
 
-    constructHeaderAPIs: (header) => {
-      assignAPIs('columnResizingFeature', header, [
-        {
-          fn: (_contextDocument) =>
+    assignHeaderPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnResizingFeature', prototype, table, {
+        header_getResizeHandler: {
+          fn: (header, _contextDocument) =>
             header_getResizeHandler(header, _contextDocument),
-          fnName: 'header_getResizeHandler',
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnResizingFeature', table, [
-        {
+      assignTableAPIs('columnResizingFeature', table, {
+        table_setColumnResizing: {
           fn: (updater) => table_setColumnResizing(table, updater),
-          fnName: 'table_setColumnResizing',
         },
-        {
+        table_resetHeaderSizeInfo: {
           fn: (defaultState) => table_resetHeaderSizeInfo(table, defaultState),
-          fnName: 'table_resetHeaderSizeInfo',
         },
-      ])
+      })
     },
   }
 }
 
 /**
  * The Column Resizing feature adds column resizing state and APIs to the table and column objects.
- *
  * **Note:** This is dependent on the Column Sizing feature.
- * [API Docs](https://tanstack.com/table/v8/docs/api/features/column-resizing)
- * [Guide](https://tanstack.com/table/v8/docs/guide/column-resizing)
  */
 export const columnResizingFeature = constructColumnResizingFeature()

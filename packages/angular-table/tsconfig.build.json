@@ -1,5 +1,5 @@
 {
-  "extends": "./node_modules/ng-packagr/lib/ts/conf/tsconfig.ngc.json",
+  "extends": "./node_modules/ng-packagr/src/lib/ts/conf/tsconfig.ngc.json",
   "compilerOptions": {
     "allowJs": true,
     "module": "ESNext",

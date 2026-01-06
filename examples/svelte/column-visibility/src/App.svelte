@@ -203,5 +203,5 @@
     </tfoot>
   </table>
   <div class="h-4"></div>
-  <pre>{JSON.stringify(table.getState().columnVisibility, null, 2)}</pre>
+  <pre>{JSON.stringify(table.store.state.columnVisibility, null, 2)}</pre>
 </div>

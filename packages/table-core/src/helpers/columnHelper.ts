@@ -14,6 +14,14 @@ export type ColumnHelper<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = {
+  /**
+   * Creates a data column definition with an accessor key or function to extract the cell value.
+   * @example
+   * ```ts
+   * helper.accessor('firstName', { cell: (info) => info.getValue() })
+   * helper.accessor((row) => row.lastName, { id: 'lastName' })
+   * ```
+   */
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
     TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
@@ -29,12 +37,41 @@ export type ColumnHelper<
   ) => TAccessor extends AccessorFn<TData>
     ? AccessorFnColumnDef<TFeatures, TData, TValue>
     : AccessorKeyColumnDef<TFeatures, TData, TValue>
-  columns: (
-    columns: Array<ColumnDef<TFeatures, TData, any>>,
-  ) => Array<ColumnDef<TFeatures, TData, unknown>>
+  /**
+   * Wraps an array of column definitions to preserve each column's individual TValue type.
+   * Uses variadic tuple types to infer element types before checking constraints, preventing type widening.
+   * @example
+   * ```ts
+   * helper.columns([helper.accessor('firstName', {}), helper.accessor('age', {})])
+   * ```
+   */
+  columns: <TColumns extends ReadonlyArray<ColumnDef<TFeatures, TData, any>>>(
+    columns: [...TColumns],
+  ) => Array<ColumnDef<TFeatures, TData, any>> & [...TColumns]
+  /**
+   * Creates a display column definition for non-data columns like actions or row selection.
+   * @example
+   * ```ts
+   * helper.display({ id: 'actions', header: 'Actions', cell: () => <button>Edit</button> })
+   * ```
+   */
   display: (
     column: DisplayColumnDef<TFeatures, TData>,
   ) => DisplayColumnDef<TFeatures, TData, unknown>
+  /**
+   * Creates a group column definition that contains nested child columns.
+   * @example
+   * ```ts
+   * helper.group({
+   *   id: 'name',
+   *   header: 'Name',
+   *   columns: helper.columns([
+   *     helper.accessor('firstName', {}),
+   *     helper.accessor('lastName', { id: 'lastName' }),
+   *   ]),
+   * })
+   * ```
+   */
   group: (
     column: GroupColumnDef<TFeatures, TData, unknown>,
   ) => GroupColumnDef<TFeatures, TData, unknown>
@@ -43,13 +80,10 @@ export type ColumnHelper<
 /**
  * A helper utility for creating column definitions with slightly better type inference for each individual column.
  * The `TValue` generic is inferred based on the accessor key or function provided.
- *
  * **Note:** From a JavaScript perspective, the functions in these helpers do not do anything. They are only used to help TypeScript infer the correct types for the column definitions.
- *
  * @example
  * ```tsx
  * const helper = createColumnHelper<typeof _features, Person>() // _features is the result of `tableFeatures({})` helper
- *
  * const columns = [
  *  helper.display({ id: 'actions', header: 'Actions' }),
  *  helper.accessor('firstName', {}),
@@ -73,63 +107,11 @@ export function createColumnHelper<
             accessorKey: accessor,
           }
     },
-    columns: (columns) =>
-      columns as Array<ColumnDef<TFeatures, TData, unknown>>,
+    columns: <TColumns extends ReadonlyArray<ColumnDef<TFeatures, TData, any>>>(
+      columns: [...TColumns],
+    ): Array<ColumnDef<TFeatures, TData, any>> & [...TColumns] =>
+      columns as Array<ColumnDef<TFeatures, TData, any>> & [...TColumns],
     display: (column) => column,
     group: (column) => column,
   }
 }
-
-// test
-
-// type Person = {
-//   firstName: string
-//   lastName: string
-//   age: number
-//   visits: number
-//   status: string
-//   progress: number
-//   createdAt: Date
-//   nested: {
-//     foo: [
-//       {
-//         bar: 'bar'
-//       },
-//     ]
-//     bar: Array<{ subBar: boolean }>
-//     baz: {
-//       foo: 'foo'
-//       bar: {
-//         baz: 'baz'
-//       }
-//     }
-//   }
-// }
-
-// const test: DeepKeys<Person> = 'nested.foo.0.bar'
-// const test2: DeepKeys<Person> = 'nested.bar'
-
-// const helper = createColumnHelper<{}, Person>()
-
-// helper.accessor('nested.foo', {
-//   cell: (info) => info.getValue(),
-// })
-
-// helper.accessor('nested.foo.0.bar', {
-//   cell: (info) => info.getValue(),
-// })
-
-// helper.accessor('nested.bar', {
-//   cell: (info) => info.getValue(),
-// })
-
-// helper.group({
-//   id: 'hello',
-//   columns: [
-//     helper.accessor('firstName', {}),
-//     helper.accessor((row) => row.lastName, {
-//       id: 'lastName',
-//     }),
-//     helper.accessor('age', {}),
-//   ] as Array<ColumnDef<{}, Person>>,
-// })

@@ -1,18 +1,16 @@
 import { customElement } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
-import { state } from 'lit/decorators/state.js'
 import {
   TableController,
   createSortedRowModel,
   flexRender,
-  isFunction,
   rowSortingFeature,
   sortFns,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { Person, makeData } from './makeData'
-import type { ColumnDef, SortFn, SortingState } from '@tanstack/lit-table'
+import type { ColumnDef, SortFn } from '@tanstack/lit-table'
 
 const _features = tableFeatures({
   rowSortingFeature,
@@ -75,30 +73,20 @@ const data: Array<Person> = makeData(1000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  @state()
-  private _sorting: SortingState = []
-
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
-    const table = this.tableController.table({
-      _features,
-      _rowModels: {
-        sortedRowModel: createSortedRowModel(sortFns),
+    const table = this.tableController.table(
+      {
+        _features,
+        _rowModels: {
+          sortedRowModel: createSortedRowModel(sortFns),
+        },
+        columns,
+        data,
       },
-      columns,
-      data,
-      state: {
-        sorting: this._sorting,
-      },
-      onSortingChange: (updaterOrValue) => {
-        if (isFunction(updaterOrValue)) {
-          this._sorting = updaterOrValue(this._sorting)
-        } else {
-          this._sorting = updaterOrValue
-        }
-      },
-    })
+      (state) => ({ sorting: state.sorting }),
+    )
 
     return html`
       <table>
@@ -165,7 +153,7 @@ class LitTableExample extends LitElement {
             )}
         </tbody>
       </table>
-      <pre>${JSON.stringify(this._sorting, null, 2)}</pre>
+      <pre>${JSON.stringify(table.state.sorting, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;

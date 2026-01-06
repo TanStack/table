@@ -27,7 +27,9 @@ export interface TableOptions_Plugins<
 export interface TableOptions_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> extends TableOptions_Table<TFeatures, TData>,
+>
+  extends
+    TableOptions_Table<TFeatures, TData>,
     TableOptions_Cell,
     TableOptions_Columns<TFeatures, TData>,
     TableOptions_Rows<TFeatures, TData> {}
