@@ -94,24 +94,20 @@ export function injectTable<
       { injector },
     )
 
-    // convert table instance to signal for proxify to listen to any table state and options changes
-    const tableSignal = computed(
+    const tableSignalNotifier = computed(
       () => {
+        // TODO: replace computed just using effects could be better?
         tableState()
-
         table.setOptions(updatedOptions())
         untracked(() => {
           table.baseStore.setState((prev) => ({ ...prev }))
         })
-
         return table
       },
-      {
-        equal: () => false,
-      },
+      { equal: () => false },
     )
 
-    table.setTableNotifier(tableSignal)
+    table.setTableNotifier(tableSignalNotifier)
 
     table.Subscribe = function Subscribe<TSubSelected = {}>(props: {
       selector: (state: TableState<TFeatures>) => TSubSelected

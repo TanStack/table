@@ -27,25 +27,32 @@ export function defineLazyComputedProperty<T extends object>(
     originalObject: T
     property: keyof T & string
     valueFn: (...args: any) => any
+    overridePrototype?: boolean
   },
 ) {
-  const { valueFn, originalObject, property } = setObjectOptions
-  let computedValue: (...args: Array<unknown>) => any
-  Object.defineProperty(originalObject, property, {
-    enumerable: true,
-    configurable: true,
-    get() {
-      computedValue = toComputed(notifier, valueFn, property)
-      // Once the property is set the first time, we don't need a getter anymore
-      // since we have a computed / cached fn value
-      Object.defineProperty(this, property, {
-        value: computedValue,
-        configurable: true,
-        enumerable: true,
-      })
-      return computedValue
-    },
-  })
+  const { originalObject, property, overridePrototype, valueFn } =
+    setObjectOptions
+
+  if (overridePrototype) {
+    assignReactivePrototypeAPI(notifier, originalObject, property)
+  } else {
+    Object.defineProperty(originalObject, property, {
+      enumerable: true,
+      configurable: true,
+      get(this) {
+        const computedValue = toComputed(notifier, valueFn, property)
+        markReactive(computedValue)
+        // Once the property is set the first time, we don't need a getter anymore
+        // since we have a computed / cached fn value
+        Object.defineProperty(this, property, {
+          value: computedValue,
+          configurable: true,
+          enumerable: true,
+        })
+        return computedValue
+      },
+    })
+  }
 }
 
 /**
@@ -127,4 +134,36 @@ export function toComputed<
 
 function serializeArgs(...args: Array<any>) {
   return JSON.stringify(args)
+}
+
+export function assignReactivePrototypeAPI(
+  notifier: Signal<unknown>,
+  prototype: Record<string, any>,
+  fnName: string,
+) {
+  const fn = prototype[fnName]
+  const originalArgsLength = Math.max(
+    0,
+    Reflect.get(fn, 'originalArgsLength') ?? 0,
+  )
+
+  if (originalArgsLength <= 1) {
+    const cached = {} as Record<string, Signal<unknown>>
+    Object.defineProperty(prototype, fnName, {
+      enumerable: true,
+      configurable: true,
+      get(this) {
+        const self = this
+        return (cached[`${self.id}_${fnName}`] ??= computed(() => {
+          notifier()
+          return fn.call(self)
+        }))
+      },
+    })
+  } else {
+    prototype[fnName] = function (this: unknown, ...args: Array<any>) {
+      notifier()
+      return fn.apply(this, args)
+    }
+  }
 }

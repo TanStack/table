@@ -356,6 +356,9 @@ export function assignPrototypeAPIs<
         return fn(this, ...args)
       }
     }
+    Object.defineProperties(prototype[fnKey], {
+      originalArgsLength: { value: fn.length },
+    })
   }
 }
 
