@@ -28,6 +28,7 @@ import {
   FlexRenderView,
   mapToFlexRenderTypedContent,
 } from './flex-render/view'
+import { isReactive } from './reactivityUtils'
 import type { FlexRenderTypedContent } from './flex-render/view'
 import type {
   CellContext,
@@ -36,7 +37,6 @@ import type {
   TableFeatures,
 } from '@tanstack/table-core'
 import type { EffectRef } from '@angular/core'
-import { isReactive } from './reactivityUtils'
 
 export {
   injectFlexRenderContext,
@@ -58,12 +58,12 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   standalone: true,
   providers: [FlexRenderComponentFactory],
 })
-export class FlexRenderDirective<
-    TProps extends
-      | NonNullable<unknown>
-      | CellContext<TableFeatures, any>
-      | HeaderContext<TableFeatures, any>,
-  >
+export class FlexRender<
+  TProps extends
+    | NonNullable<unknown>
+    | CellContext<TableFeatures, any>
+    | HeaderContext<TableFeatures, any>,
+>
   implements OnChanges, DoCheck
 {
   readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
@@ -173,7 +173,7 @@ export class FlexRenderDirective<
           this.renderFlags |= FlexRenderFlags.DirtyCheck
           this.doCheck()
         },
-        { injector: this.injector, forceRoot: true },
+        { injector: this.injector },
       )
     }
   }
@@ -333,4 +333,7 @@ export class FlexRenderDirective<
   }
 }
 
-export { FlexRender as FlexRenderDirective }
+/**
+ * @deprecated Use `FlexRender` import instead.
+ */
+export const FlexRenderDirective = FlexRender
