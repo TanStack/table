@@ -25,7 +25,6 @@ import type {
   CellContext,
   ExpandedState,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 import type { TemplateRef } from '@angular/core'
 
@@ -204,11 +203,14 @@ describe('FlexRenderDirective', () => {
   })
 
   test('Support cell with component output', async () => {
+    const callExpandRender = vi.fn<(val: boolean) => void>()
+
     const columns = [
       {
         id: 'expand',
         header: 'Expand',
         cell: ({ row }: any) => {
+          callExpandRender(row.getIsExpanded())
           return flexRenderComponent(ExpandCell, {
             inputs: { expanded: row.getIsExpanded() },
             outputs: { toggleExpand: () => row.toggleExpanded() },
@@ -297,6 +299,14 @@ describe('FlexRenderDirective', () => {
       '0': true,
     })
     fixture.detectChanges()
+
+    // TODO: As a perf improvement / better maintenability,
+    //  check in a future if we can avoid evaluating the cell twice during the first render. done during comparison
+    expect(callExpandRender).toHaveBeenCalledTimes(3)
+    expect(callExpandRender).toHaveBeenNthCalledWith(1, false)
+    expect(callExpandRender).toHaveBeenNthCalledWith(2, false)
+    expect(callExpandRender).toHaveBeenNthCalledWith(3, true)
+
     expect(buttonEl.nativeElement.innerHTML).toEqual(' Expanded ')
   })
 })

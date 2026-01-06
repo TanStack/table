@@ -4,7 +4,6 @@ import { Component, effect, input, isSignal, signal } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import {
   ColumnDef,
-  createCoreRowModel,
   createPaginatedRowModel,
   stockFeatures,
 } from '@tanstack/table-core'
@@ -56,8 +55,6 @@ describe('injectTable', () => {
       })),
     )
 
-    const tablePropertyKeys = Object.keys(table())
-
     test('table must be a signal', () => {
       expect(isSignal(table.get)).toEqual(true)
     })
@@ -93,7 +90,6 @@ describe('injectTable', () => {
           columns: columns,
           _features: stockFeatures,
           _rowModels: {
-            coreRowModel: createCoreRowModel(),
             paginatedRowModel: createPaginatedRowModel(),
           },
           getRowId: (row) => row.id,
@@ -115,14 +111,14 @@ describe('injectTable', () => {
         pagination.set({ pageIndex: 0, pageSize: 3 })
 
         TestBed.tick()
+
+        expect(coreRowModelFn).toHaveBeenCalledOnce()
+        expect(coreRowModelFn.mock.calls[0]![0].rows.length).toEqual(10)
+
+        expect(rowModelFn).toHaveBeenCalledTimes(2)
+        expect(rowModelFn.mock.calls[0]![0].rows.length).toEqual(5)
+        expect(rowModelFn.mock.calls[1]![0].rows.length).toEqual(3)
       })
-
-      expect(coreRowModelFn).toHaveBeenCalledOnce()
-      expect(coreRowModelFn.mock.calls[0]![0].rows.length).toEqual(10)
-
-      expect(rowModelFn).toHaveBeenCalledTimes(2)
-      expect(rowModelFn.mock.calls[0]![0].rows.length).toEqual(5)
-      expect(rowModelFn.mock.calls[1]![0].rows.length).toEqual(3)
     })
   })
 })
