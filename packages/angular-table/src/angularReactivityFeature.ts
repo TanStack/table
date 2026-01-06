@@ -1,5 +1,9 @@
 import { computed, isSignal, signal } from '@angular/core'
-import { defineLazyComputedProperty, markReactive } from './reactivityUtils'
+import {
+  defineLazyComputedProperty,
+  markReactive,
+  toComputed,
+} from './reactivityUtils'
 import type { Signal } from '@angular/core'
 import type {
   RowData,
@@ -31,6 +35,7 @@ export interface AngularReactivityFlags {
 }
 
 interface TableOptions_AngularReactivity {
+  enableExperimentalReactivity?: boolean
   reactivity?: Partial<AngularReactivityFlags>
 }
 
@@ -39,7 +44,10 @@ interface Table_AngularReactivity<
   TData extends RowData,
 > {
   get: Signal<Table<TFeatures, TData>>
-  _setTableNotifier: (signal: Signal<Table<TFeatures, TData>>) => void
+  /**
+   * @internal
+   */
+  setTableNotifier: (signal: Signal<Table<TFeatures, TData>>) => void
 }
 
 interface AngularReactivityFeatureConstructors<
@@ -78,14 +86,8 @@ export function constructAngularReactivityFeature<
     },
     constructTableAPIs: (table) => {
       const rootNotifier = signal<Signal<any> | null>(null)
-
-      table.get = computed(() => rootNotifier()!(), {
-        equal: () => false,
-      })
-
-      if (table.options.reactivity?.table === false) {
-        return
-      }
+      table.setTableNotifier = (notifier) => rootNotifier.set(notifier)
+      table.get = computed(() => rootNotifier()!(), { equal: () => false })
       markReactive(table)
       setReactiveProps(table.get, table, {
         skipProperty: getUserSkipPropertyFn(
@@ -200,12 +202,13 @@ function setReactiveProps(
   notifier: Signal<Table<any, any>>,
   obj: { [key: string]: any },
   options: {
+    bindTo?: unknown
     skipProperty: (property: string) => boolean
   },
 ) {
   const { skipProperty } = options
   for (const property in obj) {
-    const value = obj[property]
+    let value = obj[property]
     if (
       isSignal(value) ||
       typeof value !== 'function' ||
@@ -213,6 +216,11 @@ function setReactiveProps(
     ) {
       continue
     }
+
+    if (options.bindTo && 'bind' in value) {
+      value = value.bind(options.bindTo)
+    }
+
     defineLazyComputedProperty(notifier, {
       valueFn: value,
       property,
@@ -269,7 +277,7 @@ function setReactivePropsOnPrototype(
               table._rootNotifier,
               boundMethod,
               property,
-            ) as any
+            )
             wrapped.__angularWrapped = true
             // Cache the wrapped version on the instance
             Object.defineProperty(this, property, {
