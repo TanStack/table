@@ -27,7 +27,6 @@ import {
   FlexRenderView,
   mapToFlexRenderTypedContent,
 } from './flex-render/view'
-import { isReactive } from './reactivityUtils'
 import type { FlexRenderTypedContent } from './flex-render/view'
 import type {
   CellContext,
@@ -53,7 +52,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | undefined
 
 @Directive({
-  selector: '[flexRender], ng-template[flexRender]',
+  selector: 'ng-template[flexRender]',
   standalone: true,
   providers: [FlexRenderComponentFactory],
 })
@@ -82,7 +81,7 @@ export class FlexRender<
     alias: 'flexRenderProps',
   })
 
-  readonly notifier = input<'doCheck' | 'tableChange'>('doCheck', {
+  readonly notifier = input<'doCheck' | 'tableChange'>('tableChange', {
     alias: 'flexRenderNotifier',
   })
 
@@ -161,11 +160,7 @@ export class FlexRender<
     this.#tableChangeEffect?.destroy()
     this.#tableChangeEffect = null
     let firstCheck = !!(this.renderFlags & FlexRenderFlags.ViewFirstRender)
-    if (
-      this.table &&
-      this.notifier() === 'tableChange' &&
-      isReactive(this.table)
-    ) {
+    if (this.table && this.notifier() === 'tableChange') {
       this.#tableChangeEffect = effect(
         () => {
           this.table.get()

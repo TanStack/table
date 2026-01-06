@@ -131,7 +131,7 @@ describe('FlexRenderDirective', () => {
 
   // Skip for now, test framework (using ComponentRef.setInput) cannot recognize signal inputs
   // as component inputs
-  test('should render custom components', () => {
+  test('should render custom components', async () => {
     @Component({
       template: `{{ row().property }}`,
       standalone: true,
@@ -157,6 +157,7 @@ describe('FlexRenderDirective', () => {
     setFixtureSignalInput(fixture, 'context', {
       row: { property: 'Updated value' },
     })
+    await fixture.whenRenderingDone()
     fixture.detectChanges()
 
     expect(fixture.nativeElement.textContent).toEqual('Updated value')
@@ -166,7 +167,14 @@ describe('FlexRenderDirective', () => {
 @Component({
   selector: 'app-test-render',
   template: `
-    <ng-container *flexRender="content(); props: context(); let renderValue">
+    <ng-container
+      *flexRender="
+        content();
+        props: context();
+        notifier: 'doCheck';
+        let renderValue
+      "
+    >
       <span [innerHTML]="renderValue"></span>
     </ng-container>
   `,

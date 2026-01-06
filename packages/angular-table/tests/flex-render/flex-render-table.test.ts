@@ -98,7 +98,7 @@ describe('FlexRenderDirective', () => {
   test('Render component with FlexRenderComponent', async () => {
     const status = signal<string>('Initial status')
 
-    const { dom } = createTestTable(defaultData, [
+    const { dom, fixture } = createTestTable(defaultData, [
       {
         id: 'first_cell',
         header: 'Status',
@@ -117,7 +117,7 @@ describe('FlexRenderDirective', () => {
     expect(firstCell!.textContent).toEqual('Initial status')
 
     status.set('Updated status')
-    dom.clickTriggerCdButton()
+    await fixture.whenStable()
 
     expect(firstCell!.textContent).toEqual('Updated status')
   })
@@ -187,13 +187,15 @@ describe('FlexRenderDirective', () => {
 
     const table = fixture.componentInstance.table
     table.getRow('0').toggleSelected(true)
-    dom.clickTriggerCdButton2()
+    await fixture.whenStable()
+
     expect(contextCaptor).toHaveBeenCalledTimes(1)
     expect(latestCall().row.getIsSelected()).toEqual(true)
 
     table.getRow('0').toggleSelected(false)
     table.getRow('0').toggleExpanded(true)
-    dom.clickTriggerCdButton2()
+    await fixture.whenStable()
+
     expect(contextCaptor).toHaveBeenCalledTimes(1)
     expect(latestCall().row.getIsSelected()).toEqual(false)
     expect(latestCall().row.getIsExpanded()).toEqual(true)
@@ -413,16 +415,6 @@ export function createTestTable(
   return {
     fixture,
     dom: {
-      clickTriggerCdButton() {
-        const btn = fixture.debugElement.query(By.css('button'))
-        btn.triggerEventHandler('click', null)
-        fixture.detectChanges()
-      },
-      clickTriggerCdButton2() {
-        const btn = fixture.debugElement.queryAll(By.css('button'))[1]!
-        btn.triggerEventHandler('click', null)
-        fixture.detectChanges()
-      },
       getTable() {
         return fixture.nativeElement.querySelector('table') as HTMLTableElement
       },
