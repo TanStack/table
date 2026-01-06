@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import { createColumnHelper } from '@tanstack/table-core'
 import { describe, expect, test } from 'vitest'
 import {
+  FlexRender,
   FlexRenderDirective,
   injectFlexRenderContext,
 } from '../../src/flex-render'
@@ -178,9 +179,9 @@ class TestRenderComponent {
   readonly context = input.required<Record<string, unknown>>()
 }
 
-type FlexRenderDirectiveAllowedContent = FlexRenderDirective<
-  NonNullable<unknown>
->['content']
+type FlexRenderDirectiveAllowedContent = ReturnType<
+  FlexRender<NonNullable<unknown>>['content']
+>
 
 function expectPrimitiveValueIs(
   fixture: ComponentFixture<unknown>,

@@ -2,19 +2,18 @@ import {
   ChangeDetectorRef,
   Directive,
   DoCheck,
-  Inject,
   Injector,
-  Input,
   OnChanges,
   SimpleChanges,
   TemplateRef,
   Type,
   ViewContainerRef,
+  computed,
   effect,
   inject,
+  input,
   runInInjectionContext,
 } from '@angular/core'
-import { memo } from '@tanstack/table-core'
 import { FlexRenderComponentProps } from './flex-render/context'
 import { FlexRenderFlags } from './flex-render/flags'
 import {
@@ -54,7 +53,7 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | undefined
 
 @Directive({
-  selector: '[flexRender]',
+  selector: '[flexRender], ng-template[flexRender]',
   standalone: true,
   providers: [FlexRenderComponentFactory],
 })
@@ -69,51 +68,55 @@ export class FlexRender<
   readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
   readonly #changeDetectorRef = inject(ChangeDetectorRef)
 
-  @Input({ required: true, alias: 'flexRender' })
-  content:
+  readonly content = input.required<
     | number
     | string
     | ((props: TProps) => FlexRenderContent<TProps>)
     | null
-    | undefined = undefined
+    | undefined
+  >({
+    alias: 'flexRender',
+  })
 
-  @Input({ required: true, alias: 'flexRenderProps' })
-  props: TProps = {} as TProps
+  readonly props = input.required<TProps>({
+    alias: 'flexRenderProps',
+  })
 
-  @Input({ required: false, alias: 'flexRenderNotifier' })
-  notifier: 'doCheck' | 'tableChange' = 'doCheck'
+  readonly notifier = input<'doCheck' | 'tableChange'>('doCheck', {
+    alias: 'flexRenderNotifier',
+  })
 
-  @Input({ required: false, alias: 'flexRenderInjector' })
-  injector: Injector = inject(Injector)
+  readonly injector = input(inject(Injector), {
+    alias: 'flexRenderInjector',
+  })
+
+  readonly viewContainerRef = inject(ViewContainerRef)
+
+  readonly templateRef = inject(TemplateRef)
 
   table: Table<TableFeatures, any>
   renderFlags = FlexRenderFlags.ViewFirstRender
   renderView: FlexRenderView<any> | null = null
 
-  readonly #latestContent = () => {
-    const { content, props } = this
+  readonly #getLatestContentValue = () => {
+    const content = this.content()
+    const props = this.props()
     return typeof content !== 'function'
       ? content
-      : runInInjectionContext(this.injector, () => content(props))
+      : runInInjectionContext(this.injector(), () => content(props))
   }
 
-  #getContentValue = memo({
-    memoDeps: () => [this.#latestContent(), this.props, this.content],
-    fn: (latestContent) => {
-      return mapToFlexRenderTypedContent(latestContent)
-    },
+  readonly #latestContent = computed(() => this.#getLatestContentValue())
+
+  #getContentValue = computed(() => {
+    const latestContent = this.#latestContent()
+    return mapToFlexRenderTypedContent(latestContent)
   })
 
-  constructor(
-    @Inject(ViewContainerRef)
-    private readonly viewContainerRef: ViewContainerRef,
-    @Inject(TemplateRef)
-    private readonly templateRef: TemplateRef<any>,
-  ) {}
-
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<FlexRender<TProps>>) {
     if (changes['props']) {
-      this.table = 'table' in this.props ? this.props.table : null
+      const props = changes.props.currentValue
+      this.table = 'table' in props ? props.table : null
       this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
       this.bindTableDirtyCheck()
     }
@@ -132,7 +135,7 @@ export class FlexRender<
       return
     }
 
-    if (this.notifier === 'doCheck') {
+    if (this.notifier() === 'doCheck') {
       this.renderFlags |= FlexRenderFlags.DirtyCheck
       this.doCheck()
     }
@@ -160,7 +163,7 @@ export class FlexRender<
     let firstCheck = !!(this.renderFlags & FlexRenderFlags.ViewFirstRender)
     if (
       this.table &&
-      this.notifier === 'tableChange' &&
+      this.notifier() === 'tableChange' &&
       isReactive(this.table)
     ) {
       this.#tableChangeEffect = effect(
@@ -173,7 +176,7 @@ export class FlexRender<
           this.renderFlags |= FlexRenderFlags.DirtyCheck
           this.doCheck()
         },
-        { injector: this.injector },
+        { injector: this.injector() },
       )
     }
   }
@@ -187,7 +190,7 @@ export class FlexRender<
       return
     }
     if (this.renderFlags & FlexRenderFlags.PropsReferenceChanged) {
-      if (this.renderView) this.renderView.updateProps(this.props)
+      if (this.renderView) this.renderView.updateProps(this.props())
       this.renderFlags &= ~FlexRenderFlags.PropsReferenceChanged
     }
     if (
@@ -271,10 +274,10 @@ export class FlexRender<
     template: Extract<FlexRenderTypedContent, { kind: 'primitive' }>,
   ): FlexRenderTemplateView {
     const context = () => {
-      return typeof this.content === 'string' ||
-        typeof this.content === 'number'
-        ? this.content
-        : this.content?.(this.props)
+      const content = this.content()
+      return typeof content === 'string' || typeof content === 'number'
+        ? content
+        : content?.(this.props())
     }
     const ref = this.viewContainerRef.createEmbeddedView(this.templateRef, {
       get $implicit() {
@@ -287,7 +290,7 @@ export class FlexRender<
   #renderTemplateRefContent(
     template: Extract<FlexRenderTypedContent, { kind: 'templateRef' }>,
   ): FlexRenderTemplateView {
-    const latestContext = () => this.props
+    const latestContext = () => this.props()
     const view = this.viewContainerRef.createEmbeddedView(template.content, {
       get $implicit() {
         return latestContext()
@@ -304,12 +307,12 @@ export class FlexRender<
   ): FlexRenderComponentView {
     const { inputs, outputs, injector } = flexRenderComponent.content
 
-    const getContext = () => this.props
-    const proxy = new Proxy(this.props, {
+    const getContext = () => this.props()
+    const proxy = new Proxy(this.props(), {
       get: (_, key) => getContext()[key as keyof typeof _],
     })
     const componentInjector = Injector.create({
-      parent: injector ?? this.injector,
+      parent: injector ?? this.injector(),
       providers: [{ provide: FlexRenderComponentProps, useValue: proxy }],
     })
     const view = this.#flexRenderComponentFactory.createComponent(
@@ -324,10 +327,10 @@ export class FlexRender<
   ): FlexRenderComponentView {
     const view = this.#flexRenderComponentFactory.createComponent(
       flexRenderComponent(component.content, {
-        inputs: this.props,
-        injector: this.injector,
+        inputs: this.props(),
+        injector: this.injector(),
       }),
-      this.injector,
+      this.injector(),
     )
     return new FlexRenderComponentView(component, view)
   }

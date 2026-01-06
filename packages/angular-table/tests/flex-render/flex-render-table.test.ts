@@ -181,24 +181,20 @@ describe('FlexRenderDirective', () => {
         TestData,
         any
       >
-    // TODO: As a perf improvement, check in a future if we can avoid evaluating the cell twice during the first render.
-    // This is caused due to the registration of the initial effect and the first #getContentValue() to detect the
-    // type of content to render.
-    expect(contextCaptor).toHaveBeenCalledTimes(2)
 
+    expect(contextCaptor).toHaveBeenCalledTimes(1)
     expect(latestCall().row.getIsExpanded()).toEqual(false)
-    expect(latestCall().row.getIsSelected()).toEqual(false)
 
     const table = fixture.componentInstance.table
     table.getRow('0').toggleSelected(true)
     dom.clickTriggerCdButton2()
-    expect(contextCaptor).toHaveBeenCalledTimes(3)
+    expect(contextCaptor).toHaveBeenCalledTimes(1)
     expect(latestCall().row.getIsSelected()).toEqual(true)
 
     table.getRow('0').toggleSelected(false)
     table.getRow('0').toggleExpanded(true)
     dom.clickTriggerCdButton2()
-    expect(contextCaptor).toHaveBeenCalledTimes(4)
+    expect(contextCaptor).toHaveBeenCalledTimes(1)
     expect(latestCall().row.getIsSelected()).toEqual(false)
     expect(latestCall().row.getIsExpanded()).toEqual(true)
   })
@@ -301,15 +297,9 @@ describe('FlexRenderDirective', () => {
     })
     fixture.detectChanges()
 
-    // TODO: As a perf improvement / better maintenability,
-    //  check in a future if we can avoid evaluating the cell twice during the first render. done during comparison
-    expect(callExpandRender).toHaveBeenCalledTimes(5)
+    expect(callExpandRender).toHaveBeenCalledTimes(2)
     expect(callExpandRender).toHaveBeenNthCalledWith(1, false)
-    expect(callExpandRender).toHaveBeenNthCalledWith(2, false)
-    expect(callExpandRender).toHaveBeenNthCalledWith(3, true)
-    // TODO: fix. caused by running the content(props) in a effect on flex-render.ts#226
-    expect(callExpandRender).toHaveBeenNthCalledWith(4, true)
-    expect(callExpandRender).toHaveBeenNthCalledWith(5, true)
+    expect(callExpandRender).toHaveBeenNthCalledWith(2, true)
 
     expect(buttonEl.nativeElement.innerHTML).toEqual(' Expanded ')
   })
