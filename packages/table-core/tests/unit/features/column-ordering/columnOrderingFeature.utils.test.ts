@@ -32,7 +32,7 @@ describe('column_getIndex', () => {
       ...table.getAllLeafColumns()[0],
       id: 'non-existent',
       table,
-    } as any
+    }
 
     expect(column_getIndex(column)).toBe(-1)
   })

@@ -1,10 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import {
+  constructTable,
+  coreFeatures,
   createPaginatedRowModel,
   rowPaginationFeature,
-  type Row,
+  rowPinningFeature,
 } from '../../../../src'
 import { createRowPinningTable } from '../../../helpers/rowPinningHelpers'
+import { generateTestData } from '../../../fixtures/data/generateTestData'
+import { generateTestColumnDefs } from '../../../fixtures/data/generateTestColumnDefs'
+import type { Row } from '../../../../src'
+import type { Person } from '../../../fixtures/data/types'
 
 const ROW = {
   0: '0',
@@ -25,7 +31,31 @@ const EMPTY_PINNING_STATE = {
 describe('table methods', () => {
   describe('setRowPinning', () => {
     it('should update pinning state', () => {
-      const table = createRowPinningTable()
+      // Create a table exactly like row selection tests do
+      const data = generateTestData(10)
+      const columns = generateTestColumnDefs<typeof _features, Person>(data)
+
+      const _features = {
+        ...coreFeatures,
+        rowPinningFeature,
+      }
+
+      const table = constructTable({
+        _features,
+        _rowModels: {},
+        data,
+        columns,
+        getSubRows: (row) => row.subRows,
+        enableRowPinning: true,
+        renderFallbackValue: '',
+        initialState: {
+          rowPinning: {
+            top: [],
+            bottom: [],
+          },
+        },
+      })
+
       const newState = {
         top: [ROW[0]],
         bottom: [ROW[1]],
@@ -57,7 +87,6 @@ describe('table methods', () => {
         bottom: [ROW[1]],
       }
       const table = createRowPinningTable({
-        _features: {},
         initialState: {
           rowPinning: initialState,
         },
@@ -98,7 +127,6 @@ describe('table methods', () => {
   describe('getTopRows/getBottomRows/getCenterRows', () => {
     it('should return correct rows for each section', () => {
       const table = createRowPinningTable({
-        _features: {},
         initialState: {
           rowPinning: {
             top: [ROW[0]],

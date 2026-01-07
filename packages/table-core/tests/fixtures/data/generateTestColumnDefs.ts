@@ -1,11 +1,12 @@
 import { createColumnHelper } from '../../../src'
 import type { Person, PersonColumn, PersonKeys } from './types'
-import type { TableFeatures } from '../../../src'
+import type { RowData, TableFeatures } from '../../../src'
 
-export function generateTestColumnDefs<TFeatures extends TableFeatures>(
-  people: Array<Person>,
-): Array<PersonColumn<TFeatures>> {
-  const columnHelper = createColumnHelper<TFeatures, Person>()
+export function generateTestColumnDefs<
+  TFeatures extends TableFeatures,
+  TData extends RowData = Person,
+>(people: Array<TData>): Array<PersonColumn<TFeatures, TData>> {
+  const columnHelper = createColumnHelper<TFeatures, TData>()
   const person = people[0]
 
   if (!person) {
@@ -15,6 +16,6 @@ export function generateTestColumnDefs<TFeatures extends TableFeatures>(
   return Object.keys(person).map((key) => {
     const typedKey = key as PersonKeys
 
-    return columnHelper.accessor(typedKey, { id: typedKey } as any)
+    return columnHelper.accessor(typedKey as any, { id: typedKey } as any)
   })
 }

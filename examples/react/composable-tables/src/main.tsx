@@ -108,7 +108,7 @@ function UsersTable() {
                         >
                           {header.isPlaceholder ? null : (
                             <>
-                              <table.FlexRender header={h} />
+                              <header.FlexRender />
                               <header.SortIndicator />
                               <header.ColumnFilter />
                               {/* Show sort order number when multiple columns sorted */}
@@ -139,7 +139,7 @@ function UsersTable() {
                       {(cell) => (
                         <td>
                           {/* Cell components are pre-bound via AppCell */}
-                          <table.FlexRender cell={cell} />
+                          <cell.FlexRender />
                         </td>
                       )}
                     </table.AppCell>
@@ -289,7 +289,7 @@ function ProductsTable() {
                         >
                           {header.isPlaceholder ? null : (
                             <>
-                              <table.FlexRender header={h} />
+                              <header.FlexRender />
                               <header.SortIndicator />
                               <header.ColumnFilter />
                               {sorting.length > 1 &&
@@ -319,7 +319,7 @@ function ProductsTable() {
                       {(cell) => (
                         <td>
                           {/* Cell components are pre-bound via AppCell */}
-                          <table.FlexRender cell={cell} />
+                          <cell.FlexRender />
                         </td>
                       )}
                     </table.AppCell>

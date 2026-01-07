@@ -486,7 +486,7 @@ describe('row_pin', () => {
   it('should unpin a row when position is false', () => {
     const { table, onRowPinningChangeMock } =
       createTableWithMockOnPinningChange()
-    table.store.setState(() => ({
+    table.baseStore.setState(() => ({
       rowPinning: {
         top: [ROW[0]],
         bottom: [],
@@ -548,7 +548,7 @@ describe('row_pin', () => {
   it('should maintain existing pinned rows when pinning additional rows', () => {
     const { table, onRowPinningChangeMock } =
       createTableWithMockOnPinningChange()
-    table.store.setState(() => ({
+    table.baseStore.setState(() => ({
       rowPinning: {
         top: [ROW[1]],
         bottom: [ROW[2]],
@@ -573,7 +573,7 @@ describe('row_pin', () => {
   it('should remove row from other position when moving between top and bottom', () => {
     const { table, onRowPinningChangeMock } =
       createTableWithMockOnPinningChange()
-    table.store.setState(() => ({
+    table.baseStore.setState(() => ({
       rowPinning: {
         top: [ROW[0]],
         bottom: [],

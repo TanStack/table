@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
   constructTable,
-  coreFeatures,
   createColumnHelper,
   rowSelectionFeature,
 } from '../../../../src'
@@ -13,7 +12,6 @@ import type { ColumnDef } from '../../../../src'
 // TODO: bring up to new test structure
 
 const _features = {
-  ...coreFeatures,
   rowSelectionFeature,
 }
 

@@ -26,10 +26,10 @@ import {
   table_getVisibleLeafColumns,
   table_resetColumnPinning,
   table_setColumnPinning,
-  type Header,
 } from '../../../../src'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
+import type { Header } from '../../../../src'
 
 describe('getDefaultColumnPinningState', () => {
   it('should return default column pinning state', () => {
@@ -126,7 +126,7 @@ describe('column_getCanPin', () => {
     const table = generateTestTableWithData(1)
     const column = table.getAllColumns()[0]
 
-    const result = column_getCanPin(column as any)
+    const result = column_getCanPin(column)
 
     expect(result).toBe(true)
   })
@@ -137,7 +137,7 @@ describe('column_getCanPin', () => {
     })
     const column = table.getAllColumns()[0]
 
-    const result = column_getCanPin(column as any)
+    const result = column_getCanPin(column)
 
     expect(result).toBe(false)
   })
@@ -156,7 +156,7 @@ describe('column_getCanPin', () => {
       ],
     }
 
-    const result = column_getCanPin(column as any)
+    const result = column_getCanPin(column)
 
     expect(result).toBe(false)
   })
@@ -212,7 +212,7 @@ describe('table_setColumnPinning', () => {
       onColumnPinningChange,
     })
 
-    table_setColumnPinning(table as any, {
+    table_setColumnPinning(table, {
       left: ['firstName'],
       right: [],
     })
@@ -231,7 +231,7 @@ describe('table_resetColumnPinning', () => {
       onColumnPinningChange,
     })
 
-    table_resetColumnPinning(table as any, true)
+    table_resetColumnPinning(table, true)
 
     expect(onColumnPinningChange).toHaveBeenCalledWith({
       left: [],
@@ -252,7 +252,7 @@ describe('table_resetColumnPinning', () => {
       initialState,
     })
 
-    table_resetColumnPinning(table as any, false)
+    table_resetColumnPinning(table, false)
 
     expect(onColumnPinningChange).toHaveBeenCalledWith({
       left: ['firstName'],
@@ -272,7 +272,7 @@ describe('table_getIsSomeColumnsPinned', () => {
       },
     })
 
-    const result = table_getIsSomeColumnsPinned(table as any)
+    const result = table_getIsSomeColumnsPinned(table)
 
     expect(result).toBe(true)
   })
@@ -287,7 +287,7 @@ describe('table_getIsSomeColumnsPinned', () => {
       },
     })
 
-    const result = table_getIsSomeColumnsPinned(table as any)
+    const result = table_getIsSomeColumnsPinned(table)
 
     expect(result).toBe(true)
   })
@@ -295,7 +295,7 @@ describe('table_getIsSomeColumnsPinned', () => {
   it('should return false when no columns are pinned', () => {
     const table = generateTestTableWithData(1)
 
-    const result = table_getIsSomeColumnsPinned(table as any)
+    const result = table_getIsSomeColumnsPinned(table)
 
     expect(result).toBe(false)
   })
@@ -310,8 +310,8 @@ describe('table_getIsSomeColumnsPinned', () => {
       },
     })
 
-    expect(table_getIsSomeColumnsPinned(table as any, 'left')).toBe(true)
-    expect(table_getIsSomeColumnsPinned(table as any, 'right')).toBe(false)
+    expect(table_getIsSomeColumnsPinned(table, 'left')).toBe(true)
+    expect(table_getIsSomeColumnsPinned(table, 'right')).toBe(false)
   })
 })
 
@@ -429,7 +429,7 @@ describe('table_getLeftHeaderGroups', () => {
       },
     })
 
-    const headerGroups = table_getLeftHeaderGroups(table as any)
+    const headerGroups = table_getLeftHeaderGroups(table)
 
     expect(headerGroups[0]?.headers[0]?.column.id).toBe('firstName')
   })
@@ -446,7 +446,7 @@ describe('table_getRightHeaderGroups', () => {
       },
     })
 
-    const headerGroups = table_getRightHeaderGroups(table as any)
+    const headerGroups = table_getRightHeaderGroups(table)
 
     expect(headerGroups[0]?.headers[0]?.column.id).toBe('lastName')
   })
@@ -463,7 +463,7 @@ describe('table_getCenterHeaderGroups', () => {
       },
     })
 
-    const headerGroups = table_getCenterHeaderGroups(table as any)
+    const headerGroups = table_getCenterHeaderGroups(table)
     const centerColumnIds = headerGroups[0]?.headers.map(
       (header: Header<any, any>) => header.column.id,
     )
@@ -485,7 +485,7 @@ describe('table_getLeftLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getLeftLeafColumns(table as any)
+    const leafColumns = table_getLeftLeafColumns(table)
 
     expect(leafColumns).toHaveLength(1)
     expect(leafColumns[0]?.id).toBe('firstName')
@@ -503,7 +503,7 @@ describe('table_getRightLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getRightLeafColumns(table as any)
+    const leafColumns = table_getRightLeafColumns(table)
 
     expect(leafColumns).toHaveLength(1)
     expect(leafColumns[0]?.id).toBe('lastName')
@@ -521,7 +521,7 @@ describe('table_getCenterLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getCenterLeafColumns(table as any)
+    const leafColumns = table_getCenterLeafColumns(table)
     const centerColumnIds = leafColumns.map((col) => col.id)
 
     expect(centerColumnIds).not.toContain('firstName')
@@ -541,7 +541,7 @@ describe('table_getPinnedLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getPinnedLeafColumns(table as any, 'left')
+    const leafColumns = table_getPinnedLeafColumns(table, 'left')
 
     expect(leafColumns).toHaveLength(1)
     expect(leafColumns[0]?.id).toBe('firstName')
@@ -557,7 +557,7 @@ describe('table_getPinnedLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getPinnedLeafColumns(table as any, 'right')
+    const leafColumns = table_getPinnedLeafColumns(table, 'right')
 
     expect(leafColumns).toHaveLength(1)
     expect(leafColumns[0]?.id).toBe('lastName')
@@ -573,7 +573,7 @@ describe('table_getPinnedLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getPinnedLeafColumns(table as any, 'center')
+    const leafColumns = table_getPinnedLeafColumns(table, 'center')
 
     expect(leafColumns.length).toBeGreaterThan(0)
     expect(leafColumns.map((col) => col.id)).not.toContain('firstName')
@@ -595,7 +595,7 @@ describe('table_getPinnedVisibleLeafColumns', () => {
       },
     })
 
-    const leftColumns = table_getPinnedVisibleLeafColumns(table as any, 'left')
+    const leftColumns = table_getPinnedVisibleLeafColumns(table, 'left')
     const rightColumns = table_getPinnedVisibleLeafColumns(table, 'right')
     const centerColumns = table_getPinnedVisibleLeafColumns(table, 'center')
 
@@ -613,12 +613,10 @@ describe('table_getPinnedVisibleLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getPinnedVisibleLeafColumns(table as any)
+    const leafColumns = table_getPinnedVisibleLeafColumns(table)
 
     expect(leafColumns.map((col) => col.id)).not.toContain('age')
-    expect(leafColumns.length).toBe(
-      table_getVisibleLeafColumns(table as any).length,
-    )
+    expect(leafColumns.length).toBe(table_getVisibleLeafColumns(table).length)
   })
 })
 
@@ -633,7 +631,7 @@ describe('table_getFooterGroups', () => {
       },
     })
 
-    const footerGroups = table_getLeftFooterGroups(table as any)
+    const footerGroups = table_getLeftFooterGroups(table)
 
     expect(footerGroups[0]?.headers[0]?.column.id).toBe('firstName')
   })
@@ -648,7 +646,7 @@ describe('table_getFooterGroups', () => {
       },
     })
 
-    const footerGroups = table_getRightFooterGroups(table as any)
+    const footerGroups = table_getRightFooterGroups(table)
 
     expect(footerGroups[0]?.headers[0]?.column.id).toBe('lastName')
   })
@@ -663,7 +661,7 @@ describe('table_getFooterGroups', () => {
       },
     })
 
-    const footerGroups = table_getCenterFooterGroups(table as any)
+    const footerGroups = table_getCenterFooterGroups(table)
     const centerColumnIds = footerGroups[0]?.headers.map(
       (header: Header<any, any>) => header.column.id,
     )
@@ -685,7 +683,7 @@ describe('table_getFlatHeaders', () => {
       },
     })
 
-    const flatHeaders = table_getLeftFlatHeaders(table as any)
+    const flatHeaders = table_getLeftFlatHeaders(table)
 
     expect(flatHeaders).toHaveLength(1)
     expect(flatHeaders[0]?.column.id).toBe('firstName')
@@ -701,7 +699,7 @@ describe('table_getFlatHeaders', () => {
       },
     })
 
-    const flatHeaders = table_getRightFlatHeaders(table as any)
+    const flatHeaders = table_getRightFlatHeaders(table)
 
     expect(flatHeaders).toHaveLength(1)
     expect(flatHeaders[0]?.column.id).toBe('lastName')
@@ -717,7 +715,7 @@ describe('table_getFlatHeaders', () => {
       },
     })
 
-    const flatHeaders = table_getCenterFlatHeaders(table as any)
+    const flatHeaders = table_getCenterFlatHeaders(table)
     const centerColumnIds = flatHeaders.map((header) => header.column.id)
 
     expect(centerColumnIds).not.toContain('firstName')

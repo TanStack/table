@@ -19,7 +19,7 @@ describe('constructColumn', () => {
     const depth = 0
     const parent = undefined
 
-    const column = constructColumn(table, columnDef, depth, parent)
+    const column = constructColumn(table as any, columnDef, depth, parent)
 
     expect(column).toBeDefined()
     expect(column).toHaveProperty('accessorFn')

@@ -18,10 +18,10 @@ import {
   table_resetColumnVisibility,
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
-  type Column,
 } from '../../../../src'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
+import type { Column } from '../../../../src'
 
 const _features = tableFeatures({
   ...coreFeatures,

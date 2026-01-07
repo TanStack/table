@@ -1,6 +1,6 @@
 'use client'
-/* eslint-disable @eslint-react/no-context-provider */
-import React, { createContext, use, useMemo } from 'react'
+import { createContext } from 'preact'
+import { useContext, useMemo } from 'preact/hooks'
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
 import { FlexRender } from './FlexRender'
@@ -27,8 +27,8 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { ComponentType, ReactNode } from 'react'
-import type { ReactTable } from './useTable'
+import type { ComponentChildren, ComponentType } from 'preact'
+import type { PreactTable } from './useTable'
 
 // =============================================================================
 // Enhanced Context Types with Pre-bound Components
@@ -45,7 +45,7 @@ export type AppCellContext<
   TCellComponents extends Record<string, ComponentType<any>>,
 > = {
   cell: Cell<TFeatures, TData, TValue> &
-    TCellComponents & { FlexRender: () => ReactNode }
+    TCellComponents & { FlexRender: () => ComponentChildren }
   column: Column<TFeatures, TData, TValue>
   getValue: CellContext<TFeatures, TData, TValue>['getValue']
   renderValue: CellContext<TFeatures, TData, TValue>['renderValue']
@@ -65,7 +65,7 @@ export type AppHeaderContext<
 > = {
   column: Column<TFeatures, TData, TValue>
   header: Header<TFeatures, TData, TValue> &
-    THeaderComponents & { FlexRender: () => ReactNode }
+    THeaderComponents & { FlexRender: () => ComponentChildren }
   table: Table<TFeatures, TData>
 }
 
@@ -275,7 +275,7 @@ export type CreateTableHookOptions<
  * Props for AppTable component - without selector
  */
 export interface AppTablePropsWithoutSelector {
-  children: ReactNode
+  children: ComponentChildren
   selector?: never
 }
 
@@ -286,7 +286,7 @@ export interface AppTablePropsWithSelector<
   TFeatures extends TableFeatures,
   TSelected,
 > {
-  children: (state: TSelected) => ReactNode
+  children: (state: TSelected) => ComponentChildren
   selector: (state: TableState<TFeatures>) => TSelected
 }
 
@@ -302,8 +302,8 @@ export interface AppCellPropsWithoutSelector<
   cell: Cell<TFeatures, TData, TValue>
   children: (
     cell: Cell<TFeatures, TData, TValue> &
-      TCellComponents & { FlexRender: () => ReactNode },
-  ) => ReactNode
+      TCellComponents & { FlexRender: () => ComponentChildren },
+  ) => ComponentChildren
   selector?: never
 }
 
@@ -320,9 +320,9 @@ export interface AppCellPropsWithSelector<
   cell: Cell<TFeatures, TData, TValue>
   children: (
     cell: Cell<TFeatures, TData, TValue> &
-      TCellComponents & { FlexRender: () => ReactNode },
+      TCellComponents & { FlexRender: () => ComponentChildren },
     state: TSelected,
-  ) => ReactNode
+  ) => ComponentChildren
   selector: (state: TableState<TFeatures>) => TSelected
 }
 
@@ -338,8 +338,8 @@ export interface AppHeaderPropsWithoutSelector<
   header: Header<TFeatures, TData, TValue>
   children: (
     header: Header<TFeatures, TData, TValue> &
-      THeaderComponents & { FlexRender: () => ReactNode },
-  ) => ReactNode
+      THeaderComponents & { FlexRender: () => ComponentChildren },
+  ) => ComponentChildren
   selector?: never
 }
 
@@ -356,9 +356,9 @@ export interface AppHeaderPropsWithSelector<
   header: Header<TFeatures, TData, TValue>
   children: (
     header: Header<TFeatures, TData, TValue> &
-      THeaderComponents & { FlexRender: () => ReactNode },
+      THeaderComponents & { FlexRender: () => ComponentChildren },
     state: TSelected,
-  ) => ReactNode
+  ) => ComponentChildren
   selector: (state: TableState<TFeatures>) => TSelected
 }
 
@@ -377,7 +377,7 @@ export interface AppCellComponent<
       TValue,
       TCellComponents
     >,
-  ): ReactNode
+  ): ComponentChildren
   <TValue extends CellData = CellData, TSelected = unknown>(
     props: AppCellPropsWithSelector<
       TFeatures,
@@ -386,7 +386,7 @@ export interface AppCellComponent<
       TCellComponents,
       TSelected
     >,
-  ): ReactNode
+  ): ComponentChildren
 }
 
 /**
@@ -404,7 +404,7 @@ export interface AppHeaderComponent<
       TValue,
       THeaderComponents
     >,
-  ): ReactNode
+  ): ComponentChildren
   <TValue extends CellData = CellData, TSelected = unknown>(
     props: AppHeaderPropsWithSelector<
       TFeatures,
@@ -413,34 +413,36 @@ export interface AppHeaderComponent<
       THeaderComponents,
       TSelected
     >,
-  ): ReactNode
+  ): ComponentChildren
 }
 
 /**
  * Component type for AppTable - root wrapper with optional Subscribe
  */
 export interface AppTableComponent<TFeatures extends TableFeatures> {
-  (props: AppTablePropsWithoutSelector): ReactNode
-  <TSelected>(props: AppTablePropsWithSelector<TFeatures, TSelected>): ReactNode
+  (props: AppTablePropsWithoutSelector): ComponentChildren
+  <TSelected>(
+    props: AppTablePropsWithSelector<TFeatures, TSelected>,
+  ): ComponentChildren
 }
 
 /**
  * Extended table API returned by useAppTable with all App wrapper components
  */
-export type AppReactTable<
+export type AppPreactTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected,
   TTableComponents extends Record<string, ComponentType<any>>,
   TCellComponents extends Record<string, ComponentType<any>>,
   THeaderComponents extends Record<string, ComponentType<any>>,
-> = ReactTable<TFeatures, TData, TSelected> &
+> = PreactTable<TFeatures, TData, TSelected> &
   NoInfer<TTableComponents> & {
     /**
      * Root wrapper component that provides table context with optional Subscribe.
      * @example
      * ```tsx
-     * // Without selector - children is ReactNode
+     * // Without selector - children is ComponentChildren
      * <table.AppTable>
      *   <table>...</table>
      * </table.AppTable>
@@ -604,7 +606,7 @@ export function createTableHook<
   THeaderComponents
 >) {
   // Create contexts internally with TFeatures baked in
-  const TableContext = createContext<ReactTable<TFeatures, any, any>>(
+  const TableContext = createContext<PreactTable<TFeatures, any, any>>(
     null as never,
   )
   const CellContext = createContext<Cell<TFeatures, any, any>>(null as never)
@@ -670,11 +672,11 @@ export function createTableHook<
    * }
    * ```
    */
-  function useTableContext<TData extends RowData = RowData>(): ReactTable<
+  function useTableContext<TData extends RowData = RowData>(): PreactTable<
     TFeatures,
     TData
   > {
-    const table = use(TableContext)
+    const table = useContext(TableContext)
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!table) {
@@ -684,7 +686,7 @@ export function createTableHook<
       )
     }
 
-    return table as ReactTable<TFeatures, TData>
+    return table as PreactTable<TFeatures, TData>
   }
 
   /**
@@ -706,7 +708,7 @@ export function createTableHook<
    * ```
    */
   function useCellContext<TValue extends CellData = CellData>() {
-    const cell = use(CellContext)
+    const cell = useContext(CellContext)
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!cell) {
@@ -746,7 +748,7 @@ export function createTableHook<
    * ```
    */
   function useHeaderContext<TValue extends CellData = CellData>() {
-    const header = use(HeaderContext)
+    const header = useContext(HeaderContext)
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!header) {
@@ -800,7 +802,7 @@ export function createTableHook<
       '_features' | '_rowModels'
     >,
     selector?: (state: TableState<TFeatures>) => TSelected,
-  ): AppReactTable<
+  ): AppPreactTable<
     TFeatures,
     TData,
     TSelected,
@@ -819,15 +821,17 @@ export function createTableHook<
 
     // AppTable - Root wrapper that provides table context with optional Subscribe
     const AppTable = useMemo(() => {
-      function AppTableImpl(props: AppTablePropsWithoutSelector): ReactNode
+      function AppTableImpl(
+        props: AppTablePropsWithoutSelector,
+      ): ComponentChildren
       function AppTableImpl<TAppTableSelected>(
         props: AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
-      ): ReactNode
+      ): ComponentChildren
       function AppTableImpl<TAppTableSelected>(
         props:
           | AppTablePropsWithoutSelector
           | AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
-      ): ReactNode {
+      ): ComponentChildren {
         const { children, selector: appTableSelector } = props as any
 
         return (
@@ -835,7 +839,9 @@ export function createTableHook<
             {appTableSelector ? (
               <table.Subscribe selector={appTableSelector}>
                 {(state: TAppTableSelected) =>
-                  (children as (state: TAppTableSelected) => ReactNode)(state)
+                  (children as (state: TAppTableSelected) => ComponentChildren)(
+                    state,
+                  )
                 }
               </table.Subscribe>
             ) : (
@@ -856,7 +862,7 @@ export function createTableHook<
           TValue,
           TCellComponents
         >,
-      ): ReactNode
+      ): ComponentChildren
       function AppCellImpl<
         TValue extends CellData = CellData,
         TAppCellSelected = unknown,
@@ -868,7 +874,7 @@ export function createTableHook<
           TCellComponents,
           TAppCellSelected
         >,
-      ): ReactNode
+      ): ComponentChildren
       function AppCellImpl<
         TValue extends CellData = CellData,
         TAppCellSelected = unknown,
@@ -887,7 +893,7 @@ export function createTableHook<
               TCellComponents,
               TAppCellSelected
             >,
-      ): ReactNode {
+      ): ComponentChildren {
         const { cell, children, selector: appCellSelector } = props as any
         const extendedCell = Object.assign(cell, {
           FlexRender: CellFlexRender,
@@ -902,9 +908,11 @@ export function createTableHook<
                   (
                     children as (
                       cell: Cell<TFeatures, TData, TValue> &
-                        TCellComponents & { FlexRender: () => ReactNode },
+                        TCellComponents & {
+                          FlexRender: () => ComponentChildren
+                        },
                       state: TAppCellSelected,
-                    ) => ReactNode
+                    ) => ComponentChildren
                   )(extendedCell, state)
                 }
               </table.Subscribe>
@@ -912,8 +920,8 @@ export function createTableHook<
               (
                 children as (
                   cell: Cell<TFeatures, TData, TValue> &
-                    TCellComponents & { FlexRender: () => ReactNode },
-                ) => ReactNode
+                    TCellComponents & { FlexRender: () => ComponentChildren },
+                ) => ComponentChildren
               )(extendedCell)
             )}
           </CellContext.Provider>
@@ -931,7 +939,7 @@ export function createTableHook<
           TValue,
           THeaderComponents
         >,
-      ): ReactNode
+      ): ComponentChildren
       function AppHeaderImpl<
         TValue extends CellData = CellData,
         TAppHeaderSelected = unknown,
@@ -943,7 +951,7 @@ export function createTableHook<
           THeaderComponents,
           TAppHeaderSelected
         >,
-      ): ReactNode
+      ): ComponentChildren
       function AppHeaderImpl<
         TValue extends CellData = CellData,
         TAppHeaderSelected = unknown,
@@ -962,7 +970,7 @@ export function createTableHook<
               THeaderComponents,
               TAppHeaderSelected
             >,
-      ): ReactNode {
+      ): ComponentChildren {
         const { header, children, selector: appHeaderSelector } = props as any
         const extendedHeader = Object.assign(header, {
           FlexRender: HeaderFlexRender,
@@ -977,9 +985,9 @@ export function createTableHook<
                   (
                     children as (
                       header: Header<TFeatures, TData, TValue> &
-                        THeaderComponents & { FlexRender: () => ReactNode },
+                        THeaderComponents,
                       state: TAppHeaderSelected,
-                    ) => ReactNode
+                    ) => ComponentChildren
                   )(extendedHeader, state)
                 }
               </table.Subscribe>
@@ -987,8 +995,8 @@ export function createTableHook<
               (
                 children as (
                   header: Header<TFeatures, TData, TValue> &
-                    THeaderComponents & { FlexRender: () => ReactNode },
-                ) => ReactNode
+                    THeaderComponents & { FlexRender: () => ComponentChildren },
+                ) => ComponentChildren
               )(extendedHeader)
             )}
           </HeaderContext.Provider>
@@ -1010,7 +1018,7 @@ export function createTableHook<
           TValue,
           THeaderComponents
         >,
-      ): ReactNode
+      ): ComponentChildren
       function AppFooterImpl<
         TValue extends CellData = CellData,
         TAppFooterSelected = unknown,
@@ -1022,7 +1030,7 @@ export function createTableHook<
           THeaderComponents,
           TAppFooterSelected
         >,
-      ): ReactNode
+      ): ComponentChildren
       function AppFooterImpl<
         TValue extends CellData = CellData,
         TAppFooterSelected = unknown,
@@ -1041,7 +1049,7 @@ export function createTableHook<
               THeaderComponents,
               TAppFooterSelected
             >,
-      ): ReactNode {
+      ): ComponentChildren {
         const { header, children, selector: appFooterSelector } = props as any
         const extendedHeader = Object.assign(header, {
           FlexRender: FooterFlexRender,
@@ -1056,9 +1064,9 @@ export function createTableHook<
                   (
                     children as (
                       header: Header<TFeatures, TData, TValue> &
-                        THeaderComponents & { FlexRender: () => ReactNode },
+                        THeaderComponents,
                       state: TAppFooterSelected,
-                    ) => ReactNode
+                    ) => ComponentChildren
                   )(extendedHeader, state)
                 }
               </table.Subscribe>
@@ -1066,8 +1074,8 @@ export function createTableHook<
               (
                 children as (
                   header: Header<TFeatures, TData, TValue> &
-                    THeaderComponents & { FlexRender: () => ReactNode },
-                ) => ReactNode
+                    THeaderComponents & { FlexRender: () => ComponentChildren },
+                ) => ComponentChildren
               )(extendedHeader)
             )}
           </HeaderContext.Provider>
@@ -1088,7 +1096,7 @@ export function createTableHook<
         AppHeader,
         AppFooter,
         ...tableComponents,
-      }) as AppReactTable<
+      }) as AppPreactTable<
         TFeatures,
         TData,
         TSelected,

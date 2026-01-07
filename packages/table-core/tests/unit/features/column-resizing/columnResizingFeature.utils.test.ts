@@ -75,7 +75,7 @@ describe('column_getCanResize', () => {
       table,
     }
 
-    const result = column_getCanResize(column as any)
+    const result = column_getCanResize(column)
 
     expect(result).toBe(true)
   })
@@ -90,7 +90,7 @@ describe('column_getCanResize', () => {
       table,
     }
 
-    const result = column_getCanResize(column as any)
+    const result = column_getCanResize(column)
 
     expect(result).toBe(false)
   })
@@ -103,7 +103,7 @@ describe('column_getCanResize', () => {
       table,
     }
 
-    const result = column_getCanResize(column as any)
+    const result = column_getCanResize(column)
 
     expect(result).toBe(false)
   })
@@ -129,7 +129,7 @@ describe('column_getIsResizing', () => {
       table,
     }
 
-    const result = column_getIsResizing(column as any)
+    const result = column_getIsResizing(column)
 
     expect(result).toBe(true)
   })
@@ -141,7 +141,7 @@ describe('column_getIsResizing', () => {
       table,
     }
 
-    const result = column_getIsResizing(column as any)
+    const result = column_getIsResizing(column)
 
     expect(result).toBe(false)
   })
