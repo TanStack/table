@@ -6,13 +6,13 @@ import {
   columnOrderingFeature,
   columnPinningFeature,
   columnVisibilityFeature,
-  createTableHelper,
+  createTableHook,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-// Create table helper with features
-const tableHelper = createTableHelper({
+// Create table hook with features
+const { useAppTable, createAppColumnHelper } = createTableHook({
   _features: {
     columnVisibilityFeature,
     columnPinningFeature,
@@ -25,7 +25,7 @@ const tableHelper = createTableHelper({
 })
 
 // Create column helper
-const columnHelper = tableHelper.createColumnHelper<Person>()
+const columnHelper = createAppColumnHelper<Person>()
 
 // Define columns using columnHelper
 const defaultColumns = columnHelper.columns([
@@ -80,7 +80,7 @@ function App() {
 
   const rerender = () => setData(() => makeData(5000))
 
-  const table = tableHelper.useTable({
+  const table = useAppTable({
     columns,
     data,
   })

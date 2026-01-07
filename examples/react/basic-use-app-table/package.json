@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-tanstack-query",
+  "name": "tanstack-table-example-basic-use-app-table",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -11,9 +11,6 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.1.0",
-    "@tanstack/react-query": "^5.90.16",
-    "@tanstack/react-store": "^0.8.0",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"

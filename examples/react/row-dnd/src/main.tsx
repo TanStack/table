@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom/client'
 import {
   FlexRender,
   columnSizingFeature,
-  createColumnHelper,
-  createTableHelper,
+  createTableHook,
 } from '@tanstack/react-table'
 import {
   DndContext,
@@ -27,10 +26,10 @@ import { makeData } from './makeData'
 import type { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core'
 import type { CSSProperties } from 'react'
 import type { Person } from './makeData'
-import type { Cell, Row } from '@tanstack/react-table'
+import type { Row } from '@tanstack/react-table'
 import './index.css'
 
-const tableHelper = createTableHelper({
+const { appFeatures, useAppTable, createAppColumnHelper } = createTableHook({
   _features: { columnSizingFeature },
   _rowModels: {},
   debugTable: true,
@@ -38,7 +37,7 @@ const tableHelper = createTableHelper({
   debugColumns: true,
 })
 
-const columnHelper = createColumnHelper<typeof tableHelper.features, Person>()
+const columnHelper = createAppColumnHelper<Person>()
 
 // Cell Component
 const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
@@ -54,11 +53,7 @@ const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
 }
 
 // Row Component
-const DraggableRow = ({
-  row,
-}: {
-  row: Row<typeof tableHelper.features, Person>
-}) => {
+const DraggableRow = ({ row }: { row: Row<typeof appFeatures, Person> }) => {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.userId,
   })
@@ -73,13 +68,11 @@ const DraggableRow = ({
   return (
     // connect row ref to dnd-kit, apply important styles
     <tr ref={setNodeRef} style={style}>
-      {row
-        .getAllCells()
-        .map((cell: Cell<typeof tableHelper.features, Person, unknown>) => (
-          <td key={cell.id} style={{ width: cell.column.getSize() }}>
-            <FlexRender cell={cell} />
-          </td>
-        ))}
+      {row.getAllCells().map((cell) => (
+        <td key={cell.id} style={{ width: cell.column.getSize() }}>
+          <FlexRender cell={cell} />
+        </td>
+      ))}
     </tr>
   )
 }
@@ -133,7 +126,7 @@ function App() {
 
   const rerender = () => setData(() => makeData(20))
 
-  const table = tableHelper.useTable(
+  const table = useAppTable(
     {
       columns,
       data,

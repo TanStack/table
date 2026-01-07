@@ -50,7 +50,7 @@
     }
   ],
   "devDependencies": {
-    "@faker-js/faker": "^10.1.0",
+    "@faker-js/faker": "^10.2.0",
     "@size-limit/preset-small-lib": "^12.0.0",
     "@tanstack/config": "0.14.2",
     "@testing-library/jest-dom": "^6.9.1",
@@ -58,7 +58,7 @@
     "eslint": "^9.39.2",
     "eslint-plugin-unused-imports": "^4.3.0",
     "jsdom": "^27.4.0",
-    "knip": "^5.78.0",
+    "knip": "^5.80.0",
     "nx": "^22.3.3",
     "prettier": "^3.7.4",
     "prettier-plugin-svelte": "^3.4.1",

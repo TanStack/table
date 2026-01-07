@@ -9,7 +9,7 @@
     "start": "vite"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.1.0",
+    "@faker-js/faker": "^10.2.0",
     "@tanstack/lit-table": "^9.0.0-alpha.10",
     "lit": "^3.3.2"
   },

@@ -4,8 +4,7 @@ import {
   FlexRender,
   columnOrderingFeature,
   columnSizingFeature,
-  createColumnHelper,
-  createTableHelper,
+  createTableHook,
 } from '@tanstack/react-table'
 import {
   DndContext,
@@ -31,7 +30,7 @@ import type { Person } from './makeData'
 import type { Cell, Header } from '@tanstack/react-table'
 import './index.css'
 
-const tableHelper = createTableHelper({
+const { appFeatures, useAppTable, createAppColumnHelper } = createTableHook({
   _features: { columnOrderingFeature, columnSizingFeature },
   _rowModels: {},
   debugTable: true,
@@ -39,17 +38,15 @@ const tableHelper = createTableHelper({
   debugColumns: true,
 })
 
-const columnHelper = createColumnHelper<typeof tableHelper.features, Person>()
+const columnHelper = createAppColumnHelper<Person>()
 
 const DraggableTableHeader = ({
   header,
 }: {
-  header: Header<typeof tableHelper.features, Person, unknown>
+  header: Header<typeof appFeatures, Person, unknown>
 }) => {
   const { attributes, isDragging, listeners, setNodeRef, transform } =
-    useSortable({
-      id: header.column.id,
-    })
+    useSortable({ id: header.column.id })
 
   const style: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
@@ -74,7 +71,7 @@ const DraggableTableHeader = ({
 const DragAlongCell = ({
   cell,
 }: {
-  cell: Cell<typeof tableHelper.features, Person, unknown>
+  cell: Cell<typeof appFeatures, Person, unknown>
 }) => {
   const { isDragging, setNodeRef, transform } = useSortable({
     id: cell.column.id,
@@ -139,7 +136,7 @@ function App() {
 
   const rerender = () => setData(() => makeData(20))
 
-  const table = tableHelper.useTable(
+  const table = useAppTable(
     {
       columns,
       data,

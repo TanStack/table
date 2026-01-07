@@ -11,7 +11,7 @@ import type { TableOptions } from '../types/TableOptions'
  */
 export type TableHelperOptions<TFeatures extends TableFeatures> = Omit<
   TableOptions<TFeatures, any>,
-  'columns' | 'data' | 'store' | 'initialState'
+  'columns' | 'data' | 'store' | 'state' | 'initialState'
 > & {
   _features: TFeatures
 }
@@ -27,7 +27,7 @@ export type TableHelper_Core<TFeatures extends TableFeatures> = {
   features: TFeatures
   options: Omit<
     TableOptions<TFeatures, any>,
-    'columns' | 'data' | 'store' | 'initialState'
+    'columns' | 'data' | 'store' | 'state' | 'initialState'
   >
   tableCreator: <TData extends RowData>(
     tableOptions: Omit<

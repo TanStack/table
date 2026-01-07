@@ -11,9 +11,9 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.1.0",
+    "@faker-js/faker": "^10.2.0",
     "@tanstack/preact-table": "^9.0.0-alpha.10",
-    "preact": "^10.28.1"
+    "preact": "^10.28.2"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",

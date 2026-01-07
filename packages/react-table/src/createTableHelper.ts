@@ -1,3 +1,4 @@
+'use client'
 import { constructTableHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
 import type { ReactTable } from './useTable'
@@ -46,30 +47,3 @@ export function createTableHelper<TFeatures extends TableFeatures>(
     },
   }
 }
-
-// test
-
-// type Person = {
-//   firstName: string
-//   lastName: string
-//   age: number
-// }
-
-// const tableHelper = createTableHelper({
-//   _features: { rowSelectionFeature: {} },
-//   TData: {} as Person,
-// })
-
-// const columns = [
-//   tableHelper.columnHelper.accessor('firstName', { header: 'First Name' }),
-//   tableHelper.columnHelper.accessor('lastName', { header: 'Last Name' }),
-//   tableHelper.columnHelper.accessor('age', { header: 'Age' }),
-//   tableHelper.columnHelper.display({ header: 'Actions', id: 'actions' }),
-// ] as Array<ColumnDef<typeof tableHelper.features, Person, unknown>>
-
-// const data: Array<Person> = []
-
-// tableHelper.useTable({
-//   columns,
-//   data,
-// })

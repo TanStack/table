@@ -1,3 +1,4 @@
+'use client'
 import { useStore } from '@tanstack/react-store'
 import type {
   NoInfer,

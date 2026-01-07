@@ -9,7 +9,7 @@
     "start": "vite"
   },
   "devDependencies": {
-    "@faker-js/faker": "^10.1.0",
+    "@faker-js/faker": "^10.2.0",
     "@rollup/plugin-replace": "^6.0.3",
     "@types/node": "^25.0.3",
     "typescript": "5.9.3",

@@ -10,7 +10,7 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  createTableHelper,
+  createTableHook,
   filterFns,
   rowExpandingFeature,
   rowPaginationFeature,
@@ -20,7 +20,7 @@ import {
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const tableHelper = createTableHelper({
+const { useAppTable, createAppColumnHelper } = createTableHook({
   _features: {
     columnFilteringFeature,
     columnGroupingFeature,
@@ -37,7 +37,7 @@ const tableHelper = createTableHelper({
   },
 })
 
-const columnHelper = tableHelper.createColumnHelper<Person>()
+const columnHelper = createAppColumnHelper<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -88,7 +88,7 @@ function App() {
   const [data, setData] = React.useState(() => makeData(10_000))
   const refreshData = () => setData(() => makeData(100_000)) // stress test
 
-  const table = tableHelper.useTable(
+  const table = useAppTable(
     {
       columns,
       data,
