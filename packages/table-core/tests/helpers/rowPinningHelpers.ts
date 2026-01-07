@@ -18,8 +18,8 @@ import type { Person } from '../fixtures/data/types'
 // Define feature set with proper typing
 const _features = {
   ...coreFeatures,
-  rowPinning: rowPinningFeature,
-}
+  rowPinningFeature,
+} as any
 
 type personKeys = keyof Person
 type PersonColumn = ColumnDef<typeof _features, Person, any>
@@ -68,9 +68,9 @@ export function createTableWithMockOnPinningChange(rowCount = 10): {
 }
 
 export function createRowPinningTable(
-  options?: Omit<TableOptions<typeof _features, Person>, 'data' | 'columns'>,
+  options?: Omit<TableOptions<typeof _features, Person>, 'data' | 'columns' | '_features'>,
   lengths: Array<number> | number = 10,
-) {
+): any {
   const lengthsArray = Array.isArray(lengths) ? lengths : [lengths]
   const data = generateTestData(...lengthsArray)
   const columns = generateColumnDefs(data)
@@ -80,7 +80,7 @@ export function createRowPinningTable(
     _rowModels: {},
     data,
     columns,
-    getSubRows: (row) => row.subRows,
+    getSubRows: (row: any) => row.subRows,
     enableRowPinning: true,
     renderFallbackValue: '',
     initialState: {
