@@ -29,7 +29,7 @@
             @for (cell of row.getAllCells(); track cell.id) {
               <td [tanStackTableCell]="cell">
                 <ng-container *flexRenderCell="cell; let cell">
-                  {{ cell}}
+                  {{ cell }}
                 </ng-container>
               </td>
             }
