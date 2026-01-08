@@ -142,28 +142,33 @@ export function assignReactivePrototypeAPI(
   fnName: string,
 ) {
   const fn = prototype[fnName]
-  const originalArgsLength = Math.max(
-    0,
-    Reflect.get(fn, 'originalArgsLength') ?? 0,
-  )
+  // const originalArgsLength = Math.max(
+  //   0,
+  //   Reflect.get(fn, 'originalArgsLength') ?? 0,
+  // )
 
-  if (originalArgsLength <= 1) {
-    const cached = {} as Record<string, Signal<unknown>>
-    Object.defineProperty(prototype, fnName, {
-      enumerable: true,
-      configurable: true,
-      get(this) {
-        const self = this
-        return (cached[`${self.id}_${fnName}`] ??= computed(() => {
-          notifier()
-          return fn.call(self)
-        }))
-      },
-    })
-  } else {
-    prototype[fnName] = function (this: unknown, ...args: Array<any>) {
-      notifier()
-      return fn.apply(this, args)
-    }
+  // if (originalArgsLength <= 1) {
+  prototype[fnName] = function (this: unknown, ...args: Array<any>) {
+    notifier()
+    return fn.apply(this, args)
   }
+  // TODO: this break everything. for example, when table data changes, it still uses old cell
+  //   const cached = {} as Record<string, Signal<unknown>>
+  //   Object.defineProperty(prototype, fnName, {
+  //     enumerable: true,
+  //     configurable: true,
+  //     get(this) {
+  //       const self = this
+  //       return (cached[`${self.id}_${fnName}`] ??= computed(() => {
+  //         notifier()
+  //         return fn.call(self)
+  //       }, {}))
+  //     },
+  //   })
+  // } else {
+  //   prototype[fnName] = function (this: unknown, ...args: Array<any>) {
+  //     notifier()
+  //     return fn.apply(this, args)
+  //   }
+  // }
 }

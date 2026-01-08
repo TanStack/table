@@ -22,6 +22,7 @@ import type {
   Row,
   RowData,
   Table,
+  TableFeature,
   TableFeatures,
   TableOptions,
   TableState,
@@ -298,13 +299,15 @@ export interface AppCellPropsWithoutSelector<
   cell: Cell<TFeatures, TData, TValue>
 }
 
-export function createTableContexts<
+export function createTableHook<
   TFeatures extends TableFeatures,
   const TTableComponents extends Record<string, RenderableComponent>,
   const TCellComponents extends Record<string, RenderableComponent>,
   const THeaderComponents extends Record<string, RenderableComponent>,
 >({
   tableComponents,
+  cellComponents,
+  headerComponents,
   ...defaultTableOptions
 }: CreateTableContextOptions<
   TFeatures,
@@ -338,23 +341,26 @@ export function createTableContexts<
     TCellComponents,
     THeaderComponents
   > {
-    const table = injectTable<TFeatures, TData, TSelected>(
-      () =>
-        ({ ...defaultTableOptions, ...tableOptions() }) as TableOptions<
-          TFeatures,
-          TData
-        >,
-      selector,
-    )
+    const appTableFeatures: TableFeature<{}> = {
+      constructTableAPIs: (table) => {
+        Object.assign(table, tableComponents)
+      },
+      assignCellPrototype(prototype) {
+        Object.assign(prototype, cellComponents)
+      },
+      assignHeaderPrototype(prototype) {
+        Object.assign(prototype, headerComponents)
+      },
+    }
 
-    function AppCell<TValue extends CellData = CellData>(props) {}
-
-    const extendedTable = Object.assign(table, {
-      AppCell,
-      ...tableComponents,
-    }) as AngularTable<any, any>
-
-    return extendedTable
+    return injectTable<TFeatures, TData, TSelected>(() => {
+      const options = {
+        ...defaultTableOptions,
+        ...tableOptions(),
+      } as TableOptions<TFeatures, TData>
+      options._features = { ...options._features, appTableFeatures }
+      return options
+    }, selector) as AngularTable<any, any>
   }
 
   function createAppColumnHelper<TData extends RowData>(): AppColumnHelper<

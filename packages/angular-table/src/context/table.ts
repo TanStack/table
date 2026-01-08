@@ -25,6 +25,6 @@ export class TanStackTable<
 export function injectTableContext<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TanStackTableContext<TFeatures, TData> {
-  return inject(TanStackTable<TFeatures, TData>)
+>(): TanStackTableContext<TFeatures, TData>['table'] {
+  return inject(TanStackTable<TFeatures, TData>).table
 }

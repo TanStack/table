@@ -28,6 +28,6 @@ export function injectTableHeaderContext<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData,
->(): TanStackTableHeaderContext<TFeatures, TData, TValue> {
-  return inject(TanStackTableHeader<TFeatures, TData, TValue>)
+>(): TanStackTableHeaderContext<TFeatures, TData, TValue>['header'] {
+  return inject(TanStackTableHeader<TFeatures, TData, TValue>).header
 }

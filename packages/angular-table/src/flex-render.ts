@@ -67,18 +67,18 @@ export class FlexRender<
   readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
   readonly #changeDetectorRef = inject(ChangeDetectorRef)
 
-  readonly content = input.required<
+  readonly content = input<
     | number
     | string
     | ((props: TProps) => FlexRenderContent<TProps>)
     | null
     | undefined
     | any
-  >({
+  >(undefined, {
     alias: 'flexRender',
   })
 
-  readonly props = input.required<TProps>({
+  readonly props = input<TProps>({} as TProps, {
     alias: 'flexRenderProps',
   })
 
@@ -114,13 +114,13 @@ export class FlexRender<
   })
 
   ngOnChanges(changes: SimpleChanges<FlexRender<TProps>>) {
-    if (changes['props']) {
+    if (changes.props) {
       const props = changes.props.currentValue
       this.table = 'table' in props ? props.table : null
       this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
       this.bindTableDirtyCheck()
     }
-    if (changes['content']) {
+    if (changes.content) {
       this.renderFlags |=
         FlexRenderFlags.ContentChanged | FlexRenderFlags.ViewFirstRender
       this.update()
