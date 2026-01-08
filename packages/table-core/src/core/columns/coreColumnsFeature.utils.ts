@@ -1,4 +1,4 @@
-import { callMemoOrStaticFn, isDev } from '../../utils'
+import { callMemoOrStaticFn } from '../../utils'
 import { table_getOrderColumnsFn } from '../../features/column-ordering/columnOrderingFeature.utils'
 import { constructColumn } from './constructColumn'
 import type { Table_Internal } from '../../types/Table'
@@ -152,7 +152,7 @@ export function table_getColumn<
 ): Column<TFeatures, TData, unknown> | undefined {
   const column = table.getAllFlatColumnsById()[columnId]
 
-  if (isDev && !column) {
+  if (process.env.NODE_ENV === 'development' && !column) {
     console.warn(`[Table] Column with id '${columnId}' does not exist.`)
   }
 

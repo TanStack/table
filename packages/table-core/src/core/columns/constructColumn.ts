@@ -1,4 +1,4 @@
-import { isDev } from '../../utils'
+import {} from '../../utils'
 import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -65,7 +65,7 @@ export function constructColumn<
 
         for (const key of accessorKey.split('.')) {
           result = result?.[key]
-          if (isDev && result === undefined) {
+          if (process.env.NODE_ENV === 'development' && result === undefined) {
             console.warn(
               `"${key}" in deeply nested key "${accessorKey}" returned undefined.`,
             )
@@ -81,7 +81,7 @@ export function constructColumn<
   }
 
   if (!id) {
-    if (isDev) {
+    if (process.env.NODE_ENV === 'development') {
       throw new Error(
         resolvedColumnDef.accessorFn
           ? `coreColumnsFeature require an id when using an accessorFn`

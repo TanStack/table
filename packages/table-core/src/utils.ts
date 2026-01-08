@@ -3,8 +3,6 @@ import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState, TableState_All } from './types/TableState'
 
-export const isDev = process.env.NODE_ENV === 'development'
-
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'
     ? (updater as (i: T) => T)(input)
@@ -147,7 +145,7 @@ export function tableMemo<
   let debug: boolean | undefined
   let debugCache: boolean | undefined
 
-  if (isDev) {
+  if (process.env.NODE_ENV === 'development') {
     const { debugCache: _debugCache, debugAll } = table.options
     debugCache = _debugCache
     const { parentName } = getFunctionNameInfo(fnName, '.')
@@ -200,43 +198,44 @@ export function tableMemo<
     console.groupEnd()
   }
 
-  const debugOptions = isDev
-    ? {
-        onBeforeCompare: () => {
-          if (debugCache) {
-            beforeCompareTime = performance.now()
-          }
-        },
-        onAfterCompare: (depsChanged: boolean) => {
-          if (debugCache) {
-            afterCompareTime = performance.now()
-            const compareTime =
-              Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
-            if (!depsChanged) {
-              logTime(compareTime, depsChanged)
+  const debugOptions =
+    process.env.NODE_ENV === 'development'
+      ? {
+          onBeforeCompare: () => {
+            if (debugCache) {
+              beforeCompareTime = performance.now()
             }
-          }
-        },
-        onBeforeUpdate: () => {
-          if (debug) {
-            startCalcTime = performance.now()
-          }
-        },
-        onAfterUpdate: () => {
-          if (debug) {
-            endCalcTime = performance.now()
-            const executionTime =
-              Math.round((endCalcTime - startCalcTime) * 100) / 100
-            logTime(executionTime, true)
-          }
-          queueMicrotask(() => onAfterUpdate?.())
-        },
-      }
-    : {
-        onAfterUpdate: () => {
-          queueMicrotask(() => onAfterUpdate?.())
-        },
-      }
+          },
+          onAfterCompare: (depsChanged: boolean) => {
+            if (debugCache) {
+              afterCompareTime = performance.now()
+              const compareTime =
+                Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
+              if (!depsChanged) {
+                logTime(compareTime, depsChanged)
+              }
+            }
+          },
+          onBeforeUpdate: () => {
+            if (debug) {
+              startCalcTime = performance.now()
+            }
+          },
+          onAfterUpdate: () => {
+            if (debug) {
+              endCalcTime = performance.now()
+              const executionTime =
+                Math.round((endCalcTime - startCalcTime) * 100) / 100
+              logTime(executionTime, true)
+            }
+            queueMicrotask(() => onAfterUpdate?.())
+          },
+        }
+      : {
+          onAfterUpdate: () => {
+            queueMicrotask(() => onAfterUpdate?.())
+          },
+        }
 
   return memo({
     ...memoOptions,

@@ -1,5 +1,5 @@
 import { Derived, Store } from '@tanstack/store'
-import { isDev } from '../../utils'
+import {} from '../../utils'
 import { coreFeatures } from '../coreFeatures'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -68,7 +68,10 @@ export function constructTable<
     },
   })
 
-  if (isDev && (tableOptions.debugAll || tableOptions.debugTable)) {
+  if (
+    process.env.NODE_ENV === 'development' &&
+    (tableOptions.debugAll || tableOptions.debugTable)
+  ) {
     const features = Object.keys(table._features)
     const rowModels = Object.keys(table.options._rowModels || {})
     const states = Object.keys(table.initialState)
