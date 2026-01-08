@@ -7,7 +7,10 @@ import {
   rowPaginationFeature,
   rowPinningFeature,
 } from '../../../../src'
-import { createRowPinningTable, createTableWithMockOnPinningChange } from '../../../helpers/rowPinningHelpers'
+import {
+  createRowPinningTable,
+  createTableWithMockOnPinningChange,
+} from '../../../helpers/rowPinningHelpers'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
 import type { ColumnDef, Row } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
@@ -54,7 +57,8 @@ const EMPTY_PINNING_STATE = {
 describe('table methods', () => {
   describe('setRowPinning', () => {
     it('should call onRowPinningChange when invoked', () => {
-      const { table, onRowPinningChangeMock } = createTableWithMockOnPinningChange()
+      const { table, onRowPinningChangeMock } =
+        createTableWithMockOnPinningChange()
 
       const newState = {
         top: [ROW[0]],
@@ -117,8 +121,8 @@ describe('table methods', () => {
           rowPinning: {
             top: [ROW[0]],
             bottom: [ROW[1]],
-          }
-        }
+          },
+        },
       })
 
       expect(table.getIsSomeRowsPinned()).toBe(true)
@@ -312,18 +316,20 @@ describe('row methods', () => {
 
   describe('pin', () => {
     it('should call onRowPinningChange when pinning row', () => {
-      const { table, onRowPinningChangeMock } = createTableWithMockOnPinningChange()
+      const { table, onRowPinningChangeMock } =
+        createTableWithMockOnPinningChange()
       const row = table.getRow(ROW[0])
 
       row.pin('top')
-      
+
       expect(onRowPinningChangeMock).toHaveBeenCalled()
       // The exact call pattern would depend on row.pin implementation
       // This test verifies the callback mechanism works
     })
 
     it('should call onRowPinningChange when unpinning row', () => {
-      const { table, onRowPinningChangeMock } = createTableWithMockOnPinningChange()
+      const { table, onRowPinningChangeMock } =
+        createTableWithMockOnPinningChange()
       // Set up initial state with a pinned row
       table.baseStore.setState((old: any) => ({
         ...old,
@@ -335,12 +341,13 @@ describe('row methods', () => {
       const row = table.getRow(ROW[0])
 
       row.pin(false)
-      
+
       expect(onRowPinningChangeMock).toHaveBeenCalled()
     })
 
     it('should call onRowPinningChange when including leaf rows', () => {
-      const { table, onRowPinningChangeMock } = createTableWithMockOnPinningChange(10)
+      const { table, onRowPinningChangeMock } =
+        createTableWithMockOnPinningChange(10)
       const row = table.getRow(ROW[0])
 
       row.pin('top', true)
@@ -350,7 +357,8 @@ describe('row methods', () => {
     })
 
     it('should call onRowPinningChange when including parent rows', () => {
-      const { table, onRowPinningChangeMock } = createTableWithMockOnPinningChange(10)
+      const { table, onRowPinningChangeMock } =
+        createTableWithMockOnPinningChange(10)
       const row = table.getRow(ROW[0])
 
       row.pin('top', false, true)

@@ -54,21 +54,25 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const myTableStore = new Store(
-  getInitialTableState(
-    _features, // get default initial state from features
-    // custom initial state
-    {
-      pagination: { pageIndex: 0, pageSize: 10 },
-      sorting: [],
-    },
-  ),
-)
-
 function App() {
   const [data] = React.useState(() => makeData(1000))
 
   const rerender = React.useReducer(() => ({}), {})[1]
+
+  // create our own TanStack Store in our own scope (This could just be a global store if defined outside of this component)
+  const [myTableStore] = React.useState(
+    () =>
+      new Store(
+        getInitialTableState(
+          _features, // get default initial state from features
+          // custom initial state
+          {
+            sorting: [],
+            pagination: { pageIndex: 0, pageSize: 10 },
+          },
+        ),
+      ),
+  )
 
   // Subscribe to store state for reactive updates, custom selector available too
   const state = useStore(myTableStore, (state) => state)

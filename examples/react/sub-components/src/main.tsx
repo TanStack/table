@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
+  createColumnHelper,
   createExpandedRowModel,
   rowExpandingFeature,
   tableFeatures,
@@ -20,86 +21,61 @@ const _features = tableFeatures({
   rowExpandingFeature,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
-  {
-    header: 'Name',
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'expander',
+    header: () => null,
+    cell: ({ row }) => {
+      return row.getCanExpand() ? (
+        <button
+          onClick={row.getToggleExpandedHandler()}
+          style={{ cursor: 'pointer' }}
+        >
+          {row.getIsExpanded() ? '👇' : '👉'}
+        </button>
+      ) : (
+        '🔵'
+      )
+    },
+  }),
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    cell: ({ row, getValue }) => (
+      <div
+        style={{
+          paddingLeft: `${row.depth * 2}rem`,
+        }}
+      >
+        {getValue<string>()}
+      </div>
+    ),
     footer: (props) => props.column.id,
-    columns: [
-      {
-        id: 'expander',
-        header: () => null,
-        cell: ({ row }) => {
-          return row.getCanExpand() ? (
-            <button
-              onClick={row.getToggleExpandedHandler()}
-              style={{ cursor: 'pointer' }}
-            >
-              {row.getIsExpanded() ? '👇' : '👉'}
-            </button>
-          ) : (
-            '🔵'
-          )
-        },
-      },
-      {
-        accessorKey: 'firstName',
-        header: 'First Name',
-        cell: ({ row, getValue }) => (
-          <div
-            style={{
-              // Since rows are flattened by default,
-              // we can use the row.depth property
-              // and paddingLeft to visually indicate the depth
-              // of the row
-              paddingLeft: `${row.depth * 2}rem`,
-            }}
-          >
-            {getValue<string>()}
-          </div>
-        ),
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: (props) => props.column.id,
-      },
-    ],
-  },
-  {
-    header: 'Info',
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => <span>Last Name</span>,
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-      },
-      {
-        header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
-            header: () => <span>Visits</span>,
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'status',
-            header: 'Status',
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
-            header: 'Profile Progress',
-            footer: (props) => props.column.id,
-          },
-        ],
-      },
-    ],
-  },
-]
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: () => <span>Visits</span>,
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+])
 
 type TableProps<TFeatures extends TableFeatures, TData extends RowData> = {
   data: Array<TData>

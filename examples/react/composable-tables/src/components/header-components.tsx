@@ -64,5 +64,7 @@ export function FooterSum() {
     return acc + (typeof value === 'number' ? value : 0)
   }, 0)
 
-  return <span className="footer-sum">{sum > 0 ? sum.toLocaleString() : '—'}</span>
+  return (
+    <span className="footer-sum">{sum > 0 ? sum.toLocaleString() : '—'}</span>
+  )
 }

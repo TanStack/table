@@ -2,13 +2,15 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
+  FlexRender,
   columnSizingFeature,
   createSortedRowModel,
-  FlexRender,
   rowSortingFeature,
   sortFns,
   useTable,
 } from '@tanstack/react-table'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import { makeColumns, makeData } from './makeData'
 import type {
   Cell,
   ColumnDef,
@@ -17,9 +19,7 @@ import type {
   ReactTable,
   Row,
 } from '@tanstack/react-table'
-import { useVirtualizer } from '@tanstack/react-virtual'
 import type { Virtualizer } from '@tanstack/react-virtual'
-import { makeColumns, makeData } from './makeData'
 import type { Person } from './makeData'
 
 const _features = {
@@ -81,19 +81,19 @@ interface TableContainerProps {
 function TableContainer({ table }: TableContainerProps) {
   const visibleColumns = table.getAllLeafColumns()
 
-  //The virtualizers need to know the scrollable container element
+  // The virtualizers need to know the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  //we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
+  // we are using a slightly different virtualization strategy for columns (compared to virtual rows) in order to support dynamic row heights
   const columnVirtualizer = useVirtualizer<
     HTMLDivElement,
     HTMLTableCellElement
   >({
     count: visibleColumns.length,
-    estimateSize: (index) => visibleColumns[index].getSize(), //estimate width of each column for accurate scrollbar dragging
+    estimateSize: (index) => visibleColumns[index].getSize(), // estimate width of each column for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
     horizontal: true,
-    overscan: 3, //how many columns to render on each side off screen each way (adjust this for performance)
+    overscan: 3, // how many columns to render on each side off screen each way (adjust this for performance)
     onChange: (instance) => {
       // requestAnimationFrame(() => {
       const virtualColumns = instance.getVirtualItems()
@@ -120,9 +120,9 @@ function TableContainer({ table }: TableContainerProps) {
       className="container"
       ref={tableContainerRef}
       style={{
-        overflow: 'auto', //our scrollable table container
-        position: 'relative', //needed for sticky header
-        height: '800px', //should be a fixed height
+        overflow: 'auto', // our scrollable table container
+        position: 'relative', // needed for sticky header
+        height: '800px', // should be a fixed height
       }}
     >
       <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
@@ -259,16 +259,16 @@ function TableBody({
 
   const { rows } = table.getRowModel()
 
-  //dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
+  // dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without the need for `measureElement`
   const rowVirtualizer = useVirtualizer<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
-    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.current,
-    //measure dynamic row height, except in firefox because it measures table border height incorrectly
+    // measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? (element) => element?.getBoundingClientRect().height
+        ? (element) => element.getBoundingClientRect().height
         : undefined,
     overscan: 5,
     onChange: (instance) => {
@@ -294,7 +294,7 @@ function TableBody({
       ref={tableBodyRef}
       style={{
         display: 'grid',
-        position: 'relative', //needed for absolute positioning of rows
+        position: 'relative', // needed for absolute positioning of rows
       }}
     >
       {virtualRowIndexes.map((virtualRowIndex) => {
@@ -335,13 +335,13 @@ function TableBodyRow({
 
   return (
     <tr
-      data-index={virtualRowIndex} //needed for dynamic row height measurement
+      data-index={virtualRowIndex} // needed for dynamic row height measurement
       ref={(node) => {
         if (node && typeof virtualRowIndex !== 'undefined') {
           rowVirtualizer.measureElement(node)
           rowRefsMap.current.set(virtualRowIndex, node)
         }
-      }} //measure dynamic row height
+      }} // measure dynamic row height
       key={row.id}
       style={{
         display: 'flex',

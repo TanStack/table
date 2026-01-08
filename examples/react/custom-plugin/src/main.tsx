@@ -20,7 +20,7 @@ import { makeData } from './makeData'
 import type {
   Column,
   OnChangeFn,
-  Table,
+  ReactTable,
   TableFeature,
   Updater,
 } from '@tanstack/react-table'
@@ -326,7 +326,7 @@ function Filter({
   table,
 }: {
   column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

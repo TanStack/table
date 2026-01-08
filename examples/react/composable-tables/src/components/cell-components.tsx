@@ -54,19 +54,25 @@ export function RowActionsCell() {
   return (
     <div className="row-actions">
       <button
-        onClick={() => alert(`View: ${row.original.firstName} ${row.original.lastName}`)}
+        onClick={() =>
+          alert(`View: ${row.original.firstName} ${row.original.lastName}`)
+        }
         title="View"
       >
         👁️
       </button>
       <button
-        onClick={() => alert(`Edit: ${row.original.firstName} ${row.original.lastName}`)}
+        onClick={() =>
+          alert(`Edit: ${row.original.firstName} ${row.original.lastName}`)
+        }
         title="Edit"
       >
         ✏️
       </button>
       <button
-        onClick={() => alert(`Delete: ${row.original.firstName} ${row.original.lastName}`)}
+        onClick={() =>
+          alert(`Delete: ${row.original.firstName} ${row.original.lastName}`)
+        }
         title="Delete"
       >
         🗑️
@@ -82,7 +88,13 @@ export function PriceCell() {
   const cell = useCellContext<number>()
   return (
     <span className="price">
-      ${cell.getValue().toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+      $
+      {cell
+        .getValue()
+        .toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}
     </span>
   )
 }

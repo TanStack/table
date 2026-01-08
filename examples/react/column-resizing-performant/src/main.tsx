@@ -24,7 +24,7 @@ type Person = {
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
-const defaultColumns = columnHelper.columns([
+const columns = columnHelper.columns([
   columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
@@ -67,9 +67,6 @@ const defaultColumns = columnHelper.columns([
 
 function App() {
   const [data, _setData] = React.useState(() => makeData(200))
-  const [columns] = React.useState<typeof defaultColumns>(() => [
-    ...defaultColumns,
-  ])
 
   const rerender = React.useReducer(() => ({}), {})[1]
 

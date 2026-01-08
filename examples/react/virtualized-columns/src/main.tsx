@@ -15,8 +15,8 @@ import type {
   ColumnDef,
   Header,
   HeaderGroup,
+  ReactTable,
   Row,
-  Table,
 } from '@tanstack/react-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
@@ -62,7 +62,7 @@ function App() {
 }
 
 interface TableContainerProps {
-  table: Table<any, Person>
+  table: ReactTable<any, Person>
 }
 
 function TableContainer({ table }: TableContainerProps) {
@@ -89,7 +89,7 @@ function TableContainer({ table }: TableContainerProps) {
   let virtualPaddingLeft: number | undefined
   let virtualPaddingRight: number | undefined
 
-  if (columnVirtualizer && virtualColumns.length) {
+  if (virtualColumns.length) {
     virtualPaddingLeft = virtualColumns[0]?.start ?? 0
     virtualPaddingRight =
       columnVirtualizer.getTotalSize() -
@@ -128,7 +128,7 @@ function TableContainer({ table }: TableContainerProps) {
 
 interface TableHeadProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  table: Table<typeof features, Person>
+  table: ReactTable<typeof features, Person>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
 }
@@ -155,6 +155,7 @@ function TableHead({
           key={headerGroup.id}
           virtualPaddingLeft={virtualPaddingLeft}
           virtualPaddingRight={virtualPaddingRight}
+          table={table}
         />
       ))}
     </thead>
@@ -166,6 +167,7 @@ interface TableHeadRowProps {
   headerGroup: HeaderGroup<any, Person>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
+  table: ReactTable<typeof features, Person>
 }
 
 function TableHeadRow({
@@ -173,6 +175,7 @@ function TableHeadRow({
   headerGroup,
   virtualPaddingLeft,
   virtualPaddingRight,
+  table,
 }: TableHeadRowProps) {
   const virtualColumns = columnVirtualizer.getVirtualItems()
   return (
@@ -183,7 +186,7 @@ function TableHeadRow({
       ) : null}
       {virtualColumns.map((virtualColumn) => {
         const header = headerGroup.headers[virtualColumn.index]
-        return <TableHeadCell key={header.id} header={header} />
+        return <TableHeadCell key={header.id} header={header} table={table} />
       })}
       {virtualPaddingRight ? (
         // fake empty column to the right for virtualization scroll padding
@@ -195,9 +198,10 @@ function TableHeadRow({
 
 interface TableHeadCellProps {
   header: Header<typeof features, Person, unknown>
+  table: ReactTable<typeof features, Person>
 }
 
-function TableHeadCell({ header }: TableHeadCellProps) {
+function TableHeadCell({ header, table }: TableHeadCellProps) {
   return (
     <th
       key={header.id}
@@ -226,7 +230,7 @@ function TableHeadCell({ header }: TableHeadCellProps) {
 
 interface TableBodyProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  table: Table<typeof features, Person>
+  table: ReactTable<typeof features, Person>
   tableContainerRef: React.RefObject<HTMLDivElement | null>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
@@ -277,6 +281,7 @@ function TableBody({
             virtualPaddingLeft={virtualPaddingLeft}
             virtualPaddingRight={virtualPaddingRight}
             virtualRow={virtualRow}
+            table={table}
           />
         )
       })}
@@ -291,6 +296,7 @@ interface TableBodyRowProps {
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
   virtualRow: VirtualItem
+  table: ReactTable<typeof features, Person>
 }
 
 function TableBodyRow({
@@ -300,6 +306,7 @@ function TableBodyRow({
   virtualPaddingLeft,
   virtualPaddingRight,
   virtualRow,
+  table,
 }: TableBodyRowProps) {
   const visibleCells = row.getVisibleCells()
   const virtualColumns = columnVirtualizer.getVirtualItems()
@@ -321,7 +328,7 @@ function TableBodyRow({
       ) : null}
       {virtualColumns.map((vc) => {
         const cell = visibleCells[vc.index]
-        return <TableBodyCell key={cell.id} cell={cell} />
+        return <TableBodyCell key={cell.id} cell={cell} table={table} />
       })}
       {virtualPaddingRight ? (
         // fake empty column to the right for virtualization scroll padding
@@ -333,9 +340,10 @@ function TableBodyRow({
 
 interface TableBodyCellProps {
   cell: Cell<any, Person, unknown>
+  table: ReactTable<typeof features, Person>
 }
 
-function TableBodyCell({ cell }: TableBodyCellProps) {
+function TableBodyCell({ cell, table }: TableBodyCellProps) {
   return (
     <td
       key={cell.id}

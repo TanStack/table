@@ -47,6 +47,7 @@ const _features = tableFeatures({})
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
+// use new columnHelper.columns method to create columns with the same TValue generic so TypeScript doesn't complain when passing columns to useTable
 const columns = columnHelper.columns([
   columnHelper.group({
     id: 'hello',

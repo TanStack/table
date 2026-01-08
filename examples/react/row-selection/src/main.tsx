@@ -59,48 +59,32 @@ function App() {
             </div>
           ),
         }),
-        columnHelper.group({
-          header: 'Name',
+        columnHelper.accessor('firstName', {
+          header: 'First Name',
+          cell: (info) => info.getValue(),
           footer: (props) => props.column.id,
-          columns: columnHelper.columns([
-            columnHelper.accessor('firstName', {
-              cell: (info) => info.getValue(),
-              footer: (props) => props.column.id,
-            }),
-            columnHelper.accessor((row) => row.lastName, {
-              id: 'lastName',
-              cell: (info) => info.getValue(),
-              header: () => <span>Last Name</span>,
-              footer: (props) => props.column.id,
-            }),
-          ]),
         }),
-        columnHelper.group({
-          header: 'Info',
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          header: () => <span>Last Name</span>,
+          cell: (info) => info.getValue(),
           footer: (props) => props.column.id,
-          columns: columnHelper.columns([
-            columnHelper.accessor('age', {
-              header: () => 'Age',
-              footer: (props) => props.column.id,
-            }),
-            columnHelper.group({
-              header: 'More Info',
-              columns: columnHelper.columns([
-                columnHelper.accessor('visits', {
-                  header: () => <span>Visits</span>,
-                  footer: (props) => props.column.id,
-                }),
-                columnHelper.accessor('status', {
-                  header: 'Status',
-                  footer: (props) => props.column.id,
-                }),
-                columnHelper.accessor('progress', {
-                  header: 'Profile Progress',
-                  footer: (props) => props.column.id,
-                }),
-              ]),
-            }),
-          ]),
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          footer: (props) => props.column.id,
         }),
       ]),
     [],

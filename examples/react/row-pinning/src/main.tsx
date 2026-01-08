@@ -18,9 +18,9 @@ import type {
   Column,
   ColumnDef,
   ExpandedState,
+  ReactTable,
   Row,
   RowPinningState,
-  Table,
 } from '@tanstack/react-table'
 import './index.css'
 
@@ -147,26 +147,29 @@ function App() {
   const [data, setData] = React.useState(() => makeData(1000, 2, 2))
   const refreshData = () => setData(() => makeData(1000, 2, 2))
 
-  const table = useTable({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      expandedRowModel: createExpandedRowModel(),
-      paginatedRowModel: createPaginatedRowModel(),
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {
+        filteredRowModel: createFilteredRowModel(filterFns),
+        expandedRowModel: createExpandedRowModel(),
+        paginatedRowModel: createPaginatedRowModel(),
+      },
+      columns,
+      data,
+      initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
+      state: {
+        expanded,
+        rowPinning,
+      },
+      onExpandedChange: setExpanded,
+      onRowPinningChange: setRowPinning,
+      getSubRows: (row) => row.subRows,
+      keepPinnedRows,
+      debugAll: true,
     },
-    columns,
-    data,
-    initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
-    state: {
-      expanded,
-      rowPinning,
-    },
-    onExpandedChange: setExpanded,
-    onRowPinningChange: setRowPinning,
-    getSubRows: (row) => row.subRows,
-    keepPinnedRows,
-    debugAll: true,
-  })
+    (state) => state, // subscribe to all re-renders
+  )
 
   // console.log(table.getBottomRows)
   // React.useEffect(() => {
@@ -355,7 +358,7 @@ function PinnedRow({
   table,
 }: {
   row: Row<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof _features, Person>
 }) {
   return (
     <tr
@@ -390,7 +393,7 @@ function Filter({
   table,
 }: {
   column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

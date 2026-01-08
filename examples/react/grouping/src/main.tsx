@@ -20,6 +20,7 @@ import {
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
+// this example happens to use the createTableHook pattern, but it is not required
 const { useAppTable, createAppColumnHelper } = createTableHook({
   _features: {
     columnFilteringFeature,

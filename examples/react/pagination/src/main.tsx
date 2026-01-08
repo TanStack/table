@@ -15,7 +15,7 @@ import {
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { Column, Table } from '@tanstack/react-table'
+import type { Column, ReactTable } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
@@ -241,7 +241,7 @@ function Filter({
   table,
 }: {
   column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

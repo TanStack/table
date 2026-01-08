@@ -4,11 +4,11 @@ import { faker } from '@faker-js/faker'
 import {
   columnOrderingFeature,
   columnVisibilityFeature,
+  createColumnHelper,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef } from '@tanstack/react-table'
 import type { Person } from './makeData'
 import './index.css'
 
@@ -17,57 +17,53 @@ const _features = tableFeatures({
   columnVisibilityFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
-  {
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const defaultColumns = columnHelper.columns([
+  columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'firstName',
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
-      },
-    ],
-  },
-  {
+      }),
+    ]),
+  }),
+  columnHelper.group({
     header: 'Info',
     footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
         header: () => 'Age',
         footer: (props) => props.column.id,
-      },
-      {
+      }),
+      columnHelper.group({
         header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
             header: () => <span>Visits</span>,
             footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'status',
+          }),
+          columnHelper.accessor('status', {
             header: 'Status',
             footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
+          }),
+          columnHelper.accessor('progress', {
             header: 'Profile Progress',
             footer: (props) => props.column.id,
-          },
-        ],
-      },
-    ],
-  },
-]
+          }),
+        ]),
+      }),
+    ]),
+  }),
+])
 
 function App() {
   const [data, setData] = React.useState(() => makeData(20))

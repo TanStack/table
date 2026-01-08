@@ -53,7 +53,7 @@ const defaultData: Array<Person> = [
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
-const defaultColumns = columnHelper.columns([
+const columns = columnHelper.columns([
   columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
@@ -101,9 +101,6 @@ const defaultColumns = columnHelper.columns([
 
 function App() {
   const [data] = React.useState(() => [...defaultData])
-  const [columns] = React.useState<typeof defaultColumns>(() => [
-    ...defaultColumns,
-  ])
 
   const [columnResizeMode, setColumnResizeMode] =
     React.useState<ColumnResizeMode>('onChange')

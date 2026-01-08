@@ -23,13 +23,12 @@ export function DebouncedInput({
     }, debounce)
 
     return () => clearTimeout(timeout)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
 
   return (
     <input
       {...props}
-      value={value ?? ''}
+      value={value}
       onChange={(e) => {
         if (e.target.value === '') return setValue('')
         if (props.type === 'number') {

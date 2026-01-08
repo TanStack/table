@@ -56,6 +56,7 @@ const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
       rowA.columnFiltersMeta[columnId].itemRank!,

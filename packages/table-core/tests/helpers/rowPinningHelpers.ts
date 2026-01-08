@@ -1,18 +1,14 @@
 import { vi } from 'vitest'
 import { getDefaultRowPinningState } from '../../src/features/row-pinning/rowPinningFeature.utils'
-import { 
-  constructTable, 
+import {
+  constructTable,
   createColumnHelper,
   coreFeatures,
-  rowPinningFeature 
+  rowPinningFeature,
 } from '../../src'
 import { generateTestData } from '../fixtures/data/generateTestData'
 import { generateTestTableWithData } from './generateTestTable'
-import type {
-  ColumnDef,
-  RowPinningState,
-  TableOptions,
-} from '../../src'
+import type { ColumnDef, RowPinningState, TableOptions } from '../../src'
 import type { Person } from '../fixtures/data/types'
 
 // Define feature set with proper typing
@@ -68,7 +64,10 @@ export function createTableWithMockOnPinningChange(rowCount = 10): {
 }
 
 export function createRowPinningTable(
-  options?: Omit<TableOptions<typeof _features, Person>, 'data' | 'columns' | '_features'>,
+  options?: Omit<
+    TableOptions<typeof _features, Person>,
+    'data' | 'columns' | '_features'
+  >,
   lengths: Array<number> | number = 10,
 ): any {
   const lengthsArray = Array.isArray(lengths) ? lengths : [lengths]

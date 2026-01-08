@@ -68,7 +68,7 @@ export default function Table<T extends Record<string, string | number>>({
 
   // Sync controlled state with table store
   useEffect(() => {
-    table.store.setState((prev) => ({
+    table.baseStore.setState((prev) => ({
       ...prev,
       pagination,
       sorting,

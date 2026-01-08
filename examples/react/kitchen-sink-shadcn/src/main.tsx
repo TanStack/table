@@ -297,42 +297,45 @@ function App() {
 
   const refreshData = () => setData(() => makeData(100_000)) // stress test
 
-  const table = useTable({
-    _features,
-    _rowModels: {
-      coreRowModel: createCoreRowModel(),
-      filteredRowModel: createFilteredRowModel(filterFns),
-      facetedRowModel: createFacetedRowModel(),
-      facetedUniqueValues: createFacetedUniqueValues(),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {
+        coreRowModel: createCoreRowModel(),
+        filteredRowModel: createFilteredRowModel(filterFns),
+        facetedRowModel: createFacetedRowModel(),
+        facetedUniqueValues: createFacetedUniqueValues(),
+        paginatedRowModel: createPaginatedRowModel(),
+        sortedRowModel: createSortedRowModel(sortFns),
+      },
+      columns,
+      data,
+      defaultColumn: {
+        minSize: 60,
+        maxSize: 800,
+        filterFn: dynamicFilterFn,
+      },
+      state: {
+        rowSelection,
+        sorting,
+        columnVisibility,
+        columnOrder,
+        columnSizing,
+        columnFilters,
+      },
+      onSortingChange: setSorting,
+      onColumnVisibilityChange: setColumnVisibility,
+      onColumnOrderChange: setColumnOrder,
+      onColumnSizingChange: setColumnSizing,
+      onColumnFiltersChange: setColumnFilters,
+      getRowId: (row) => row.id,
+      enableRowSelection: true,
+      onRowSelectionChange: setRowSelection,
+      columnResizeMode: 'onChange',
+      debugTable: true,
     },
-    columns,
-    data,
-    defaultColumn: {
-      minSize: 60,
-      maxSize: 800,
-      filterFn: dynamicFilterFn,
-    },
-    state: {
-      rowSelection,
-      sorting,
-      columnVisibility,
-      columnOrder,
-      columnSizing,
-      columnFilters,
-    },
-    onSortingChange: setSorting,
-    onColumnVisibilityChange: setColumnVisibility,
-    onColumnOrderChange: setColumnOrder,
-    onColumnSizingChange: setColumnSizing,
-    onColumnFiltersChange: setColumnFilters,
-    getRowId: (row) => row.id,
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    columnResizeMode: 'onChange',
-    debugTable: true,
-  })
+    (state) => state, // subscribe to all re-renders
+  )
 
   const columnSizeVars = React.useMemo(() => {
     const headers = table.getFlatHeaders()

@@ -12,7 +12,7 @@ import {
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { makeData } from './makeData'
-import type { ColumnDef, Row, Table } from '@tanstack/react-table'
+import type { ColumnDef, ReactTable, Row } from '@tanstack/react-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 
@@ -173,7 +173,7 @@ function App() {
 }
 
 interface TableBodyProps {
-  table: Table<typeof features, Person>
+  table: ReactTable<typeof features, Person>
   tableContainerRef: React.RefObject<HTMLDivElement | null>
 }
 
@@ -214,6 +214,7 @@ function TableBody({ table, tableContainerRef }: TableBodyProps) {
             row={row}
             virtualRow={virtualRow}
             rowVirtualizer={rowVirtualizer}
+            table={table}
           />
         )
       })}
@@ -225,9 +226,15 @@ interface TableBodyRowProps {
   row: Row<typeof features, Person>
   virtualRow: VirtualItem
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
+  table: ReactTable<typeof features, Person>
 }
 
-function TableBodyRow({ row, virtualRow, rowVirtualizer }: TableBodyRowProps) {
+function TableBodyRow({
+  row,
+  virtualRow,
+  rowVirtualizer,
+  table,
+}: TableBodyRowProps) {
   return (
     <tr
       data-index={virtualRow.index} // needed for dynamic row height measurement

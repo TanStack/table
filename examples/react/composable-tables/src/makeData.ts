@@ -75,4 +75,3 @@ export function makeData(...lens: Array<number>) {
 export function makeProductData(count: number): Array<Product> {
   return range(count).map(() => newProduct())
 }
-

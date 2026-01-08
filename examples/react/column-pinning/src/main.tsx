@@ -28,7 +28,7 @@ const { useAppTable, createAppColumnHelper } = createTableHook({
 const columnHelper = createAppColumnHelper<Person>()
 
 // Define columns using columnHelper
-const defaultColumns = columnHelper.columns([
+const columns = columnHelper.columns([
   columnHelper.group({
     header: 'Name',
     footer: (props) => props.column.id,
@@ -76,7 +76,6 @@ const defaultColumns = columnHelper.columns([
 
 function App() {
   const [data, setData] = React.useState(() => makeData(5000))
-  const [columns] = React.useState(() => [...defaultColumns])
 
   const rerender = () => setData(() => makeData(5000))
 

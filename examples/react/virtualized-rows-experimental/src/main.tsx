@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
+  FlexRender,
   columnSizingFeature,
   createSortedRowModel,
-  FlexRender,
   rowSortingFeature,
   sortFns,
   useTable,
@@ -203,7 +203,7 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
     measureElement:
       typeof window !== 'undefined' &&
       navigator.userAgent.indexOf('Firefox') === -1
-        ? (element) => element?.getBoundingClientRect().height
+        ? (element) => element.getBoundingClientRect().height
         : undefined,
     overscan: 5,
     onChange: (instance) => {
