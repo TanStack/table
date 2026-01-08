@@ -7,16 +7,17 @@
     "build": "vite build",
     "serve": "vite preview",
     "start": "vite",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "test:types": "tsc"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.1.0",
+    "@faker-js/faker": "^10.2.0",
     "@tanstack/preact-table": "^9.0.0-alpha.10",
-    "preact": "^10.28.0"
+    "preact": "^10.28.2"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
     "typescript": "5.9.3",
-    "vite": "^7.2.7"
+    "vite": "^7.3.0"
   }
 }

@@ -146,7 +146,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   // Render pagination info
   const paginationInfoElement = document.createElement('span')
   paginationInfoElement.classList.add('flex', 'items-center', 'gap-1')
-  paginationInfoElement.innerHTML = `<div>Page</div><strong>${table.getState().pagination.pageIndex + 1} of ${table.getPageCount().toLocaleString()}</strong>`
+  paginationInfoElement.innerHTML = `<div>Page</div><strong>${table.store.state.pagination.pageIndex + 1} of ${table.getPageCount().toLocaleString()}</strong>`
   paginationElement.appendChild(paginationInfoElement)
 
   // Render pagination set page
@@ -158,7 +158,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   paginationPageInput.min = String(1)
   paginationPageInput.max = String(table.getPageCount())
   paginationPageInput.defaultValue = String(
-    table.getState().pagination.pageIndex + 1,
+    table.store.state.pagination.pageIndex + 1,
   )
   paginationPageInput.classList.add('border', 'p-1', 'rounded', 'w-16')
   paginationPageInput.oninput = (e) => {
@@ -171,7 +171,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
 
   // Render pagiantion page size
   const paginationPageSizeSelect = document.createElement('select')
-  paginationPageSizeSelect.value = String(table.getState().pagination.pageSize)
+  paginationPageSizeSelect.value = String(table.store.state.pagination.pageSize)
   paginationPageSizeSelect.onchange = (e) => {
     const target = e.target as HTMLSelectElement
     table.setPageSize(Number(target.value))
@@ -179,7 +179,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   ;[10, 20, 30, 40, 50].map((pageSize) => {
     const option = document.createElement('option')
     option.value = String(pageSize)
-    option.selected = table.getState().pagination.pageSize === pageSize
+    option.selected = table.store.state.pagination.pageSize === pageSize
     option.textContent = `Show ${pageSize}`
     paginationPageSizeSelect.appendChild(option)
   })
@@ -189,8 +189,8 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   const stateInfoElement = document.createElement('pre')
   stateInfoElement.textContent = JSON.stringify(
     {
-      pagination: table.getState().pagination,
-      sorting: table.getState().sorting,
+      pagination: table.store.state.pagination,
+      sorting: table.store.state.sorting,
     },
     null,
     2,

@@ -1,7 +1,7 @@
-import type { Table_Internal } from './types/Table'
+import type { Table, Table_Internal } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
-import type { TableState } from './types/TableState'
+import type { TableState, TableState_All } from './types/TableState'
 
 export const isDev = process.env.NODE_ENV === 'development'
 
@@ -13,17 +13,19 @@ export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
 
 export function noop() {}
 
-export function makeStateUpdater<K extends keyof TableState<any>>(
-  key: K,
-  instance: unknown,
-) {
-  return (updater: Updater<TableState<any>[K]>) => {
-    ;(instance as any).setState(<TTableState>(old: TTableState) => {
-      return {
-        ...old,
-        [key]: functionalUpdate(updater, (old as any)[key]),
-      }
-    })
+export function makeStateUpdater<
+  TFeatures extends TableFeatures,
+  K extends (string & {}) | keyof TableState_All | keyof TableState<TFeatures>,
+>(key: K, instance: Table<TFeatures, any>) {
+  return (updater: Updater<TableState<any>[K & keyof TableState<any>]>) => {
+    ;(instance as Table_Internal<any, any>).baseStore.setState(
+      <TTableState extends TableState_All>(old: TTableState) => {
+        return {
+          ...old,
+          [key]: functionalUpdate(updater, (old as any)[key]),
+        }
+      },
+    )
   }
 }
 
@@ -191,7 +193,7 @@ export function tableMemo<
     )
     console.info({
       feature,
-      state: table.getState(),
+      state: table.store.state,
       deps: memoOptions.memoDeps?.toString(),
     })
     console.trace()
@@ -242,11 +244,15 @@ export function tableMemo<
   })
 }
 
-interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
+export interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
   fn: (...args: any) => any
   memoDeps?: (depArgs?: any) => [...any] | undefined
-  fnName: string
 }
+
+export type APIObject<TDeps extends ReadonlyArray<any>, TDepArgs> = Record<
+  string,
+  API<TDeps, TDepArgs>
+>
 
 /**
  * Assumes that a function name is in the format of `parentName_fnKey` and returns the `fnKey` and `fnName` in the format of `parentName.fnKey`.
@@ -265,34 +271,95 @@ export function getFunctionNameInfo(
 }
 
 /**
- * Takes a static function, looks at its name and assigns it to an object with optional memoization and debugging.
+ * Assigns Table API methods directly to the table instance.
+ * Unlike row/cell/column/header, the table is a singleton so methods are assigned directly.
  */
-export function assignAPIs<
+export function assignTableAPIs<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TObject extends Record<string, any>,
   TDeps extends ReadonlyArray<any>,
   TDepArgs,
 >(
   feature: keyof TFeatures & string,
-  obj: TObject extends Record<string, infer U> ? U : never, // table, row, cell, column, header
-  apis: Array<API<TDeps, NoInfer<TDepArgs>>>,
+  table: Table_Internal<TFeatures, TData>,
+  apis: APIObject<TDeps, NoInfer<TDepArgs>>,
 ): void {
-  const table = (obj._table ?? obj) as Table_Internal<TFeatures, TData>
-  apis.forEach(({ fn, memoDeps, fnName: staticFnName }) => {
+  for (const [staticFnName, { fn, memoDeps }] of Object.entries(apis)) {
     const { fnKey, fnName } = getFunctionNameInfo(staticFnName)
 
-    obj[fnKey] = memoDeps
+    ;(table as Record<string, any>)[fnKey] = memoDeps
       ? tableMemo({
           memoDeps,
           fn,
           fnName,
-          objectId: obj.id,
           table,
           feature,
         })
       : fn
-  })
+  }
+}
+
+export interface PrototypeAPI<TDeps extends ReadonlyArray<any>, TDepArgs> {
+  fn: (self: any, ...args: any) => any
+  memoDeps?: (self: any, depArgs?: any) => [...any] | undefined
+}
+
+export type PrototypeAPIObject<
+  TDeps extends ReadonlyArray<any>,
+  TDepArgs,
+> = Record<string, PrototypeAPI<TDeps, TDepArgs>>
+
+/**
+ * Assigns API methods to a prototype object for memory-efficient method sharing.
+ * All instances created with this prototype will share the same method references.
+ *
+ * For memoized methods, the memo state is lazily created and stored on each instance.
+ * This provides the best of both worlds: shared method code + per-instance caching.
+ */
+export function assignPrototypeAPIs<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TDeps extends ReadonlyArray<any>,
+  TDepArgs,
+>(
+  feature: keyof TFeatures & string,
+  prototype: Record<string, any>,
+  table: Table_Internal<TFeatures, TData>,
+  apis: PrototypeAPIObject<TDeps, NoInfer<TDepArgs>>,
+): void {
+  for (const [staticFnName, { fn, memoDeps }] of Object.entries(apis)) {
+    const { fnKey, fnName } = getFunctionNameInfo(staticFnName)
+
+    if (memoDeps) {
+      // For memoized methods, create a function that lazily initializes
+      // the memo on first access and stores it on the instance
+      const memoKey = `_memo_${fnKey}`
+
+      prototype[fnKey] = function (this: any, ...args: Array<any>) {
+        // Lazily create memo on first access for this instance
+        if (!this[memoKey]) {
+          const self = this
+          this[memoKey] = tableMemo({
+            memoDeps: () => memoDeps(self),
+            fn: (...deps) => fn(self, ...deps),
+            fnName,
+            objectId: self.id,
+            table,
+            feature,
+          })
+        }
+        return this[memoKey](...args)
+      }
+    } else {
+      // Non-memoized methods just call the static function with `this`
+      prototype[fnKey] = function (this: any, ...args: Array<any>) {
+        return fn(this, ...args)
+      }
+    }
+    Object.defineProperties(prototype[fnKey], {
+      originalArgsLength: { value: fn.length },
+    })
+  }
 }
 
 /**

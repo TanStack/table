@@ -3,10 +3,8 @@ import {
   FlexRender,
   useTable,
   createColumnHelper,
-  RowSelectionState,
   tableFeatures,
   rowSelectionFeature,
-  Updater,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
@@ -90,33 +88,22 @@ const columns = columnHelper.columns([
 ])
 
 const data = ref(makeData(10))
-const rowSelection = ref<RowSelectionState>({})
 
 const rerender = () => {
   data.value = makeData(10)
 }
 
-const table = useTable({
-  _features,
-  _rowModels: {},
-  get data() {
-    return data.value
+const table = useTable(
+  {
+    _features,
+    _rowModels: {},
+    data,
+    columns,
+    enableRowSelection: true, //enable row selection for all rows
+    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
   },
-  columns,
-  state: {
-    get rowSelection() {
-      return rowSelection.value
-    },
-  },
-  enableRowSelection: true, //enable row selection for all rows
-  // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-  onRowSelectionChange: (updateOrValue: Updater<RowSelectionState>) => {
-    rowSelection.value =
-      typeof updateOrValue === 'function'
-        ? updateOrValue(rowSelection.value)
-        : updateOrValue
-  },
-})
+  (state) => ({ rowSelection: state.rowSelection }),
+)
 </script>
 
 <template>

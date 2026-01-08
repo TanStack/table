@@ -7,10 +7,11 @@
     "build": "vite build",
     "serve": "vite preview",
     "start": "vite",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "test:types": "tsc"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.1.0",
+    "@faker-js/faker": "^10.2.0",
     "@tanstack/react-table": "^9.0.0-alpha.10",
     "react": "^19.2.3",
     "react-dom": "^19.2.3"
@@ -21,6 +22,6 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "typescript": "5.9.3",
-    "vite": "^7.2.7"
+    "vite": "^7.3.0"
   }
 }

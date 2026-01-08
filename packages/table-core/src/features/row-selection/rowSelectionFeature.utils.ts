@@ -97,7 +97,7 @@ export function table_getSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.options.state?.rowSelection ?? {}).length) {
+  if (!Object.keys(table.store.state.rowSelection ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -114,7 +114,7 @@ export function table_getFilteredSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.options.state?.rowSelection ?? {}).length) {
+  if (!Object.keys(table.store.state.rowSelection ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -131,7 +131,7 @@ export function table_getGroupedSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.options.state?.rowSelection ?? {}).length) {
+  if (!Object.keys(table.store.state.rowSelection ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -148,7 +148,7 @@ export function table_getIsAllRowsSelected<
 >(table: Table_Internal<TFeatures, TData>) {
   const preGroupedFlatRows = table.getFilteredRowModel().flatRows
   const rowSelection =
-    table.options.state?.rowSelection ?? ({} as RowSelectionState)
+    table.store.state.rowSelection ?? ({} as RowSelectionState)
 
   let isAllRowsSelected = Boolean(
     preGroupedFlatRows.length && Object.keys(rowSelection).length,
@@ -175,7 +175,7 @@ export function table_getIsAllPageRowsSelected<
     .getPaginatedRowModel()
     .flatRows.filter((row) => row_getCanSelect(row))
   const rowSelection =
-    table.options.state?.rowSelection ?? ({} as RowSelectionState)
+    table.store.state.rowSelection ?? ({} as RowSelectionState)
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
 
@@ -193,9 +193,7 @@ export function table_getIsSomeRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const totalSelected = Object.keys(
-    table.options.state?.rowSelection ?? {},
-  ).length
+  const totalSelected = Object.keys(table.store.state.rowSelection ?? {}).length
   return (
     totalSelected > 0 &&
     totalSelected < table.getFilteredRowModel().flatRows.length
@@ -252,7 +250,7 @@ export function row_toggleSelected<
 ) {
   const isSelected = row_getIsSelected(row)
 
-  table_setRowSelection(row._table, (old) => {
+  table_setRowSelection(row.table, (old) => {
     value = typeof value !== 'undefined' ? value : !isSelected
 
     if (row_getCanSelect(row) && isSelected === value) {
@@ -266,7 +264,7 @@ export function row_toggleSelected<
       row.id,
       value,
       opts?.selectChildren ?? true,
-      row._table,
+      row.table,
     )
 
     return selectedRowIds
@@ -298,7 +296,7 @@ export function row_getCanSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const options = row._table.options
+  const options = row.table.options
   if (typeof options.enableRowSelection === 'function') {
     return options.enableRowSelection(row)
   }
@@ -310,7 +308,7 @@ export function row_getCanSelectSubRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const options = row._table.options
+  const options = row.table.options
   if (typeof options.enableSubRowSelection === 'function') {
     return options.enableSubRowSelection(row)
   }
@@ -322,7 +320,7 @@ export function row_getCanMultiSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const options = row._table.options
+  const options = row.table.options
   if (typeof options.enableMultiRowSelection === 'function') {
     return options.enableMultiRowSelection(row)
   }
@@ -421,11 +419,7 @@ export function isRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean {
-  return (
-    (row._table.options.state?.rowSelection ?? ({} as RowSelectionState))[
-      row.id
-    ] ?? false
-  )
+  return (row.table.store.state.rowSelection ?? {})[row.id] ?? false
 }
 
 export function isSubRowSelected<
@@ -433,9 +427,6 @@ export function isSubRowSelected<
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean | 'some' | 'all' {
   if (!row.subRows.length) return false
-
-  const rowSelection =
-    row._table.options.state?.rowSelection ?? ({} as RowSelectionState)
 
   let allChildrenSelected = true
   let someSelected = false

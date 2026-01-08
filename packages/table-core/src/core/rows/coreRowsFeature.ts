@@ -1,4 +1,4 @@
-import { assignAPIs } from '../../utils'
+import { assignPrototypeAPIs, assignTableAPIs } from '../../utils'
 import {
   row_getAllCells,
   row_getAllCellsByColumnId,
@@ -33,57 +33,47 @@ export function constructCoreRowsFeature<
   TData extends RowData,
 >(): TableFeature<CoreRowsFeatureConstructors<TFeatures, TData>> {
   return {
-    constructRowAPIs: (row) => {
-      assignAPIs('coreRowsFeature', row, [
-        {
-          fn: () => row_getAllCellsByColumnId(row),
-          fnName: 'row_getAllCellsByColumnId',
-          memoDeps: () => [row.getAllCells()],
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('coreRowsFeature', prototype, table, {
+        row_getAllCellsByColumnId: {
+          fn: (row) => row_getAllCellsByColumnId(row),
+          memoDeps: (row) => [row.getAllCells()],
         },
-        {
-          fn: () => row_getAllCells(row),
-          fnName: 'row_getAllCells',
-          memoDeps: () => [row._table.getAllLeafColumns()],
+        row_getAllCells: {
+          fn: (row) => row_getAllCells(row),
+          memoDeps: (row) => [row.table.getAllLeafColumns()],
         },
-        {
-          fn: () => row_getLeafRows(row),
-          fnName: 'row_getLeafRows',
+        row_getLeafRows: {
+          fn: (row) => row_getLeafRows(row),
         },
-        {
-          fn: () => row_getParentRow(row),
-          fnName: 'row_getParentRow',
+        row_getParentRow: {
+          fn: (row) => row_getParentRow(row),
         },
-        {
-          fn: () => row_getParentRows(row),
-          fnName: 'row_getParentRows',
+        row_getParentRows: {
+          fn: (row) => row_getParentRows(row),
         },
-        {
-          fn: (columnId) => row_getUniqueValues(row, columnId),
-          fnName: 'row_getUniqueValues',
+        row_getUniqueValues: {
+          fn: (row, columnId) => row_getUniqueValues(row, columnId),
         },
-        {
-          fn: (columnId) => row_getValue(row, columnId),
-          fnName: 'row_getValue',
+        row_getValue: {
+          fn: (row, columnId) => row_getValue(row, columnId),
         },
-        {
-          fn: (columnId) => row_renderValue(row, columnId),
-          fnName: 'row_renderValue',
+        row_renderValue: {
+          fn: (row, columnId) => row_renderValue(row, columnId),
         },
-      ])
+      })
     },
-
     constructTableAPIs: (table) => {
-      assignAPIs('coreRowsFeature', table, [
-        {
-          fn: (row, index, parent) => table_getRowId(row, table, index, parent),
-          fnName: 'table_getRowId',
+      assignTableAPIs('coreRowsFeature', table, {
+        table_getRowId: {
+          fn: (originalRow, index, parent) =>
+            table_getRowId(originalRow, table, index, parent),
         },
-        {
+        table_getRow: {
           fn: (id: string, searchAll?: boolean) =>
             table_getRow(table, id, searchAll),
-          fnName: 'table_getRow',
         },
-      ])
+      })
     },
   }
 }

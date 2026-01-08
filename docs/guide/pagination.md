@@ -203,7 +203,7 @@ There are several pagination table instance APIs that are useful for hooking up 
   {'>>'}
 </Button>
 <select
-  value={table.getState().pagination.pageSize}
+  value={table.store.state.pagination.pageSize}
   onChange={e => {
     table.setPageSize(Number(e.target.value))
   }}

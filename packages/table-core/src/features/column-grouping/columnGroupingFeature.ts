@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignPrototypeAPIs,
+  assignTableAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   cell_getIsAggregated,
   cell_getIsGrouped,
@@ -73,82 +77,70 @@ export function constructColumnGroupingFeature<
       }
     },
 
-    constructCellAPIs: (cell) => {
-      assignAPIs('columnGroupingFeature', cell, [
-        {
-          fn: () => cell_getIsGrouped(cell),
-          fnName: 'cell_getIsGrouped',
+    assignCellPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnGroupingFeature', prototype, table, {
+        cell_getIsGrouped: {
+          fn: (cell) => cell_getIsGrouped(cell),
         },
-        {
-          fn: () => cell_getIsPlaceholder(cell),
-          fnName: 'cell_getIsPlaceholder',
+        cell_getIsPlaceholder: {
+          fn: (cell) => cell_getIsPlaceholder(cell),
         },
-        {
-          fn: () => cell_getIsAggregated(cell),
-          fnName: 'cell_getIsAggregated',
+        cell_getIsAggregated: {
+          fn: (cell) => cell_getIsAggregated(cell),
         },
-      ])
+      })
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnGroupingFeature', column, [
-        {
-          fn: () => column_toggleGrouping(column),
-          fnName: 'column_toggleGrouping',
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnGroupingFeature', prototype, table, {
+        column_toggleGrouping: {
+          fn: (column) => column_toggleGrouping(column),
         },
-        {
-          fn: () => column_getCanGroup(column),
-          fnName: 'column_getCanGroup',
+        column_getCanGroup: {
+          fn: (column) => column_getCanGroup(column),
         },
-        {
-          fn: () => column_getIsGrouped(column),
-          fnName: 'column_getIsGrouped',
+        column_getIsGrouped: {
+          fn: (column) => column_getIsGrouped(column),
         },
-        {
-          fn: () => column_getGroupedIndex(column),
-          fnName: 'column_getGroupedIndex',
+        column_getGroupedIndex: {
+          fn: (column) => column_getGroupedIndex(column),
         },
-        {
-          fn: () => column_getToggleGroupingHandler(column),
-          fnName: 'column_getToggleGroupingHandler',
+        column_getToggleGroupingHandler: {
+          fn: (column) => column_getToggleGroupingHandler(column),
         },
-        {
-          fn: () => column_getAutoAggregationFn(column),
-          fnName: 'column_getAutoAggregationFn',
+        column_getAutoAggregationFn: {
+          fn: (column) => column_getAutoAggregationFn(column),
         },
-        {
-          fn: () => column_getAggregationFn(column),
-          fnName: 'column_getAggregationFn',
+        column_getAggregationFn: {
+          fn: (column) => column_getAggregationFn(column),
         },
-      ])
+      })
     },
 
-    constructRowAPIs: (row) => {
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnGroupingFeature', prototype, table, {
+        row_getIsGrouped: {
+          fn: (row) => row_getIsGrouped(row),
+        },
+        row_getGroupingValue: {
+          fn: (row, columnId) => row_getGroupingValue(row, columnId),
+        },
+      })
+    },
+
+    initRowInstanceData: (row) => {
       ;(row as any)._groupingValuesCache = {}
-
-      assignAPIs('columnGroupingFeature', row, [
-        {
-          fn: () => row_getIsGrouped(row),
-          fnName: 'row_getIsGrouped',
-        },
-        {
-          fn: (columnId) => row_getGroupingValue(row, columnId),
-          fnName: 'row_getGroupingValue',
-        },
-      ])
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnGroupingFeature', table, [
-        {
+      assignTableAPIs('columnGroupingFeature', table, {
+        table_setGrouping: {
           fn: (updater) => table_setGrouping(table, updater),
-          fnName: 'table_setGrouping',
         },
-        {
+        table_resetGrouping: {
           fn: (defaultState) => table_resetGrouping(table, defaultState),
-          fnName: 'table_resetGrouping',
         },
-      ])
+      })
     },
   }
 }

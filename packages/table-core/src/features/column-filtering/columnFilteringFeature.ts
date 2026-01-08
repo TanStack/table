@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignPrototypeAPIs,
+  assignTableAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   column_getAutoFilterFn,
   column_getCanFilter,
@@ -66,55 +70,46 @@ export function constructColumnFilteringFeature<
       }
     },
 
-    constructColumnAPIs: (column) => {
-      assignAPIs('columnFilteringFeature', column, [
-        {
-          fn: () => column_getAutoFilterFn(column),
-          fnName: 'column_getAutoFilterFn',
+    assignColumnPrototype: (prototype, table) => {
+      assignPrototypeAPIs('columnFilteringFeature', prototype, table, {
+        column_getAutoFilterFn: {
+          fn: (column) => column_getAutoFilterFn(column),
         },
-        {
-          fn: () => column_getFilterFn(column),
-          fnName: 'column_getFilterFn',
+        column_getFilterFn: {
+          fn: (column) => column_getFilterFn(column),
         },
-        {
-          fn: () => column_getCanFilter(column),
-          fnName: 'column_getCanFilter',
+        column_getCanFilter: {
+          fn: (column) => column_getCanFilter(column),
         },
-        {
-          fn: () => column_getIsFiltered(column),
-          fnName: 'column_getIsFiltered',
+        column_getIsFiltered: {
+          fn: (column) => column_getIsFiltered(column),
         },
-        {
-          fn: () => column_getFilterValue(column),
-          fnName: 'column_getFilterValue',
+        column_getFilterValue: {
+          fn: (column) => column_getFilterValue(column),
         },
-        {
-          fn: () => column_getFilterIndex(column),
-          fnName: 'column_getFilterIndex',
+        column_getFilterIndex: {
+          fn: (column) => column_getFilterIndex(column),
         },
-        {
-          fn: (value) => column_setFilterValue(column, value),
-          fnName: 'column_setFilterValue',
+        column_setFilterValue: {
+          fn: (column, value) => column_setFilterValue(column, value),
         },
-      ])
+      })
     },
 
-    constructRowAPIs: (row) => {
+    initRowInstanceData: (row) => {
       ;(row as any).columnFilters = {}
       ;(row as any).columnFiltersMeta = {}
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('columnFilteringFeature', table, [
-        {
+      assignTableAPIs('columnFilteringFeature', table, {
+        table_setColumnFilters: {
           fn: (updater) => table_setColumnFilters(table, updater),
-          fnName: 'table_setColumnFilters',
         },
-        {
+        table_resetColumnFilters: {
           fn: (defaultState) => table_resetColumnFilters(table, defaultState),
-          fnName: 'table_resetColumnFilters',
         },
-      ])
+      })
     },
   }
 }

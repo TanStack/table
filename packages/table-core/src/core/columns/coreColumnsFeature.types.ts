@@ -39,7 +39,7 @@ export interface Column_CoreProperties<
   /**
    * Reference to the parent table instance.
    */
-  _table: Table_Internal<TFeatures, TData>
+  table: Table_Internal<TFeatures, TData>
 }
 
 export interface Column_Column<

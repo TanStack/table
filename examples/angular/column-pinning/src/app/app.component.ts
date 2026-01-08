@@ -136,7 +136,7 @@ export class AppComponent {
   }))
 
   stringifiedColumnPinning = computed(() => {
-    return JSON.stringify(this.table.getState().columnPinning)
+    return JSON.stringify(this.table.store.state.columnPinning)
   })
 
   randomizeColumns() {

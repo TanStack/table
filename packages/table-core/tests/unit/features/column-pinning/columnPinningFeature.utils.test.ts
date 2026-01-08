@@ -29,6 +29,7 @@ import {
 } from '../../../../src'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
+import type { Header } from '../../../../src'
 
 describe('getDefaultColumnPinningState', () => {
   it('should return default column pinning state', () => {
@@ -45,7 +46,7 @@ describe('column_pin', () => {
     const onColumnPinningChange = vi.fn()
     const table = generateTestTableWithData(1, {
       onColumnPinningChange,
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: [],
@@ -71,7 +72,7 @@ describe('column_pin', () => {
     const onColumnPinningChange = vi.fn()
     const table = generateTestTableWithData(1, {
       onColumnPinningChange,
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: [],
@@ -97,7 +98,7 @@ describe('column_pin', () => {
     const onColumnPinningChange = vi.fn()
     const table = generateTestTableWithData(1, {
       onColumnPinningChange,
-      state: {
+      initialState: {
         columnPinning: {
           left: ['id'],
           right: [],
@@ -125,7 +126,7 @@ describe('column_getCanPin', () => {
     const table = generateTestTableWithData(1)
     const column = table.getAllColumns()[0]
 
-    const result = column_getCanPin(column as any)
+    const result = column_getCanPin(column)
 
     expect(result).toBe(true)
   })
@@ -136,7 +137,7 @@ describe('column_getCanPin', () => {
     })
     const column = table.getAllColumns()[0]
 
-    const result = column_getCanPin(column as any)
+    const result = column_getCanPin(column)
 
     expect(result).toBe(false)
   })
@@ -155,7 +156,7 @@ describe('column_getCanPin', () => {
       ],
     }
 
-    const result = column_getCanPin(column as any)
+    const result = column_getCanPin(column)
 
     expect(result).toBe(false)
   })
@@ -164,7 +165,7 @@ describe('column_getCanPin', () => {
 describe('column_getIsPinned', () => {
   it('should return left when column is pinned left', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -180,7 +181,7 @@ describe('column_getIsPinned', () => {
 
   it('should return right when column is pinned right', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['firstName'],
@@ -211,7 +212,7 @@ describe('table_setColumnPinning', () => {
       onColumnPinningChange,
     })
 
-    table_setColumnPinning(table as any, {
+    table_setColumnPinning(table, {
       left: ['firstName'],
       right: [],
     })
@@ -230,7 +231,7 @@ describe('table_resetColumnPinning', () => {
       onColumnPinningChange,
     })
 
-    table_resetColumnPinning(table as any, true)
+    table_resetColumnPinning(table, true)
 
     expect(onColumnPinningChange).toHaveBeenCalledWith({
       left: [],
@@ -251,7 +252,7 @@ describe('table_resetColumnPinning', () => {
       initialState,
     })
 
-    table_resetColumnPinning(table as any, false)
+    table_resetColumnPinning(table, false)
 
     expect(onColumnPinningChange).toHaveBeenCalledWith({
       left: ['firstName'],
@@ -263,7 +264,7 @@ describe('table_resetColumnPinning', () => {
 describe('table_getIsSomeColumnsPinned', () => {
   it('should return true when columns are pinned left', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -271,14 +272,14 @@ describe('table_getIsSomeColumnsPinned', () => {
       },
     })
 
-    const result = table_getIsSomeColumnsPinned(table as any)
+    const result = table_getIsSomeColumnsPinned(table)
 
     expect(result).toBe(true)
   })
 
   it('should return true when columns are pinned right', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['firstName'],
@@ -286,7 +287,7 @@ describe('table_getIsSomeColumnsPinned', () => {
       },
     })
 
-    const result = table_getIsSomeColumnsPinned(table as any)
+    const result = table_getIsSomeColumnsPinned(table)
 
     expect(result).toBe(true)
   })
@@ -294,14 +295,14 @@ describe('table_getIsSomeColumnsPinned', () => {
   it('should return false when no columns are pinned', () => {
     const table = generateTestTableWithData(1)
 
-    const result = table_getIsSomeColumnsPinned(table as any)
+    const result = table_getIsSomeColumnsPinned(table)
 
     expect(result).toBe(false)
   })
 
   it('should check specific position when position parameter is provided', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -309,15 +310,15 @@ describe('table_getIsSomeColumnsPinned', () => {
       },
     })
 
-    expect(table_getIsSomeColumnsPinned(table as any, 'left')).toBe(true)
-    expect(table_getIsSomeColumnsPinned(table as any, 'right')).toBe(false)
+    expect(table_getIsSomeColumnsPinned(table, 'left')).toBe(true)
+    expect(table_getIsSomeColumnsPinned(table, 'right')).toBe(false)
   })
 })
 
 describe('column_getPinnedIndex', () => {
   it('should return index of pinned column', () => {
     const table = generateTestTableWithData(2, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName', 'lastName'],
           right: [],
@@ -344,7 +345,7 @@ describe('column_getPinnedIndex', () => {
 describe('row_getCenterVisibleCells', () => {
   it('should return only unpinned visible cells', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -364,7 +365,7 @@ describe('row_getCenterVisibleCells', () => {
 describe('row_getLeftVisibleCells', () => {
   it('should return only left pinned cells', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -392,7 +393,7 @@ describe('row_getLeftVisibleCells', () => {
 describe('row_getRightVisibleCells', () => {
   it('should return only right pinned cells', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -420,7 +421,7 @@ describe('row_getRightVisibleCells', () => {
 describe('table_getLeftHeaderGroups', () => {
   it('should return header groups for left pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -428,7 +429,7 @@ describe('table_getLeftHeaderGroups', () => {
       },
     })
 
-    const headerGroups = table_getLeftHeaderGroups(table as any)
+    const headerGroups = table_getLeftHeaderGroups(table)
 
     expect(headerGroups[0]?.headers[0]?.column.id).toBe('firstName')
   })
@@ -437,7 +438,7 @@ describe('table_getLeftHeaderGroups', () => {
 describe('table_getRightHeaderGroups', () => {
   it('should return header groups for right pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -445,7 +446,7 @@ describe('table_getRightHeaderGroups', () => {
       },
     })
 
-    const headerGroups = table_getRightHeaderGroups(table as any)
+    const headerGroups = table_getRightHeaderGroups(table)
 
     expect(headerGroups[0]?.headers[0]?.column.id).toBe('lastName')
   })
@@ -454,7 +455,7 @@ describe('table_getRightHeaderGroups', () => {
 describe('table_getCenterHeaderGroups', () => {
   it('should return header groups for unpinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -462,9 +463,9 @@ describe('table_getCenterHeaderGroups', () => {
       },
     })
 
-    const headerGroups = table_getCenterHeaderGroups(table as any)
+    const headerGroups = table_getCenterHeaderGroups(table)
     const centerColumnIds = headerGroups[0]?.headers.map(
-      (header) => header.column.id,
+      (header: Header<any, any>) => header.column.id,
     )
 
     expect(centerColumnIds).not.toContain('firstName')
@@ -476,7 +477,7 @@ describe('table_getCenterHeaderGroups', () => {
 describe('table_getLeftLeafColumns', () => {
   it('should return left pinned leaf columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -484,7 +485,7 @@ describe('table_getLeftLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getLeftLeafColumns(table as any)
+    const leafColumns = table_getLeftLeafColumns(table)
 
     expect(leafColumns).toHaveLength(1)
     expect(leafColumns[0]?.id).toBe('firstName')
@@ -494,7 +495,7 @@ describe('table_getLeftLeafColumns', () => {
 describe('table_getRightLeafColumns', () => {
   it('should return right pinned leaf columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -502,7 +503,7 @@ describe('table_getRightLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getRightLeafColumns(table as any)
+    const leafColumns = table_getRightLeafColumns(table)
 
     expect(leafColumns).toHaveLength(1)
     expect(leafColumns[0]?.id).toBe('lastName')
@@ -512,7 +513,7 @@ describe('table_getRightLeafColumns', () => {
 describe('table_getCenterLeafColumns', () => {
   it('should return unpinned leaf columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -520,7 +521,7 @@ describe('table_getCenterLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getCenterLeafColumns(table as any)
+    const leafColumns = table_getCenterLeafColumns(table)
     const centerColumnIds = leafColumns.map((col) => col.id)
 
     expect(centerColumnIds).not.toContain('firstName')
@@ -532,7 +533,7 @@ describe('table_getCenterLeafColumns', () => {
 describe('table_getPinnedLeafColumns', () => {
   it('should return left pinned leaf columns when position is left', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -540,7 +541,7 @@ describe('table_getPinnedLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getPinnedLeafColumns(table as any, 'left')
+    const leafColumns = table_getPinnedLeafColumns(table, 'left')
 
     expect(leafColumns).toHaveLength(1)
     expect(leafColumns[0]?.id).toBe('firstName')
@@ -548,7 +549,7 @@ describe('table_getPinnedLeafColumns', () => {
 
   it('should return right pinned leaf columns when position is right', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -556,7 +557,7 @@ describe('table_getPinnedLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getPinnedLeafColumns(table as any, 'right')
+    const leafColumns = table_getPinnedLeafColumns(table, 'right')
 
     expect(leafColumns).toHaveLength(1)
     expect(leafColumns[0]?.id).toBe('lastName')
@@ -564,7 +565,7 @@ describe('table_getPinnedLeafColumns', () => {
 
   it('should return center leaf columns when position is center', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -572,7 +573,7 @@ describe('table_getPinnedLeafColumns', () => {
       },
     })
 
-    const leafColumns = table_getPinnedLeafColumns(table as any, 'center')
+    const leafColumns = table_getPinnedLeafColumns(table, 'center')
 
     expect(leafColumns.length).toBeGreaterThan(0)
     expect(leafColumns.map((col) => col.id)).not.toContain('firstName')
@@ -583,7 +584,7 @@ describe('table_getPinnedLeafColumns', () => {
 describe('table_getPinnedVisibleLeafColumns', () => {
   it('should return visible leaf columns for specified position', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -594,7 +595,7 @@ describe('table_getPinnedVisibleLeafColumns', () => {
       },
     })
 
-    const leftColumns = table_getPinnedVisibleLeafColumns(table as any, 'left')
+    const leftColumns = table_getPinnedVisibleLeafColumns(table, 'left')
     const rightColumns = table_getPinnedVisibleLeafColumns(table, 'right')
     const centerColumns = table_getPinnedVisibleLeafColumns(table, 'center')
 
@@ -605,26 +606,24 @@ describe('table_getPinnedVisibleLeafColumns', () => {
 
   it('should return all visible leaf columns when no position specified', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnVisibility: {
           age: false,
         },
       },
     })
 
-    const leafColumns = table_getPinnedVisibleLeafColumns(table as any)
+    const leafColumns = table_getPinnedVisibleLeafColumns(table)
 
     expect(leafColumns.map((col) => col.id)).not.toContain('age')
-    expect(leafColumns.length).toBe(
-      table_getVisibleLeafColumns(table as any).length,
-    )
+    expect(leafColumns.length).toBe(table_getVisibleLeafColumns(table).length)
   })
 })
 
 describe('table_getFooterGroups', () => {
   it('should return footer groups for left pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -632,14 +631,14 @@ describe('table_getFooterGroups', () => {
       },
     })
 
-    const footerGroups = table_getLeftFooterGroups(table as any)
+    const footerGroups = table_getLeftFooterGroups(table)
 
     expect(footerGroups[0]?.headers[0]?.column.id).toBe('firstName')
   })
 
   it('should return footer groups for right pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -647,14 +646,14 @@ describe('table_getFooterGroups', () => {
       },
     })
 
-    const footerGroups = table_getRightFooterGroups(table as any)
+    const footerGroups = table_getRightFooterGroups(table)
 
     expect(footerGroups[0]?.headers[0]?.column.id).toBe('lastName')
   })
 
   it('should return footer groups for center columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -662,9 +661,9 @@ describe('table_getFooterGroups', () => {
       },
     })
 
-    const footerGroups = table_getCenterFooterGroups(table as any)
+    const footerGroups = table_getCenterFooterGroups(table)
     const centerColumnIds = footerGroups[0]?.headers.map(
-      (header) => header.column.id,
+      (header: Header<any, any>) => header.column.id,
     )
 
     expect(centerColumnIds).not.toContain('firstName')
@@ -676,7 +675,7 @@ describe('table_getFooterGroups', () => {
 describe('table_getFlatHeaders', () => {
   it('should return flat headers for left pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: [],
@@ -684,7 +683,7 @@ describe('table_getFlatHeaders', () => {
       },
     })
 
-    const flatHeaders = table_getLeftFlatHeaders(table as any)
+    const flatHeaders = table_getLeftFlatHeaders(table)
 
     expect(flatHeaders).toHaveLength(1)
     expect(flatHeaders[0]?.column.id).toBe('firstName')
@@ -692,7 +691,7 @@ describe('table_getFlatHeaders', () => {
 
   it('should return flat headers for right pinned columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: [],
           right: ['lastName'],
@@ -700,7 +699,7 @@ describe('table_getFlatHeaders', () => {
       },
     })
 
-    const flatHeaders = table_getRightFlatHeaders(table as any)
+    const flatHeaders = table_getRightFlatHeaders(table)
 
     expect(flatHeaders).toHaveLength(1)
     expect(flatHeaders[0]?.column.id).toBe('lastName')
@@ -708,7 +707,7 @@ describe('table_getFlatHeaders', () => {
 
   it('should return flat headers for center columns', () => {
     const table = generateTestTableWithData(1, {
-      state: {
+      initialState: {
         columnPinning: {
           left: ['firstName'],
           right: ['lastName'],
@@ -716,7 +715,7 @@ describe('table_getFlatHeaders', () => {
       },
     })
 
-    const flatHeaders = table_getCenterFlatHeaders(table as any)
+    const flatHeaders = table_getCenterFlatHeaders(table)
     const centerColumnIds = flatHeaders.map((header) => header.column.id)
 
     expect(centerColumnIds).not.toContain('firstName')

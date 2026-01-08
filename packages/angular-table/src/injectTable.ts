@@ -1,13 +1,16 @@
-import { computed, signal } from '@angular/core'
 import {
-  constructTable,
-  coreFeatures,
-  getInitialTableState,
-  isFunction,
-} from '@tanstack/table-core'
-import { lazyInit } from './lazy-signal-initializer'
-import { proxifyTable } from './proxy'
+  Injector,
+  assertInInjectionContext,
+  computed,
+  effect,
+  inject,
+  untracked,
+} from '@angular/core'
+import { constructTable } from '@tanstack/table-core'
+import { injectStore } from '@tanstack/angular-store'
+import { lazyInit } from './lazySignalInitializer'
 import { angularReactivityFeature } from './angularReactivityFeature'
+import type { Signal } from '@angular/core'
 import type {
   RowData,
   Table,
@@ -15,72 +18,112 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { Signal } from '@angular/core'
+
+export type AngularTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TSelected = {},
+> = Table<TFeatures, TData> & {
+  /**
+   * The selected state from the table store, based on the selector provided.
+   */
+  readonly state: Signal<Readonly<TSelected>>
+  /**
+   * Subscribe to changes in the table store with a custom selector.
+   */
+  Subscribe: <TSubSelected = {}>(props: {
+    selector: (state: TableState<TFeatures>) => TSubSelected
+    children: ((state: Signal<Readonly<TSubSelected>>) => any) | any
+  }) => any
+}
 
 export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
+  TSelected = {},
 >(
   options: () => TableOptions<TFeatures, TData>,
-): Table<TFeatures, TData> & Signal<Table<TFeatures, TData>> {
+  selector: (state: TableState<TFeatures>) => TSelected = () =>
+    ({}) as TSelected,
+): AngularTable<TFeatures, TData, TSelected> {
+  assertInInjectionContext(injectTable)
+  const injector = inject(Injector)
+
   return lazyInit(() => {
-    const features = () => {
-      return {
-        ...coreFeatures,
-        ...options()._features,
-        angularReactivityFeature,
-      }
-    }
-
-    // By default, manage table state here using the table's initial state
-    const state = signal<TableState<TFeatures>>(
-      getInitialTableState(features(), options().initialState),
-    )
-
     const resolvedOptions: TableOptions<TFeatures, TData> = {
       ...options(),
-      _features: features(),
-      state: { ...state(), ...options().state },
+      _features: {
+        ...options()._features,
+        angularReactivityFeature,
+      },
     } as TableOptions<TFeatures, TData>
 
-    const table = constructTable(resolvedOptions)
+    const table = constructTable(resolvedOptions) as AngularTable<
+      TFeatures,
+      TData,
+      TSelected
+    >
 
-    // Compose table options using computed.
-    // This is to allow `tableSignal` to listen and set table option
     const updatedOptions = computed<TableOptions<TFeatures, TData>>(() => {
-      // listen to table state changed
-      const tableState = state()
-      // listen to input options changed
-      const tableOptions = options()
-
-      return {
+      const tableOptionsValue = options()
+      const result: TableOptions<TFeatures, TData> = {
         ...table.options,
-        ...resolvedOptions,
-        ...tableOptions,
-        _features: features(),
-        state: { ...tableState, ...tableOptions.state },
-        onStateChange: (updater) => {
-          const value = isFunction(updater) ? updater(tableState) : updater
-          state.set(value)
-          resolvedOptions.onStateChange?.(updater)
+        ...tableOptionsValue,
+        _features: {
+          ...tableOptionsValue._features,
+          angularReactivityFeature,
         },
       }
+      if (tableOptionsValue.state) {
+        result.state = tableOptionsValue.state
+      }
+      return result
     })
 
-    // convert table instance to signal for proxify to listen to any table state and options changes
-    const tableSignal = computed(
-      () => {
-        table.setOptions(updatedOptions())
-        return table
+    effect(
+      (onCleanup) => {
+        const cleanup = table.store.mount()
+        onCleanup(() => cleanup())
       },
-      {
-        equal: () => false,
-      },
+      { injector },
     )
 
-    table._setRootNotifier?.(tableSignal as any)
+    const tableState = injectStore(
+      table.store,
+      (state: TableState<TFeatures>) => state,
+      { injector },
+    )
 
-    // proxify Table instance to provide ability for consumer to listen to any table state changes
-    return proxifyTable(tableSignal)
+    const tableSignalNotifier = computed(
+      () => {
+        // TODO: replace computed just using effects could be better?
+        tableState()
+        table.setOptions(updatedOptions())
+        untracked(() => {
+          table.baseStore.setState((prev) => ({ ...prev }))
+        })
+        return table
+      },
+      { equal: () => false },
+    )
+
+    table.setTableNotifier(tableSignalNotifier)
+
+    table.Subscribe = function Subscribe<TSubSelected = {}>(props: {
+      selector: (state: TableState<TFeatures>) => TSubSelected
+      children: ((state: Signal<Readonly<TSubSelected>>) => any) | any
+    }) {
+      const selected = injectStore(table.store, props.selector, { injector })
+      if (typeof props.children === 'function') {
+        return props.children(selected)
+      }
+      return props.children
+    }
+
+    const stateStore = injectStore(table.store, selector, { injector })
+
+    Reflect.set(table, 'state', stateStore)
+
+    return table
   })
 }

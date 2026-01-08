@@ -22,17 +22,13 @@
   ],
   "type": "module",
   "types": "dist/esm/index.d.ts",
-  "main": "dist/cjs/index.cjs",
+  "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/index.d.cts",
-        "default": "./dist/cjs/index.cjs"
       }
     },
     "./package.json": "./package.json"
@@ -55,11 +51,12 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@tanstack/preact-store": "^0.10.1",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
-    "preact": "^10.28.0"
+    "preact": "^10.28.2"
   },
   "peerDependencies": {
     "preact": ">=10"

@@ -10,10 +10,8 @@
     createTable,
     filterFns,
     globalFilteringFeature,
-    isFunction,
     tableFeatures,
   } from '@tanstack/svelte-table'
-  import { type Updater } from 'svelte/store'
   import './index.css'
   import { makeData, type Person } from './makeData'
 
@@ -50,36 +48,29 @@
     },
   ]
 
-  let globalFilter = $state('')
-
-  function setGlobalFilter(updater: Updater<string>) {
-    if (isFunction(updater)) {
-      globalFilter = updater(globalFilter)
-    } else globalFilter = updater
-  }
-
-  const table = createTable({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel({
-        ...filterFns,
-        fuzzy: fuzzyFilter,
-      }),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
-    data: makeData(25),
-    columns,
-    state: {
-      get globalFilter() {
-        return globalFilter
+  const table = createTable(
+    {
+      _features,
+      _rowModels: {
+        filteredRowModel: createFilteredRowModel({
+          ...filterFns,
+          fuzzy: fuzzyFilter,
+        }),
+        paginatedRowModel: createPaginatedRowModel(),
       },
+      data: makeData(25),
+      columns,
+      globalFilterFn: fuzzyFilter,
     },
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: fuzzyFilter,
-  })
+    (state) => ({
+      globalFilter: state.globalFilter,
+    }),
+  )
 
+  // Access selected state reactively
   $effect(() => {
-    table.setGlobalFilter(globalFilter)
+    // Access table.state to create reactive dependency
+    table.state
   })
 </script>
 
@@ -87,7 +78,8 @@
   type="text"
   placeholder="Global filter"
   class="border w-full p-1"
-  bind:value={globalFilter}
+  value={table.state.globalFilter ?? ''}
+  oninput={(e) => table.setGlobalFilter(e.target.value)}
 />
 <div class="h-2"></div>
 <table class="w-full">
@@ -123,4 +115,4 @@
   </tbody>
 </table>
 <div class="h-2"></div>
-<pre>"globalFilter": "{table.getState().globalFilter}"</pre>
+<pre>"globalFilter": "{table.state.globalFilter}"</pre>

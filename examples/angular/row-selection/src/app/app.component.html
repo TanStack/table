@@ -102,7 +102,7 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {{ table.getState().pagination.pageIndex + 1 }} of
+        {{ table.store.state.pagination.pageIndex + 1 }} of
         {{ table.getPageCount() }}
       </strong>
     </span>
@@ -110,14 +110,14 @@
       | Go to page:
       <input
         type="number"
-        [value]="table.getState().pagination.pageIndex + 1"
+        [value]="table.store.state.pagination.pageIndex + 1"
         (input)="onPageInputChange($event)"
         class="border p-1 rounded w-16"
       />
     </span>
 
     <select
-      [value]="table.getState().pagination.pageSize"
+      [value]="table.store.state.pagination.pageSize"
       (change)="onPageSizeChange($event)"
     >
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {

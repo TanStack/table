@@ -5,10 +5,11 @@ import './index.css'
 // 3 TanStack Libraries!!!
 import {
   columnSizingFeature,
+  createColumnHelper,
   createSortedRowModel,
-  flexRender,
   rowSortingFeature,
   sortFns,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import {
@@ -20,9 +21,13 @@ import {
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { fetchData } from './makeData'
 import type { Person, PersonApiResponse } from './makeData'
-import type { ColumnDef, OnChangeFn, SortingState } from '@tanstack/react-table'
+import type { OnChangeFn, SortingState } from '@tanstack/react-table'
 
 const fetchSize = 50
+
+const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
 
 function App() {
   // we need a reference to the scrolling element for logic down below
@@ -30,49 +35,42 @@ function App() {
 
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
-    () => [
-      {
-        accessorKey: 'id',
-        header: 'ID',
-        size: 60,
-      },
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        size: 50,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        size: 50,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        size: 80,
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created At',
-        cell: (info) => info.getValue<Date>().toLocaleString(),
-        size: 200,
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('id', {
+          header: 'ID',
+          size: 60,
+        }),
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          size: 50,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          size: 50,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          size: 80,
+        }),
+        columnHelper.accessor('createdAt', {
+          header: 'Created At',
+          cell: (info) => info.getValue<Date>().toLocaleString(),
+          size: 200,
+        }),
+      ]),
     [],
   )
 
@@ -126,7 +124,7 @@ function App() {
   }, [fetchMoreOnBottomReached])
 
   const table = useTable({
-    _features: { columnSizingFeature, rowSortingFeature },
+    _features,
     _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     data: flatData,
     columns,
@@ -222,10 +220,7 @@ function App() {
                         }
                         onClick={header.column.getToggleSortingHandler()}
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                        <table.FlexRender header={header} />
                         {{
                           asc: ' 🔼',
                           desc: ' 🔽',
@@ -258,7 +253,7 @@ function App() {
                     width: '100%',
                   }}
                 >
-                  {row.getVisibleCells().map((cell) => {
+                  {row.getAllCells().map((cell) => {
                     return (
                       <td
                         key={cell.id}
@@ -267,10 +262,7 @@ function App() {
                           width: cell.column.getSize(),
                         }}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
+                        <table.FlexRender cell={cell} />
                       </td>
                     )
                   })}

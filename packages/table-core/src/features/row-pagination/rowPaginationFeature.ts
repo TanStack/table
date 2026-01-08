@@ -1,4 +1,4 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import { assignTableAPIs, makeStateUpdater } from '../../utils'
 import {
   getDefaultPaginationState,
   table_autoResetPageIndex,
@@ -61,76 +61,56 @@ export function constructRowPaginationFeature<
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('rowPaginationFeature', table, [
-        {
+      assignTableAPIs('rowPaginationFeature', table, {
+        table_autoResetPageIndex: {
           fn: () => table_autoResetPageIndex(table),
-          fnName: 'table_autoResetPageIndex',
         },
-        {
+        table_setPagination: {
           fn: (updater) => table_setPagination(table, updater),
-          fnName: 'table_setPagination',
         },
-        {
+        table_resetPagination: {
           fn: (defaultState) => table_resetPagination(table, defaultState),
-          fnName: 'table_resetPagination',
         },
-        {
+        table_setPageIndex: {
           fn: (updater) => table_setPageIndex(table, updater),
-          fnName: 'table_setPageIndex',
         },
-        {
+        table_resetPageIndex: {
           fn: (defaultState) => table_resetPageIndex(table, defaultState),
-          fnName: 'table_resetPageIndex',
         },
-        {
+        table_setPageSize: {
           fn: (updater) => table_setPageSize(table, updater),
-          fnName: 'table_setPageSize',
         },
-        {
+        table_getPageCount: {
           fn: () => table_getPageCount(table),
-          fnName: 'table_getPageCount',
         },
-        {
+        table_resetPageSize: {
           fn: (defaultState) => table_resetPageSize(table, defaultState),
-          fnName: 'table_resetPageSize',
         },
-        {
+        table_getPageOptions: {
           fn: () => table_getPageOptions(table),
-          fnName: 'table_getPageOptions',
         },
-        {
+        table_getCanPreviousPage: {
           fn: () => table_getCanPreviousPage(table),
-          fnName: 'table_getCanPreviousPage',
         },
-        {
+        table_getCanNextPage: {
           fn: () => table_getCanNextPage(table),
-          fnName: 'table_getCanNextPage',
         },
-        {
+        table_previousPage: {
           fn: () => table_previousPage(table),
-          fnName: 'table_previousPage',
         },
-        {
+        table_nextPage: {
           fn: () => table_nextPage(table),
-          fnName: 'table_nextPage',
         },
-        {
+        table_firstPage: {
           fn: () => table_firstPage(table),
-          fnName: 'table_firstPage',
         },
-        {
+        table_lastPage: {
           fn: () => table_lastPage(table),
-          fnName: 'table_lastPage',
         },
-        {
-          fn: () => table_getPageCount(table),
-          fnName: 'table_getPageCount',
-        },
-        {
+        table_getRowCount: {
           fn: () => table_getRowCount(table),
-          fnName: 'table_getRowCount',
         },
-      ])
+      })
     },
   }
 }

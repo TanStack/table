@@ -22,17 +22,13 @@
   ],
   "type": "module",
   "types": "dist/esm/index.d.ts",
-  "main": "dist/cjs/index.cjs",
+  "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/esm/index.d.ts",
         "default": "./dist/esm/index.js"
-      },
-      "require": {
-        "types": "./dist/cjs/index.d.cts",
-        "default": "./dist/cjs/index.cjs"
       }
     },
     "./package.json": "./package.json"
@@ -56,7 +52,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "lit": "^3.3.1"
+    "lit": "^3.3.2"
   },
   "peerDependencies": {
     "lit": "^3.1.3"

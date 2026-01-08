@@ -1,9 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
-import {
-  FlexRenderDirective,
-  injectTable,
-  tableFeatures,
-} from '@tanstack/angular-table'
+import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
 import type { ColumnDef } from '@tanstack/angular-table'
 
 type Person = {
@@ -81,7 +77,7 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRenderDirective],
+  imports: [FlexRender],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

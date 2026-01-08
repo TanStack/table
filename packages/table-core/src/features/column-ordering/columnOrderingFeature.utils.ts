@@ -19,8 +19,7 @@ export function column_getIndex<
   column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const { _table: table } = column
-  const columns = table_getPinnedVisibleLeafColumns(table, position)
+  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
   return columns.findIndex((d) => d.id === column.id)
 }
 
@@ -32,7 +31,7 @@ export function column_getIsFirstColumn<
   column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = table_getPinnedVisibleLeafColumns(column._table, position)
+  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
   return columns[0]?.id === column.id
 }
 
@@ -44,7 +43,7 @@ export function column_getIsLastColumn<
   column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = table_getPinnedVisibleLeafColumns(column._table, position)
+  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
   return columns[columns.length - 1]?.id === column.id
 }
 
@@ -69,7 +68,7 @@ export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { columnOrder = [] } = table.options.state ?? {}
+  const { columnOrder = [] } = table.store.state
 
   return (columns: Array<Column_Internal<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
@@ -111,7 +110,7 @@ export function orderColumns<
   table: Table_Internal<TFeatures, TData>,
   leafColumns: Array<Column_Internal<TFeatures, TData, unknown>>,
 ) {
-  const grouping = table.options.state?.grouping ?? ([] as GroupingState)
+  const grouping = table.store.state.grouping ?? ([] as GroupingState)
   const { groupedColumnMode } = table.options
 
   if (!grouping.length || !groupedColumnMode) {

@@ -6,7 +6,6 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   filterFns,
-  flexRender,
   rowExpandingFeature,
   rowPaginationFeature,
   rowPinningFeature,
@@ -19,9 +18,9 @@ import type {
   Column,
   ColumnDef,
   ExpandedState,
+  ReactTable,
   Row,
   RowPinningState,
-  Table,
 } from '@tanstack/react-table'
 import './index.css'
 
@@ -148,26 +147,29 @@ function App() {
   const [data, setData] = React.useState(() => makeData(1000, 2, 2))
   const refreshData = () => setData(() => makeData(1000, 2, 2))
 
-  const table = useTable({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      expandedRowModel: createExpandedRowModel(),
-      paginatedRowModel: createPaginatedRowModel(),
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {
+        filteredRowModel: createFilteredRowModel(filterFns),
+        expandedRowModel: createExpandedRowModel(),
+        paginatedRowModel: createPaginatedRowModel(),
+      },
+      columns,
+      data,
+      initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
+      state: {
+        expanded,
+        rowPinning,
+      },
+      onExpandedChange: setExpanded,
+      onRowPinningChange: setRowPinning,
+      getSubRows: (row) => row.subRows,
+      keepPinnedRows,
+      debugAll: true,
     },
-    columns,
-    data,
-    initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
-    state: {
-      expanded,
-      rowPinning,
-    },
-    onExpandedChange: setExpanded,
-    onRowPinningChange: setRowPinning,
-    getSubRows: (row) => row.subRows,
-    keepPinnedRows,
-    debugAll: true,
-  })
+    (state) => state, // subscribe to all re-renders
+  )
 
   // console.log(table.getBottomRows)
   // React.useEffect(() => {
@@ -187,10 +189,7 @@ function App() {
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          <table.FlexRender header={header} />
                           {header.column.getCanFilter() ? (
                             <div>
                               <Filter column={header.column} table={table} />
@@ -217,10 +216,7 @@ function App() {
                   {row.getAllCells().map((cell) => {
                     return (
                       <td key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
+                        <table.FlexRender cell={cell} />
                       </td>
                     )
                   })}
@@ -267,7 +263,7 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{' '}
+            {table.store.state.pagination.pageIndex + 1} of{' '}
             {table.getPageCount()}
           </strong>
         </span>
@@ -277,7 +273,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.getState().pagination.pageIndex + 1}
+            defaultValue={table.store.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -286,7 +282,7 @@ function App() {
           />
         </span>
         <select
-          value={table.getState().pagination.pageSize}
+          value={table.store.state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
@@ -362,7 +358,7 @@ function PinnedRow({
   table,
 }: {
   row: Row<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof _features, Person>
 }) {
   return (
     <tr
@@ -384,7 +380,7 @@ function PinnedRow({
       {row.getAllCells().map((cell) => {
         return (
           <td key={cell.id}>
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            <table.FlexRender cell={cell} />
           </td>
         )
       })}
@@ -397,7 +393,7 @@ function Filter({
   table,
 }: {
   column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof _features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

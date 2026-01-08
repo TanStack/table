@@ -1,6 +1,6 @@
 import { tableMemo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
-import type { Table_Internal } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type {
   ColumnFiltersState,
   Row_ColumnFiltering,
@@ -14,18 +14,19 @@ export function createFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
 ) => () => RowModel<TFeatures, TData> {
-  return (table, columnId) =>
-    tableMemo({
+  return (_table, columnId) => {
+    const table = _table as Table_Internal<TFeatures, TData>
+    return tableMemo({
       feature: 'columnFacetingFeature',
       table,
       fnName: 'createFacetedRowModel',
       memoDeps: () => [
         table.getPreFilteredRowModel(),
-        table.options.state?.columnFilters,
-        table.options.state?.globalFilter,
+        table.store.state.columnFilters,
+        table.store.state.globalFilter,
         table.getFilteredRowModel(),
       ],
       fn: (preRowModel, columnFilters, globalFilter) =>
@@ -37,6 +38,7 @@ export function createFacetedRowModel<
           globalFilter,
         ),
     })
+  }
 }
 
 function _createFacetedRowModel<

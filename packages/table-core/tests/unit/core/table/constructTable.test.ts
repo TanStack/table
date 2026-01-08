@@ -40,9 +40,8 @@ describe('constructTable', () => {
     // table APIs
     expect(table).toHaveProperty('getCoreRowModel')
     expect(table).toHaveProperty('getRowModel')
-    expect(table).toHaveProperty('getState')
     expect(table).toHaveProperty('reset')
-    expect(table).toHaveProperty('setState')
     expect(table).toHaveProperty('setOptions')
+    expect(table).toHaveProperty('store') // state is managed via store in v9
   })
 })

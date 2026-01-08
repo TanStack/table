@@ -1,4 +1,8 @@
-import { assignAPIs, makeStateUpdater } from '../../utils'
+import {
+  assignPrototypeAPIs,
+  assignTableAPIs,
+  makeStateUpdater,
+} from '../../utils'
 import {
   getDefaultExpandedState,
   row_getCanExpand,
@@ -58,70 +62,56 @@ export function constructRowExpandingFeature<
       }
     },
 
-    constructRowAPIs: (row) => {
-      assignAPIs('rowExpandingFeature', row, [
-        {
-          fn: (expanded) => row_toggleExpanded(row, expanded),
-          fnName: 'row_toggleExpanded',
+    assignRowPrototype: (prototype, table) => {
+      assignPrototypeAPIs('rowExpandingFeature', prototype, table, {
+        row_toggleExpanded: {
+          fn: (row, expanded) => row_toggleExpanded(row, expanded),
         },
-        {
-          fn: () => row_getIsExpanded(row),
-          fnName: 'row_getIsExpanded',
+        row_getIsExpanded: {
+          fn: (row) => row_getIsExpanded(row),
         },
-        {
-          fn: () => row_getCanExpand(row),
-          fnName: 'row_getCanExpand',
+        row_getCanExpand: {
+          fn: (row) => row_getCanExpand(row),
         },
-        {
-          fn: () => row_getIsAllParentsExpanded(row),
-          fnName: 'row_getIsAllParentsExpanded',
+        row_getIsAllParentsExpanded: {
+          fn: (row) => row_getIsAllParentsExpanded(row),
         },
-        {
-          fn: () => row_getToggleExpandedHandler(row),
-          fnName: 'row_getToggleExpandedHandler',
+        row_getToggleExpandedHandler: {
+          fn: (row) => row_getToggleExpandedHandler(row),
         },
-      ])
+      })
     },
 
     constructTableAPIs: (table) => {
-      assignAPIs('rowExpandingFeature', table, [
-        {
+      assignTableAPIs('rowExpandingFeature', table, {
+        table_autoResetExpanded: {
           fn: () => table_autoResetExpanded(table),
-          fnName: 'table_autoResetExpanded',
         },
-        {
+        table_setExpanded: {
           fn: (updater) => table_setExpanded(table, updater),
-          fnName: 'table_setExpanded',
         },
-        {
+        table_toggleAllRowsExpanded: {
           fn: (expanded) => table_toggleAllRowsExpanded(table, expanded),
-          fnName: 'table_toggleAllRowsExpanded',
         },
-        {
+        table_resetExpanded: {
           fn: (defaultState) => table_resetExpanded(table, defaultState),
-          fnName: 'table_resetExpanded',
         },
-        {
+        table_getCanSomeRowsExpand: {
           fn: () => table_getCanSomeRowsExpand(table),
-          fnName: 'table_getCanSomeRowsExpand',
         },
-        {
+        table_getToggleAllRowsExpandedHandler: {
           fn: () => table_getToggleAllRowsExpandedHandler(table),
-          fnName: 'table_getToggleAllRowsExpandedHandler',
         },
-        {
+        table_getIsSomeRowsExpanded: {
           fn: () => table_getIsSomeRowsExpanded(table),
-          fnName: 'table_getIsSomeRowsExpanded',
         },
-        {
+        table_getIsAllRowsExpanded: {
           fn: () => table_getIsAllRowsExpanded(table),
-          fnName: 'table_getIsAllRowsExpanded',
         },
-        {
+        table_getExpandedDepth: {
           fn: () => table_getExpandedDepth(table),
-          fnName: 'table_getExpandedDepth',
         },
-      ])
+      })
     },
   }
 }

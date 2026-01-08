@@ -52,6 +52,7 @@
     "build": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
+    "@tanstack/solid-store": "^0.8.0",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {

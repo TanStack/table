@@ -7,7 +7,8 @@
     "build": "vite build",
     "serve": "vite preview",
     "start": "vite",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "test:types": "tsc"
   },
   "dependencies": {
     "@tanstack/react-table": "^9.0.0-alpha.10",
@@ -20,6 +21,6 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "typescript": "5.9.3",
-    "vite": "^7.2.7"
+    "vite": "^7.3.0"
   }
 }

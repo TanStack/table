@@ -1,7 +1,6 @@
 import { customElement } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
-import { state } from 'lit/decorators/state.js'
 import {
   ColumnDef,
   TableController,
@@ -58,21 +57,26 @@ const data: Array<Person> = makeData(1000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  @state()
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
-    const table = this.tableController.table({
-      _features,
-      _rowModels: {},
-      data,
-      columns,
-      columnResizeMode: 'onChange',
-      columnResizeDirection: 'ltr',
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
-    })
+    const table = this.tableController.table(
+      {
+        _features,
+        _rowModels: {},
+        data,
+        columns,
+        columnResizeMode: 'onChange',
+        columnResizeDirection: 'ltr',
+        debugTable: true,
+        debugHeaders: true,
+        debugColumns: true,
+      },
+      (state) => ({
+        columnSizing: state.columnSizing,
+        columnResizing: state.columnResizing,
+      }),
+    )
 
     return html`
       <table style="width: ${table.getCenterTotalSize()}px">
@@ -134,16 +138,7 @@ class LitTableExample extends LitElement {
             )}
         </tbody>
       </table>
-      <pre>
-${JSON.stringify(
-          {
-            columnSizing: table.getState().columnSizing,
-            columnResizing: table.getState().columnResizing,
-          },
-          null,
-          2,
-        )}</pre
-      >
+      <pre>${JSON.stringify(table.state, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;

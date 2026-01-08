@@ -3,13 +3,10 @@ import {
   FlexRender,
   rowSortingFeature,
   useTable,
-  SortingState,
   createColumnHelper,
   createSortedRowModel,
   sortFns,
   tableFeatures,
-  isFunction,
-  Updater,
 } from '@tanstack/vue-table'
 import { h, ref } from 'vue'
 import { makeData, Person } from './makeData'
@@ -58,29 +55,18 @@ const rerender = () => {
   data.value = makeData(10000)
 }
 
-const sorting = ref<SortingState>([])
-
-const table = useTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
-  get data() {
-    return data.value
-  },
-  columns,
-  state: {
-    get sorting() {
-      return sorting.value
+const table = useTable(
+  {
+    _features,
+    _rowModels: {
+      sortedRowModel: createSortedRowModel(sortFns),
     },
+    data,
+    columns,
+    debugTable: true,
   },
-  onSortingChange: (updaterOrValue: Updater<SortingState>) => {
-    sorting.value = isFunction(updaterOrValue)
-      ? updaterOrValue(sorting.value)
-      : updaterOrValue
-  },
-  debugTable: true,
-})
+  (state) => ({ sorting: state.sorting }),
+)
 </script>
 
 <template>
@@ -153,7 +139,7 @@ const table = useTable({
 
     <button @click="rerender" class="border p-2">Rerender</button>
 
-    <pre>{{ JSON.stringify(sorting, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.state.sorting, null, 2) }}</pre>
   </div>
 </template>
 

@@ -32,7 +32,7 @@ describe('column_getIndex', () => {
       ...table.getAllLeafColumns()[0],
       id: 'non-existent',
       table,
-    } as any
+    }
 
     expect(column_getIndex(column)).toBe(-1)
   })
@@ -122,7 +122,7 @@ describe('table_getOrderColumnsFn', () => {
 
   it('should reorder columns according to columnOrder', () => {
     const table = generateTestTableWithData<TableFeatures>(3, {
-      state: {
+      initialState: {
         columnOrder: ['lastName', 'firstName'],
       },
     })
@@ -145,7 +145,7 @@ describe('orderColumns', () => {
 
   it('should remove grouped columns when groupedColumnMode is "remove"', () => {
     const table = generateTestTableWithData<TableFeatures>(3, {
-      state: {
+      initialState: {
         grouping: ['firstName'],
       },
       groupedColumnMode: 'remove',
@@ -158,7 +158,7 @@ describe('orderColumns', () => {
 
   it('should move grouped columns to start when groupedColumnMode is "reorder"', () => {
     const table = generateTestTableWithData<TableFeatures>(3, {
-      state: {
+      initialState: {
         grouping: ['lastName'],
       },
       groupedColumnMode: 'reorder',

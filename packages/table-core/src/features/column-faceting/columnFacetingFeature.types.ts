@@ -16,7 +16,7 @@ export interface Column_ColumnFaceting<
    */
   getFacetedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * A function that **computes and returns** a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
+   * Returns a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
    */
   getFacetedUniqueValues: () => Map<any, number>
 }

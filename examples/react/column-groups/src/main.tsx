@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
   createColumnHelper,
-  flexRender,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -48,6 +47,7 @@ const _features = tableFeatures({})
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
+// use new columnHelper.columns method to create columns with the same TValue generic so TypeScript doesn't complain when passing columns to useTable
 const columns = columnHelper.columns([
   columnHelper.group({
     id: 'hello',
@@ -113,12 +113,9 @@ function App() {
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender header={header} />
+                  )}
                 </th>
               ))}
             </tr>
@@ -129,7 +126,7 @@ function App() {
             <tr key={row.id}>
               {row.getAllCells().map((cell) => (
                 <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <table.FlexRender cell={cell} />
                 </td>
               ))}
             </tr>
@@ -140,12 +137,9 @@ function App() {
             <tr key={footerGroup.id}>
               {footerGroup.headers.map((header) => (
                 <th key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.footer,
-                        header.getContext(),
-                      )}
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender footer={header} />
+                  )}
                 </th>
               ))}
             </tr>

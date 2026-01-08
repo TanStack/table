@@ -2,11 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
   columnSizingFeature,
-  flexRender,
+  createColumnHelper,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import type { ColumnDef } from '@tanstack/react-table'
 import './index.css'
 
 const _features = tableFeatures({ columnSizingFeature })
@@ -47,65 +46,65 @@ const defaultData: Array<Person> = [
   },
 ]
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
 // This is not the Column Resizing Example, this is a simplified version that just sets static column sizes
 function App() {
   const [data] = React.useState(() => [...defaultData])
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-        size: 120, // initial size
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        footer: (props) => props.column.id,
-        size: 120,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-        size: 100,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        footer: (props) => props.column.id,
-        size: 80,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        footer: (props) => props.column.id,
-        size: 200,
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        footer: (props) => props.column.id,
-        size: 200,
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+          size: 120, // initial size
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          footer: (props) => props.column.id,
+          size: 120,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+          size: 100,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          footer: (props) => props.column.id,
+          size: 80,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          footer: (props) => props.column.id,
+          size: 200,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          footer: (props) => props.column.id,
+          size: 200,
+        }),
+      ]),
     [],
   )
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const table = useTable({
-    _features,
-    _rowModels: {},
-    columns,
-    data,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-  })
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {},
+      columns,
+      data,
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
+    },
+    (state) => state,
+  )
 
   return (
     <div className="p-2">
@@ -123,7 +122,7 @@ function App() {
                   // Don't actually do this to resize columns. This is just for demonstration purposes.
                   // See the Column Resizing Example for how to do this with dedicated resizing APIs efficiently.
                   table.setColumnSizing({
-                    ...table.getState().columnSizing,
+                    ...table.store.state.columnSizing,
                     [column.id]: Number(e.target.value),
                   })
                 }}
@@ -153,12 +152,9 @@ function App() {
                       width: header.getSize(),
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                     <div />
                   </th>
                 ))}
@@ -175,7 +171,7 @@ function App() {
                       width: cell.column.getSize(),
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <table.FlexRender cell={cell} />
                   </td>
                 ))}
               </tr>
@@ -203,12 +199,9 @@ function App() {
                       width: header.getSize(),
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                     <div />
                   </div>
                 ))}
@@ -226,7 +219,7 @@ function App() {
                       width: cell.column.getSize(),
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <table.FlexRender cell={cell} />
                   </div>
                 ))}
               </div>
@@ -262,12 +255,9 @@ function App() {
                       width: header.getSize(),
                     }}
                   >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
                     <div />
                   </div>
                 ))}
@@ -293,7 +283,7 @@ function App() {
                       width: cell.column.getSize(),
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <table.FlexRender cell={cell} />
                   </div>
                 ))}
               </div>
@@ -305,15 +295,9 @@ function App() {
       <button onClick={() => rerender()} className="border p-2">
         Rerender
       </button>
-      <pre>
-        {JSON.stringify(
-          {
-            columnSizing: table.getState().columnSizing,
-          },
-          null,
-          2,
-        )}
-      </pre>
+      <table.Subscribe selector={(state) => state}>
+        {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+      </table.Subscribe>
     </div>
   )
 }

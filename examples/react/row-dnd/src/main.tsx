@@ -1,9 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './index.css'
-import { flexRender, useTable } from '@tanstack/react-table'
-
-// needed for table body level scope DnD setup
+import {
+  FlexRender,
+  columnSizingFeature,
+  createTableHook,
+} from '@tanstack/react-table'
 import {
   DndContext,
   KeyboardSensor,
@@ -14,8 +15,6 @@ import {
   useSensors,
 } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
-
-// needed for row & cell level scope DnD setup
 import {
   SortableContext,
   arrayMove,
@@ -24,10 +23,21 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { makeData } from './makeData'
-import type { CSSProperties } from 'react'
 import type { DragEndEvent, UniqueIdentifier } from '@dnd-kit/core'
+import type { CSSProperties } from 'react'
 import type { Person } from './makeData'
-import type { ColumnDef, Row } from '@tanstack/react-table'
+import type { Row } from '@tanstack/react-table'
+import './index.css'
+
+const { appFeatures, useAppTable, createAppColumnHelper } = createTableHook({
+  _features: { columnSizingFeature },
+  _rowModels: {},
+  debugTable: true,
+  debugHeaders: true,
+  debugColumns: true,
+})
+
+const columnHelper = createAppColumnHelper<Person>()
 
 // Cell Component
 const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
@@ -43,13 +53,13 @@ const RowDragHandleCell = ({ rowId }: { rowId: string }) => {
 }
 
 // Row Component
-const DraggableRow = ({ row }: { row: Row<any, Person> }) => {
+const DraggableRow = ({ row }: { row: Row<typeof appFeatures, Person> }) => {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.userId,
   })
 
   const style: CSSProperties = {
-    transform: CSS.Transform.toString(transform), // let dnd-kit do its thing
+    transform: CSS.Translate.toString(transform), // translate instead of transform to avoid squishing
     transition: transition,
     opacity: isDragging ? 0.8 : 1,
     zIndex: isDragging ? 1 : 0,
@@ -58,9 +68,9 @@ const DraggableRow = ({ row }: { row: Row<any, Person> }) => {
   return (
     // connect row ref to dnd-kit, apply important styles
     <tr ref={setNodeRef} style={style}>
-      {row.getVisibleCells().map((cell) => (
+      {row.getAllCells().map((cell) => (
         <td key={cell.id} style={{ width: cell.column.getSize() }}>
-          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+          <FlexRender cell={cell} />
         </td>
       ))}
     </tr>
@@ -69,42 +79,42 @@ const DraggableRow = ({ row }: { row: Row<any, Person> }) => {
 
 // Table Component
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<any, Person>>>(
-    () => [
-      // Create a dedicated drag handle column. Alternatively, you could just set up dnd events on the rows themselves.
-      {
-        id: 'drag-handle',
-        header: 'Move',
-        cell: ({ row }) => <RowDragHandleCell rowId={row.id} />,
-        size: 60,
-      },
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-      },
-    ],
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        // Create a dedicated drag handle column. Alternatively, you could just set up dnd events on the rows themselves.
+        columnHelper.display({
+          id: 'drag-handle',
+          header: 'Move',
+          cell: ({ row }) => <RowDragHandleCell rowId={row.id} />,
+          size: 60,
+        }),
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+          id: 'firstName',
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          id: 'lastName',
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          id: 'age',
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          id: 'visits',
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          id: 'status',
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          id: 'progress',
+        }),
+      ]),
     [],
   )
   const [data, setData] = React.useState(() => makeData(20))
@@ -116,21 +126,19 @@ function App() {
 
   const rerender = () => setData(() => makeData(20))
 
-  const table = useTable({
-    _features: {},
-    _rowModels: {},
-    columns,
-    data,
-    getRowId: (row) => row.userId, // required because row indexes will change
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-  })
+  const table = useAppTable(
+    {
+      columns,
+      data,
+      getRowId: (row) => row.userId, // required because row indexes will change
+    },
+    (state) => state,
+  )
 
   // reorder rows after drag & drop
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event
-    if (active && over && active.id !== over.id) {
+    if (over && active.id !== over.id) {
       setData((data) => {
         const oldIndex = dataIds.indexOf(active.id)
         const newIndex = dataIds.indexOf(over.id)
@@ -167,12 +175,9 @@ function App() {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                    {header.isPlaceholder ? null : (
+                      <FlexRender header={header} />
+                    )}
                   </th>
                 ))}
               </tr>
@@ -189,7 +194,9 @@ function App() {
             </SortableContext>
           </tbody>
         </table>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+        <table.Subscribe selector={(state) => state}>
+          {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+        </table.Subscribe>
       </div>
     </DndContext>
   )

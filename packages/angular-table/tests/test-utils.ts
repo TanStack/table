@@ -1,11 +1,15 @@
-import { SIGNAL, signalSetFn } from '@angular/core/primitives/signals'
+import { SIGNAL } from '@angular/core/primitives/signals'
 import type { InputSignal } from '@angular/core'
 import type { ComponentFixture } from '@angular/core/testing'
 
 type ToSignalInputUpdatableMap<T> = {
   [K in keyof T as T[K] extends InputSignal<any>
     ? K
-    : never]: T[K] extends InputSignal<infer Value> ? Value : never
+    : never]?: T[K] extends infer Input
+    ? Input extends InputSignal<infer T>
+      ? T
+      : never
+    : never
 }
 
 export function setFixtureSignalInputs<T extends NonNullable<unknown>>(
@@ -48,41 +52,22 @@ export async function flushQueue() {
   await new Promise(setImmediate)
 }
 
-export const experimentalReactivity_testShouldBeComputedProperty = (
+const staticComputedProperties = ['get', 'state']
+export const testShouldBeComputedProperty = (
   testObj: any,
   propertyName: string,
 ) => {
-  if (propertyName.startsWith('_rootNotifier')) {
+  if (staticComputedProperties.some((prop) => propertyName === prop)) {
     return true
   }
   if (propertyName.endsWith('Handler')) {
     return false
   }
-
   if (propertyName.startsWith('get')) {
     // Only properties with no arguments are computed
     const fn = testObj[propertyName]
     // Cannot test if is lazy computed since we return the unwrapped value
     return fn instanceof Function && fn.length === 0
   }
-
-  return false
-}
-
-export const testShouldBeComputedProperty = (
-  testObj: any,
-  propertyName: string,
-) => {
-  if (propertyName.endsWith('Handler')) {
-    return false
-  }
-
-  if (propertyName.startsWith('get')) {
-    // Only properties with no arguments are computed
-    const fn = testObj[propertyName]
-    // Cannot test if is lazy computed since we return the unwrapped value
-    return fn instanceof Function && fn.length === 0
-  }
-
   return false
 }

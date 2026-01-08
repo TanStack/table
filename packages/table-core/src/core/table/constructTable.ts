@@ -1,15 +1,14 @@
+import { Derived, Store } from '@tanstack/store'
 import { isDev } from '../../utils'
-import type { RowModelFns } from '../../types/RowModelFns'
-import type { CachedRowModels } from '../../types/RowModel'
-import type { Table_CoreProperties } from './coreTablesFeature.types'
+import { coreFeatures } from '../coreFeatures'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
 
 export function getInitialTableState<TFeatures extends TableFeatures>(
-  features: TableFeatures,
+  features: TFeatures,
   initialState: Partial<TableState<TFeatures>> | undefined = {},
 ): TableState<TFeatures> {
   Object.values(features).forEach((feature) => {
@@ -20,44 +19,73 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   return structuredClone(initialState) as TableState<TFeatures>
 }
 
+export function createTableStore<TFeatures extends TableFeatures>(
+  features: TFeatures,
+  initialState: Partial<TableState<TFeatures>> | undefined = {},
+): Store<TableState<TFeatures>> {
+  return new Store(getInitialTableState(features, initialState))
+}
+
 export function constructTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(options: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
-  const { _features = {} as TFeatures } = options
+>(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
+  const table = {
+    _features: { ...coreFeatures, ...tableOptions._features },
+    _rowModels: {},
+    _rowModelFns: {},
+  } as Table_Internal<TFeatures, TData>
 
-  const featuresList: Array<TableFeature<{}>> = Object.values(_features)
+  const featuresList: Array<TableFeature<{}>> = Object.values(table._features)
 
-  if (isDev && (options.debugAll || options.debugTable)) {
-    console.info(
-      'Constructing Table Instance with feature list:',
-      Object.keys(_features),
+  const defaultOptions = featuresList.reduce((obj, feature) => {
+    return Object.assign(obj, feature.getDefaultTableOptions?.(table))
+  }, {}) as TableOptions<TFeatures, TData>
+
+  table.options = {
+    ...defaultOptions,
+    ...tableOptions,
+  }
+
+  table.initialState = getInitialTableState(
+    table._features,
+    table.options.initialState,
+  )
+
+  table.baseStore =
+    table.options.store ?? (new Store(table.initialState) as any)
+
+  // @ts-ignore - complex TFeatures type inference does not work with Derived
+  table.store = new Derived({
+    deps: [table.baseStore],
+    fn: ({ currDepVals }) => {
+      const baseState = currDepVals[0]
+      // Merge base state with user-provided external state (table.options.state takes precedence)
+      return {
+        ...baseState,
+        ...(table.options.state ?? {}),
+      } as TableState<TFeatures>
+    },
+  })
+
+  if (isDev && (tableOptions.debugAll || tableOptions.debugTable)) {
+    const features = Object.keys(table._features)
+    const rowModels = Object.keys(table.options._rowModels || {})
+    const states = Object.keys(table.initialState)
+
+    console.log(
+      `Constructing Table Instance
+    
+  Features:   ${features.join('\n              ')}
+    
+  Row Models: ${rowModels.length ? rowModels.join('\n              ') : '(none)'}
+    
+  States:     ${states.join('\n              ')}`,
     )
   }
 
-  const table = {} as unknown as Table<TFeatures, TData>
-
-  const defaultOptions = featuresList.reduce((obj, feature) => {
-    return Object.assign(obj, feature.getDefaultTableOptions?.(table as any))
-  }, {}) as TableOptions<TFeatures, TData>
-
-  const initialState = getInitialTableState(_features, options.initialState)
-
-  const coreInstance: Table_CoreProperties<TFeatures, TData> = {
-    _features, // features get stored here immediately
-    _rowModels: {} as CachedRowModels<TFeatures, TData>, // row models get cached here later
-    _rowModelFns: {} as RowModelFns<TFeatures, TData>, // row model processing functions get stored here
-    options: {
-      ...defaultOptions,
-      ...options,
-    },
-    initialState,
-  }
-
-  Object.assign(table, coreInstance)
-
   for (const feature of featuresList) {
-    feature.constructTableAPIs?.(table as any)
+    feature.constructTableAPIs?.(table)
   }
 
   return table

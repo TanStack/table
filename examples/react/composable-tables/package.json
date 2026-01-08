@@ -1,0 +1,28 @@
+{
+  "name": "tanstack-table-example-composable-tables",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:types": "tsc"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.2.0",
+    "@tanstack/react-store": "^0.8.0",
+    "@tanstack/react-table": "^9.0.0-alpha.10",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "typescript": "5.9.3",
+    "vite": "^7.3.0"
+  }
+}

@@ -1,3 +1,4 @@
+import type { Derived, Store } from '@tanstack/store'
 import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
@@ -5,7 +6,6 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { CachedRowModels, CreateRowModels_All } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
-import { Store } from '@tanstack/store'
 
 export interface TableMeta<
   TFeatures extends TableFeatures,
@@ -49,14 +49,13 @@ export interface TableOptions_Table<
    */
   meta?: TableMeta<TFeatures, TData>
   /**
-   * The `onStateChange` option can be used to optionally listen to state changes within the table.
-   */
-  onStateChange?: (updater: Updater<TableState<TFeatures>>) => void
-  /**
-   * The `state` option can be used to optionally _control_ part or all of the table state. The state you pass here will merge with and overwrite the internal automatically-managed state to produce the final state for the table. You can also listen to state changes via the `onStateChange` option.
-   * > Note: Any state passed in here will override both the internal state and any other `initialState` you provide.
+   * Pass in individual self-managed state to the table.
    */
   state?: Partial<TableState<TFeatures>>
+  /**
+   * Optionally, provide your own external TanStack Store instance if you want to manage the table state externally.
+   */
+  store?: Store<TableState<TFeatures>>
 }
 
 export interface Table_CoreProperties<
@@ -68,6 +67,18 @@ export interface Table_CoreProperties<
    */
   _features: Partial<CoreFeatures> & TFeatures
   /**
+   * Prototype cache for Cell objects - shared by all cells in this table
+   */
+  _cellPrototype?: object
+  /**
+   * Prototype cache for Column objects - shared by all columns in this table
+   */
+  _columnPrototype?: object
+  /**
+   * Prototype cache for Header objects - shared by all headers in this table
+   */
+  _headerPrototype?: object
+  /**
    * The row model processing functions that are used to process the data by features.
    */
   _rowModelFns: RowModelFns<TFeatures, TData>
@@ -75,6 +86,14 @@ export interface Table_CoreProperties<
    * The row models that are enabled for the table.
    */
   _rowModels: CachedRowModels<TFeatures, TData>
+  /**
+   * Prototype cache for Row objects - shared by all rows in this table
+   */
+  _rowPrototype?: object
+  /**
+   * The base store for the table. This can be used to write to the table state.
+   */
+  baseStore: Store<TableState<TFeatures>>
   /**
    * This is the resolved initial state of the table.
    */
@@ -86,17 +105,13 @@ export interface Table_CoreProperties<
   /**
    * Where the table state is stored.
    */
-  store: Store<TableState<TFeatures>>
+  store: Derived<TableState<TFeatures>, [Store<TableState<TFeatures>>]>
 }
 
 export interface Table_Table<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > extends Table_CoreProperties<TFeatures, TData> {
-  /**
-   * Call this function to get the table's current state. It's recommended to use this function and its state, especially when managing the table state manually. It is the exact same state used internally by the table for every feature and function it provides.
-   */
-  getState: () => TableState<TFeatures>
   /**
    * Call this function to reset the table state to the initial state.
    */
@@ -105,8 +120,4 @@ export interface Table_Table<
    * This function can be used to update the table options.
    */
   setOptions: (newOptions: Updater<TableOptions<TFeatures, TData>>) => void
-  /**
-   * Call this function to update the table state.
-   */
-  setState: (updater: Updater<TableState<TFeatures>>) => void
 }
