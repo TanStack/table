@@ -20,10 +20,10 @@ export const packages = [
   //   name: '@tanstack/lit-table',
   //   packageDir: 'packages/lit-table',
   // },
-  {
-    name: '@tanstack/preact-table',
-    packageDir: 'packages/preact-table',
-  },
+  // {
+  //   name: '@tanstack/preact-table',
+  //   packageDir: 'packages/preact-table',
+  // },
   {
     name: '@tanstack/react-table',
     packageDir: 'packages/react-table',

@@ -333,5 +333,6 @@ export class FlexRender<
 
 /**
  * @deprecated Use `FlexRender` import instead.
+ * @alias FlexRender
  */
 export const FlexRenderDirective = FlexRender
