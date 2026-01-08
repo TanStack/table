@@ -6,6 +6,7 @@
         inputs: { title: 'Users Table', onRefresh }
       "
     />
+
     <table>
       <thead>
         @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
@@ -13,14 +14,8 @@
             @for (header of headerGroup.headers; track header.id) {
               @if (!header.isPlaceholder) {
                 <th [tanStackTableHeader]="header">
-                  <ng-container
-                    *flexRender="
-                      header.column.columnDef.header;
-                      props: header.getContext();
-                      let header
-                    "
-                  >
-                    <div [innerHTML]="header"></div>
+                  <ng-container *flexRenderHeader="header; let header">
+                    {{ header }}
                   </ng-container>
                 </th>
               }
@@ -31,38 +26,27 @@
       <tbody>
         @for (row of table.getRowModel().rows; track row.id) {
           <tr>
-            @for (c of row.getAllCells(); track c.id) {
-              @let cell = table.AppCell(c);
-
-              <td>
-                <ng-container
-                  *flexRender="
-                    cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let cell
-                  "
-                >
-                  <div [innerHTML]="cell"></div>
+            @for (cell of row.getAllCells(); track cell.id) {
+              <td [tanStackTableCell]="cell">
+                <ng-container *flexRenderCell="cell; let cell">
+                  {{ cell}}
                 </ng-container>
               </td>
             }
           </tr>
         }
       </tbody>
+
       <tfoot>
         @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
           <tr>
             @for (footer of footerGroup.headers; track footer.id) {
-              <th>
-                <ng-container
-                  *flexRender="
-                    footer.column.columnDef.footer;
-                    props: footer.getContext();
-                    let footer
-                  "
-                >
-                  {{ footer }}
-                </ng-container>
+              <th [colSpan]="footer.colSpan" [tanStackTableHeader]="footer">
+                @if (!footer.isPlaceholder) {
+                  <ng-container *flexRenderFooter="footer; let footer">
+                    {{ footer }}
+                  </ng-container>
+                }
               </th>
             }
           </tr>

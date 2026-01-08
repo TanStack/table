@@ -5,10 +5,8 @@ import { injectTableContext } from '../table'
   template: `
     <div class="table-toolbar">
       <h2>{{ title() }}</h2>
-      <button (click)="context.table().resetColumnFilters()">
-        Clear filters
-      </button>
-      <button (click)="context.table().resetSorting()">Clear sorting</button>
+      <button (click)="table().resetColumnFilters()">Clear filters</button>
+      <button (click)="table().resetSorting()">Clear sorting</button>
 
       @if (onRefresh(); as onRefresh) {
         <button (click)="onRefresh()">Refresh data</button>
@@ -21,9 +19,9 @@ export class TableToolbar {
   readonly title = input.required<string>()
   readonly onRefresh = input<() => void>()
 
-  readonly context = injectTableContext()
+  readonly table = injectTableContext()
 
   constructor() {
-    this.context.table().resetColumnFilters()
+    this.table().resetColumnFilters()
   }
 }

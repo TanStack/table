@@ -10,7 +10,6 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  createTableContexts,
   filterFns,
   rowPaginationFeature,
   rowSortingFeature,
@@ -18,7 +17,18 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 // Import table-level components
+import { createTableHook } from '@tanstack/angular-table'
 import { TableToolbar } from './components/table-components'
+import {
+  CategoryCell,
+  NumberCell,
+  PriceCell,
+  ProgressCell,
+  RowActionsCell,
+  StatusCell,
+  TextCell,
+} from './components/cell-components'
+import { FooterColumnId, FooterSum } from './components/header-components'
 
 // Import table-level components
 // import {
@@ -44,11 +54,13 @@ export const {
   createAppColumnHelper,
   injectAppTable,
   injectTableContext,
+  injectTableCellContext,
+  injectTableHeaderContext,
   // useAppTable,
   // useTableContext,
   // useCellContext,
   // useHeaderContext,
-} = createTableContexts({
+} = createTableHook({
   // Features are set once here and shared across all tables
   _features: tableFeatures({
     columnFilteringFeature,
@@ -75,20 +87,20 @@ export const {
 
   // Register cell-level components (accessible via cell.ComponentName in AppCell)
   cellComponents: {
-    // TextCell,
-    // NumberCell,
-    // StatusCell,
-    // ProgressCell,
-    // RowActionsCell,
-    // PriceCell,
-    // CategoryCell,
+    TextCell,
+    NumberCell,
+    ProgressCell,
+    StatusCell,
+    CategoryCell,
+    PriceCell,
+    RowActionsCell,
   },
 
   // Register header/footer-level components (accessible via header.ComponentName in AppHeader/AppFooter)
   headerComponents: {
     // SortIndicator,
     // ColumnFilter,
-    // FooterColumnId,
-    // FooterSum,
+    FooterColumnId,
+    FooterSum,
   },
 })

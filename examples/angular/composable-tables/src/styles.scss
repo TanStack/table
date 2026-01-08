@@ -5,16 +5,25 @@ html {
 
 table {
   border: 1px solid lightgray;
+  border-collapse: collapse;
+  width: 100%;
 }
 
 tbody {
   border-bottom: 1px solid lightgray;
 }
 
-th {
+th,
+td {
   border-bottom: 1px solid lightgray;
   border-right: 1px solid lightgray;
-  padding: 2px 4px;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: 600;
 }
 
 tfoot {
@@ -25,8 +34,216 @@ tfoot th {
   font-weight: normal;
 }
 
-.pagination-actions {
-  margin: 10px;
+.table-container {
+  padding: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pagination {
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  background: white;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+  width: 64px;
+}
+
+.pagination select {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.sort-indicator {
+  margin-left: 4px;
+}
+
+.column-filter {
+  margin-top: 4px;
+}
+
+.column-filter input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+  width: 100%;
+  font-size: 12px;
+}
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable-header:hover {
+  background-color: #e8e8e8;
+}
+
+.row-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.row-actions button {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  background: white;
+  font-size: 12px;
+}
+
+.row-actions button:hover {
+  background-color: #f0f0f0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.relationship {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-badge.complicated {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.single {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #007bff;
+  transition: width 0.2s;
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.table-toolbar h2 {
+  margin: 0;
+}
+
+.table-toolbar button {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  background: white;
+}
+
+.table-toolbar button:hover {
+  background-color: #f0f0f0;
+}
+
+.row-count {
+  color: #666;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.app {
+  padding: 16px;
+}
+
+.app h1 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.description {
+  text-align: center;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+.description code {
+  background-color: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.table-divider {
+  height: 48px;
+  border-bottom: 1px solid #e0e0e0;
+  margin: 32px auto;
+  max-width: 1200px;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.category-badge.electronics {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.category-badge.clothing {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+.category-badge.food {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.category-badge.books {
+  background-color: #fff8e1;
+  color: #f57c00;
+}
+
+.price {
+  font-weight: 600;
+  color: #2e7d32;
 }

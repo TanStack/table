@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
+  CellFlexRender,
   FlexRender,
   TanStackTable,
+  TanStackTableCell,
   TanStackTableHeader,
+  flexRenderComponent,
 } from '@tanstack/angular-table'
 import { NgComponentOutlet } from '@angular/common'
 import { createAppColumnHelper, injectAppTable } from './table'
@@ -15,7 +18,14 @@ const productColumnHelper = createAppColumnHelper<Product>()
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRender, TanStackTableHeader, NgComponentOutlet, TanStackTable],
+  imports: [
+    FlexRender,
+    TanStackTableHeader,
+    TanStackTableCell,
+    NgComponentOutlet,
+    TanStackTable,
+    CellFlexRender,
+  ],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -25,38 +35,38 @@ export class AppComponent {
   readonly columns = personColumnHelper.columns([
     personColumnHelper.accessor('firstName', {
       header: 'First Name',
-      footer: (props) => props.column.id,
-      // cell: ({ cell }) => <cell.TextCell />,
+      footer: ({ header }) => flexRenderComponent(header.FooterColumnId),
+      cell: ({ cell }) => flexRenderComponent(cell.TextCell),
     }),
     personColumnHelper.accessor('lastName', {
       header: 'Last Name',
-      footer: (props) => props.column.id,
-      // cell: ({ cell }) => <cell.TextCell />,
+      footer: ({ header }) => flexRenderComponent(header.FooterColumnId),
+      cell: ({ cell }) => flexRenderComponent(cell.TextCell),
     }),
     personColumnHelper.accessor('age', {
       header: 'Age',
-      footer: (props) => props.column.id,
-      // cell: ({ cell }) => <cell.NumberCell />,
+      footer: ({ header }) => flexRenderComponent(header.FooterSum),
+      cell: ({ cell }) => flexRenderComponent(cell.NumberCell),
     }),
     personColumnHelper.accessor('visits', {
       header: 'Visits',
-      footer: (props) => props.column.id,
-      // cell: ({ cell }) => <cell.NumberCell />,
+      footer: ({ header }) => flexRenderComponent(header.FooterSum),
+      cell: ({ cell }) => flexRenderComponent(cell.NumberCell),
     }),
     personColumnHelper.accessor('status', {
       header: 'Status',
-      footer: (props) => props.column.id,
-      // cell: ({ cell }) => <cell.StatusCell />,
+      footer: ({ header }) => flexRenderComponent(header.FooterColumnId),
+      cell: ({ cell }) => cell.StatusCell,
     }),
     personColumnHelper.accessor('progress', {
       header: 'Progress',
-      footer: (props) => props.column.id,
-      // cell: ({ cell }) => <cell.ProgressCell />,
+      footer: ({ header }) => flexRenderComponent(header.FooterSum),
+      cell: ({ cell }) => cell.ProgressCell,
     }),
     personColumnHelper.display({
       id: 'actions',
       header: 'Actions',
-      // cell: ({ cell }) => <cell.RowActionsCell />,
+      cell: ({ cell }) => cell.RowActionsCell,
     }),
   ])
 
