@@ -1,23 +1,24 @@
 <div class="p-2">
   <div class="table-container" [tanStackTable]="table">
-
-    <ng-container *ngComponentOutlet="table.TableToolbar; inputs: { title: 'Users Table', onRefresh }"/>
+    <ng-container
+      *ngComponentOutlet="
+        table.TableToolbar;
+        inputs: { title: 'Users Table', onRefresh }
+      "
+    />
     <table>
       <thead>
         @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-          <tr >
+          <tr>
             @for (header of headerGroup.headers; track header.id) {
               @if (!header.isPlaceholder) {
-                <th
-                  [tanStackTableHeader]="header"
-                >
-
+                <th [tanStackTableHeader]="header">
                   <ng-container
                     *flexRender="
-                    header.column.columnDef.header;
-                    props: header.getContext();
-                    let header
-                  "
+                      header.column.columnDef.header;
+                      props: header.getContext();
+                      let header
+                    "
                   >
                     <div [innerHTML]="header"></div>
                   </ng-container>
@@ -36,10 +37,10 @@
               <td>
                 <ng-container
                   *flexRender="
-                  cell.column.columnDef.cell;
-                  props: cell.getContext();
-                  let cell
-                "
+                    cell.column.columnDef.cell;
+                    props: cell.getContext();
+                    let cell
+                  "
                 >
                   <div [innerHTML]="cell"></div>
                 </ng-container>
@@ -55,10 +56,10 @@
               <th>
                 <ng-container
                   *flexRender="
-                  footer.column.columnDef.footer;
-                  props: footer.getContext();
-                  let footer
-                "
+                    footer.column.columnDef.footer;
+                    props: footer.getContext();
+                    let footer
+                  "
                 >
                   {{ footer }}
                 </ng-container>
@@ -68,7 +69,6 @@
         }
       </tfoot>
     </table>
-
   </div>
 
   <div class="h-4"></div>
