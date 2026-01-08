@@ -10,13 +10,7 @@ export function lazyInit<T extends object>(initializer: () => T): T {
 
   const initializeObject = () => {
     if (!object) {
-      object = untracked(() => {
-        let result = initializer()
-        if (Object.keys(addedPropsDuringInitialization).length > 0) {
-          result = Object.assign(result, { ...addedPropsDuringInitialization })
-        }
-        return result
-      })
+      object = untracked(() => initializer())
     }
   }
 
@@ -35,14 +29,6 @@ export function lazyInit<T extends object>(initializer: () => T): T {
     get(_, prop, receiver) {
       initializeObject()
       return Reflect.get(object as T, prop, receiver)
-    },
-    set(target: T, p: string | symbol, newValue: any, receiver: any): boolean {
-      if (!object) {
-        addedPropsDuringInitialization[p] = newValue
-      }
-
-      Reflect.set(target, p, newValue, receiver)
-      return true
     },
     has(_, prop) {
       initializeObject()
