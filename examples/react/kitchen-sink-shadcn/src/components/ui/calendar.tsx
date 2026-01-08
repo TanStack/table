@@ -61,9 +61,12 @@ function Calendar({
       }}
       components={{
         Chevron: ({ orientation, className, ...props }) => {
-          const Icon = orientation === 'left' || orientation === 'right' 
-            ? (orientation === 'left' ? ChevronLeft : ChevronRight)
-            : ChevronLeft
+          const Icon =
+            orientation === 'left' || orientation === 'right'
+              ? orientation === 'left'
+                ? ChevronLeft
+                : ChevronRight
+              : ChevronLeft
           return <Icon className={cn('h-4 w-4', className)} {...props} />
         },
       }}

@@ -89,12 +89,10 @@ export function PriceCell() {
   return (
     <span className="price">
       $
-      {cell
-        .getValue()
-        .toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        })}
+      {cell.getValue().toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}
     </span>
   )
 }
