@@ -6,10 +6,17 @@ import { untracked } from '@angular/core'
  */
 export function lazyInit<T extends object>(initializer: () => T): T {
   let object: T | null = null
+  const addedPropsDuringInitialization = {}
 
   const initializeObject = () => {
     if (!object) {
-      object = untracked(() => initializer())
+      object = untracked(() => {
+        let result = initializer()
+        if (Object.keys(addedPropsDuringInitialization).length > 0) {
+          result = Object.assign(result, { ...addedPropsDuringInitialization })
+        }
+        return result
+      })
     }
   }
 
@@ -28,6 +35,14 @@ export function lazyInit<T extends object>(initializer: () => T): T {
     get(_, prop, receiver) {
       initializeObject()
       return Reflect.get(object as T, prop, receiver)
+    },
+    set(target: T, p: string | symbol, newValue: any, receiver: any): boolean {
+      if (!object) {
+        addedPropsDuringInitialization[p] = newValue
+      }
+
+      Reflect.set(target, p, newValue, receiver)
+      return true
     },
     has(_, prop) {
       initializeObject()

@@ -73,6 +73,7 @@ export class FlexRender<
     | ((props: TProps) => FlexRenderContent<TProps>)
     | null
     | undefined
+    | any
   >({
     alias: 'flexRender',
   })
@@ -81,7 +82,7 @@ export class FlexRender<
     alias: 'flexRenderProps',
   })
 
-  readonly notifier = input<'doCheck' | 'tableChange'>('tableChange', {
+  readonly notifier = input<'doCheck' | 'tableChange'>('doCheck', {
     alias: 'flexRenderNotifier',
   })
 
