@@ -15,19 +15,19 @@ export type SubscribeProps<
   TSelected = {},
 > = {
   /**
-   * The table instance to subscribe to. Required when using as a standalone component.
-   * Not needed when using as `table.Subscribe`.
+   * The children to render. Can be a function that receives the selected state, or a React node.
    */
-  table: Table<TFeatures, TData>
+  children: ((state: TSelected) => ReactNode) | ReactNode
   /**
    * A selector function that selects the part of the table state to subscribe to.
    * This allows for fine-grained reactivity by only re-rendering when the selected state changes.
    */
   selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
   /**
-   * The children to render. Can be a function that receives the selected state, or a React node.
+   * The table instance to subscribe to. Required when using as a standalone component.
+   * Not needed when using as `table.Subscribe`.
    */
-  children: ((state: TSelected) => ReactNode) | ReactNode
+  table: Table<TFeatures, TData>
 }
 
 /**
@@ -59,12 +59,12 @@ export function Subscribe<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = {},
->(
-  props: SubscribeProps<TFeatures, TData, TSelected>,
-): ReturnType<FunctionComponent> {
-  const selected = useStore(props.table.store, props.selector)
+>({
+  children,
+  selector,
+  table,
+}: SubscribeProps<TFeatures, TData, TSelected>): ReturnType<FunctionComponent> {
+  const selected = useStore(table.store, selector)
 
-  return typeof props.children === 'function'
-    ? props.children(selected)
-    : props.children
+  return typeof children === 'function' ? children(selected) : children
 }
