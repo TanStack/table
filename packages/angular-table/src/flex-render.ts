@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Directive,
   DoCheck,
+  EffectRef,
   Injector,
   OnChanges,
   SimpleChanges,
@@ -34,7 +35,6 @@ import type {
   Table,
   TableFeatures,
 } from '@tanstack/table-core'
-import type { EffectRef } from '@angular/core'
 
 export {
   injectFlexRenderContext,
@@ -86,7 +86,8 @@ export class FlexRender<
     alias: 'flexRenderNotifier',
   })
 
-  readonly injector = input(inject(Injector), {
+  readonly #injector = inject(Injector)
+  readonly injector = input(this.#injector, {
     alias: 'flexRenderInjector',
   })
 
@@ -172,7 +173,7 @@ export class FlexRender<
           this.renderFlags |= FlexRenderFlags.DirtyCheck
           this.doCheck()
         },
-        { injector: this.injector() },
+        { injector: this.#injector },
       )
     }
   }
@@ -210,6 +211,11 @@ export class FlexRender<
     }
 
     this.viewContainerRef.clear()
+    if (this.renderView) {
+      this.renderView.unmount()
+      this.renderView = null
+    }
+
     this.renderFlags =
       FlexRenderFlags.Pristine |
       (this.renderFlags & FlexRenderFlags.ViewFirstRender) |

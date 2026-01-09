@@ -82,7 +82,7 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   let deps: Array<any> | undefined = []
   let result: TResult | undefined
 
-  return (depArgs): TResult => {
+  const memoizedFn = (depArgs?: TDepArgs): TResult => {
     onBeforeCompare?.()
     const newDeps = memoDeps?.(depArgs)
     const depsChanged =
@@ -103,6 +103,12 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
 
     return result
   }
+
+  Object.defineProperties(memoizedFn, {
+    originalArgsLength: { value: fn.length },
+  })
+
+  return memoizedFn
 }
 
 interface TableMemoOptions<

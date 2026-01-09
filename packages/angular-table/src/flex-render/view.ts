@@ -67,6 +67,8 @@ export abstract class FlexRenderView<
   abstract dirtyCheck(): void
 
   abstract onDestroy(callback: Function): void
+
+  abstract unmount(): void
 }
 
 export class FlexRenderTemplateView extends FlexRenderView<
@@ -93,6 +95,10 @@ export class FlexRenderTemplateView extends FlexRenderView<
     //
     // If in a future we need to manually mark the view as dirty, just uncomment next line
     // this.view.markForCheck()
+  }
+
+  override unmount() {
+    this.view.destroy()
   }
 
   override onDestroy(callback: Function) {
@@ -146,6 +152,10 @@ export class FlexRenderComponentView extends FlexRenderView<
         break
       }
     }
+  }
+
+  override unmount() {
+    this.view.componentRef.destroy()
   }
 
   override onDestroy(callback: Function) {

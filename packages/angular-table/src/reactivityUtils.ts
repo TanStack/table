@@ -91,7 +91,7 @@ export function toComputed<
   fn: TFunction,
   debugName: string,
 ): ComputedFunction<TFunction> {
-  const hasArgs = fn.length > 0
+  const hasArgs = getFnArgsLength(fn) > 0
   if (!hasArgs) {
     const computedFn = computed(
       () => {
@@ -136,39 +136,39 @@ function serializeArgs(...args: Array<any>) {
   return JSON.stringify(args)
 }
 
+function getFnArgsLength(
+  fn: ((...args: any) => any) & { originalArgsLength?: number },
+): number {
+  return Math.max(0, fn.originalArgsLength ?? fn.length)
+}
+
 export function assignReactivePrototypeAPI(
   notifier: Signal<unknown>,
   prototype: Record<string, any>,
   fnName: string,
 ) {
   const fn = prototype[fnName]
-  // const originalArgsLength = Math.max(
-  //   0,
-  //   Reflect.get(fn, 'originalArgsLength') ?? 0,
-  // )
+  const originalArgsLength = getFnArgsLength(fn)
 
-  // if (originalArgsLength <= 1) {
-  prototype[fnName] = function (this: unknown, ...args: Array<any>) {
-    notifier()
-    return fn.apply(this, args)
+  if (originalArgsLength <= 1) {
+    Object.defineProperty(prototype, fnName, {
+      enumerable: true,
+      configurable: true,
+      get(this) {
+        const self = this
+        // Create a cache in the current prototype to allow the signals
+        // to be garbage collected. Shorthand for a WeakMap implementation
+        self._reactiveCache ??= {}
+        return (self._reactiveCache[`${self.id}${fnName}`] ??= computed(() => {
+          notifier()
+          return fn.apply(self)
+        }, {}))
+      },
+    })
+  } else {
+    prototype[fnName] = function (this: unknown, ...args: Array<any>) {
+      notifier()
+      return fn.apply(this, args)
+    }
   }
-  // TODO: this break everything. for example, when table data changes, it still uses old cell
-  //   const cached = {} as Record<string, Signal<unknown>>
-  //   Object.defineProperty(prototype, fnName, {
-  //     enumerable: true,
-  //     configurable: true,
-  //     get(this) {
-  //       const self = this
-  //       return (cached[`${self.id}_${fnName}`] ??= computed(() => {
-  //         notifier()
-  //         return fn.call(self)
-  //       }, {}))
-  //     },
-  //   })
-  // } else {
-  //   prototype[fnName] = function (this: unknown, ...args: Array<any>) {
-  //     notifier()
-  //     return fn.apply(this, args)
-  //   }
-  // }
 }
