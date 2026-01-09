@@ -107,11 +107,22 @@ export function toComputed<
 
   const computedCache: Record<string, Signal<unknown>> = {}
 
-  const computedFn = (arg0: any, ...otherArgs: Array<any>) => {
-    const argsArray = [arg0, ...otherArgs]
+  const computedFn = function (this: unknown, ...argsArray: Array<any>) {
+    const cacheable = argsArray.every((arg) => {
+      return (
+        arg === null ||
+        arg === undefined ||
+        typeof arg === 'string' ||
+        typeof arg === 'number' ||
+        typeof arg === 'boolean' ||
+        typeof arg === 'symbol'
+      )
+    })
+    if (!cacheable) return false
+
     const serializedArgs = serializeArgs(...argsArray)
-    if (computedCache.hasOwnProperty(serializedArgs)) {
-      return computedCache[serializedArgs]?.()
+    if (computedCache[serializedArgs]) {
+      return computedCache[serializedArgs]()
     }
     const computedSignal = computed(
       () => {
