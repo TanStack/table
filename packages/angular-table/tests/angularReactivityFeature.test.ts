@@ -93,7 +93,9 @@ describe('angularReactivityFeature', () => {
 
       const headers = headerGroup.headers
       headers.forEach((header, cellIndex) => {
-        const headerPropertyKeys = Object.keys(header)
+        const headerPropertyKeys = Object.keys(header).concat(
+          Object.getOwnPropertyNames(Object.getPrototypeOf(header)),
+        )
         test.each(
           headerPropertyKeys.map((property) => [
             property,
@@ -113,7 +115,9 @@ describe('angularReactivityFeature', () => {
   describe('Column property reactivity', () => {
     const columns = table.getAllColumns()
     columns.forEach((column, index) => {
-      const columnPropertyKeys = Object.keys(column)
+      const columnPropertyKeys = Object.keys(column).concat(
+        Object.getOwnPropertyNames(Object.getPrototypeOf(column)),
+      )
       test.each(
         columnPropertyKeys.map((property) => [
           property,
@@ -129,10 +133,12 @@ describe('angularReactivityFeature', () => {
     })
   })
 
-  describe('Row property reactivity', () => {
+  describe('Row and cells property reactivity', () => {
     const flatRows = table.getRowModel().flatRows
     flatRows.forEach((row, index) => {
-      const rowsPropertyKeys = Object.keys(row)
+      const rowsPropertyKeys = Object.keys(row).concat(
+        Object.getOwnPropertyNames(Object.getPrototypeOf(row)),
+      )
       test.each(
         rowsPropertyKeys.map((property) => [
           property,
@@ -148,7 +154,9 @@ describe('angularReactivityFeature', () => {
 
       const cells = row.getAllCells()
       cells.forEach((cell, cellIndex) => {
-        const cellPropertyKeys = Object.keys(cell)
+        const cellPropertyKeys = Object.keys(cell).concat(
+          Object.getOwnPropertyNames(Object.getPrototypeOf(cell)),
+        )
         test.each(
           cellPropertyKeys.map((property) => [
             property,

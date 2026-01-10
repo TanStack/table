@@ -1,4 +1,5 @@
 import { SIGNAL } from '@angular/core/primitives/signals'
+import { getMemoFnMeta } from '@tanstack/table-core'
 import type { InputSignal } from '@angular/core'
 import type { ComponentFixture } from '@angular/core/testing'
 
@@ -59,11 +60,24 @@ const staticNonComputedProperties = [
   'getRowId',
   'getRow',
   'getIsSomeColumnsPinned',
+  'getContext',
 ]
+
+function getFnArgsLength(
+  fn: ((...args: any) => any) & { originalArgsLength?: number },
+): number {
+  return Math.max(0, getMemoFnMeta(fn)?.originalArgsLength ?? fn.length)
+}
+
 export const testShouldBeComputedProperty = (
   testObj: any,
   propertyName: string,
+  excludeComputed: Array<string> = [],
 ) => {
+  if (excludeComputed.includes(propertyName)) {
+    return false
+  }
+
   if (staticNonComputedProperties.some((prop) => propertyName === prop)) {
     return false
   }
@@ -78,7 +92,8 @@ export const testShouldBeComputedProperty = (
     // Only properties with no arguments are computed
     const fn = testObj[propertyName]
     // Cannot test if is lazy computed since we return the unwrapped value
-    return fn instanceof Function && fn.length === 0
+    const args = Math.max(0, getFnArgsLength(fn) - 1)
+    return fn instanceof Function && args === 0
   }
   return false
 }

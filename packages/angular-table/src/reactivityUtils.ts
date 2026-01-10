@@ -1,4 +1,6 @@
 import { computed } from '@angular/core'
+import { $internalMemoFnMeta, getMemoFnMeta } from '@tanstack/table-core'
+import type { MemoFnMeta } from '@tanstack/table-core'
 import type { Signal } from '@angular/core'
 
 export const $TABLE_REACTIVE = Symbol('reactive')
@@ -7,10 +9,8 @@ export function markReactive<T extends object>(obj: T): void {
   Object.defineProperty(obj, $TABLE_REACTIVE, { value: true })
 }
 
-export function isReactive<T extends object>(
-  obj: T,
-): obj is T & { [$TABLE_REACTIVE]: true } {
-  return Reflect.get(obj, $TABLE_REACTIVE) === true
+export function isReactive<T>(obj: T): boolean {
+  return Reflect.get(obj as {}, $TABLE_REACTIVE) === true
 }
 
 /**
@@ -151,7 +151,7 @@ function serializeArgs(...args: Array<any>) {
 function getFnArgsLength(
   fn: ((...args: any) => any) & { originalArgsLength?: number },
 ): number {
-  return Math.max(0, fn.originalArgsLength ?? fn.length)
+  return Math.max(0, getMemoFnMeta(fn)?.originalArgsLength ?? fn.length)
 }
 
 export function assignReactivePrototypeAPI(
@@ -159,6 +159,8 @@ export function assignReactivePrototypeAPI(
   prototype: Record<string, any>,
   fnName: string,
 ) {
+  if (isReactive(prototype[fnName])) return
+
   const fn = prototype[fnName]
   const originalArgsLength = getFnArgsLength(fn)
 
@@ -171,10 +173,18 @@ export function assignReactivePrototypeAPI(
         // Create a cache in the current prototype to allow the signals
         // to be garbage collected. Shorthand for a WeakMap implementation
         self._reactiveCache ??= {}
-        return (self._reactiveCache[`${self.id}${fnName}`] ??= computed(() => {
-          notifier()
-          return fn.apply(self)
-        }, {}))
+        const cached = (self._reactiveCache[`${self.id}${fnName}`] ??= computed(
+          () => {
+            notifier()
+            return fn.apply(self)
+          },
+          {},
+        ))
+        markReactive(cached)
+        cached[$internalMemoFnMeta] = {
+          originalArgsLength,
+        } satisfies MemoFnMeta
+        return cached
       },
     })
   } else {
@@ -182,5 +192,9 @@ export function assignReactivePrototypeAPI(
       notifier()
       return fn.apply(this, args)
     }
+    markReactive(prototype[fnName])
+    prototype[fnName][$internalMemoFnMeta] = {
+      originalArgsLength,
+    } satisfies MemoFnMeta
   }
 }

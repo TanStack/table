@@ -60,6 +60,23 @@ export function flattenBy<TNode>(
   return flat
 }
 
+export const $internalMemoFnMeta = Symbol('memoFnMeta')
+export type MemoFnMeta = { originalArgsLength?: number }
+
+/**
+ * @internal
+ */
+function setMemoFnMeta(fn: Function, meta: MemoFnMeta) {
+  Object.defineProperty(fn, $internalMemoFnMeta, { value: meta })
+}
+
+/**
+ * @internal
+ */
+export function getMemoFnMeta(fn: any): MemoFnMeta | null {
+  return (typeof fn === 'function' && fn[$internalMemoFnMeta]) ?? null
+}
+
 interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
   fn: (...args: NoInfer<TDeps>) => TResult
   memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
@@ -104,9 +121,7 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
     return result
   }
 
-  Object.defineProperties(memoizedFn, {
-    originalArgsLength: { value: fn.length },
-  })
+  setMemoFnMeta(memoizedFn, { originalArgsLength: fn.length })
 
   return memoizedFn
 }
@@ -362,9 +377,8 @@ export function assignPrototypeAPIs<
         return fn(this, ...args)
       }
     }
-    Object.defineProperties(prototype[fnKey], {
-      originalArgsLength: { value: fn.length },
-    })
+
+    setMemoFnMeta(prototype[fnKey], { originalArgsLength: fn.length })
   }
 }
 
