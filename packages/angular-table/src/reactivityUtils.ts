@@ -39,12 +39,12 @@ export function defineLazyComputedProperty<T extends object>(
     Object.defineProperty(originalObject, property, {
       enumerable: true,
       configurable: true,
-      get(this) {
+      get() {
         const computedValue = toComputed(notifier, valueFn, property)
         markReactive(computedValue)
         // Once the property is set the first time, we don't need a getter anymore
         // since we have a computed / cached fn value
-        Object.defineProperty(this, property, {
+        Object.defineProperty(originalObject, property, {
           value: computedValue,
           configurable: true,
           enumerable: true,
@@ -58,14 +58,12 @@ export function defineLazyComputedProperty<T extends object>(
 /**
  * @internal should be used only internally
  */
-type ComputedFunction<T> =
-  // 0 args
-  T extends (...args: []) => infer TReturn
-    ? Signal<TReturn>
-    : // 1+ args
-      T extends (arg0?: any, ...args: Array<any>) => any
-      ? T
-      : never
+type ComputedFunction<T> = T extends () => infer TReturn
+  ? Signal<TReturn>
+  : // 1+ args
+    T extends (arg0?: any, ...args: Array<any>) => any
+    ? T
+    : never
 
 /**
  * @description Transform a function into a computed that react to given notifier re-computations
@@ -105,34 +103,37 @@ export function toComputed<
     return computedFn as ComputedFunction<TFunction>
   }
 
-  const computedCache: Record<string, Signal<unknown>> = {}
-
-  const computedFn = function (this: unknown, ...argsArray: Array<any>) {
-    const cacheable = argsArray.every((arg) => {
-      return (
-        arg === null ||
-        arg === undefined ||
-        typeof arg === 'string' ||
-        typeof arg === 'number' ||
-        typeof arg === 'boolean' ||
-        typeof arg === 'symbol'
-      )
-    })
-    if (!cacheable) return false
-
+  const computedFn: ((this: unknown, ...argsArray: Array<any>) => unknown) & {
+    _reactiveCache?: Record<string, Signal<unknown>>
+  } = function (this: unknown, ...argsArray: Array<any>) {
+    const cacheable =
+      argsArray.length === 0 ||
+      argsArray.every((arg) => {
+        return (
+          arg === null ||
+          arg === undefined ||
+          typeof arg === 'string' ||
+          typeof arg === 'number' ||
+          typeof arg === 'boolean' ||
+          typeof arg === 'symbol'
+        )
+      })
+    if (!cacheable) {
+      return fn.apply(this, argsArray)
+    }
     const serializedArgs = serializeArgs(...argsArray)
-    if (computedCache[serializedArgs]) {
-      return computedCache[serializedArgs]()
+    if ((computedFn._reactiveCache ??= {})[serializedArgs]) {
+      return computedFn._reactiveCache[serializedArgs]()
     }
     const computedSignal = computed(
       () => {
         void notifier()
-        return fn(...argsArray)
+        return fn.apply(this, argsArray)
       },
       { debugName },
     )
 
-    computedCache[serializedArgs] = computedSignal
+    computedFn._reactiveCache[serializedArgs] = computedSignal
 
     return computedSignal()
   }

@@ -53,10 +53,21 @@ export async function flushQueue() {
 }
 
 const staticComputedProperties = ['get', 'state']
+const staticNonComputedProperties = [
+  'getIsSomeRowsPinned',
+  'getColumn',
+  'getRowId',
+  'getRow',
+  'getIsSomeColumnsPinned',
+]
 export const testShouldBeComputedProperty = (
   testObj: any,
   propertyName: string,
 ) => {
+  if (staticNonComputedProperties.some((prop) => propertyName === prop)) {
+    return false
+  }
+
   if (staticComputedProperties.some((prop) => propertyName === prop)) {
     return true
   }
@@ -70,4 +81,8 @@ export const testShouldBeComputedProperty = (
     return fn instanceof Function && fn.length === 0
   }
   return false
+}
+
+export function getFnReactiveCache(fn: any): void {
+  return fn._reactiveCache
 }

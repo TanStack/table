@@ -26,15 +26,15 @@ describe('toComputed', () => {
           mockFn(result())
         })
 
-        TestBed.flushEffects()
+        TestBed.tick()
         expect(mockFn).toHaveBeenLastCalledWith(2)
 
         notifier.set(3)
-        TestBed.flushEffects()
+        TestBed.tick()
         expect(mockFn).toHaveBeenLastCalledWith(6)
 
         notifier.set(2)
-        TestBed.flushEffects()
+        TestBed.tick()
         expect(mockFn).toHaveBeenLastCalledWith(4)
 
         expect(mockFn.mock.calls.length).toEqual(3)
@@ -53,7 +53,7 @@ describe('toComputed', () => {
         },
         '3args',
       )
-      expect(fn1.length).toEqual(1)
+      expect(fn1.length).toEqual(0)
 
       // currently full rest parameters is not supported
       const fn2 = toComputed(
@@ -143,10 +143,12 @@ describe('toComputed', () => {
   describe('args 0~1', () => {
     test('creates a fn an explicit first argument and allows other args', () => {
       const notifier = signal(1)
+      const captor = vi.fn<(arg0?: number) => void>()
+      const captor2 = vi.fn<(arg0?: number) => void>()
 
       const fn1 = toComputed(
         notifier,
-        (arg0?: number) => {
+        (arg0: number | undefined) => {
           if (arg0 === undefined) {
             return 5 * notifier()
           }
@@ -154,9 +156,26 @@ describe('toComputed', () => {
         },
         'optionalArgs',
       )
-      expect(fn1.length).toEqual(1)
 
-      fn1()
+      expect(isSignal(fn1)).toEqual(false)
+
+      TestBed.runInInjectionContext(() => {
+        effect(() => {
+          captor(fn1(0))
+        })
+        effect(() => {
+          captor2(fn1(1))
+        })
+      })
+
+      TestBed.tick()
+      notifier.set(2)
+      TestBed.tick()
+      notifier.set(3)
+      expect(captor.mock.calls).toHaveLength(1)
+      expect(captor2.mock.calls).toHaveLength(2)
+      expect(captor2).toHaveBeenNthCalledWith(1, 1)
+      expect(captor2).toHaveBeenNthCalledWith(2, 2)
     })
   })
 })

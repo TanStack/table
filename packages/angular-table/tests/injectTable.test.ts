@@ -9,6 +9,7 @@ import {
 } from '@tanstack/table-core'
 import { RowModel, injectTable } from '../src'
 import {
+  getFnReactiveCache,
   setFixtureSignalInputs,
   testShouldBeComputedProperty,
 } from './test-utils'
@@ -177,6 +178,24 @@ describe('injectTable - Experimental reactivity', () => {
     )('property (%s) is computed -> (%s)', (name, expected) => {
       const tableProperty = table[name as keyof typeof table]
       expect(isSignal(tableProperty)).toEqual(expected)
+    })
+
+    describe('will create a computed for non detectable computed properties', () => {
+      test('getIsSomeRowsPinned', () => {
+        table.getIsSomeRowsPinned('top')
+        table.getIsSomeRowsPinned('bottom')
+        table.getIsSomeRowsPinned()
+
+        expect(getFnReactiveCache(table.getIsSomeRowsPinned)).toHaveProperty(
+          '["top"]',
+        )
+        expect(getFnReactiveCache(table.getIsSomeRowsPinned)).toHaveProperty(
+          '["bottom"]',
+        )
+        expect(getFnReactiveCache(table.getIsSomeRowsPinned)).toHaveProperty(
+          '[]',
+        )
+      })
     })
   })
 
