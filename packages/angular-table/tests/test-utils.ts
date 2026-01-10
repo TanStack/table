@@ -83,6 +83,6 @@ export const testShouldBeComputedProperty = (
   return false
 }
 
-export function getFnReactiveCache(fn: any): void {
+export function getFnReactiveCache(fn: any): any {
   return fn._reactiveCache
 }
