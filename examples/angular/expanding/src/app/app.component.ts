@@ -105,8 +105,11 @@ export class AppComponent {
     JSON.stringify(this.expanded(), undefined, 2),
   )
 
+  readonly rowSelectionState = this.table.Subscribe({
+    selector: (state) => state.rowSelection,
+  })
   readonly rawRowSelectionState = computed(() =>
-    JSON.stringify(this.table.store.state.rowSelection, undefined, 2),
+    JSON.stringify(this.rowSelectionState(), undefined, 2),
   )
 
   onPageInputChange(event: Event): void {

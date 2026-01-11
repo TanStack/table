@@ -1,6 +1,13 @@
-import { injectFlexRenderContext } from '@tanstack/angular-table'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
-import type { CellContext, HeaderContext } from '@tanstack/angular-table'
+import {
+  injectFlexRenderContext,
+  injectTableCellContext,
+} from '@tanstack/angular-table'
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
+import type {
+  CellContext,
+  HeaderContext,
+  RowData,
+} from '@tanstack/angular-table'
 
 @Component({
   template: `
@@ -17,11 +24,11 @@ import type { CellContext, HeaderContext } from '@tanstack/angular-table'
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadSelectionComponent<T> {
-  context = injectFlexRenderContext<
-    // @ts-expect-error TODO: Should fix types
-    HeaderContext<{ rowSelectionFeature: {} }, T, unknown>
-  >()
+export class TableHeadSelectionComponent<T extends RowData> {
+  context =
+    injectFlexRenderContext<
+      HeaderContext<{ rowSelectionFeature: {} }, T, unknown>
+    >()
 }
 
 @Component({
@@ -39,6 +46,8 @@ export class TableHeadSelectionComponent<T> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowSelectionComponent<T> {
+  readonly cell = injectTableCellContext()
+  readonly row = computed(() => this.cell().row)
   context =
     // @ts-expect-error TODO: Should fix types
     injectFlexRenderContext<CellContext<{ rowSelectionFeature: {} }, unknown>>()

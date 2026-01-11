@@ -101,7 +101,6 @@ export class AppComponent {
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(sortFns),
     },
-    // enableExperimentalReactivity: true,
     columns: this.columns,
     data: this.data(),
     state: {

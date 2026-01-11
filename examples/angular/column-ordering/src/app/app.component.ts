@@ -96,7 +96,6 @@ export class AppComponent {
       columnOrder: this.columnOrder(),
       columnVisibility: this.columnVisibility(),
     },
-    enableExperimentalReactivity: true,
     onColumnVisibilityChange: (updaterOrValue) => {
       typeof updaterOrValue === 'function'
         ? this.columnVisibility.update(updaterOrValue)

@@ -6,6 +6,7 @@ import {
   viewChild,
 } from '@angular/core'
 import {
+  CellFlexRender,
   FlexRenderDirective,
   columnFilteringFeature,
   createFilteredRowModel,
@@ -23,9 +24,9 @@ import {
   TableHeadSelectionComponent,
   TableRowSelectionComponent,
 } from './selection-column.component'
+import type { TemplateRef } from '@angular/core'
 import type { Person } from './makeData'
 import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
-import type { TemplateRef } from '@angular/core'
 
 const tableHelper = createTableHelper({
   _features: {
@@ -43,7 +44,7 @@ const tableHelper = createTableHelper({
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FilterComponent, FlexRenderDirective, FormsModule],
+  imports: [FilterComponent, FlexRenderDirective, CellFlexRender, FormsModule],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -52,6 +53,8 @@ export class AppComponent {
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(10_000))
 
+  readonly myValue = signal(0)
+
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
@@ -59,7 +62,7 @@ export class AppComponent {
     {
       id: 'select',
       header: () => {
-        return flexRenderComponent(TableHeadSelectionComponent)
+        const data = flexRenderComponent(TableHeadSelectionComponent)
       },
       cell: () => {
         return flexRenderComponent(TableRowSelectionComponent)
@@ -73,12 +76,14 @@ export class AppComponent {
           accessorKey: 'firstName',
           cell: (info) => info.getValue(),
           footer: (props) => props.column.id,
-          header: 'First name',
+          header: (props) => `${this.myValue()} First name`,
         },
         {
           accessorFn: (row) => row.lastName,
           id: 'lastName',
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            return `lastname: ${info.getValue()} - is selected: ${info.row.getIsSelected()}`
+          },
           header: () => 'Last Name',
           footer: (props) => props.column.id,
         },
@@ -123,7 +128,6 @@ export class AppComponent {
     state: {
       rowSelection: this.rowSelection(),
     },
-    enableExperimentalReactivity: true,
     enableRowSelection: true, // enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: (updaterOrValue) => {
@@ -162,5 +166,13 @@ export class AppComponent {
 
   refreshData(): void {
     this.data.set(makeData(10_000))
+  }
+
+  constructor() {
+    Reflect.set(window, 'updateValue', () => this.willUpdate())
+  }
+
+  willUpdate() {
+    this.myValue.update((x) => x + 1)
   }
 }
