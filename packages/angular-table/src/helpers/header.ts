@@ -2,7 +2,7 @@ import { Directive, InjectionToken, inject, input } from '@angular/core'
 import { CellData, Header, RowData, TableFeatures } from '@tanstack/table-core'
 import type { Signal } from '@angular/core'
 
-export const HeaderContextToken = new InjectionToken<
+export const TanStackTableHeaderToken = new InjectionToken<
   TanStackTableHeaderContext<any, any, any>['header']
 >('[TanStack Table] HeaderContext')
 
@@ -19,7 +19,7 @@ export interface TanStackTableHeaderContext<
   exportAs: 'header',
   providers: [
     {
-      provide: HeaderContextToken,
+      provide: TanStackTableHeaderToken,
       useFactory: () => inject(TanStackTableHeader).header,
     },
   ],
@@ -39,5 +39,5 @@ export function injectTableHeaderContext<
   TData extends RowData,
   TValue extends CellData,
 >(): TanStackTableHeaderContext<TFeatures, TData, TValue>['header'] {
-  return inject(HeaderContextToken)
+  return inject(TanStackTableHeaderToken)
 }

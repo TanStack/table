@@ -2,7 +2,7 @@ import { Directive, InjectionToken, inject, input } from '@angular/core'
 import { RowData, Table, TableFeatures } from '@tanstack/table-core'
 import type { Signal } from '@angular/core'
 
-export const TableContextToken = new InjectionToken<
+export const TanStackTableToken = new InjectionToken<
   TanStackTableContext<any, any>['table']
 >('[TanStack Table] HeaderContext')
 
@@ -18,7 +18,7 @@ export interface TanStackTableContext<
   exportAs: 'table',
   providers: [
     {
-      provide: TableContextToken,
+      provide: TanStackTableToken,
       useFactory: () => inject(TanStackTable).table,
     },
   ],
@@ -36,5 +36,5 @@ export function injectTableContext<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(): TanStackTableContext<TFeatures, TData>['table'] {
-  return inject(TableContextToken)
+  return inject(TanStackTableToken)
 }

@@ -28,9 +28,9 @@ import {
   FlexRenderView,
   mapToFlexRenderTypedContent,
 } from './flex-render/view'
-import { CellContextToken } from './context/cell'
-import { HeaderContextToken } from './context/header'
-import { TableContextToken } from './context/table'
+import { TanStackTableCellToken } from './helpers/cell'
+import { TanStackTableHeaderToken } from './helpers/header'
+import { TanStackTableToken } from './helpers/table'
 import type { FlexRenderTypedContent } from './flex-render/view'
 import type {
   CellContext,
@@ -328,19 +328,19 @@ export class FlexRenderDirective<
     const staticProviders = []
     if ('table' in proxy) {
       staticProviders.push({
-        provide: TableContextToken,
+        provide: TanStackTableToken,
         useValue: () => proxy.table,
       })
     }
     if ('cell' in proxy) {
       staticProviders.push({
-        provide: CellContextToken,
+        provide: TanStackTableCellToken,
         useValue: () => proxy.cell,
       })
     }
     if ('header' in proxy) {
       staticProviders.push({
-        provide: HeaderContextToken,
+        provide: TanStackTableHeaderToken,
         useValue: () => proxy.header,
       })
     }

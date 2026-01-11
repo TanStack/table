@@ -10,7 +10,7 @@ export interface TanStackTableCellContext<
   cell: Signal<Cell<TFeatures, TData, TValue>>
 }
 
-export const CellContextToken = new InjectionToken<
+export const TanStackTableCellToken = new InjectionToken<
   TanStackTableCellContext<any, any, any>['cell']
 >('[TanStack Table] CellContext')
 
@@ -19,7 +19,7 @@ export const CellContextToken = new InjectionToken<
   exportAs: 'cell',
   providers: [
     {
-      provide: CellContextToken,
+      provide: TanStackTableCellToken,
       useFactory: () => inject(TanStackTableCell).cell,
     },
   ],
@@ -39,5 +39,5 @@ export function injectTableCellContext<
   TData extends RowData,
   TValue extends CellData,
 >(): TanStackTableCellContext<TFeatures, TData, TValue>['cell'] {
-  return inject(CellContextToken)
+  return inject(TanStackTableCellToken)
 }

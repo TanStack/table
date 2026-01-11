@@ -5,10 +5,10 @@ import { describe, expect, test } from 'vitest'
 import {
   FlexRender,
   FlexRenderDirective,
+  flexRenderComponent,
   injectFlexRenderContext,
-} from '../../src/flex-render'
+} from '../../src'
 import { setFixtureSignalInput, setFixtureSignalInputs } from '../test-utils'
-import { flexRenderComponent } from '../../src/flex-render/flex-render-component'
 import type { TemplateRef } from '@angular/core'
 import type { ComponentFixture } from '@angular/core/testing'
 
@@ -167,28 +167,26 @@ describe('FlexRenderDirective', () => {
 @Component({
   selector: 'app-test-render',
   template: `
-    <ng-container
-      *flexRender="
-        content();
-        props: context();
-        notifier: 'doCheck';
-        let renderValue
-      "
-    >
+    <ng-container *flexRender="content(); props: context(); let renderValue">
       <span [innerHTML]="renderValue"></span>
     </ng-container>
   `,
   standalone: true,
-  imports: [FlexRenderDirective],
+  imports: [FlexRender],
 })
 class TestRenderComponent {
-  readonly content = input.required<FlexRenderDirectiveAllowedContent>()
+  readonly content = input.required<FlexRenderAllowedContent>()
 
   readonly context = input.required<Record<string, unknown>>()
 }
 
-type FlexRenderDirectiveAllowedContent = ReturnType<
-  FlexRender<NonNullable<unknown>>['content']
+type FlexRenderAllowedContent = ReturnType<
+  FlexRenderDirective<
+    any,
+    any,
+    NonNullable<unknown>,
+    NonNullable<unknown>
+  >['content']
 >
 
 function expectPrimitiveValueIs(

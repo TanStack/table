@@ -66,7 +66,7 @@ const getUserSkipPropertyFn = (
   return value ?? defaultPropertyFn
 }
 
-export function constructAngularReactivityFeature<
+function constructAngularReactivityFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(): TableFeature<AngularReactivityFeatureConstructors<TFeatures, TData>> {

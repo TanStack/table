@@ -1,8 +1,10 @@
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { injectTable } from '../injectTable'
+import { injectFlexRenderContext } from '../flexRender'
 import { injectTableHeaderContext as _injectTableHeaderContext } from './header'
-import { injectTableContext as _injetTableContext } from './table'
+import { injectTableContext as _injectTableContext } from './table'
 import { injectTableCellContext as _injectTableCellContext } from './cell'
+import type { FlexRenderContent } from '../flexRender'
 import type { AngularTable } from '../injectTable'
 import type {
   AccessorFn,
@@ -18,6 +20,7 @@ import type {
   DisplayColumnDef,
   GroupColumnDef,
   Header,
+  HeaderContext,
   IdentifiedColumnDef,
   Row,
   RowData,
@@ -28,7 +31,6 @@ import type {
   TableState,
 } from '@tanstack/table-core'
 import type { Type } from '@angular/core'
-import type { FlexRenderContent } from '../flex-render'
 
 type RenderableComponent =
   | Type<any>
@@ -287,18 +289,6 @@ export type CreateTableContextOptions<
   headerComponents?: THeaderComponents
 }
 
-/**
- * Props for AppCell component
- */
-export interface AppCellPropsWithoutSelector<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TValue extends CellData,
-  TCellComponents extends Record<string, RenderableComponent>,
-> {
-  cell: Cell<TFeatures, TData, TValue>
-}
-
 export function createTableHook<
   TFeatures extends TableFeatures,
   const TTableComponents extends Record<string, RenderableComponent>,
@@ -316,7 +306,7 @@ export function createTableHook<
   THeaderComponents
 >) {
   function injectTableContext<TData extends RowData = RowData>() {
-    return _injetTableContext<TFeatures, TData>()
+    return _injectTableContext<TFeatures, TData>()
   }
 
   function injectTableHeaderContext<TValue extends CellData = CellData>() {
@@ -325,6 +315,20 @@ export function createTableHook<
 
   function injectTableCellContext<TValue extends CellData = CellData>() {
     return _injectTableCellContext<TFeatures, any, TValue>()
+  }
+
+  function injectFlexRenderHeaderContext<
+    TData extends RowData,
+    TValue extends CellData,
+  >() {
+    return injectFlexRenderContext<HeaderContext<TFeatures, TData, TValue>>()
+  }
+
+  function injectFlexRenderCellContext<
+    TData extends RowData,
+    TValue extends CellData,
+  >() {
+    return injectFlexRenderContext<CellContext<TFeatures, TData, TValue>>()
   }
 
   function injectAppTable<TData extends RowData, TSelected = {}>(
@@ -384,6 +388,8 @@ export function createTableHook<
     injectTableContext,
     injectTableHeaderContext,
     injectTableCellContext,
+    injectFlexRenderHeaderContext,
+    injectFlexRenderCellContext,
     injectAppTable,
   }
 }

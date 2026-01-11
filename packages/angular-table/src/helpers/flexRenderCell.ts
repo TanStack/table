@@ -6,7 +6,7 @@ import {
   RowData,
   TableFeatures,
 } from '@tanstack/table-core'
-import { FlexRenderDirective } from '../flex-render'
+import { FlexRenderDirective } from '../flexRender'
 
 /**
  * Simplified directive wrapper of `*flexRender`.
