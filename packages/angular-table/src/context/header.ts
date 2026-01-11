@@ -1,6 +1,10 @@
-import { Directive, inject, input } from '@angular/core'
+import { Directive, InjectionToken, inject, input } from '@angular/core'
 import { CellData, Header, RowData, TableFeatures } from '@tanstack/table-core'
 import type { Signal } from '@angular/core'
+
+export const HeaderContextToken = new InjectionToken<
+  TanStackTableHeaderContext<any, any, any>['header']
+>('[TanStack Table] HeaderContext')
 
 export interface TanStackTableHeaderContext<
   TFeatures extends TableFeatures,
@@ -13,6 +17,12 @@ export interface TanStackTableHeaderContext<
 @Directive({
   selector: '[tanStackTableHeader]',
   exportAs: 'header',
+  providers: [
+    {
+      provide: HeaderContextToken,
+      useFactory: () => inject(TanStackTableHeader).header,
+    },
+  ],
 })
 export class TanStackTableHeader<
   TFeatures extends TableFeatures,
@@ -29,5 +39,5 @@ export function injectTableHeaderContext<
   TData extends RowData,
   TValue extends CellData,
 >(): TanStackTableHeaderContext<TFeatures, TData, TValue>['header'] {
-  return inject(TanStackTableHeader<TFeatures, TData, TValue>).header
+  return inject(HeaderContextToken)
 }

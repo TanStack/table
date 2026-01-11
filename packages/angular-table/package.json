@@ -33,7 +33,7 @@
     }
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "files": [
     "dist",
@@ -58,8 +58,8 @@
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^2.2.1",
     "@analogjs/vitest-angular": "^2.2.1",
-    "@angular/core": "^21.0.6",
-    "@angular/platform-browser": "^21.0.6",
+    "@angular/core": "^21.0.0",
+    "@angular/platform-browser": "^21.0.0",
     "ng-packagr": "^21.0.1",
     "typescript": "5.9.3"
   },
