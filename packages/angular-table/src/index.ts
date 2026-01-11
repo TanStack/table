@@ -1,3 +1,6 @@
+import { FlexRenderCell } from './context/flex-render'
+import { FlexRenderDirective } from './flex-render'
+
 export * from '@tanstack/table-core'
 
 export * from './angularReactivityFeature'
@@ -13,3 +16,5 @@ export * from './context/header'
 export * from './context/table'
 export * from './context/createTableHook'
 export * from './context/flex-render'
+
+export const FlexRender = [FlexRenderDirective, FlexRenderCell] as const

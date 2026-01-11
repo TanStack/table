@@ -3,7 +3,7 @@ import {
   Directive,
   EffectRef,
   Injector,
-  Provider,
+  InputSignal,
   TemplateRef,
   Type,
   ViewContainerRef,
@@ -31,14 +31,12 @@ import {
 import { CellContextToken } from './context/cell'
 import { HeaderContextToken } from './context/header'
 import { TableContextToken } from './context/table'
-import type { InputSignal } from '@angular/core'
 import type { FlexRenderTypedContent } from './flex-render/view'
 import type {
   CellContext,
   CellData,
   HeaderContext,
   RowData,
-  Table,
   TableFeatures,
 } from '@tanstack/table-core'
 
@@ -68,7 +66,7 @@ export type FlexRenderInputContent<TProps extends NonNullable<unknown>> =
   selector: 'ng-template[flexRender]',
   standalone: true,
 })
-export class FlexRender<
+export class FlexRenderDirective<
   TFeatures extends TableFeatures,
   TRowData extends RowData,
   TValue extends CellData,
@@ -83,9 +81,7 @@ export class FlexRender<
 
   readonly inputContent: InputSignal<FlexRenderInputContent<TProps>> = input(
     undefined as FlexRenderInputContent<TProps>,
-    {
-      alias: 'flexRender',
-    },
+    { alias: 'flexRender' },
   )
   readonly content = linkedSignal(() => this.inputContent())
 
@@ -94,22 +90,14 @@ export class FlexRender<
   })
   readonly props = linkedSignal(() => this.inputProps())
 
-  readonly #injector = inject(Injector)
-  readonly inputInjector = input(this.#injector, {
+  readonly inputInjector = input(inject(Injector), {
     alias: 'flexRenderInjector',
   })
   readonly injector = linkedSignal(() => this.inputInjector())
 
-  readonly inputStaticProviders = input<Array<Provider>>([], {
-    alias: 'flexRenderStaticProviders',
-  })
-  readonly staticProviders = linkedSignal(() => this.inputStaticProviders())
+  readonly #viewContainerRef = inject(ViewContainerRef)
+  readonly #templateRef = inject(TemplateRef)
 
-  readonly viewContainerRef = inject(ViewContainerRef)
-
-  readonly templateRef = inject(TemplateRef)
-
-  table: Table<TFeatures, TRowData> | null = null
   renderFlags = FlexRenderFlags.ViewFirstRender
   renderView: FlexRenderView<any> | null = null
 
@@ -129,6 +117,18 @@ export class FlexRender<
   })
 
   constructor() {
+    const destroyRef = inject(DestroyRef)
+    destroyRef.onDestroy(() => {
+      if (this.#currentEffectRef) {
+        this.#currentEffectRef.destroy()
+        this.#currentEffectRef = null
+      }
+      if (this.renderView) {
+        this.renderView.unmount()
+        this.renderView = null
+      }
+    })
+
     let previousContent: FlexRenderInputContent<TProps>
     let previousProps: TProps
 
@@ -136,31 +136,23 @@ export class FlexRender<
       const props = this.props()
       const content = this.content()
 
-      untracked(() => {
-        if (this.renderFlags & FlexRenderFlags.ViewFirstRender) {
-        } else {
-          if (previousContent !== content) {
-            this.renderFlags |= FlexRenderFlags.ContentChanged
-          }
-          if (previousProps !== props) {
-            this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
-          }
+      if (!(this.renderFlags & FlexRenderFlags.ViewFirstRender)) {
+        if (previousContent !== content) {
+          this.renderFlags |= FlexRenderFlags.ContentChanged
         }
+        if (previousProps !== props) {
+          this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
+        }
+      }
 
-        this.update()
-      })
+      untracked(() => this.update())
+
+      if (FlexRenderFlags.ViewFirstRender & this.renderFlags) {
+        this.renderFlags &= ~FlexRenderFlags.ViewFirstRender
+      }
 
       previousContent = content
       previousProps = props
-    })
-
-    inject(DestroyRef).onDestroy(() => {
-      if (this.#currentEffectRef) {
-        this.#currentEffectRef.destroy()
-        this.#currentEffectRef = null
-        this.renderView?.unmount()
-        this.renderView = null
-      }
     })
   }
 
@@ -184,55 +176,47 @@ export class FlexRender<
       (FlexRenderFlags.ContentChanged | FlexRenderFlags.ViewFirstRender)
     ) {
       this.render()
-      if (FlexRenderFlags.ViewFirstRender & this.renderFlags) {
-        this.renderFlags &= ~FlexRenderFlags.ViewFirstRender
-      }
       return
     }
+
     if (this.renderFlags & FlexRenderFlags.PropsReferenceChanged) {
       if (this.renderView) this.renderView.updateProps(this.props())
       this.renderFlags &= ~FlexRenderFlags.PropsReferenceChanged
     }
-    if (
-      this.renderFlags &
-      (FlexRenderFlags.DirtyCheck | FlexRenderFlags.DirtySignal)
-    ) {
+
+    if (this.renderFlags & FlexRenderFlags.Dirty) {
       if (this.renderView) this.renderView.dirtyCheck()
-      this.renderFlags &= ~(
-        FlexRenderFlags.DirtyCheck | FlexRenderFlags.DirtySignal
-      )
+      this.renderFlags &= ~FlexRenderFlags.Dirty
     }
   }
 
   #currentEffectRef: EffectRef | null = null
 
   render() {
+    // When the view is recreated from scratch (content change or first render),
+    // we have to destroy the current effect listener since it will be recreated
+    // skipping the first call (FlexRenderFlags.RenderEffectChecked)
     if (this.#shouldRecreateEntireView() && this.#currentEffectRef) {
       this.#currentEffectRef.destroy()
       this.#currentEffectRef = null
       this.renderFlags &= ~FlexRenderFlags.RenderEffectChecked
     }
 
-    this.viewContainerRef.clear()
+    this.#viewContainerRef.clear()
     if (this.renderView) {
       this.renderView.unmount()
       this.renderView = null
     }
 
     this.renderFlags =
-      FlexRenderFlags.Pristine |
       (this.renderFlags & FlexRenderFlags.ViewFirstRender) |
       (this.renderFlags & FlexRenderFlags.RenderEffectChecked)
 
     const resolvedContent = this.#getContentValue()
-    if (resolvedContent.kind === 'null') {
-      this.renderView = null
-    } else {
-      this.renderView = this.#renderViewByContent(resolvedContent)
-    }
-
+    this.renderView = this.#renderViewByContent(resolvedContent)
     // If the content is a function `content(props)`, we initialize an effect
-    // in order to react to changes if the given definition use signals.
+    // to react to changes. If the current fn uses signals, we will set the DirtySignal flag
+    // to re-schedule the component updates
     if (!this.#currentEffectRef && typeof this.content === 'function') {
       this.#currentEffectRef = effect(
         () => {
@@ -241,10 +225,10 @@ export class FlexRender<
             this.renderFlags |= FlexRenderFlags.RenderEffectChecked
             return
           }
-          this.renderFlags |= FlexRenderFlags.DirtySignal
+          this.renderFlags |= FlexRenderFlags.Dirty
           this.doCheck()
         },
-        { injector: this.viewContainerRef.injector },
+        { injector: this.#viewContainerRef.injector },
       )
     }
   }
@@ -282,7 +266,7 @@ export class FlexRender<
         ? content
         : content?.(this.props())
     }
-    const ref = this.viewContainerRef.createEmbeddedView(this.templateRef, {
+    const ref = this.#viewContainerRef.createEmbeddedView(this.#templateRef, {
       get $implicit() {
         return context()
       },
@@ -294,7 +278,7 @@ export class FlexRender<
     template: Extract<FlexRenderTypedContent, { kind: 'templateRef' }>,
   ): FlexRenderTemplateView {
     const latestContext = () => this.props()
-    const view = this.viewContainerRef.createEmbeddedView(
+    const view = this.#viewContainerRef.createEmbeddedView(
       template.content,
       {
         get $implicit() {
@@ -341,26 +325,23 @@ export class FlexRender<
       get: (_, key) => getContext()[key as keyof typeof _],
     })
 
-    const staticProviders = [...this.staticProviders()]
-    const context = getContext()
-    if ('cell' in context) {
-      staticProviders.push({
-        provide: CellContextToken,
-        useValue: () => context.cell,
-      })
+    const staticProviders = []
+    if ('table' in proxy) {
       staticProviders.push({
         provide: TableContextToken,
-        useValue: () => context.table,
+        useValue: () => proxy.table,
       })
     }
-    if ('header' in context) {
+    if ('cell' in proxy) {
+      staticProviders.push({
+        provide: CellContextToken,
+        useValue: () => proxy.cell,
+      })
+    }
+    if ('header' in proxy) {
       staticProviders.push({
         provide: HeaderContextToken,
-        useValue: () => context.header,
-      })
-      staticProviders.push({
-        provide: TableContextToken,
-        useValue: () => context.table,
+        useValue: () => proxy.header,
       })
     }
 
@@ -373,9 +354,3 @@ export class FlexRender<
     })
   }
 }
-
-/**
- * @deprecated Use `FlexRender` import instead.
- * @alias FlexRender
- */
-export const FlexRenderDirective = FlexRender
