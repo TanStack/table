@@ -1,0 +1,42 @@
+<div class="p-2">
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            @if (!header.isPlaceholder) {
+              <th *flexRenderHeader="header; let header">
+                <div [innerHTML]="header"></div>
+              </th>
+            }
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          @for (cell of row.getAllCells(); track cell.id) {
+            <td *flexRenderCell="cell; let cell">
+              <div [innerHTML]="cell"></div>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
+        <tr>
+          @for (footer of footerGroup.headers; track footer.id) {
+            <th *flexRenderFooter="footer; let footer">
+              {{ footer }}
+            </th>
+          }
+        </tr>
+      }
+    </tfoot>
+  </table>
+
+  <div class="h-4"></div>
+  <button (click)="rerender()" class="border p-2">Rerender</button>
+</div>
