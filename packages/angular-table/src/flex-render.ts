@@ -5,6 +5,7 @@ import {
   EffectRef,
   Injector,
   OnChanges,
+  Provider,
   SimpleChanges,
   TemplateRef,
   Type,
@@ -13,6 +14,7 @@ import {
   effect,
   inject,
   input,
+  linkedSignal,
   runInInjectionContext,
 } from '@angular/core'
 import { FlexRenderComponentProps } from './flex-render/context'
@@ -28,10 +30,13 @@ import {
   FlexRenderView,
   mapToFlexRenderTypedContent,
 } from './flex-render/view'
+import type { InputSignal } from '@angular/core'
 import type { FlexRenderTypedContent } from './flex-render/view'
 import type {
   CellContext,
+  CellData,
   HeaderContext,
+  RowData,
   Table,
   TableFeatures,
 } from '@tanstack/table-core'
@@ -54,48 +59,60 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
 @Directive({
   selector: 'ng-template[flexRender]',
   standalone: true,
-  providers: [FlexRenderComponentFactory],
 })
 export class FlexRender<
+  TFeatures extends TableFeatures,
+  TRowData extends RowData,
+  TValue extends CellData,
   TProps extends
     | NonNullable<unknown>
-    | CellContext<TableFeatures, any>
-    | HeaderContext<TableFeatures, any>,
+    | CellContext<TFeatures, TRowData, TValue>
+    | HeaderContext<TFeatures, TRowData, TValue>,
 >
-  implements OnChanges, DoCheck
+  implements DoCheck, OnChanges
 {
-  readonly #flexRenderComponentFactory = inject(FlexRenderComponentFactory)
+  readonly #flexRenderComponentFactory = new FlexRenderComponentFactory(
+    inject(ViewContainerRef),
+  )
   readonly #changeDetectorRef = inject(ChangeDetectorRef)
 
-  readonly content = input<
+  readonly inputContent: InputSignal<
     | number
     | string
     | ((props: TProps) => FlexRenderContent<TProps>)
     | null
     | undefined
-    | any
-  >(undefined, {
+  > = input(undefined as any, {
     alias: 'flexRender',
   })
+  readonly content = linkedSignal(() => this.inputContent())
 
-  readonly props = input<TProps>({} as TProps, {
+  readonly inputProps = input<TProps>({} as TProps, {
     alias: 'flexRenderProps',
   })
+  readonly props = linkedSignal(() => this.inputProps())
 
-  readonly notifier = input<'doCheck' | 'tableChange'>('doCheck', {
+  readonly inputNotifier = input<'doCheck' | 'tableChange'>('doCheck', {
     alias: 'flexRenderNotifier',
   })
+  readonly notifier = linkedSignal(() => this.inputNotifier())
 
   readonly #injector = inject(Injector)
-  readonly injector = input(this.#injector, {
+  readonly inputInjector = input(this.#injector, {
     alias: 'flexRenderInjector',
   })
+  readonly injector = linkedSignal(() => this.inputInjector())
+
+  readonly inputStaticProviders = input<Array<Provider>>([], {
+    alias: 'flexRenderStaticProviders',
+  })
+  readonly staticProviders = linkedSignal(() => this.inputStaticProviders())
 
   readonly viewContainerRef = inject(ViewContainerRef)
 
   readonly templateRef = inject(TemplateRef)
 
-  table: Table<TableFeatures, any>
+  table: Table<TFeatures, TRowData> | null = null
   renderFlags = FlexRenderFlags.ViewFirstRender
   renderView: FlexRenderView<any> | null = null
 
@@ -114,14 +131,16 @@ export class FlexRender<
     return mapToFlexRenderTypedContent(latestContent)
   })
 
-  ngOnChanges(changes: SimpleChanges<FlexRender<TProps>>) {
-    if (changes.props) {
-      const props = changes.props.currentValue
+  ngOnChanges(
+    changes: SimpleChanges<FlexRender<TFeatures, TRowData, TValue, TProps>>,
+  ) {
+    if (changes.inputProps) {
+      const props = changes.inputProps.currentValue
       this.table = 'table' in props ? props.table : null
       this.renderFlags |= FlexRenderFlags.PropsReferenceChanged
       this.bindTableDirtyCheck()
     }
-    if (changes.content) {
+    if (changes.inputContent) {
       this.renderFlags |=
         FlexRenderFlags.ContentChanged | FlexRenderFlags.ViewFirstRender
       this.update()
@@ -163,9 +182,10 @@ export class FlexRender<
     this.#tableChangeEffect = null
     let firstCheck = !!(this.renderFlags & FlexRenderFlags.ViewFirstRender)
     if (this.table && this.notifier() === 'tableChange') {
+      const table = this.table
       this.#tableChangeEffect = effect(
         () => {
-          this.table.get()
+          table.get()
           if (firstCheck) {
             firstCheck = false
             return
@@ -307,16 +327,8 @@ export class FlexRender<
       { kind: 'flexRenderComponent' }
     >,
   ): FlexRenderComponentView {
-    const { inputs, outputs, injector } = flexRenderComponent.content
-
-    const getContext = () => this.props()
-    const proxy = new Proxy(this.props(), {
-      get: (_, key) => getContext()[key as keyof typeof _],
-    })
-    const componentInjector = Injector.create({
-      parent: injector ?? this.injector(),
-      providers: [{ provide: FlexRenderComponentProps, useValue: proxy }],
-    })
+    const { injector } = flexRenderComponent.content
+    const componentInjector = this.#getComponentInjector(injector)
     const view = this.#flexRenderComponentFactory.createComponent(
       flexRenderComponent.content,
       componentInjector,
@@ -327,14 +339,29 @@ export class FlexRender<
   #renderCustomComponent(
     component: Extract<FlexRenderTypedContent, { kind: 'component' }>,
   ): FlexRenderComponentView {
+    const instance = flexRenderComponent(component.content, {
+      inputs: this.props(),
+      injector: this.#getComponentInjector(this.injector()),
+    })
     const view = this.#flexRenderComponentFactory.createComponent(
-      flexRenderComponent(component.content, {
-        inputs: this.props(),
-        injector: this.injector(),
-      }),
+      instance,
       this.injector(),
     )
     return new FlexRenderComponentView(component, view)
+  }
+
+  #getComponentInjector(parentInjector?: Injector) {
+    const getContext = () => this.props()
+    const proxy = new Proxy(this.props(), {
+      get: (_, key) => getContext()[key as keyof typeof _],
+    })
+    return Injector.create({
+      parent: parentInjector ?? this.injector(),
+      providers: [
+        ...this.staticProviders(),
+        { provide: FlexRenderComponentProps, useValue: proxy },
+      ],
+    })
   }
 }
 

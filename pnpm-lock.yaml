@@ -3494,10 +3494,10 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1(@analogjs/vite-plugin-angular@2.2.1(@angular-devkit/build-angular@21.0.4(u5fs7psindzucntcdedavjbwtm))(@angular/build@21.0.4(kc35yzw5n5t7efydd2g6bmpsfy)))(@angular-devkit/architect@0.2100.4(chokidar@4.0.3))(vitest@4.0.16(@types/node@25.0.3)(jiti@2.6.1)(jsdom@27.4.0(postcss@8.5.6))(less@4.4.2)(lightningcss@1.30.2)(sass@1.93.2)(terser@5.44.0)(tsx@4.19.2)(yaml@2.6.1))
       '@angular/core':
-        specifier: ^21.0.6
+        specifier: ^21.0.0
         version: 21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0)
       '@angular/platform-browser':
-        specifier: ^21.0.6
+        specifier: ^21.0.0
         version: 21.0.6(@angular/animations@21.0.6(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.0.6(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.0.6(@angular/compiler@21.0.6)(rxjs@7.8.2)(zone.js@0.16.0))
       ng-packagr:
         specifier: ^21.0.1
