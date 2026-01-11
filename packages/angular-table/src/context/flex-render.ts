@@ -1,4 +1,4 @@
-import { Directive, effect, inject, input, untracked } from '@angular/core'
+import { Directive, effect, inject, input } from '@angular/core'
 import {
   Cell,
   CellData,
@@ -45,17 +45,6 @@ export class CellFlexRender<
       if (cell) {
         content.set(cell.column.columnDef.cell)
         props.set(cell.getContext())
-        // TODO: fix
-        untracked(() =>
-          this.#flexRender.ngOnChanges({
-            inputContent: {
-              currentValue: cell.column.columnDef.cell,
-            },
-            inputProps: {
-              currentValue: cell.getContext(),
-            },
-          } as any),
-        )
         staticProviders.set([
           { provide: TableContextToken, useValue: () => cell.table },
           { provide: CellContextToken, useValue: () => cell },

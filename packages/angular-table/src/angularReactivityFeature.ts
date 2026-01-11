@@ -30,7 +30,6 @@ export interface AngularReactivityFlags {
 }
 
 interface TableOptions_AngularReactivity {
-  enableExperimentalReactivity?: boolean
   reactivity?: Partial<AngularReactivityFlags>
 }
 
