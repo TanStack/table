@@ -57,7 +57,7 @@ export class ProgressCell {
 }
 
 @Component({
-  selector: 'table-progress-cell',
+  selector: 'table-row-actions',
   template: `
     <div class="row-actions">
       <button (click)="view()" title="View">👁️</button>
@@ -90,18 +90,11 @@ export class RowActionsCell {
 
 @Component({
   selector: 'table-price-cell',
-  template: ` <span class="price"> {{ price() | currency }} </span> `,
+  template: ` <span class="price"> {{ cell().getValue() | currency }} </span> `,
   imports: [CurrencyPipe],
 })
 export class PriceCell {
   readonly cell = injectTableCellContext<number>()
-
-  readonly price = computed(() =>
-    this.cell().getValue().toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }),
-  )
 }
 
 @Component({

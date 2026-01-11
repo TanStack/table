@@ -217,7 +217,10 @@ export class FlexRenderDirective<
     // If the content is a function `content(props)`, we initialize an effect
     // to react to changes. If the current fn uses signals, we will set the DirtySignal flag
     // to re-schedule the component updates
-    if (!this.#currentEffectRef && typeof this.content === 'function') {
+    if (
+      !this.#currentEffectRef &&
+      typeof untracked(this.content) === 'function'
+    ) {
       this.#currentEffectRef = effect(
         () => {
           this.#latestContent()

@@ -26,7 +26,7 @@ import { injectTableHeaderContext } from '../table'
 @Component({
   selector: 'span',
   host: {
-    'tantack-footer-column-id': '',
+    'tanstack-footer-column-id': '',
     class: 'footer-column-id',
   },
   template: `{{ header().column.id }}`,
@@ -38,7 +38,7 @@ export class FooterColumnId {
 @Component({
   selector: 'span',
   host: {
-    'tantack-footer-sum': '',
+    'tanstack-footer-sum': '',
     class: 'footer-sum',
   },
   template: `{{ sum() > 0 ? sum().toLocaleString() : '—' }}`,

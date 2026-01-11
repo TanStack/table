@@ -4,7 +4,7 @@ import type { Signal } from '@angular/core'
 
 export const TanStackTableToken = new InjectionToken<
   TanStackTableContext<any, any>['table']
->('[TanStack Table] HeaderContext')
+>('[TanStack Table] Table Context')
 
 export interface TanStackTableContext<
   TFeatures extends TableFeatures,
