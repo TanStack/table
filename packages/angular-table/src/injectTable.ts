@@ -40,11 +40,11 @@ export type AngularTable<
 export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 >(
   options: () => TableOptions<TFeatures, TData>,
-  selector: (state: TableState<TFeatures>) => TSelected = () =>
-    ({}) as TSelected,
+  selector: (state: TableState<TFeatures>) => TSelected = (state) =>
+    state as TSelected,
 ): AngularTable<TFeatures, TData, TSelected> {
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
