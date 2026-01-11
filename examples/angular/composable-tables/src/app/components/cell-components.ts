@@ -1,12 +1,3 @@
-// /**
-//  * Cell-level components that use useCellContext
-//  *
-//  * These components can be used via the pre-bound cellComponents
-//  * in AppCell children, e.g., <cell.TextCell />
-//  */
-// import { useCellContext } from '../hooks/table'
-//
-
 import { Component, computed } from '@angular/core'
 import { injectFlexRenderContext } from '@tanstack/angular-table'
 import { CurrencyPipe } from '@angular/common'

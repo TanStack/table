@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
-  CellFlexRender,
   FlexRender,
   TanStackTable,
   TanStackTableCell,
@@ -10,11 +9,10 @@ import {
 import { NgComponentOutlet } from '@angular/common'
 import { createAppColumnHelper, injectAppTable } from './table'
 import { makeData } from './makeData'
-import type { Person, Product } from './makeData'
+import type { Person } from './makeData'
 
 // Create column helpers with TFeatures already bound - only need TData!
 const personColumnHelper = createAppColumnHelper<Person>()
-const productColumnHelper = createAppColumnHelper<Product>()
 
 @Component({
   selector: 'app-root',
@@ -24,7 +22,6 @@ const productColumnHelper = createAppColumnHelper<Product>()
     TanStackTableCell,
     NgComponentOutlet,
     TanStackTable,
-    CellFlexRender,
   ],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,17 +53,17 @@ export class AppComponent {
     personColumnHelper.accessor('status', {
       header: 'Status',
       footer: ({ header }) => flexRenderComponent(header.FooterColumnId),
-      cell: ({ cell }) => cell.StatusCell,
+      cell: ({ cell }) => flexRenderComponent(cell.StatusCell),
     }),
     personColumnHelper.accessor('progress', {
       header: 'Progress',
       footer: ({ header }) => flexRenderComponent(header.FooterSum),
-      cell: ({ cell }) => cell.ProgressCell,
+      cell: ({ cell }) => flexRenderComponent(cell.ProgressCell),
     }),
     personColumnHelper.display({
       id: 'actions',
       header: 'Actions',
-      cell: ({ cell }) => cell.RowActionsCell,
+      cell: ({ cell }) => flexRenderComponent(cell.RowActionsCell),
     }),
   ])
 
@@ -80,8 +77,4 @@ export class AppComponent {
   onRefresh = () => {
     this.data.set([...makeData(5000)])
   }
-
-  constructor() {}
-
-  rerender() {}
 }

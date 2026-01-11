@@ -5,16 +5,8 @@
         <tr>
           @for (header of headerGroup.headers; track header.id) {
             @if (!header.isPlaceholder) {
-              <th>
-                <ng-container
-                  *flexRender="
-                    header.column.columnDef.header;
-                    props: header.getContext();
-                    let header
-                  "
-                >
-                  <div [innerHTML]="header"></div>
-                </ng-container>
+              <th *flexRenderHeader="header; let header">
+                <div [innerHTML]="header"></div>
               </th>
             }
           }
@@ -25,16 +17,8 @@
       @for (row of table.getRowModel().rows; track row.id) {
         <tr>
           @for (cell of row.getAllCells(); track cell.id) {
-            <td>
-              <ng-container
-                *flexRender="
-                  cell.column.columnDef.cell;
-                  props: cell.getContext();
-                  let cell
-                "
-              >
-                <div [innerHTML]="cell"></div>
-              </ng-container>
+            <td *flexRenderCell="cell; let cell">
+              <div [innerHTML]="cell"></div>
             </td>
           }
         </tr>
@@ -44,16 +28,8 @@
       @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
         <tr>
           @for (footer of footerGroup.headers; track footer.id) {
-            <th>
-              <ng-container
-                *flexRender="
-                  footer.column.columnDef.footer;
-                  props: footer.getContext();
-                  let footer
-                "
-              >
-                {{ footer }}
-              </ng-container>
+            <th *flexRenderFooter="footer; let footer">
+              {{ footer }}
             </th>
           }
         </tr>
