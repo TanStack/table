@@ -17,12 +17,14 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/angular-table'
+
 // Import table-level components
 import {
   PaginationControls,
   RowCount,
   TableToolbar,
 } from './components/table-components'
+// Import cell-level components
 import {
   CategoryCell,
   NumberCell,
@@ -32,6 +34,7 @@ import {
   StatusCell,
   TextCell,
 } from './components/cell-components'
+// Import header-level components (both use injectTableHeaderContext())
 import {
   ColumnFilter,
   FooterColumnId,
@@ -39,25 +42,16 @@ import {
   SortIndicator,
 } from './components/header-components'
 
-// Import table-level components
-// import {
-//   PaginationControls,
-//   RowCount,
-//   TableToolbar,
-// } from '../components/table-components'
-
-// Import cell-level components
-
-// Import header/footer-level components (both use useHeaderContext)
-
 /**
  * Create the custom table hook with all pre-bound components.
  * This exports:
  * - createAppColumnHelper: Create column definitions with TFeatures already bound
- * - useAppTable: Hook for creating tables with TFeatures baked in
- * - useTableContext: Access table instance in tableComponents
- * - useCellContext: Access cell instance in cellComponents
- * - useHeaderContext: Access header instance in headerComponents
+ * - injectAppTable: Function for creating tables with TFeatures baked in
+ * - injectTableContext: Access table instance in tableComponents
+ * - injectTableCellContext: Access cell instance in cellComponents
+ * - injectTableHeaderContext: Access header instance in headerComponents
+ * - injectFlexRenderHeaderContext: Access FlexRenderContext with header-level typings
+ * - injectFlexRenderCellContext: Access FlexRenderContext with header-level typings
  */
 export const {
   createAppColumnHelper,
@@ -65,10 +59,8 @@ export const {
   injectTableContext,
   injectTableCellContext,
   injectTableHeaderContext,
-  // useAppTable,
-  // useTableContext,
-  // useCellContext,
-  // useHeaderContext,
+  // injectFlexRenderHeaderContext
+  // injectFlexRenderCellContext
 } = createTableHook({
   // Features are set once here and shared across all tables
   _features: tableFeatures({

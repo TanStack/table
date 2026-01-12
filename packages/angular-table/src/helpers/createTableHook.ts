@@ -302,6 +302,53 @@ export type CreateTableContextOptions<
   headerComponents?: THeaderComponents
 }
 
+export type CreateTableHookResult<
+  TFeatures extends TableFeatures,
+  TTableComponents extends Record<string, RenderableComponent>,
+  TCellComponents extends Record<string, RenderableComponent>,
+  THeaderComponents extends Record<string, RenderableComponent>,
+> = {
+  createAppColumnHelper: <TData extends RowData>() => AppColumnHelper<
+    TFeatures,
+    TData,
+    TCellComponents,
+    THeaderComponents
+  >
+  injectTableContext: <TData extends RowData = RowData>() => Signal<
+    AngularTable<TFeatures, TData>
+  >
+  injectTableHeaderContext: <
+    TValue extends CellData = CellData,
+    TRowData extends RowData = RowData,
+  >() => Signal<Header<TFeatures, TRowData, TValue>>
+  injectTableCellContext: <
+    TValue extends CellData = CellData,
+    TRowData extends RowData = RowData,
+  >() => Signal<Cell<TFeatures, TRowData, TValue>>
+  injectFlexRenderHeaderContext: <
+    TData extends RowData,
+    TValue extends CellData,
+  >() => HeaderContext<TFeatures, TData, TValue>
+  injectFlexRenderCellContext: <
+    TData extends RowData,
+    TValue extends CellData,
+  >() => CellContext<TFeatures, TData, TValue>
+  injectAppTable: <TData extends RowData, TSelected = {}>(
+    tableOptions: () => Omit<
+      TableOptions<TFeatures, TData>,
+      '_features' | '_rowModels'
+    >,
+    selector?: (state: TableState<TFeatures>) => TSelected,
+  ) => AppAngularTable<
+    TFeatures,
+    TData,
+    TSelected,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+}
+
 export function createTableHook<
   TFeatures extends TableFeatures,
   const TTableComponents extends Record<string, RenderableComponent>,
@@ -317,32 +364,43 @@ export function createTableHook<
   TTableComponents,
   TCellComponents,
   THeaderComponents
->) {
+>): CreateTableHookResult<
+  TFeatures,
+  TTableComponents,
+  TCellComponents,
+  THeaderComponents
+> {
   function injectTableContext<TData extends RowData = RowData>(): Signal<
     AngularTable<TFeatures, TData>
   > {
     return _injectTableContext<TFeatures, TData>()
   }
 
-  function injectTableHeaderContext<TValue extends CellData = CellData>() {
-    return _injectTableHeaderContext<TFeatures, any, TValue>()
+  function injectTableHeaderContext<
+    TValue extends CellData = CellData,
+    TRowData extends RowData = RowData,
+  >(): Signal<Header<TFeatures, TRowData, TValue>> {
+    return _injectTableHeaderContext<TFeatures, TRowData, TValue>()
   }
 
-  function injectTableCellContext<TValue extends CellData = CellData>() {
-    return _injectTableCellContext<TFeatures, any, TValue>()
+  function injectTableCellContext<
+    TValue extends CellData = CellData,
+    TRowData extends RowData = RowData,
+  >(): Signal<Cell<TFeatures, TRowData, TValue>> {
+    return _injectTableCellContext<TFeatures, TRowData, TValue>()
   }
 
   function injectFlexRenderHeaderContext<
     TData extends RowData,
     TValue extends CellData,
-  >() {
+  >(): HeaderContext<TFeatures, TData, TValue> {
     return injectFlexRenderContext<HeaderContext<TFeatures, TData, TValue>>()
   }
 
   function injectFlexRenderCellContext<
     TData extends RowData,
     TValue extends CellData,
-  >() {
+  >(): CellContext<TFeatures, TData, TValue> {
     return injectFlexRenderContext<CellContext<TFeatures, TData, TValue>>()
   }
 
@@ -364,12 +422,12 @@ export function createTableHook<
       return cell as Cell<TFeatures, TData, any> & TCellComponents
     }
 
-    function appHeader(header: Cell<TFeatures, TData, any>) {
-      return header as Cell<TFeatures, TData, any> & TCellComponents
+    function appHeader(header: Header<TFeatures, TData, any>) {
+      return header as Header<TFeatures, TData, any> & THeaderComponents
     }
 
-    function appFooter(footer: Cell<TFeatures, TData, any>) {
-      return footer as Cell<TFeatures, TData, any> & TCellComponents
+    function appFooter(footer: Header<TFeatures, TData, any>) {
+      return footer as Header<TFeatures, TData, any> & THeaderComponents
     }
 
     const appTableFeatures: TableFeature<{}> = {
