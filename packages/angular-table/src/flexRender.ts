@@ -267,7 +267,7 @@ export class FlexRenderDirective<
       const content = this.content()
       return typeof content === 'string' || typeof content === 'number'
         ? content
-        : content?.(this.props())
+        : runInInjectionContext(this.injector(), () => content?.(this.props()))
     }
     const ref = this.#viewContainerRef.createEmbeddedView(this.#templateRef, {
       get $implicit() {
@@ -313,11 +313,11 @@ export class FlexRenderDirective<
   ): FlexRenderComponentView {
     const instance = flexRenderComponent(component.content, {
       inputs: this.props(),
-      injector: this.#getInjector(this.injector()),
     })
+    const injector = this.#getInjector(instance.injector)
     const view = this.#flexRenderComponentFactory.createComponent(
       instance,
-      this.injector(),
+      injector,
     )
     return new FlexRenderComponentView(component, view)
   }
