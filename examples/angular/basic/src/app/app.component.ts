@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
 import type { ColumnDef } from '@tanstack/angular-table'
 
-// This example uses the classic standalone `useTable` hook to create a table without the new `createTableHelper` util.
+// This example uses the classic standalone `injectTable` hook to create a table without the new `createTableHelper` util.
 
 // 1. Define what the shape of your data will be for each row
 type Person = {
