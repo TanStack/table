@@ -3,6 +3,7 @@ import { injectFlexRenderContext } from '@tanstack/angular-table'
 import { CurrencyPipe } from '@angular/common'
 import { injectTableCellContext } from '../table'
 import type { CellContext, TableFeatures } from '@tanstack/angular-table'
+import type { Person } from '../makeData'
 
 @Component({
   selector: 'span',
@@ -67,7 +68,7 @@ export class ProgressCell {
   `,
 })
 export class RowActionsCell {
-  readonly cell = injectTableCellContext<number>()
+  readonly cell = injectTableCellContext<number, Person>()
 
   view() {
     alert(
