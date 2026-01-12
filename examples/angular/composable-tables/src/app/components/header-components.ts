@@ -10,18 +10,44 @@
 // }
 
 import { Component, computed } from '@angular/core'
+import { flexRenderComponent } from '@tanstack/angular-table'
+import { FormsModule } from '@angular/forms'
 import { injectTableHeaderContext } from '../table'
+import type { FlexRenderComponent } from '@tanstack/angular-table'
 
-// @Component({
-//   selector: 'app-sort-indicator',
-//   host: {
-//     class: 'sort-indicator',
-//   },
-//   template: ` {{ sorted === 'asc' ? '🔼' : '🔽' }} `,
-// })
-// export class SortIndicator {
-//   readonly context = injectTableHeaderContext()
-// }
+export function SortIndicator(): string | null {
+  const header = injectTableHeaderContext()
+  const sorted = header().column.getIsSorted()
+  if (!sorted) {
+    return null
+  }
+  return `<span class="sort-indicator">${sorted === 'asc' ? '🔼' : '🔽'}</span>`
+}
+
+export function ColumnFilter(): FlexRenderComponent | null {
+  const header = injectTableHeaderContext()
+  if (!header().column.getCanFilter()) return null
+  return flexRenderComponent(_ColumnFilter)
+}
+
+@Component({
+  template: `
+    <div class="column-filter" (click)="$event.stopPropagation()">
+      <input
+        type="text"
+        [ngModel]="filterValue()"
+        (ngModelChange)="header().column.setFilterValue($event)"
+        [placeholder]="placeholder()"
+      />
+    </div>
+  `,
+  imports: [FormsModule],
+})
+export class _ColumnFilter {
+  readonly header = injectTableHeaderContext()
+  readonly filterValue = computed(() => this.header().column.getFilterValue())
+  readonly placeholder = computed(() => `Filter ${this.header().column.id}...`)
+}
 
 @Component({
   selector: 'span',

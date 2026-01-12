@@ -1,0 +1,83 @@
+<div class="table-container" [tanStackTable]="table">
+  <ng-container
+    *ngComponentOutlet="
+          table.TableToolbar;
+          inputs: { title: 'Users Table', onRefresh }
+        "
+  />
+
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (_header of headerGroup.headers; track _header.id) {
+            @let header = table.appHeader(_header);
+            @if (!header.isPlaceholder) {
+              <th
+                [tanStackTableHeader]="header"
+                (click)="header.column.toggleSorting()"
+              >
+                <ng-container *flexRenderHeader="header; let header">
+                  {{ header }}
+                </ng-container>
+
+                <ng-container
+                  *flexRender="
+                        header.SortIndicator;
+                        props: header.getContext();
+                        let value
+                      "
+                >
+                  <div [innerHTML]="value"></div>
+                </ng-container>
+
+                <ng-container
+                  *flexRender="
+                        header.ColumnFilter;
+                        props: header.getContext();
+                        let value
+                      "
+                >
+                  <div [innerHTML]="value"></div>
+                </ng-container>
+              </th>
+            }
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          @for (cell of row.getAllCells(); track cell.id) {
+            <td [tanStackTableCell]="cell">
+              <ng-container *flexRenderCell="cell; let cell">
+                {{ cell }}
+              </ng-container>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+
+    <tfoot>
+      @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
+        <tr>
+          @for (footer of footerGroup.headers; track footer.id) {
+            <th [colSpan]="footer.colSpan" [tanStackTableHeader]="footer">
+              @if (!footer.isPlaceholder) {
+                <ng-container *flexRenderFooter="footer; let footer">
+                  {{ footer }}
+                </ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </tfoot>
+  </table>
+
+  <ng-container *ngComponentOutlet="table.PaginationControls"/>
+
+  <ng-container *ngComponentOutlet="table.RowCount"/>
+</div>

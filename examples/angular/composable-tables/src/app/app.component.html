@@ -1,59 +1,13 @@
-<div class="p-2">
-  <div class="table-container" [tanStackTable]="table">
-    <ng-container
-      *ngComponentOutlet="
-        table.TableToolbar;
-        inputs: { title: 'Users Table', onRefresh }
-      "
-    />
+<h1>Composable Tables Example</h1>
+<p class="description">
+  Both tables below use the same <code>useAppTable</code> hook and
+  shareable components, but with different data types and column
+  configurations.
+</p>
 
-    <table>
-      <thead>
-        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-          <tr>
-            @for (header of headerGroup.headers; track header.id) {
-              @if (!header.isPlaceholder) {
-                <th [tanStackTableHeader]="header">
-                  <ng-container *flexRenderHeader="header; let header">
-                    {{ header }}
-                  </ng-container>
-                </th>
-              }
-            }
-          </tr>
-        }
-      </thead>
-      <tbody>
-        @for (row of table.getRowModel().rows; track row.id) {
-          <tr>
-            @for (cell of row.getAllCells(); track cell.id) {
-              <td [tanStackTableCell]="cell">
-                <ng-container *flexRenderCell="cell; let cell">
-                  {{ cell }}
-                </ng-container>
-              </td>
-            }
-          </tr>
-        }
-      </tbody>
+<users-table/>
 
-      <tfoot>
-        @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
-          <tr>
-            @for (footer of footerGroup.headers; track footer.id) {
-              <th [colSpan]="footer.colSpan" [tanStackTableHeader]="footer">
-                @if (!footer.isPlaceholder) {
-                  <ng-container *flexRenderFooter="footer; let footer">
-                    {{ footer }}
-                  </ng-container>
-                }
-              </th>
-            }
-          </tr>
-        }
-      </tfoot>
-    </table>
-  </div>
+<div class="table-divider"></div>
 
-  <div class="h-4"></div>
-</div>
+<products-table/>
+

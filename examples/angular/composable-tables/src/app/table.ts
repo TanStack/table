@@ -10,6 +10,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  createTableHook,
   filterFns,
   rowPaginationFeature,
   rowSortingFeature,
@@ -17,8 +18,11 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 // Import table-level components
-import { createTableHook } from '@tanstack/angular-table'
-import { TableToolbar } from './components/table-components'
+import {
+  PaginationControls,
+  RowCount,
+  TableToolbar,
+} from './components/table-components'
 import {
   CategoryCell,
   NumberCell,
@@ -28,7 +32,12 @@ import {
   StatusCell,
   TextCell,
 } from './components/cell-components'
-import { FooterColumnId, FooterSum } from './components/header-components'
+import {
+  ColumnFilter,
+  FooterColumnId,
+  FooterSum,
+  SortIndicator,
+} from './components/header-components'
 
 // Import table-level components
 // import {
@@ -80,8 +89,8 @@ export const {
 
   // Register table-level components (accessible via table.ComponentName)
   tableComponents: {
-    // PaginationControls,
-    // RowCount,
+    PaginationControls,
+    RowCount,
     TableToolbar,
   },
 
@@ -98,8 +107,8 @@ export const {
 
   // Register header/footer-level components (accessible via header.ComponentName in AppHeader/AppFooter)
   headerComponents: {
-    // SortIndicator,
-    // ColumnFilter,
+    SortIndicator,
+    ColumnFilter,
     FooterColumnId,
     FooterSum,
   },
