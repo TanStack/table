@@ -30,7 +30,7 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { Type } from '@angular/core'
+import type { Signal, Type } from '@angular/core'
 
 type RenderableComponent =
   | Type<any>
@@ -247,7 +247,20 @@ export type AppAngularTable<
   TTableComponents extends Record<string, RenderableComponent>,
   TCellComponents extends Record<string, RenderableComponent>,
   THeaderComponents extends Record<string, RenderableComponent>,
-> = AngularTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents>
+> = AngularTable<TFeatures, TData, TSelected> &
+  NoInfer<TTableComponents> & {
+    appCell: <TValue>(
+      cell: Cell<TFeatures, TData, TValue>,
+    ) => Cell<TFeatures, TData, TValue> & NoInfer<TCellComponents>
+
+    appHeader: <TValue>(
+      header: Header<TFeatures, TData, TValue>,
+    ) => Header<TFeatures, TData, TValue> & NoInfer<THeaderComponents>
+
+    appFooter: <TValue>(
+      footer: Header<TFeatures, TData, TValue>,
+    ) => Header<TFeatures, TData, TValue> & NoInfer<THeaderComponents>
+  }
 
 // =============================================================================
 // CreateTableHook Options and Props
@@ -305,7 +318,9 @@ export function createTableHook<
   TCellComponents,
   THeaderComponents
 >) {
-  function injectTableContext<TData extends RowData = RowData>() {
+  function injectTableContext<TData extends RowData = RowData>(): Signal<
+    AngularTable<TFeatures, TData>
+  > {
     return _injectTableContext<TFeatures, TData>()
   }
 
@@ -345,9 +360,21 @@ export function createTableHook<
     TCellComponents,
     THeaderComponents
   > {
+    function appCell(cell: Cell<TFeatures, TData, any>) {
+      return cell as Cell<TFeatures, TData, any> & TCellComponents
+    }
+
+    function appHeader(header: Cell<TFeatures, TData, any>) {
+      return header as Cell<TFeatures, TData, any> & TCellComponents
+    }
+
+    function appFooter(footer: Cell<TFeatures, TData, any>) {
+      return footer as Cell<TFeatures, TData, any> & TCellComponents
+    }
+
     const appTableFeatures: TableFeature<{}> = {
       constructTableAPIs: (table) => {
-        Object.assign(table, tableComponents)
+        Object.assign(table, tableComponents, { appCell, appHeader, appFooter })
       },
       assignCellPrototype(prototype) {
         Object.assign(prototype, cellComponents)

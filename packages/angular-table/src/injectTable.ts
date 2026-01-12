@@ -22,7 +22,7 @@ import type { Signal, ValueEqualityFn } from '@angular/core'
 export type AngularTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
   /**
    * The selected state from the table store, based on the selector provided.
