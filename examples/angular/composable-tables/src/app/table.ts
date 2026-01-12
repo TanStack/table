@@ -51,7 +51,7 @@ import {
  * - injectTableCellContext: Access cell instance in cellComponents
  * - injectTableHeaderContext: Access header instance in headerComponents
  * - injectFlexRenderHeaderContext: Access FlexRenderContext with header-level typings
- * - injectFlexRenderCellContext: Access FlexRenderContext with header-level typings
+ * - injectFlexRenderCellContext: Access FlexRenderContext with cell-level typings
  */
 export const {
   createAppColumnHelper,
