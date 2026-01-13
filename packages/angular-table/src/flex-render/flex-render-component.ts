@@ -81,7 +81,7 @@ export function flexRenderComponent<
   ...options: OptionalKeys<TInputs> extends never
     ? [FlexRenderOptions<TInputs, TOutputs>?]
     : [FlexRenderRequiredOptions<TInputs, TOutputs>]
-) {
+): FlexRenderComponent<TComponent> {
   const { inputs, injector, outputs } = options[0] ?? {}
   return new FlexRenderComponent(component, inputs, injector, outputs)
 }

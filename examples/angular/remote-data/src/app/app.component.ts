@@ -1,20 +1,23 @@
-import { HttpParams } from '@angular/common/http'
+import { HttpClient, HttpParams } from '@angular/common/http'
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   linkedSignal,
-  resource,
   signal,
 } from '@angular/core'
 import { ReactiveFormsModule } from '@angular/forms'
 import {
-  FlexRenderDirective,
-  createTableHelper,
+  FlexRender,
+  createColumnHelper,
   globalFilteringFeature,
+  injectTable,
   rowPaginationFeature,
   rowSortingFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { map } from 'rxjs'
+import { rxResource } from '@angular/core/rxjs-interop'
 import type {
   ColumnDef,
   PaginationState,
@@ -35,22 +38,18 @@ const _features = tableFeatures({
   rowSortingFeature,
 })
 
-const tableHelper = createTableHelper({
-  _features,
-  TData: {} as Todo,
-})
-
-const columnHelper = tableHelper.createColumnHelper<Todo>()
+const columnHelper = createColumnHelper<typeof _features, Todo>()
 
 type TodoResponse = { items: Array<Todo>; totalCount: number }
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRenderDirective, ReactiveFormsModule],
+  imports: [FlexRender, ReactiveFormsModule],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+  readonly client = inject(HttpClient)
   readonly pagination = signal<PaginationState>({
     pageSize: 10,
     pageIndex: 0,
@@ -58,13 +57,13 @@ export class AppComponent {
 
   readonly sorting = signal<SortingState>([{ id: 'id', desc: false }])
   readonly globalFilter = signal<string | null>(null)
-  readonly data = resource({
+  readonly data = rxResource({
     params: () => ({
       page: this.pagination(),
       globalFilter: this.globalFilter(),
       sorting: this.sorting(),
     }),
-    loader: ({ params: { page, globalFilter, sorting }, abortSignal }) => {
+    stream: ({ params: { page, globalFilter, sorting } }) => {
       let httpParams = new HttpParams({
         fromObject: {
           _page: page.pageIndex + 1,
@@ -86,15 +85,18 @@ export class AppComponent {
           .set('_order', orders.join(','))
       }
 
-      return fetch(
-        `https://jsonplaceholder.typicode.com/todos?${httpParams.toString()}`,
-      ).then(async (res) => {
-        const items: Array<Todo> = await res.json()
-        return {
-          items,
-          totalCount: Number(res.headers.get('X-Total-Count')),
-        } satisfies TodoResponse
-      }) as Promise<TodoResponse>
+      return this.client
+        .get<
+          Array<Todo>
+        >(`https://jsonplaceholder.typicode.com/todos`, { params: httpParams, observe: 'response' })
+        .pipe(
+          map((response) => {
+            return {
+              items: response.body ?? [],
+              totalCount: Number(response.headers.get('X-Total-Count')),
+            } satisfies TodoResponse
+          }),
+        )
     },
   })
 
@@ -131,9 +133,10 @@ export class AppComponent {
     },
   })
 
-  readonly table = tableHelper.injectTable(() => {
+  readonly table = injectTable(() => {
     const data = this.dataWithLatest()
     return {
+      _features,
       data: data.items,
       columns: this.columns,
       state: {
