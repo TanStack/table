@@ -2,7 +2,7 @@ import { TemplateRef, Type } from '@angular/core'
 import { FlexRenderComponent } from './flex-render-component'
 import type { EmbeddedViewRef } from '@angular/core'
 import type { FlexRenderComponentRef } from './flex-render-component-ref'
-import type { FlexRenderContent } from '../flex-render'
+import type { FlexRenderContent } from '../flexRender'
 
 export type FlexRenderTypedContent =
   | { kind: 'null' }
@@ -67,6 +67,8 @@ export abstract class FlexRenderView<
   abstract dirtyCheck(): void
 
   abstract onDestroy(callback: Function): void
+
+  abstract unmount(): void
 }
 
 export class FlexRenderTemplateView extends FlexRenderView<
@@ -93,6 +95,10 @@ export class FlexRenderTemplateView extends FlexRenderView<
     //
     // If in a future we need to manually mark the view as dirty, just uncomment next line
     // this.view.markForCheck()
+  }
+
+  override unmount() {
+    this.view.destroy()
   }
 
   override onDestroy(callback: Function) {
@@ -146,6 +152,10 @@ export class FlexRenderComponentView extends FlexRenderView<
         break
       }
     }
+  }
+
+  override unmount() {
+    this.view.componentRef.destroy()
   }
 
   override onDestroy(callback: Function) {

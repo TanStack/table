@@ -96,7 +96,6 @@ export class AppComponent {
       columnOrder: this.columnOrder(),
       columnVisibility: this.columnVisibility(),
     },
-    enableExperimentalReactivity: true,
     onColumnVisibilityChange: (updaterOrValue) => {
       typeof updaterOrValue === 'function'
         ? this.columnVisibility.update(updaterOrValue)
@@ -113,7 +112,7 @@ export class AppComponent {
   }))
 
   readonly stringifiedColumnOrdering = computed(() => {
-    return JSON.stringify(this.table.store.state.columnOrder)
+    return JSON.stringify(this.table.state().columnOrder)
   })
 
   randomizeColumns() {

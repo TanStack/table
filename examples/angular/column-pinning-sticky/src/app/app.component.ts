@@ -104,7 +104,6 @@ export class AppComponent {
     _features,
     columns: this.columns(),
     data: this.data(),
-    enableExperimentalReactivity: true,
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,
@@ -112,7 +111,7 @@ export class AppComponent {
   }))
 
   stringifiedColumnPinning = computed(() => {
-    return JSON.stringify(this.table.store.state.columnPinning)
+    return JSON.stringify(this.table.state().columnPinning)
   })
 
   readonly getCommonPinningStyles = (

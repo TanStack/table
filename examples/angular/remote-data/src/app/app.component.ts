@@ -2,7 +2,6 @@ import { HttpParams } from '@angular/common/http'
 import {
   ChangeDetectionStrategy,
   Component,
-  ResourceStatus,
   linkedSignal,
   resource,
   signal,
@@ -60,12 +59,12 @@ export class AppComponent {
   readonly sorting = signal<SortingState>([{ id: 'id', desc: false }])
   readonly globalFilter = signal<string | null>(null)
   readonly data = resource({
-    request: () => ({
+    params: () => ({
       page: this.pagination(),
       globalFilter: this.globalFilter(),
       sorting: this.sorting(),
     }),
-    loader: ({ request: { page, globalFilter, sorting }, abortSignal }) => {
+    loader: ({ params: { page, globalFilter, sorting }, abortSignal }) => {
       let httpParams = new HttpParams({
         fromObject: {
           _page: page.pageIndex + 1,
@@ -127,8 +126,7 @@ export class AppComponent {
       status: this.data.status(),
     }),
     computation: (source, previous) => {
-      if (previous && source.status === ResourceStatus.Loading)
-        return previous.value
+      if (previous && source.status === 'loading') return previous.value
       return source.value ?? { items: [], totalCount: 0 }
     },
   })

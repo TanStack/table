@@ -115,7 +115,6 @@ export class AppComponent {
     },
     columns: this.columns,
     data: this.data(),
-    enableExperimentalReactivity: true,
     state: {
       rowSelection: this.rowSelection(),
     },

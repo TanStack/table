@@ -58,6 +58,23 @@ export function flattenBy<TNode>(
   return flat
 }
 
+export const $internalMemoFnMeta = Symbol('memoFnMeta')
+export type MemoFnMeta = { originalArgsLength?: number }
+
+/**
+ * @internal
+ */
+function setMemoFnMeta(fn: Function, meta: MemoFnMeta) {
+  Object.defineProperty(fn, $internalMemoFnMeta, { value: meta })
+}
+
+/**
+ * @internal
+ */
+export function getMemoFnMeta(fn: any): MemoFnMeta | null {
+  return (typeof fn === 'function' && fn[$internalMemoFnMeta]) ?? null
+}
+
 interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
   fn: (...args: NoInfer<TDeps>) => TResult
   memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
@@ -80,7 +97,7 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   let deps: Array<any> | undefined = []
   let result: TResult | undefined
 
-  return (depArgs): TResult => {
+  const memoizedFn = (depArgs?: TDepArgs): TResult => {
     onBeforeCompare?.()
     const newDeps = memoDeps?.(depArgs)
     const depsChanged =
@@ -101,6 +118,10 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
 
     return result
   }
+
+  setMemoFnMeta(memoizedFn, { originalArgsLength: fn.length })
+
+  return memoizedFn
 }
 
 interface TableMemoOptions<
@@ -355,9 +376,8 @@ export function assignPrototypeAPIs<
         return fn(this, ...args)
       }
     }
-    Object.defineProperties(prototype[fnKey], {
-      originalArgsLength: { value: fn.length },
-    })
+
+    setMemoFnMeta(prototype[fnKey], { originalArgsLength: fn.length })
   }
 }
 

@@ -5,41 +5,10 @@ import {
   computed,
   signal,
 } from '@angular/core'
-import {
-  FlexRenderDirective,
-  aggregationFns,
-  columnFilteringFeature,
-  columnGroupingFeature,
-  createExpandedRowModel,
-  createFilteredRowModel,
-  createGroupedRowModel,
-  createPaginatedRowModel,
-  createTableHelper,
-  filterFns,
-  isFunction,
-  rowExpandingFeature,
-  rowPaginationFeature,
-} from '@tanstack/angular-table'
-import { columns } from './columns'
+import { FlexRenderDirective, isFunction } from '@tanstack/angular-table'
+import { columns, tableHelper } from './columns'
 import { makeData } from './makeData'
-import type { Person } from './makeData'
 import type { GroupingState, Updater } from '@tanstack/angular-table'
-
-export const tableHelper = createTableHelper({
-  _features: {
-    columnGroupingFeature,
-    rowPaginationFeature,
-    columnFilteringFeature,
-    rowExpandingFeature,
-  },
-  _rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-    paginatedRowModel: createPaginatedRowModel(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
-  TData: {} as Person,
-})
 
 @Component({
   selector: 'app-root',
@@ -58,7 +27,6 @@ export class AppComponent {
   )
 
   readonly table = tableHelper.injectTable(() => ({
-    enableExperimentalReactivity: true,
     data: this.data(),
     columns: columns,
     initialState: {

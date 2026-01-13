@@ -8,13 +8,16 @@ import {
   OutputEmitterRef,
   OutputRefSubscription,
   ViewContainerRef,
-  inject,
 } from '@angular/core'
 import { FlexRenderComponent } from './flex-render-component'
 
 @Injectable()
 export class FlexRenderComponentFactory {
-  #viewContainerRef = inject(ViewContainerRef)
+  readonly #viewContainerRef: ViewContainerRef
+
+  constructor(viewContainerRef: ViewContainerRef) {
+    this.#viewContainerRef = viewContainerRef
+  }
 
   createComponent<T>(
     flexRenderComponent: FlexRenderComponent<T>,
@@ -22,9 +25,7 @@ export class FlexRenderComponentFactory {
   ): FlexRenderComponentRef<T> {
     const componentRef = this.#viewContainerRef.createComponent(
       flexRenderComponent.component,
-      {
-        injector: componentInjector,
-      },
+      { injector: componentInjector },
     )
     const view = new FlexRenderComponentRef(
       componentRef,

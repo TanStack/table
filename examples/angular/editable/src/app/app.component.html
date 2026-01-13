@@ -94,7 +94,7 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {{ table.store.state.pagination.pageIndex + 1 }} of
+        {{ table.state().pagination.pageIndex + 1 }} of
         {{ table.getPageCount() }}
       </strong>
     </span>

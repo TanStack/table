@@ -1,4 +1,6 @@
 import { computed } from '@angular/core'
+import { $internalMemoFnMeta, getMemoFnMeta } from '@tanstack/table-core'
+import type { MemoFnMeta } from '@tanstack/table-core'
 import type { Signal } from '@angular/core'
 
 export const $TABLE_REACTIVE = Symbol('reactive')
@@ -7,10 +9,8 @@ export function markReactive<T extends object>(obj: T): void {
   Object.defineProperty(obj, $TABLE_REACTIVE, { value: true })
 }
 
-export function isReactive<T extends object>(
-  obj: T,
-): obj is T & { [$TABLE_REACTIVE]: true } {
-  return Reflect.get(obj, $TABLE_REACTIVE) === true
+export function isReactive<T>(obj: T): boolean {
+  return Reflect.get(obj as {}, $TABLE_REACTIVE) === true
 }
 
 /**
@@ -39,12 +39,12 @@ export function defineLazyComputedProperty<T extends object>(
     Object.defineProperty(originalObject, property, {
       enumerable: true,
       configurable: true,
-      get(this) {
+      get() {
         const computedValue = toComputed(notifier, valueFn, property)
         markReactive(computedValue)
         // Once the property is set the first time, we don't need a getter anymore
         // since we have a computed / cached fn value
-        Object.defineProperty(this, property, {
+        Object.defineProperty(originalObject, property, {
           value: computedValue,
           configurable: true,
           enumerable: true,
@@ -58,14 +58,12 @@ export function defineLazyComputedProperty<T extends object>(
 /**
  * @internal should be used only internally
  */
-type ComputedFunction<T> =
-  // 0 args
-  T extends (...args: []) => infer TReturn
-    ? Signal<TReturn>
-    : // 1+ args
-      T extends (arg0?: any, ...args: Array<any>) => any
-      ? T
-      : never
+type ComputedFunction<T> = T extends () => infer TReturn
+  ? Signal<TReturn>
+  : // 1+ args
+    T extends (arg0?: any, ...args: Array<any>) => any
+    ? T
+    : never
 
 /**
  * @description Transform a function into a computed that react to given notifier re-computations
@@ -91,7 +89,7 @@ export function toComputed<
   fn: TFunction,
   debugName: string,
 ): ComputedFunction<TFunction> {
-  const hasArgs = fn.length > 0
+  const hasArgs = getFnArgsLength(fn) > 0
   if (!hasArgs) {
     const computedFn = computed(
       () => {
@@ -105,23 +103,37 @@ export function toComputed<
     return computedFn as ComputedFunction<TFunction>
   }
 
-  const computedCache: Record<string, Signal<unknown>> = {}
-
-  const computedFn = (arg0: any, ...otherArgs: Array<any>) => {
-    const argsArray = [arg0, ...otherArgs]
+  const computedFn: ((this: unknown, ...argsArray: Array<any>) => unknown) & {
+    _reactiveCache?: Record<string, Signal<unknown>>
+  } = function (this: unknown, ...argsArray: Array<any>) {
+    const cacheable =
+      argsArray.length === 0 ||
+      argsArray.every((arg) => {
+        return (
+          arg === null ||
+          arg === undefined ||
+          typeof arg === 'string' ||
+          typeof arg === 'number' ||
+          typeof arg === 'boolean' ||
+          typeof arg === 'symbol'
+        )
+      })
+    if (!cacheable) {
+      return fn.apply(this, argsArray)
+    }
     const serializedArgs = serializeArgs(...argsArray)
-    if (computedCache.hasOwnProperty(serializedArgs)) {
-      return computedCache[serializedArgs]?.()
+    if ((computedFn._reactiveCache ??= {})[serializedArgs]) {
+      return computedFn._reactiveCache[serializedArgs]()
     }
     const computedSignal = computed(
       () => {
         void notifier()
-        return fn(...argsArray)
+        return fn.apply(this, argsArray)
       },
       { debugName },
     )
 
-    computedCache[serializedArgs] = computedSignal
+    computedFn._reactiveCache[serializedArgs] = computedSignal
 
     return computedSignal()
   }
@@ -136,28 +148,43 @@ function serializeArgs(...args: Array<any>) {
   return JSON.stringify(args)
 }
 
+function getFnArgsLength(
+  fn: ((...args: any) => any) & { originalArgsLength?: number },
+): number {
+  return Math.max(0, getMemoFnMeta(fn)?.originalArgsLength ?? fn.length)
+}
+
 export function assignReactivePrototypeAPI(
   notifier: Signal<unknown>,
   prototype: Record<string, any>,
   fnName: string,
 ) {
+  if (isReactive(prototype[fnName])) return
+
   const fn = prototype[fnName]
-  const originalArgsLength = Math.max(
-    0,
-    Reflect.get(fn, 'originalArgsLength') ?? 0,
-  )
+  const originalArgsLength = getFnArgsLength(fn)
 
   if (originalArgsLength <= 1) {
-    const cached = {} as Record<string, Signal<unknown>>
     Object.defineProperty(prototype, fnName, {
       enumerable: true,
       configurable: true,
       get(this) {
         const self = this
-        return (cached[`${self.id}_${fnName}`] ??= computed(() => {
-          notifier()
-          return fn.call(self)
-        }))
+        // Create a cache in the current prototype to allow the signals
+        // to be garbage collected. Shorthand for a WeakMap implementation
+        self._reactiveCache ??= {}
+        const cached = (self._reactiveCache[`${self.id}${fnName}`] ??= computed(
+          () => {
+            notifier()
+            return fn.apply(self)
+          },
+          {},
+        ))
+        markReactive(cached)
+        cached[$internalMemoFnMeta] = {
+          originalArgsLength,
+        } satisfies MemoFnMeta
+        return cached
       },
     })
   } else {
@@ -165,5 +192,9 @@ export function assignReactivePrototypeAPI(
       notifier()
       return fn.apply(this, args)
     }
+    markReactive(prototype[fnName])
+    prototype[fnName][$internalMemoFnMeta] = {
+      originalArgsLength,
+    } satisfies MemoFnMeta
   }
 }

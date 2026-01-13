@@ -1,6 +1,12 @@
 import { isProxy } from 'node:util/types'
 import { describe, expect, test, vi } from 'vitest'
-import { Component, effect, input, isSignal, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  input,
+  signal,
+} from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import {
   ColumnDef,
@@ -8,20 +14,17 @@ import {
   stockFeatures,
 } from '@tanstack/table-core'
 import { RowModel, injectTable } from '../src'
-import {
-  setFixtureSignalInputs,
-  testShouldBeComputedProperty,
-} from './test-utils'
 import type { PaginationState } from '../src'
 
 describe('injectTable', () => {
-  test('should render with required signal inputs', () => {
+  test('should support required signal inputs', () => {
     @Component({
-      selector: 'app-fake',
+      selector: 'app-table',
       template: ``,
       standalone: true,
+      changeDetection: ChangeDetectionStrategy.OnPush,
     })
-    class FakeComponent {
+    class TableComponent {
       data = input.required<Array<any>>()
 
       table = injectTable(() => ({
@@ -31,12 +34,18 @@ describe('injectTable', () => {
       }))
     }
 
-    const fixture = TestBed.createComponent(FakeComponent)
-    setFixtureSignalInputs(fixture, {
-      data: [],
+    @Component({
+      selector: 'app-root',
+      imports: [TableComponent],
+      template: ` <app-table [data]="[]" /> `,
+      changeDetection: ChangeDetectionStrategy.OnPush,
     })
+    class RootComponent {}
 
+    const fixture = TestBed.createComponent(RootComponent)
     fixture.detectChanges()
+
+    fixture.whenRenderingDone()
   })
 
   describe('Proxy table', () => {
@@ -55,8 +64,8 @@ describe('injectTable', () => {
       })),
     )
 
-    test('table must be a signal', () => {
-      expect(isSignal(table.get)).toEqual(true)
+    test('table is proxy', () => {
+      expect(isProxy(table)).toBe(true)
     })
 
     test('supports "in" operator', () => {
@@ -66,7 +75,7 @@ describe('injectTable', () => {
     })
 
     test('supports "Object.keys"', () => {
-      const keys = Object.keys(table.get())
+      const keys = Object.keys(table.get()).concat('state')
       expect(Object.keys(table)).toEqual(keys)
     })
 
@@ -118,155 +127,6 @@ describe('injectTable', () => {
         expect(rowModelFn).toHaveBeenCalledTimes(2)
         expect(rowModelFn.mock.calls[0]![0].rows.length).toEqual(5)
         expect(rowModelFn.mock.calls[1]![0].rows.length).toEqual(3)
-      })
-    })
-  })
-})
-
-describe('injectTable - Experimental reactivity', () => {
-  type Data = { id: string; title: string }
-  const data = signal<Array<Data>>([{ id: '1', title: 'Title' }])
-  const columns: Array<ColumnDef<typeof stockFeatures, Data>> = [
-    { id: 'id', header: 'Id', cell: (context) => context.getValue() },
-    { id: 'title', header: 'Title', cell: (context) => context.getValue() },
-  ]
-  const table = TestBed.runInInjectionContext(() =>
-    injectTable(() => ({
-      data: data(),
-      _features: { ...stockFeatures },
-      columns: columns,
-      getRowId: (row) => row.id,
-      reactivity: {
-        column: true,
-        cell: true,
-        row: true,
-        header: true,
-      },
-    })),
-  )
-  const tablePropertyKeys = Object.keys(table)
-
-  describe('Proxy', () => {
-    test('table is proxy', () => {
-      expect(isProxy(table)).toBe(true)
-    })
-
-    test('supports "in" operator', () => {
-      expect('_features' in table).toBe(true)
-      expect('options' in table).toBe(true)
-      expect('notFound' in table).toBe(false)
-    })
-
-    test('supports "Object.keys"', () => {
-      const keys = Object.keys(table)
-      expect(Object.keys(table)).toEqual(keys)
-    })
-
-    test('supports "Object.has"', () => {
-      const keys = Object.keys(table)
-      expect(Object.keys(table)).toEqual(keys)
-    })
-  })
-
-  describe('Table property reactivity', () => {
-    test.each(
-      tablePropertyKeys.map((property) => [
-        property,
-        testShouldBeComputedProperty(table, property),
-      ]),
-    )('property (%s) is computed -> (%s)', (name, expected) => {
-      const tableProperty = table[name as keyof typeof table]
-      expect(isSignal(tableProperty)).toEqual(expected)
-    })
-  })
-
-  describe('Header property reactivity', () => {
-    const headers = table.getHeaderGroups()
-    headers.forEach((headerGroup, index) => {
-      const headerPropertyKeys = Object.keys(headerGroup)
-      test.each(
-        headerPropertyKeys.map((property) => [
-          property,
-          testShouldBeComputedProperty(headerGroup, property),
-        ]),
-      )(
-        `HeaderGroup ${headerGroup.id} (${index}) - property (%s) is computed -> (%s)`,
-        (name, expected) => {
-          const tableProperty = headerGroup[name as keyof typeof headerGroup]
-          expect(isSignal(tableProperty)).toEqual(expected)
-        },
-      )
-
-      const headers = headerGroup.headers
-      headers.forEach((header, cellIndex) => {
-        const headerPropertyKeys = Object.keys(header)
-        test.each(
-          headerPropertyKeys.map((property) => [
-            property,
-            testShouldBeComputedProperty(header, property),
-          ]),
-        )(
-          `HeaderGroup ${headerGroup.id} (${index}) / Header ${header.id} - property (%s) is computed -> (%s)`,
-          (name, expected) => {
-            const tableProperty = header[name as keyof typeof header]
-            expect(isSignal(tableProperty)).toEqual(expected)
-          },
-        )
-      })
-    })
-  })
-
-  describe('Column property reactivity', () => {
-    const columns = table.getAllColumns()
-    columns.forEach((column, index) => {
-      const columnPropertyKeys = Object.keys(column)
-      test.each(
-        columnPropertyKeys.map((property) => [
-          property,
-          testShouldBeComputedProperty(column, property),
-        ]),
-      )(
-        `Column ${column.id} (${index}) - property (%s) is computed -> (%s)`,
-        (name, expected) => {
-          const tableProperty = column[name as keyof typeof column]
-          expect(isSignal(tableProperty)).toEqual(expected)
-        },
-      )
-    })
-  })
-
-  describe('Row property reactivity', () => {
-    const flatRows = table.getRowModel().flatRows
-    flatRows.forEach((row, index) => {
-      const rowsPropertyKeys = Object.keys(row)
-      test.each(
-        rowsPropertyKeys.map((property) => [
-          property,
-          testShouldBeComputedProperty(row, property),
-        ]),
-      )(
-        `Row ${row.id} (${index}) - property (%s) is computed -> (%s)`,
-        (name, expected) => {
-          const tableProperty = row[name as keyof typeof row]
-          expect(isSignal(tableProperty)).toEqual(expected)
-        },
-      )
-
-      const cells = row.getAllCells()
-      cells.forEach((cell, cellIndex) => {
-        const cellPropertyKeys = Object.keys(cell)
-        test.each(
-          cellPropertyKeys.map((property) => [
-            property,
-            testShouldBeComputedProperty(cell, property),
-          ]),
-        )(
-          `Row ${row.id} (${index}) / Cell ${cell.id} - property (%s) is computed -> (%s)`,
-          (name, expected) => {
-            const tableProperty = cell[name as keyof typeof cell]
-            expect(isSignal(tableProperty)).toEqual(expected)
-          },
-        )
       })
     })
   })

@@ -30,7 +30,6 @@ export interface AngularReactivityFlags {
 }
 
 interface TableOptions_AngularReactivity {
-  enableExperimentalReactivity?: boolean
   reactivity?: Partial<AngularReactivityFlags>
 }
 
@@ -67,7 +66,7 @@ const getUserSkipPropertyFn = (
   return value ?? defaultPropertyFn
 }
 
-export function constructAngularReactivityFeature<
+function constructAngularReactivityFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(): TableFeature<AngularReactivityFeatureConstructors<TFeatures, TData>> {

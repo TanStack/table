@@ -6,7 +6,7 @@ import {
   viewChild,
 } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
@@ -23,9 +23,9 @@ import {
   TableHeadSelectionComponent,
   TableRowSelectionComponent,
 } from './selection-column.component'
+import type { TemplateRef } from '@angular/core'
 import type { Person } from './makeData'
 import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
-import type { TemplateRef } from '@angular/core'
 
 const tableHelper = createTableHelper({
   _features: {
@@ -43,7 +43,7 @@ const tableHelper = createTableHelper({
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FilterComponent, FlexRenderDirective, FormsModule],
+  imports: [FilterComponent, FlexRender, FormsModule],
   templateUrl: './app.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -58,12 +58,8 @@ export class AppComponent {
   readonly columns: Array<ColumnDef<typeof tableHelper.features, Person>> = [
     {
       id: 'select',
-      header: () => {
-        return flexRenderComponent(TableHeadSelectionComponent)
-      },
-      cell: () => {
-        return flexRenderComponent(TableRowSelectionComponent)
-      },
+      header: () => flexRenderComponent(TableHeadSelectionComponent),
+      cell: () => flexRenderComponent(TableRowSelectionComponent),
     },
     {
       header: 'Name',
@@ -73,7 +69,7 @@ export class AppComponent {
           accessorKey: 'firstName',
           cell: (info) => info.getValue(),
           footer: (props) => props.column.id,
-          header: 'First name',
+          header: (props) => `First name`,
         },
         {
           accessorFn: (row) => row.lastName,
@@ -123,7 +119,6 @@ export class AppComponent {
     state: {
       rowSelection: this.rowSelection(),
     },
-    enableExperimentalReactivity: true,
     enableRowSelection: true, // enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: (updaterOrValue) => {

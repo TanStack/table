@@ -8,13 +8,7 @@
           @for (header of headerGroup.headers; track header.id) {
             <th [attr.colSpan]="header.colSpan">
               @if (!header.isPlaceholder) {
-                <ng-container
-                  *flexRender="
-                    header.column.columnDef.header;
-                    props: header.getContext();
-                    let headerCell
-                  "
-                >
+                <ng-container *flexRenderHeader="header; let headerCell">
                   {{ headerCell }}
                 </ng-container>
 
@@ -38,13 +32,7 @@
         <tr>
           @for (cell of row.getAllCells(); track cell.id) {
             <td>
-              <ng-container
-                *flexRender="
-                  cell.column.columnDef.cell;
-                  props: cell.getContext();
-                  let renderCell
-                "
-              >
+              <ng-container *flexRenderCell="cell; let renderCell">
                 {{ renderCell }}
               </ng-container>
             </td>

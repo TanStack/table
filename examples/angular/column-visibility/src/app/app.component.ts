@@ -135,7 +135,7 @@ export class AppComponent implements OnInit {
   }))
 
   stringifiedColumnVisibility = computed(() => {
-    return JSON.stringify(this.table.store.state.columnVisibility)
+    return JSON.stringify(this.table.state().columnVisibility)
   })
 
   ngOnInit() {

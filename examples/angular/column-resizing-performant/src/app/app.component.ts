@@ -5,17 +5,17 @@ import {
   signal,
   untracked,
 } from '@angular/core'
-import type { ColumnDef, ColumnResizeMode } from '@tanstack/angular-table'
 import {
+  FlexRenderDirective,
   columnResizingFeature,
   columnSizingFeature,
-  FlexRenderDirective,
   injectTable,
   tableFeatures,
 } from '@tanstack/angular-table'
-import type { Person } from './makeData'
 import { makeData } from './makeData'
 import { TableResizableCell, TableResizableHeader } from './resizable-cell'
+import type { Person } from './makeData'
+import type { ColumnDef, ColumnResizeMode } from '@tanstack/angular-table'
 
 const _features = tableFeatures({
   columnSizingFeature,
@@ -78,7 +78,23 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(200))
 
-  readonly columnSizing = computed(() => this.table.store.state.columnSizing)
+  readonly table = injectTable(() => ({
+    data: this.data(),
+    _features,
+    columns: defaultColumns,
+    columnResizeMode: 'onChange' as ColumnResizeMode,
+    defaultColumn: {
+      minSize: 60,
+      maxSize: 800,
+    },
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  }))
+
+  readonly columnSizing = this.table.Subscribe({
+    selector: (state) => state.columnSizing,
+  })
 
   /**
    * Instead of calling `column.getSize()` on every render for every header
@@ -99,24 +115,10 @@ export class AppComponent {
     return colSizes
   })
 
-  readonly table = injectTable(() => ({
-    data: this.data(),
-    _features,
-    columns: defaultColumns,
-    columnResizeMode: 'onChange' as ColumnResizeMode,
-    defaultColumn: {
-      minSize: 60,
-      maxSize: 800,
-    },
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-  }))
-
   readonly columnSizingDebugInfo = computed(() =>
     JSON.stringify(
       {
-        columnSizing: this.table.store.state.columnSizing,
+        columnSizing: this.columnSizing(),
       },
       null,
       2,

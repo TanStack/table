@@ -33,14 +33,14 @@
     }
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
-    "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./build/lib/package.json",
+    "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./dist/package.json",
     "build:types": "tsc --emitDeclarationOnly",
     "clean": "rimraf ./build && rimraf ./dist",
     "test:build": "publint --strict",
@@ -58,8 +58,8 @@
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^2.2.1",
     "@analogjs/vitest-angular": "^2.2.1",
-    "@angular/core": "^21.0.6",
-    "@angular/platform-browser": "^21.0.6",
+    "@angular/core": "^21.0.0",
+    "@angular/platform-browser": "^21.0.0",
     "ng-packagr": "^21.0.1",
     "typescript": "5.9.3"
   },

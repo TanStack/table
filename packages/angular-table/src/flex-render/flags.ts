@@ -9,14 +9,10 @@ export enum FlexRenderFlags {
    */
   ViewFirstRender = 1 << 0,
   /**
-   * Represents a state where the view is not dirty, meaning no changes require rendering updates.
-   */
-  Pristine = 1 << 1,
-  /**
    * Indicates the `content` property has been modified or the view requires a complete re-render.
    * When this flag is enabled, the view will be cleared and recreated from scratch.
    */
-  ContentChanged = 1 << 2,
+  ContentChanged = 1 << 1,
   /**
    * Indicates that the `props` property reference has changed.
    * When this flag is enabled, the view context is updated based on the type of the content.
@@ -24,17 +20,15 @@ export enum FlexRenderFlags {
    * For Component view, inputs will be updated and view will be marked as dirty.
    * For TemplateRef and primitive values, view will be marked as dirty
    */
-  PropsReferenceChanged = 1 << 3,
+  PropsReferenceChanged = 1 << 2,
   /**
    * Indicates that the current rendered view needs to be checked for changes.
+   * This will be set to true when `content(props)` result has changed or during
+   * forced update
    */
-  DirtyCheck = 1 << 4,
-  /**
-   * Indicates that a signal within the `content(props)` result has changed
-   */
-  DirtySignal = 1 << 5,
+  Dirty = 1 << 3,
   /**
    * Indicates that the first render effect has been checked at least one time.
    */
-  RenderEffectChecked = 1 << 6,
+  RenderEffectChecked = 1 << 4,
 }
