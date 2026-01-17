@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
 import type { ColumnDef } from '@tanstack/angular-table'
 
-// This example uses the classic standalone `injectTable` hook to create a table without the new `createTableHelper` util.
+// This example uses the classic standalone `injectTable` hook to create a table without the new `createTableHook` util.
 
 // 1. Define what the shape of your data will be for each row
 type Person = {
@@ -47,7 +47,7 @@ const defaultData: Array<Person> = [
 const _features = tableFeatures({}) // util method to create sharable TFeatures object/type
 
 // 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns.
-// Alternatively, check out the createTableHelper/createColumnHelper util for an even more type-safe way to define columns.
+// Alternatively, check out the createAppTable/createColumnHelper util for an even more type-safe way to define columns.
 const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',

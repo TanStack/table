@@ -8,10 +8,10 @@ import {
   FlexRenderDirective,
   columnSizingFeature,
   columnVisibilityFeature,
-  createPaginatedRowModel,
-  createTableHelper,
   flexRenderComponent,
+  injectTable,
   rowPaginationFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { CdkDrag, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop'
 import { JsonPipe } from '@angular/common'
@@ -21,16 +21,13 @@ import type { Person } from './makeData'
 import type { CdkDragDrop } from '@angular/cdk/drag-drop'
 import type { ColumnDef } from '@tanstack/angular-table'
 
-const defaultColumns: Array<
-  ColumnDef<
-    {
-      rowPaginationFeature: typeof rowPaginationFeature
-      columnSizingFeature: typeof columnSizingFeature
-      columnVisibilityFeature: typeof columnVisibilityFeature
-    },
-    Person
-  >
-> = [
+const _tableFeatures = tableFeatures({
+  rowPaginationFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+})
+
+const defaultColumns: Array<ColumnDef<typeof _tableFeatures, Person>> = [
   {
     id: 'drag-handle',
     header: 'Move',
@@ -75,19 +72,9 @@ const defaultColumns: Array<
 export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(20))
 
-  readonly tableHelper = createTableHelper({
-    _features: {
-      rowPaginationFeature,
-      columnSizingFeature,
-      columnVisibilityFeature,
-    },
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
-  })
-
-  readonly table = this.tableHelper.injectTable(() => {
+  readonly table = injectTable(() => {
     return {
+      _features: _tableFeatures,
       data: this.data(),
       columns: defaultColumns,
       getRowId: (row) => row.userId,

@@ -8,8 +8,8 @@ import {
   FlexRenderDirective,
   createExpandedRowModel,
   createPaginatedRowModel,
-  createTableHelper,
   flexRenderComponent,
+  injectTable,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -77,15 +77,12 @@ export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(100, 5, 3))
   readonly expanded = signal<ExpandedState>({})
 
-  readonly tableHelper = createTableHelper({
+  readonly table = injectTable(() => ({
     _features,
     _rowModels: {
       paginatedRowModel: createPaginatedRowModel(),
       expandedRowModel: createExpandedRowModel(),
     },
-  })
-
-  readonly table = this.tableHelper.injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
     state: {

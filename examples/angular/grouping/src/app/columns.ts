@@ -6,32 +6,29 @@ import {
   createFilteredRowModel,
   createGroupedRowModel,
   createPaginatedRowModel,
-  createTableHelper,
+  createTableHook,
   filterFns,
   rowExpandingFeature,
   rowPaginationFeature,
 } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-export const tableHelper = createTableHelper({
-  _features: {
-    columnGroupingFeature,
-    rowPaginationFeature,
-    columnFilteringFeature,
-    rowExpandingFeature,
-  },
-  _rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-    paginatedRowModel: createPaginatedRowModel(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
-  TData: {} as Person,
-})
-export default tableHelper
-
-const { createColumnHelper } = tableHelper
-const columnHelper = createColumnHelper<Person>()
+export const { createAppColumnHelper, injectAppTable: injectTable } =
+  createTableHook({
+    _features: {
+      columnGroupingFeature,
+      rowPaginationFeature,
+      columnFilteringFeature,
+      rowExpandingFeature,
+    },
+    _rowModels: {
+      groupedRowModel: createGroupedRowModel(aggregationFns),
+      expandedRowModel: createExpandedRowModel(),
+      paginatedRowModel: createPaginatedRowModel(),
+      filteredRowModel: createFilteredRowModel(filterFns),
+    },
+  })
+const columnHelper = createAppColumnHelper<Person>()
 
 export const columns = columnHelper.columns([
   columnHelper.group({

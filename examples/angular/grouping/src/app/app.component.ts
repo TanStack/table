@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core'
 import { FlexRenderDirective, isFunction } from '@tanstack/angular-table'
-import { columns, tableHelper } from './columns'
+import { columns, injectTable } from './columns'
 import { makeData } from './makeData'
 import type { GroupingState, Updater } from '@tanstack/angular-table'
 
@@ -26,7 +26,7 @@ export class AppComponent {
     JSON.stringify(this.grouping(), null, 2),
   )
 
-  readonly table = tableHelper.injectTable(() => ({
+  readonly table = injectTable(() => ({
     data: this.data(),
     columns: columns,
     initialState: {

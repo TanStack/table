@@ -4,7 +4,6 @@ import { FlexRenderDirective } from './flexRender'
 export * from '@tanstack/table-core'
 
 // export * from './angularReactivityFeature'
-export * from './createTableHelper'
 export * from './flexRender'
 export * from './injectTable'
 // export * from './lazySignalInitializer'

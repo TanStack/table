@@ -10,7 +10,7 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
-  createTableHelper,
+  createTableHook,
   filterFns,
   flexRenderComponent,
   rowPaginationFeature,
@@ -25,9 +25,9 @@ import {
 } from './selection-column.component'
 import type { TemplateRef } from '@angular/core'
 import type { Person } from './makeData'
-import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
+import type { RowSelectionState } from '@tanstack/angular-table'
 
-const tableHelper = createTableHelper({
+const { injectAppTable: injectTable, createAppColumnHelper } = createTableHook({
   _features: {
     columnFilteringFeature,
     rowPaginationFeature,
@@ -39,6 +39,8 @@ const tableHelper = createTableHelper({
   },
   debugTable: true,
 })
+
+const columnHelper = createAppColumnHelper<Person>()
 
 @Component({
   selector: 'app-root',
@@ -55,65 +57,61 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: Array<ColumnDef<typeof tableHelper.features, Person>> = [
-    {
+  readonly columns = columnHelper.columns([
+    columnHelper.display({
       id: 'select',
       header: () => flexRenderComponent(TableHeadSelectionComponent),
       cell: () => flexRenderComponent(TableRowSelectionComponent),
-    },
-    {
+    }),
+    columnHelper.group({
       header: 'Name',
       footer: (props) => props.column.id,
-      columns: [
-        {
-          accessorKey: 'firstName',
+      columns: columnHelper.columns([
+        columnHelper.accessor('firstName', {
           cell: (info) => info.getValue(),
           footer: (props) => props.column.id,
-          header: (props) => `First name`,
-        },
-        {
-          accessorFn: (row) => row.lastName,
-          id: 'lastName',
+          header: () => 'First name',
+        }),
+        columnHelper.accessor('lastName', {
           cell: (info) => info.getValue(),
           header: () => 'Last Name',
           footer: (props) => props.column.id,
-        },
-      ],
-    },
-    {
+        }),
+      ]),
+    }),
+    columnHelper.group({
       header: 'Info',
       footer: (props) => props.column.id,
-      columns: [
-        {
-          accessorKey: 'age',
+      columns: columnHelper.columns([
+        columnHelper.accessor('age', {
           header: () => this.ageHeaderCell(),
           footer: (props) => props.column.id,
-        },
-        {
+        }),
+        columnHelper.group({
           header: 'More Info',
-          columns: [
-            {
-              accessorKey: 'visits',
+          columns: columnHelper.columns([
+            columnHelper.accessor((row) => row.visits, {
+              id: 'visits',
               header: () => 'Visits',
               footer: (props) => props.column.id,
-            },
-            {
-              accessorKey: 'status',
-              header: 'Status',
+            }),
+            columnHelper.accessor((row) => row.status, {
+              id: 'status',
+              header: () => 'Status',
               footer: (props) => props.column.id,
-            },
-            {
-              accessorKey: 'progress',
+            }),
+            columnHelper.accessor((row) => row.progress, {
+              id: 'progress',
               header: 'Profile Progress',
               footer: (props) => props.column.id,
-            },
-          ],
-        },
-      ],
-    },
-  ]
+            }),
+          ]),
+        }),
+      ]),
+    }),
+  ])
 
-  table = tableHelper.injectTable(() => ({
+  table = injectTable(() => ({
     data: this.data(),
     columns: this.columns,
     state: {

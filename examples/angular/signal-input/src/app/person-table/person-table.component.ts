@@ -2,21 +2,16 @@ import { ChangeDetectionStrategy, Component, input, model } from '@angular/core'
 import {
   FlexRenderDirective,
   columnVisibilityFeature,
-  createPaginatedRowModel,
-  createTableHelper,
+  injectTable,
   rowPaginationFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import type { ColumnDef, PaginationState } from '@tanstack/angular-table'
 import type { Person } from '../makeData'
 
-const tableHelper = createTableHelper({
-  _features: {
-    rowPaginationFeature,
-    columnVisibilityFeature,
-  },
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+const _features = tableFeatures({
+  rowPaginationFeature,
+  columnVisibilityFeature,
 })
 
 @Component({
@@ -30,7 +25,7 @@ export class PersonTableComponent {
 
   readonly pagination = model.required<PaginationState>()
 
-  readonly columns: Array<ColumnDef<typeof tableHelper.features, Person>> = [
+  readonly columns: Array<ColumnDef<typeof _features, Person>> = [
     {
       accessorKey: 'firstName',
       header: 'First Name',
@@ -44,8 +39,9 @@ export class PersonTableComponent {
     },
   ]
 
-  readonly table = tableHelper.injectTable(() => {
+  readonly table = injectTable(() => {
     return {
+      _features,
       data: this.data(),
       columns: this.columns,
       state: {

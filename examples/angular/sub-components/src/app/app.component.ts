@@ -3,9 +3,10 @@ import {
   FlexRenderDirective,
   columnVisibilityFeature,
   createExpandedRowModel,
-  createTableHelper,
   flexRenderComponent,
+  injectTable,
   rowExpandingFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { ReactiveFormsModule } from '@angular/forms'
 import { JsonPipe, NgTemplateOutlet } from '@angular/common'
@@ -14,15 +15,12 @@ import { ExpandableCell, ExpanderCell } from './expandable-cell'
 import type { Person } from './makeData'
 import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
-const columns: Array<
-  ColumnDef<
-    {
-      rowExpandingFeature: typeof rowExpandingFeature
-      columnVisibilityFeature: typeof columnVisibilityFeature
-    },
-    Person
-  >
-> = [
+const _features = tableFeatures({
+  rowExpandingFeature,
+  columnVisibilityFeature,
+})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -107,17 +105,11 @@ export class AppComponent {
   readonly data = signal<Array<Person>>(makeData(10))
   readonly expanded = signal<ExpandedState>({})
 
-  tableHelper = createTableHelper({
-    _features: {
-      rowExpandingFeature: rowExpandingFeature,
-      columnVisibilityFeature: columnVisibilityFeature,
-    },
+  readonly table = injectTable(() => ({
+    _features,
     _rowModels: {
       expandedRowModel: createExpandedRowModel(),
     },
-  })
-
-  readonly table = this.tableHelper.injectTable(() => ({
     data: this.data(),
     columns,
     state: {
