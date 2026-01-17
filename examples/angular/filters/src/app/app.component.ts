@@ -14,8 +14,8 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  createTableHook,
   filterFns,
-  injectTable,
   isFunction,
   rowPaginationFeature,
   rowSortingFeature,
@@ -26,19 +26,69 @@ import { FormsModule } from '@angular/forms'
 import { NgClass } from '@angular/common'
 import { FilterComponent } from './table-filter.component'
 import { makeData } from './makeData'
-import type {
-  ColumnDef,
-  ColumnFiltersState,
-  Updater,
-} from '@tanstack/angular-table'
+import type { ColumnFiltersState, Updater } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-export const _features = tableFeatures({
+const _features = tableFeatures({
   columnFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
   rowSortingFeature,
 })
+
+const { injectAppTable, createAppColumnHelper } = createTableHook({
+  _features,
+  _rowModels: {
+    facetedMinMaxValues: createFacetedMinMaxValues(),
+    facetedRowModel: createFacetedRowModel(),
+    facetedUniqueValues: createFacetedUniqueValues(),
+    filteredRowModel: createFilteredRowModel(filterFns),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(sortFns),
+  },
+  debugTable: true,
+  debugHeaders: true,
+  debugColumns: false,
+})
+
+const columnHelper = createAppColumnHelper<Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => 'Last Name',
+  }),
+  columnHelper.accessor('age', {
+    header: () => 'Age',
+    meta: {
+      filterVariant: 'range',
+    },
+  }),
+  columnHelper.accessor('visits', {
+    header: () => 'Visits',
+    meta: {
+      filterVariant: 'range',
+    },
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    meta: {
+      filterVariant: 'select',
+    },
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    meta: {
+      filterVariant: 'range',
+    },
+  }),
+])
+
+export { _features }
 
 @Component({
   selector: 'app-root',
@@ -50,58 +100,8 @@ export class AppComponent {
   readonly columnFilters = signal<ColumnFiltersState>([])
   readonly data = signal(makeData(5000))
 
-  readonly columns: Array<ColumnDef<typeof _features, Person>> = [
-    {
-      accessorKey: 'firstName',
-      cell: (info) => info.getValue(),
-    },
-    {
-      accessorFn: (row) => row.lastName,
-      id: 'lastName',
-      cell: (info) => info.getValue(),
-      header: () => 'Last Name',
-    },
-    {
-      accessorKey: 'age',
-      header: () => 'Age',
-      meta: {
-        filterVariant: 'range',
-      },
-    },
-    {
-      accessorKey: 'visits',
-      header: () => 'Visits',
-      meta: {
-        filterVariant: 'range',
-      },
-    },
-    {
-      accessorKey: 'status',
-      header: 'Status',
-      meta: {
-        filterVariant: 'select',
-      },
-    },
-    {
-      accessorKey: 'progress',
-      header: 'Profile Progress',
-      meta: {
-        filterVariant: 'range',
-      },
-    },
-  ]
-
-  table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {
-      facetedMinMaxValues: createFacetedMinMaxValues(),
-      facetedRowModel: createFacetedRowModel(),
-      facetedUniqueValues: createFacetedUniqueValues(),
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
-    columns: this.columns,
+  table = injectAppTable(() => ({
+    columns,
     data: this.data(),
     state: {
       columnFilters: this.columnFilters(),
@@ -111,9 +111,6 @@ export class AppComponent {
         ? this.columnFilters.update(updater)
         : this.columnFilters.set(updater)
     },
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
   }))
 
   readonly stringifiedFilters = computed(() =>
