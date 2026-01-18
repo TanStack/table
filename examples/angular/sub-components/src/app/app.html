@@ -7,13 +7,7 @@
             @for (header of headerGroup.headers; track header.id) {
               <th [colSpan]="header.colSpan">
                 @if (!header.isPlaceholder) {
-                  <ng-container
-                    *flexRender="
-                      header.column.columnDef.header;
-                      props: header.getContext();
-                      let header
-                    "
-                  >
+                  <ng-container *flexRenderHeader="header; let header">
                     <div [innerHTML]="header"></div>
                   </ng-container>
                 }
@@ -29,11 +23,7 @@
             @for (cell of row.getVisibleCells(); track cell.id) {
               <td>
                 <ng-container
-                  *flexRender="
-                    cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let cell
-                  "
+                  *flexRenderCell="cell; let cell"
                 >
                   <div [innerHTML]="cell"></div>
                 </ng-container>
@@ -45,12 +35,7 @@
             <tr>
               <!-- 2nd row is a custom 1 cell row -->
               <td [colSpan]="row.getVisibleCells().length">
-                <ng-container
-                  *ngTemplateOutlet="
-                    subComponentTemplate;
-                    context: { $implicit: row }
-                  "
-                />
+                <app-sub [row]="row"/>
               </td>
             </tr>
           }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   columnVisibilityFeature,
   createExpandedRowModel,
   flexRenderComponent,
@@ -9,9 +9,10 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 import { ReactiveFormsModule } from '@angular/forms'
-import { JsonPipe, NgTemplateOutlet } from '@angular/common'
+import { JsonPipe } from '@angular/common'
 import { makeData } from './makeData'
 import { ExpandableCell, ExpanderCell } from './expandable-cell'
+import { SubComponent } from './sub-component/sub-component'
 import type { Person } from './makeData'
 import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
@@ -92,23 +93,18 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 @Component({
   selector: 'app-root',
-  imports: [
-    FlexRenderDirective,
-    ReactiveFormsModule,
-    JsonPipe,
-    NgTemplateOutlet,
-  ],
-  templateUrl: './app.component.html',
+  imports: [FlexRender, ReactiveFormsModule, JsonPipe, SubComponent],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly data = signal<Array<Person>>(makeData(10))
   readonly expanded = signal<ExpandedState>({})
 
   readonly table = injectTable(() => ({
     _features,
     _rowModels: {
-      expandedRowModel: createExpandedRowModel(),
+      expandedRowModel: createExpandedRowModel<typeof _features, Person>(),
     },
     data: this.data(),
     columns,
