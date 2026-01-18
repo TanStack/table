@@ -6,8 +6,6 @@ export * from '@tanstack/table-core'
 export * from './angularReactivityFeature'
 export * from './flexRender'
 export * from './injectTable'
-// export * from './lazySignalInitializer'
-// export * from './reactivityUtils'
 export * from './flex-render/flexRenderComponent'
 
 export * from './helpers/cell'
