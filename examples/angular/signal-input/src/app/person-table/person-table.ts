@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, model } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   columnVisibilityFeature,
+  createPaginatedRowModel,
   injectTable,
   rowPaginationFeature,
   tableFeatures,
@@ -16,11 +17,11 @@ const _features = tableFeatures({
 
 @Component({
   selector: 'app-person-table',
-  templateUrl: 'person-table.component.html',
+  templateUrl: 'person-table.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FlexRenderDirective],
+  imports: [FlexRender],
 })
-export class PersonTableComponent {
+export class PersonTable {
   readonly data = input.required<Array<Person>>()
 
   readonly pagination = model.required<PaginationState>()
@@ -42,6 +43,9 @@ export class PersonTableComponent {
   readonly table = injectTable(() => {
     return {
       _features,
+      _rowModels: {
+        paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
+      },
       data: this.data(),
       columns: this.columns,
       state: {

@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { makeData } from './makeData'
-import { PersonTableComponent } from './person-table/person-table.component'
+import { PersonTable } from './person-table/person-table'
 import type { PaginationState } from '@tanstack/angular-table'
 
 @Component({
   selector: 'app-root',
-  imports: [PersonTableComponent],
-  templateUrl: './app.component.html',
+  imports: [PersonTable],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   data = signal(makeData(10000))
   pagination = signal<PaginationState>({
     pageIndex: 0,
