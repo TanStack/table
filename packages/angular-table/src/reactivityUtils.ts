@@ -21,7 +21,7 @@ function isReactive<T>(obj: T): boolean {
  *
  * @internal should be used only internally
  */
-function defineLazyComputedProperty<T extends object>(
+export function defineLazyComputedProperty<T extends object>(
   notifier: Signal<T>,
   setObjectOptions: {
     originalObject: T
