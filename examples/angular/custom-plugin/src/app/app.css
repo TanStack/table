@@ -1,11 +1,11 @@
 table {
   &[data-table-density] {
-    :where(td,th) {
+    :where(td, th) {
       transition: padding 0.2s;
       padding: 16px;
     }
 
-    &[data-table-density="sm"] {
+    &[data-table-density='sm'] {
       :where(td, th) {
         padding: 4px;
       }
@@ -16,6 +16,5 @@ table {
         padding: 8px;
       }
     }
-
   }
 }
