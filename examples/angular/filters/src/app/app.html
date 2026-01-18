@@ -9,17 +9,10 @@
             <th [attr.colSpan]="header.colSpan">
               @if (!header.isPlaceholder) {
                 <div
-                  [ngClass]="{
-                    'cursor-pointer select-none': header.column.getCanSort(),
-                  }"
+                  [class.cursor-pointer]="header.column.getCanSort()"
+                  [class.select-none]="header.column.getCanSort()"
                 >
-                  <ng-container
-                    *flexRender="
-                      header.column.columnDef.header;
-                      props: header.getContext();
-                      let headerCell
-                    "
-                  >
+                  <ng-container *flexRenderHeader="header; let headerCell">
                     {{ headerCell }}
                   </ng-container>
 
@@ -33,10 +26,7 @@
 
                 @if (header.column.getCanFilter()) {
                   <div>
-                    <app-table-filter
-                      [column]="header.column"
-                      [table]="table"
-                    />
+                    <app-table-filter [column]="header.column" [table]="table" />
                   </div>
                 }
               }
@@ -50,13 +40,7 @@
         <tr>
           @for (cell of row.getAllCells(); track cell.id) {
             <td>
-              <ng-container
-                *flexRender="
-                  cell.column.columnDef.cell;
-                  props: cell.getContext();
-                  let renderCell
-                "
-              >
+              <ng-container *flexRenderCell="cell; let renderCell">
                 {{ renderCell }}
               </ng-container>
             </td>
@@ -113,10 +97,7 @@
       />
     </span>
 
-    <select
-      [value]="table.store.state.pagination.pageSize"
-      (change)="onPageSizeChange($event)"
-    >
+    <select [value]="table.store.state.pagination.pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }
@@ -124,15 +105,10 @@
   </div>
   <div>{{ table.getPrePaginatedRowModel().rows.length }} Rows</div>
   <div>
-    <button class="border rounded p-2 mb-2" (click)="refreshData()">
-      Refresh Data
-    </button>
+    <button class="border rounded p-2 mb-2" (click)="refreshData()">Refresh Data</button>
   </div>
   <div>
     <pre>{{ stringifiedFilters() }}</pre>
   </div>
 </div>
 
-<ng-template #ageHeaderCell let-context>
-  <span>Age 🥳</span>
-</ng-template>

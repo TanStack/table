@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   columnFacetingFeature,
   columnFilteringFeature,
   createFacetedMinMaxValues,
@@ -22,14 +22,12 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { FormsModule } from '@angular/forms'
-import { NgClass } from '@angular/common'
-import { FilterComponent } from './table-filter.component'
 import { makeData } from './makeData'
+import { TableFilter } from './table-filter/table-filter'
 import type { ColumnFiltersState, Updater } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+export const _features = tableFeatures({
   columnFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
@@ -88,15 +86,13 @@ const columns = columnHelper.columns([
   }),
 ])
 
-export { _features }
-
 @Component({
   selector: 'app-root',
-  imports: [FilterComponent, FlexRenderDirective, FormsModule, NgClass],
-  templateUrl: './app.component.html',
+  imports: [TableFilter, FlexRender],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly columnFilters = signal<ColumnFiltersState>([])
   readonly data = signal(makeData(5000))
 
