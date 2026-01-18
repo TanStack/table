@@ -3,65 +3,41 @@ import {
   Component,
   computed,
   signal,
-  viewChild,
 } from '@angular/core'
 import {
   FlexRender,
-  columnFilteringFeature,
-  createFilteredRowModel,
-  createPaginatedRowModel,
-  createTableHook,
-  filterFns,
+  TanStackTable,
   flexRenderComponent,
-  rowPaginationFeature,
-  rowSelectionFeature,
 } from '@tanstack/angular-table'
-import { FormsModule } from '@angular/forms'
-import { FilterComponent } from './filter'
+import { TableFilter } from './table-filter/table-filter'
 import { makeData } from './makeData'
 import {
-  TableHeadSelectionComponent,
-  TableRowSelectionComponent,
-} from './selection-column.component'
-import type { TemplateRef } from '@angular/core'
+  TableHeaderSelection,
+  TableRowSelection,
+} from './selection-column/selection-column'
+import { createAppColumnHelper, injectTable } from './table'
 import type { Person } from './makeData'
 import type { RowSelectionState } from '@tanstack/angular-table'
-
-const { injectAppTable: injectTable, createAppColumnHelper } = createTableHook({
-  _features: {
-    columnFilteringFeature,
-    rowPaginationFeature,
-    rowSelectionFeature,
-  },
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
-  debugTable: true,
-})
 
 const columnHelper = createAppColumnHelper<Person>()
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FilterComponent, FlexRender, FormsModule],
-  templateUrl: './app.component.html',
+  imports: [TableFilter, FlexRender, TanStackTable],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(10_000))
 
-  readonly ageHeaderCell =
-    viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
-
   readonly columns = columnHelper.columns([
     columnHelper.display({
       id: 'select',
-      header: () => flexRenderComponent(TableHeadSelectionComponent),
-      cell: () => flexRenderComponent(TableRowSelectionComponent),
+      header: () => flexRenderComponent(TableHeaderSelection),
+      cell: () => flexRenderComponent(TableRowSelection),
     }),
     columnHelper.group({
       header: 'Name',
@@ -84,7 +60,7 @@ export class AppComponent {
       footer: (props) => props.column.id,
       columns: columnHelper.columns([
         columnHelper.accessor('age', {
-          header: () => this.ageHeaderCell(),
+          header: () => `Age 🥳`,
           footer: (props) => props.column.id,
         }),
         columnHelper.group({
@@ -111,7 +87,7 @@ export class AppComponent {
     }),
   ])
 
-  table = injectTable(() => ({
+  readonly table = injectTable(() => ({
     data: this.data(),
     columns: this.columns,
     state: {
@@ -127,6 +103,10 @@ export class AppComponent {
       )
     },
   }))
+
+  readonly paginationState = this.table.Subscribe({
+    selector: (state) => state.pagination,
+  })
 
   readonly stringifiedRowSelection = computed(() =>
     JSON.stringify(this.rowSelection(), null, 2),

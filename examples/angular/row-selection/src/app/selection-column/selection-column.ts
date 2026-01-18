@@ -1,13 +1,9 @@
-import {
-  injectFlexRenderContext,
-  injectTableCellContext,
-} from '@tanstack/angular-table'
+import { injectTableCellContext } from '@tanstack/angular-table'
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
-import type {
-  CellContext,
-  HeaderContext,
-  RowData,
-} from '@tanstack/angular-table'
+import {
+  injectFlexRenderCellContext,
+  injectFlexRenderHeaderContext,
+} from '../table'
 
 @Component({
   template: `
@@ -24,11 +20,8 @@ import type {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeadSelectionComponent<T extends RowData> {
-  context =
-    injectFlexRenderContext<
-      HeaderContext<{ rowSelectionFeature: {} }, T, unknown>
-    >()
+export class TableHeaderSelection {
+  context = injectFlexRenderHeaderContext()
 }
 
 @Component({
@@ -45,10 +38,8 @@ export class TableHeadSelectionComponent<T extends RowData> {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowSelectionComponent<T> {
+export class TableRowSelection {
   readonly cell = injectTableCellContext()
   readonly row = computed(() => this.cell().row)
-  context =
-    // @ts-expect-error TODO: Should fix types
-    injectFlexRenderContext<CellContext<{ rowSelectionFeature: {} }, unknown>>()
+  readonly context = injectFlexRenderCellContext()
 }

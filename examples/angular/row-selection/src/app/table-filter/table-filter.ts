@@ -1,10 +1,12 @@
-import { Component, input } from '@angular/core'
-import type { OnInit } from '@angular/core'
-import type { Column, Table } from '@tanstack/angular-table'
+import { Component, computed, input } from '@angular/core'
+import { injectTableContext } from '../table'
+import type { Column } from '@tanstack/angular-table'
 
 @Component({
   selector: 'app-table-filter',
-  template: ` @if (columnType) {
+  template: `
+    @let columnType = this.columnType();
+
     @if (columnType == 'number') {
       <div class="flex space-x-2">
         <input
@@ -34,30 +36,27 @@ import type { Column, Table } from '@tanstack/angular-table'
         (input)="column().setFilterValue(search.value)"
       />
     }
-  }`,
+  `,
   standalone: true,
 })
-export class FilterComponent<T> implements OnInit {
-  column = input.required<Column<any, any, any>>()
-  // @ts-expect-error TODO: Should fix types
-  table = input.required<Table<T>>()
+export class TableFilter {
+  readonly column = input.required<Column<any, any, any>>()
+  readonly table = injectTableContext()
 
-  columnType!: string
-
-  ngOnInit() {
-    this.columnType = typeof this.table()
+  readonly columnType = computed(() => {
+    return typeof this.table()
       .getPreFilteredRowModel()
       .flatRows[0]?.getValue(this.column().id)
-  }
+  })
 
   getMinValue() {
-    const minValue = this.column().getFilterValue() as any
+    const minValue = this.column().getFilterValue()
 
     return (minValue?.[0] ?? '') as string
   }
 
   getMaxValue() {
-    const maxValue = this.column().getFilterValue() as any
+    const maxValue = this.column().getFilterValue()
     return (maxValue?.[1] ?? '') as string
   }
 

@@ -1,7 +1,7 @@
 <div class="p-2">
   <div class="h-2"></div>
 
-  <table>
+  <table [tanStackTable]="table">
     <thead>
       @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
         <tr>
@@ -14,11 +14,7 @@
 
                 @if (header.column.getCanFilter()) {
                   <div>
-                    <!-- TODO: fix type -->
-                    <app-table-filter
-                      [column]="$any(header.column)"
-                      [table]="table"
-                    />
+                    <app-table-filter [column]="header.column" />
                   </div>
                 }
               }
@@ -50,9 +46,7 @@
             (change)="table.toggleAllPageRowsSelected()"
           />
         </td>
-        <td [attr.colspan]="20">
-          Page Rows ({{ table.getRowModel().rows.length }})
-        </td>
+        <td [attr.colspan]="20">Page Rows ({{ table.getRowModel().rows.length }})</td>
       </tr>
     </tfoot>
   </table>
@@ -90,7 +84,7 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {{ table.store.state.pagination.pageIndex + 1 }} of
+        {{ paginationState().pageIndex + 1 }} of
         {{ table.getPageCount() }}
       </strong>
     </span>
@@ -98,16 +92,13 @@
       | Go to page:
       <input
         type="number"
-        [value]="table.store.state.pagination.pageIndex + 1"
+        [value]="paginationState().pageIndex + 1"
         (input)="onPageInputChange($event)"
         class="border p-1 rounded w-16"
       />
     </span>
 
-    <select
-      [value]="table.store.state.pagination.pageSize"
-      (change)="onPageSizeChange($event)"
-    >
+    <select [value]="paginationState().pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }
@@ -115,15 +106,12 @@
   </div>
   <br />
   <div>
-    {{ rowSelectionLength() }} of
-    {{ table.getPreFilteredRowModel().rows.length }} Total Rows
+    {{ rowSelectionLength() }} of {{ table.getPreFilteredRowModel().rows.length }} Total Rows
   </div>
   <hr />
   <br />
   <div>
-    <button class="border rounded p-2 mb-2" (click)="refreshData()">
-      Refresh Data
-    </button>
+    <button class="border rounded p-2 mb-2" (click)="refreshData()">Refresh Data</button>
   </div>
   <div>
     <button class="border rounded p-2 mb-2" (click)="logSelectedFlatRows()">
@@ -136,6 +124,3 @@
   </div>
 </div>
 
-<ng-template #ageHeaderCell let-context>
-  <span>Age 🥳</span>
-</ng-template>
