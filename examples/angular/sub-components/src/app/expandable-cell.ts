@@ -4,12 +4,8 @@ import {
   input,
   output,
 } from '@angular/core'
-import {
-  injectFlexRenderContext
-} from '@tanstack/angular-table'
-import type {
-  CellContext,
-  RowData} from '@tanstack/angular-table';
+import { injectFlexRenderContext } from '@tanstack/angular-table'
+import type { CellContext, RowData } from '@tanstack/angular-table'
 
 @Component({
   standalone: true,
