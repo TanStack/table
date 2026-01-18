@@ -28,9 +28,7 @@
   <div class="h-4"></div>
   <div class="flex flex-wrap gap-2">
     <button (click)="rerender()" class="border p-1">Regenerate</button>
-    <button (click)="randomizeColumns()" class="border p-1">
-      Shuffle Columns
-    </button>
+    <button (click)="randomizeColumns()" class="border p-1">Shuffle Columns</button>
   </div>
 
   <table>
@@ -61,11 +59,7 @@
           @for (cell of row.getVisibleCells(); track cell.id) {
             <td>
               <ng-container
-                *flexRender="
-                  cell.column.columnDef.cell;
-                  props: cell.getContext();
-                  let cell
-                "
+                *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cell"
               >
                 {{ cell }}
               </ng-container>

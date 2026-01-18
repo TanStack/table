@@ -5,9 +5,10 @@ import {
   signal,
 } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   columnOrderingFeature,
   columnVisibilityFeature,
+  createColumnHelper,
   injectTable,
   tableFeatures,
 } from '@tanstack/angular-table'
@@ -15,75 +16,69 @@ import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type {
-  ColumnDef,
   ColumnOrderState,
   ColumnVisibilityState,
 } from '@tanstack/angular-table'
-
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
-  {
-    header: 'Name',
-    footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => 'Last Name',
-        footer: (props) => props.column.id,
-      },
-    ],
-  },
-  {
-    header: 'Info',
-    footer: (props) => props.column.id,
-    columns: [
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        footer: (props) => props.column.id,
-      },
-      {
-        header: 'More Info',
-        columns: [
-          {
-            accessorKey: 'visits',
-            header: () => 'Visits',
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'status',
-            header: 'Status',
-            footer: (props) => props.column.id,
-          },
-          {
-            accessorKey: 'progress',
-            header: 'Profile Progress',
-            footer: (props) => props.column.id,
-          },
-        ],
-      },
-    ],
-  },
-]
 
 const _features = tableFeatures({
   columnVisibilityFeature,
   columnOrderingFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const defaultColumns = columnHelper.columns([
+  columnHelper.group({
+    header: 'Name',
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor('lastName', {
+        cell: (info) => info.getValue(),
+        header: () => 'Last Name',
+        footer: (props) => props.column.id,
+      }),
+    ]),
+  }),
+  columnHelper.group({
+    header: 'Info',
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
+        header: () => 'Age',
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.group({
+        header: 'More Info',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
+            header: () => 'Visits',
+            footer: (props) => props.column.id,
+          }),
+          columnHelper.accessor('status', {
+            header: 'Status',
+            footer: (props) => props.column.id,
+          }),
+          columnHelper.accessor('progress', {
+            header: 'Profile Progress',
+            footer: (props) => props.column.id,
+          }),
+        ]),
+      }),
+    ]),
+  }),
+])
+
 @Component({
   selector: 'app-root',
-  imports: [FlexRenderDirective],
-  templateUrl: './app.component.html',
+  imports: [FlexRender],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly data = signal<Array<Person>>(makeData(20))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
