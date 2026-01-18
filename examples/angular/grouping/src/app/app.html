@@ -12,10 +12,7 @@
                 <div>
                   @if (header.column.getCanGroup()) {
                     <!-- If the header can be grouped, let's add a toggle -->
-                    <button
-                      (click)="header.column.toggleGrouping()"
-                      [style.cursor]="'pointer'"
-                    >
+                    <button (click)="header.column.toggleGrouping()" [style.cursor]="'pointer'">
                       @if (header.column.getIsGrouped()) {
                         🛑({{ header.column.getGroupedIndex() }})
                       } @else {
@@ -23,13 +20,7 @@
                       }
                     </button>
                   }
-                  <ng-container
-                    *flexRender="
-                      header.column.columnDef.header;
-                      props: header.getContext();
-                      let header
-                    "
-                  >
+                  <ng-container *flexRenderHeader="header; let header">
                     <span>{{ header }}</span>
                   </ng-container>
                 </div>
@@ -63,11 +54,7 @@
                   {{ row.getIsExpanded() ? '👇 ' : '👉' }}
                 </button>
                 <ng-container
-                  *flexRender="
-                    cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let cell
-                  "
+                  *flexRenderCell="cell; let cell"
                 >
                   <span>{{ cell }}</span>
                 </ng-container>
@@ -77,8 +64,7 @@
                 <!-- renderer for cell -->
                 <ng-container
                   *flexRender="
-                    cell.column.columnDef.aggregatedCell ??
-                      cell.column.columnDef.cell;
+                    cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell;
                     props: cell.getContext();
                     let aggregatedCell
                   "
@@ -86,16 +72,11 @@
                   {{ aggregatedCell }}
                 </ng-container>
               } @else if (cell.getIsPlaceholder()) {
-                <ng-container />
               } @else {
                 <!-- For cells with repeated values, render null-->
                 <!-- Otherwise, just render the regular cell-->
                 <ng-container
-                  *flexRender="
-                    cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let cell
-                  "
+                  *flexRenderCell="cell; let cell"
                 >
                   {{ cell }}
                 </ng-container>
@@ -154,10 +135,7 @@
       />
     </span>
 
-    <select
-      [value]="table.store.state.pagination.pageSize"
-      (change)="onPageSizeChange($event)"
-    >
+    <select [value]="table.store.state.pagination.pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }

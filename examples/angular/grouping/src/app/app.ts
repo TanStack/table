@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   signal,
 } from '@angular/core'
-import { FlexRenderDirective, isFunction } from '@tanstack/angular-table'
+import { FlexRender, isFunction } from '@tanstack/angular-table'
 import { columns, injectTable } from './columns'
 import { makeData } from './makeData'
 import type { GroupingState, Updater } from '@tanstack/angular-table'
@@ -13,12 +12,11 @@ import type { GroupingState, Updater } from '@tanstack/angular-table'
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [FlexRenderDirective, CommonModule],
-  templateUrl: './app.component.html',
+  imports: [FlexRender],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-  title = 'grouping'
+export class App {
   readonly data = signal(makeData(10000))
   readonly grouping = signal<GroupingState>([])
 
