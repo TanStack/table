@@ -8,24 +8,14 @@
   ({{ data().length }} rows)
 
   <div class="overflow-x-auto">
-    <div
-      class="divTable"
-      [style]="columnSizeVars()"
-      [style.width.px]="table.getTotalSize()"
-    >
+    <div class="divTable" [style]="columnSizeVars()" [style.width.px]="table.getTotalSize()">
       <div class="thead">
         @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
           <div class="tr">
             @for (header of headerGroup.headers; track header.id) {
               <div class="th" [tableResizableHeader]="header.id">
                 @if (!header.isPlaceholder) {
-                  <ng-container
-                    *flexRender="
-                      header.column.columnDef.header;
-                      props: header.getContext();
-                      let header
-                    "
-                  >
+                  <ng-container *flexRenderHeader="header; let header">
                     <div [innerHTML]="header"></div>
                   </ng-container>
                 }
@@ -44,21 +34,15 @@
       </div>
       <div class="tbody">
         @for (row of table.getRowModel().rows; track row.id) {
-          <tr class="tr">
+          <div class="tr">
             @for (cell of row.getAllCells(); track cell.id) {
-              <td class="td" [tableResizableCell]="cell.column.id">
-                <ng-container
-                  *flexRender="
-                    cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let cell
-                  "
-                >
+              <div class="td" [tableResizableCell]="cell.column.id">
+                <ng-container *flexRenderCell="cell; let cell">
                   <div [innerHTML]="cell"></div>
                 </ng-container>
-              </td>
+              </div>
             }
-          </tr>
+          </div>
         }
       </div>
     </div>

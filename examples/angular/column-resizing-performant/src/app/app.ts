@@ -6,14 +6,14 @@ import {
   untracked,
 } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   columnResizingFeature,
   columnSizingFeature,
   injectTable,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { makeData } from './makeData'
-import { TableResizableCell, TableResizableHeader } from './resizable-cell'
+import { TableResizableCells } from './resizable-cell/resizable-cell'
 import type { Person } from './makeData'
 import type { ColumnDef, ColumnResizeMode } from '@tanstack/angular-table'
 
@@ -71,11 +71,11 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRenderDirective, TableResizableCell, TableResizableHeader],
-  templateUrl: './app.component.html',
+  imports: [FlexRender, TableResizableCells],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly data = signal<Array<Person>>(makeData(200))
 
   readonly table = injectTable(() => ({

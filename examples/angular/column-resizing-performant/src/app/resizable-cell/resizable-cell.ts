@@ -1,4 +1,4 @@
-import { computed, Directive, input } from '@angular/core'
+import { Directive, computed, input } from '@angular/core'
 
 @Directive({
   selector: '[tableResizableHeader]',
@@ -33,3 +33,8 @@ export class TableResizableCell {
     () => `calc(var(--col-${this.cellId()}-size) * 1px)`,
   )
 }
+
+export const TableResizableCells = [
+  TableResizableCell,
+  TableResizableHeader,
+] as const
