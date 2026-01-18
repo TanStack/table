@@ -5,13 +5,12 @@ import {
   signal,
 } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   columnVisibilityFeature,
   injectTable,
   isFunction,
   tableFeatures,
 } from '@tanstack/angular-table'
-import type { OnInit } from '@angular/core'
 import type { ColumnDef, ColumnVisibilityState } from '@tanstack/angular-table'
 
 type Person = {
@@ -108,15 +107,15 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRenderDirective],
-  templateUrl: './app.component.html',
+  imports: [FlexRender],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent implements OnInit {
-  data = signal<Array<Person>>([])
+export class App {
+  readonly data = signal<Array<Person>>(defaultData)
   readonly columnVisibility = signal<ColumnVisibilityState>({})
 
-  table = injectTable(() => ({
+  readonly table = injectTable(() => ({
     _features,
     columns: defaultColumns,
     data: this.data(),
@@ -134,15 +133,11 @@ export class AppComponent implements OnInit {
     debugColumns: true,
   }))
 
-  stringifiedColumnVisibility = computed(() => {
+  readonly stringifiedColumnVisibility = computed(() => {
     return JSON.stringify(this.table.state().columnVisibility)
   })
 
-  ngOnInit() {
-    this.data.set(defaultData)
-  }
-
   rerender() {
-    this.data.set(defaultData)
+    this.data.update((data) => [...data.reverse()])
   }
 }
