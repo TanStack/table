@@ -50,7 +50,7 @@ interface FlexRenderOptions<
    * })
    * ```
    */
-  bindings?: Array<Binding>
+  readonly bindings?: Array<Binding>
   /**
    * Directives to apply to the component at creation time.
    *
@@ -82,28 +82,28 @@ interface FlexRenderOptions<
    * })
    * ```
    */
-  directives?: CreateComponentDirectives
+  readonly directives?: CreateComponentDirectives
   /**
    * Component instance inputs.
    *
    * These values are assigned after the component has been created using
    * [componentRef.setInput API](https://angular.dev/api/core/ComponentRef#setInput).
    *
-   * Shouldn't be used together with {@link FlexRenderOptions#binding} option
+   * Shouldn't be used together with {@link FlexRenderOptions#bindings} option
    */
-  inputs?: TInputs
+  readonly inputs?: TInputs
   /**
    * Component instance outputs.
    *
    * Outputs are wired imperatively after component creation using {@link OutputEmitterRef#subscribe}.
    *
-   * Shouldn't be used together with {@link FlexRenderOptions#binding} option
+   * Shouldn't be used together with {@link FlexRenderOptions#bindings} option
    */
-  outputs?: TOutputs
+  readonly outputs?: TOutputs
   /**
    * Optional {@link Injector} that will be used when rendering the component
    */
-  injector?: Injector
+  readonly injector?: Injector
 }
 
 type Inputs<T> = {
@@ -178,7 +178,7 @@ export function flexRenderComponent<TComponent = any>(
  *        return flexRenderComponent(MyComponent, {
  *          inputs: { value: mySignalValue() },
  *          outputs: { valueChange: (val) => {} }
- *          // or using angular createComponent#binding api
+ *          // or using angular createComponent#bindings api
  *          bindings: [
  *            inputBinding('value', mySignalValue),
  *            outputBinding('valueChange', value => {
