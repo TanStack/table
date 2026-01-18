@@ -1,33 +1,24 @@
 import { Component, computed, signal } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   columnOrderingFeature,
   columnPinningFeature,
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
+  createColumnHelper,
   injectTable,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { faker } from '@faker-js/faker'
-import { NgStyle } from '@angular/common'
 import { makeData } from './makeData'
+import type { Person } from './makeData'
 import type {
   Column,
-  ColumnDef,
   ColumnOrderState,
   ColumnPinningState,
   ColumnVisibilityState,
 } from '@tanstack/angular-table'
-
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
 
 const _features = tableFeatures({
   columnOrderingFeature,
@@ -37,59 +28,55 @@ const _features = tableFeatures({
   columnVisibilityFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
-  {
-    accessorKey: 'firstName',
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const defaultColumns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
     id: 'firstName',
     header: 'First Name',
     cell: (info) => info.getValue(),
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorFn: (row) => row.lastName,
+  }),
+  columnHelper.accessor('lastName', {
     id: 'lastName',
     cell: (info) => info.getValue(),
     header: () => 'Last Name',
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'age',
+  }),
+  columnHelper.accessor('age', {
     id: 'age',
     header: 'Age',
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     id: 'visits',
     header: 'Visits',
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     id: 'status',
     header: 'Status',
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     id: 'progress',
     header: 'Profile Progress',
     footer: (props) => props.column.id,
     size: 180,
-  },
-]
+  }),
+])
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRenderDirective, NgStyle],
-  templateUrl: './app.component.html',
+  imports: [FlexRender],
+  templateUrl: './app.html',
 })
-export class AppComponent {
+export class App {
   readonly columns = signal([...defaultColumns])
   readonly data = signal<Array<Person>>(makeData(30))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
@@ -145,6 +132,6 @@ export class AppComponent {
   }
 
   rerender() {
-    this.data.set(makeData(5000))
+    this.data.set(makeData(30))
   }
 }

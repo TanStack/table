@@ -44,7 +44,7 @@
               <!-- IMPORTANT: This is where the magic happens! -->
               <th
                 [attr.colSpan]="header.colSpan"
-                [ngStyle]="getCommonPinningStyles(header.column)"
+                [style]="getCommonPinningStyles(header.column)"
               >
                 <div class="whitespace-nowrap">
                   @if (!header.isPlaceholder) {
@@ -114,7 +114,7 @@
         @for (row of table.getRowModel().rows; track row.id) {
           <tr>
             @for (cell of row.getVisibleCells(); track cell.id) {
-              <td [ngStyle]="getCommonPinningStyles(cell.column)">
+              <td [style]="getCommonPinningStyles(cell.column)">
                 <ng-container
                   *flexRender="
                     cell.column.columnDef.cell;
