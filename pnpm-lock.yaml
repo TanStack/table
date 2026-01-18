@@ -445,6 +445,9 @@ importers:
       '@angular/router':
         specifier: ^21.1.0
         version: 21.1.0(@angular/common@21.1.0(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.1.0(@angular/animations@21.1.0(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.1.0(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.0(@angular/compiler@21.1.0)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
+      '@tanstack/angular-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.0
         version: 7.8.2
