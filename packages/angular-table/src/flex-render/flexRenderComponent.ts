@@ -7,6 +7,44 @@ import type {
   Type,
 } from '@angular/core'
 
+interface FlexRenderRequiredInputOptions<
+  TInputs extends Record<string, any>,
+  TOutputs extends Record<string, any>,
+> {
+  /**
+   * Component instance inputs.
+   * They will be set via [componentRef.setInput API](https://angular.dev/api/core/ComponentRef#setInput)
+   */
+  inputs: TInputs
+  /**
+   * Component instance outputs.
+   */
+  outputs?: TOutputs
+  /**
+   * Optional {@link Injector} that will be used when rendering the component
+   */
+  injector?: Injector
+}
+
+interface FlexRenderOptions<
+  TInputs extends Record<string, any>,
+  TOutputs extends Record<string, any>,
+> {
+  /**
+   * Component instance inputs.
+   * They will be set via [componentRef.setInput API](https://angular.dev/api/core/ComponentRef#setInput)
+   */
+  inputs?: TInputs
+  /**
+   * Component instance outputs.
+   */
+  outputs?: TOutputs
+  /**
+   * Optional {@link Injector} that will be used when rendering the component
+   */
+  injector?: Injector
+}
+
 type Inputs<T> = {
   [K in keyof T as T[K] extends InputSignal<infer R>
     ? K
@@ -29,42 +67,6 @@ type OptionalKeys<T, K = keyof T> = K extends keyof T
     : K
   : never
 
-interface FlexRenderRequiredOptions<
-  TInputs extends Record<string, any>,
-  TOutputs extends Record<string, any>,
-> {
-  /**
-   * Component instance inputs. They will be set via [componentRef.setInput API](https://angular.dev/api/core/ComponentRef#setInput)
-   */
-  inputs: TInputs
-  /**
-   * Component instance outputs.
-   */
-  outputs?: TOutputs
-  /**
-   * Optional {@link Injector} that will be used when rendering the component
-   */
-  injector?: Injector
-}
-
-interface FlexRenderOptions<
-  TInputs extends Record<string, any>,
-  TOutputs extends Record<string, any>,
-> {
-  /**
-   * Component instance inputs. They will be set via [componentRef.setInput API](https://angular.dev/api/core/ComponentRef#setInput)
-   */
-  inputs?: TInputs
-  /**
-   * Component instance outputs.
-   */
-  outputs?: TOutputs
-  /**
-   * Optional {@link Injector} that will be used when rendering the component
-   */
-  injector?: Injector
-}
-
 /**
  * Helper function to create a [@link FlexRenderComponent] instance, with better type-safety.
  *
@@ -80,7 +82,7 @@ export function flexRenderComponent<
   component: Type<TComponent>,
   ...options: OptionalKeys<TInputs> extends never
     ? [FlexRenderOptions<TInputs, TOutputs>?]
-    : [FlexRenderRequiredOptions<TInputs, TOutputs>]
+    : [FlexRenderRequiredInputOptions<TInputs, TOutputs>]
 ): FlexRenderComponent<TComponent> {
   const { inputs, injector, outputs } = options[0] ?? {}
   return new FlexRenderComponent(component, inputs, injector, outputs)

@@ -1,4 +1,13 @@
-import { Directive, effect, inject, input } from '@angular/core'
+import {
+  DestroyRef,
+  Directive,
+  Injector,
+  TemplateRef,
+  ViewContainerRef,
+  computed,
+  inject,
+  input,
+} from '@angular/core'
 import {
   Cell,
   CellData,
@@ -6,7 +15,9 @@ import {
   RowData,
   TableFeatures,
 } from '@tanstack/table-core'
-import { FlexRenderDirective } from '../flexRender'
+import { FlexViewRenderer } from '../flex-render/renderer'
+import type { FlexRenderInputContent } from '../flex-render/renderer'
+import type { CellContext, HeaderContext } from '@tanstack/table-core'
 
 /**
  * Simplified directive wrapper of `*flexRender`.
@@ -29,22 +40,30 @@ import { FlexRenderDirective } from '../flexRender'
  * <td *flexRender="footer.column.columnDef.footer; props: footer.getContext(); let footer">{{footer}}</td>
  * ```
  *
- * @see {FlexRender}
+ * Can be imported through {@link FlexRenderCell} or {@link FlexRender} import,
+ * which the latter is preferred.
+ *
+ * @example
+ * ```ts
+ * import {FlexRender} from '@tanstack/angular-table
+ *
+ * @Component({
+ *  // ...
+ *  imports: [
+ *    FlexRender
+ *  ]
+ * })
+ * ```
  */
 @Directive({
   selector:
     'ng-template[flexRenderCell], ng-template[flexRenderFooter], ng-template[flexRenderHeader]',
-  hostDirectives: [{ directive: FlexRenderDirective }],
 })
 export class FlexRenderCell<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData,
 > {
-  readonly #flexRender = inject(
-    FlexRenderDirective<TFeatures, TData, TValue, any>,
-  )
-
   readonly cell = input<Cell<TFeatures, TData, TValue>>(undefined, {
     alias: 'flexRenderCell',
   })
@@ -57,27 +76,61 @@ export class FlexRenderCell<
     alias: 'flexRenderFooter',
   })
 
-  constructor() {
-    effect(() => {
+  readonly #renderData = computed<
+    | [
+        content: FlexRenderInputContent<CellContext<TFeatures, TData, TValue>>,
+        props: CellContext<TFeatures, TData, TValue>,
+      ]
+    | [
+        content: FlexRenderInputContent<
+          HeaderContext<TFeatures, TData, TValue>
+        >,
+        props: HeaderContext<TFeatures, TData, TValue>,
+      ]
+    | [content: null, props: null]
+  >(
+    () => {
       const cell = this.cell()
       const header = this.header()
       const footer = this.footer()
-      const { content, props } = this.#flexRender
-
       if (cell) {
-        content.set(cell.column.columnDef.cell)
-        props.set(cell.getContext())
+        return [cell.column.columnDef.cell, cell.getContext()]
       }
-
       if (header) {
-        content.set(header.column.columnDef.header)
-        props.set(header.getContext())
+        return [header.column.columnDef.header, header.getContext()]
       }
-
       if (footer) {
-        content.set(footer.column.columnDef.footer)
-        props.set(footer.getContext())
+        return [footer.column.columnDef.footer, footer.getContext()]
       }
+      return [null, null]
+    },
+    {
+      equal: (a, b) => {
+        return a[0] === b[0] && a[1] === b[1]
+      },
+    },
+  )
+
+  readonly #injector = inject(Injector)
+  readonly #templateRef = inject(TemplateRef)
+  readonly #viewContainerRef = inject(ViewContainerRef)
+
+  constructor() {
+    const content = computed(() => this.#renderData()[0])
+    const props = computed(() => this.#renderData()[1])
+
+    const renderer = new FlexViewRenderer<TFeatures, TData, TValue, any>({
+      content: content,
+      props: props,
+      injector: () => this.#injector,
+      templateRef: this.#templateRef,
+      viewContainerRef: this.#viewContainerRef,
+    })
+
+    renderer.mount()
+
+    inject(DestroyRef).onDestroy(() => {
+      renderer.destroy()
     })
   }
 }

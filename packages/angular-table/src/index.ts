@@ -8,7 +8,7 @@ export * from './flexRender'
 export * from './injectTable'
 // export * from './lazySignalInitializer'
 // export * from './reactivityUtils'
-export * from './flex-render/flex-render-component'
+export * from './flex-render/flexRenderComponent'
 
 export * from './helpers/cell'
 export * from './helpers/header'
@@ -16,4 +16,7 @@ export * from './helpers/table'
 export * from './helpers/createTableHook'
 export * from './helpers/flexRenderCell'
 
+/**
+ * Constant helper to import FlexRender directives.
+ */
 export const FlexRender = [FlexRenderDirective, FlexRenderCell] as const
