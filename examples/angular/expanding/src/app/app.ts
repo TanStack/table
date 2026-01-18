@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   createExpandedRowModel,
   createPaginatedRowModel,
   flexRenderComponent,
@@ -17,11 +17,14 @@ import {
 } from '@tanstack/angular-table'
 import { ReactiveFormsModule } from '@angular/forms'
 import { makeData } from './makeData'
-import { ExpandableCell, ExpandableHeaderCell } from './expandable-cell'
+import {
+  ExpandableCell,
+  ExpandableHeaderCell,
+} from './expandable-cell/expandable-cell'
 import type { Person } from './makeData'
 import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+export const _features = tableFeatures({
   rowExpandingFeature: rowExpandingFeature,
   rowPaginationFeature: rowPaginationFeature,
   rowSelectionFeature: rowSelectionFeature,
@@ -69,19 +72,19 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRenderDirective, ReactiveFormsModule],
-  templateUrl: './app.component.html',
+  imports: [FlexRender, ReactiveFormsModule],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly data = signal<Array<Person>>(makeData(100, 5, 3))
   readonly expanded = signal<ExpandedState>({})
 
   readonly table = injectTable(() => ({
     _features,
     _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-      expandedRowModel: createExpandedRowModel(),
+      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
+      expandedRowModel: createExpandedRowModel<typeof _features, Person>(),
     },
     data: this.data(),
     columns: defaultColumns,

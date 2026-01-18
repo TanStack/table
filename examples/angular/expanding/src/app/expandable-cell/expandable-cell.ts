@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core'
 import {
-  type HeaderContext,
-  injectFlexRenderContext,
-  type Table,
-  CellContext,
-  rowExpandingFeature,
-  RowData,
-  rowSelectionFeature,
+  injectTableCellContext,
+  injectTableHeaderContext,
 } from '@tanstack/angular-table'
+import type { RowData } from '@tanstack/angular-table'
+import type { _features } from '../app'
 
 @Component({
   standalone: true,
@@ -21,7 +18,7 @@ import {
     {{ ' ' }}
 
     <button (click)="table.getToggleAllRowsExpandedHandler()($event)">
-      {{ context.table.getIsAllRowsExpanded() ? '👇' : '👉' }}
+      {{ table.getIsAllRowsExpanded() ? '👇' : '👉' }}
     </button>
 
     {{ label() }}
@@ -29,21 +26,12 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpandableHeaderCell<T extends RowData> {
-  readonly context = injectFlexRenderContext<
-    HeaderContext<
-      {
-        rowExpandingFeature: typeof rowExpandingFeature
-        rowSelectionFeature: typeof rowSelectionFeature
-      },
-      T,
-      unknown
-    >
-  >()
+  readonly context = injectTableHeaderContext<typeof _features, T, unknown>()
 
   readonly label = input.required<string>()
 
   get table() {
-    return this.context.table
+    return this.context().table
   }
 }
 
@@ -69,7 +57,7 @@ export class ExpandableHeaderCell<T extends RowData> {
         }
         {{ ' ' }}
 
-        {{ context.getValue() }}
+        {{ context().getValue() }}
       </div>
     </div>
   `,
@@ -83,18 +71,9 @@ export class ExpandableHeaderCell<T extends RowData> {
   `,
 })
 export class ExpandableCell<T extends RowData> {
-  readonly context = injectFlexRenderContext<
-    CellContext<
-      {
-        rowExpandingFeature: typeof rowExpandingFeature
-        rowSelectionFeature: typeof rowSelectionFeature
-      },
-      T,
-      unknown
-    >
-  >()
+  readonly context = injectTableCellContext<typeof _features, T, unknown>()
 
   get row() {
-    return this.context.row
+    return this.context().row
   }
 }
