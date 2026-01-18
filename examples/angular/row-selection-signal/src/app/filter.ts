@@ -50,13 +50,13 @@ export class FilterComponent<T extends RowData> implements OnInit {
   }
 
   getMinValue() {
-    const minValue = this.column().getFilterValue() as any
+    const minValue = this.column().getFilterValue()
 
     return (minValue?.[0] ?? '') as string
   }
 
   getMaxValue() {
-    const maxValue = this.column().getFilterValue() as any
+    const maxValue = this.column().getFilterValue()
     return (maxValue?.[1] ?? '') as string
   }
 

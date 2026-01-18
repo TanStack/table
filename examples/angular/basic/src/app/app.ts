@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
-import type { ColumnDef } from '@tanstack/angular-table'
 import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
+import type { ColumnDef } from '@tanstack/angular-table'
 
 // This example uses the classic standalone `injectTable` hook to create a table without the new `createTableHook` util.
 

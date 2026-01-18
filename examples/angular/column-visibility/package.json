@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "lint": "eslint ./src",
     "watch": "ng build --watch --configuration development"
   },
   "private": true,

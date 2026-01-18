@@ -5,12 +5,11 @@ import {
   output,
 } from '@angular/core'
 import {
-  type HeaderContext,
-  injectFlexRenderContext,
-  type Table,
-  CellContext,
-  RowData,
+  injectFlexRenderContext
 } from '@tanstack/angular-table'
+import type {
+  CellContext,
+  RowData} from '@tanstack/angular-table';
 
 @Component({
   standalone: true,
