@@ -1,8 +1,8 @@
 import { TemplateRef, Type } from '@angular/core'
-import { FlexRenderComponent } from './flex-render-component'
+import { FlexRenderComponent } from './flexRenderComponent'
+import type { FlexRenderContent } from './renderer'
 import type { EmbeddedViewRef } from '@angular/core'
-import type { FlexRenderComponentRef } from './flex-render-component-ref'
-import type { FlexRenderContent } from '../flexRender'
+import type { FlexRenderComponentRef } from './flexRenderComponentFactory'
 
 export type FlexRenderTypedContent =
   | { kind: 'null' }

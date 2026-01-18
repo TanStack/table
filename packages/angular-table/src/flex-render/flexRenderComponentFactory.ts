@@ -9,7 +9,7 @@ import {
   OutputRefSubscription,
   ViewContainerRef,
 } from '@angular/core'
-import { FlexRenderComponent } from './flex-render-component'
+import { FlexRenderComponent } from './flexRenderComponent'
 
 @Injectable()
 export class FlexRenderComponentFactory {
