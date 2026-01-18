@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
-import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
 import type { ColumnDef } from '@tanstack/angular-table'
+import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
 
 // This example uses the classic standalone `injectTable` hook to create a table without the new `createTableHook` util.
 
@@ -86,10 +86,10 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 @Component({
   selector: 'app-root',
   imports: [FlexRender],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly data = signal<Array<Person>>(defaultData)
 
   // 5. Create the table instance with required _features, columns, and data
