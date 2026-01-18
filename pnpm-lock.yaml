@@ -90,10 +90,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -130,10 +130,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -176,10 +176,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -222,10 +222,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -268,10 +268,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -314,10 +314,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -360,10 +360,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -406,10 +406,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -449,10 +449,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -495,10 +495,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -541,10 +541,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -587,10 +587,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -633,10 +633,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -743,10 +743,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -792,10 +792,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -890,10 +890,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
@@ -936,10 +936,10 @@ importers:
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/angular-table
       rxjs:
-        specifier: ~7.8.0
+        specifier: ~7.8.2
         version: 7.8.2
       tslib:
-        specifier: ^2.3.0
+        specifier: ^2.8.1
         version: 2.8.1
     devDependencies:
       '@angular/build':
