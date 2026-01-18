@@ -1,17 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  input,
-  output,
-  signal,
-  untracked,
-} from '@angular/core'
-import { FormsModule } from '@angular/forms'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 import { CdkDragHandle } from '@angular/cdk/drag-drop'
 
 @Component({
-  selector: 'editable-cell',
+  selector: 'drag-handle-cell',
   template: ` <button cdkDragHandle>🟰</button> `,
   imports: [CdkDragHandle],
   changeDetection: ChangeDetectionStrategy.OnPush,

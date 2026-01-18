@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   columnSizingFeature,
   columnVisibilityFeature,
   flexRenderComponent,
@@ -15,7 +15,7 @@ import {
 } from '@tanstack/angular-table'
 import { CdkDrag, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop'
 import { JsonPipe } from '@angular/common'
-import { DragHandleCell } from './drag-handle-cell'
+import { DragHandleCell } from './drag-handle-cell/drag-handle-cell'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { CdkDragDrop } from '@angular/cdk/drag-drop'
@@ -64,12 +64,12 @@ const defaultColumns: Array<ColumnDef<typeof _tableFeatures, Person>> = [
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRenderDirective, CdkDropList, CdkDrag, JsonPipe],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  imports: [FlexRender, CdkDropList, CdkDrag, JsonPipe],
+  templateUrl: './app.html',
+  styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly data = signal<Array<Person>>(makeData(20))
 
   readonly table = injectTable(() => {

@@ -6,13 +6,7 @@
           @for (header of headerGroup.headers; track header.id) {
             @if (!header.isPlaceholder) {
               <th>
-                <ng-container
-                  *flexRender="
-                    header.column.columnDef.header;
-                    props: header.getContext();
-                    let header
-                  "
-                >
+                <ng-container *flexRenderHeader="header; let header">
                   <div [innerHTML]="header"></div>
                 </ng-container>
               </th>
@@ -28,20 +22,10 @@
       (cdkDropListDropped)="drop($event)"
     >
       @for (row of table.getRowModel().rows; track row.id) {
-        <tr
-          cdkDrag
-          [cdkDragData]="row.original"
-          [cdkDragBoundary]="boundaryElement"
-        >
+        <tr cdkDrag [cdkDragData]="row.original" [cdkDragBoundary]="boundaryElement">
           @for (cell of row.getVisibleCells(); track cell.id) {
             <td [style.width.px]="cell.column.getSize()">
-              <ng-container
-                *flexRender="
-                  cell.column.columnDef.cell;
-                  props: cell.getContext();
-                  let cell
-                "
-              >
+              <ng-container *flexRenderCell="cell; let cell">
                 <div [innerHTML]="cell"></div>
               </ng-container>
             </td>
