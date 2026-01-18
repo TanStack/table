@@ -21,10 +21,7 @@
                 @if (header.column.getCanFilter()) {
                   <div>
                     <!-- TODO fix type -->
-                    <app-table-filter
-                      [column]="$any(header.column)"
-                      [table]="table"
-                    />
+                    <app-table-filter [column]="$any(header.column)" [table]="table" />
                   </div>
                 }
               }
@@ -39,11 +36,7 @@
           @for (cell of row.getVisibleCells(); track cell.id) {
             <td>
               <ng-container
-                *flexRender="
-                  cell.column.columnDef.cell;
-                  props: cell.getContext();
-                  let renderCell
-                "
+                *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let renderCell"
               >
                 {{ renderCell }}
               </ng-container>
@@ -62,9 +55,7 @@
             (change)="table.toggleAllPageRowsSelected()"
           />
         </td>
-        <td [attr.colspan]="20">
-          Page Rows ({{ table.getRowModel().rows.length }})
-        </td>
+        <td [attr.colspan]="20">Page Rows ({{ table.getRowModel().rows.length }})</td>
       </tr>
     </tfoot>
   </table>
@@ -116,10 +107,7 @@
       />
     </span>
 
-    <select
-      [value]="table.store.state.pagination.pageSize"
-      (change)="onPageSizeChange($event)"
-    >
+    <select [value]="table.store.state.pagination.pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }
@@ -127,15 +115,12 @@
   </div>
   <br />
   <div>
-    {{ rowSelectionLength() }} of
-    {{ table.getPreFilteredRowModel().rows.length }} Total Rows
+    {{ rowSelectionLength() }} of {{ table.getPreFilteredRowModel().rows.length }} Total Rows
   </div>
   <hr />
   <br />
   <div>
-    <button class="border rounded p-2 mb-2" (click)="refreshData()">
-      Refresh Data
-    </button>
+    <button class="border rounded p-2 mb-2" (click)="refreshData()">Refresh Data</button>
   </div>
   <div>
     <button class="border rounded p-2 mb-2" (click)="logSelectedFlatRows()">

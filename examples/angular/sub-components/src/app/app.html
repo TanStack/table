@@ -22,9 +22,7 @@
           <tr>
             @for (cell of row.getVisibleCells(); track cell.id) {
               <td>
-                <ng-container
-                  *flexRenderCell="cell; let cell"
-                >
+                <ng-container *flexRenderCell="cell; let cell">
                   <div [innerHTML]="cell"></div>
                 </ng-container>
               </td>
@@ -35,7 +33,7 @@
             <tr>
               <!-- 2nd row is a custom 1 cell row -->
               <td [colSpan]="row.getVisibleCells().length">
-                <app-sub [row]="row"/>
+                <app-sub [row]="row" />
               </td>
             </tr>
           }

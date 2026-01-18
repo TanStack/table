@@ -30,11 +30,7 @@
             @for (cell of row.getAllCells(); track cell.id) {
               <td>
                 <ng-container
-                  *flexRender="
-                    cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let cell
-                  "
+                  *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cell"
                 >
                   <div [innerHTML]="cell"></div>
                 </ng-container>
@@ -93,10 +89,7 @@
       />
     </span>
 
-    <select
-      [value]="table.store.state.pagination.pageSize"
-      (change)="onPageSizeChange($event)"
-    >
+    <select [value]="table.store.state.pagination.pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }

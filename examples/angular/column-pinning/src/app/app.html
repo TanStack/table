@@ -29,19 +29,12 @@
 
   <div class="flex flex-wrap gap-2">
     <button (click)="rerender()" class="border p-1">Regenerate</button>
-    <button (click)="randomizeColumns()" class="border p-1">
-      Shuffle Columns
-    </button>
+    <button (click)="randomizeColumns()" class="border p-1">Shuffle Columns</button>
   </div>
   <div class="h-4"></div>
   <div>
     <label>
-      <input
-        type="checkbox"
-        #input
-        [checked]="split()"
-        (change)="split.set(input.checked)"
-      />
+      <input type="checkbox" #input [checked]="split()" (change)="split.set(input.checked)" />
       Split mode
     </label>
   </div>
@@ -51,10 +44,7 @@
     @if (split()) {
       <table class="border-2 border-black">
         <thead>
-          @for (
-            headerGroup of table.getLeftHeaderGroups();
-            track headerGroup.id
-          ) {
+          @for (headerGroup of table.getLeftHeaderGroups(); track headerGroup.id) {
             <tr>
               @for (header of headerGroup.headers; track header.id) {
                 <th [attr.colSpan]="header.colSpan">
@@ -73,10 +63,7 @@
                   </div>
 
                   <ng-container
-                    *ngTemplateOutlet="
-                      headerContentTpl;
-                      context: { $implicit: header }
-                    "
+                    *ngTemplateOutlet="headerContentTpl; context: { $implicit: header }"
                   />
                 </th>
               }
@@ -109,10 +96,7 @@
     <!-- Center Side -->
     <table class="border-2 border-black">
       <thead>
-        @if (
-          split() ? table.getCenterHeaderGroups() : table.getHeaderGroups();
-          as headerGroups
-        ) {
+        @if (split() ? table.getCenterHeaderGroups() : table.getHeaderGroups(); as headerGroups) {
           @for (headerGroup of headerGroups; track headerGroup.id) {
             <tr>
               @for (header of headerGroup.headers; track header.id) {
@@ -131,10 +115,7 @@
                     }
 
                     <ng-container
-                      *ngTemplateOutlet="
-                        headerContentTpl;
-                        context: { $implicit: header }
-                      "
+                      *ngTemplateOutlet="headerContentTpl; context: { $implicit: header }"
                     />
                   </div>
                 </th>
@@ -145,10 +126,7 @@
       </thead>
       <tbody>
         @for (row of table.getRowModel().rows | slice: 0 : 20; track row.id) {
-          @if (
-            split() ? row.getCenterVisibleCells() : row.getVisibleCells();
-            as cells
-          ) {
+          @if (split() ? row.getCenterVisibleCells() : row.getVisibleCells(); as cells) {
             <tr>
               @for (cell of cells; track cell.id) {
                 <td>
@@ -173,10 +151,7 @@
     @if (split()) {
       <table class="border-2 border-black">
         <thead>
-          @for (
-            headerGroup of table.getRightHeaderGroups();
-            track headerGroup.id
-          ) {
+          @for (headerGroup of table.getRightHeaderGroups(); track headerGroup.id) {
             <tr>
               @for (header of headerGroup.headers; track header.id) {
                 <th [attr.colSpan]="header.colSpan">
@@ -195,10 +170,7 @@
                   </div>
 
                   <ng-container
-                    *ngTemplateOutlet="
-                      headerContentTpl;
-                      context: { $implicit: header }
-                    "
+                    *ngTemplateOutlet="headerContentTpl; context: { $implicit: header }"
                   />
                 </th>
               }
@@ -237,24 +209,15 @@
   @if (!header.isPlaceholder && header.column.getCanPin()) {
     <div class="flex gap-1 justify-center">
       @if (header.column.getIsPinned() !== 'left') {
-        <button class="border rounded px-2" (click)="header.column.pin('left')">
-          <=
-        </button>
+        <button class="border rounded px-2" (click)="header.column.pin('left')"><=</button>
       }
 
       @if (header.column.getIsPinned()) {
-        <button class="border rounded px-2" (click)="header.column.pin(false)">
-          X
-        </button>
+        <button class="border rounded px-2" (click)="header.column.pin(false)">X</button>
       }
 
       @if (header.column.getIsPinned() !== 'right') {
-        <button
-          class="border rounded px-2"
-          (click)="header.column.pin('right')"
-        >
-          =>
-        </button>
+        <button class="border rounded px-2" (click)="header.column.pin('right')">=></button>
       }
     </div>
   }

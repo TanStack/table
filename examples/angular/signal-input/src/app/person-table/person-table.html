@@ -6,11 +6,7 @@
           <th [attr.colSpan]="header.colSpan">
             @if (!header.isPlaceholder) {
               <ng-container
-                *flexRender="
-                  header.column.columnDef.header;
-                  props: header.getContext();
-                  let header
-                "
+                *flexRender="header.column.columnDef.header; props: header.getContext(); let header"
               >
                 <span>{{ header }}</span>
               </ng-container>
@@ -26,11 +22,7 @@
         @for (cell of row.getVisibleCells(); track cell.id) {
           <td>
             <ng-container
-              *flexRender="
-                cell.column.columnDef.cell;
-                props: cell.getContext();
-                let cell
-              "
+              *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cell"
             >
               {{ cell }}
             </ng-container>
@@ -88,10 +80,7 @@
     />
   </span>
 
-  <select
-    [value]="table.store.state.pagination.pageSize"
-    (change)="onPageSizeChange($event)"
-  >
+  <select [value]="table.store.state.pagination.pageSize" (change)="onPageSizeChange($event)">
     @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
       <option [value]="pageSize">Show {{ pageSize }}</option>
     }

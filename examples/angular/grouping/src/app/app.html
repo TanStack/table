@@ -53,9 +53,7 @@
                 >
                   {{ row.getIsExpanded() ? '👇 ' : '👉' }}
                 </button>
-                <ng-container
-                  *flexRenderCell="cell; let cell"
-                >
+                <ng-container *flexRenderCell="cell; let cell">
                   <span>{{ cell }}</span>
                 </ng-container>
                 {{ ' ' }}{{ row.subRows.length }}
@@ -75,9 +73,7 @@
               } @else {
                 <!-- For cells with repeated values, render null-->
                 <!-- Otherwise, just render the regular cell-->
-                <ng-container
-                  *flexRenderCell="cell; let cell"
-                >
+                <ng-container *flexRenderCell="cell; let cell">
                   {{ cell }}
                 </ng-container>
               }

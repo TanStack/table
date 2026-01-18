@@ -29,9 +29,7 @@
 
   <div class="flex flex-wrap gap-2">
     <button (click)="rerender()" class="border p-1">Regenerate</button>
-    <button (click)="randomizeColumns()" class="border p-1">
-      Shuffle Columns
-    </button>
+    <button (click)="randomizeColumns()" class="border p-1">Shuffle Columns</button>
   </div>
   <div class="h-4"></div>
 
@@ -42,10 +40,7 @@
           <tr>
             @for (header of headerGroup.headers; track header.id) {
               <!-- IMPORTANT: This is where the magic happens! -->
-              <th
-                [attr.colSpan]="header.colSpan"
-                [style]="getCommonPinningStyles(header.column)"
-              >
+              <th [attr.colSpan]="header.colSpan" [style]="getCommonPinningStyles(header.column)">
                 <div class="whitespace-nowrap">
                   @if (!header.isPlaceholder) {
                     <ng-container
@@ -59,38 +54,25 @@
                     </ng-container>
                   }
                   <!-- Demo getIndex behavior -->
-                  {{
-                    header.column.getIndex(
-                      header.column.getIsPinned() || 'center'
-                    )
-                  }}
+                  {{ header.column.getIndex(header.column.getIsPinned() || 'center') }}
                 </div>
 
                 @if (!header.isPlaceholder && header.column.getCanPin()) {
                   <div class="flex gap-1 justify-center">
                     @if (header.column.getIsPinned() !== 'left') {
-                      <button
-                        class="border rounded px-2"
-                        (click)="header.column.pin('left')"
-                      >
+                      <button class="border rounded px-2" (click)="header.column.pin('left')">
                         <=
                       </button>
                     }
 
                     @if (header.column.getIsPinned()) {
-                      <button
-                        class="border rounded px-2"
-                        (click)="header.column.pin(false)"
-                      >
+                      <button class="border rounded px-2" (click)="header.column.pin(false)">
                         X
                       </button>
                     }
 
                     @if (header.column.getIsPinned() !== 'right') {
-                      <button
-                        class="border rounded px-2"
-                        (click)="header.column.pin('right')"
-                      >
+                      <button class="border rounded px-2" (click)="header.column.pin('right')">
                         =>
                       </button>
                     }
@@ -116,11 +98,7 @@
             @for (cell of row.getVisibleCells(); track cell.id) {
               <td [style]="getCommonPinningStyles(cell.column)">
                 <ng-container
-                  *flexRender="
-                    cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let cellValue
-                  "
+                  *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let cellValue"
                 >
                   {{ cellValue }}
                 </ng-container>
