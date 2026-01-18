@@ -1,5 +1,5 @@
-import { computed, isSignal, signal } from '@angular/core'
-import { defineLazyComputedProperty, markReactive } from './reactivityUtils'
+import { computed, signal } from '@angular/core'
+import { setReactivePropertiesOnObject } from './reactivityUtils'
 import type { Signal } from '@angular/core'
 import type {
   RowData,
@@ -85,8 +85,7 @@ function constructAngularReactivityFeature<
       const rootNotifier = signal<Signal<any> | null>(null)
       table.setTableNotifier = (notifier) => rootNotifier.set(notifier)
       table.get = computed(() => rootNotifier()!(), { equal: () => false })
-      markReactive(table)
-      setReactiveProps(table.get, table, {
+      setReactivePropertiesOnObject(table.get, table, {
         overridePrototype: false,
         skipProperty: skipBaseProperties,
       })
@@ -96,8 +95,7 @@ function constructAngularReactivityFeature<
       if (table.options.reactivity?.cell === false) {
         return
       }
-      markReactive(prototype)
-      setReactiveProps(table.get, prototype, {
+      setReactivePropertiesOnObject(table.get, prototype, {
         skipProperty: getUserSkipPropertyFn(
           table.options.reactivity?.cell,
           skipBaseProperties,
@@ -110,8 +108,7 @@ function constructAngularReactivityFeature<
       if (table.options.reactivity?.column === false) {
         return
       }
-      markReactive(prototype)
-      setReactiveProps(table.get, prototype, {
+      setReactivePropertiesOnObject(table.get, prototype, {
         skipProperty: getUserSkipPropertyFn(
           table.options.reactivity?.cell,
           skipBaseProperties,
@@ -124,8 +121,7 @@ function constructAngularReactivityFeature<
       if (table.options.reactivity?.header === false) {
         return
       }
-      markReactive(prototype)
-      setReactiveProps(table.get, prototype, {
+      setReactivePropertiesOnObject(table.get, prototype, {
         skipProperty: getUserSkipPropertyFn(
           table.options.reactivity?.cell,
           skipBaseProperties,
@@ -138,8 +134,7 @@ function constructAngularReactivityFeature<
       if (table.options.reactivity?.row === false) {
         return
       }
-      markReactive(prototype)
-      setReactiveProps(table.get, prototype, {
+      setReactivePropertiesOnObject(table.get, prototype, {
         skipProperty: getUserSkipPropertyFn(
           table.options.reactivity?.cell,
           skipBaseProperties,
@@ -163,32 +158,4 @@ function skipBaseProperties(property: string): boolean {
     // ends with `Handler`
     property.endsWith('Handler')
   )
-}
-
-function setReactiveProps(
-  notifier: Signal<Table<any, any>>,
-  obj: { [key: string]: any },
-  options: {
-    overridePrototype?: boolean
-    skipProperty: (property: string) => boolean
-  },
-) {
-  const { skipProperty } = options
-
-  for (const property in obj) {
-    const value = obj[property]
-    if (
-      isSignal(value) ||
-      typeof value !== 'function' ||
-      skipProperty(property)
-    ) {
-      continue
-    }
-    defineLazyComputedProperty(notifier, {
-      valueFn: value,
-      property,
-      originalObject: obj,
-      overridePrototype: options.overridePrototype,
-    })
-  }
 }

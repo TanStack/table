@@ -1,0 +1,20 @@
+table {
+  &[data-table-density] {
+    :where(td, th) {
+      transition: padding 0.2s;
+      padding: 16px;
+    }
+
+    &[data-table-density='sm'] {
+      :where(td, th) {
+        padding: 4px;
+      }
+    }
+
+    &[data-table-density='md'] {
+      :where(td, th) {
+        padding: 8px;
+      }
+    }
+  }
+}

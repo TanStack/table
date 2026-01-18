@@ -8,11 +8,11 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "lint": "eslint ./src",
     "serve:ssr:remote-data": "node dist/remote-data/server/server.mjs"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^21.1.0",
     "@angular/common": "^21.1.0",
     "@angular/compiler": "^21.1.0",
     "@angular/core": "^21.1.0",
@@ -24,8 +24,7 @@
     "@angular/ssr": "^21.1.0",
     "@tanstack/angular-table": "^9.0.0-alpha.10",
     "express": "^5.2.1",
-    "rxjs": "~7.8.2",
-    "zone.js": "~0.16.0"
+    "rxjs": "~7.8.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^21.1.0",

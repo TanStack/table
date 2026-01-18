@@ -1,0 +1,72 @@
+import { Component, computed, input } from '@angular/core'
+import { injectTableContext } from '../table'
+import type { Column } from '@tanstack/angular-table'
+
+@Component({
+  selector: 'app-table-filter',
+  template: `
+    @let columnType = this.columnType();
+
+    @if (columnType == 'number') {
+      <div class="flex space-x-2">
+        <input
+          #min
+          type="number"
+          class="w-24 border shadow rounded"
+          placeholder="Min"
+          [value]="getMinValue()"
+          (input)="updateMinFilterValue(min.value)"
+        />
+        <input
+          #max
+          type="number"
+          class="w-36 border shadow rounded"
+          placeholder="max"
+          [value]="getMaxValue()"
+          (input)="updateMaxFilterValue(max.value)"
+        />
+      </div>
+    } @else {
+      <input
+        #search
+        type="text"
+        class="w-36 border shadow rounded"
+        placeholder="Search..."
+        [value]="column().getFilterValue() ?? ''"
+        (input)="column().setFilterValue(search.value)"
+      />
+    }
+  `,
+  standalone: true,
+})
+export class TableFilter {
+  readonly column = input.required<Column<any, any, any>>()
+  readonly table = injectTableContext()
+
+  readonly columnType = computed(() => {
+    return typeof this.table()
+      .getPreFilteredRowModel()
+      .flatRows[0]?.getValue(this.column().id)
+  })
+
+  getMinValue() {
+    const minValue = this.column().getFilterValue()
+
+    return (minValue?.[0] ?? '') as string
+  }
+
+  getMaxValue() {
+    const maxValue = this.column().getFilterValue()
+    return (maxValue?.[1] ?? '') as string
+  }
+
+  updateMinFilterValue(newValue: string): void {
+    this.column().setFilterValue((old: any) => {
+      return [newValue, old?.[1]]
+    })
+  }
+
+  updateMaxFilterValue(newValue: string): void {
+    this.column().setFilterValue((old: any) => [old?.[0], newValue])
+  }
+}

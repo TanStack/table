@@ -1,7 +1,6 @@
-import { provideRouter } from '@angular/router'
-import { routes } from './app.routes'
+import { provideBrowserGlobalErrorListeners } from '@angular/core'
 import type { ApplicationConfig } from '@angular/core'
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)],
+  providers: [provideBrowserGlobalErrorListeners()],
 }

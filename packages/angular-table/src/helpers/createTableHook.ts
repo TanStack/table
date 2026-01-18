@@ -333,7 +333,7 @@ export type CreateTableHookResult<
     TData extends RowData,
     TValue extends CellData,
   >() => CellContext<TFeatures, TData, TValue>
-  injectAppTable: <TData extends RowData, TSelected = {}>(
+  injectAppTable: <TData extends RowData, TSelected = TableState<TFeatures>>(
     tableOptions: () => Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'

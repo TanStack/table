@@ -6,6 +6,9 @@ import type { CellContext, TableFeatures } from '@tanstack/angular-table'
 import type { Person } from '../makeData'
 
 @Component({
+  // Using dynamic components with Angular, we can just put a simple selector
+  // that will be rendered, but we need to specify an unique host property
+  // that will identify this component
   selector: 'span',
   host: {
     'tanstack-table-text-cell': '',

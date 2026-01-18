@@ -1,15 +1,15 @@
-import { computed } from '@angular/core'
+import { computed, isSignal } from '@angular/core'
 import { $internalMemoFnMeta, getMemoFnMeta } from '@tanstack/table-core'
 import type { MemoFnMeta } from '@tanstack/table-core'
 import type { Signal } from '@angular/core'
 
-export const $TABLE_REACTIVE = Symbol('reactive')
+const $TABLE_REACTIVE = Symbol('reactive')
 
-export function markReactive<T extends object>(obj: T): void {
+function markReactive<T extends object>(obj: T): void {
   Object.defineProperty(obj, $TABLE_REACTIVE, { value: true })
 }
 
-export function isReactive<T>(obj: T): boolean {
+function isReactive<T>(obj: T): boolean {
   return Reflect.get(obj as {}, $TABLE_REACTIVE) === true
 }
 
@@ -21,7 +21,7 @@ export function isReactive<T>(obj: T): boolean {
  *
  * @internal should be used only internally
  */
-export function defineLazyComputedProperty<T extends object>(
+function defineLazyComputedProperty<T extends object>(
   notifier: Signal<T>,
   setObjectOptions: {
     originalObject: T
@@ -154,7 +154,7 @@ function getFnArgsLength(
   return Math.max(0, getMemoFnMeta(fn)?.originalArgsLength ?? fn.length)
 }
 
-export function assignReactivePrototypeAPI(
+function assignReactivePrototypeAPI(
   notifier: Signal<unknown>,
   prototype: Record<string, any>,
   fnName: string,
@@ -196,5 +196,37 @@ export function assignReactivePrototypeAPI(
     prototype[fnName][$internalMemoFnMeta] = {
       originalArgsLength,
     } satisfies MemoFnMeta
+  }
+}
+
+export function setReactivePropertiesOnObject<T extends object>(
+  notifier: Signal<T>,
+  obj: { [key: string]: any },
+  options: {
+    overridePrototype?: boolean
+    skipProperty: (property: string) => boolean
+  },
+) {
+  const { skipProperty } = options
+  if (isReactive(obj)) {
+    return
+  }
+  markReactive(obj)
+
+  for (const property in obj) {
+    const value = obj[property]
+    if (
+      isSignal(value) ||
+      typeof value !== 'function' ||
+      skipProperty(property)
+    ) {
+      continue
+    }
+    defineLazyComputedProperty(notifier, {
+      valueFn: value,
+      property,
+      originalObject: obj,
+      overridePrototype: options.overridePrototype,
+    })
   }
 }
