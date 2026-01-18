@@ -15,21 +15,13 @@ import {
 import { faker } from '@faker-js/faker'
 import { NgTemplateOutlet, SlicePipe } from '@angular/common'
 import { makeData } from './makeData'
+import type { Person } from './makeData'
 import type {
   ColumnDef,
   ColumnOrderState,
   ColumnPinningState,
   ColumnVisibilityState,
 } from '@tanstack/angular-table'
-
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
 
 const _features = tableFeatures({
   columnPinningFeature,
@@ -92,10 +84,10 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 @Component({
   selector: 'app-root',
   imports: [FlexRenderDirective, SlicePipe, NgTemplateOutlet],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly data = signal<Array<Person>>(makeData(5000))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
