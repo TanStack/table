@@ -32,7 +32,7 @@ interface FlexRenderOptions<
    *
    * @example
    * ```ts
-   * import {flexRenderComponent} from '@tantack/angular-table';
+   * import {flexRenderComponent} from '@tanstack/angular-table';
    * flexRenderComponent(MyComponent, {
    *   bindings: [
    *     // Will update `value` input every time `mySignalValue` changes
@@ -45,7 +45,7 @@ interface FlexRenderOptions<
    *     }),
    *     // Two-way binding between `value` input and `valueChange` output
    *     // Useful while using `model` inputs.
-   *     twoWayBinding('value', 'myValue')
+   *     twoWayBinding('value', mySignal)
    *   ]
    * })
    * ```
@@ -64,7 +64,7 @@ interface FlexRenderOptions<
    *
    * @example
    * ```ts
-   * import {flexRenderComponent} from '@tantack/angular-table';
+   * import {flexRenderComponent} from '@tanstack/angular-table';
    * flexRenderComponent(MyComponent, {
    *   bindings: [
    *      // ...
