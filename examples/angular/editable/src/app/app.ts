@@ -7,14 +7,14 @@ import {
   signal,
 } from '@angular/core'
 import {
-  FlexRenderDirective,
+  FlexRender,
   createPaginatedRowModel,
   flexRenderComponent,
   injectTable,
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { EditableCell } from './editable-cell'
+import { EditableCell } from './editable-cell/editable-cell'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { ColumnDef, RowData, TableFeatures } from '@tanstack/angular-table'
@@ -38,7 +38,7 @@ const defaultColumn: Partial<ColumnDef<typeof _features, Person>> = {
         value: initialValue,
       },
       outputs: {
-        blur: (value) => {
+        change: (value) => {
           if (table.options.meta?.updateData) {
             table.options.meta.updateData(row.index, column.id, value)
           }
@@ -83,11 +83,11 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRenderDirective],
-  templateUrl: './app.component.html',
+  imports: [FlexRender],
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly data = signal<Array<Person>>(makeData(10_000))
   readonly injector = inject(Injector)
 
@@ -98,7 +98,7 @@ export class AppComponent {
     columns: defaultColumns,
     _features,
     _rowModels: {
-      paginatedRowModel: createPaginatedRowModel() as any,
+      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
     },
     defaultColumn: defaultColumn,
     debugTable: true,

@@ -6,13 +6,7 @@
           @for (header of headerGroup.headers; track header.id) {
             @if (!header.isPlaceholder) {
               <th>
-                <ng-container
-                  *flexRender="
-                    header.column.columnDef.header;
-                    props: header.getContext();
-                    let header
-                  "
-                >
+                <ng-container *flexRenderHeader="header; let header">
                   <div [innerHTML]="header"></div>
                 </ng-container>
               </th>
@@ -26,13 +20,7 @@
         <tr>
           @for (cell of row.getAllCells(); track cell.id) {
             <td>
-              <ng-container
-                *flexRender="
-                  cell.column.columnDef.cell;
-                  props: cell.getContext();
-                  let cell
-                "
-              >
+              <ng-container *flexRenderCell="cell; let cell">
                 <div [innerHTML]="cell"></div>
               </ng-container>
             </td>
@@ -45,13 +33,7 @@
         <tr>
           @for (footer of footerGroup.headers; track footer.id) {
             <th>
-              <ng-container
-                *flexRender="
-                  footer.column.columnDef.footer;
-                  props: footer.getContext();
-                  let footer
-                "
-              >
+              <ng-container *flexRenderFooter="footer; let footer">
                 {{ footer }}
               </ng-container>
             </th>
@@ -100,7 +82,5 @@
     </span>
   </div>
   <br />
-  <button class="border rounded p-2 mb-2" (click)="refresh()">
-    Refresh data
-  </button>
+  <button class="border rounded p-2 mb-2" (click)="refresh()">Refresh data</button>
 </div>

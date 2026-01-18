@@ -8,7 +8,20 @@ import { ProductsTable } from './components/products-table/products-table'
   host: {
     class: 'app',
   },
-  templateUrl: './app.component.html',
+  template: `
+    <h1>Composable Tables Example</h1>
+    <p class="description">
+      Both tables below use the same <code>injectAppTable</code> function and
+      shareable components, but with different data types and column
+      configurations.
+    </p>
+
+    <users-table />
+
+    <div class="table-divider"></div>
+
+    <products-table />
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {}
+export class App {}
