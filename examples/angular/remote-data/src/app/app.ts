@@ -45,10 +45,10 @@ type TodoResponse = { items: Array<Todo>; totalCount: number }
 @Component({
   selector: 'app-root',
   imports: [FlexRender, ReactiveFormsModule],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly client = inject(HttpClient)
   readonly pagination = signal<PaginationState>({
     pageSize: 10,
