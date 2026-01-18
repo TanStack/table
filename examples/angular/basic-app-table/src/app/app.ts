@@ -99,10 +99,10 @@ const columns = columnHelper.columns([
 @Component({
   selector: 'app-root',
   imports: [FlexRender],
-  templateUrl: './app.component.html',
+  templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class App {
   readonly data = signal<Array<Person>>(defaultData)
 
   // 6. Create the table instance with the required columns and data.
