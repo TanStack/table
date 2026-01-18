@@ -10,7 +10,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "basic": {
+    "custom-plugin": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -85,10 +85,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "basic:build:production"
+              "buildTarget": "custom-plugin:build:production"
             },
             "development": {
-              "buildTarget": "basic:build:development"
+              "buildTarget": "custom-plugin:build:development"
             }
           },
           "defaultConfiguration": "development"
