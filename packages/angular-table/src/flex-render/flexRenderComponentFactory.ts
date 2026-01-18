@@ -25,7 +25,11 @@ export class FlexRenderComponentFactory {
   ): FlexRenderComponentRef<T> {
     const componentRef = this.#viewContainerRef.createComponent(
       flexRenderComponent.component,
-      { injector: componentInjector },
+      {
+        injector: componentInjector,
+        directives: flexRenderComponent.directives,
+        bindings: flexRenderComponent.bindings ?? [],
+      },
     )
     const view = new FlexRenderComponentRef(
       componentRef,

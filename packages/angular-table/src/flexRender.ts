@@ -80,7 +80,6 @@ export type {
  */
 @Directive({
   selector: 'ng-template[flexRender]',
-  standalone: true,
 })
 export class FlexRenderDirective<
   TFeatures extends TableFeatures,

@@ -1,5 +1,6 @@
 import { TemplateRef, Type } from '@angular/core'
-import { FlexRenderComponent } from './flexRenderComponent'
+import { FlexRenderComponentInstance } from './flexRenderComponent'
+import type { FlexRenderComponent } from './flexRenderComponent'
 import type { FlexRenderContent } from './renderer'
 import type { EmbeddedViewRef } from '@angular/core'
 import type { FlexRenderComponentRef } from './flexRenderComponentFactory'
@@ -23,7 +24,7 @@ export function mapToFlexRenderTypedContent(
   if (typeof content === 'string' || typeof content === 'number') {
     return { kind: 'primitive', content }
   }
-  if (content instanceof FlexRenderComponent) {
+  if (content instanceof FlexRenderComponentInstance) {
     return { kind: 'flexRenderComponent', content }
   } else if (content instanceof TemplateRef) {
     return { kind: 'templateRef', content }
