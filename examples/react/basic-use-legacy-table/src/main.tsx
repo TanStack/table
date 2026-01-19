@@ -26,7 +26,10 @@ import { makeData } from './makeData'
 import type {
   CellData,
   Column,
+  ColumnFiltersState,
+  PaginationState,
   RowData,
+  SortingState,
   StockFeatures,
   TableFeatures,
 } from '@tanstack/react-table'
@@ -96,6 +99,15 @@ function App() {
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData((_old) => makeData(50_000)) // stress test
 
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    [],
+  )
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
   // Using useLegacyTable with the v8-style API!
   // Notice how we use get*RowModel() options instead of _rowModels
   // and we don't need to define _features
@@ -107,14 +119,18 @@ function App() {
     getFilteredRowModel: getFilteredRowModel(), // client side filtering
     getSortedRowModel: getSortedRowModel(), // client side sorting
     getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      columnFilters,
+      pagination,
+      sorting,
+    },
+    onColumnFiltersChange: setColumnFilters,
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
     // Debug options work the same
     debugTable: true,
     debugColumns: true,
   })
-
-  // With useLegacyTable, we can use the v8-style getState() method
-  // or access state directly from table.state (both work the same)
-  const { columnFilters, pagination, sorting } = table.getState()
 
   return (
     <div className="p-2">
