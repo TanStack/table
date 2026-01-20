@@ -3,7 +3,9 @@ import {
   Component,
   ViewChild,
   input,
+  inputBinding,
   output,
+  outputBinding,
   signal,
 } from '@angular/core'
 import {
@@ -303,6 +305,104 @@ describe('FlexRenderDirective', () => {
     expect(callExpandRender).toHaveBeenNthCalledWith(1, false)
     expect(callExpandRender).toHaveBeenNthCalledWith(2, true)
 
+    expect(buttonEl.nativeElement.innerHTML).toEqual(' Expanded ')
+  })
+
+  test('Support cell with component input/output binding', async () => {
+    const callExpandRender = vi.fn<() => void>()
+
+    const columns = [
+      {
+        id: 'expand',
+        header: 'Expand',
+        cell: ({ row }: any) => {
+          callExpandRender()
+          return flexRenderComponent(ExpandCell, {
+            bindings: [
+              inputBinding('expanded', row.getIsExpanded),
+              outputBinding('toggleExpand', () => row.toggleExpanded()),
+            ],
+          })
+        },
+      },
+    ] satisfies Array<ColumnDef<typeof stockFeatures, TestData>>
+
+    @Component({
+      selector: 'expand-cell',
+      template: `
+        <button (click)="toggleExpand.emit()">
+          {{ expanded() ? 'Expanded' : 'Not expanded' }}
+        </button>
+      `,
+      changeDetection: ChangeDetectionStrategy.OnPush,
+      standalone: true,
+    })
+    class ExpandCell {
+      readonly expanded = input(false)
+      readonly toggleExpand = output<void>()
+    }
+
+    @Component({
+      template: `
+        <table>
+          <tbody>
+            @for (row of table.getRowModel().rows; track row.id) {
+              <tr>
+                @for (cell of row.getVisibleCells(); track cell.id) {
+                  <td>
+                    <ng-container *flexRenderCell="cell; let cell">
+                      <span [innerHTML]="cell"></span>
+                    </ng-container>
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      `,
+      changeDetection: ChangeDetectionStrategy.OnPush,
+      standalone: true,
+      selector: 'app-table-test',
+      imports: [FlexRender],
+    })
+    class TestComponent {
+      readonly expandState = signal<ExpandedState>({})
+
+      readonly table = injectTable(() => {
+        return {
+          columns: columns,
+          data: defaultData,
+          _features: stockFeatures,
+          _rowModels: {
+            coreRowModel: createCoreRowModel(),
+          },
+          state: { expanded: this.expandState() },
+          onExpandedChange: (updaterOrValue) => {
+            typeof updaterOrValue === 'function'
+              ? this.expandState.update(updaterOrValue)
+              : this.expandState.set(updaterOrValue)
+          },
+        } as TableOptions<typeof stockFeatures, TestData>
+      })
+    }
+
+    const fixture = TestBed.createComponent(TestComponent)
+    await fixture.whenStable()
+
+    const expandCell = fixture.debugElement.query(By.directive(ExpandCell))
+    expect(fixture.componentInstance.expandState()).toEqual({})
+    expect(expandCell.componentInstance.expanded()).toEqual(false)
+
+    const buttonEl = expandCell.query(By.css('button'))
+    expect(buttonEl.nativeElement.innerHTML).toEqual(' Not expanded ')
+    buttonEl.triggerEventHandler('click')
+
+    expect(fixture.componentInstance.expandState()).toEqual({
+      '0': true,
+    })
+    await fixture.whenStable()
+
+    expect(callExpandRender).toHaveBeenCalledTimes(1)
     expect(buttonEl.nativeElement.innerHTML).toEqual(' Expanded ')
   })
 })

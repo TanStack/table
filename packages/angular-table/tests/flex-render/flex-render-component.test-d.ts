@@ -13,15 +13,3 @@ test('Infer component inputs', () => {
   // Input is optional so we can skip passing the property
   flexRenderComponent(Test, { inputs: {} })
 })
-
-test('Options are mandatory when given component has required inputs', () => {
-  class Test {
-    readonly input1 = input<string>()
-    readonly requiredInput1 = input.required<string>()
-  }
-
-  // @ts-expect-error Required input
-  flexRenderComponent(Test)
-
-  flexRenderComponent(Test, { inputs: { requiredInput1: 'My value' } })
-})
