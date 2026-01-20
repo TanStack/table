@@ -121,7 +121,7 @@ type Outputs<T> = {
 }
 
 /**
- * Helper function to create a [@link FlexRenderComponent] instance, with better type-safety.
+ * Helper function to create a {@link FlexRenderComponent} instance, with better type-safety.
  *
  * @example
  * ```ts
