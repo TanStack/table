@@ -2,7 +2,7 @@
 
 > [Looking for the latest version?](https://github.com/tanstack/react-table)
 
-## Visit [react-table-v7.tanstack.com](https://react-table-v7.tanstack.com) for docs, guides, API and more!
+## Visit the [v7 Documentation Source](https://github.com/TanStack/table/blob/v7/docs/src/pages/docs/overview.md) for docs, guides, API and more!
 
 ## Quick Features
 
