@@ -9,7 +9,7 @@ describe('memo', () => {
   it('should not call Date.now() when debug is disabled', () => {
     const dateSpy = vi.spyOn(Date, 'now')
     const fn = vi.fn((a: number) => a * 2)
-    const getDeps = (a: number) => [a]
+    const getDeps = (a?: number) => [a as number]
     
     // Test case 1: debug returns false
     const memoizedFalse = memo(getDeps, fn, {
@@ -24,7 +24,7 @@ describe('memo', () => {
   it('should not call Date.now() when debug option is missing', () => {
     const dateSpy = vi.spyOn(Date, 'now')
     const fn = vi.fn((a: number) => a * 2)
-    const getDeps = (a: number) => [a]
+    const getDeps = (a?: number) => [a as number]
     
     // Test case 2: no debug option
     const memoizedNoDebug = memo(getDeps, fn, {
@@ -37,7 +37,7 @@ describe('memo', () => {
   it('should call Date.now() when debug is enabled', () => {
     const dateSpy = vi.spyOn(Date, 'now')
     const fn = vi.fn((a: number) => a * 2)
-    const getDeps = (a: number) => [a]
+    const getDeps = (a?: number) => [a as number]
     
     // Test case 3: debug returns true
     const memoizedTrue = memo(getDeps, fn, {
