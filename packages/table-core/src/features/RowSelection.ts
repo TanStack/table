@@ -445,10 +445,7 @@ export const RowSelection: TableFeature = {
     }
 
     table.getIsSomePageRowsSelected = () => {
-      const paginationFlatRows = table.getPaginationRowModel().flatRows
-      return table.getIsAllPageRowsSelected()
-        ? false
-        : paginationFlatRows
+      return table.getPaginationRowModel().flatRows
             .filter((row) => row.getCanSelect())
             .some((d) => d.getIsSelected() || d.getIsSomeSelected())
     }
