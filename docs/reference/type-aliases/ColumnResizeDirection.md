@@ -1,0 +1,12 @@
+---
+id: ColumnResizeDirection
+title: ColumnResizeDirection
+---
+
+# Type Alias: ColumnResizeDirection
+
+```ts
+type ColumnResizeDirection = "ltr" | "rtl";
+```
+
+Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L18)

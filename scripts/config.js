@@ -12,10 +12,10 @@ export const packages = [
     name: '@tanstack/table-core',
     packageDir: 'packages/table-core',
   },
-  // {
-  //   name: '@tanstack/angular-table',
-  //   packageDir: 'packages/angular-table',
-  // },
+  {
+    name: '@tanstack/angular-table',
+    packageDir: 'packages/angular-table',
+  },
   // {
   //   name: '@tanstack/lit-table',
   //   packageDir: 'packages/lit-table',

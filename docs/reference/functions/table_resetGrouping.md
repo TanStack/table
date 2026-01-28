@@ -1,0 +1,36 @@
+---
+id: table_resetGrouping
+title: table_resetGrouping
+---
+
+# Function: table\_resetGrouping()
+
+```ts
+function table_resetGrouping<TFeatures, TData>(table, defaultState?): void;
+```
+
+Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L120)
+
+## Type Parameters
+
+### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
+
+### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+## Parameters
+
+### table
+
+[`Table_Internal`](../type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+
+### defaultState?
+
+`boolean`
+
+## Returns
+
+`void`

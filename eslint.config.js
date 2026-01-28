@@ -4,7 +4,8 @@
 import { tanstackConfig } from '@tanstack/config/eslint'
 import unusedImports from 'eslint-plugin-unused-imports'
 
-export default [
+/** @type {any} */
+const config = [
   ...tanstackConfig,
   {
     name: 'tanstack/temp',
@@ -22,3 +23,5 @@ export default [
     },
   },
 ]
+
+export default config

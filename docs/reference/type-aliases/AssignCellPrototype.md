@@ -1,0 +1,42 @@
+---
+id: AssignCellPrototype
+title: AssignCellPrototype
+---
+
+# Type Alias: AssignCellPrototype()\<TConstructors\>
+
+```ts
+type AssignCellPrototype<TConstructors> = <TFeatures, TData>(prototype, table) => void;
+```
+
+Defined in: [packages/table-core/src/types/TableFeatures.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L77)
+
+## Type Parameters
+
+### TConstructors
+
+`TConstructors` *extends* `FeatureConstructors`
+
+## Type Parameters
+
+### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
+
+### TData
+
+`TData` *extends* [`RowData`](RowData.md)
+
+## Parameters
+
+### prototype
+
+`Record`\<`string`, `any`\>
+
+### table
+
+[`Table_Internal`](Table_Internal.md)\<`TFeatures`, `TData`\>
+
+## Returns
+
+`void`

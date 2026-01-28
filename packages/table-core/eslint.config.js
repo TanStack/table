@@ -2,9 +2,12 @@
 
 import rootConfig from '../../eslint.config.js'
 
-export default [
+/** @type {any} */
+const config = [
   ...rootConfig,
   {
     rules: {},
   },
 ]
+
+export default config

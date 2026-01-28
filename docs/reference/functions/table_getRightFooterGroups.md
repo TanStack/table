@@ -1,0 +1,32 @@
+---
+id: table_getRightFooterGroups
+title: table_getRightFooterGroups
+---
+
+# Function: table\_getRightFooterGroups()
+
+```ts
+function table_getRightFooterGroups<TFeatures, TData>(table): any[];
+```
+
+Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L289)
+
+## Type Parameters
+
+### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
+
+### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+## Parameters
+
+### table
+
+[`Table_Internal`](../type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+
+## Returns
+
+`any`[]

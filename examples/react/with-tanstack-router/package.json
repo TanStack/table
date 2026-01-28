@@ -11,17 +11,17 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.90.18",
-    "@tanstack/react-router": "^1.150.0",
+    "@tanstack/react-query": "^5.90.20",
+    "@tanstack/react-router": "^1.157.16",
     "@tanstack/react-table": "^9.0.0-alpha.10",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.2.0",
     "@rollup/plugin-replace": "^6.0.3",
-    "@tanstack/router-vite-plugin": "^1.150.0",
-    "@types/react": "^19.2.8",
+    "@tanstack/router-vite-plugin": "^1.157.16",
+    "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "typescript": "5.9.3",

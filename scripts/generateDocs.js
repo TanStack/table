@@ -19,6 +19,13 @@ const packages = [
     outputDir: resolve(__dirname, '../docs/framework/react/reference'),
     exclude: ['packages/table-core/**/*'],
   },
+  {
+    name: 'angular-table',
+    entryPoints: [resolve(__dirname, '../packages/angular-table/src/index.ts')],
+    tsconfig: resolve(__dirname, '../packages/angular-table/tsconfig.json'),
+    outputDir: resolve(__dirname, '../docs/framework/angular/reference'),
+    exclude: ['packages/table-core/**/*'],
+  },
 ]
 
 await generateReferenceDocs({ packages })
