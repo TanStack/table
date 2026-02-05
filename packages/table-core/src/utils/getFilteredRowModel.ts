@@ -87,6 +87,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
           const row = rowModel.flatRows[j]!
 
           row.columnFilters = {}
+          row.columnFiltersMeta = {}
 
           if (resolvedColumnFilters.length) {
             for (let i = 0; i < resolvedColumnFilters.length; i++) {
