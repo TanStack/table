@@ -1,17 +1,13 @@
 // @ts-check
 
 // @ts-ignore Needed due to moduleResolution Node vs Bundler
-import { tanstackConfig } from '@tanstack/config/eslint'
-import unusedImports from 'eslint-plugin-unused-imports'
+import { tanstackConfig } from '@tanstack/eslint-config'
 
 /** @type {any} */
 const config = [
   ...tanstackConfig,
   {
     name: 'tanstack/temp',
-    plugins: {
-      'unused-imports': unusedImports,
-    },
     rules: {
       'no-case-declarations': 'off',
       'no-shadow': 'off',
@@ -19,7 +15,6 @@ const config = [
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'warn',
       '@typescript-eslint/no-unsafe-function-type': 'off',
-      'unused-imports/no-unused-imports': 'warn',
     },
   },
 ]
