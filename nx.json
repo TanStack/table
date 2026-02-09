@@ -4,7 +4,7 @@
   "nxCloudId": "6435ee4cd7387c45c0e4bf4c",
   "useInferencePlugins": false,
   "parallel": 5,
-   "tui": {
+  "tui": {
     "enabled": false
   },
   "namedInputs": {
