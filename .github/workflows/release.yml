@@ -1,4 +1,4 @@
-name: ci
+name: Release
 
 on:
   workflow_dispatch:
@@ -21,13 +21,13 @@ permissions:
   id-token: write
 
 jobs:
-  test-and-publish:
-    name: Test & Publish
-    if: github.repository == 'TanStack/table'
+  release:
+    name: Release
+    if: github.repository_owner == 'TanStack'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0
       - name: Start Nx Agents
