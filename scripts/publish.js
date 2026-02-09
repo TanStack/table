@@ -1,6 +1,6 @@
 // @ts-check
 
-import { publish } from '@tanstack/config/publish'
+import { publish } from '@tanstack/publish-config'
 import { branchConfigs, packages, rootDir } from './config.js'
 
 await publish({

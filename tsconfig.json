@@ -11,7 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "module": "ES2022",
+    "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": true,
     "noImplicitReturns": false, // TODO enable
@@ -24,10 +24,5 @@
     "target": "ES2020",
     "noErrorTruncation": true
   },
-  "include": [
-    "prettier.config.js",
-    "scripts",
-    "eslint.config.js",
-    "vitest.workspace.mjs"
-  ]
+  "include": ["*.config.*", "scripts", "vitest.workspace.mjs"]
 }

@@ -1,9 +1,12 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "defaultBase": "main",
-  "nxCloudAccessToken": "OWExNzViODMtZjU4Ny00MTRmLTk3ZDYtMGY5YzlkOTRhZDQ2fHJlYWQtb25seQ==",
+  "nxCloudId": "6435ee4cd7387c45c0e4bf4c",
   "useInferencePlugins": false,
   "parallel": 5,
+  "tui": {
+    "enabled": false
+  },
   "namedInputs": {
     "sharedGlobals": [
       "{workspaceRoot}/.nvmrc",
@@ -57,7 +60,7 @@
     },
     "test:sherif": {
       "cache": true,
-      "inputs": ["{workspaceRoot}/**/*"]
+      "inputs": ["{workspaceRoot}/**/package.json"]
     }
   }
 }

@@ -6,8 +6,8 @@ title: Filters Guide
 
 The filter guides are now split into multiple guides:
 
-- [Column Filtering](../column-filtering)
-- [Global Filtering](../global-filtering)
-- [Fuzzy Filtering](../fuzzy-filtering)
-- [Column Faceting](../column-faceting)
-- [Global Faceting](../global-faceting)
+- [Column Filtering](./column-filtering)
+- [Global Filtering](./global-filtering)
+- [Fuzzy Filtering](./fuzzy-filtering)
+- [Column Faceting](./column-faceting)
+- [Global Faceting](./global-faceting)
