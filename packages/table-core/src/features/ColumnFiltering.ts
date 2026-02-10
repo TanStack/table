@@ -265,8 +265,8 @@ export const ColumnFiltering: TableFeature = {
     } as ColumnFiltersOptions<TData>
   },
 
-  createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
+  createColumn: <TData extends RowData, TValue>(
+    column: Column<TData, TValue>,
     table: Table<TData>,
   ): void => {
     column.getAutoFilterFn = () => {
@@ -334,7 +334,7 @@ export const ColumnFiltering: TableFeature = {
 
         //
         if (
-          shouldAutoRemoveFilter(filterFn as FilterFn<TData>, newFilter, column)
+          shouldAutoRemoveFilter(filterFn as FilterFn<TData>, newFilter, column as Column<TData, unknown>)
         ) {
           return old?.filter((d) => d.id !== column.id) ?? []
         }

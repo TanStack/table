@@ -8,7 +8,7 @@ import {
 } from '../types'
 import { getMemoOptions, memo } from '../utils'
 
-export interface CoreColumn<TData extends RowData, TValue> {
+export interface CoreColumn<in out TData extends RowData, in out TValue> {
   /**
    * The resolved accessor function to use when extracting the value for the column from each row. Will only be defined if the column def has a valid accessor key or function defined.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/column#accessorfn)
