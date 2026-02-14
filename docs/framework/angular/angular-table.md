@@ -3,7 +3,7 @@ title: Angular Table
 ---
 
 The `@tanstack/angular-table` adapter is a wrapper around the core table logic. Most of it's job is related to managing
-state the "angular signals" way, providing types and the rendering implementation of cell/header/footer templates.
+state using angular signals, providing types and the rendering implementation of cell/header/footer templates.
 
 ## Exports
 
@@ -11,7 +11,7 @@ state the "angular signals" way, providing types and the rendering implementatio
 
 ### `injectTable`
 
-Accepts an options function or a computed value that returns the table options, and returns a table.
+Accepts an options function or a computed signal that returns the table options, and returns a table.
 
 ```ts
 import {injectTable} from '@tanstack/angular-table'

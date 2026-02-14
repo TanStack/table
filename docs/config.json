@@ -141,6 +141,14 @@
           "label": "angular",
           "children": [
             {
+              "label": "Rendering",
+              "to": "framework/angular/guide/rendering"
+            },
+            {
+              "label": "Composable Tables",
+              "to": "framework/angular/guide/composable-tables"
+            },
+            {
               "label": "Table State",
               "to": "framework/angular/guide/table-state"
             }
@@ -390,8 +398,24 @@
               "label": "Basic"
             },
             {
-              "to": "framework/angular/examples/grouping",
-              "label": "Column Grouping"
+              "to": "framework/angular/examples/basic-app-table",
+              "label": "Basic (App Table)"
+            },
+            {
+              "to": "framework/angular/examples/composable-tables",
+              "label": "Composable tables"
+            },
+            {
+              "to": "framework/angular/examples/custom-plugin",
+              "label": "Custom plugin"
+            },
+            {
+              "to": "framework/angular/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/angular/examples/expanding",
+              "label": "Row Expanding"
             },
             {
               "to": "framework/angular/examples/column-ordering",
@@ -403,7 +427,7 @@
             },
             {
               "to": "framework/angular/examples/column-pinning-sticky",
-              "label": "Sticky Column Pinning"
+              "label": "Column Pinning (Sticky)"
             },
             {
               "to": "framework/angular/examples/column-visibility",
@@ -414,12 +438,16 @@
               "label": "Column Filters"
             },
             {
-              "to": "framework/angular/examples/row-selection",
-              "label": "Row Selection"
+              "to": "framework/angular/examples/column-resizing-performant",
+              "label": "Column Resizing"
             },
             {
-              "to": "framework/angular/examples/expanding",
-              "label": "Expanding"
+              "to": "framework/angular/examples/grouping",
+              "label": "Column Grouping"
+            },
+            {
+              "to": "framework/angular/examples/remote-data",
+              "label": "Fetch API data (SPA / SSR)"
             },
             {
               "to": "framework/angular/examples/sub-components",
@@ -435,15 +463,7 @@
             },
             {
               "to": "framework/angular/examples/row-dnd",
-              "label": "Row DnD"
-            },
-            {
-              "to": "framework/angular/examples/column-resizing-performant",
-              "label": "Performant Column Resizing"
-            },
-            {
-              "to": "framework/angular/examples/remote-data",
-              "label": "Remote data (optional SSR)"
+              "label": "Row Drag & Drop"
             }
           ]
         },
