@@ -37,6 +37,14 @@
             {
               "label": "Angular Table Adapter",
               "to": "framework/angular/angular-table"
+            },
+            {
+              "label": "Rendering",
+              "to": "framework/angular/guide/rendering"
+            },
+            {
+              "label": "Composable Tables",
+              "to": "framework/angular/guide/composable-tables"
             }
           ]
         },
@@ -306,6 +314,69 @@
           "label": "Cell",
           "to": "api/core/cell"
         }
+      ],
+      "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            {
+              "label": "Angular API Reference",
+              "to": "framework/angular/reference/index.md"
+            },
+            {
+              "label": "injectTable",
+              "to": "framework/angular/reference/functions/inject-table.md"
+            },
+            {
+              "label": "createTableHook",
+              "to": "framework/angular/reference/functions/createTableHook.md"
+            },
+            {
+              "label": "flexRenderComponent",
+              "to": "framework/angular/reference/functions/flexRenderComponent.md"
+            },
+            {
+              "label": "injectFlexRenderContext",
+              "to": "framework/angular/reference/functions/injectFlexRenderContext.md"
+            },
+            {
+              "label": "injectTableContext",
+              "to": "framework/angular/reference/functions/injectTableContext.md"
+            },
+            {
+              "label": "injectTableCellContext",
+              "to": "framework/angular/reference/functions/injectTableCellContext.md"
+            },
+            {
+              "label": "injectTableHeaderContext",
+              "to": "framework/angular/reference/functions/injectTableHeaderContext.md"
+            },
+            {
+              "label": "Directive / FlexRender",
+              "to": "framework/angular/reference/variables/FlexRender.md"
+            },
+            {
+              "label": "Directive / FlexRenderCell",
+              "to": "framework/angular/reference/classes/FlexRenderCell.md"
+            },
+            {
+              "label": "Directive / FlexRenderDirective",
+              "to": "framework/angular/reference/classes/FlexRenderDirective.md"
+            },
+            {
+              "label": "Directive / TanStackTable",
+              "to": "framework/angular/reference/classes/TanStackTable.md"
+            },
+            {
+              "label": "Directive / TanStackTableCell",
+              "to": "framework/angular/reference/classes/TanStackTableCell.md"
+            },
+            {
+              "label": "Directive / TanStackTableHeader",
+              "to": "framework/angular/reference/classes/TanStackTableHeader.md"
+            }
+          ]
+        }
       ]
     },
     {
@@ -390,8 +461,24 @@
               "label": "Basic"
             },
             {
-              "to": "framework/angular/examples/grouping",
-              "label": "Column Grouping"
+              "to": "framework/angular/examples/basic-app-table",
+              "label": "Basic (App Table)"
+            },
+            {
+              "to": "framework/angular/examples/composable-tables",
+              "label": "Composable tables"
+            },
+            {
+              "to": "framework/angular/examples/custom-plugin",
+              "label": "Custom plugin"
+            },
+            {
+              "to": "framework/angular/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
+              "to": "framework/angular/examples/expanding",
+              "label": "Row Expanding"
             },
             {
               "to": "framework/angular/examples/column-ordering",
@@ -403,7 +490,7 @@
             },
             {
               "to": "framework/angular/examples/column-pinning-sticky",
-              "label": "Sticky Column Pinning"
+              "label": "Column Pinning (Sticky)"
             },
             {
               "to": "framework/angular/examples/column-visibility",
@@ -414,12 +501,16 @@
               "label": "Column Filters"
             },
             {
-              "to": "framework/angular/examples/row-selection",
-              "label": "Row Selection"
+              "to": "framework/angular/examples/column-resizing-performant",
+              "label": "Column Resizing"
             },
             {
-              "to": "framework/angular/examples/expanding",
-              "label": "Expanding"
+              "to": "framework/angular/examples/grouping",
+              "label": "Column Grouping"
+            },
+            {
+              "to": "framework/angular/examples/remote-data",
+              "label": "Fetch API data (SPA / SSR)"
             },
             {
               "to": "framework/angular/examples/sub-components",
@@ -435,15 +526,7 @@
             },
             {
               "to": "framework/angular/examples/row-dnd",
-              "label": "Row DnD"
-            },
-            {
-              "to": "framework/angular/examples/column-resizing-performant",
-              "label": "Performant Column Resizing"
-            },
-            {
-              "to": "framework/angular/examples/remote-data",
-              "label": "Remote data (optional SSR)"
+              "label": "Row Drag & Drop"
             }
           ]
         },
