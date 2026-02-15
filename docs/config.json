@@ -39,12 +39,14 @@
               "to": "framework/angular/angular-table"
             },
             {
-              "label": "Rendering",
-              "to": "framework/angular/guide/rendering"
+              "label": "Rendering components",
+              "to": "framework/angular/guide/rendering",
+              "badge": "angular"
             },
             {
-              "label": "Composable Tables",
-              "to": "framework/angular/guide/composable-tables"
+              "label": "Table composition",
+              "to": "framework/angular/guide/composable-tables",
+              "badge": "angular"
             }
           ]
         },
@@ -321,59 +323,59 @@
           "children": [
             {
               "label": "Angular API Reference",
-              "to": "framework/angular/reference/index.md"
+              "to": "framework/angular/reference/index"
             },
             {
               "label": "injectTable",
-              "to": "framework/angular/reference/functions/inject-table.md"
+              "to": "framework/angular/reference/functions/inject-table"
             },
             {
               "label": "createTableHook",
-              "to": "framework/angular/reference/functions/createTableHook.md"
+              "to": "framework/angular/reference/functions/createTableHook"
             },
             {
               "label": "flexRenderComponent",
-              "to": "framework/angular/reference/functions/flexRenderComponent.md"
+              "to": "framework/angular/reference/functions/flexRenderComponent"
             },
             {
               "label": "injectFlexRenderContext",
-              "to": "framework/angular/reference/functions/injectFlexRenderContext.md"
+              "to": "framework/angular/reference/functions/injectFlexRenderContext"
             },
             {
               "label": "injectTableContext",
-              "to": "framework/angular/reference/functions/injectTableContext.md"
+              "to": "framework/angular/reference/functions/injectTableContext"
             },
             {
               "label": "injectTableCellContext",
-              "to": "framework/angular/reference/functions/injectTableCellContext.md"
+              "to": "framework/angular/reference/functions/injectTableCellContext"
             },
             {
               "label": "injectTableHeaderContext",
-              "to": "framework/angular/reference/functions/injectTableHeaderContext.md"
+              "to": "framework/angular/reference/functions/injectTableHeaderContext"
             },
             {
               "label": "Directive / FlexRender",
-              "to": "framework/angular/reference/variables/FlexRender.md"
+              "to": "framework/angular/reference/variables/FlexRender"
             },
             {
               "label": "Directive / FlexRenderCell",
-              "to": "framework/angular/reference/classes/FlexRenderCell.md"
+              "to": "framework/angular/reference/classes/FlexRenderCell"
             },
             {
               "label": "Directive / FlexRenderDirective",
-              "to": "framework/angular/reference/classes/FlexRenderDirective.md"
+              "to": "framework/angular/reference/classes/FlexRenderDirective"
             },
             {
               "label": "Directive / TanStackTable",
-              "to": "framework/angular/reference/classes/TanStackTable.md"
+              "to": "framework/angular/reference/classes/TanStackTable"
             },
             {
               "label": "Directive / TanStackTableCell",
-              "to": "framework/angular/reference/classes/TanStackTableCell.md"
+              "to": "framework/angular/reference/classes/TanStackTableCell"
             },
             {
               "label": "Directive / TanStackTableHeader",
-              "to": "framework/angular/reference/classes/TanStackTableHeader.md"
+              "to": "framework/angular/reference/classes/TanStackTableHeader"
             }
           ]
         }

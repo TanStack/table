@@ -1,8 +1,6 @@
 ---
-title: Composable Tables (Angular) Guide
+title: Table Composition
 ---
-
-## Composable Tables
 
 `createTableHook` is a convenience API for creating reusable, type-safe table configurations with pre-bound components. It is inspired by [TanStack Form's `createFormHook`](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition) — a pattern where you define shared infrastructure once and consume it across your application with minimal boilerplate.
 
@@ -286,5 +284,5 @@ export const {
 
 ## Examples
 
-- [Composable Tables](../../examples/angular/composable-tables) — full example with two tables sharing the same `createTableHook` configuration, including table/cell/header component registries, sorting, filtering, and pagination.
-- [Basic App Table](../../examples/angular/basic-app-table) — minimal example using `createTableHook` with no pre-bound components.
+- [Composable Tables](../angular/composable-tables) — full example with two tables sharing the same `createTableHook` configuration, including table/cell/header component registries, sorting, filtering, and pagination.
+- [Basic App Table](../angular/basic-app-table) — minimal example using `createTableHook` with no pre-bound components.
