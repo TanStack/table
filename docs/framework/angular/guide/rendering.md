@@ -128,7 +128,7 @@ Inside rendered components, the full props object is available via [`injectFlexR
 
 You can render Angular components from column definitions in two ways:
 
-### Using `flexRenderComponent(...)`
+### Using `flexRenderComponent`
 
 [`flexRenderComponent(component, options?)`](../reference/functions/flexRenderComponent) wraps a component type with explicit options for `inputs`, `outputs`, `injector`, `bindings`, and `directives`.
 
@@ -138,6 +138,7 @@ Use this when you need to:
 - subscribe to component outputs
 - provide a custom `Injector`
 - use creation-time `bindings` (Angular v20+)
+- apply host directives and binding values at runtime
 
 ```ts
 import { flexRenderComponent, type ColumnDef } from '@tanstack/angular-table'
@@ -164,13 +165,15 @@ const columns: ColumnDef<Person>[] = [
 
 **Inputs** are applied through [`ComponentRef.setInput(key, value)`](https://angular.dev/api/core/ComponentRef#setInput). This works with both `input()` signals and `@Input()` decorators. Inputs are diffed on every change detection cycle using `KeyValueDiffers` — only changed values trigger `setInput`.
 
-**Outputs** work through `OutputEmitterRef` subscriptions. The factory reads the component instance property by name, checks that it is an `OutputEmitterRef`, and subscribes to it. When the output emits, the corresponding callback from `outputs` is invoked. Subscriptions are cleaned up automatically when the component is destroyed.
+For object-like inputs, updates are reference-based: if the object reference is stable, Angular's default input equality semantics prevent unnecessary updates.
 
-The `FlexRenderComponentRef` tracks input/output changes via Angular's `KeyValueDiffers`. When the same component type is re-rendered with updated options, it diffs and patches only the changed inputs/outputs instead of recreating the component.
+**Outputs** work through `OutputEmitterRef` subscriptions. The factory reads the component instance property by name, checks that it is an `OutputEmitterRef`, and subscribes to it. When the output emits, the corresponding callback from `outputs` is invoked. Subscriptions are cleaned up automatically when the component is destroyed.
 
 #### `bindings` API (Angular v20+)
 
 `flexRenderComponent` also accepts `bindings` and `directives`, forwarded directly to [`ViewContainerRef.createComponent`](https://angular.dev/api/core/ViewContainerRef#createComponent) at creation time.
+
+This supports Angular programmatic rendering APIs for passing host directives and binding values at runtime.
 
 Unlike `inputs`/`outputs` (which are applied imperatively after creation), `bindings` are applied **at creation time** — they participate in the component's initial change detection cycle.
 
@@ -204,15 +207,17 @@ See the Angular docs for details:
 - [Programmatic rendering — Binding inputs/outputs/directives](https://angular.dev/guide/components/programmatic-rendering#binding-inputs-outputs-and-setting-host-directives-at-creation)
 - [`inputBinding`](https://angular.dev/api/core/inputBinding), [`outputBinding`](https://angular.dev/api/core/outputBinding), [`twoWayBinding`](https://angular.dev/api/core/twoWayBinding)
 
-### Returning a component type
+### Returning a component class
 
-Return a component `Type<T>` from `header`, `cell`, or `footer`. The render context properties (`table`, `column`, `header`, `cell`, `row`, `getValue`, etc.) are automatically set as component inputs via `ComponentRef.setInput(...)`.
+Return a component class from `header`, `cell`, or `footer`. 
+
+The render context properties (`table`, `column`, `header`, `cell`, `row`, `getValue`, etc.) are automatically set as component inputs via `ComponentRef.setInput(...)`.
 
 Define input signals matching the context property names you need:
 
 ```ts
 import { Component, input } from '@angular/core'
-import type { ColumnDef, Table } from '@tanstack/angular-table'
+import type { ColumnDef, Table, CellContext } from '@tanstack/angular-table'
 
 const columns: ColumnDef<Person>[] = [
   {
@@ -233,7 +238,9 @@ const columns: ColumnDef<Person>[] = [
   `,
 })
 export class TableHeadSelectionComponent<T> {
-  readonly table = input.required<Table<T>>()
+  readonly table = input.required<Table<T>>();
+  // column = input.required<Column<typeof _features, T, unknown>>()
+  // header = input.required<Header<typeof _features, T, unknown>>()
 }
 ```
 

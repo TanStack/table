@@ -321,11 +321,11 @@
           "children": [
             {
               "label": "Angular API Reference",
-              "to": "framework/angular/reference"
+              "to": "framework/angular/reference/index"
             },
             {
               "label": "injectTable",
-              "to": "framework/angular/reference/functions/inject-table"
+              "to": "framework/angular/reference/functions/injectTable"
             },
             {
               "label": "createTableHook",
