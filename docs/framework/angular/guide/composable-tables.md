@@ -10,23 +10,6 @@ title: Composable Tables (Angular) Guide
 
 `createTableHook` centralize your table configuration into a single factory call. It returns a set of typed functions — `injectAppTable`, `createAppColumnHelper`, and pre-typed injection helpers — that you use instead of the base APIs.
 
-```ts
-import {
-  createTableHook,
-  tableFeatures,
-  // features
-  rowSortingFeature,
-  rowPaginationFeature,
-  columnFilteringFeature,
-  // row models
-  createSortedRowModel,
-  createFilteredRowModel,
-  createPaginatedRowModel,
-  sortFns,
-  filterFns,
-} from '@tanstack/angular-table'
-```
-
 ## Setup
 
 Call `createTableHook` with your shared configuration and destructure the returned utilities:
