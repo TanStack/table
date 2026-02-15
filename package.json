@@ -12,7 +12,7 @@
     "test": "pnpm run test:ci",
     "test:pr": "nx affected --targets=test:sherif,test:knip,test:docs,test:lib,test:types,build",
     "test:ci": "nx run-many --targets=test:sherif,test:knip,test:docs,test:lib,test:types,build",
-    "test:sherif": "sherif -i react -i react-dom -i vue -i solid-js -i svelte -i @builder.io/qwik",
+    "test:sherif": "sherif -i preact -i react -i react-dom -i vue -i solid-js -i svelte -i @builder.io/qwik",
     "test:lib": "nx affected --targets=test:lib --exclude=examples/**",
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
     "test:types": "nx affected --targets=test:types --exclude=examples/**",

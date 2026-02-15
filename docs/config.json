@@ -59,6 +59,15 @@
           ]
         },
         {
+          "label": "preact",
+          "children": [
+            {
+              "label": "Preact Table Adapter",
+              "to": "framework/preact/preact-table"
+            }
+          ]
+        },
+        {
           "label": "react",
           "children": [
             {
@@ -170,6 +179,15 @@
             {
               "label": "Table State",
               "to": "framework/qwik/guide/table-state"
+            }
+          ]
+        },
+        {
+          "label": "preact",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/preact/guide/table-state"
             }
           ]
         },

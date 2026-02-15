@@ -18,6 +18,14 @@ The `@tanstack/react-table` package works with React 16.8, React 17, React 18, a
 
 > NOTE: Even though the react adapter works with React 19, it may not work with the new React Compiler that's coming out along-side React 19. This may be fixed in future TanStack Table updates.
 
+## Preact Table
+
+```bash
+npm install @tanstack/preact-table
+```
+
+The `@tanstack/preact-table` package works with Preact 10.
+
 ## Vue Table
 
 ```bash
