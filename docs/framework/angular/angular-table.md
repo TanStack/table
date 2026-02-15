@@ -33,10 +33,16 @@ import {
   createColumnHelper,
   injectTable,
   type ColumnDef,
+  rowPaginationFeature,
+  stockFeatures
 } from '@tanstack/angular-table'
 
+// Register all table core features
+const _features = tableFeatures(stockFeatures);
+// ...or register only your needed features 
 const _features = tableFeatures({
-  // table features
+  rowPaginationFeature,
+  // ...all other features
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
@@ -74,9 +80,9 @@ export class AppComponent {
     })
   }
 }
-
-// ...render your table in template
 ```
+
+See [injectTable API Reference](reference/functions/injectTable)
 
 ### `createTableHook`
 
@@ -90,7 +96,7 @@ At runtime, `createTableHook` wraps `injectTable` and returns typed helpers such
 - `createAppColumnHelper` for strongly typed column definitions
 - pre-typed context helpers (`injectTableContext`, `injectTableCellContext`, `injectTableHeaderContext`, `injectFlexRenderCellContext`, `injectFlexRenderHeaderContext`)
 
-For full setup and patterns, see the [Composable Tables (Angular) Guide](./guide/composable-tables.md).
+For full setup and patterns, see the [Table Composition Guide](./guide/table-composition.md).
 
 ### `FlexRender`
 
@@ -105,7 +111,7 @@ It supports the same content kinds as Angular rendering:
 
 Column render functions (`header`, `cell`, `footer`) run in Angular injection context, so you can use `inject()` and signals directly in render logic.
 
-For complete rendering details (`*flexRender`, shorthand directives, `flexRenderComponent`, `TemplateRef`, component inputs/outputs, and `injectFlexRenderContext`), see the [Rendering (Angular) Guide](./guide/rendering.md).
+For complete rendering details (`*flexRender`, shorthand directives, `flexRenderComponent`, `TemplateRef`, component inputs/outputs, and `injectFlexRenderContext`), see the [Rendering components Guide](./guide/rendering.md).
 
 ### Context helpers and directives
 
@@ -116,3 +122,7 @@ For complete rendering details (`*flexRender`, shorthand directives, `flexRender
 - `TanStackTableHeader` + `injectTableHeaderContext()`
 
 These APIs provide signal-based context values and are available from nearest directives or from `*flexRender`-rendered components when matching props are present.
+
+### Full API Reference
+
+See [Angular API Reference](reference/index.md)

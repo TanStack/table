@@ -5,7 +5,7 @@ title: AngularReactivityFlags
 
 # Interface: AngularReactivityFlags
 
-Defined in: [angularReactivityFeature.ts:40](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L40)
+Defined in: [angularReactivityFeature.ts:55](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L55)
 
 Fine-grained configuration for Angular reactivity.
 
@@ -16,6 +16,22 @@ objects are wrapped with signal-aware access.
 - `false` disables wrapping entirely for that object type.
 - a function allows customizing the skip rules (see SkipPropertyFn).
 
+## Example
+
+```ts
+const table = injectTable(() => {
+ // ...table options,
+ reactivity: {
+   // fine-grained control over which table objects have reactive properties,
+   // and which properties are wrapped
+   header: true,
+   column: true,
+   row: true,
+   cell: true,
+ }
+})
+```
+
 ## Properties
 
 ### cell
@@ -24,7 +40,7 @@ objects are wrapped with signal-aware access.
 cell: boolean | SkipPropertyFn;
 ```
 
-Defined in: [angularReactivityFeature.ts:48](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L48)
+Defined in: [angularReactivityFeature.ts:63](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L63)
 
 Controls reactive wrapping for `Cell` instances.
 
@@ -36,7 +52,7 @@ Controls reactive wrapping for `Cell` instances.
 column: boolean | SkipPropertyFn;
 ```
 
-Defined in: [angularReactivityFeature.ts:44](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L44)
+Defined in: [angularReactivityFeature.ts:59](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L59)
 
 Controls reactive wrapping for `Column` instances.
 
@@ -48,7 +64,7 @@ Controls reactive wrapping for `Column` instances.
 header: boolean | SkipPropertyFn;
 ```
 
-Defined in: [angularReactivityFeature.ts:42](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L42)
+Defined in: [angularReactivityFeature.ts:57](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L57)
 
 Controls reactive wrapping for `Header` instances.
 
@@ -60,6 +76,6 @@ Controls reactive wrapping for `Header` instances.
 row: boolean | SkipPropertyFn;
 ```
 
-Defined in: [angularReactivityFeature.ts:46](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L46)
+Defined in: [angularReactivityFeature.ts:61](https://github.com/TanStack/table/blob/main/packages/angular-table/src/angularReactivityFeature.ts#L61)
 
 Controls reactive wrapping for `Row` instances.

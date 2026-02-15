@@ -40,13 +40,11 @@
             },
             {
               "label": "Rendering components",
-              "to": "framework/angular/guide/rendering",
-              "badge": "angular"
+              "to": "framework/angular/guide/rendering"
             },
             {
               "label": "Table composition",
-              "to": "framework/angular/guide/composable-tables",
-              "badge": "angular"
+              "to": "framework/angular/guide/table-composition"
             }
           ]
         },
@@ -323,7 +321,7 @@
           "children": [
             {
               "label": "Angular API Reference",
-              "to": "framework/angular/reference/index"
+              "to": "framework/angular/reference"
             },
             {
               "label": "injectTable",
@@ -352,6 +350,26 @@
             {
               "label": "injectTableHeaderContext",
               "to": "framework/angular/reference/functions/injectTableHeaderContext"
+            },
+            {
+              "label": "Interface / FlexRenderComponent",
+              "to": "framework/angular/reference/interfaces/FlexRenderComponent"
+            },
+            {
+              "label": "Type / AngularTable",
+              "to": "framework/angular/reference/type-aliases/AngularTable"
+            },
+            {
+              "label": "Type / AppAngularTable",
+              "to": "framework/angular/reference/type-aliases/AppAngularTable"
+            },
+            {
+              "label": "Type / FlexRenderContent",
+              "to": "framework/angular/reference/type-aliases/FlexRenderContent"
+            },
+                        {
+              "label": "Type / FlexRenderInputContent",
+              "to": "framework/angular/reference/type-aliases/FlexRenderContent"
             },
             {
               "label": "Directive / FlexRender",

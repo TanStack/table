@@ -284,5 +284,5 @@ export const {
 
 ## Examples
 
-- [Composable Tables](../angular/composable-tables) — full example with two tables sharing the same `createTableHook` configuration, including table/cell/header component registries, sorting, filtering, and pagination.
-- [Basic App Table](../angular/basic-app-table) — minimal example using `createTableHook` with no pre-bound components.
+- [Composable Tables](../examples/composable-tables) — full example with two tables sharing the same `createTableHook` configuration, including table/cell/header component registries, sorting, filtering, and pagination.
+- [Basic App Table](../examples/basic-app-table) — minimal example using `createTableHook` with no pre-bound components.

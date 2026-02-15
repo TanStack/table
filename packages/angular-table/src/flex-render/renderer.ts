@@ -33,6 +33,10 @@ import type {
   TableFeatures,
 } from '@tanstack/table-core'
 
+/**
+ * Content supported by the `flexRender` directive when declaring
+ * a table column header/cell.
+ */
 export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | string
   | number
@@ -43,6 +47,9 @@ export type FlexRenderContent<TProps extends NonNullable<unknown>> =
   | Record<any, any>
   | undefined
 
+/**
+ * Input content supported by the `flexRender` directives.
+ */
 export type FlexRenderInputContent<TProps extends NonNullable<unknown>> =
   | number
   | string

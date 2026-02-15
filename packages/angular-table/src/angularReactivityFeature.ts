@@ -36,6 +36,21 @@ type SkipPropertyFn = (property: string) => boolean
  * - `true` enables wrapping using the default skip rules.
  * - `false` disables wrapping entirely for that object type.
  * - a function allows customizing the skip rules (see {@link SkipPropertyFn}).
+ * 
+ * @example
+ * ```ts
+ * const table = injectTable(() => {
+ *  // ...table options,
+ *  reactivity: {
+ *    // fine-grained control over which table objects have reactive properties,
+ *    // and which properties are wrapped
+ *    header: true,
+ *    column: true,
+ *    row: true,
+ *    cell: true,
+ *  }
+ * })
+ * ```
  */
 export interface AngularReactivityFlags {
   /** Controls reactive wrapping for `Header` instances. */
@@ -191,6 +206,12 @@ function constructAngularReactivityFeature<
   }
 }
 
+/**
+ * Angular reactivity feature that add reactive signal supports in table core instance. 
+ * This is used internally by the Angular table adapter `injectTable`.
+ * 
+ * @private
+ */
 export const angularReactivityFeature = constructAngularReactivityFeature()
 
 /**

@@ -36,7 +36,6 @@ title: "@tanstack/angular-table"
 
 ## Variables
 
-- [angularReactivityFeature](variables/angularReactivityFeature.md)
 - [FlexRender](variables/FlexRender.md)
 - [TanStackTableCellToken](variables/TanStackTableCellToken.md)
 - [TanStackTableHeaderToken](variables/TanStackTableHeaderToken.md)

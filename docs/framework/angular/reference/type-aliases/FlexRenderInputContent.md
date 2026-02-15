@@ -14,7 +14,9 @@ type FlexRenderInputContent<TProps> =
   | undefined;
 ```
 
-Defined in: [flex-render/renderer.ts:46](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/renderer.ts#L46)
+Defined in: [flex-render/renderer.ts:53](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/renderer.ts#L53)
+
+Input content supported by the `flexRender` directives.
 
 ## Type Parameters
 
