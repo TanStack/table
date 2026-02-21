@@ -76,7 +76,7 @@ export interface RowSelectionRow {
    */
   getCanSelectSubRows: () => boolean
   /**
-   * Returns whether or not all of the row's sub rows are selected.
+   * Returns whether or not all of the row's selectable sub rows are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisallsubrowsselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
@@ -88,7 +88,7 @@ export interface RowSelectionRow {
    */
   getIsSelected: () => boolean
   /**
-   * Returns whether or not some of the row's sub rows are selected.
+   * Returns whether or not some of the row's selectable sub rows are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getissomeselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
@@ -503,13 +503,15 @@ export const RowSelection: TableFeature = {
     }
 
     row.getIsSomeSelected = () => {
-      const { rowSelection } = table.getState()
-      return isSubRowSelected(row, rowSelection, table) === 'some'
+      const selectable = getSelectableSubRowCount(row)
+      const selected = getSelectedSubRowCount(row)
+      return selected > 0 && selected < selectable;
     }
 
     row.getIsAllSubRowsSelected = () => {
-      const { rowSelection } = table.getState()
-      return isSubRowSelected(row, rowSelection, table) === 'all'
+      const selectable = getSelectableSubRowCount(row)
+      const selected = getSelectedSubRowCount(row)
+      return selected > 0 && selected === selectable;
     }
 
     row.getCanSelect = () => {
@@ -636,43 +638,43 @@ export function isRowSelected<TData extends RowData>(
   return selection[row.id] ?? false
 }
 
-export function isSubRowSelected<TData extends RowData>(
-  row: Row<TData>,
-  selection: Record<string, boolean>,
-  table: Table<TData>,
-): boolean | 'some' | 'all' {
-  if (!row.subRows?.length) return false
+/**
+ * Determines the number of selectable sub-rows and nested sub-rows using BFS traversal
+ *
+ * @param {Row<TData>} row - The table row to evaluate.
+ * @returns {number} The number of selectable sub rows.
+ */
+export function getSelectableSubRowCount<TData extends RowData>(row: Row<TData>): number {
+  return countSubRows(row, (node) => node.getCanSelect());
+};
 
-  let allChildrenSelected = true
-  let someSelected = false
+/**
+ * Determines the number of selectable and selected sub-rows and nested sub-rows using BFS traversal
+ *
+ * @param {Row<TData>} row - The table row to evaluate.
+ * @returns {number} The number of selected sub rows.
+ */
+export function getSelectedSubRowCount<TData extends RowData>(row: Row<TData>): number {
+  return countSubRows(row, (node) => node.getCanSelect() && node.getIsSelected());
+};
 
-  row.subRows.forEach((subRow) => {
-    // Bail out early if we know both of these
-    if (someSelected && !allChildrenSelected) {
-      return
+/**
+ * Count the number of sub-rows that satisfy a given condition (checked via BFS across all nested sub-rows).
+ *
+ * @param row The table row to evaluate.
+ * @param eligibility A function that takes a row and returns a boolean indicating whether the row should be counted.
+ * @returns The number of sub-rows that satisfy the condition.
+ */
+function countSubRows<TData extends RowData>(row: Row<TData>, eligibility: (row: Row<TData>) => boolean): number {
+  const q = [...row.subRows];
+  let count = 0;
+  while (q.length) {
+    const node = q.shift()!;
+    if (eligibility(node)) {
+      count += 1;
     }
+    q.push(...node.subRows);
+  }
 
-    if (subRow.getCanSelect()) {
-      if (isRowSelected(subRow, selection)) {
-        someSelected = true
-      } else {
-        allChildrenSelected = false
-      }
-    }
-
-    // Check row selection of nested subrows
-    if (subRow.subRows && subRow.subRows.length) {
-      const subRowChildrenSelected = isSubRowSelected(subRow, selection, table)
-      if (subRowChildrenSelected === 'all') {
-        someSelected = true
-      } else if (subRowChildrenSelected === 'some') {
-        someSelected = true
-        allChildrenSelected = false
-      } else {
-        allChildrenSelected = false
-      }
-    }
-  })
-
-  return allChildrenSelected ? 'all' : someSelected ? 'some' : false
+  return count;
 }
