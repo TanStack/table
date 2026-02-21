@@ -503,15 +503,14 @@ export const RowSelection: TableFeature = {
     }
 
     row.getIsSomeSelected = () => {
-      const selectable = getSelectableSubRowCount(row)
-      const selected = getSelectedSubRowCount(row)
-      return selected > 0 && selected < selectable;
+      const { selectableCount, selectedCount } = getSubRowSelectionsCount(row);
+      return selectedCount > 0 && selectedCount < selectableCount;
     }
 
     row.getIsAllSubRowsSelected = () => {
-      const selectable = getSelectableSubRowCount(row)
-      const selected = getSelectedSubRowCount(row)
-      return selected > 0 && selected === selectable;
+      const { selectableCount, selectedCount } = getSubRowSelectionsCount(row);
+
+      return selectedCount > 0 && selectedCount === selectableCount;
     }
 
     row.getCanSelect = () => {
@@ -639,42 +638,40 @@ export function isRowSelected<TData extends RowData>(
 }
 
 /**
- * Determines the number of selectable sub-rows and nested sub-rows using BFS traversal
- *
- * @param {Row<TData>} row - The table row to evaluate.
- * @returns {number} The number of selectable sub rows.
- */
-export function getSelectableSubRowCount<TData extends RowData>(row: Row<TData>): number {
-  return countSubRows(row, (node) => node.getCanSelect());
-};
-
-/**
- * Determines the number of selectable and selected sub-rows and nested sub-rows using BFS traversal
- *
- * @param {Row<TData>} row - The table row to evaluate.
- * @returns {number} The number of selected sub rows.
- */
-export function getSelectedSubRowCount<TData extends RowData>(row: Row<TData>): number {
-  return countSubRows(row, (node) => node.getCanSelect() && node.getIsSelected());
-};
-
-/**
- * Count the number of sub-rows that satisfy a given condition (checked via BFS across all nested sub-rows).
+ * Determines the number of selectable sub-rows and selected sub-rows (checked via BFS across all nested sub-rows).
  *
  * @param row The table row to evaluate.
- * @param eligibility A function that takes a row and returns a boolean indicating whether the row should be counted.
  * @returns The number of sub-rows that satisfy the condition.
  */
-function countSubRows<TData extends RowData>(row: Row<TData>, eligibility: (row: Row<TData>) => boolean): number {
+export function getSubRowSelectionsCount<TData extends RowData>(row: Row<TData>): { selectableCount: number, selectedCount: number } {
   const q = [...row.subRows];
-  let count = 0;
-  while (q.length) {
-    const node = q.shift()!;
-    if (eligibility(node)) {
-      count += 1;
+  let selectableCount = 0;
+  let selectedCount = 0;
+  let index = 0;
+  while (index < q.length) {
+    const node = q[index]!;
+    if (node.getCanSelect()) {
+      selectableCount += 1;
+      if (node.getIsSelected()) {
+        selectedCount += 1;
+      }
     }
     q.push(...node.subRows);
+    index += 1;
   }
 
-  return count;
+  return { selectableCount, selectedCount };
+}
+
+export function isSubRowSelected<TData extends RowData>(
+  row: Row<TData>,
+  _selection: Record<string, boolean>,
+  _table: Table<TData>,
+): boolean | 'some' | 'all' {
+  if (row.getIsSomeSelected()) {
+    return 'some';
+  } else if (row.getIsAllSubRowsSelected()) {
+    return 'all';
+  }
+  return false;
 }
