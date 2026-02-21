@@ -767,5 +767,24 @@ describe('RowSelection', () => {
       const firstRow = table.getCoreRowModel().rows[0]
       expect(firstRow.getIsAllSubRowsSelected()).toBe(true)
     })
+
+    it('should return true when all selectable sub-rows are selected and some are non-selectable', () => {
+      const data = makeData(1, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: (row) => row.id !== '0.1', // second sub-row is NOT selectable
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: { '0.0': true } }, // only selectable sub-row selected
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsAllSubRowsSelected()).toBe(true)
+    })
   });
 })
