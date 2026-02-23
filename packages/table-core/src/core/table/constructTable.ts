@@ -1,6 +1,6 @@
-import { Derived, Store } from '@tanstack/store'
-import {} from '../../utils'
+import { createStore } from '@tanstack/store'
 import { coreFeatures } from '../coreFeatures'
+import type { Store } from '@tanstack/store'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -23,7 +23,7 @@ export function createTableStore<TFeatures extends TableFeatures>(
   features: TFeatures,
   initialState: Partial<TableState<TFeatures>> | undefined = {},
 ): Store<TableState<TFeatures>> {
-  return new Store(getInitialTableState(features, initialState))
+  return createStore(getInitialTableState(features, initialState))
 }
 
 export function constructTable<
@@ -52,20 +52,14 @@ export function constructTable<
     table.options.initialState,
   )
 
-  table.baseStore =
-    table.options.store ?? (new Store(table.initialState) as any)
+  table.baseStore = table.options.store ?? createStore(table.initialState)
 
-  // @ts-ignore - complex TFeatures type inference does not work with Derived
-  table.store = new Derived({
-    deps: [table.baseStore],
-    fn: ({ currDepVals }) => {
-      const baseState = currDepVals[0]
-      // Merge base state with user-provided external state (table.options.state takes precedence)
-      return {
-        ...baseState,
-        ...(table.options.state ?? {}),
-      } as TableState<TFeatures>
-    },
+  table.store = createStore(() => {
+    const state = table.baseStore.get()
+    return {
+      ...state,
+      ...(table.options.state ?? {}),
+    }
   })
 
   if (
@@ -78,11 +72,11 @@ export function constructTable<
 
     console.log(
       `Constructing Table Instance
-    
+
   Features:   ${features.join('\n              ')}
-    
+
   Row Models: ${rowModels.length ? rowModels.join('\n              ') : '(none)'}
-    
+
   States:     ${states.join('\n              ')}`,
     )
   }

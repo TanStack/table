@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { Store, useStore } from '@tanstack/react-store'
+import { createStore, useStore } from '@tanstack/react-store'
 import {
   createColumnHelper,
   createPaginatedRowModel,
@@ -60,18 +60,17 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   // create our own TanStack Store in our own scope (This could just be a global store if defined outside of this component)
-  const [myTableStore] = React.useState(
-    () =>
-      new Store(
-        getInitialTableState(
-          _features, // get default initial state from features
-          // custom initial state
-          {
-            sorting: [],
-            pagination: { pageIndex: 0, pageSize: 10 },
-          },
-        ),
+  const [myTableStore] = React.useState(() =>
+    createStore(
+      getInitialTableState(
+        _features, // get default initial state from features
+        // custom initial state
+        {
+          sorting: [],
+          pagination: { pageIndex: 0, pageSize: 10 },
+        },
       ),
+    ),
   )
 
   // Subscribe to store state for reactive updates, custom selector available too

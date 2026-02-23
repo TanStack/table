@@ -2,7 +2,6 @@ import {
   Injector,
   assertInInjectionContext,
   computed,
-  effect,
   inject,
   untracked,
 } from '@angular/core'
@@ -133,14 +132,6 @@ export function injectTable<
       }
       return result
     })
-
-    effect(
-      (onCleanup) => {
-        const cleanup = table.store.mount()
-        onCleanup(() => cleanup())
-      },
-      { injector },
-    )
 
     const tableState = injectStore(
       table.store,
