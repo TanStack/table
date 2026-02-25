@@ -1,6 +1,9 @@
 import React from 'react'
 import { createReactPanel } from '@tanstack/devtools-utils/react'
-import { TableDevtoolsCore, setTableDevtoolsTarget } from '@tanstack/table-devtools'
+import {
+  TableDevtoolsCore,
+  setTableDevtoolsTarget,
+} from '@tanstack/table-devtools'
 
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/react'

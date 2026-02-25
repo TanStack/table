@@ -43,7 +43,10 @@ const stylesFactory = (theme: 'light' | 'dark') => {
       }
     `,
     tabButtonActive: css`
-      background: ${t(colors.red[500] + alpha[20], colors.red[700] + alpha[20])};
+      background: ${t(
+        colors.red[500] + alpha[20],
+        colors.red[700] + alpha[20],
+      )};
       border-color: ${t(colors.red[500], colors.red[300])};
       color: ${t(colors.red[700], colors.red[300])};
     `,

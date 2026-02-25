@@ -14,7 +14,11 @@
     "type": "github",
     "url": "https://github.com/sponsors/tannerlinsley"
   },
-  "keywords": ["tanstack", "table", "devtools"],
+  "keywords": [
+    "tanstack",
+    "table",
+    "devtools"
+  ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
     "lint:fix": "eslint ./src --fix",
@@ -47,7 +51,10 @@
   "engines": {
     "node": ">=16"
   },
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "dependencies": {
     "@tanstack/devtools-ui": "^0.4.4",
     "@tanstack/devtools-utils": "^0.3.0",

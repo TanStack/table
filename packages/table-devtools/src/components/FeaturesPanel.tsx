@@ -98,60 +98,60 @@ export function FeaturesPanel() {
             <div class={styles().sectionTitle}>Features</div>
 
             <div class={styles().featureSubsection}>
-            <div class={styles().featureSubsectionTitle}>Core Features</div>
-            <For each={CORE_FEATURE_NAMES}>
-              {(name) => (
-                <div class={styles().featureListItem}>
-                  <span
-                    class={
-                      tableFeatures.has(name)
-                        ? styles().featureCheck
-                        : styles().featureUncheck
-                    }
-                  >
-                    {tableFeatures.has(name) ? '✓' : '○'}
-                  </span>
-                  {name}
-                </div>
-              )}
-            </For>
-          </div>
-
-          <div class={styles().featureSubsection}>
-            <div class={styles().featureSubsectionTitle}>Stock Features</div>
-            <For each={STOCK_FEATURE_NAMES}>
-              {(name) => (
-                <div class={styles().featureListItem}>
-                  <span
-                    class={
-                      tableFeatures.has(name)
-                        ? styles().featureCheck
-                        : styles().featureUncheck
-                    }
-                  >
-                    {tableFeatures.has(name) ? '✓' : '○'}
-                  </span>
-                  {name}
-                </div>
-              )}
-            </For>
-          </div>
-
-          {getAdditionalPlugins().length > 0 && (
-            <div class={styles().featureSubsection}>
-              <div class={styles().featureSubsectionTitle}>
-                Additional Plugins
-              </div>
-              <For each={getAdditionalPlugins()}>
+              <div class={styles().featureSubsectionTitle}>Core Features</div>
+              <For each={CORE_FEATURE_NAMES}>
                 {(name) => (
                   <div class={styles().featureListItem}>
-                    <span class={styles().featureCheck}>✓</span>
+                    <span
+                      class={
+                        tableFeatures.has(name)
+                          ? styles().featureCheck
+                          : styles().featureUncheck
+                      }
+                    >
+                      {tableFeatures.has(name) ? '✓' : '○'}
+                    </span>
                     {name}
                   </div>
                 )}
               </For>
             </div>
-          )}
+
+            <div class={styles().featureSubsection}>
+              <div class={styles().featureSubsectionTitle}>Stock Features</div>
+              <For each={STOCK_FEATURE_NAMES}>
+                {(name) => (
+                  <div class={styles().featureListItem}>
+                    <span
+                      class={
+                        tableFeatures.has(name)
+                          ? styles().featureCheck
+                          : styles().featureUncheck
+                      }
+                    >
+                      {tableFeatures.has(name) ? '✓' : '○'}
+                    </span>
+                    {name}
+                  </div>
+                )}
+              </For>
+            </div>
+
+            {getAdditionalPlugins().length > 0 && (
+              <div class={styles().featureSubsection}>
+                <div class={styles().featureSubsectionTitle}>
+                  Additional Plugins
+                </div>
+                <For each={getAdditionalPlugins()}>
+                  {(name) => (
+                    <div class={styles().featureListItem}>
+                      <span class={styles().featureCheck}>✓</span>
+                      {name}
+                    </div>
+                  )}
+                </For>
+              </div>
+            )}
           </>
         }
         right={
@@ -160,33 +160,30 @@ export function FeaturesPanel() {
               Client Side Row Models and Fns
             </div>
             <For each={rowModelNames}>
-            {(rowModelName) => {
-              const fns = getRowModelFunctions(rowModelName)
-              return (
-                <div>
-                  <div class={styles().rowModelItem}>{rowModelName}</div>
-                  <For each={fns}>
-                    {(fnName) => (
-                      <div class={styles().rowModelFnItem}>{fnName}</div>
-                    )}
-                  </For>
-                </div>
-              )
-            }}
-          </For>
-          {rowModelNames.length === 0 && (
-            <div class={styles().rowModelItem}>No row models configured</div>
-          )}
+              {(rowModelName) => {
+                const fns = getRowModelFunctions(rowModelName)
+                return (
+                  <div>
+                    <div class={styles().rowModelItem}>{rowModelName}</div>
+                    <For each={fns}>
+                      {(fnName) => (
+                        <div class={styles().rowModelFnItem}>{fnName}</div>
+                      )}
+                    </For>
+                  </div>
+                )
+              }}
+            </For>
+            {rowModelNames.length === 0 && (
+              <div class={styles().rowModelItem}>No row models configured</div>
+            )}
             <div class={styles().rowModelExecutionOrder}>
-              <div class={styles().featureSubsectionTitle}>
-                Execution Order
-              </div>
+              <div class={styles().featureSubsectionTitle}>Execution Order</div>
               <For each={EXECUTION_ORDER_GETTERS}>
                 {(getter, index) => {
                   const rowModelKey = getterToRowModelKey(getter)
                   const isPresent =
-                    rowModelKey !== null &&
-                    rowModelNames.includes(rowModelKey)
+                    rowModelKey !== null && rowModelNames.includes(rowModelKey)
                   return (
                     <>
                       {index() > 0 && ' → '}
