@@ -1,24 +1,8 @@
-import { computed, signal } from '@angular/core'
-import { setReactivePropertiesOnObject } from './reactivityUtils'
-import type { Signal } from '@angular/core'
-import type {
-  RowData,
-  Table,
-  TableFeature,
-  TableFeatures,
-} from '@tanstack/table-core'
-
-declare module '@tanstack/table-core' {
-  interface TableOptions_Plugins<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  > extends TableOptions_AngularReactivity {}
-
-  interface Table_Plugins<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  > extends Table_AngularReactivity<TFeatures, TData> {}
-}
+import { setReactivePropertiesOnObject } from './tableReactivityFeature.utils'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { Accessor } from './tableReactivityFeature.utils'
+import type { RowData } from '../../types/type-utils'
+import type { Table } from '../../types/Table'
 
 /**
  * Predicate used to skip/ignore a property name when applying Angular reactivity.
@@ -68,7 +52,7 @@ export interface AngularReactivityFlags {
  *
  * Available on `createTable` options via module augmentation in this file.
  */
-interface TableOptions_AngularReactivity {
+interface TableOptions_Reactivity {
   /**
    * Enables/disables and configures Angular reactivity on table-related prototypes.
    *
@@ -82,31 +66,31 @@ interface TableOptions_AngularReactivity {
  *
  * Added to the table instance via module augmentation.
  */
-interface Table_AngularReactivity<
+interface Table_Reactivity<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
   /**
    * Returns a table signal that updates whenever the table state or options changes.
    */
-  get: Signal<Table<TFeatures, TData>>
+  value: Accessor<Table<TFeatures, TData>>
   /**
    * Sets the reactive notifier that powers {@link get}.
    *
    * @internal Used by the Angular table adapter to connect its notifier to the core table.
    */
-  setTableNotifier: (signal: Signal<Table<TFeatures, TData>>) => void
+  setTableNotifier: (signal: Accessor<Table<TFeatures, TData>>) => void
 }
 
 /**
  * Type map describing what this feature adds to TanStack Table constructors.
  */
-interface AngularReactivityFeatureConstructors<
+interface TableReactivityFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  TableOptions: TableOptions_AngularReactivity
-  Table: Table_AngularReactivity<TFeatures, TData>
+  TableOptions: TableOptions_Reactivity
+  Table: Table_Reactivity<TFeatures, TData>
 }
 
 /**
@@ -127,10 +111,25 @@ const getUserSkipPropertyFn = (
   return value ?? defaultPropertyFn
 }
 
-function constructAngularReactivityFeature<
+export type InteroperableWritableSignal<T> = {
+  (): T
+  set: (value: unknown) => void
+}
+
+export interface ReactivityFeatureFactoryOptions {
+  createSignal: <T>(value: T) => InteroperableWritableSignal<T>
+  createMemo: <T>(accessor: Accessor<T>) => Accessor<T>
+  isSignal: (v: unknown) => boolean
+}
+
+export function constructReactivityFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): TableFeature<AngularReactivityFeatureConstructors<TFeatures, TData>> {
+>(
+  factory: ReactivityFeatureFactoryOptions,
+): TableFeature<TableReactivityFeatureConstructors<TFeatures, TData>> {
+  const { createSignal, createMemo } = factory
+
   return {
     getDefaultTableOptions(table) {
       return {
@@ -143,76 +142,96 @@ function constructAngularReactivityFeature<
       }
     },
     constructTableAPIs: (table) => {
-      const rootNotifier = signal<Signal<any> | null>(null)
-      table.setTableNotifier = (notifier) => rootNotifier.set(notifier)
-      table.get = computed(() => rootNotifier()!(), { equal: () => false })
-      setReactivePropertiesOnObject(table.get, table, {
+      const rootNotifier = createSignal<Accessor<
+        Table<TFeatures, TData>
+      > | null>(null)
+
+      table.setTableNotifier = (notifier) => {
+        rootNotifier.set(notifier)
+      }
+
+      table.value = () => {
+        const notifier = rootNotifier()
+        void notifier?.()
+        return table as any
+      }
+
+      setReactivePropertiesOnObject(table.value, table, {
         overridePrototype: false,
         skipProperty: skipBaseProperties,
+        factory,
       })
     },
 
     assignCellPrototype: (prototype, table) => {
+      // @ts-expect-error Internal
       if (table.options.reactivity?.cell === false) {
         return
       }
-      setReactivePropertiesOnObject(table.get, prototype, {
+      // @ts-expect-error Internal
+      setReactivePropertiesOnObject(table.value, prototype, {
         skipProperty: getUserSkipPropertyFn(
+          // @ts-expect-error Internal
           table.options.reactivity?.cell,
           skipBaseProperties,
         ),
         overridePrototype: true,
+        factory,
       })
     },
 
     assignColumnPrototype: (prototype, table) => {
+      // @ts-expect-error Internal
       if (table.options.reactivity?.column === false) {
         return
       }
-      setReactivePropertiesOnObject(table.get, prototype, {
+      // @ts-expect-error Internal
+      setReactivePropertiesOnObject(table.value, prototype, {
         skipProperty: getUserSkipPropertyFn(
+          // @ts-expect-error Internal
           table.options.reactivity?.cell,
           skipBaseProperties,
         ),
         overridePrototype: true,
+        factory,
       })
     },
 
     assignHeaderPrototype: (prototype, table) => {
+      // @ts-expect-error Internal
       if (table.options.reactivity?.header === false) {
         return
       }
-      setReactivePropertiesOnObject(table.get, prototype, {
+      // @ts-expect-error Internal
+      setReactivePropertiesOnObject(table.value, prototype, {
         skipProperty: getUserSkipPropertyFn(
+          // @ts-expect-error Internal
           table.options.reactivity?.cell,
           skipBaseProperties,
         ),
         overridePrototype: true,
+        factory,
       })
     },
 
     assignRowPrototype: (prototype, table) => {
+      // @ts-expect-error Internal
       if (table.options.reactivity?.row === false) {
         return
       }
-      setReactivePropertiesOnObject(table.get, prototype, {
+      // @ts-expect-error Internal
+      setReactivePropertiesOnObject(table.value, prototype, {
         skipProperty: getUserSkipPropertyFn(
+          // @ts-expect-error Internal
           table.options.reactivity?.cell,
           skipBaseProperties,
         ),
         overridePrototype: true,
+        factory,
       })
     },
   }
 }
-
-/**
- * Angular reactivity feature that add reactive signal supports in table core instance.
- * This is used internally by the Angular table adapter `injectTable`.
- *
- * @private
- */
-export const angularReactivityFeature = constructAngularReactivityFeature()
 
 /**
  * Default predicate used to skip base/non-reactive properties.

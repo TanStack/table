@@ -1,7 +1,6 @@
-import { computed, isSignal } from '@angular/core'
-import { $internalMemoFnMeta, getMemoFnMeta } from '@tanstack/table-core'
-import type { MemoFnMeta } from '@tanstack/table-core'
-import type { Signal } from '@angular/core'
+import { $internalMemoFnMeta, getMemoFnMeta } from '../../utils'
+import type { MemoFnMeta } from '../../utils'
+import type { ReactivityFeatureFactoryOptions } from './tableReactivityFeature'
 
 const $TABLE_REACTIVE = Symbol('reactive')
 
@@ -13,6 +12,8 @@ function isReactive<T>(obj: T): boolean {
   return Reflect.get(obj as {}, $TABLE_REACTIVE) === true
 }
 
+export type Accessor<T> = () => T
+
 /**
  * Defines a lazy computed property on an object. The property is initialized
  * with a getter that computes its value only when accessed for the first time.
@@ -22,25 +23,26 @@ function isReactive<T>(obj: T): boolean {
  * @internal should be used only internally
  */
 export function defineLazyComputedProperty<T extends object>(
-  notifier: Signal<T>,
+  notifier: Accessor<T>,
   setObjectOptions: {
     originalObject: T
     property: keyof T & string
     valueFn: (...args: any) => any
     overridePrototype?: boolean
+    factory: ReactivityFeatureFactoryOptions
   },
 ) {
-  const { originalObject, property, overridePrototype, valueFn } =
+  const { originalObject, property, overridePrototype, valueFn, factory } =
     setObjectOptions
 
   if (overridePrototype) {
-    assignReactivePrototypeAPI(notifier, originalObject, property)
+    assignReactivePrototypeAPI(notifier, originalObject, property, factory)
   } else {
     Object.defineProperty(originalObject, property, {
       enumerable: true,
       configurable: true,
       get() {
-        const computedValue = toComputed(notifier, valueFn, property)
+        const computedValue = toComputed(notifier, valueFn, property, factory)
         markReactive(computedValue)
         // Once the property is set the first time, we don't need a getter anymore
         // since we have a computed / cached fn value
@@ -59,7 +61,7 @@ export function defineLazyComputedProperty<T extends object>(
  * @internal should be used only internally
  */
 type ComputedFunction<T> = T extends () => infer TReturn
-  ? Signal<TReturn>
+  ? Accessor<TReturn>
   : // 1+ args
     T extends (arg0?: any, ...args: Array<any>) => any
     ? T
@@ -85,26 +87,25 @@ export function toComputed<
   TReturn,
   TFunction extends (...args: any) => TReturn,
 >(
-  notifier: Signal<T>,
+  notifier: Accessor<T>,
   fn: TFunction,
   debugName: string,
+  factory: ReactivityFeatureFactoryOptions,
 ): ComputedFunction<TFunction> {
+  const { createMemo } = factory
   const hasArgs = getFnArgsLength(fn) > 0
   if (!hasArgs) {
-    const computedFn = computed(
-      () => {
-        void notifier()
-        return fn()
-      },
-      { debugName },
-    )
+    const computedFn = createMemo(() => {
+      void notifier()
+      return fn()
+    })
     Object.defineProperty(computedFn, 'name', { value: debugName })
     markReactive(computedFn)
     return computedFn as ComputedFunction<TFunction>
   }
 
   const computedFn: ((this: unknown, ...argsArray: Array<any>) => unknown) & {
-    _reactiveCache?: Record<string, Signal<unknown>>
+    _reactiveCache?: Record<string, Accessor<unknown>>
   } = function (this: unknown, ...argsArray: Array<any>) {
     const cacheable =
       argsArray.length === 0 ||
@@ -125,13 +126,10 @@ export function toComputed<
     if ((computedFn._reactiveCache ??= {})[serializedArgs]) {
       return computedFn._reactiveCache[serializedArgs]()
     }
-    const computedSignal = computed(
-      () => {
-        void notifier()
-        return fn.apply(this, argsArray)
-      },
-      { debugName },
-    )
+    const computedSignal = createMemo(() => {
+      void notifier()
+      return fn.apply(this, argsArray)
+    })
 
     computedFn._reactiveCache[serializedArgs] = computedSignal
 
@@ -155,11 +153,14 @@ function getFnArgsLength(
 }
 
 function assignReactivePrototypeAPI(
-  notifier: Signal<unknown>,
+  notifier: Accessor<unknown>,
   prototype: Record<string, any>,
   fnName: string,
+  factory: ReactivityFeatureFactoryOptions,
 ) {
   if (isReactive(prototype[fnName])) return
+
+  const { createMemo } = factory
 
   const fn = prototype[fnName]
   const originalArgsLength = getFnArgsLength(fn)
@@ -173,13 +174,11 @@ function assignReactivePrototypeAPI(
         // Create a cache in the current prototype to allow the signals
         // to be garbage collected. Shorthand for a WeakMap implementation
         self._reactiveCache ??= {}
-        const cached = (self._reactiveCache[`${self.id}${fnName}`] ??= computed(
-          () => {
+        const cached = (self._reactiveCache[`${self.id}${fnName}`] ??=
+          createMemo(() => {
             notifier()
             return fn.apply(self)
-          },
-          {},
-        ))
+          }))
         markReactive(cached)
         cached[$internalMemoFnMeta] = {
           originalArgsLength,
@@ -200,14 +199,15 @@ function assignReactivePrototypeAPI(
 }
 
 export function setReactivePropertiesOnObject<T extends object>(
-  notifier: Signal<T>,
+  notifier: Accessor<T>,
   obj: { [key: string]: any },
   options: {
     overridePrototype?: boolean
     skipProperty: (property: string) => boolean
+    factory: ReactivityFeatureFactoryOptions
   },
 ) {
-  const { skipProperty } = options
+  const { skipProperty, factory } = options
   if (isReactive(obj)) {
     return
   }
@@ -215,11 +215,7 @@ export function setReactivePropertiesOnObject<T extends object>(
 
   for (const property in obj) {
     const value = obj[property]
-    if (
-      isSignal(value) ||
-      typeof value !== 'function' ||
-      skipProperty(property)
-    ) {
+    if (typeof value !== 'function' || skipProperty(property)) {
       continue
     }
     defineLazyComputedProperty(notifier, {
@@ -227,6 +223,7 @@ export function setReactivePropertiesOnObject<T extends object>(
       property,
       originalObject: obj,
       overridePrototype: options.overridePrototype,
+      factory: factory,
     })
   }
 }

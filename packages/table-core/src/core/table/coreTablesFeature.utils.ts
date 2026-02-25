@@ -35,6 +35,8 @@ export function table_setOptions<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<TableOptions<TFeatures, TData>>,
 ): void {
-  const newOptions = functionalUpdate(updater, table.options)
-  table.options = table_mergeOptions(table, newOptions)
+  table.baseOptionsStore.setState((options) => {
+    const newOptions = functionalUpdate(updater, options)
+    return table_mergeOptions(table, newOptions)
+  })
 }

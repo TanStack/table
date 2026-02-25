@@ -3671,6 +3671,9 @@ importers:
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       goober:
         specifier: ^2.1.18
         version: 2.1.18(csstype@3.2.3)
