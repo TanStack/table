@@ -55,7 +55,7 @@ export function constructTable<
   table.baseStore = table.options.store ?? createStore(table.initialState)
 
   table.store = createStore(() => {
-    const state = table.baseStore.get()
+    const state = table.baseStore.state
     return {
       ...state,
       ...(table.options.state ?? {}),
