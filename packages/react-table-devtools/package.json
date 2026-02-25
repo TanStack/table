@@ -56,7 +56,7 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/devtools-utils": "^0.3.0",
+    "@tanstack/devtools-utils": "^0.3.2",
     "@tanstack/table-core": "workspace:*",
     "@tanstack/table-devtools": "workspace:*"
   },

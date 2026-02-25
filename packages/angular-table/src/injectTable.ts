@@ -2,13 +2,17 @@ import {
   Injector,
   assertInInjectionContext,
   computed,
+  effect,
   inject,
+  signal,
   untracked,
 } from '@angular/core'
-import { constructTable } from '@tanstack/table-core'
+import {
+  constructReactivityFeature,
+  constructTable,
+} from '@tanstack/table-core'
 import { injectStore } from '@tanstack/angular-store'
 import { lazyInit } from './lazySignalInitializer'
-import { angularReactivityFeature } from './angularReactivityFeature'
 import type {
   RowData,
   Table,
@@ -28,9 +32,13 @@ export type AngularTable<
    */
   readonly state: Signal<Readonly<TSelected>>
   /**
+   * A signal that returns the entire table instance. Will update on table/options change.
+   */
+  readonly value: Signal<AngularTable<TFeatures, TData, TSelected>>
+  /**
    * Subscribe to changes in the table store with a custom selector.
    */
-  Subscribe: <TSubSelected = {}>(props: {
+  subscribe: <TSubSelected = {}>(props: {
     selector: (state: TableState<TFeatures>) => TSubSelected
     equal?: ValueEqualityFn<TSubSelected>
   }) => Signal<Readonly<TSubSelected>>
@@ -103,6 +111,10 @@ export function injectTable<
 ): AngularTable<TFeatures, TData, TSelected> {
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
+  const stateNotifier = signal(0)
+  const angularReactivityFeature = constructReactivityFeature({
+    stateNotifier: () => stateNotifier(),
+  })
 
   return lazyInit(() => {
     const resolvedOptions: TableOptions<TFeatures, TData> = {
@@ -113,19 +125,22 @@ export function injectTable<
       },
     } as TableOptions<TFeatures, TData>
 
-    const table: AngularTable<TFeatures, TData, TSelected> = constructTable(
-      resolvedOptions,
-    ) as AngularTable<TFeatures, TData, TSelected>
+    const table = constructTable(resolvedOptions) as AngularTable<
+      TFeatures,
+      TData,
+      TSelected
+    >
+    const tableState = injectStore(table.store, (state) => state, { injector })
+    const tableOptions = injectStore(table.optionsStore, (state) => state, {
+      injector,
+    })
 
     const updatedOptions = computed<TableOptions<TFeatures, TData>>(() => {
       const tableOptionsValue = options()
       const result: TableOptions<TFeatures, TData> = {
-        ...table.options,
+        ...untracked(() => table.options),
         ...tableOptionsValue,
-        _features: {
-          ...tableOptionsValue._features,
-          angularReactivityFeature,
-        },
+        _features: { ...tableOptionsValue._features, angularReactivityFeature },
       }
       if (tableOptionsValue.state) {
         result.state = tableOptionsValue.state
@@ -133,25 +148,25 @@ export function injectTable<
       return result
     })
 
-    const tableState = injectStore(
-      table.store,
-      (state: TableState<TFeatures>) => state,
-      { injector },
-    )
-
-    const tableSignalNotifier = computed(
+    effect(
       () => {
-        tableState()
-        table.setOptions(updatedOptions())
-        untracked(() => table.baseStore.setState((prev) => ({ ...prev })))
-        return table
+        const newOptions = updatedOptions()
+        untracked(() => table.setOptions(newOptions))
       },
-      { equal: () => false },
+      { injector, debugName: 'tableOptionsUpdate' },
     )
 
-    table.setTableNotifier(tableSignalNotifier)
+    let isMount = true
+    effect(
+      () => {
+        void [tableOptions(), tableState()]
+        if (!isMount) untracked(() => stateNotifier.update((n) => n + 1))
+        isMount && (isMount = false)
+      },
+      { injector, debugName: 'tableStateNotifier' },
+    )
 
-    table.Subscribe = function Subscribe<TSubSelected = {}>(props: {
+    table.subscribe = function Subscribe<TSubSelected = {}>(props: {
       selector: (state: TableState<TFeatures>) => TSubSelected
       equal?: ValueEqualityFn<TSubSelected>
     }) {
@@ -163,6 +178,14 @@ export function injectTable<
 
     Object.defineProperty(table, 'state', {
       value: injectStore(table.store, selector, { injector }),
+    })
+
+    Object.defineProperty(table, 'value', {
+      value: computed(() => {
+        tableOptions()
+        tableState()
+        return table
+      }),
     })
 
     return table

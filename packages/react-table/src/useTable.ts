@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
-import { useStore } from '@tanstack/react-store'
+import { shallow, useStore } from '@tanstack/react-store'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type {
@@ -103,26 +103,15 @@ export function useTable<
     return tableInstance
   })
 
-  // sync table options on every render
-  table.setOptions((prev) => ({
-    ...prev,
-    ...tableOptions,
-  }))
+  useEffect(() => {
+    // sync table options on every render
+    table.setOptions((prev) => ({
+      ...prev,
+      ...tableOptions,
+    }))
+  }, [table, tableOptions])
 
-  useIsomorphicLayoutEffect(() => {
-    // prevent race condition between table.setOptions and table.baseStore.setState
-    queueMicrotask(() => {
-      table.baseStore.setState((prev) => ({
-        ...prev,
-      }))
-    })
-  }, [
-    table.options.columns, // re-render when columns change
-    table.options.data, // re-render when data changes
-    table.options.state, // sync react state to the table store
-  ])
-
-  const state = useStore(table.store, selector)
+  const state = useStore(table.store, selector, shallow)
 
   return useMemo(
     () => ({

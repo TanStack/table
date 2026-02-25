@@ -1,5 +1,8 @@
-import { isRef, unref, watch } from 'vue'
-import { constructTable } from '@tanstack/table-core'
+import { isRef, ref, unref, watch, watchEffect } from 'vue'
+import {
+  constructReactivityFeature,
+  constructTable,
+} from '@tanstack/table-core'
 import { useStore } from '@tanstack/vue-store'
 import { mergeProxy } from './merge-proxy'
 import type {
@@ -74,75 +77,75 @@ export function useTable<
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): VueTable<TFeatures, TData, TSelected> {
+  const notifier = ref<number>(0)
+
+  const vueReactivityFeature = constructReactivityFeature({
+    stateNotifier: () => notifier.value,
+    optionsNotifier: () => notifier.value,
+  })
+
   const IS_REACTIVE = isRef(tableOptions.data)
 
-  const statefulOptions = mergeProxy(
-    IS_REACTIVE ? getOptionsWithReactiveData(tableOptions) : tableOptions,
+  const mergedOptions = {
+    ...tableOptions,
+    _features: {
+      ...tableOptions._features,
+      vueReactivityFeature,
+    },
+  }
+
+  const resolvedOptions = mergeProxy(
+    IS_REACTIVE
+      ? getOptionsWithReactiveData(
+          mergedOptions as TableOptions<TFeatures, TData>,
+        )
+      : mergedOptions,
     {
       // Remove state and onStateChange - store handles it internally
       mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
         newOptions: Partial<TableOptions<TFeatures, TData>>,
       ) => {
-        return IS_REACTIVE
-          ? {
-              ...defaultOptions,
-              ...newOptions,
-            }
-          : mergeProxy(defaultOptions, newOptions)
+        return mergeProxy(defaultOptions, newOptions)
       },
     },
   ) as TableOptions<TFeatures, TData>
 
-  const table = constructTable(statefulOptions) as VueTable<
+  const table = constructTable(resolvedOptions) as VueTable<
     TFeatures,
     TData,
     TSelected
   >
 
-  function updateOptions() {
-    table.setOptions((prev) => {
-      return mergeProxy(
-        prev,
-        IS_REACTIVE ? getOptionsWithReactiveData(tableOptions) : tableOptions,
-      ) as TableOptions<TFeatures, TData>
-    })
-  }
-
-  updateOptions()
-
-  // Add reactivity support for reactive data
-  if (IS_REACTIVE) {
-    watch(
-      () => tableOptions.data,
-      () => {
-        table.baseStore.setState((prev: TableState<TFeatures>) => ({
-          ...prev,
-          data: unref(tableOptions.data),
-        }))
-      },
-      { immediate: true },
-    )
-  }
-
-  /**
-   * Temp force reactivity to all state changes on every table.get* method
-   */
   const allState = useStore(table.store, (state) => state)
+  const allOptions = useStore(table.optionsStore, (state) => state)
 
-  // Wrap all "get*" methods to make them reactive
-  // Access allState.value directly to create reactive dependency
-  Object.keys(table).forEach((key) => {
-    const value = (table as any)[key]
-    if (typeof value === 'function' && key.startsWith('get')) {
-      const originalMethod = value.bind(table)
-      ;(table as any)[key] = (...args: Array<any>) => {
-        // Access state to create reactive dependency
-        allState.value
-        return originalMethod(...args)
-      }
-    }
+  watchEffect(() => {
+    allState.value
+    allOptions.value
+    notifier.value++
   })
+
+  watch(
+    () =>
+      [
+        IS_REACTIVE ? unref(tableOptions.data) : tableOptions.data,
+        tableOptions,
+      ] as const,
+    () => {
+      table.setOptions((prev) => {
+        return mergeProxy(
+          prev,
+          IS_REACTIVE
+            ? getOptionsWithReactiveData(
+                tableOptions as TableOptions<TFeatures, TData>,
+              )
+            : tableOptions,
+        ) as TableOptions<TFeatures, TData>
+      })
+    },
+    { immediate: true },
+  )
 
   table.Subscribe = function Subscribe<TSelected>(props: {
     selector: (state: TableState<TFeatures>) => TSelected

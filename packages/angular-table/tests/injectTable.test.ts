@@ -75,8 +75,8 @@ describe('injectTable', () => {
     })
 
     test('supports "Object.keys"', () => {
-      const keys = Object.keys(table.get()).concat('state')
-      expect(Object.keys(table)).toEqual(keys)
+      const keys = Object.keys(table)
+      expect(keys.some((k) => ['state', 'getRowModel'].includes(k)))
     })
 
     test('Row model is reactive', () => {

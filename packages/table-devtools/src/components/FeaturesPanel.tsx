@@ -188,15 +188,9 @@ export function FeaturesPanel() {
             <For each={rowModelNames}>
               {(rowModelName) => {
                 const fns = getRowModelFunctions(rowModelName)
-                const count = getRowCountForModel(
-                  tableInstance as { [key: string]: unknown },
-                  rowModelName,
-                )
                 return (
                   <div>
-                    <div class={styles().rowModelItem}>
-                      {rowModelName} ({count.toLocaleString()} rows)
-                    </div>
+                    <div class={styles().rowModelItem}>{rowModelName}</div>
                     <For each={fns}>
                       {(fnName) => (
                         <div class={styles().rowModelFnItem}>{fnName}</div>

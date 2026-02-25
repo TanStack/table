@@ -36,5 +36,6 @@ export function table_setOptions<
   updater: Updater<TableOptions<TFeatures, TData>>,
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
-  table.options = table_mergeOptions(table, newOptions)
+  const mergedOptions = table_mergeOptions(table, newOptions)
+  table.optionsStore.setState(() => mergedOptions)
 }

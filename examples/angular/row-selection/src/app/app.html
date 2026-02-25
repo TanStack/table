@@ -1,4 +1,8 @@
 <div class="p-2">
+  <button class="border rounded px-2" (click)="toggleEnableRowSelection()">
+    {{ enableRowSelection() ? 'Disable' : 'Enable' }} Row selection
+  </button>
+
   <div class="h-2"></div>
 
   <table [tanStackTable]="table">

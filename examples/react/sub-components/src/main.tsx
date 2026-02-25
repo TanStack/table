@@ -103,56 +103,60 @@ function Table({
   })
 
   return (
-    <div className="p-2">
-      <div className="h-2" />
-      <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th key={header.id} colSpan={header.colSpan}>
-                    {header.isPlaceholder ? null : (
-                      <div>
-                        <table.FlexRender header={header} />
-                      </div>
-                    )}
-                  </th>
-                )
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <Fragment key={row.id}>
-                <tr>
-                  {/* first row is a normal row */}
-                  {row.getAllCells().map((cell) => {
+    <table.Subscribe selector={(state) => state}>
+      {() => (
+        <div className="p-2">
+          <div className="h-2" />
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
                     return (
-                      <td key={cell.id}>
-                        <table.FlexRender cell={cell} />
-                      </td>
+                      <th key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <div>
+                            <table.FlexRender header={header} />
+                          </div>
+                        )}
+                      </th>
                     )
                   })}
                 </tr>
-                {row.getIsExpanded() && (
-                  <tr>
-                    {/* 2nd row is a custom 1 cell row */}
-                    <td colSpan={row.getAllCells().length}>
-                      {renderSubComponent({ row })}
-                    </td>
-                  </tr>
-                )}
-              </Fragment>
-            )
-          })}
-        </tbody>
-      </table>
-      <div className="h-2" />
-      <div>{table.getRowModel().rows.length} Rows</div>
-    </div>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => {
+                return (
+                  <Fragment key={row.id}>
+                    <tr>
+                      {/* first row is a normal row */}
+                      {row.getAllCells().map((cell) => {
+                        return (
+                          <td key={cell.id}>
+                            <table.FlexRender cell={cell} />
+                          </td>
+                        )
+                      })}
+                    </tr>
+                    {row.getIsExpanded() && (
+                      <tr>
+                        {/* 2nd row is a custom 1 cell row */}
+                        <td colSpan={row.getAllCells().length}>
+                          {renderSubComponent({ row })}
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
+                )
+              })}
+            </tbody>
+          </table>
+          <div className="h-2" />
+          <div>{table.getRowModel().rows.length} Rows</div>
+        </div>
+      )}
+    </table.Subscribe>
   )
 }
 

@@ -1,7 +1,8 @@
+packages:
+  - examples/**/*
+  - packages/*
+
 cleanupUnusedCatalogs: true
+
 linkWorkspacePackages: true
 preferWorkspacePackages: true
-
-packages:
-  - 'examples/**/*'
-  - 'packages/*'

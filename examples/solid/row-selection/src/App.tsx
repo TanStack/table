@@ -1,3 +1,9 @@
+import type {
+  Column,
+  ColumnDef,
+  SolidTable,
+  Table,
+} from '@tanstack/solid-table'
 import {
   columnFilteringFeature,
   createFilteredRowModel,
@@ -11,15 +17,11 @@ import {
   tableFeatures,
 } from '@tanstack/solid-table'
 import { For, Show, createEffect, createSignal } from 'solid-js'
-import { makeData } from './makeData'
-import type {
-  Column,
-  ColumnDef,
-  SolidTable,
-  Table,
-} from '@tanstack/solid-table'
 import type { Person } from './makeData'
+import { makeData } from './makeData'
 import './index.css'
+import { TanStackDevtools } from '@tanstack/solid-devtools'
+import { tableDevtoolsPlugin } from '@tanstack/solid-table-devtools'
 
 export const _features = tableFeatures({
   rowPaginationFeature,
@@ -31,6 +33,7 @@ export const _features = tableFeatures({
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(100_000)) // stress test
+  const [enableRowSelection, setEnableRowSelection] = createSignal(true)
 
   // Create table first with a placeholder for columns
   let table: SolidTable<typeof _features, Person>
@@ -51,16 +54,18 @@ function App() {
           </table.Subscribe>
         )
       },
-      cell: ({ row }) => (
-        <div class="px-1">
-          <IndeterminateCheckbox
-            checked={row.getIsSelected()}
-            disabled={!row.getCanSelect()}
-            indeterminate={row.getIsSomeSelected()}
-            onChange={row.getToggleSelectedHandler()}
-          />
-        </div>
-      ),
+      cell: ({ row }) => {
+        return (
+          <div class="px-1">
+            <IndeterminateCheckbox
+              checked={row.getIsSelected()}
+              disabled={!row.getCanSelect()}
+              indeterminate={row.getIsSomeSelected()}
+              onChange={row.getToggleSelectedHandler()}
+            />
+          </div>
+        )
+      },
     },
     {
       header: 'Name',
@@ -124,8 +129,9 @@ function App() {
     },
     columns,
     getRowId: (row) => row.id,
-    enableRowSelection: true, // enable row selection for all rows
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+    get enableRowSelection() {
+      return enableRowSelection()
+    },
     debugTable: true,
   })
 
@@ -140,6 +146,8 @@ function App() {
     // >
     //   {(state) => (
     <div class="p-2">
+      <TanStackDevtools plugins={[tableDevtoolsPlugin({ table })]} />
+
       <div>
         <table.Subscribe
           selector={(state) => ({ globalFilter: state.globalFilter })}
@@ -325,6 +333,12 @@ function App() {
         >
           Log table.getSelectedRowModel().flatRows
         </button>
+        <button
+          class="border rounded p-2 mb-2"
+          onClick={() => setEnableRowSelection((prev) => !prev)}
+        >
+          {enableRowSelection() ? 'Disable' : 'Enable'} Row Selection
+        </button>
       </div>
       <div>
         <label>Row Selection State:</label>
@@ -333,8 +347,6 @@ function App() {
         </table.Subscribe>
       </div>
     </div>
-    //   )}
-    // </table.Subscribe>
   )
 }
 
