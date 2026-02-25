@@ -2228,7 +2228,7 @@ importers:
         specifier: 0.9.6
         version: 0.9.6(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(csstype@3.2.3)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.11)
       '@tanstack/react-table-devtools':
-        specifier: workspace:*
+        specifier: 9.0.0-alpha.11
         version: link:../../../packages/react-table-devtools
       '@types/react':
         specifier: ^19.2.10
@@ -3642,7 +3642,7 @@ importers:
         version: 0.3.0(@types/react@19.2.10)(csstype@3.2.3)(preact@10.28.2)(react@19.2.4)(solid-js@1.9.11)(vue@3.5.27(typescript@5.9.3))
       '@tanstack/solid-store':
         specifier: ^0.8.0
-        version: 0.8.0(solid-js@1.9.11)
+        version: 0.8.1(solid-js@1.9.11)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
