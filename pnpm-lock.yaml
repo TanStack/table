@@ -2775,9 +2775,15 @@ importers:
 
   examples/solid/row-selection:
     dependencies:
+      '@tanstack/solid-devtools':
+        specifier: ^0.7.26
+        version: 0.7.26(csstype@3.2.3)(solid-js@1.9.11)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: 9.0.0-alpha.11
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.11
         version: 1.9.11
@@ -3588,11 +3594,30 @@ importers:
   packages/solid-table:
     dependencies:
       '@tanstack/solid-store':
-        specifier: ^0.8.0
-        version: 0.8.1(solid-js@1.9.11)
+        specifier: ^0.9.1
+        version: 0.9.1(solid-js@1.9.11)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
+    devDependencies:
+      solid-js:
+        specifier: ^1.9.11
+        version: 1.9.11
+      vite-plugin-solid:
+        specifier: ^2.11.10
+        version: 2.11.10(@testing-library/jest-dom@6.9.1)(solid-js@1.9.11)(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.97.1)(terser@5.44.1)(tsx@4.19.2)(yaml@2.8.2))
+
+  packages/solid-table-devtools:
+    dependencies:
+      '@tanstack/devtools-utils':
+        specifier: ^0.3.0
+        version: 0.3.0(@types/react@19.2.10)(csstype@3.2.3)(preact@10.28.2)(react@19.2.4)(solid-js@1.9.11)(vue@3.5.27(typescript@5.9.3))
+      '@tanstack/table-core':
+        specifier: workspace:*
+        version: link:../table-core
+      '@tanstack/table-devtools':
+        specifier: workspace:*
+        version: link:../table-devtools
     devDependencies:
       solid-js:
         specifier: ^1.9.11
@@ -3641,8 +3666,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(@types/react@19.2.10)(csstype@3.2.3)(preact@10.28.2)(react@19.2.4)(solid-js@1.9.11)(vue@3.5.27(typescript@5.9.3))
       '@tanstack/solid-store':
-        specifier: ^0.8.0
-        version: 0.8.1(solid-js@1.9.11)
+        specifier: ^0.9.1
+        version: 0.9.1(solid-js@1.9.11)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -7258,8 +7283,14 @@ packages:
     resolution: {integrity: sha512-Lvq5VnH9Rtqci0urHENMMlyswN5fySvIANclS7cUq2xOr5Cc9QfPpwctZ3Bi1X+MibKIcXplTAixIYDFyYquQg==}
     engines: {node: '>=12'}
 
-  '@tanstack/solid-store@0.8.1':
-    resolution: {integrity: sha512-1p4TTJGIZJ2J7130aTo7oWfHVRSCd9DxLP3HzcDMnzn56pz8krlyBEzsE+z/sHGXP0EC/JjT02fgj2L9+fmf8Q==}
+  '@tanstack/solid-devtools@0.7.26':
+    resolution: {integrity: sha512-HagP7imKP6I+GVaHZp3GvwKUZ4qTHkMmZVOK6+uFrlDDJNtKBEblMW1jyGsh0NKrbajTW2KNT0AlylRu5vsR/A==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      solid-js: '>=1.9.7'
+
+  '@tanstack/solid-store@0.9.1':
+    resolution: {integrity: sha512-gx7ToM+Yrkui36NIj0HjAufzv1Dg8usjtVFy5H3Ll52Xjuz+eliIJL+ihAr4LRuWh3nDPBR+nCLW0ShFrbE5yw==}
     peerDependencies:
       solid-js: ^1.6.0
 
@@ -15871,9 +15902,18 @@ snapshots:
       - vite-plugin-solid
       - webpack
 
-  '@tanstack/solid-store@0.8.1(solid-js@1.9.11)':
+  '@tanstack/solid-devtools@0.7.26(csstype@3.2.3)(solid-js@1.9.11)':
     dependencies:
-      '@tanstack/store': 0.8.1
+      '@tanstack/devtools': 0.10.7(csstype@3.2.3)(solid-js@1.9.11)
+      solid-js: 1.9.11
+    transitivePeerDependencies:
+      - bufferutil
+      - csstype
+      - utf-8-validate
+
+  '@tanstack/solid-store@0.9.1(solid-js@1.9.11)':
+    dependencies:
+      '@tanstack/store': 0.9.1
       solid-js: 1.9.11
 
   '@tanstack/store@0.7.7': {}

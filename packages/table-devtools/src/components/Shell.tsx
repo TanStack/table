@@ -5,10 +5,12 @@ import { useStyles } from '../styles/use-styles'
 import { FeaturesPanel } from './FeaturesPanel'
 import { RowsPanel } from './RowsPanel'
 import { StatePanel } from './StatePanel'
+import { OptionsPanel } from './OptionsPanel'
 
 const tabs = [
   { id: 'features', label: 'Features' },
   { id: 'state', label: 'State' },
+  { id: 'options', label: 'Options' },
   { id: 'rows', label: 'Rows' },
 ] as const
 
@@ -51,6 +53,9 @@ export function Shell() {
             </Match>
             <Match when={activeTab() === 'state'}>
               <StatePanel />
+            </Match>
+            <Match when={activeTab() === 'options'}>
+              <OptionsPanel />
             </Match>
             <Match when={activeTab() === 'rows'}>
               <RowsPanel />
