@@ -1,0 +1,65 @@
+{
+  "name": "@tanstack/table-devtools",
+  "version": "9.0.0-alpha.11",
+  "description": "Devtools for TanStack Table.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/table-devtools"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": ["tanstack", "table", "devtools"],
+  "scripts": {
+    "clean": "rimraf ./build && rimraf ./dist",
+    "lint:fix": "eslint ./src --fix",
+    "test:eslint": "eslint ./src",
+    "test:lib": "vitest --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib --watch",
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "vite build"
+  },
+  "type": "module",
+  "types": "dist/esm/index.d.ts",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./production": {
+      "import": {
+        "types": "./dist/esm/production.d.ts",
+        "default": "./dist/esm/production.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
+  "files": ["dist", "src"],
+  "dependencies": {
+    "@tanstack/devtools-ui": "^0.4.4",
+    "@tanstack/devtools-utils": "^0.3.0",
+    "@tanstack/solid-store": "^0.8.0",
+    "clsx": "^2.1.1",
+    "goober": "^2.1.18",
+    "solid-js": "^1.9.11"
+  },
+  "peerDependencies": {
+    "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "vite-plugin-solid": "^2.11.10"
+  }
+}

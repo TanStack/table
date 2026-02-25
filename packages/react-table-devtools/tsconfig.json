@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react"
+  },
+  "include": ["src", "eslint.config.js", "vite.config.ts", "tests"]
+}

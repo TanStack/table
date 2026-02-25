@@ -3,12 +3,5 @@ linkWorkspacePackages: true
 preferWorkspacePackages: true
 
 packages:
+  - 'examples/**/*'
   - 'packages/*'
-  - 'examples/angular/*'
-  - 'examples/lit/*'
-  - 'examples/preact/*'
-  - 'examples/react/*'
-  - 'examples/solid/*'
-  - 'examples/svelte/*'
-  - 'examples/vanilla/*'
-  - 'examples/vue/*'

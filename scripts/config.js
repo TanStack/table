@@ -12,6 +12,10 @@ export const packages = [
     name: '@tanstack/table-core',
     packageDir: 'packages/table-core',
   },
+  // {
+  //   name: '@tanstack/table-devtools',
+  //   packageDir: 'packages/table-devtools',
+  // },
   {
     name: '@tanstack/angular-table',
     packageDir: 'packages/angular-table',
@@ -28,6 +32,10 @@ export const packages = [
     name: '@tanstack/react-table',
     packageDir: 'packages/react-table',
   },
+  // {
+  //   name: '@tanstack/react-table-devtools',
+  //   packageDir: 'packages/react-table-devtools',
+  // },
   // {
   //   name: '@tanstack/solid-table',
   //   packageDir: 'packages/solid-table',

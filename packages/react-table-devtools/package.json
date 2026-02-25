@@ -1,0 +1,67 @@
+{
+  "name": "@tanstack/react-table-devtools",
+  "version": "9.0.0-alpha.11",
+  "description": "React devtools for TanStack Table.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/react-table-devtools"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": ["react", "tanstack", "table", "devtools"],
+  "scripts": {
+    "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src",
+    "test:lib": "vitest --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib --watch",
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "vite build"
+  },
+  "type": "module",
+  "types": "dist/esm/index.d.ts",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./production": {
+      "import": {
+        "types": "./dist/esm/production.d.ts",
+        "default": "./dist/esm/production.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
+  "files": ["dist", "src"],
+  "dependencies": {
+    "@tanstack/devtools-utils": "^0.3.0",
+    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-devtools": "workspace:*"
+  },
+  "devDependencies": {
+    "@eslint-react/eslint-plugin": "^2.13.0",
+    "@types/react": "^19.2.10",
+    "@vitejs/plugin-react": "^5.1.2",
+    "eslint-plugin-react-compiler": "19.1.0-rc.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "react": "^19.2.4"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  }
+}

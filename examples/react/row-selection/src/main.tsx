@@ -12,6 +12,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+} from '@tanstack/react-table-devtools'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
 import type { Person } from './makeData'
@@ -111,16 +115,17 @@ function App() {
   )
 
   return (
-    <table.Subscribe
-      selector={(state) => ({
-        // don't include row selection state to optimize re-renders
-        columnFilters: state.columnFilters,
-        globalFilter: state.globalFilter,
-        pagination: state.pagination,
-      })}
-    >
-      {(state) => (
-        <div className="p-2">
+    <>
+      <table.Subscribe
+        selector={(state) => ({
+          // don't include row selection state to optimize re-renders
+          columnFilters: state.columnFilters,
+          globalFilter: state.globalFilter,
+          pagination: state.pagination,
+        })}
+      >
+        {(state) => (
+          <div className="p-2">
           <div>
             <input
               value={state.globalFilter ?? ''}
@@ -306,9 +311,11 @@ function App() {
               {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
             </table.Subscribe>
           </div>
-        </div>
-      )}
-    </table.Subscribe>
+          </div>
+        )}
+      </table.Subscribe>
+      <TanStackDevtools plugins={[tableDevtoolsPlugin({ table })]} />
+    </>
   )
 }
 
