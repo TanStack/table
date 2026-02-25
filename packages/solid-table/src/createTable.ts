@@ -1,6 +1,17 @@
-import { constructTable } from '@tanstack/table-core'
+import {
+  constructReactivityFeature,
+  constructTable,
+} from '@tanstack/table-core'
 import { useStore } from '@tanstack/solid-store'
-import { createComputed, createSignal } from 'solid-js'
+import {
+  createComputed,
+  createMemo,
+  createSignal,
+  getOwner,
+  mergeProps,
+  runWithOwner,
+} from 'solid-js'
+import type { Accessor, JSX } from 'solid-js'
 import type {
   NoInfer,
   RowData,
@@ -9,7 +20,6 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { Accessor, JSX } from 'solid-js'
 
 export type SolidTable<
   TFeatures extends TableFeatures,
@@ -54,21 +64,75 @@ export function createTable<
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): SolidTable<TFeatures, TData, TSelected> {
-  const table = constructTable(tableOptions) as SolidTable<
+  const owner = getOwner()
+
+  const solidReactivityFeature = constructReactivityFeature({
+    createSignal: (value) => {
+      const signal = createSignal(value)
+      function interoperableSignal() {
+        return signal[0]()
+      }
+      return Object.assign(interoperableSignal, {
+        set: (value: any) => signal[1](() => value),
+      })
+    },
+    createMemo: (fn) => {
+      if (owner) {
+        return runWithOwner(owner, () => createMemo(fn))!
+      }
+      return createMemo(fn)
+    },
+    isSignal: (value) => typeof value === 'function',
+  })
+
+  const mergedOptions = mergeProps(tableOptions, {
+    _features: mergeProps(tableOptions._features, {
+      solidReactivityFeature,
+    }),
+  }) as any
+
+  const [renderVersion, setRenderVersion] = createSignal(0)
+
+  const resolvedOptions = mergeProps(
+    {
+      mergeOptions: (
+        defaultOptions: TableOptions<TFeatures, TData>,
+        options: TableOptions<TFeatures, TData>,
+      ) => {
+        return mergeProps(defaultOptions, options)
+      },
+    },
+    mergedOptions,
+  ) as TableOptions<TFeatures, TData>
+
+  const table = constructTable(resolvedOptions) as SolidTable<
     TFeatures,
     TData,
     TSelected
   >
 
+  // @ts-ignore
+  table.setTableNotifier(() => {
+    renderVersion()
+    return table
+  })
+
   /**
    * Temp force reactivity to all state changes on every table.get* method
    */
   const allState = useStore(table.store, (state) => state)
-  const [renderVersion, setRenderVersion] = createSignal(0)
+  const allOptions = useStore(table.baseOptionsStore, (options) => options)
+
+  createComputed(() => {
+    table.setOptions((prev) => {
+      return mergeProps(prev, mergedOptions) as TableOptions<TFeatures, TData>
+    })
+  })
 
   createComputed(() => {
     // Access storeState to create reactive dependency
     allState()
+    allOptions()
     // Increment version to invalidate cached get* methods
     setRenderVersion((v) => v + 1)
     // Update options when store changes
@@ -77,17 +141,27 @@ export function createTable<
     // })
   })
 
-  // Wrap all "get*" methods to make them reactive
-  Object.keys(table).forEach((key) => {
-    const value = (table as any)[key]
-    if (typeof value === 'function' && key.startsWith('get')) {
-      const originalMethod = value.bind(table)
-      ;(table as any)[key] = (...args: Array<any>) => {
-        renderVersion()
-        return originalMethod(...args)
-      }
-    }
-  })
+  // Object.assign(table, {
+  //   get options() {
+  //     allOptions()
+  //     return table.baseOptionsStore.get()
+  //   },
+  // })
+  //
+  // Object.defineProperty(table.store, 'get', {
+  //   value: () => {
+  //     allState()
+  //     allOptions()
+  //     return table.store['atom'].get()
+  //   },
+  // })
+  // Object.defineProperty(table.store, 'state', {
+  //   get() {
+  //     allState()
+  //     allOptions()
+  //     return this['atom'].get()
+  //   },
+  // })
 
   table.Subscribe = function Subscribe<TSelected>(props: {
     selector: (state: TableState<TFeatures>) => TSelected

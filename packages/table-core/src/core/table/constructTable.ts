@@ -42,10 +42,18 @@ export function constructTable<
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
   }, {}) as TableOptions<TFeatures, TData>
 
-  table.options = {
+  table.baseOptionsStore = createStore({
     ...defaultOptions,
     ...tableOptions,
-  }
+  })
+
+  Object.defineProperty(table, 'options', {
+    enumerable: true,
+    configurable: true,
+    get() {
+      return table.baseOptionsStore.state
+    },
+  })
 
   table.initialState = getInitialTableState(
     table._features,

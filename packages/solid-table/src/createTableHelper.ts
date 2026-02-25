@@ -13,7 +13,7 @@ import type {
 export type TableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
-> = Omit<TableHelper_Core<TFeatures, TData>, 'tableCreator'> & {
+> = Omit<TableHelper_Core<TFeatures>, 'tableCreator'> & {
   createTable: <TSelected = {}>(
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
@@ -27,9 +27,12 @@ export function createTableHelper<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  tableHelperOptions: TableHelperOptions<TFeatures, TData>,
+  tableHelperOptions: TableHelperOptions<TFeatures>,
 ): TableHelper<TFeatures, TData> {
-  const tableHelper = constructTableHelper(createTable, tableHelperOptions)
+  const tableHelper = constructTableHelper(
+    createTable as any,
+    tableHelperOptions,
+  )
   return {
     ...tableHelper,
     createTable: <TSelected = {}>(

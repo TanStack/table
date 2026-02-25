@@ -3,12 +3,16 @@ import {
   assertInInjectionContext,
   computed,
   inject,
+  isSignal,
+  signal,
   untracked,
 } from '@angular/core'
-import { constructTable } from '@tanstack/table-core'
+import {
+  constructReactivityFeature,
+  constructTable,
+} from '@tanstack/table-core'
 import { injectStore } from '@tanstack/angular-store'
 import { lazyInit } from './lazySignalInitializer'
-import { angularReactivityFeature } from './angularReactivityFeature'
 import type {
   RowData,
   Table,
@@ -104,6 +108,16 @@ export function injectTable<
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
 
+  const angularReactivityFeature = constructReactivityFeature({
+    createSignal: (value) => {
+      return signal(value) as any
+    },
+    createMemo: (fn) => {
+      return computed(() => fn())
+    },
+    isSignal: (value) => isSignal(value),
+  })
+
   return lazyInit(() => {
     const resolvedOptions: TableOptions<TFeatures, TData> = {
       ...options(),
@@ -142,7 +156,8 @@ export function injectTable<
     const tableSignalNotifier = computed(
       () => {
         tableState()
-        table.setOptions(updatedOptions())
+        const newOptions = updatedOptions()
+        untracked(() => table.setOptions(newOptions))
         untracked(() => table.baseStore.setState((prev) => ({ ...prev })))
         return table
       },
