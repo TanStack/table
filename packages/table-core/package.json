@@ -55,6 +55,6 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@tanstack/store": "^0.8.0"
+    "@tanstack/store": "^0.9.1"
   }
 }

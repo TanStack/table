@@ -1,4 +1,4 @@
-import type { Derived, Store } from '@tanstack/store'
+import type { ReadonlyStore, Store } from '@tanstack/store'
 import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
@@ -105,7 +105,7 @@ export interface Table_CoreProperties<
   /**
    * Where the table state is stored.
    */
-  store: Derived<TableState<TFeatures>, [Store<TableState<TFeatures>>]>
+  store: ReadonlyStore<TableState<TFeatures>>
 }
 
 export interface Table_Table<

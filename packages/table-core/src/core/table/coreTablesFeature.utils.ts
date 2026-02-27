@@ -8,7 +8,7 @@ export function table_reset<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): void {
-  table.baseStore.setState(structuredClone(table.initialState))
+  table.baseStore.setState(() => structuredClone(table.initialState))
 }
 
 export function table_mergeOptions<

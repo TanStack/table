@@ -6,7 +6,7 @@ import {
   keepPreviousData,
   useQuery,
 } from '@tanstack/react-query'
-import { Store, useStore } from '@tanstack/react-store'
+import { createStore, useStore } from '@tanstack/react-store'
 import './index.css'
 import {
   createColumnHelper,
@@ -49,7 +49,7 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const myTableStore = new Store(
+const myTableStore = createStore(
   getInitialTableState(_features, {
     pagination: { pageIndex: 0, pageSize: 10 },
   }),

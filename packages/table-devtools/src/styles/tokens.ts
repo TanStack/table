@@ -55,8 +55,7 @@ export const tokens = {
       bold: 700,
     },
     family: {
-      sans:
-        'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
+      sans: 'ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
       mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
     },
   },

@@ -116,7 +116,7 @@ export function useTable<
     watch(
       () => tableOptions.data,
       () => {
-        table.store.setState((prev: TableState<TFeatures>) => ({
+        table.baseStore.setState((prev: TableState<TFeatures>) => ({
           ...prev,
           data: unref(tableOptions.data),
         }))

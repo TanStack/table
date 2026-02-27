@@ -12,15 +12,15 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.2.0",
-    "@tanstack/react-store": "^0.8.0",
+    "@tanstack/react-store": "^0.9.1",
     "@tanstack/react-table": "^9.0.0-alpha.11",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.3",
     "@tanstack/react-devtools": "0.9.6",
     "@tanstack/react-table-devtools": "9.0.0-alpha.11",
-    "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",

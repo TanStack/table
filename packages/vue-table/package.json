@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*",
-    "@tanstack/vue-store": "^0.8.0"
+    "@tanstack/vue-store": "^0.9.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.3",

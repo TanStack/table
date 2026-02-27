@@ -107,12 +107,6 @@ export function useTable<
     ...tableOptions,
   }))
 
-  // Mount the derived store to register it on the dependency graph
-  useIsomorphicLayoutEffect(() => {
-    const cleanup = table.store.mount()
-    return cleanup
-  }, [table])
-
   useIsomorphicLayoutEffect(() => {
     // prevent race condition between table.setOptions and table.baseStore.setState
     queueMicrotask(() => {
