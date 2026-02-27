@@ -26,7 +26,7 @@
     "test:ci": "nx run-many --targets=test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build -p @tanstack/table-core @tanstack/react-table @tanstack/table-devtools @tanstack/react-table-devtools @tanstack/preact-table @tanstack/angular-table 'examples/react/**' 'examples/preact/**' 'examples/angular/**'",
     "test:docs": "node scripts/verify-links.ts",
     "test:eslint": "nx affected --target=test:eslint --exclude='examples/{lit,solid,svelte,vanilla,vue}/**' --exclude='packages/{lit-table,solid-table,svelte-table,vue-table,match-sorter-utils}'",
-    "test:knip": "knip",
+    "test:knip": "NODE_OPTIONS='--max-old-space-size=4096' knip",
     "test:lib": "nx affected --targets=test:lib --exclude='examples/{lit,solid,svelte,vanilla,vue}/**' --exclude='packages/{lit-table,solid-table,svelte-table,vue-table,match-sorter-utils}'",
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
     "test:pr": "nx affected --targets=test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build --exclude='examples/{lit,solid,svelte,vanilla,vue}/**' --exclude='packages/{lit-table,solid-table,svelte-table,vue-table,match-sorter-utils}'",
