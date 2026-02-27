@@ -319,7 +319,7 @@ describe('FlexRenderDirective', () => {
           callExpandRender()
           return flexRenderComponent(ExpandCell, {
             bindings: [
-              inputBinding('expanded', row.getIsExpanded),
+              inputBinding('expanded', () => row.getIsExpanded()),
               outputBinding('toggleExpand', () => row.toggleExpanded()),
             ],
           })

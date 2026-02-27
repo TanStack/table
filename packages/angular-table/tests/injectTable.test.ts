@@ -75,7 +75,7 @@ describe('injectTable', () => {
     })
 
     test('supports "Object.keys"', () => {
-      const keys = Object.keys(table.value()).concat('state')
+      const keys = Object.keys(table.value()).concat('state', 'value')
       expect(Object.keys(table)).toEqual(keys)
     })
 

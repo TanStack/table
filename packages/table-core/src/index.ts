@@ -80,7 +80,6 @@ export * from './features/stockFeatures'
 
 // tableReactivityFeature
 export * from './features/table-reactivity/tableReactivityFeature'
-export * from './features/table-reactivity/tableReactivityFeature.utils'
 
 // columnFacetingFeature
 export * from './features/column-faceting/columnFacetingFeature'

@@ -66,6 +66,7 @@ export function constructTable<
     const state = table.baseStore.state
     return {
       ...state,
+      // Table `store` will be updated also on options change
       ...(table.options.state ?? {}),
     }
   })
