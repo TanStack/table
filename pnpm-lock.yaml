@@ -99,7 +99,7 @@ importers:
         specifier: ^21.1.1
         version: 21.1.1(@angular/common@21.1.1(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.1.1(@angular/animations@21.1.1(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.1.1(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -139,7 +139,7 @@ importers:
         specifier: ^21.1.1
         version: 21.1.1(@angular/animations@21.1.1(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.1.1(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0))
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -185,7 +185,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -231,7 +231,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -277,7 +277,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -323,7 +323,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -369,7 +369,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -415,7 +415,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -458,7 +458,7 @@ importers:
         specifier: ^21.1.1
         version: 21.1.1(@angular/common@21.1.1(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0))(@angular/platform-browser@21.1.1(@angular/animations@21.1.1(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0)))(@angular/common@21.1.1(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0))(rxjs@7.8.2))(@angular/core@21.1.1(@angular/compiler@21.1.1)(rxjs@7.8.2)(zone.js@0.16.0)))(rxjs@7.8.2)
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -504,7 +504,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -550,7 +550,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -596,7 +596,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -642,7 +642,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -694,7 +694,7 @@ importers:
         specifier: ^21.1.2
         version: 21.1.2(17b55bdf21c0532cd65a8e542126d4c8)
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       express:
         specifier: ^5.2.1
@@ -752,7 +752,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -801,7 +801,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -850,7 +850,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -899,7 +899,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -945,7 +945,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -1183,7 +1183,7 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1220,7 +1220,7 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1257,7 +1257,7 @@ importers:
         specifier: ^4.1.18
         version: 4.1.18(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.97.1)(terser@5.44.1)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       class-variance-authority:
         specifier: ^0.7.1
@@ -1306,7 +1306,7 @@ importers:
   examples/react/basic-use-app-table:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1340,7 +1340,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1371,7 +1371,7 @@ importers:
   examples/react/basic-use-table:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1417,7 +1417,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1448,7 +1448,7 @@ importers:
   examples/react/column-groups:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1482,7 +1482,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1516,7 +1516,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1550,7 +1550,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1584,7 +1584,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1615,7 +1615,7 @@ importers:
   examples/react/column-resizing:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1649,7 +1649,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1680,7 +1680,7 @@ importers:
   examples/react/column-sizing:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1711,7 +1711,7 @@ importers:
   examples/react/column-visibility:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1748,7 +1748,7 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1782,7 +1782,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1816,7 +1816,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1853,7 +1853,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1890,7 +1890,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1927,7 +1927,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -1961,7 +1961,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -2031,7 +2031,7 @@ importers:
         specifier: ^4.1.18
         version: 4.1.18(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.97.1)(terser@5.44.1)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       class-variance-authority:
         specifier: ^0.7.1
@@ -2095,7 +2095,7 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -2141,7 +2141,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -2175,7 +2175,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -2212,7 +2212,7 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -2252,7 +2252,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -2286,7 +2286,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -2320,7 +2320,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.18
@@ -2357,7 +2357,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.18
@@ -2397,7 +2397,7 @@ importers:
         specifier: ^5.90.20
         version: 5.90.20(react@19.2.4)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.18
@@ -2434,7 +2434,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.18
@@ -2471,7 +2471,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.18
@@ -2511,7 +2511,7 @@ importers:
         specifier: ^1.28.0
         version: 1.28.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -2554,7 +2554,7 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -2591,7 +2591,7 @@ importers:
         specifier: ^1.157.16
         version: 1.157.16(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.4
@@ -3108,7 +3108,7 @@ importers:
   examples/vanilla/basic:
     dependencies:
       '@tanstack/table-core':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/table-core
       nanostores:
         specifier: ^1.1.0
@@ -3130,7 +3130,7 @@ importers:
   examples/vanilla/pagination:
     dependencies:
       '@tanstack/table-core':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/table-core
       nanostores:
         specifier: ^1.1.0
@@ -3155,7 +3155,7 @@ importers:
   examples/vanilla/sorting:
     dependencies:
       '@tanstack/table-core':
-        specifier: ^9.0.0-alpha.11
+        specifier: ^9.0.0-alpha.12
         version: link:../../../packages/table-core
       nanostores:
         specifier: ^1.1.0
