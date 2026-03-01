@@ -2,6 +2,7 @@ import { Match, Switch } from 'solid-js'
 import { Header, HeaderLogo, MainPanel } from '@tanstack/devtools-ui'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useStyles } from '../styles/use-styles'
+import { ColumnsPanel } from './ColumnsPanel'
 import { FeaturesPanel } from './FeaturesPanel'
 import { RowsPanel } from './RowsPanel'
 import { StatePanel } from './StatePanel'
@@ -10,6 +11,7 @@ const tabs = [
   { id: 'features', label: 'Features' },
   { id: 'state', label: 'State' },
   { id: 'rows', label: 'Rows' },
+  { id: 'columns', label: 'Columns' },
 ] as const
 
 export function Shell() {
@@ -54,6 +56,9 @@ export function Shell() {
             </Match>
             <Match when={activeTab() === 'rows'}>
               <RowsPanel />
+            </Match>
+            <Match when={activeTab() === 'columns'}>
+              <ColumnsPanel />
             </Match>
           </Switch>
         </div>

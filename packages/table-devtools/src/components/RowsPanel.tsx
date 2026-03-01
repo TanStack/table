@@ -1,7 +1,7 @@
 import { For, createSignal } from 'solid-js'
 import { JsonTree } from '@tanstack/devtools-ui'
-import { useStore } from '@tanstack/solid-store'
 import { useTableDevtoolsContext } from '../TableContextProvider'
+import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
 import { ResizableSplit } from './ResizableSplit'
 
@@ -47,9 +47,10 @@ export function RowsPanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
   const tableInstance = table()
-  const tableState = tableInstance
-    ? useStore(tableInstance.store, (state) => state)
-    : undefined
+  const tableState = useTableStore(
+    tableInstance ? tableInstance.store : undefined,
+    (state) => state,
+  )
 
   const [selectedRowModel, setSelectedRowModel] =
     createSignal<(typeof ROW_MODEL_GETTERS)[number]>('getRowModel')
