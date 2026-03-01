@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "ignoreDependencies": ["@size-limit/preset-small-lib", "@faker-js/faker"],
+  "ignoreDependencies": ["@faker-js/faker"],
   "ignoreWorkspaces": ["examples/**", "packages/table-core/tests/**"],
   "ignore": ["**/*benchmark*", "**/benchmarks/**"],
   "workspaces": {
