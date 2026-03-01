@@ -302,8 +302,10 @@ export type LegacyHeaderGroup<TData extends RowData> = HeaderGroup<
 >
 
 /** @deprecated Use ColumnDef<TFeatures, TData, TValue> with useTable instead. */
-export type LegacyColumnDef<TData extends RowData, TValue = unknown> =
-  ColumnDef<StockFeatures, TData, TValue>
+export type LegacyColumnDef<
+  TData extends RowData,
+  TValue = unknown,
+> = ColumnDef<StockFeatures, TData, TValue>
 
 /** @deprecated Use Table<TFeatures, TData> with useTable instead. */
 export type LegacyTable<TData extends RowData> = Table<StockFeatures, TData>
