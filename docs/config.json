@@ -497,6 +497,10 @@
               "label": "Row Selection"
             },
             {
+              "to": "framework/angular/examples/row-selection-signal",
+              "label": "Row Selection (Signal)"
+            },
+            {
               "to": "framework/angular/examples/expanding",
               "label": "Row Expanding"
             },
@@ -574,6 +578,10 @@
               "label": "Sorting"
             },
             {
+              "to": "framework/lit/examples/sorting-dynamic-data",
+              "label": "Sorting (Dynamic Data)"
+            },
+            {
               "to": "framework/lit/examples/virtualized-rows",
               "label": "Virtualized Rows"
             }
@@ -587,12 +595,28 @@
               "label": "Basic"
             },
             {
-              "to": "framework/react/examples/shadcn-basic",
+              "to": "framework/react/examples/basic-shadcn",
               "label": "Shadcn Basic"
             },
             {
-              "to": "framework/react/examples/basic-table-helper",
-              "label": "Basic with Helpers"
+              "to": "framework/react/examples/basic-use-table",
+              "label": "Basic (useTable)"
+            },
+            {
+              "to": "framework/react/examples/basic-use-app-table",
+              "label": "Basic (useAppTable)"
+            },
+            {
+              "to": "framework/react/examples/basic-use-legacy-table",
+              "label": "Basic (useLegacyTable)"
+            },
+            {
+              "to": "framework/react/examples/basic-external-state",
+              "label": "Basic (External State)"
+            },
+            {
+              "to": "framework/react/examples/basic-external-store",
+              "label": "Basic (External Store)"
             },
             {
               "to": "framework/react/examples/column-groups",
@@ -623,12 +647,20 @@
               "label": "Column Pinning"
             },
             {
+              "to": "framework/react/examples/column-pinning-split",
+              "label": "Column Pinning (Split)"
+            },
+            {
               "to": "framework/react/examples/column-pinning-sticky",
               "label": "Sticky Column Pinning"
             },
             {
               "to": "framework/react/examples/column-sizing",
               "label": "Column Sizing"
+            },
+            {
+              "to": "framework/react/examples/column-resizing",
+              "label": "Column Resizing"
             },
             {
               "to": "framework/react/examples/column-resizing-performant",
@@ -639,8 +671,12 @@
               "label": "Column Visibility"
             },
             {
-              "to": "framework/react/examples/editable-data",
-              "label": "Editable Data"
+              "to": "framework/react/examples/composable-tables",
+              "label": "Composable Tables"
+            },
+            {
+              "to": "framework/react/examples/custom-plugin",
+              "label": "Custom Plugin"
             },
             {
               "to": "framework/react/examples/expanding",
@@ -651,20 +687,12 @@
               "label": "Sub Components"
             },
             {
-              "to": "framework/react/examples/fully-controlled",
-              "label": "Fully Controlled"
-            },
-            {
               "to": "framework/react/examples/grouping",
               "label": "Grouping"
             },
             {
               "to": "framework/react/examples/pagination",
               "label": "Pagination"
-            },
-            {
-              "to": "framework/react/examples/pagination-controlled",
-              "label": "Pagination Controlled"
             },
             {
               "to": "framework/react/examples/row-dnd",
@@ -703,28 +731,20 @@
               "label": "Virtualized Infinite Scrolling"
             },
             {
-              "to": "framework/react/examples/kitchen-sink",
-              "label": "Kitchen Sink"
+              "to": "framework/react/examples/kitchen-sink-shadcn",
+              "label": "Kitchen Sink (Shadcn)"
             },
             {
-              "to": "framework/react/examples/material-ui-pagination",
-              "label": "Material UI Pagination"
+              "to": "framework/react/examples/with-tanstack-form",
+              "label": "With TanStack Form"
             },
             {
-              "to": "framework/react/examples/full-width-table",
-              "label": "React Full Width"
+              "to": "framework/react/examples/with-tanstack-query",
+              "label": "With TanStack Query"
             },
             {
-              "to": "framework/react/examples/full-width-resizable-table",
-              "label": "React Full Width Resizable"
-            },
-            {
-              "to": "framework/react/examples/custom-features",
-              "label": "Custom Features"
-            },
-            {
-              "to": "framework/react/examples/query-router-search-params",
-              "label": "Query Router Search Params"
+              "to": "framework/react/examples/with-tanstack-router",
+              "label": "With TanStack Router"
             }
           ]
         },
@@ -734,6 +754,10 @@
             {
               "to": "framework/solid/examples/basic",
               "label": "Basic"
+            },
+            {
+              "to": "framework/solid/examples/basic-table-helper",
+              "label": "Basic with Helpers"
             },
             {
               "to": "framework/solid/examples/column-groups",
@@ -752,6 +776,14 @@
               "label": "Filters"
             },
             {
+              "to": "framework/solid/examples/filters-faceted",
+              "label": "Filters (Faceted)"
+            },
+            {
+              "to": "framework/solid/examples/row-selection",
+              "label": "Row Selection"
+            },
+            {
               "to": "framework/solid/examples/sorting",
               "label": "Sorting"
             },
@@ -767,6 +799,14 @@
             {
               "to": "framework/svelte/examples/basic",
               "label": "Basic"
+            },
+            {
+              "to": "framework/svelte/examples/basic-snippets",
+              "label": "Basic Snippets"
+            },
+            {
+              "to": "framework/svelte/examples/basic-table-helper",
+              "label": "Basic with Helpers"
             },
             {
               "to": "framework/svelte/examples/column-groups",
@@ -787,6 +827,10 @@
             {
               "to": "framework/svelte/examples/filtering",
               "label": "Filtering"
+            },
+            {
+              "to": "framework/svelte/examples/row-selection",
+              "label": "Row Selection"
             },
             {
               "to": "framework/svelte/examples/sorting",
@@ -814,6 +858,10 @@
               "label": "Pagination"
             },
             {
+              "to": "framework/vue/examples/pagination-controlled",
+              "label": "Pagination Controlled"
+            },
+            {
               "to": "framework/vue/examples/row-selection",
               "label": "Row Selection"
             },
@@ -832,6 +880,19 @@
             {
               "to": "framework/vue/examples/virtualized-rows",
               "label": "Virtualized Rows"
+            }
+          ]
+        },
+        {
+          "label": "preact",
+          "children": [
+            {
+              "to": "framework/preact/examples/basic",
+              "label": "Basic"
+            },
+            {
+              "to": "framework/preact/examples/sorting",
+              "label": "Sorting"
             }
           ]
         },
