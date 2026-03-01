@@ -5,7 +5,7 @@ title: CreateRowModel_Core
 
 # Interface: CreateRowModel\_Core\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L23)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L23)
 
 ## Extends
 
@@ -29,7 +29,7 @@ Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.
 optional coreRowModel: (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L30)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L30)
 
 This required option is a factory for a function that computes and returns the core row model for the table.
 

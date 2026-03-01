@@ -9,7 +9,7 @@ title: column_getIndex
 function column_getIndex<TFeatures, TData, TValue>(column, position?): number;
 ```
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L14)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L14)
 
 ## Type Parameters
 

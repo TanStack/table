@@ -9,7 +9,7 @@ title: table_getIsSomePageRowsSelected
 function table_getIsSomePageRowsSelected<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L203)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L203)
 
 ## Type Parameters
 

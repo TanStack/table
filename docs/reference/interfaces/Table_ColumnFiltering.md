@@ -5,7 +5,7 @@ title: Table_ColumnFiltering
 
 # Interface: Table\_ColumnFiltering
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L175)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L175)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFe
 resetColumnFilters: (defaultState?) => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:179](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L179)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:179](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L179)
 
 Resets the **columnFilters** state to `initialState.columnFilters`, or `true` can be passed to force a default blank state reset to `[]`.
 
@@ -37,7 +37,7 @@ Resets the **columnFilters** state to `initialState.columnFilters`, or `true` ca
 setColumnFilters: (updater) => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:183](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L183)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:183](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L183)
 
 Sets or updates the `state.columnFilters` state.
 

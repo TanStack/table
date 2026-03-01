@@ -9,7 +9,7 @@ title: table_previousPage
 function table_previousPage<TFeatures, TData>(table): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L156)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L156)
 
 ## Type Parameters
 

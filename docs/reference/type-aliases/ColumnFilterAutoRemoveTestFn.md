@@ -9,7 +9,7 @@ title: ColumnFilterAutoRemoveTestFn
 type ColumnFilterAutoRemoveTestFn<TFeatures, TData, TValue> = (value, column?) => boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L65)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L65)
 
 ## Type Parameters
 

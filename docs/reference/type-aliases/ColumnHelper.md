@@ -9,7 +9,7 @@ title: ColumnHelper
 type ColumnHelper<TFeatures, TData> = object;
 ```
 
-Defined in: [packages/table-core/src/helpers/columnHelper.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L13)
+Defined in: [helpers/columnHelper.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L13)
 
 ## Type Parameters
 
@@ -29,7 +29,7 @@ Defined in: [packages/table-core/src/helpers/columnHelper.ts:13](https://github.
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/helpers/columnHelper.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L25)
+Defined in: [helpers/columnHelper.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L25)
 
 Creates a data column definition with an accessor key or function to extract the cell value.
 
@@ -74,7 +74,7 @@ helper.accessor((row) => row.lastName, { id: 'lastName' })
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns];
 ```
 
-Defined in: [packages/table-core/src/helpers/columnHelper.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L48)
+Defined in: [helpers/columnHelper.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L48)
 
 Wraps an array of column definitions to preserve each column's individual TValue type.
 Uses variadic tuple types to infer element types before checking constraints, preventing type widening.
@@ -109,7 +109,7 @@ helper.columns([helper.accessor('firstName', {}), helper.accessor('age', {})])
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/table-core/src/helpers/columnHelper.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L58)
+Defined in: [helpers/columnHelper.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L58)
 
 Creates a display column definition for non-data columns like actions or row selection.
 
@@ -137,7 +137,7 @@ helper.display({ id: 'actions', header: 'Actions', cell: () => <button>Edit</but
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/table-core/src/helpers/columnHelper.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L75)
+Defined in: [helpers/columnHelper.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L75)
 
 Creates a group column definition that contains nested child columns.
 

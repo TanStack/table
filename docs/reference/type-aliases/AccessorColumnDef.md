@@ -11,7 +11,7 @@ type AccessorColumnDef<TFeatures, TData, TValue> =
 | AccessorFnColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/types/ColumnDef.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L194)
+Defined in: [types/ColumnDef.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L194)
 
 ## Type Parameters
 

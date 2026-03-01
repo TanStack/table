@@ -9,7 +9,7 @@ title: injectTable
 function injectTable<TFeatures, TData, TSelected>(options, selector): AngularTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [injectTable.ts:96](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L96)
+Defined in: [injectTable.ts:95](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L95)
 
 Creates and returns an Angular-reactive table instance.
 
@@ -17,7 +17,7 @@ The initializer is intentionally re-evaluated whenever any signal read inside it
 This is how the adapter keeps the table in sync with Angular's reactivity model.
 
 Because of that behavior, keep expensive/static values (for example `columns`, feature setup, row models)
-as stable references outside the initializer, and only read reactive state (`data()`, pagination/filter/sorting signals, etc.) 
+as stable references outside the initializer, and only read reactive state (`data()`, pagination/filter/sorting signals, etc.)
 inside it.
 
 The returned table is also signal-reactive: table state and table APIs are wired for Angular signals, so you can safely consume table methods inside `computed(...)` and `effect(...)`.
@@ -58,7 +58,7 @@ An Angular-reactive TanStack Table instance.
 ```ts
 // Register only the features you need
 import {tableFeatures, rowPaginationFeature} from '@tanstack/angular-table';
-const _features = tableFeatures({ 
+const _features = tableFeatures({
  rowPaginationFeature,
  // ...all other features you need
 })
@@ -83,7 +83,7 @@ const columnHelper = createColumnHelper<typeof _features, MyData>();
 const columns = columnHelper.columns([
  columnHelper.accessor(...),
  // ...other columns
-]) 
+])
 ```
 3. Create the table instance with `injectTable`
 ```ts

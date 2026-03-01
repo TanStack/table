@@ -12,7 +12,7 @@ function constructCell<TFeatures, TData, TValue>(
 table): Cell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/cells/constructCell.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/constructCell.ts#L26)
+Defined in: [core/cells/constructCell.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/constructCell.ts#L26)
 
 ## Type Parameters
 

@@ -5,7 +5,7 @@ title: TableOptions_RowSorting
 
 # Interface: TableOptions\_RowSorting
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L143)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L143)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.type
 optional enableMultiRemove: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:147](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L147)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:147](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L147)
 
 Enables/disables the ability to remove multi-sorts
 
@@ -27,7 +27,7 @@ Enables/disables the ability to remove multi-sorts
 optional enableMultiSort: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L151)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L151)
 
 Enables/Disables multi-sorting for the table.
 
@@ -39,7 +39,7 @@ Enables/Disables multi-sorting for the table.
 optional enableSorting: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L155)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L155)
 
 Enables/Disables sorting for the table.
 
@@ -51,7 +51,7 @@ Enables/Disables sorting for the table.
 optional enableSortingRemoval: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:161](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L161)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:161](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L161)
 
 Enables/Disables the ability to remove sorting for the table.
 - If `true` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'none' -> ...
@@ -65,7 +65,7 @@ Enables/Disables the ability to remove sorting for the table.
 optional isMultiSortEvent: (e) => boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L165)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L165)
 
 Pass a custom function that will be used to determine if a multi-sort event should be triggered. It is passed the event from the sort toggle handler and should return `true` if the event should trigger a multi-sort.
 
@@ -87,7 +87,7 @@ Pass a custom function that will be used to determine if a multi-sort event shou
 optional manualSorting: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:169](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L169)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:169](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L169)
 
 Enables manual sorting for the table. If this is `true`, you will be expected to sort your data before it is passed to the table. This is useful if you are doing server-side sorting.
 
@@ -99,7 +99,7 @@ Enables manual sorting for the table. If this is `true`, you will be expected to
 optional maxMultiSortColCount: number;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L173)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L173)
 
 Set a maximum number of columns that can be multi-sorted.
 
@@ -111,7 +111,7 @@ Set a maximum number of columns that can be multi-sorted.
 optional onSortingChange: OnChangeFn<SortingState>;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:177](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L177)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:177](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L177)
 
 If provided, this function will be called with an `updaterFn` when `state.sorting` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
 
@@ -123,6 +123,6 @@ If provided, this function will be called with an `updaterFn` when `state.sortin
 optional sortDescFirst: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L181)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L181)
 
 If `true`, all sorts will default to descending as their first toggle state.

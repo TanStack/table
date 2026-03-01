@@ -9,7 +9,7 @@ title: table_getIsSomeColumnsVisible
 function table_getIsSomeColumnsVisible<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L162)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L162)
 
 ## Type Parameters
 

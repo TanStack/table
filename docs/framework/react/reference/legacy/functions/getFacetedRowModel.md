@@ -9,7 +9,7 @@ title: getFacetedRowModel
 function getFacetedRowModel<TData>(): FacetedRowModelFactory<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:104](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L104)
+Defined in: [useLegacyTable.ts:111](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L111)
 
 ## Type Parameters
 

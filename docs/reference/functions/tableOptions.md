@@ -11,7 +11,7 @@ title: tableOptions
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "columns"> & object;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableOptions.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L5)
+Defined in: [helpers/tableOptions.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L5)
 
 ### Type Parameters
 
@@ -39,7 +39,7 @@ Defined in: [packages/table-core/src/helpers/tableOptions.ts:5](https://github.c
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "data"> & object;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableOptions.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L16)
+Defined in: [helpers/tableOptions.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L16)
 
 ### Type Parameters
 
@@ -67,7 +67,7 @@ Defined in: [packages/table-core/src/helpers/tableOptions.ts:16](https://github.
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features">;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableOptions.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L27)
+Defined in: [helpers/tableOptions.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L27)
 
 ### Type Parameters
 
@@ -95,7 +95,7 @@ Defined in: [packages/table-core/src/helpers/tableOptions.ts:27](https://github.
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "data" | "columns"> & object;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableOptions.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L34)
+Defined in: [helpers/tableOptions.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L34)
 
 ### Type Parameters
 
@@ -123,7 +123,7 @@ Defined in: [packages/table-core/src/helpers/tableOptions.ts:34](https://github.
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "_features">;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableOptions.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L45)
+Defined in: [helpers/tableOptions.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L45)
 
 ### Type Parameters
 
@@ -151,7 +151,7 @@ Defined in: [packages/table-core/src/helpers/tableOptions.ts:45](https://github.
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "columns" | "_features">;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableOptions.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L52)
+Defined in: [helpers/tableOptions.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L52)
 
 ### Type Parameters
 
@@ -179,7 +179,7 @@ Defined in: [packages/table-core/src/helpers/tableOptions.ts:52](https://github.
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "columns" | "_features">;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableOptions.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L59)
+Defined in: [helpers/tableOptions.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L59)
 
 ### Type Parameters
 
@@ -207,7 +207,7 @@ Defined in: [packages/table-core/src/helpers/tableOptions.ts:59](https://github.
 function tableOptions<TFeatures, TData>(options): TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableOptions.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L69)
+Defined in: [helpers/tableOptions.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L69)
 
 ### Type Parameters
 

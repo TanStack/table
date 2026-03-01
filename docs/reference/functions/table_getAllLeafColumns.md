@@ -9,7 +9,7 @@ title: table_getAllLeafColumns
 function table_getAllLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.utils.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L130)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L130)
 
 ## Type Parameters
 

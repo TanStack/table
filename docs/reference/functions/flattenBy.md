@@ -9,7 +9,7 @@ title: flattenBy
 function flattenBy<TNode>(arr, getChildren): TNode[];
 ```
 
-Defined in: [packages/table-core/src/utils.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L40)
+Defined in: [utils.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L40)
 
 ## Type Parameters
 

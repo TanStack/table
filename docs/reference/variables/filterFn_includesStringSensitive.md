@@ -9,6 +9,6 @@ title: filterFn_includesStringSensitive
 const filterFn_includesStringSensitive: FilterFn<any, any>;
 ```
 
-Defined in: [packages/table-core/src/fns/filterFns.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L45)
+Defined in: [fns/filterFns.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L45)
 
 Filter function for checking if a string includes a given substring. (Case-sensitive)

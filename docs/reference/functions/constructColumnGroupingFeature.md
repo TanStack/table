@@ -9,7 +9,7 @@ title: constructColumnGroupingFeature
 function constructColumnGroupingFeature<TFeatures, TData>(): TableFeature<ColumnGroupingFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.ts#L54)
+Defined in: [features/column-grouping/columnGroupingFeature.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.ts#L54)
 
 ## Type Parameters
 

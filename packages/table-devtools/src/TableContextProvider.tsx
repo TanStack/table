@@ -1,3 +1,4 @@
+import type { Accessor, ParentComponent, Setter } from 'solid-js'
 import {
   createContext,
   createEffect,
@@ -9,11 +10,15 @@ import {
   getTableDevtoolsTarget,
   subscribeTableDevtoolsTarget,
 } from './tableTarget'
-import type { Accessor, ParentComponent, Setter } from 'solid-js'
-import type { RowData, Table, stockFeatures } from '@tanstack/table-core'
+import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
-export type TableDevtoolsTabId = 'features' | 'state' | 'options' | 'rows'
-type AnyTable = Table<typeof stockFeatures, RowData>
+export type TableDevtoolsTabId =
+  | 'features'
+  | 'state'
+  | 'options'
+  | 'rows'
+  | 'columns'
+type AnyTable = Table<TableFeatures, RowData>
 
 interface TableDevtoolsContextValue {
   table: Accessor<AnyTable | undefined>

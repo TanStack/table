@@ -5,7 +5,7 @@ title: CachedRowModel_Expanded
 
 # Interface: CachedRowModel\_Expanded\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L136)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L136)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/features/row-expanding/rowExpandingFeature.
 expandedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L140)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L140)
 
 #### Returns
 

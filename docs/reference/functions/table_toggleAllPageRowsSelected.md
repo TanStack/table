@@ -9,7 +9,7 @@ title: table_toggleAllPageRowsSelected
 function table_toggleAllPageRowsSelected<TFeatures, TData>(table, value?): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L67)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L67)
 
 ## Type Parameters
 

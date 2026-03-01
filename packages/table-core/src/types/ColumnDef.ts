@@ -150,7 +150,7 @@ type GroupColumnDefBase<
   TData extends RowData,
   TValue extends CellData = CellData,
 > = ColumnDefBase<TFeatures, TData, TValue> & {
-  columns?: Array<ColumnDef<TFeatures, TData, unknown>>
+  columns?: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>
 }
 
 export type GroupColumnDef<

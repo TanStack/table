@@ -5,7 +5,7 @@ title: Column_ColumnOrdering
 
 # Interface: Column\_ColumnOrdering
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L18)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L18)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeat
 getIndex: (position?) => number;
 ```
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L22)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L22)
 
 Returns the index of the column in the order of the visible columns. Optionally pass a `position` parameter to get the index of the column in a sub-section of the table
 
@@ -37,7 +37,7 @@ Returns the index of the column in the order of the visible columns. Optionally 
 getIsFirstColumn: (position?) => boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L26)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L26)
 
 Returns `true` if the column is the first column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the first in a sub-section of the table.
 
@@ -59,7 +59,7 @@ Returns `true` if the column is the first column in the order of the visible col
 getIsLastColumn: (position?) => boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L30)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L30)
 
 Returns `true` if the column is the last column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the last in a sub-section of the table.
 

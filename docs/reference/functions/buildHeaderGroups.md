@@ -13,7 +13,7 @@ function buildHeaderGroups<TFeatures, TData, TValue>(
    headerFamily?): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/core/headers/buildHeaderGroups.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/buildHeaderGroups.ts#L11)
+Defined in: [core/headers/buildHeaderGroups.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/buildHeaderGroups.ts#L11)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: column_getIsFirstColumn
 function column_getIsFirstColumn<TFeatures, TData, TValue>(column, position?): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L26)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L26)
 
 ## Type Parameters
 

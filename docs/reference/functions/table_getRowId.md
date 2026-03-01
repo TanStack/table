@@ -13,7 +13,7 @@ function table_getRowId<TFeatures, TData>(
    parent?): string;
 ```
 
-Defined in: [packages/table-core/src/core/rows/coreRowsFeature.utils.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L114)
+Defined in: [core/rows/coreRowsFeature.utils.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L114)
 
 ## Type Parameters
 

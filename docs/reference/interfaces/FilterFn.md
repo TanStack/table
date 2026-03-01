@@ -5,7 +5,7 @@ title: FilterFn
 
 # Interface: FilterFn()\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L45)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L45)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ FilterFn(
    addMeta?): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L49)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L49)
 
 ## Parameters
 
@@ -57,7 +57,7 @@ Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFe
 optional autoRemove: ColumnFilterAutoRemoveTestFn<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L55)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L55)
 
 ***
 
@@ -67,4 +67,4 @@ Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFe
 optional resolveFilterValue: TransformFilterValueFn<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L56)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L56)

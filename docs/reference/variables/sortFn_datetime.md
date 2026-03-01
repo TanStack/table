@@ -9,4 +9,4 @@ title: sortFn_datetime
 const sortFn_datetime: SortFn<any, any>;
 ```
 
-Defined in: [packages/table-core/src/fns/sortFns.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L68)
+Defined in: [fns/sortFns.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L68)

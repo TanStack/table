@@ -5,7 +5,7 @@ title: TableOptions_ColumnResizing
 
 # Interface: TableOptions\_ColumnResizing
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L20)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L20)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 optional columnResizeDirection: ColumnResizeDirection;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L32)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L32)
 
 Enables or disables right-to-left support for resizing the column. defaults to 'ltr'.
 
@@ -27,7 +27,7 @@ Enables or disables right-to-left support for resizing the column. defaults to '
 optional columnResizeMode: ColumnResizeMode;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L24)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L24)
 
 Determines when the columnSizing state is updated. `onChange` updates the state when the user is dragging the resize handle. `onEnd` updates the state when the user releases the resize handle.
 
@@ -39,7 +39,7 @@ Determines when the columnSizing state is updated. `onChange` updates the state 
 optional enableColumnResizing: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L28)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L28)
 
 Enables or disables column resizing for the column.
 
@@ -51,6 +51,6 @@ Enables or disables column resizing for the column.
 optional onColumnResizingChange: OnChangeFn<columnResizingState>;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L36)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L36)
 
 If provided, this function will be called with an `updaterFn` when `state.columnResizing` changes. This overrides the default internal state management, so you will also need to supply `state.columnResizing` from your own managed state.

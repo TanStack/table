@@ -9,6 +9,6 @@ title: coreTablesFeature
 const coreTablesFeature: TableFeature<CoreTablesFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/core/table/coreTablesFeature.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.ts#L36)
+Defined in: [core/table/coreTablesFeature.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.ts#L36)
 
 The Core Tables feature provides the core table functionality for handling state and options.

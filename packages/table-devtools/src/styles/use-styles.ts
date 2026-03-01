@@ -225,6 +225,64 @@ const stylesFactory = (theme: 'light' | 'dark') => {
       color: ${t(colors.gray[500], colors.darkGray[600])};
       font-size: ${font.size.sm};
     `,
+    buttonRow: css`
+      display: flex;
+      gap: ${size[2]};
+      margin-bottom: ${size[2]};
+      flex-wrap: wrap;
+    `,
+    copyButton: css`
+      border: 1px solid ${t(colors.gray[300], colors.darkGray[600])};
+      border-radius: ${border.radius.md};
+      background: ${t(colors.gray[100], colors.darkGray[800])};
+      color: ${t(colors.gray[700], colors.gray[200])};
+      font-size: ${font.size.sm};
+      padding: ${size[1]} ${size[2]};
+      cursor: pointer;
+
+      &:hover {
+        background: ${t(colors.gray[200], colors.darkGray[700])};
+      }
+    `,
+    pasteButton: css`
+      border: 1px solid ${t(colors.gray[300], colors.darkGray[600])};
+      border-radius: ${border.radius.md};
+      background: ${t(colors.gray[100], colors.darkGray[800])};
+      color: ${t(colors.gray[700], colors.gray[200])};
+      font-size: ${font.size.sm};
+      padding: ${size[1]} ${size[2]};
+      cursor: pointer;
+
+      &:hover {
+        background: ${t(colors.gray[200], colors.darkGray[700])};
+      }
+    `,
+    resetButton: css`
+      border: 1px solid ${t(colors.red[300], colors.red[700])};
+      border-radius: ${border.radius.md};
+      background: ${t(colors.gray[100], colors.darkGray[800])};
+      color: ${t(colors.red[700], colors.red[300])};
+      font-size: ${font.size.sm};
+      padding: ${size[1]} ${size[2]};
+      cursor: pointer;
+
+      &:hover {
+        background: ${t(colors.gray[200], colors.darkGray[700])};
+      }
+    `,
+    summarySection: css`
+      margin-bottom: ${size[3]};
+    `,
+    summaryItem: css`
+      font-size: ${font.size.sm};
+      color: ${t(colors.gray[700], colors.gray[200])};
+      margin-bottom: ${size[1]};
+    `,
+    pasteError: css`
+      font-size: ${font.size.sm};
+      color: ${t(colors.red[700], colors.red[300])};
+      margin-top: ${size[2]};
+    `,
   }
 }
 

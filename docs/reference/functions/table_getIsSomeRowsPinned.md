@@ -9,7 +9,7 @@ title: table_getIsSomeRowsPinned
 function table_getIsSomeRowsPinned<TFeatures, TData>(table, position?): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L45)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L45)
 
 ## Type Parameters
 

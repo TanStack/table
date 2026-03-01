@@ -5,7 +5,7 @@ title: TableFeatures
 
 # Interface: TableFeatures
 
-Defined in: [packages/table-core/src/types/TableFeatures.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L42)
+Defined in: [types/TableFeatures.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L42)
 
 ## Extends
 
@@ -19,7 +19,7 @@ Defined in: [packages/table-core/src/types/TableFeatures.ts:42](https://github.c
 optional columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L17)
+Defined in: [features/stockFeatures.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L17)
 
 #### Inherited from
 
@@ -33,7 +33,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:17](https://githu
 optional columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L18)
+Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L18)
 
 #### Inherited from
 
@@ -47,7 +47,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:18](https://githu
 optional columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L19)
+Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L19)
 
 #### Inherited from
 
@@ -61,7 +61,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:19](https://githu
 optional columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L20)
+Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L20)
 
 #### Inherited from
 
@@ -75,7 +75,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:20](https://githu
 optional columnPinningFeature: TableFeature<ColumnPinningFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L21)
+Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L21)
 
 #### Inherited from
 
@@ -89,7 +89,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:21](https://githu
 optional columnResizingFeature: TableFeature<ColumnResizingFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L22)
+Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L22)
 
 #### Inherited from
 
@@ -103,7 +103,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:22](https://githu
 optional columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L23)
+Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L23)
 
 #### Inherited from
 
@@ -117,7 +117,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:23](https://githu
 optional columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L24)
+Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L24)
 
 #### Inherited from
 
@@ -131,7 +131,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:24](https://githu
 optional coreCellsFeature: TableFeature<CoreCellsFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/core/coreFeatures.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L9)
+Defined in: [core/coreFeatures.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L9)
 
 #### Inherited from
 
@@ -145,7 +145,7 @@ Defined in: [packages/table-core/src/core/coreFeatures.ts:9](https://github.com/
 optional coreColumnsFeature: TableFeature<CoreColumnsFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L10)
+Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L10)
 
 #### Inherited from
 
@@ -159,7 +159,7 @@ Defined in: [packages/table-core/src/core/coreFeatures.ts:10](https://github.com
 optional coreHeadersFeature: TableFeature<CoreHeadersFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/core/coreFeatures.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L11)
+Defined in: [core/coreFeatures.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L11)
 
 #### Inherited from
 
@@ -173,7 +173,7 @@ Defined in: [packages/table-core/src/core/coreFeatures.ts:11](https://github.com
 optional coreRowModelsFeature: TableFeature<CoreRowModelsFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/core/coreFeatures.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L12)
+Defined in: [core/coreFeatures.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L12)
 
 #### Inherited from
 
@@ -187,7 +187,7 @@ Defined in: [packages/table-core/src/core/coreFeatures.ts:12](https://github.com
 optional coreRowsFeature: TableFeature<CoreRowsFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/core/coreFeatures.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L13)
+Defined in: [core/coreFeatures.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L13)
 
 #### Inherited from
 
@@ -201,7 +201,7 @@ Defined in: [packages/table-core/src/core/coreFeatures.ts:13](https://github.com
 optional coreTablesFeature: TableFeature<CoreTablesFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/core/coreFeatures.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L14)
+Defined in: [core/coreFeatures.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L14)
 
 #### Inherited from
 
@@ -215,7 +215,7 @@ Defined in: [packages/table-core/src/core/coreFeatures.ts:14](https://github.com
 optional globalFilteringFeature: TableFeature<GlobalFilteringFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L25)
+Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L25)
 
 #### Inherited from
 
@@ -229,7 +229,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:25](https://githu
 optional rowExpandingFeature: TableFeature<RowExpandingFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L26)
+Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L26)
 
 #### Inherited from
 
@@ -243,7 +243,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:26](https://githu
 optional rowPaginationFeature: TableFeature<RowPaginationFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L27)
+Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L27)
 
 #### Inherited from
 
@@ -257,7 +257,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:27](https://githu
 optional rowPinningFeature: TableFeature<RowPinningFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L28)
+Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L28)
 
 #### Inherited from
 
@@ -271,7 +271,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:28](https://githu
 optional rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L29)
+Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L29)
 
 #### Inherited from
 
@@ -285,7 +285,7 @@ Defined in: [packages/table-core/src/features/stockFeatures.ts:29](https://githu
 optional rowSortingFeature: TableFeature<RowSortingFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L30)
+Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L30)
 
 #### Inherited from
 

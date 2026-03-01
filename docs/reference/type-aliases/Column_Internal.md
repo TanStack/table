@@ -9,7 +9,7 @@ title: Column_Internal
 type Column_Internal<TFeatures, TData, TValue> = Column<TFeatures, TData, TValue> & object;
 ```
 
-Defined in: [packages/table-core/src/types/Column.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L80)
+Defined in: [types/Column.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L80)
 
 ## Type Declaration
 

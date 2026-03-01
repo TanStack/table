@@ -9,7 +9,7 @@ title: table_resetPageSize
 function table_resetPageSize<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L89)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L89)
 
 ## Type Parameters
 

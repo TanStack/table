@@ -9,7 +9,7 @@ title: table_getLeftLeafColumns
 function table_getLeftLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:400](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L400)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:400](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L400)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: row_getCenterVisibleCells
 function row_getCenterVisibleCells<TFeatures, TData>(row): any[];
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:118](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L118)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:118](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L118)
 
 ## Type Parameters
 

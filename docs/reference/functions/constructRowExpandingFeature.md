@@ -9,7 +9,7 @@ title: constructRowExpandingFeature
 function constructRowExpandingFeature<TFeatures, TData>(): TableFeature<RowExpandingFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/features/row-expanding/rowExpandingFeature.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.ts#L46)
+Defined in: [features/row-expanding/rowExpandingFeature.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.ts#L46)
 
 ## Type Parameters
 

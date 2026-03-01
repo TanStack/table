@@ -9,7 +9,7 @@ title: functionalUpdate
 function functionalUpdate<T>(updater, input): T;
 ```
 
-Defined in: [packages/table-core/src/utils.ts:6](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L6)
+Defined in: [utils.ts:6](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L6)
 
 ## Type Parameters
 

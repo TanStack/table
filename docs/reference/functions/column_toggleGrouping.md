@@ -9,7 +9,7 @@ title: column_toggleGrouping
 function column_toggleGrouping<TFeatures, TData, TValue>(column): void;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L19)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L19)
 
 ## Type Parameters
 

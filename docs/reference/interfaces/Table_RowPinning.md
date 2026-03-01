@@ -5,7 +5,7 @@ title: Table_RowPinning
 
 # Interface: Table\_RowPinning\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L61)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L61)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.type
 getBottomRows: () => Row<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L68)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L68)
 
 Returns all bottom pinned rows.
 
@@ -41,7 +41,7 @@ Returns all bottom pinned rows.
 getCenterRows: () => Row<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L72)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L72)
 
 Returns all rows that are not pinned to the top or bottom.
 
@@ -57,7 +57,7 @@ Returns all rows that are not pinned to the top or bottom.
 getIsSomeRowsPinned: (position?) => boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L76)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L76)
 
 Returns whether or not any rows are pinned. Optionally specify to only check for pinned rows in either the `top` or `bottom` position.
 
@@ -79,7 +79,7 @@ Returns whether or not any rows are pinned. Optionally specify to only check for
 getTopRows: () => Row<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L80)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L80)
 
 Returns all top pinned rows.
 
@@ -95,7 +95,7 @@ Returns all top pinned rows.
 resetRowPinning: (defaultState?) => void;
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L84)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L84)
 
 Resets the **rowPinning** state to `initialState.rowPinning`, or `true` can be passed to force a default blank state reset to `{ top: [], bottom: [], }`.
 
@@ -117,7 +117,7 @@ Resets the **rowPinning** state to `initialState.rowPinning`, or `true` can be p
 setRowPinning: (updater) => void;
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L88)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L88)
 
 Sets or updates the `state.rowPinning` state.
 

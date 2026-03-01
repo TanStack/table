@@ -9,7 +9,7 @@ title: row_getAllCells
 function row_getAllCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/core/rows/coreRowsFeature.utils.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L92)
+Defined in: [core/rows/coreRowsFeature.utils.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L92)
 
 ## Type Parameters
 

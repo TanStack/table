@@ -9,7 +9,7 @@ title: row_getLeftVisibleCells
 function row_getLeftVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L133)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L133)
 
 ## Type Parameters
 

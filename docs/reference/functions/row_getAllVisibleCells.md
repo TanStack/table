@@ -9,7 +9,7 @@ title: row_getAllVisibleCells
 function row_getAllVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L68)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L68)
 
 ## Type Parameters
 

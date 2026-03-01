@@ -9,7 +9,7 @@ title: CreateRowModels_All
 type CreateRowModels_All<TFeatures, TData> = CreateRowModel_Core<TFeatures, TData> & CreateRowModel_Expanded<TFeatures, TData> & CreateRowModel_Faceted<TFeatures, TData> & CreateRowModel_Filtered<TFeatures, TData> & CreateRowModel_Grouped<TFeatures, TData> & CreateRowModel_Paginated<TFeatures, TData> & CreateRowModel_Sorted<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/types/RowModel.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L76)
+Defined in: [types/RowModel.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L76)
 
 ## Type Parameters
 

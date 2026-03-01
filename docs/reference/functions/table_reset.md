@@ -9,7 +9,7 @@ title: table_reset
 function table_reset<TFeatures, TData>(table): void;
 ```
 
-Defined in: [packages/table-core/src/core/table/coreTablesFeature.utils.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L7)
+Defined in: [core/table/coreTablesFeature.utils.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L7)
 
 ## Type Parameters
 

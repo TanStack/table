@@ -9,7 +9,7 @@ title: constructColumnSizingFeature
 function constructColumnSizingFeature<TFeatures, TData>(): TableFeature<ColumnSizingFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L47)
+Defined in: [features/column-sizing/columnSizingFeature.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L47)
 
 ## Type Parameters
 

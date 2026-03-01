@@ -5,7 +5,7 @@ title: Table_ColumnGrouping
 
 # Interface: Table\_ColumnGrouping\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L173)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L173)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeat
 resetGrouping: (defaultState?) => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L180)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L180)
 
 Resets the **grouping** state to `initialState.grouping`, or `true` can be passed to force a default blank state reset to `[]`.
 
@@ -47,7 +47,7 @@ Resets the **grouping** state to `initialState.grouping`, or `true` can be passe
 setGrouping: (updater) => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L184)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L184)
 
 Updates the grouping state of the table via an update function or value.
 

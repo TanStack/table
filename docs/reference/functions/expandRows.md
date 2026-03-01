@@ -9,7 +9,7 @@ title: expandRows
 function expandRows<TFeatures, TData>(rowModel): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/row-expanding/createExpandedRowModel.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/createExpandedRowModel.ts#L51)
+Defined in: [features/row-expanding/createExpandedRowModel.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/createExpandedRowModel.ts#L51)
 
 ## Type Parameters
 

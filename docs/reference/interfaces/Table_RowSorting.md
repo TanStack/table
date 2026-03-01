@@ -5,7 +5,7 @@ title: Table_RowSorting
 
 # Interface: Table\_RowSorting\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L184)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L184)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.type
 resetSorting: (defaultState?) => void;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L191)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L191)
 
 Resets the **sorting** state to `initialState.sorting`, or `true` can be passed to force a default blank state reset to `[]`.
 
@@ -47,7 +47,7 @@ Resets the **sorting** state to `initialState.sorting`, or `true` can be passed 
 setSorting: (updater) => void;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L195)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L195)
 
 Sets or updates the `state.sorting` state.
 

@@ -9,7 +9,7 @@ title: row_getIsAllParentsExpanded
 function row_getIsAllParentsExpanded<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts:182](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L182)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:182](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L182)
 
 ## Type Parameters
 

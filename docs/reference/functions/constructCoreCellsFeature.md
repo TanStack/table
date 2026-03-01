@@ -9,7 +9,7 @@ title: constructCoreCellsFeature
 function constructCoreCellsFeature<TFeatures, TData>(): TableFeature<CoreCellsFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.ts#L19)
+Defined in: [core/cells/coreCellsFeature.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.ts#L19)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: table_getBottomRows
 function table_getBottomRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L98)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L98)
 
 ## Type Parameters
 

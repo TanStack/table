@@ -9,6 +9,6 @@ title: coreRowsFeature
 const coreRowsFeature: TableFeature<CoreRowsFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [packages/table-core/src/core/rows/coreRowsFeature.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.ts#L84)
+Defined in: [core/rows/coreRowsFeature.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.ts#L84)
 
 The Core Rows feature provides the core row functionality.

@@ -9,7 +9,7 @@ title: table_setColumnFilters
 function table_setColumnFilters<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L156)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L156)
 
 ## Type Parameters
 

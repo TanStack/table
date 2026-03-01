@@ -2,6 +2,7 @@
 
 import {
   aggregationFns,
+  createColumnHelper,
   createExpandedRowModel,
   createFacetedMinMaxValues,
   createFacetedRowModel,
@@ -18,7 +19,13 @@ import { useMemo } from 'react'
 import { useStore } from '@tanstack/react-store'
 import { useTable } from './useTable'
 import type {
+  Cell,
+  Column,
+  ColumnDef,
   CreateRowModels_All,
+  Header,
+  HeaderGroup,
+  Row,
   RowData,
   RowModel,
   StockFeatures,
@@ -259,6 +266,67 @@ export type LegacyReactTable<TData extends RowData> = ReactTable<
    */
   getState: () => TableState<StockFeatures>
 }
+
+// =============================================================================
+// Legacy type aliases - StockFeatures hardcoded for simpler prop typing with useLegacyTable
+// =============================================================================
+
+/** @deprecated Use Column<TFeatures, TData, TValue> with useTable instead. */
+export type LegacyColumn<TData extends RowData, TValue = unknown> = Column<
+  StockFeatures,
+  TData,
+  TValue
+>
+
+/** @deprecated Use Row<TFeatures, TData> with useTable instead. */
+export type LegacyRow<TData extends RowData> = Row<StockFeatures, TData>
+
+/** @deprecated Use Cell<TFeatures, TData, TValue> with useTable instead. */
+export type LegacyCell<TData extends RowData, TValue = unknown> = Cell<
+  StockFeatures,
+  TData,
+  TValue
+>
+
+/** @deprecated Use Header<TFeatures, TData, TValue> with useTable instead. */
+export type LegacyHeader<TData extends RowData, TValue = unknown> = Header<
+  StockFeatures,
+  TData,
+  TValue
+>
+
+/** @deprecated Use HeaderGroup<TFeatures, TData> with useTable instead. */
+export type LegacyHeaderGroup<TData extends RowData> = HeaderGroup<
+  StockFeatures,
+  TData
+>
+
+/** @deprecated Use ColumnDef<TFeatures, TData, TValue> with useTable instead. */
+export type LegacyColumnDef<
+  TData extends RowData,
+  TValue = unknown,
+> = ColumnDef<StockFeatures, TData, TValue>
+
+/** @deprecated Use Table<TFeatures, TData> with useTable instead. */
+export type LegacyTable<TData extends RowData> = Table<StockFeatures, TData>
+
+// =============================================================================
+// Legacy column helper - StockFeatures hardcoded
+// =============================================================================
+
+/**
+ * @deprecated Use `createColumnHelper<TFeatures, TData>()` with useTable instead.
+ *
+ * A column helper with StockFeatures pre-bound for use with useLegacyTable.
+ * Only requires TData—no need to specify TFeatures.
+ */
+export function legacyCreateColumnHelper<TData extends RowData>() {
+  return createColumnHelper<StockFeatures, TData>()
+}
+
+// =============================================================================
+// useLegacyTable hook
+// =============================================================================
 
 /**
  * @deprecated This hook is provided as a compatibility layer for migrating from TanStack Table v8.

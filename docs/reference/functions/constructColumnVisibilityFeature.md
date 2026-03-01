@@ -9,7 +9,7 @@ title: constructColumnVisibilityFeature
 function constructColumnVisibilityFeature<TFeatures, TData>(): TableFeature<ColumnVisibilityFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts#L51)
+Defined in: [features/column-visibility/columnVisibilityFeature.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts#L51)
 
 ## Type Parameters
 

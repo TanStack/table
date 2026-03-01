@@ -1,7 +1,7 @@
 import { For } from 'solid-js'
-import { useStore } from '@tanstack/solid-store'
 import { coreFeatures, stockFeatures } from '@tanstack/table-core'
 import { useTableDevtoolsContext } from '../TableContextProvider'
+import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
 import { ResizableSplit } from './ResizableSplit'
 
@@ -44,14 +44,40 @@ function getterToRowModelKey(getter: string): string | null {
   return withoutGet.charAt(0).toLowerCase() + withoutGet.slice(1)
 }
 
+const ROW_MODEL_TO_GETTER: Record<
+  string,
+  (typeof EXECUTION_ORDER_GETTERS)[number]
+> = {
+  coreRowModel: 'getCoreRowModel',
+  filteredRowModel: 'getFilteredRowModel',
+  preFilteredRowModel: 'getFilteredRowModel',
+  groupedRowModel: 'getGroupedRowModel',
+  preGroupedRowModel: 'getGroupedRowModel',
+  sortedRowModel: 'getSortedRowModel',
+  preSortedRowModel: 'getSortedRowModel',
+  expandedRowModel: 'getExpandedRowModel',
+  paginatedRowModel: 'getRowModel',
+}
+
+function getRowCountForModel(
+  tableInstance: { [key: string]: unknown } | undefined,
+  rowModelName: string,
+): number {
+  const getter = ROW_MODEL_TO_GETTER[rowModelName]
+  if (!getter || typeof tableInstance?.[getter] !== 'function') return 0
+  const result = (tableInstance[getter] as () => { rows?: Array<unknown> })()
+  return result?.rows?.length ?? 0
+}
+
 export function FeaturesPanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
 
   const tableInstance = table()
-  const tableState = tableInstance
-    ? useStore(tableInstance.store, (state) => state)
-    : undefined
+  const tableState = useTableStore(
+    tableInstance ? tableInstance.store : undefined,
+    (state) => state,
+  )
 
   const getTableFeatures = (): Set<string> => {
     tableState?.()

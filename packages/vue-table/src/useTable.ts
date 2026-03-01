@@ -19,7 +19,7 @@ export type TableOptionsWithReactiveData<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Omit<TableOptions<TFeatures, TData>, 'data'> & {
-  data: MaybeRef<Array<TData>>
+  data: MaybeRef<ReadonlyArray<TData>>
 }
 
 function getOptionsWithReactiveData<

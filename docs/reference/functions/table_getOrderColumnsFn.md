@@ -9,7 +9,7 @@ title: table_getOrderColumnsFn
 function table_getOrderColumnsFn<TFeatures, TData>(table): (columns) => Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L67)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L67)
 
 ## Type Parameters
 

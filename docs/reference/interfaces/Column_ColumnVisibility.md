@@ -5,7 +5,7 @@ title: Column_ColumnVisibility
 
 # Interface: Column\_ColumnVisibility
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L84)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L84)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/column-visibility/columnVisibility
 getCanHide: () => boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L88)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L88)
 
 Returns whether the column can be hidden
 
@@ -31,7 +31,7 @@ Returns whether the column can be hidden
 getIsVisible: () => boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L92)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L92)
 
 Returns whether the column is visible
 
@@ -47,7 +47,7 @@ Returns whether the column is visible
 getToggleVisibilityHandler: () => (event) => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts:96](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L96)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:96](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L96)
 
 Returns a function that can be used to toggle the column visibility. This function can be used to bind to an event handler to a checkbox.
 
@@ -75,7 +75,7 @@ Returns a function that can be used to toggle the column visibility. This functi
 toggleVisibility: (value?) => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L100)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L100)
 
 Toggles the visibility of the column.
 

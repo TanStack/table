@@ -16,7 +16,7 @@ type Row<TFeatures, TData> = Row_Core<TFeatures, TData> & UnionToIntersection<
 | "rowSelectionFeature" extends keyof TFeatures ? Row_RowSelection : never> & ExtractFeatureTypes<"Row", TFeatures> & Row_Plugins<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/types/Row.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L26)
+Defined in: [types/Row.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L26)
 
 ## Type Parameters
 

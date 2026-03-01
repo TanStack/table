@@ -9,7 +9,7 @@ title: table_getPreSortedRowModel
 function table_getPreSortedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L66)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L66)
 
 ## Type Parameters
 

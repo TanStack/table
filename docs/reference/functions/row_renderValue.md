@@ -9,7 +9,7 @@ title: row_renderValue
 function row_renderValue<TFeatures, TData>(row, columnId): any;
 ```
 
-Defined in: [packages/table-core/src/core/rows/coreRowsFeature.utils.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L55)
+Defined in: [core/rows/coreRowsFeature.utils.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L55)
 
 ## Type Parameters
 

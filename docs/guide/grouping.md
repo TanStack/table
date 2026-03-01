@@ -25,9 +25,9 @@ Grouping in TanStack table is a feature that applies to columns and allows you t
 To use the grouping feature, you will need to use the grouped row model. This model is responsible for grouping the rows based on the grouping state.
 
 ```tsx
-import { getGroupedRowModel } from '@tanstack/react-table'
+import { getGroupedRowModel, useLegacyTable } from '@tanstack/react-table/legacy'
 
-const table = useReactTable({
+const table = useLegacyTable({
   // other options...
   getGroupedRowModel: getGroupedRowModel(),
 })
@@ -37,9 +37,9 @@ When grouping state is active, the table will add matching rows as subRows to th
 To allow the user to expand and collapse the grouped rows, you can use the expanding feature.
 
 ```tsx
-import { getGroupedRowModel, getExpandedRowModel} from '@tanstack/react-table'
+import { getGroupedRowModel, getExpandedRowModel, useLegacyTable } from '@tanstack/react-table/legacy'
 
-const table = useReactTable({
+const table = useLegacyTable({
   // other options...
   getGroupedRowModel: getGroupedRowModel(),
   getExpandedRowModel: getExpandedRowModel(),

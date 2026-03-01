@@ -9,7 +9,7 @@ title: getDefaultColumnPinningState
 function getDefaultColumnPinningState(): ColumnPinningState;
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L22)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L22)
 
 ## Returns
 

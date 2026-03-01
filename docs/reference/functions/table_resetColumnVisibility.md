@@ -9,7 +9,7 @@ title: table_resetColumnVisibility
 function table_resetColumnVisibility<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L122)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L122)
 
 ## Type Parameters
 

@@ -5,7 +5,7 @@ title: CreateRowModel_Sorted
 
 # Interface: CreateRowModel\_Sorted\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:212](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L212)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:212](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L212)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.type
 optional sortedRowModel: (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L219)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L219)
 
 This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table or implement your own.
 

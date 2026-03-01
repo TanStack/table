@@ -9,7 +9,7 @@ title: AccessorFn
 type AccessorFn<TData, TValue> = (originalRow, index) => TValue;
 ```
 
-Defined in: [packages/table-core/src/types/ColumnDef.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L30)
+Defined in: [types/ColumnDef.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L30)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: constructRowPaginationFeature
 function constructRowPaginationFeature<TFeatures, TData>(): TableFeature<RowPaginationFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.ts#L42)
+Defined in: [features/row-pagination/rowPaginationFeature.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.ts#L42)
 
 ## Type Parameters
 

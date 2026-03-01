@@ -9,4 +9,4 @@ title: ColumnSizingState
 type ColumnSizingState = Record<string, number>;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L8)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L8)

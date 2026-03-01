@@ -174,7 +174,7 @@ describe('angularReactivityFeature', () => {
   })
 
   describe('Integration', () => {
-    test('methods works will be reactive effects', () => {
+    test('methods within effect will be re-trigger when options/state changes', () => {
       const data = signal<Array<Data>>([{ id: '1', title: 'Title' }])
       const table = createTestTable(data)
       const isSelectedRow1Captor = vi.fn<(val: boolean) => void>()

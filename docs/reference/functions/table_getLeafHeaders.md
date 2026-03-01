@@ -9,7 +9,7 @@ title: table_getLeafHeaders
 function table_getLeafHeaders<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.utils.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L102)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L102)
 
 ## Type Parameters
 

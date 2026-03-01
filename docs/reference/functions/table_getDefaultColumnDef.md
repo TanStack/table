@@ -9,7 +9,7 @@ title: table_getDefaultColumnDef
 function table_getDefaultColumnDef<TFeatures, TData>(table): Partial<ColumnDef<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.utils.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L46)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L46)
 
 ## Type Parameters
 

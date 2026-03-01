@@ -9,7 +9,7 @@ title: getDefaultColumnVisibilityState
 function getDefaultColumnVisibilityState(): ColumnVisibilityState;
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L10)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L10)
 
 ## Returns
 

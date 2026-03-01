@@ -9,7 +9,7 @@ title: column_getSize
 function column_getSize<TFeatures, TData, TValue>(column): number;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L29)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L29)
 
 ## Type Parameters
 

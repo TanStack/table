@@ -9,7 +9,7 @@ title: table_getAllFlatColumns
 function table_getAllFlatColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.utils.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L106)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L106)
 
 ## Type Parameters
 

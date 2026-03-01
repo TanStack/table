@@ -5,7 +5,7 @@ title: ColumnOrderDefaultOptions
 
 # Interface: ColumnOrderDefaultOptions
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L33)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L33)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeat
 onColumnOrderChange: OnChangeFn<ColumnOrderState>;
 ```
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L34)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L34)

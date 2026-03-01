@@ -19,7 +19,7 @@ type Column<TFeatures, TData, TValue> = Column_Core<TFeatures, TData, TValue> & 
 | "rowSortingFeature" extends keyof TFeatures ? Column_RowSorting<TFeatures, TData> : never> & ExtractFeatureTypes<"Column", TFeatures> & Column_Plugins<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/types/Column.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L32)
+Defined in: [types/Column.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L32)
 
 ## Type Parameters
 

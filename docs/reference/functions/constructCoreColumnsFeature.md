@@ -9,7 +9,7 @@ title: constructCoreColumnsFeature
 function constructCoreColumnsFeature<TFeatures, TData>(): TableFeature<CoreColumnsFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.ts#L29)
+Defined in: [core/columns/coreColumnsFeature.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.ts#L29)
 
 ## Type Parameters
 

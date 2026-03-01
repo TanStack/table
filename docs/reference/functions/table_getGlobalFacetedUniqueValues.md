@@ -9,7 +9,7 @@ title: table_getGlobalFacetedUniqueValues
 function table_getGlobalFacetedUniqueValues<TFeatures, TData>(table): Map<any, number>;
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L69)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L69)
 
 ## Type Parameters
 

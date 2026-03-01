@@ -5,7 +5,7 @@ title: PaginationState
 
 # Interface: PaginationState
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts:6](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L6)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:6](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L6)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeatur
 pageIndex: number;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L7)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L7)
 
 ***
 
@@ -25,4 +25,4 @@ Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeatur
 pageSize: number;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L8)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L8)

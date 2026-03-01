@@ -9,7 +9,7 @@ title: AssignHeaderPrototype
 type AssignHeaderPrototype<TConstructors> = <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [packages/table-core/src/types/TableFeatures.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L93)
+Defined in: [types/TableFeatures.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L93)
 
 ## Type Parameters
 

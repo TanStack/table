@@ -9,4 +9,4 @@ title: ExpandedState
 type ExpandedState = true | Record<string, boolean>;
 ```
 
-Defined in: [packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L8)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L8)

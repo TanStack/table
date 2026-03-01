@@ -115,9 +115,9 @@ export function useTable<
       }))
     })
   }, [
-    tableOptions.columns, // re-render when columns change
-    tableOptions.data, // re-render when data changes
-    tableOptions.state, // sync react state to the table store
+    table.options.columns, // re-render when columns change
+    table.options.data, // re-render when data changes
+    table.options.state, // sync preact state to the table store
   ])
 
   const state = useStore(table.store, selector)

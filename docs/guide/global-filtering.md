@@ -41,9 +41,12 @@ If you have decided that you need to implement server-side global filtering inst
 No `getFilteredRowModel` table option is needed for manual server-side global filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have passed a `getFilteredRowModel` table option, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
 
 ```jsx
-const table = useReactTable({
+import { useLegacyTable, getCoreRowModel } from '@tanstack/react-table/legacy'
+
+const table = useLegacyTable({
   data,
   columns,
+  getCoreRowModel: getCoreRowModel(),
   // getFilteredRowModel: getFilteredRowModel(), // not needed for manual server-side global filtering
   manualFiltering: true,
 })
@@ -56,9 +59,9 @@ Note: When using manual global filtering, many of the options that are discussed
 If you are using the built-in client-side global filtering, first you need to pass in a getFilteredRowModel function to the table options.
 
 ```jsx
-import { useReactTable, getFilteredRowModel } from '@tanstack/react-table'
+import { useLegacyTable, getCoreRowModel, getFilteredRowModel } from '@tanstack/react-table/legacy'
 //...
-const table = useReactTable({
+const table = useLegacyTable({
   // other options...
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(), // needed for client-side global filtering
@@ -70,7 +73,7 @@ const table = useReactTable({
 The globalFilterFn option allows you to specify the filter function that will be used for global filtering. The filter function can be a string that references a built-in filter function, a string that references a custom filter function provided via the tableOptions.filterFns option, or a custom filter function.
 
 ```jsx
-const table = useReactTable({
+const table = useLegacyTable({
   data,
   columns,
   getCoreRowModel: getCoreRowModel(),

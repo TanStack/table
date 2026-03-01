@@ -9,7 +9,7 @@ title: getDefaultSortingState
 function getDefaultSortingState(): SortingState;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L15)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L15)
 
 ## Returns
 

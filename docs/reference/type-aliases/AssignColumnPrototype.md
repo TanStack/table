@@ -9,7 +9,7 @@ title: AssignColumnPrototype
 type AssignColumnPrototype<TConstructors> = <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [packages/table-core/src/types/TableFeatures.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L85)
+Defined in: [types/TableFeatures.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L85)
 
 ## Type Parameters
 

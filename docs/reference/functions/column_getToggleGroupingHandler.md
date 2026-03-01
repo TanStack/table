@@ -9,7 +9,7 @@ title: column_getToggleGroupingHandler
 function column_getToggleGroupingHandler<TFeatures, TData, TValue>(column): () => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L62)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L62)
 
 ## Type Parameters
 

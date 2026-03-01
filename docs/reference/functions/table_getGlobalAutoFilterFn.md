@@ -9,7 +9,7 @@ title: table_getGlobalAutoFilterFn
 function table_getGlobalAutoFilterFn(): FilterFn<any, any>;
 ```
 
-Defined in: [packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L23)
+Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L23)
 
 ## Returns
 

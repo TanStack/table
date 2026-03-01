@@ -9,7 +9,7 @@ title: GetInitialState
 type GetInitialState<TConstructors> = (initialState) => TableState_All & Partial<TConstructors["TableState"]>;
 ```
 
-Defined in: [packages/table-core/src/types/TableFeatures.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L68)
+Defined in: [types/TableFeatures.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L68)
 
 ## Type Parameters
 

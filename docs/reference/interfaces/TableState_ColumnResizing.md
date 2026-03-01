@@ -5,7 +5,7 @@ title: TableState_ColumnResizing
 
 # Interface: TableState\_ColumnResizing
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:3](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L3)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:3](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L3)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 columnResizing: columnResizingState;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:4](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L4)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:4](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L4)

@@ -9,7 +9,7 @@ title: TableHelperOptions
 type TableHelperOptions<TFeatures> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableHelper.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableHelper.ts#L12)
+Defined in: [helpers/tableHelper.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableHelper.ts#L12)
 
 Options for creating a table helper to share common options across multiple tables
 coreColumnsFeature, data, and state are excluded from this type and reserved for only the `useTable`/`createTable` functions

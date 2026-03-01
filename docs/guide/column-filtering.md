@@ -66,7 +66,7 @@ const table = useTable({
 If you are using the built-in client-side filtering features, first you need to pass in a `getFilteredRowModel` function to the table options. This function will be called whenever the table needs to filter the data. You can either import the default `getFilteredRowModel` function from TanStack Table or create your own.
 
 ```jsx
-import { useTable, getFilteredRowModel } from '@tanstack/react-table'
+import { useTable, createCoreRowModel, createFilteredRowModel } from '@tanstack/react-table'
 //...
 const table = useTable({
   data,

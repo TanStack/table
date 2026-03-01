@@ -5,7 +5,7 @@ title: CachedRowModel_Core
 
 # Interface: CachedRowModel\_Core\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L37)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L37)
 
 ## Extends
 
@@ -29,7 +29,7 @@ Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.
 coreRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L41)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L41)
 
 #### Returns
 

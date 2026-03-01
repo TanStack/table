@@ -5,7 +5,7 @@ title: Column_ColumnResizing
 
 # Interface: Column\_ColumnResizing
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L62)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L62)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 getCanResize: () => boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L66)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L66)
 
 Returns `true` if the column can be resized.
 
@@ -31,7 +31,7 @@ Returns `true` if the column can be resized.
 getIsResizing: () => boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L70)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L70)
 
 Returns `true` if the column is currently being resized.
 

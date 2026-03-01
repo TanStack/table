@@ -1,7 +1,7 @@
 import { For, createSignal } from 'solid-js'
 import { JsonTree } from '@tanstack/devtools-ui'
-import { useStore } from '@tanstack/solid-store'
 import { useTableDevtoolsContext } from '../TableContextProvider'
+import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
 import { ResizableSplit } from './ResizableSplit'
 
@@ -47,9 +47,10 @@ export function RowsPanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
   const tableInstance = table()
-  const tableState = tableInstance
-    ? useStore(tableInstance.store, (state) => state)
-    : undefined
+  const tableState = useTableStore(
+    tableInstance ? tableInstance.store : undefined,
+    (state) => state,
+  )
 
   const [selectedRowModel, setSelectedRowModel] =
     createSignal<(typeof ROW_MODEL_GETTERS)[number]>('getRowModel')
@@ -62,7 +63,7 @@ export function RowsPanel() {
           'No table instance is connected. Pass a table instance to TableDevtoolsPanel.',
       }
     }
-    const data = tableInstance.options.data as Array<unknown>
+    const data = tableInstance.options.data as ReadonlyArray<unknown>
     if (!Array.isArray(data)) return data
     if (data.length <= ROW_LIMIT) return data as unknown
     return data.slice(0, ROW_LIMIT) as unknown
@@ -71,7 +72,7 @@ export function RowsPanel() {
   const getRawDataTotalCount = (): number => {
     tableState?.()
     if (!tableInstance) return 0
-    const data = tableInstance.options.data as Array<unknown>
+    const data = tableInstance.options.data as ReadonlyArray<unknown>
     return Array.isArray(data) ? data.length : 0
   }
 

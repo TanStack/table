@@ -9,7 +9,7 @@ title: row_getIsExpanded
 function row_getIsExpanded<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L160)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L160)
 
 ## Type Parameters
 

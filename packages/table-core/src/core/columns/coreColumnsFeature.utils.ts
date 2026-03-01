@@ -79,7 +79,7 @@ export function table_getAllColumns<
   table: Table_Internal<TFeatures, TData>,
 ): Array<Column<TFeatures, TData, unknown>> {
   const recurseColumns = (
-    colDefs: Array<ColumnDef<TFeatures, TData, unknown>>,
+    colDefs: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>,
     parent?: Column<TFeatures, TData, unknown>,
     depth = 0,
   ): Array<Column<TFeatures, TData, unknown>> => {

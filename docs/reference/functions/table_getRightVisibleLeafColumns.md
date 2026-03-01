@@ -9,7 +9,7 @@ title: table_getRightVisibleLeafColumns
 function table_getRightVisibleLeafColumns<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:481](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L481)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:481](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L481)
 
 ## Type Parameters
 

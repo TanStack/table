@@ -9,7 +9,7 @@ title: createTableStore
 function createTableStore<TFeatures>(features, initialState): Store<TableState<TFeatures>>;
 ```
 
-Defined in: [packages/table-core/src/core/table/constructTable.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/constructTable.ts#L22)
+Defined in: [core/table/constructTable.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/constructTable.ts#L22)
 
 ## Type Parameters
 

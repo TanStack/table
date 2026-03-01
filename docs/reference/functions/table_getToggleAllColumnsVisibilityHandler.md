@@ -9,7 +9,7 @@ title: table_getToggleAllColumnsVisibilityHandler
 function table_getToggleAllColumnsVisibilityHandler<TFeatures, TData>(table): (e) => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L173)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L173)
 
 ## Type Parameters
 

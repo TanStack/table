@@ -13,7 +13,7 @@ function constructColumn<TFeatures, TData, TValue>(
 parent?): Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/columns/constructColumn.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/constructColumn.ts#L30)
+Defined in: [core/columns/constructColumn.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/constructColumn.ts#L30)
 
 ## Type Parameters
 

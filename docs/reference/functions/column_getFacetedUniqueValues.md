@@ -9,7 +9,7 @@ title: column_getFacetedUniqueValues
 function column_getFacetedUniqueValues<TFeatures, TData, TValue>(column, table): Map<any, number>;
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L35)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L35)
 
 ## Type Parameters
 

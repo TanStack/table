@@ -12,7 +12,7 @@ function row_getVisibleCells<TFeatures, TData>(
    right): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L79)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L79)
 
 ## Type Parameters
 

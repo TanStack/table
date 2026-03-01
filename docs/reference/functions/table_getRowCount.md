@@ -9,7 +9,7 @@ title: table_getRowCount
 function table_getRowCount<TFeatures, TData>(table): number;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts:199](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L199)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:199](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L199)
 
 ## Type Parameters
 

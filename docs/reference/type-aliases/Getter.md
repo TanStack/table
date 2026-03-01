@@ -9,7 +9,7 @@ title: Getter
 type Getter<TValue> = <TTValue>() => NoInfer<TTValue>;
 ```
 
-Defined in: [packages/table-core/src/types/type-utils.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/type-utils.ts#L80)
+Defined in: [types/type-utils.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/type-utils.ts#L80)
 
 ## Type Parameters
 

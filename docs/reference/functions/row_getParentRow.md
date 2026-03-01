@@ -9,7 +9,7 @@ title: row_getParentRow
 function row_getParentRow<TFeatures, TData>(row): Row<TFeatures, TData> | undefined;
 ```
 
-Defined in: [packages/table-core/src/core/rows/coreRowsFeature.utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L69)
+Defined in: [core/rows/coreRowsFeature.utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L69)
 
 ## Type Parameters
 

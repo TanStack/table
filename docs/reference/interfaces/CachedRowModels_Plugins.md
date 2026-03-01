@@ -5,7 +5,7 @@ title: CachedRowModels_Plugins
 
 # Interface: CachedRowModels\_Plugins\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/types/RowModel.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L87)
+Defined in: [types/RowModel.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L87)
 
 ## Type Parameters
 

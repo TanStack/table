@@ -9,7 +9,7 @@ title: getCoreRowModel
 function getCoreRowModel<TData>(): RowModelFactory<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:140](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L140)
+Defined in: [useLegacyTable.ts:147](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L147)
 
 ## Type Parameters
 

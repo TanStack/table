@@ -9,7 +9,7 @@ title: constructCoreRowModelsFeature
 function constructCoreRowModelsFeature<TFeatures, TData>(): TableFeature<CoreRowModelsFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.ts#L27)
+Defined in: [core/row-models/coreRowModelsFeature.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.ts#L27)
 
 ## Type Parameters
 

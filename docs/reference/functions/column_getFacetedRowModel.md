@@ -9,7 +9,7 @@ title: column_getFacetedRowModel
 function column_getFacetedRowModel<TFeatures, TData, TValue>(column, table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L21)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L21)
 
 ## Type Parameters
 

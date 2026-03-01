@@ -1,18 +1,13 @@
+import type { Signal, ValueEqualityFn } from '@angular/core'
 import {
-  Injector,
   assertInInjectionContext,
   computed,
   effect,
   inject,
+  Injector,
   signal,
   untracked,
 } from '@angular/core'
-import {
-  constructReactivityFeature,
-  constructTable,
-} from '@tanstack/table-core'
-import { injectStore } from '@tanstack/angular-store'
-import { lazyInit } from './lazySignalInitializer'
 import type {
   RowData,
   Table,
@@ -20,7 +15,12 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { Signal, ValueEqualityFn } from '@angular/core'
+import {
+  constructReactivityFeature,
+  constructTable,
+} from '@tanstack/table-core'
+import { injectStore } from '@tanstack/angular-store'
+import { lazyInit } from './lazySignalInitializer'
 
 export type AngularTable<
   TFeatures extends TableFeatures,
