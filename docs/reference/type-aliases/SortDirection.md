@@ -9,4 +9,4 @@ title: SortDirection
 type SortDirection = "asc" | "desc";
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L8)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L8)

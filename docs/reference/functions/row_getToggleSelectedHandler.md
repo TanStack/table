@@ -9,7 +9,7 @@ title: row_getToggleSelectedHandler
 function row_getToggleSelectedHandler<TFeatures, TData>(row): (e) => void;
 ```
 
-Defined in: [packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:331](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L331)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:331](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L331)
 
 ## Type Parameters
 

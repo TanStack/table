@@ -5,7 +5,7 @@ title: TableState_ColumnPinning
 
 # Interface: TableState\_ColumnPinning
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L15)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L15)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeatur
 columnPinning: ColumnPinningState;
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L16)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L16)

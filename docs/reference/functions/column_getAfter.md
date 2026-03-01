@@ -9,7 +9,7 @@ title: column_getAfter
 function column_getAfter<TFeatures, TData, TValue>(column, position): number;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L66)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L66)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: table_getSelectedRowModel
 function table_getSelectedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L94)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L94)
 
 ## Type Parameters
 

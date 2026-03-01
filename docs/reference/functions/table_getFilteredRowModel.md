@@ -9,7 +9,7 @@ title: table_getFilteredRowModel
 function table_getFilteredRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L27)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L27)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: aggregationFns
 const aggregationFns: object;
 ```
 
-Defined in: [packages/table-core/src/fns/aggregationFns.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L208)
+Defined in: [fns/aggregationFns.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L208)
 
 ## Type Declaration
 

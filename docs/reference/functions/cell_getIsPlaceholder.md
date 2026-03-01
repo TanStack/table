@@ -9,7 +9,7 @@ title: cell_getIsPlaceholder
 function cell_getIsPlaceholder<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts:174](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L174)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:174](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L174)
 
 ## Type Parameters
 

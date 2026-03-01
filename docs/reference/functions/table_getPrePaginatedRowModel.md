@@ -9,7 +9,7 @@ title: table_getPrePaginatedRowModel
 function table_getPrePaginatedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L112)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L112)
 
 ## Type Parameters
 

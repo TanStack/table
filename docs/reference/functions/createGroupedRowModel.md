@@ -9,7 +9,7 @@ title: createGroupedRowModel
 function createGroupedRowModel<TFeatures, TData>(aggregationFns): (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/createGroupedRowModel.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/createGroupedRowModel.ts#L22)
+Defined in: [features/column-grouping/createGroupedRowModel.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/createGroupedRowModel.ts#L22)
 
 ## Type Parameters
 

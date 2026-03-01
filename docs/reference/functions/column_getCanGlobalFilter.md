@@ -9,7 +9,7 @@ title: column_getCanGlobalFilter
 function column_getCanGlobalFilter<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L9)
+Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L9)
 
 ## Type Parameters
 

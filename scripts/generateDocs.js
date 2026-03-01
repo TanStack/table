@@ -14,7 +14,10 @@ await generateReferenceDocs({
     },
     {
       name: 'react-table',
-      entryPoints: [resolve(__dirname, '../packages/react-table/src/index.ts')],
+      entryPoints: [
+        resolve(__dirname, '../packages/react-table/src/index.ts'),
+        resolve(__dirname, '../packages/react-table/src/legacy.ts'),
+      ],
       tsconfig: resolve(__dirname, '../packages/react-table/tsconfig.json'),
       outputDir: resolve(__dirname, '../docs/framework/react/reference'),
       exclude: ['packages/table-core/**/*'],

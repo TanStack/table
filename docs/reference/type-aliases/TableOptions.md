@@ -22,7 +22,7 @@ type TableOptions<TFeatures, TData> = TableOptions_Core<TFeatures, TData> & Unio
 | "rowSortingFeature" extends keyof TFeatures ? TableOptions_RowSorting : never> & ExtractFeatureTypes<"TableOptions", TFeatures> & TableOptions_Plugins<TFeatures, TData> & DebugOptions<TFeatures>;
 ```
 
-Defined in: [packages/table-core/src/types/TableOptions.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L51)
+Defined in: [types/TableOptions.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L51)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: filterFns
 const filterFns: object;
 ```
 
-Defined in: [packages/table-core/src/fns/filterFns.ts:358](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L358)
+Defined in: [fns/filterFns.ts:358](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L358)
 
 ## Type Declaration
 

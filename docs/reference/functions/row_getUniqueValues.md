@@ -9,7 +9,7 @@ title: row_getUniqueValues
 function row_getUniqueValues<TFeatures, TData>(row, columnId): unknown;
 ```
 
-Defined in: [packages/table-core/src/core/rows/coreRowsFeature.utils.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L28)
+Defined in: [core/rows/coreRowsFeature.utils.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L28)
 
 ## Type Parameters
 

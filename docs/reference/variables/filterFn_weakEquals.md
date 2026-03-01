@@ -9,6 +9,6 @@ title: filterFn_weakEquals
 const filterFn_weakEquals: FilterFn<any, any>;
 ```
 
-Defined in: [packages/table-core/src/fns/filterFns.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L27)
+Defined in: [fns/filterFns.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L27)
 
 Filter function for checking if a value is weakly equal to a given value. (JS == comparison)

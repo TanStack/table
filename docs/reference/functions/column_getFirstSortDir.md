@@ -9,7 +9,7 @@ title: column_getFirstSortDir
 function column_getFirstSortDir<TFeatures, TData, TValue>(column): "asc" | "desc";
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:211](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L211)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:211](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L211)
 
 ## Type Parameters
 

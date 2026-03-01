@@ -13,7 +13,7 @@ function callMemoOrStaticFn<TObject, TStaticFn>(
 args): ReturnType<TStaticFn>;
 ```
 
-Defined in: [packages/table-core/src/utils.ts:387](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L387)
+Defined in: [utils.ts:387](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L387)
 
 Looks to run the memoized function with the builder pattern on the object if it exists, otherwise fallback to the static method passed in.
 

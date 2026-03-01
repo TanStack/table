@@ -9,7 +9,7 @@ title: useLegacyTable
 function useLegacyTable<TData>(options): LegacyReactTable<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:297](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L297)
+Defined in: [useLegacyTable.ts:363](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L363)
 
 ## Type Parameters
 

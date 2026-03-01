@@ -9,7 +9,7 @@ title: isTouchStartEvent
 function isTouchStartEvent(e): e is TouchEvent;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts:263](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L263)
+Defined in: [features/column-resizing/columnResizingFeature.utils.ts:263](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L263)
 
 ## Parameters
 

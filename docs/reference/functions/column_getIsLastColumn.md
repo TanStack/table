@@ -9,7 +9,7 @@ title: column_getIsLastColumn
 function column_getIsLastColumn<TFeatures, TData, TValue>(column, position?): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L38)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L38)
 
 ## Type Parameters
 

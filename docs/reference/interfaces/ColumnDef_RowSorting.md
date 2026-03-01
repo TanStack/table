@@ -5,7 +5,7 @@ title: ColumnDef_RowSorting
 
 # Interface: ColumnDef\_RowSorting\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L51)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L51)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.type
 optional enableMultiSort: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L58)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L58)
 
 Enables/Disables multi-sorting for this column.
 
@@ -37,7 +37,7 @@ Enables/Disables multi-sorting for this column.
 optional enableSorting: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L62)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L62)
 
 Enables/Disables sorting for this column.
 
@@ -49,7 +49,7 @@ Enables/Disables sorting for this column.
 optional invertSorting: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L66)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L66)
 
 Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, eg. a ranking (1st, 2nd, 3rd) or golf-like scoring
 
@@ -61,7 +61,7 @@ Inverts the order of the sorting for this column. This is useful for values that
 optional sortDescFirst: boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L70)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L70)
 
 Set to `true` for sorting toggles on this column to start in the descending direction.
 
@@ -73,7 +73,7 @@ Set to `true` for sorting toggles on this column to start in the descending dire
 optional sortFn: SortFnOption<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L76)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L76)
 
 The sorting function to use with this column.
 - A `string` referencing a built-in sorting function
@@ -87,7 +87,7 @@ The sorting function to use with this column.
 optional sortUndefined: false | 1 | -1 | "first" | "last";
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L86)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L86)
 
 The priority of undefined values when sorting this column.
 - `false`

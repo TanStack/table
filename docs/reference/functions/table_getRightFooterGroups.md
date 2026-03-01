@@ -9,7 +9,7 @@ title: table_getRightFooterGroups
 function table_getRightFooterGroups<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L289)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L289)
 
 ## Type Parameters
 

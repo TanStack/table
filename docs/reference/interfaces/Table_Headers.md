@@ -5,7 +5,7 @@ title: Table_Headers
 
 # Interface: Table\_Headers\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L8)
+Defined in: [core/headers/coreHeadersFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L8)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:8]
 getFlatHeaders: () => Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L23)
+Defined in: [core/headers/coreHeadersFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L23)
 
 Returns headers for all columns in the table, including parent headers.
 
@@ -41,7 +41,7 @@ Returns headers for all columns in the table, including parent headers.
 getFooterGroups: () => HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L19)
+Defined in: [core/headers/coreHeadersFeature.types.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L19)
 
 Returns the footer groups for the table.
 
@@ -57,7 +57,7 @@ Returns the footer groups for the table.
 getHeaderGroups: () => HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L15)
+Defined in: [core/headers/coreHeadersFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L15)
 
 Returns all header groups for the table.
 
@@ -73,7 +73,7 @@ Returns all header groups for the table.
 getLeafHeaders: () => Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L27)
+Defined in: [core/headers/coreHeadersFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L27)
 
 Returns headers for all leaf columns in the table, (not including parent headers).
 

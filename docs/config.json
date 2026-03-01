@@ -22,10 +22,6 @@
           "to": "installation"
         },
         {
-          "label": "Migrating to V8",
-          "to": "guide/migrating"
-        },
-        {
           "label": "FAQ",
           "to": "faq"
         }
@@ -63,6 +59,14 @@
             {
               "label": "React Table Adapter",
               "to": "framework/react/react-table"
+            },
+            {
+              "label": "Migrating to V9",
+              "to": "framework/react/guide/migrating"
+            },
+            {
+              "label": "useLegacyTable Guide",
+              "to": "framework/react/guide/use-legacy-table"
             }
           ]
         },

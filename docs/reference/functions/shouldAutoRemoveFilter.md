@@ -12,7 +12,7 @@ function shouldAutoRemoveFilter<TFeatures, TData, TValue>(
    column?): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L194)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L194)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: createColumnHelper
 function createColumnHelper<TFeatures, TData>(): ColumnHelper<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/helpers/columnHelper.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L94)
+Defined in: [helpers/columnHelper.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L94)
 
 A helper utility for creating column definitions with slightly better type inference for each individual column.
 The `TValue` generic is inferred based on the accessor key or function provided.

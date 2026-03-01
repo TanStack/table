@@ -9,7 +9,7 @@ title: column_getAutoSortFn
 function column_getAutoSortFn<TFeatures, TData, TValue>(column): SortFn<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L38)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L38)
 
 ## Type Parameters
 

@@ -12,7 +12,7 @@ function table_getRow<TFeatures, TData>(
 searchAll?): Row<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/rows/coreRowsFeature.utils.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L129)
+Defined in: [core/rows/coreRowsFeature.utils.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L129)
 
 ## Type Parameters
 

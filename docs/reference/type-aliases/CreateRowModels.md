@@ -15,7 +15,7 @@ type CreateRowModels<TFeatures, TData> = CreateRowModel_Core<TFeatures, TData> &
 | "rowSortingFeature" extends keyof TFeatures ? CreateRowModel_Sorted<TFeatures, TData> : never> & ExtractFeatureTypes<"CreateRowModels", TFeatures> & CreateRowModels_Plugins<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/types/RowModel.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L42)
+Defined in: [types/RowModel.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L42)
 
 ## Type Parameters
 

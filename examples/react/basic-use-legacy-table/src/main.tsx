@@ -13,26 +13,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
+import { flexRender } from '@tanstack/react-table'
 import {
-  createColumnHelper,
-  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  legacyCreateColumnHelper,
   useLegacyTable,
-} from '@tanstack/react-table'
+} from '@tanstack/react-table/legacy'
 import { makeData } from './makeData'
 import type {
   CellData,
-  Column,
   ColumnFiltersState,
   PaginationState,
   RowData,
   SortingState,
-  StockFeatures,
   TableFeatures,
 } from '@tanstack/react-table'
+import type { LegacyColumn } from '@tanstack/react-table/legacy' // legacy types
 import type { Person } from './makeData'
 
 declare module '@tanstack/react-table' {
@@ -46,8 +45,7 @@ declare module '@tanstack/react-table' {
   }
 }
 
-// With useLegacyTable, we use StockFeatures since all features are included
-const columnHelper = createColumnHelper<StockFeatures, Person>()
+const columnHelper = legacyCreateColumnHelper<Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -282,11 +280,7 @@ function App() {
   )
 }
 
-function Filter({
-  column,
-}: {
-  column: Column<StockFeatures, Person, unknown>
-}) {
+function Filter({ column }: { column: LegacyColumn<Person> }) {
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}
 

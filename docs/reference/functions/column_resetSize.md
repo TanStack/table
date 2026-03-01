@@ -9,7 +9,7 @@ title: column_resetSize
 function column_resetSize<TFeatures, TData, TValue>(column): void;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L88)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L88)
 
 ## Type Parameters
 

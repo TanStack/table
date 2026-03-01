@@ -9,7 +9,7 @@ title: header_getContext
 function header_getContext<TFeatures, TData, TValue>(header): object;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.utils.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L36)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L36)
 
 ## Type Parameters
 

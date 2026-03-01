@@ -9,7 +9,7 @@ title: Cell
 type Cell<TFeatures, TData, TValue> = Cell_Cell<TFeatures, TData, TValue> & UnionToIntersection<"columnGroupingFeature" extends keyof TFeatures ? Cell_ColumnGrouping : never> & ExtractFeatureTypes<"Cell", TFeatures> & Cell_Plugins<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/types/Cell.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L22)
+Defined in: [types/Cell.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L22)
 
 ## Type Parameters
 

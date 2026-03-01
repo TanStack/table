@@ -9,7 +9,7 @@ title: row_getIsGrouped
 function row_getIsGrouped<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L130)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L130)
 
 ## Type Parameters
 

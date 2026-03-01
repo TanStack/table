@@ -9,7 +9,7 @@ title: column_clearSorting
 function column_clearSorting<TFeatures, TData, TValue>(column): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:290](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L290)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:290](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L290)
 
 ## Type Parameters
 

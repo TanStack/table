@@ -9,7 +9,7 @@ title: table_getCenterFlatHeaders
 function table_getCenterFlatHeaders<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:347](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L347)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:347](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L347)
 
 ## Type Parameters
 

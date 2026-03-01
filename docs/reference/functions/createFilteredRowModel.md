@@ -9,7 +9,7 @@ title: createFilteredRowModel
 function createFilteredRowModel<TFeatures, TData>(filterFns): (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/createFilteredRowModel.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/createFilteredRowModel.ts#L22)
+Defined in: [features/column-filtering/createFilteredRowModel.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/createFilteredRowModel.ts#L22)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: table_getPageOptions
 function table_getPageOptions<TFeatures, TData>(table): number[];
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts:118](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L118)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:118](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L118)
 
 ## Type Parameters
 

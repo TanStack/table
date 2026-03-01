@@ -9,7 +9,7 @@ title: column_getCanPin
 function column_getCanPin<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L69)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L69)
 
 ## Type Parameters
 

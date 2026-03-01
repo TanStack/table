@@ -9,7 +9,7 @@ title: isSubRowSelected
 function isSubRowSelected<TFeatures, TData>(row): boolean | "some" | "all";
 ```
 
-Defined in: [packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:425](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L425)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:425](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L425)
 
 ## Type Parameters
 

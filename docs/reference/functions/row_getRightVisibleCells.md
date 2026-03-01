@@ -9,7 +9,7 @@ title: row_getRightVisibleCells
 function row_getRightVisibleCells<TFeatures, TData>(row): any;
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L154)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L154)
 
 ## Type Parameters
 

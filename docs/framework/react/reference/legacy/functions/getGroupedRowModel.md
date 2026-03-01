@@ -9,7 +9,7 @@ title: getGroupedRowModel
 function getGroupedRowModel<TData>(): RowModelFactory<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:92](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L92)
+Defined in: [useLegacyTable.ts:99](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L99)
 
 ## Type Parameters
 

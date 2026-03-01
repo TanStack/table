@@ -9,7 +9,7 @@ title: constructColumnFilteringFeature
 function constructColumnFilteringFeature<TFeatures, TData>(): TableFeature<ColumnFilteringFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.ts#L47)
+Defined in: [features/column-filtering/columnFilteringFeature.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.ts#L47)
 
 ## Type Parameters
 

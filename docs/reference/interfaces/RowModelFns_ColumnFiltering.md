@@ -5,7 +5,7 @@ title: RowModelFns_ColumnFiltering
 
 # Interface: RowModelFns\_ColumnFiltering\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L38)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L38)
 
 ## Type Parameters
 
@@ -25,4 +25,4 @@ Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFe
 filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L42)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L42)

@@ -12,7 +12,7 @@ type RowModelFns<TFeatures, TData> = Partial<UnionToIntersection<
 | "rowSortingFeature" extends keyof TFeatures ? RowModelFns_RowSorting<TFeatures, TData> : never> & ExtractFeatureTypes<"RowModelFns", TFeatures> & RowModelFns_Plugins<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/types/RowModelFns.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L18)
+Defined in: [types/RowModelFns.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L18)
 
 ## Type Parameters
 

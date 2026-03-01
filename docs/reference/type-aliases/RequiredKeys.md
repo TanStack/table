@@ -9,7 +9,7 @@ title: RequiredKeys
 type RequiredKeys<T, K> = Omit<T, K> & Required<Pick<T, K>>;
 ```
 
-Defined in: [packages/table-core/src/types/type-utils.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/type-utils.ts#L11)
+Defined in: [types/type-utils.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/type-utils.ts#L11)
 
 ## Type Parameters
 

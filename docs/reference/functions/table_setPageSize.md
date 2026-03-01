@@ -9,7 +9,7 @@ title: table_setPageSize
 function table_setPageSize<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L101)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L101)
 
 ## Type Parameters
 

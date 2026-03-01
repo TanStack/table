@@ -9,7 +9,7 @@ title: header_getResizeHandler
 function header_getResizeHandler<TFeatures, TData, TValue>(header, _contextDocument?): (event) => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L45)
+Defined in: [features/column-resizing/columnResizingFeature.utils.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L45)
 
 ## Type Parameters
 

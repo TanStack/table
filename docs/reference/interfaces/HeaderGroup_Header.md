@@ -5,7 +5,7 @@ title: HeaderGroup_Header
 
 # Interface: HeaderGroup\_Header\<TFeatures, TData, TValue\>
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L115)
+Defined in: [core/headers/coreHeadersFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L115)
 
 ## Extended by
 
@@ -33,7 +33,7 @@ Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:11
 depth: number;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L120)
+Defined in: [core/headers/coreHeadersFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L120)
 
 ***
 
@@ -43,7 +43,7 @@ Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:12
 headers: Header<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L121)
+Defined in: [core/headers/coreHeadersFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L121)
 
 ***
 
@@ -53,4 +53,4 @@ Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:12
 id: string;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L122)
+Defined in: [core/headers/coreHeadersFeature.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L122)

@@ -9,7 +9,7 @@ title: column_getIsPinned
 function column_getIsPinned<TFeatures, TData, TValue>(column): ColumnPinningPosition;
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L85)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L85)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: column_getPinnedIndex
 function column_getPinnedIndex<TFeatures, TData, TValue>(column): number;
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:103](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L103)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:103](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L103)
 
 ## Type Parameters
 

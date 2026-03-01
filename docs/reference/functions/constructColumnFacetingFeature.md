@@ -9,7 +9,7 @@ title: constructColumnFacetingFeature
 function constructColumnFacetingFeature<TFeatures, TData>(): TableFeature<ColumnFacetingFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeature.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.ts#L32)
+Defined in: [features/column-faceting/columnFacetingFeature.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.ts#L32)
 
 ## Type Parameters
 

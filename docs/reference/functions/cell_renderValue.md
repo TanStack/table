@@ -9,7 +9,7 @@ title: cell_renderValue
 function cell_renderValue<TFeatures, TData, TValue>(cell): any;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.utils.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L13)
+Defined in: [core/cells/coreCellsFeature.utils.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L13)
 
 ## Type Parameters
 

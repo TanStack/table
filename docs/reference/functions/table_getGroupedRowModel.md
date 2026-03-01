@@ -9,7 +9,7 @@ title: table_getGroupedRowModel
 function table_getGroupedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L50)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L50)
 
 ## Type Parameters
 

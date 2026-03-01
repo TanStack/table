@@ -5,7 +5,7 @@ title: CachedRowModel_Faceted
 
 # Interface: CachedRowModel\_Faceted\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L72)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L72)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeat
 optional facetedMinMaxValues: (columnId) => [number, number];
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L77)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L77)
 
 #### Parameters
 
@@ -45,7 +45,7 @@ Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeat
 optional facetedRowModel: (columnId) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L76)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L76)
 
 #### Parameters
 
@@ -71,7 +71,7 @@ Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeat
 optional facetedUniqueValues: (columnId) => Map<any, number>;
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L78)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L78)
 
 #### Parameters
 

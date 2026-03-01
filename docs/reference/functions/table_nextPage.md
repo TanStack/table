@@ -9,7 +9,7 @@ title: table_nextPage
 function table_nextPage<TFeatures, TData>(table): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L163)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L163)
 
 ## Type Parameters
 

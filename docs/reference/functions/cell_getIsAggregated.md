@@ -9,7 +9,7 @@ title: cell_getIsAggregated
 function cell_getIsAggregated<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts:182](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L182)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:182](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L182)
 
 ## Type Parameters
 

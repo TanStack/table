@@ -5,7 +5,7 @@ title: Header_ColumnResizing
 
 # Interface: Header\_ColumnResizing
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L73)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L73)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 getResizeHandler: (context?) => (event) => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L80)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L80)
 
 Returns an event handler function that can be used to resize the header. It can be used as an:
 - `onMouseDown` handler

@@ -9,4 +9,4 @@ title: sortFn_alphanumericCaseSensitive
 const sortFn_alphanumericCaseSensitive: SortFn<any, any>;
 ```
 
-Defined in: [packages/table-core/src/fns/sortFns.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L22)
+Defined in: [fns/sortFns.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L22)

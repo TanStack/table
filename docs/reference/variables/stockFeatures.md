@@ -9,4 +9,4 @@ title: stockFeatures
 const stockFeatures: StockFeatures;
 ```
 
-Defined in: [packages/table-core/src/features/stockFeatures.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L33)
+Defined in: [features/stockFeatures.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L33)

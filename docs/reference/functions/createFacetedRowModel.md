@@ -9,7 +9,7 @@ title: createFacetedRowModel
 function createFacetedRowModel<TFeatures, TData>(): (table, columnId) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/createFacetedRowModel.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/createFacetedRowModel.ts#L13)
+Defined in: [features/column-faceting/createFacetedRowModel.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/createFacetedRowModel.ts#L13)
 
 ## Type Parameters
 

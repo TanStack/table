@@ -5,7 +5,7 @@ title: SortFn
 
 # Interface: SortFn()\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L30)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L30)
 
 ## Type Parameters
 
@@ -24,7 +24,7 @@ SortFn(
    columnId): number;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L34)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L34)
 
 ## Parameters
 

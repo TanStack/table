@@ -9,4 +9,4 @@ title: RowPinningPosition
 type RowPinningPosition = false | "top" | "bottom";
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L5)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L5)

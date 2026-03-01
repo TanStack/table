@@ -5,7 +5,7 @@ title: RowModel
 
 # Interface: RowModel\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L12)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L12)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.
 flatRows: Row<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L17)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L17)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.
 rows: Row<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L16)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L16)
 
 ***
 
@@ -45,4 +45,4 @@ Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.
 rowsById: Record<string, Row<TFeatures, TData>>;
 ```
 
-Defined in: [packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L18)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L18)

@@ -9,6 +9,6 @@ title: aggregationFn_count
 const aggregationFn_count: AggregationFn<any, any>;
 ```
 
-Defined in: [packages/table-core/src/fns/aggregationFns.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L198)
+Defined in: [fns/aggregationFns.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L198)
 
 Aggregation function for counting the number of rows in a column.

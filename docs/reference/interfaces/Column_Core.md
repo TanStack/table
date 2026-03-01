@@ -5,7 +5,7 @@ title: Column_Core
 
 # Interface: Column\_Core\<TFeatures, TData, TValue\>
 
-Defined in: [packages/table-core/src/types/Column.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L26)
+Defined in: [types/Column.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L26)
 
 ## Extends
 
@@ -33,7 +33,7 @@ Defined in: [packages/table-core/src/types/Column.ts:26](https://github.com/TanS
 optional accessorFn: AccessorFn<TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L15)
+Defined in: [core/columns/coreColumnsFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L15)
 
 The resolved accessor function to use when extracting the value for the column from each row. Will only be defined if the column def has a valid accessor key or function defined.
 
@@ -49,7 +49,7 @@ The resolved accessor function to use when extracting the value for the column f
 columnDef: ColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.types.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L19)
+Defined in: [core/columns/coreColumnsFeature.types.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L19)
 
 The original column def used to create the column.
 
@@ -65,7 +65,7 @@ The original column def used to create the column.
 columns: Column<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L23)
+Defined in: [core/columns/coreColumnsFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L23)
 
 The child column (if the column is a group column). Will be an empty array if the column is not a group column.
 
@@ -81,7 +81,7 @@ The child column (if the column is a group column). Will be an empty array if th
 depth: number;
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L27)
+Defined in: [core/columns/coreColumnsFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L27)
 
 The depth of the column (if grouped) relative to the root column def array.
 
@@ -97,7 +97,7 @@ The depth of the column (if grouped) relative to the root column def array.
 getFlatColumns: () => Column<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L53)
+Defined in: [core/columns/coreColumnsFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L53)
 
 Returns the flattened array of this column and all child/grand-child columns for this column.
 
@@ -117,7 +117,7 @@ Returns the flattened array of this column and all child/grand-child columns for
 getLeafColumns: () => Column<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L57)
+Defined in: [core/columns/coreColumnsFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L57)
 
 Returns an array of all leaf-node columns for this column. If a column has no children, it is considered the only leaf-node column.
 
@@ -137,7 +137,7 @@ Returns an array of all leaf-node columns for this column. If a column has no ch
 id: string;
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L34)
+Defined in: [core/columns/coreColumnsFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L34)
 
 The resolved unique identifier for the column resolved in this priority:
    - A manual `id` property from the column def
@@ -156,7 +156,7 @@ The resolved unique identifier for the column resolved in this priority:
 optional parent: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L38)
+Defined in: [core/columns/coreColumnsFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L38)
 
 The parent column for this column. Will be undefined if this is a root column.
 
@@ -172,7 +172,7 @@ The parent column for this column. Will be undefined if this is a root column.
 table: Table_Internal<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/columns/coreColumnsFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L42)
+Defined in: [core/columns/coreColumnsFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L42)
 
 Reference to the parent table instance.
 

@@ -12,4 +12,4 @@ type ColumnResizingDefaultOptions = Pick<TableOptions_ColumnResizing,
 | "columnResizeDirection">;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L39)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L39)

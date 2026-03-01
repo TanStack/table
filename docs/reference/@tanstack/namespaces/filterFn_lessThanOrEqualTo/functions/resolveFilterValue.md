@@ -9,7 +9,7 @@ title: resolveFilterValue
 function resolveFilterValue(val): boolean;
 ```
 
-Defined in: [packages/table-core/src/fns/filterFns.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L195)
+Defined in: [fns/filterFns.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L195)
 
 ## Parameters
 

@@ -9,7 +9,7 @@ title: AssignRowPrototype
 type AssignRowPrototype<TConstructors> = <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [packages/table-core/src/types/TableFeatures.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L101)
+Defined in: [types/TableFeatures.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L101)
 
 ## Type Parameters
 

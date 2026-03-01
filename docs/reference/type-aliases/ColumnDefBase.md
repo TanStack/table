@@ -17,7 +17,7 @@ type ColumnDefBase<TFeatures, TData, TValue> = ColumnDefBase_Core<TFeatures, TDa
 | "columnResizingFeature" extends keyof TFeatures ? ColumnDef_ColumnResizing : never> & ExtractFeatureTypes<"ColumnDef", TFeatures> & ColumnDef_Plugins<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/types/ColumnDef.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L75)
+Defined in: [types/ColumnDef.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L75)
 
 ## Type Parameters
 

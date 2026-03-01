@@ -23,7 +23,7 @@ type Table<TFeatures, TData> = Table_Core<TFeatures, TData> & UnionToIntersectio
 | "rowSortingFeature" extends keyof TFeatures ? Table_RowSorting<TFeatures, TData> : never> & ExtractFeatureTypes<"Table", TFeatures> & Table_Plugins<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/types/Table.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L53)
+Defined in: [types/Table.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L53)
 
 The table object that includes both the core table functionality and the features that are enabled via the `_features` table option.
 

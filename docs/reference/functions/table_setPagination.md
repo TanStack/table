@@ -9,7 +9,7 @@ title: table_setPagination
 function table_setPagination<TFeatures, TData>(table, updater): void | undefined;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L30)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L30)
 
 ## Type Parameters
 

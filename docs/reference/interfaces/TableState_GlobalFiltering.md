@@ -5,7 +5,7 @@ title: TableState_GlobalFiltering
 
 # Interface: TableState\_GlobalFiltering
 
-Defined in: [packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L14)
+Defined in: [features/global-filtering/globalFilteringFeature.types.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L14)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [packages/table-core/src/features/global-filtering/globalFilteringFe
 globalFilter: any;
 ```
 
-Defined in: [packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L15)
+Defined in: [features/global-filtering/globalFilteringFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L15)

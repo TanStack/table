@@ -9,7 +9,7 @@ title: row_toggleExpanded
 function row_toggleExpanded<TFeatures, TData>(row, expanded?): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L125)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L125)
 
 ## Type Parameters
 

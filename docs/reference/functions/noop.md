@@ -9,7 +9,7 @@ title: noop
 function noop(): void;
 ```
 
-Defined in: [packages/table-core/src/utils.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L12)
+Defined in: [utils.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L12)
 
 ## Returns
 

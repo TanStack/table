@@ -12,7 +12,7 @@ function constructHeader<TFeatures, TData, TValue>(
 options): Header<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/headers/constructHeader.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/constructHeader.ts#L25)
+Defined in: [core/headers/constructHeader.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/constructHeader.ts#L25)
 
 ## Type Parameters
 

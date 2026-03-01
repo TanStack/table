@@ -9,7 +9,7 @@ title: createFacetedMinMaxValues
 function createFacetedMinMaxValues<TFeatures, TData>(): (table, columnId) => () => [number, number] | undefined;
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/createFacetedMinMaxValues.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/createFacetedMinMaxValues.ts#L8)
+Defined in: [features/column-faceting/createFacetedMinMaxValues.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/createFacetedMinMaxValues.ts#L8)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: cell_getValue
 function cell_getValue<TFeatures, TData, TValue>(cell): TValue;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.utils.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L5)
+Defined in: [core/cells/coreCellsFeature.utils.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L5)
 
 ## Type Parameters
 

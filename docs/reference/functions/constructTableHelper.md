@@ -9,7 +9,7 @@ title: constructTableHelper
 function constructTableHelper<TFeatures>(tableCreator, tableHelperOptions): TableHelper_Core<TFeatures>;
 ```
 
-Defined in: [packages/table-core/src/helpers/tableHelper.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableHelper.ts#L44)
+Defined in: [helpers/tableHelper.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableHelper.ts#L44)
 
 Internal function to create a table helper that each adapter package will use to create their own table helper
 

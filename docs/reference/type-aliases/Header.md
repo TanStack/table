@@ -11,7 +11,7 @@ type Header<TFeatures, TData, TValue> = Header_Core<TFeatures, TData, TValue> & 
 | "columnResizingFeature" extends keyof TFeatures ? Header_ColumnResizing : never> & ExtractFeatureTypes<"Header", TFeatures> & Header_Plugins<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/types/Header.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Header.ts#L23)
+Defined in: [types/Header.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Header.ts#L23)
 
 ## Type Parameters
 

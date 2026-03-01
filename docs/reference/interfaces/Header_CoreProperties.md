@@ -5,7 +5,7 @@ title: Header_CoreProperties
 
 # Interface: Header\_CoreProperties\<TFeatures, TData, TValue\>
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L49)
+Defined in: [core/headers/coreHeadersFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L49)
 
 ## Extended by
 
@@ -33,7 +33,7 @@ Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:49
 colSpan: number;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L57)
+Defined in: [core/headers/coreHeadersFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L57)
 
 The col-span for the header.
 
@@ -45,7 +45,7 @@ The col-span for the header.
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L61)
+Defined in: [core/headers/coreHeadersFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L61)
 
 The header's associated column object.
 
@@ -57,7 +57,7 @@ The header's associated column object.
 depth: number;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L65)
+Defined in: [core/headers/coreHeadersFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L65)
 
 The depth of the header, zero-indexed based.
 
@@ -71,7 +71,7 @@ headerGroup:
   | null;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L69)
+Defined in: [core/headers/coreHeadersFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L69)
 
 The header's associated header group object.
 
@@ -83,7 +83,7 @@ The header's associated header group object.
 id: string;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L73)
+Defined in: [core/headers/coreHeadersFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L73)
 
 The unique identifier for the header.
 
@@ -95,7 +95,7 @@ The unique identifier for the header.
 index: number;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L77)
+Defined in: [core/headers/coreHeadersFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L77)
 
 The index for the header within the header group.
 
@@ -107,7 +107,7 @@ The index for the header within the header group.
 isPlaceholder: boolean;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L81)
+Defined in: [core/headers/coreHeadersFeature.types.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L81)
 
 A boolean denoting if the header is a placeholder header.
 
@@ -119,7 +119,7 @@ A boolean denoting if the header is a placeholder header.
 optional placeholderId: string;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L85)
+Defined in: [core/headers/coreHeadersFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L85)
 
 If the header is a placeholder header, this will be a unique header ID that does not conflict with any other headers across the table.
 
@@ -131,7 +131,7 @@ If the header is a placeholder header, this will be a unique header ID that does
 rowSpan: number;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L89)
+Defined in: [core/headers/coreHeadersFeature.types.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L89)
 
 The row-span for the header.
 
@@ -143,7 +143,7 @@ The row-span for the header.
 subHeaders: Header<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L93)
+Defined in: [core/headers/coreHeadersFeature.types.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L93)
 
 The header's hierarchical sub/child headers. Will be empty if the header's associated column is a leaf-column.
 
@@ -155,6 +155,6 @@ The header's hierarchical sub/child headers. Will be empty if the header's assoc
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.types.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L97)
+Defined in: [core/headers/coreHeadersFeature.types.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L97)
 
 Reference to the parent table instance.

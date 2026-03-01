@@ -9,7 +9,7 @@ title: table_resetSorting
 function table_resetSorting<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L26)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L26)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: GetDefaultColumnDef
 type GetDefaultColumnDef<TConstructors> = <TFeatures, TData, TValue>() => ColumnDefBase_All<TFeatures, TData, TValue> & Partial<TConstructors["ColumnDef"]>;
 ```
 
-Defined in: [packages/table-core/src/types/TableFeatures.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L55)
+Defined in: [types/TableFeatures.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L55)
 
 ## Type Parameters
 

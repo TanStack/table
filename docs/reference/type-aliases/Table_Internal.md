@@ -9,7 +9,7 @@ title: Table_Internal
 type Table_Internal<TFeatures, TData> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [packages/table-core/src/types/Table.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L111)
+Defined in: [types/Table.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L111)
 
 ## Type Declaration
 
@@ -66,7 +66,7 @@ optional state: TableState_All;
 ### store
 
 ```ts
-store: Derived<TableState_All>;
+store: ReadonlyStore<TableState_All>;
 ```
 
 ## Type Parameters

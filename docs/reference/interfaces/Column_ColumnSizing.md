@@ -5,7 +5,7 @@ title: Column_ColumnSizing
 
 # Interface: Column\_ColumnSizing
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L64)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L64)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.
 getAfter: (position?) => number;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L68)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L68)
 
 Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all succeeding (right) headers in relation to the current column.
 
@@ -37,7 +37,7 @@ Returns the offset measurement along the row-axis (usually the x-axis for standa
 getSize: () => number;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L72)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L72)
 
 Returns the current size of the column.
 
@@ -53,7 +53,7 @@ Returns the current size of the column.
 getStart: (position?) => number;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L76)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L76)
 
 Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all preceding (left) headers in relation to the current column.
 
@@ -75,7 +75,7 @@ Returns the offset measurement along the row-axis (usually the x-axis for standa
 resetSize: () => void;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L80)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L80)
 
 Resets the column to its initial size.
 

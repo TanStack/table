@@ -9,7 +9,7 @@ title: table_setGrouping
 function table_setGrouping<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L113)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L113)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: table_getFilteredSelectedRowModel
 function table_getFilteredSelectedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L111)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L111)
 
 ## Type Parameters
 

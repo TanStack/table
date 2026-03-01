@@ -9,7 +9,7 @@ title: table_getLeftFooterGroups
 function table_getLeftFooterGroups<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:277](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L277)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:277](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L277)
 
 ## Type Parameters
 

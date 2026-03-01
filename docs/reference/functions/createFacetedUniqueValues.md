@@ -9,7 +9,7 @@ title: createFacetedUniqueValues
 function createFacetedUniqueValues<TFeatures, TData>(): (table, columnId) => () => Map<any, number>;
 ```
 
-Defined in: [packages/table-core/src/features/column-faceting/createFacetedUniqueValues.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/createFacetedUniqueValues.ts#L8)
+Defined in: [features/column-faceting/createFacetedUniqueValues.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/createFacetedUniqueValues.ts#L8)
 
 ## Type Parameters
 

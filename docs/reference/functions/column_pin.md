@@ -9,7 +9,7 @@ title: column_pin
 function column_pin<TFeatures, TData, TValue>(column, position): void;
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L31)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L31)
 
 ## Type Parameters
 

@@ -9,4 +9,4 @@ title: sortFn_basic
 const sortFn_basic: SortFn<any, any>;
 ```
 
-Defined in: [packages/table-core/src/fns/sortFns.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L85)
+Defined in: [fns/sortFns.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L85)

@@ -5,7 +5,7 @@ title: columnResizingState
 
 # Interface: columnResizingState
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L7)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L7)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 columnSizingStart: [string, number][];
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L8)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L8)
 
 ***
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 deltaOffset: number | null;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L9)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L9)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 deltaPercentage: number | null;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L10)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L10)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 isResizingColumn: string | false;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L11)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L11)
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 startOffset: number | null;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L12)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L12)
 
 ***
 
@@ -65,4 +65,4 @@ Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeat
 startSize: number | null;
 ```
 
-Defined in: [packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L13)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L13)

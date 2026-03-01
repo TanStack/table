@@ -9,7 +9,7 @@ title: row_getLeafRows
 function row_getLeafRows<TFeatures, TData>(row): Row<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/core/rows/coreRowsFeature.utils.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L62)
+Defined in: [core/rows/coreRowsFeature.utils.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L62)
 
 ## Type Parameters
 

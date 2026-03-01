@@ -9,7 +9,7 @@ title: IdentifiedColumnDef
 type IdentifiedColumnDef<TFeatures, TData, TValue> = ColumnDefBase<TFeatures, TData, TValue> & object;
 ```
 
-Defined in: [packages/table-core/src/types/ColumnDef.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L133)
+Defined in: [types/ColumnDef.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L133)
 
 ## Type Declaration
 

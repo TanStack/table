@@ -9,7 +9,7 @@ title: cell_getContext
 function cell_getContext<TFeatures, TData, TValue>(cell): object;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L21)
+Defined in: [core/cells/coreCellsFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L21)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: ColumnDefBase_All
 type ColumnDefBase_All<TFeatures, TData, TValue> = ColumnDefBase_Core<TFeatures, TData, TValue> & Partial<ColumnDef_ColumnVisibility & ColumnDef_ColumnPinning & ColumnDef_ColumnFiltering<TFeatures, TData> & ColumnDef_GlobalFiltering & ColumnDef_RowSorting<TFeatures, TData> & ColumnDef_ColumnGrouping<TFeatures, TData, TValue> & ColumnDef_ColumnSizing & ColumnDef_ColumnResizing>;
 ```
 
-Defined in: [packages/table-core/src/types/ColumnDef.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L117)
+Defined in: [types/ColumnDef.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L117)
 
 ## Type Parameters
 

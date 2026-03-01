@@ -9,7 +9,7 @@ title: column_getToggleSortingHandler
 function column_getToggleSortingHandler<TFeatures, TData, TValue>(column): (e) => void;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L301)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L301)
 
 ## Type Parameters
 

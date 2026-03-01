@@ -9,7 +9,7 @@ title: row_getIsSomeSelected
 function row_getIsSomeSelected<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:281](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L281)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:281](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L281)
 
 ## Type Parameters
 

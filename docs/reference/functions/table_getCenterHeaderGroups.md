@@ -9,7 +9,7 @@ title: table_getCenterHeaderGroups
 function table_getCenterHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:253](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L253)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:253](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L253)
 
 ## Type Parameters
 

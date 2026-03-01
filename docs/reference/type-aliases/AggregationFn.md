@@ -9,7 +9,7 @@ title: AggregationFn
 type AggregationFn<TFeatures, TData> = (columnId, leafRows, childRows) => any;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L30)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L30)
 
 ## Type Parameters
 

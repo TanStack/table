@@ -9,7 +9,7 @@ title: table_setRowPinning
 function table_setRowPinning<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L21)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L21)
 
 ## Type Parameters
 

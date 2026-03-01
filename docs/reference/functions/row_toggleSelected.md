@@ -12,7 +12,7 @@ function row_toggleSelected<TFeatures, TData>(
    opts?): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:241](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L241)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:241](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L241)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: table_setColumnOrder
 function table_setColumnOrder<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L50)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L50)
 
 ## Type Parameters
 

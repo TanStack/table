@@ -9,7 +9,7 @@ title: table_getRightTotalSize
 function table_getRightTotalSize<TFeatures, TData>(table): any;
 ```
 
-Defined in: [packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L198)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L198)
 
 ## Type Parameters
 

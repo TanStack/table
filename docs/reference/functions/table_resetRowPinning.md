@@ -9,7 +9,7 @@ title: table_resetRowPinning
 function table_resetRowPinning<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L31)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L31)
 
 ## Type Parameters
 

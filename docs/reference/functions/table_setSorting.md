@@ -9,7 +9,7 @@ title: table_setSorting
 function table_setSorting<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L19)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L19)
 
 ## Type Parameters
 

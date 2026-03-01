@@ -5,7 +5,7 @@ title: StringHeaderIdentifier
 
 # Interface: StringHeaderIdentifier
 
-Defined in: [packages/table-core/src/types/ColumnDef.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L45)
+Defined in: [types/ColumnDef.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L45)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [packages/table-core/src/types/ColumnDef.ts:45](https://github.com/T
 header: string;
 ```
 
-Defined in: [packages/table-core/src/types/ColumnDef.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L46)
+Defined in: [types/ColumnDef.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L46)
 
 ***
 
@@ -25,4 +25,4 @@ Defined in: [packages/table-core/src/types/ColumnDef.ts:46](https://github.com/T
 optional id: string;
 ```
 
-Defined in: [packages/table-core/src/types/ColumnDef.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L47)
+Defined in: [types/ColumnDef.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L47)

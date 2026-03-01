@@ -9,7 +9,7 @@ title: sortFns
 const sortFns: object;
 ```
 
-Defined in: [packages/table-core/src/fns/sortFns.ts:164](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L164)
+Defined in: [fns/sortFns.ts:164](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L164)
 
 ## Type Declaration
 

@@ -5,7 +5,7 @@ title: CreateRowModel_Grouped
 
 # Interface: CreateRowModel\_Grouped\<TFeatures, TData\>
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L201)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L201)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeat
 optional groupedRowModel: (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L208)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L208)
 
 Returns the row model after grouping has taken place, but no further.
 

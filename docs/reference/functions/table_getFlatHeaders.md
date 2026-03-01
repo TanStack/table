@@ -9,7 +9,7 @@ title: table_getFlatHeaders
 function table_getFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [packages/table-core/src/core/headers/coreHeadersFeature.utils.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L90)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L90)
 
 ## Type Parameters
 

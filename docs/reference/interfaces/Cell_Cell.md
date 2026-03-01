@@ -5,7 +5,7 @@ title: Cell_Cell
 
 # Interface: Cell\_Cell\<TFeatures, TData, TValue\>
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L44)
+Defined in: [core/cells/coreCellsFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L44)
 
 ## Extends
 
@@ -37,7 +37,7 @@ Defined in: [packages/table-core/src/core/cells/coreCellsFeature.types.ts:44](ht
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L29)
+Defined in: [core/cells/coreCellsFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L29)
 
 The associated Column object for the cell.
 
@@ -53,7 +53,7 @@ The associated Column object for the cell.
 getContext: () => CellContext<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.types.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L52)
+Defined in: [core/cells/coreCellsFeature.types.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L52)
 
 Returns the rendering context (or props) for cell-based components like cells and aggregated cells. Use these props with your framework's `flexRender` utility to render these using the template of your choice:
 
@@ -69,7 +69,7 @@ Returns the rendering context (or props) for cell-based components like cells an
 getValue: Getter<TValue>;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L56)
+Defined in: [core/cells/coreCellsFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L56)
 
 Returns the value for the cell, accessed via the associated column's accessor key or accessor function.
 
@@ -81,7 +81,7 @@ Returns the value for the cell, accessed via the associated column's accessor ke
 id: string;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.types.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L33)
+Defined in: [core/cells/coreCellsFeature.types.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L33)
 
 The unique ID for the cell across the entire table.
 
@@ -97,7 +97,7 @@ The unique ID for the cell across the entire table.
 renderValue: Getter<TValue | null>;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L60)
+Defined in: [core/cells/coreCellsFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L60)
 
 Renders the value for a cell the same as `getValue`, but will return the `renderFallbackValue` if no value is found.
 
@@ -109,7 +109,7 @@ Renders the value for a cell the same as `getValue`, but will return the `render
 row: Row<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L37)
+Defined in: [core/cells/coreCellsFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L37)
 
 The associated Row object for the cell.
 
@@ -125,7 +125,7 @@ The associated Row object for the cell.
 table: Table_Internal<TFeatures, TData>;
 ```
 
-Defined in: [packages/table-core/src/core/cells/coreCellsFeature.types.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L41)
+Defined in: [core/cells/coreCellsFeature.types.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L41)
 
 Reference to the parent table instance.
 

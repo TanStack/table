@@ -9,7 +9,7 @@ title: table_autoResetPageIndex
 function table_autoResetPageIndex<TFeatures, TData>(table): void;
 ```
 
-Defined in: [packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L17)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L17)
 
 ## Type Parameters
 
