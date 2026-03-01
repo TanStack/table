@@ -154,7 +154,7 @@ type AppGroupColumnDef<
   footer?: AppColumnDefTemplate<
     AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>
   >
-  columns?: Array<ColumnDef<TFeatures, TData, unknown>>
+  columns?: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>
 }
 
 // =============================================================================

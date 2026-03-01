@@ -62,7 +62,7 @@ export function RowsPanel() {
           'No table instance is connected. Pass a table instance to TableDevtoolsPanel.',
       }
     }
-    const data = tableInstance.options.data as Array<unknown>
+    const data = tableInstance.options.data as ReadonlyArray<unknown>
     if (!Array.isArray(data)) return data
     if (data.length <= ROW_LIMIT) return data as unknown
     return data.slice(0, ROW_LIMIT) as unknown
@@ -71,7 +71,7 @@ export function RowsPanel() {
   const getRawDataTotalCount = (): number => {
     tableState?.()
     if (!tableInstance) return 0
-    const data = tableInstance.options.data as Array<unknown>
+    const data = tableInstance.options.data as ReadonlyArray<unknown>
     return Array.isArray(data) ? data.length : 0
   }
 
