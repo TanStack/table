@@ -1136,7 +1136,7 @@ importers:
   examples/preact/basic:
     dependencies:
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.10
+        specifier: ^9.0.0-alpha.14
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.28.2
@@ -1158,7 +1158,7 @@ importers:
         specifier: ^10.2.0
         version: 10.2.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.10
+        specifier: ^9.0.0-alpha.14
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.28.2
