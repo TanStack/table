@@ -29,7 +29,7 @@ export interface Row_CoreProperties<
   /**
    * An array of the original subRows as returned by the `options.getSubRows` option.
    */
-  originalSubRows?: Array<TData>
+  originalSubRows?: ReadonlyArray<TData>
   /**
    * If nested, this row's parent row id.
    */
@@ -96,7 +96,10 @@ export interface TableOptions_Rows<
    * This optional function is used to access the sub rows for any given row. If you are using nested rows, you will need to use this function to return the sub rows object (or undefined) from the row.
    * @example getSubRows: row => row.subRows
    */
-  getSubRows?: (originalRow: TData, index: number) => undefined | Array<TData>
+  getSubRows?: (
+    originalRow: TData,
+    index: number,
+  ) => undefined | ReadonlyArray<TData>
 }
 
 export interface Table_Rows<

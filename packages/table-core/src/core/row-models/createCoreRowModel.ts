@@ -29,7 +29,7 @@ function _createCoreRowModel<
   TData extends RowData,
 >(
   table: Table_Internal<TFeatures, TData>,
-  data: Array<TData>,
+  data: ReadonlyArray<TData>,
 ): {
   rows: Array<Row<TFeatures, TData>>
   flatRows: Array<Row<TFeatures, TData>>
@@ -42,7 +42,7 @@ function _createCoreRowModel<
   }
 
   const accessRows = (
-    originalRows: Array<TData>,
+    originalRows: ReadonlyArray<TData>,
     depth = 0,
     parentRow?: Row<TFeatures, TData>,
   ): Array<Row<TFeatures, TData>> => {

@@ -65,7 +65,7 @@ export interface TableOptions_Columns<
   /**
    * The array of column defs to use for the table.
    */
-  columns: Array<ColumnDef<TFeatures, TData, TValue>>
+  columns: ReadonlyArray<ColumnDef<TFeatures, TData, TValue>>
   /**
    * Default column options to use for all column defs supplied to the table.
    */
