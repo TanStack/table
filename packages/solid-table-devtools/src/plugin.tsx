@@ -1,4 +1,5 @@
-import { TableDevtoolsPanel } from './SolidTableDevtools'
+import { createSolidPlugin } from '@tanstack/devtools-utils/solid'
+import { TableDevtoolsPanel } from './TableDevtools'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 export interface TableDevtoolsPluginOptions<

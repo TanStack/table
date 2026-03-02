@@ -1,9 +1,12 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "ignoreDependencies": ["@faker-js/faker"],
-  "ignoreWorkspaces": ["examples/**", "packages/table-core/tests/**"],
+  "ignoreWorkspaces": ["examples/**"],
   "ignore": ["**/*benchmark*", "**/benchmarks/**"],
   "workspaces": {
+    "packages/table-core": {
+      "ignore": ["**/tests/**"]
+    },
     "packages/match-sorter-utils": {
       "ignoreDependencies": ["remove-accents"]
     },

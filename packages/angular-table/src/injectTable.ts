@@ -111,19 +111,14 @@ export function injectTable<
 ): AngularTable<TFeatures, TData, TSelected> {
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
-  let count = 0
+  const count = 0
 
   return lazyInit(() => {
     const stateNotifier = signal(0)
 
     const angularReactivityFeature = constructReactivityFeature({
+      // optionsNotifier: () => stateNotifier(),
       stateNotifier: () => {
-        if (count >= 100000) {
-          // TODO: temp I need to check how to avoid infinite access
-          throw new Error('Max options access')
-        }
-        count++
-
         return stateNotifier()
       },
     })

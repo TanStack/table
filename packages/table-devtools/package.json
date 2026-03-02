@@ -59,7 +59,6 @@
     "@tanstack/devtools-ui": "^0.4.4",
     "@tanstack/devtools-utils": "^0.3.0",
     "@tanstack/solid-store": "^0.9.1",
-    "clsx": "^2.1.1",
     "goober": "^2.1.18",
     "solid-js": "^1.9.11"
   },

@@ -12,12 +12,7 @@ import {
 import type { Accessor, ParentComponent, Setter } from 'solid-js'
 import type { RowData, Table, stockFeatures } from '@tanstack/table-core'
 
-export type TableDevtoolsTabId =
-  | 'features'
-  | 'state'
-  | 'options'
-  | 'rows'
-  | 'columns'
+type TableDevtoolsTabId = 'features' | 'state' | 'options' | 'rows' | 'columns'
 type AnyTable = Table<typeof stockFeatures, RowData>
 
 interface TableDevtoolsContextValue {
