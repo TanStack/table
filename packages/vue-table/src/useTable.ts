@@ -81,6 +81,7 @@ export function useTable<
 
   const vueReactivityFeature = constructReactivityFeature({
     stateNotifier: () => notifier.value,
+    optionsNotifier: () => notifier.value,
   })
 
   const IS_REACTIVE = isRef(tableOptions.data)
@@ -120,27 +121,30 @@ export function useTable<
   const allOptions = useStore(table.optionsStore, (state) => state)
 
   watchEffect(() => {
-    console.log('set infinity')
-    table.setOptions((prev) => {
-      return mergeProxy(
-        prev,
-        IS_REACTIVE
-          ? getOptionsWithReactiveData(
-              tableOptions as TableOptions<TFeatures, TData>,
-            )
-          : tableOptions,
-      ) as TableOptions<TFeatures, TData>
-    })
+    allState.value
+    allOptions.value
+    notifier.value++
   })
 
   watch(
+    () =>
+      [
+        IS_REACTIVE ? unref(tableOptions.data) : tableOptions.data,
+        tableOptions,
+      ] as const,
     () => {
-      console.log('update')
-      return { state: allState.value, options: allOptions.value }
+      table.setOptions((prev) => {
+        return mergeProxy(
+          prev,
+          IS_REACTIVE
+            ? getOptionsWithReactiveData(
+                tableOptions as TableOptions<TFeatures, TData>,
+              )
+            : tableOptions,
+        ) as TableOptions<TFeatures, TData>
+      })
     },
-    () => {
-      notifier.value++
-    },
+    { immediate: true },
   )
 
   table.Subscribe = function Subscribe<TSelected>(props: {
