@@ -18,12 +18,12 @@ export function table_mergeOptions<
   table: Table_Internal<TFeatures, TData>,
   newOptions: TableOptions<TFeatures, TData>,
 ) {
-  if (table.options.mergeOptions) {
-    return table.options.mergeOptions(table.options, newOptions)
+  if (table.latestOptions.mergeOptions) {
+    return table.latestOptions.mergeOptions(table.latestOptions, newOptions)
   }
 
   return {
-    ...table.options,
+    ...table.latestOptions,
     ...newOptions,
   }
 }
@@ -35,8 +35,8 @@ export function table_setOptions<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<TableOptions<TFeatures, TData>>,
 ): void {
-  table.baseOptionsStore.setState((options) => {
-    const newOptions = functionalUpdate(updater, options)
-    return table_mergeOptions(table, newOptions)
-  })
+  const newOptions = functionalUpdate(updater, table.latestOptions)
+  const mergedOptions = table_mergeOptions(table, newOptions)
+  table.latestOptions = mergedOptions
+  table.optionsStore.setState(() => mergedOptions)
 }

@@ -1,13 +1,18 @@
-import type { Signal, ValueEqualityFn } from '@angular/core'
 import {
+  Injector,
   assertInInjectionContext,
   computed,
   effect,
   inject,
-  Injector,
   signal,
   untracked,
 } from '@angular/core'
+import {
+  constructReactivityFeature,
+  constructTable,
+} from '@tanstack/table-core'
+import { injectStore } from '@tanstack/angular-store'
+import { lazyInit } from './lazySignalInitializer'
 import type {
   RowData,
   Table,
@@ -15,12 +20,7 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import {
-  constructReactivityFeature,
-  constructTable,
-} from '@tanstack/table-core'
-import { injectStore } from '@tanstack/angular-store'
-import { lazyInit } from './lazySignalInitializer'
+import type { Signal, ValueEqualityFn } from '@angular/core'
 
 export type AngularTable<
   TFeatures extends TableFeatures,
@@ -111,12 +111,21 @@ export function injectTable<
 ): AngularTable<TFeatures, TData, TSelected> {
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
+  let count = 0
 
   return lazyInit(() => {
     const stateNotifier = signal(0)
 
     const angularReactivityFeature = constructReactivityFeature({
-      stateNotifier: stateNotifier,
+      stateNotifier: () => {
+        if (count >= 100000) {
+          // TODO: temp I need to check how to avoid infinite access
+          throw new Error('Max options access')
+        }
+        count++
+
+        return stateNotifier()
+      },
     })
 
     const resolvedOptions: TableOptions<TFeatures, TData> = {
@@ -135,7 +144,7 @@ export function injectTable<
 
     const updatedOptions = computed<TableOptions<TFeatures, TData>>(() => {
       const tableOptionsValue = options()
-      const currentOptions = table.options
+      const currentOptions = table.latestOptions
       const result: TableOptions<TFeatures, TData> = {
         ...currentOptions,
         ...tableOptionsValue,
@@ -150,34 +159,30 @@ export function injectTable<
       return result
     })
 
-    const tableState = injectStore(
-      table.store,
-      (state: TableState<TFeatures>) => state,
-      { injector },
-    )
-    const tableOptions = injectStore(table.baseOptionsStore, (state) => state, {
-      injector,
-    })
-
     effect(
       () => {
         const newOptions = updatedOptions()
         untracked(() => table.setOptions(newOptions))
-        untracked(() => table.baseStore.setState((prev) => ({ ...prev })))
       },
       { injector },
     )
 
+    const tableState = injectStore(table.store, (state) => state, { injector })
+    const tableOptions = injectStore(table.optionsStore, (state) => state, {
+      injector,
+    })
+
     let firstRun = true
     effect(
       () => {
-        void tableState()
-        void tableOptions()
-        if (firstRun) {
-          firstRun = false
-          return
+        tableOptions()
+        tableState()
+        if (!firstRun) {
+          untracked(() => {
+            stateNotifier.update((n) => n + 1)
+          })
         }
-        untracked(() => stateNotifier.update((n) => n + 1))
+        firstRun = false
       },
       { injector },
     )
@@ -191,7 +196,6 @@ export function injectTable<
         equal: props.equal,
       })
     }
-
     Object.defineProperty(table, 'state', {
       value: injectStore(table.store, selector, { injector }),
     })

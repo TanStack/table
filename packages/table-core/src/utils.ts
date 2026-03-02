@@ -16,7 +16,7 @@ export function makeStateUpdater<
   K extends (string & {}) | keyof TableState_All | keyof TableState<TFeatures>,
 >(key: K, instance: Table<TFeatures, any>) {
   return (updater: Updater<TableState<any>[K & keyof TableState<any>]>) => {
-    ;(instance as Table_Internal<any, any>).baseStore.setState(
+    instance.baseStore.setState(
       <TTableState extends TableState_All>(old: TTableState) => {
         return {
           ...old,

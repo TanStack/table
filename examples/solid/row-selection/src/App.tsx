@@ -33,6 +33,7 @@ export const _features = tableFeatures({
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(100_000)) // stress test
+  const [enableRowSelection, setEnableRowSelection] = createSignal(true)
 
   // Create table first with a placeholder for columns
   let table: SolidTable<typeof _features, Person>
@@ -117,8 +118,6 @@ function App() {
     },
   ]
 
-  const [enableRowSelection, setEnableRowSelection] = createSignal(true)
-
   table = createTable({
     _features,
     _rowModels: {
@@ -135,8 +134,6 @@ function App() {
     },
     debugTable: true,
   })
-
-  window.setEnable = setEnableRowSelection
 
   return (
     // <table.Subscribe
@@ -335,6 +332,12 @@ function App() {
           }
         >
           Log table.getSelectedRowModel().flatRows
+        </button>
+        <button
+          class="border rounded p-2 mb-2"
+          onClick={() => setEnableRowSelection((prev) => !prev)}
+        >
+          {enableRowSelection() ? 'Disable' : 'Enable'} Row Selection
         </button>
       </div>
       <div>

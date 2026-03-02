@@ -29,6 +29,7 @@ export class TableHeaderSelection {
     <input
       type="checkbox"
       [checked]="context.row.getIsSelected()"
+      [disabled]="!context.row.getCanSelect()"
       (change)="context.row.getToggleSelectedHandler()($event)"
     />
   `,

@@ -32,6 +32,7 @@ export class App {
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(10_000))
+  readonly enableRowSelection = signal(true)
 
   readonly columns = columnHelper.columns([
     columnHelper.display({
@@ -93,7 +94,8 @@ export class App {
     state: {
       rowSelection: this.rowSelection(),
     },
-    enableRowSelection: true, // enable row selection for all rows
+
+    enableRowSelection: this.enableRowSelection(), // enable row selection for all rows
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: (updaterOrValue) => {
       this.rowSelection.set(
@@ -135,5 +137,9 @@ export class App {
 
   refreshData(): void {
     this.data.set(makeData(10_000))
+  }
+
+  toggleEnableRowSelection() {
+    this.enableRowSelection.update((value) => !value)
   }
 }

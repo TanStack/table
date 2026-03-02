@@ -95,13 +95,17 @@ export interface Table_CoreProperties<
    */
   baseStore: Store<TableState<TFeatures>>
   /**
-   * The base store for the table. This can be used to write to the table state.
+   * The base store for the table options.
    */
-  baseOptionsStore: Store<TableOptions<TFeatures, TData>>
+  optionsStore: Store<TableOptions<TFeatures, TData>>
   /**
    * This is the resolved initial state of the table.
    */
   initialState: TableState<TFeatures>
+  /**
+   * The latest table options value (non reactive).
+   */
+  latestOptions: TableOptions<TFeatures, TData>
   /**
    * A read-only reference to the table's current options.
    */

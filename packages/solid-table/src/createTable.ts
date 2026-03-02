@@ -58,9 +58,13 @@ export function createTable<
     ({}) as TSelected,
 ): SolidTable<TFeatures, TData, TSelected> {
   const [notifier, setNotifier] = createSignal<void>(void 0, { equals: false })
+  const [optionsNotifier, setOptionsNotifier] = createSignal<void>(void 0, {
+    equals: false,
+  })
 
   const solidReactivityFeature = constructReactivityFeature({
-    stateNotifier: notifier,
+    stateNotifier: () => notifier(),
+    optionsNotifier: () => optionsNotifier(),
   })
 
   const mergedOptions = mergeProps(tableOptions, {
@@ -88,7 +92,7 @@ export function createTable<
   >
 
   const allState = useStore(table.store, (state) => state)
-  const allOptions = useStore(table.baseOptionsStore, (options) => options)
+  const allOptions = useStore(table.optionsStore, (options) => options)
 
   createComputed(() => {
     table.setOptions((prev) => {
@@ -97,7 +101,6 @@ export function createTable<
   })
 
   createComputed(() => {
-    // Access storeState to create reactive dependency
     allState()
     allOptions()
     setNotifier(void 0)
