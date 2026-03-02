@@ -1,4 +1,5 @@
-import type { RowData, TableFeature, TableFeatures } from '@tanstack/table-core'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
+import type { RowData } from '../../types/type-utils'
 import type { ReadonlyStore, Store } from '@tanstack/store'
 
 interface TableReactivityFeatureConstructors<
