@@ -301,35 +301,11 @@
       ]
     },
     {
-      "label": "Core APIs",
+      "label": "API Reference",
       "children": [
         {
-          "label": "Column Def",
-          "to": "api/core/column-def"
-        },
-        {
-          "label": "Table",
-          "to": "api/core/table"
-        },
-        {
-          "label": "Column",
-          "to": "api/core/column"
-        },
-        {
-          "label": "Header Group",
-          "to": "api/core/header-group"
-        },
-        {
-          "label": "Header",
-          "to": "api/core/header"
-        },
-        {
-          "label": "Row",
-          "to": "api/core/row"
-        },
-        {
-          "label": "Cell",
-          "to": "api/core/cell"
+          "label": "Core API Reference",
+          "to": "reference/index"
         }
       ],
       "frameworks": [
@@ -339,141 +315,465 @@
             {
               "label": "Angular API Reference",
               "to": "framework/angular/reference/index"
-            },
+            }
+          ]
+        },
+        {
+          "label": "react",
+          "children": [
             {
-              "label": "injectTable",
-              "to": "framework/angular/reference/functions/injectTable"
-            },
-            {
-              "label": "createTableHook",
-              "to": "framework/angular/reference/functions/createTableHook"
-            },
-            {
-              "label": "flexRenderComponent",
-              "to": "framework/angular/reference/functions/flexRenderComponent"
-            },
-            {
-              "label": "injectFlexRenderContext",
-              "to": "framework/angular/reference/functions/injectFlexRenderContext"
-            },
-            {
-              "label": "injectTableContext",
-              "to": "framework/angular/reference/functions/injectTableContext"
-            },
-            {
-              "label": "injectTableCellContext",
-              "to": "framework/angular/reference/functions/injectTableCellContext"
-            },
-            {
-              "label": "injectTableHeaderContext",
-              "to": "framework/angular/reference/functions/injectTableHeaderContext"
-            },
-            {
-              "label": "Interface / FlexRenderComponent",
-              "to": "framework/angular/reference/interfaces/FlexRenderComponent"
-            },
-            {
-              "label": "Type / AngularTable",
-              "to": "framework/angular/reference/type-aliases/AngularTable"
-            },
-            {
-              "label": "Type / AppAngularTable",
-              "to": "framework/angular/reference/type-aliases/AppAngularTable"
-            },
-            {
-              "label": "Type / FlexRenderContent",
-              "to": "framework/angular/reference/type-aliases/FlexRenderContent"
-            },
-                        {
-              "label": "Type / FlexRenderInputContent",
-              "to": "framework/angular/reference/type-aliases/FlexRenderContent"
-            },
-            {
-              "label": "Directive / FlexRender",
-              "to": "framework/angular/reference/variables/FlexRender"
-            },
-            {
-              "label": "Directive / FlexRenderCell",
-              "to": "framework/angular/reference/classes/FlexRenderCell"
-            },
-            {
-              "label": "Directive / FlexRenderDirective",
-              "to": "framework/angular/reference/classes/FlexRenderDirective"
-            },
-            {
-              "label": "Directive / TanStackTable",
-              "to": "framework/angular/reference/classes/TanStackTable"
-            },
-            {
-              "label": "Directive / TanStackTableCell",
-              "to": "framework/angular/reference/classes/TanStackTableCell"
-            },
-            {
-              "label": "Directive / TanStackTableHeader",
-              "to": "framework/angular/reference/classes/TanStackTableHeader"
+              "label": "React API Reference",
+              "to": "framework/react/reference/index"
             }
           ]
         }
       ]
     },
     {
-      "label": "Feature APIs",
+      "collapsible": true,
+      "defaultCollapsed": true,
+      "label": "Table API Reference",
       "children": [
+        { "label": "Table", "to": "reference/type-aliases/Table" },
+        { "label": "Table_Core", "to": "reference/type-aliases/Table_Core" },
+        { "label": "Table_CoreProperties", "to": "reference/interfaces/Table_CoreProperties" },
+        { "label": "Table_Table", "to": "reference/interfaces/Table_Table" },
+        { "label": "Table_Columns", "to": "reference/interfaces/Table_Columns" },
+        { "label": "Table_Rows", "to": "reference/interfaces/Table_Rows" },
+        { "label": "Table_Headers", "to": "reference/interfaces/Table_Headers" },
+        { "label": "Table_Plugins", "to": "reference/interfaces/Table_Plugins" },
+        { "label": "TableOptions", "to": "reference/type-aliases/TableOptions" },
+        { "label": "TableOptions_All", "to": "reference/type-aliases/TableOptions_All" },
+        { "label": "TableOptions_Core", "to": "reference/interfaces/TableOptions_Core" },
+        { "label": "TableOptions_Table", "to": "reference/interfaces/TableOptions_Table" },
+        { "label": "TableOptions_Columns", "to": "reference/interfaces/TableOptions_Columns" },
+        { "label": "TableOptions_Rows", "to": "reference/interfaces/TableOptions_Rows" },
+        { "label": "TableOptions_Cell", "to": "reference/interfaces/TableOptions_Cell" },
+        { "label": "TableOptions_Plugins", "to": "reference/interfaces/TableOptions_Plugins" },
+        { "label": "TableState", "to": "reference/type-aliases/TableState" },
+        { "label": "TableState_All", "to": "reference/type-aliases/TableState_All" },
+        { "label": "TableState_Plugins", "to": "reference/interfaces/TableState_Plugins" },
+        { "label": "TableMeta", "to": "reference/interfaces/TableMeta" },
+        { "label": "TableFeature", "to": "reference/interfaces/TableFeature" },
+        { "label": "TableFeatures", "to": "reference/interfaces/TableFeatures" },
+        { "label": "StockFeatures", "to": "reference/interfaces/StockFeatures" },
+        { "label": "CoreFeatures", "to": "reference/interfaces/CoreFeatures" },
+        { "label": "constructTable", "to": "reference/functions/constructTable" },
+        { "label": "constructTableHelper", "to": "reference/functions/constructTableHelper" },
+        { "label": "createTableStore", "to": "reference/functions/createTableStore" },
+        { "label": "tableOptions", "to": "reference/functions/tableOptions" },
+        { "label": "tableFeatures", "to": "reference/functions/tableFeatures" },
+        { "label": "getInitialTableState", "to": "reference/functions/getInitialTableState" },
+        { "label": "table_setOptions", "to": "reference/functions/table_setOptions" },
+        { "label": "table_mergeOptions", "to": "reference/functions/table_mergeOptions" },
+        { "label": "table_reset", "to": "reference/functions/table_reset" },
+        { "label": "table_getRowModel", "to": "reference/functions/table_getRowModel" },
+        { "label": "table_getRow", "to": "reference/functions/table_getRow" },
+        { "label": "table_getRowCount", "to": "reference/functions/table_getRowCount" },
+        { "label": "table_getRowId", "to": "reference/functions/table_getRowId" },
+        { "label": "TableHelperOptions", "to": "reference/type-aliases/TableHelperOptions" },
+        { "label": "TableHelper_Core", "to": "reference/type-aliases/TableHelper_Core" },
+        { "label": "OnChangeFn", "to": "reference/type-aliases/OnChangeFn" },
+        { "label": "Updater", "to": "reference/type-aliases/Updater" },
+        { "label": "DebugOptions", "to": "reference/type-aliases/DebugOptions" }
+      ],
+      "frameworks": [
         {
-          "label": "Column Filtering",
-          "to": "api/features/column-filtering"
+          "label": "react",
+          "children": [
+            { "label": "useTable", "to": "framework/react/reference/index/functions/useTable" },
+            { "label": "createTableHook", "to": "framework/react/reference/index/functions/createTableHook" },
+            { "label": "ReactTable", "to": "framework/react/reference/index/type-aliases/ReactTable" },
+            { "label": "AppReactTable", "to": "framework/react/reference/index/type-aliases/AppReactTable" },
+            { "label": "CreateTableHookOptions", "to": "framework/react/reference/index/type-aliases/CreateTableHookOptions" },
+            { "label": "Subscribe", "to": "framework/react/reference/index/functions/Subscribe" },
+            { "label": "SubscribeProps", "to": "framework/react/reference/index/type-aliases/SubscribeProps" },
+            { "label": "FlexRender", "to": "framework/react/reference/index/functions/FlexRender-1" },
+            { "label": "flexRender", "to": "framework/react/reference/index/functions/flexRender" },
+            { "label": "FlexRenderProps", "to": "framework/react/reference/index/type-aliases/FlexRenderProps" },
+            { "label": "Renderable", "to": "framework/react/reference/index/type-aliases/Renderable" },
+            { "label": "AppTableComponent", "to": "framework/react/reference/index/interfaces/AppTableComponent" },
+            { "label": "AppTablePropsWithSelector", "to": "framework/react/reference/index/interfaces/AppTablePropsWithSelector" },
+            { "label": "AppTablePropsWithoutSelector", "to": "framework/react/reference/index/interfaces/AppTablePropsWithoutSelector" }
+          ]
         },
         {
-          "label": "Column Faceting",
-          "to": "api/features/column-faceting"
+          "label": "angular",
+          "children": [
+            { "label": "injectTable", "to": "framework/angular/reference/functions/injectTable" },
+            { "label": "createTableHook", "to": "framework/angular/reference/functions/createTableHook" },
+            { "label": "AngularTable", "to": "framework/angular/reference/type-aliases/AngularTable" },
+            { "label": "AppAngularTable", "to": "framework/angular/reference/type-aliases/AppAngularTable" },
+            { "label": "CreateTableHookResult", "to": "framework/angular/reference/type-aliases/CreateTableHookResult" },
+            { "label": "CreateTableContextOptions", "to": "framework/angular/reference/type-aliases/CreateTableContextOptions" },
+            { "label": "flexRenderComponent", "to": "framework/angular/reference/functions/flexRenderComponent" },
+            { "label": "FlexRenderComponent", "to": "framework/angular/reference/interfaces/FlexRenderComponent" },
+            { "label": "FlexRenderContent", "to": "framework/angular/reference/type-aliases/FlexRenderContent" },
+            { "label": "FlexRenderInputContent", "to": "framework/angular/reference/type-aliases/FlexRenderInputContent" },
+            { "label": "FlexRenderComponentProps", "to": "framework/angular/reference/type-aliases/FlexRenderComponentProps" },
+            { "label": "FlexRender", "to": "framework/angular/reference/variables/FlexRender" },
+            { "label": "FlexRenderDirective", "to": "framework/angular/reference/classes/FlexRenderDirective" },
+            { "label": "FlexRenderCell", "to": "framework/angular/reference/classes/FlexRenderCell" },
+            { "label": "TanStackTable", "to": "framework/angular/reference/classes/TanStackTable" },
+            { "label": "TanStackTableToken", "to": "framework/angular/reference/variables/TanStackTableToken" },
+            { "label": "injectTableContext", "to": "framework/angular/reference/functions/injectTableContext" },
+            { "label": "AngularReactivityFlags", "to": "framework/angular/reference/interfaces/AngularReactivityFlags" }
+          ]
+        }
+      ]
+    },
+    {
+      "collapsible": true,
+      "defaultCollapsed": true,
+      "label": "Column API Reference",
+      "children": [
+        { "label": "Column", "to": "reference/type-aliases/Column" },
+        { "label": "Column_Core", "to": "reference/interfaces/Column_Core" },
+        { "label": "Column_CoreProperties", "to": "reference/interfaces/Column_CoreProperties" },
+        { "label": "Column_Column", "to": "reference/interfaces/Column_Column" },
+        { "label": "Column_Plugins", "to": "reference/interfaces/Column_Plugins" },
+        { "label": "ColumnDef", "to": "reference/type-aliases/ColumnDef" },
+        { "label": "ColumnDefBase", "to": "reference/type-aliases/ColumnDefBase" },
+        { "label": "AccessorColumnDef", "to": "reference/type-aliases/AccessorColumnDef" },
+        { "label": "DisplayColumnDef", "to": "reference/type-aliases/DisplayColumnDef" },
+        { "label": "GroupColumnDef", "to": "reference/type-aliases/GroupColumnDef" },
+        { "label": "ColumnDefTemplate", "to": "reference/type-aliases/ColumnDefTemplate" },
+        { "label": "ColumnHelper", "to": "reference/type-aliases/ColumnHelper" },
+        { "label": "ColumnDefaultOptions", "to": "reference/interfaces/ColumnDefaultOptions" },
+        { "label": "ColumnMeta", "to": "reference/interfaces/ColumnMeta" },
+        { "label": "createColumnHelper", "to": "reference/functions/createColumnHelper" },
+        { "label": "constructColumn", "to": "reference/functions/constructColumn" },
+        { "label": "column_getFlatColumns", "to": "reference/functions/column_getFlatColumns" },
+        { "label": "column_getLeafColumns", "to": "reference/functions/column_getLeafColumns" },
+        { "label": "column_getIndex", "to": "reference/functions/column_getIndex" },
+        { "label": "column_getIsFirstColumn", "to": "reference/functions/column_getIsFirstColumn" },
+        { "label": "column_getIsLastColumn", "to": "reference/functions/column_getIsLastColumn" },
+        { "label": "column_getSize", "to": "reference/functions/column_getSize" },
+        { "label": "column_getStart", "to": "reference/functions/column_getStart" },
+        { "label": "column_getAfter", "to": "reference/functions/column_getAfter" },
+        { "label": "AccessorFn", "to": "reference/type-aliases/AccessorFn" },
+        { "label": "DeepKeys", "to": "reference/type-aliases/DeepKeys" },
+        { "label": "DeepValue", "to": "reference/type-aliases/DeepValue" }
+      ],
+      "frameworks": [
+        {
+          "label": "react",
+          "children": [
+            { "label": "AppColumnHelper", "to": "framework/react/reference/index/type-aliases/AppColumnHelper" }
+          ]
         },
         {
-          "label": "Column Ordering",
-          "to": "api/features/column-ordering"
+          "label": "angular",
+          "children": [
+            { "label": "AppColumnHelper", "to": "framework/angular/reference/type-aliases/AppColumnHelper" }
+          ]
+        }
+      ]
+    },
+    {
+      "collapsible": true,
+      "defaultCollapsed": true,
+      "label": "Row API Reference",
+      "children": [
+        { "label": "Row", "to": "reference/type-aliases/Row" },
+        { "label": "Row_Core", "to": "reference/interfaces/Row_Core" },
+        { "label": "Row_CoreProperties", "to": "reference/interfaces/Row_CoreProperties" },
+        { "label": "Row_Row", "to": "reference/interfaces/Row_Row" },
+        { "label": "Row_Plugins", "to": "reference/interfaces/Row_Plugins" },
+        { "label": "RowData", "to": "reference/type-aliases/RowData" },
+        { "label": "RowModel", "to": "reference/interfaces/RowModel" },
+        { "label": "constructRow", "to": "reference/functions/constructRow" },
+        { "label": "row_getValue", "to": "reference/functions/row_getValue" },
+        { "label": "row_getUniqueValues", "to": "reference/functions/row_getUniqueValues" },
+        { "label": "row_renderValue", "to": "reference/functions/row_renderValue" },
+        { "label": "row_getAllCells", "to": "reference/functions/row_getAllCells" },
+        { "label": "row_getAllCellsByColumnId", "to": "reference/functions/row_getAllCellsByColumnId" },
+        { "label": "row_getVisibleCells", "to": "reference/functions/row_getVisibleCells" },
+        { "label": "row_getLeftVisibleCells", "to": "reference/functions/row_getLeftVisibleCells" },
+        { "label": "row_getCenterVisibleCells", "to": "reference/functions/row_getCenterVisibleCells" },
+        { "label": "row_getRightVisibleCells", "to": "reference/functions/row_getRightVisibleCells" },
+        { "label": "row_getAllVisibleCells", "to": "reference/functions/row_getAllVisibleCells" },
+        { "label": "row_getLeafRows", "to": "reference/functions/row_getLeafRows" },
+        { "label": "row_getParentRow", "to": "reference/functions/row_getParentRow" },
+        { "label": "row_getParentRows", "to": "reference/functions/row_getParentRows" },
+        { "label": "RowModelFns", "to": "reference/type-aliases/RowModelFns" },
+        { "label": "RowModelFns_Core", "to": "reference/interfaces/RowModelFns_Core" },
+        { "label": "RowModelFns_Plugins", "to": "reference/interfaces/RowModelFns_Plugins" },
+        { "label": "createCoreRowModel", "to": "reference/functions/createCoreRowModel" },
+        { "label": "createFilteredRowModel", "to": "reference/functions/createFilteredRowModel" },
+        { "label": "createSortedRowModel", "to": "reference/functions/createSortedRowModel" },
+        { "label": "createGroupedRowModel", "to": "reference/functions/createGroupedRowModel" },
+        { "label": "createExpandedRowModel", "to": "reference/functions/createExpandedRowModel" },
+        { "label": "createPaginatedRowModel", "to": "reference/functions/createPaginatedRowModel" },
+        { "label": "createFacetedRowModel", "to": "reference/functions/createFacetedRowModel" },
+        { "label": "createFacetedMinMaxValues", "to": "reference/functions/createFacetedMinMaxValues" },
+        { "label": "createFacetedUniqueValues", "to": "reference/functions/createFacetedUniqueValues" },
+        { "label": "Table_RowModels_Core", "to": "reference/interfaces/Table_RowModels_Core" },
+        { "label": "Table_RowModels_Filtered", "to": "reference/interfaces/Table_RowModels_Filtered" },
+        { "label": "Table_RowModels_Sorted", "to": "reference/interfaces/Table_RowModels_Sorted" },
+        { "label": "Table_RowModels_Grouped", "to": "reference/interfaces/Table_RowModels_Grouped" },
+        { "label": "Table_RowModels_Expanded", "to": "reference/interfaces/Table_RowModels_Expanded" },
+        { "label": "Table_RowModels_Paginated", "to": "reference/interfaces/Table_RowModels_Paginated" },
+        { "label": "Table_RowModels_Faceted", "to": "reference/interfaces/Table_RowModels_Faceted" }
+      ]
+    },
+    {
+      "collapsible": true,
+      "defaultCollapsed": true,
+      "label": "Cell API Reference",
+      "children": [
+        { "label": "Cell", "to": "reference/type-aliases/Cell" },
+        { "label": "Cell_Core", "to": "reference/interfaces/Cell_Core" },
+        { "label": "Cell_CoreProperties", "to": "reference/interfaces/Cell_CoreProperties" },
+        { "label": "Cell_Cell", "to": "reference/interfaces/Cell_Cell" },
+        { "label": "Cell_ColumnGrouping", "to": "reference/interfaces/Cell_ColumnGrouping" },
+        { "label": "Cell_Plugins", "to": "reference/interfaces/Cell_Plugins" },
+        { "label": "CellContext", "to": "reference/interfaces/CellContext" },
+        { "label": "CellData", "to": "reference/type-aliases/CellData" },
+        { "label": "constructCell", "to": "reference/functions/constructCell" },
+        { "label": "cell_getContext", "to": "reference/functions/cell_getContext" },
+        { "label": "cell_getValue", "to": "reference/functions/cell_getValue" },
+        { "label": "cell_renderValue", "to": "reference/functions/cell_renderValue" },
+        { "label": "cell_getIsGrouped", "to": "reference/functions/cell_getIsGrouped" },
+        { "label": "cell_getIsPlaceholder", "to": "reference/functions/cell_getIsPlaceholder" },
+        { "label": "cell_getIsAggregated", "to": "reference/functions/cell_getIsAggregated" }
+      ],
+      "frameworks": [
+        {
+          "label": "react",
+          "children": [
+            { "label": "AppCellContext", "to": "framework/react/reference/index/type-aliases/AppCellContext" },
+            { "label": "AppCellComponent", "to": "framework/react/reference/index/interfaces/AppCellComponent" },
+            { "label": "AppCellPropsWithSelector", "to": "framework/react/reference/index/interfaces/AppCellPropsWithSelector" },
+            { "label": "AppCellPropsWithoutSelector", "to": "framework/react/reference/index/interfaces/AppCellPropsWithoutSelector" }
+          ]
         },
         {
-          "label": "Column Pinning",
-          "to": "api/features/column-pinning"
+          "label": "angular",
+          "children": [
+            { "label": "AppCellContext", "to": "framework/angular/reference/type-aliases/AppCellContext" },
+            { "label": "TanStackTableCell", "to": "framework/angular/reference/classes/TanStackTableCell" },
+            { "label": "TanStackTableCellToken", "to": "framework/angular/reference/variables/TanStackTableCellToken" },
+            { "label": "TanStackTableCellContext", "to": "framework/angular/reference/interfaces/TanStackTableCellContext" },
+            { "label": "injectTableCellContext", "to": "framework/angular/reference/functions/injectTableCellContext" }
+          ]
+        }
+      ]
+    },
+    {
+      "collapsible": true,
+      "defaultCollapsed": true,
+      "label": "Header API Reference",
+      "children": [
+        { "label": "Header", "to": "reference/type-aliases/Header" },
+        { "label": "Header_Core", "to": "reference/interfaces/Header_Core" },
+        { "label": "Header_CoreProperties", "to": "reference/interfaces/Header_CoreProperties" },
+        { "label": "Header_Header", "to": "reference/interfaces/Header_Header" },
+        { "label": "Header_Plugins", "to": "reference/interfaces/Header_Plugins" },
+        { "label": "HeaderGroup", "to": "reference/type-aliases/HeaderGroup" },
+        { "label": "HeaderGroup_Core", "to": "reference/interfaces/HeaderGroup_Core" },
+        { "label": "HeaderGroup_Header", "to": "reference/interfaces/HeaderGroup_Header" },
+        { "label": "HeaderGroup_Plugins", "to": "reference/interfaces/HeaderGroup_Plugins" },
+        { "label": "HeaderContext", "to": "reference/interfaces/HeaderContext" },
+        { "label": "constructHeader", "to": "reference/functions/constructHeader" },
+        { "label": "buildHeaderGroups", "to": "reference/functions/buildHeaderGroups" },
+        { "label": "header_getContext", "to": "reference/functions/header_getContext" },
+        { "label": "header_getLeafHeaders", "to": "reference/functions/header_getLeafHeaders" },
+        { "label": "header_getSize", "to": "reference/functions/header_getSize" },
+        { "label": "header_getStart", "to": "reference/functions/header_getStart" },
+        { "label": "header_getResizeHandler", "to": "reference/functions/header_getResizeHandler" },
+        { "label": "table_getHeaderGroups", "to": "reference/functions/table_getHeaderGroups" },
+        { "label": "table_getLeftHeaderGroups", "to": "reference/functions/table_getLeftHeaderGroups" },
+        { "label": "table_getCenterHeaderGroups", "to": "reference/functions/table_getCenterHeaderGroups" },
+        { "label": "table_getRightHeaderGroups", "to": "reference/functions/table_getRightHeaderGroups" },
+        { "label": "table_getFooterGroups", "to": "reference/functions/table_getFooterGroups" },
+        { "label": "table_getLeftFooterGroups", "to": "reference/functions/table_getLeftFooterGroups" },
+        { "label": "table_getCenterFooterGroups", "to": "reference/functions/table_getCenterFooterGroups" },
+        { "label": "table_getRightFooterGroups", "to": "reference/functions/table_getRightFooterGroups" },
+        { "label": "table_getFlatHeaders", "to": "reference/functions/table_getFlatHeaders" },
+        { "label": "table_getLeftFlatHeaders", "to": "reference/functions/table_getLeftFlatHeaders" },
+        { "label": "table_getCenterFlatHeaders", "to": "reference/functions/table_getCenterFlatHeaders" },
+        { "label": "table_getRightFlatHeaders", "to": "reference/functions/table_getRightFlatHeaders" },
+        { "label": "table_getLeafHeaders", "to": "reference/functions/table_getLeafHeaders" },
+        { "label": "table_getLeftLeafHeaders", "to": "reference/functions/table_getLeftLeafHeaders" },
+        { "label": "table_getCenterLeafHeaders", "to": "reference/functions/table_getCenterLeafHeaders" },
+        { "label": "table_getRightLeafHeaders", "to": "reference/functions/table_getRightLeafHeaders" }
+      ],
+      "frameworks": [
+        {
+          "label": "react",
+          "children": [
+            { "label": "AppHeaderContext", "to": "framework/react/reference/index/type-aliases/AppHeaderContext" },
+            { "label": "AppHeaderComponent", "to": "framework/react/reference/index/interfaces/AppHeaderComponent" },
+            { "label": "AppHeaderPropsWithSelector", "to": "framework/react/reference/index/interfaces/AppHeaderPropsWithSelector" },
+            { "label": "AppHeaderPropsWithoutSelector", "to": "framework/react/reference/index/interfaces/AppHeaderPropsWithoutSelector" }
+          ]
         },
         {
-          "label": "Column Sizing",
-          "to": "api/features/column-sizing"
-        },
+          "label": "angular",
+          "children": [
+            { "label": "AppHeaderContext", "to": "framework/angular/reference/type-aliases/AppHeaderContext" },
+            { "label": "TanStackTableHeader", "to": "framework/angular/reference/classes/TanStackTableHeader" },
+            { "label": "TanStackTableHeaderToken", "to": "framework/angular/reference/variables/TanStackTableHeaderToken" },
+            { "label": "TanStackTableHeaderContext", "to": "framework/angular/reference/interfaces/TanStackTableHeaderContext" },
+            { "label": "injectTableHeaderContext", "to": "framework/angular/reference/functions/injectTableHeaderContext" },
+            { "label": "injectFlexRenderContext", "to": "framework/angular/reference/functions/injectFlexRenderContext" }
+          ]
+        }
+      ]
+    },
+    {
+      "collapsible": true,
+      "defaultCollapsed": true,
+      "label": "Features API Reference",
+      "children": [
+        { "label": "stockFeatures", "to": "reference/variables/stockFeatures" },
+        { "label": "coreFeatures", "to": "reference/variables/coreFeatures" },
+        { "label": "coreCellsFeature", "to": "reference/variables/coreCellsFeature" },
+        { "label": "coreColumnsFeature", "to": "reference/variables/coreColumnsFeature" },
+        { "label": "coreHeadersFeature", "to": "reference/variables/coreHeadersFeature" },
+        { "label": "coreRowModelsFeature", "to": "reference/variables/coreRowModelsFeature" },
+        { "label": "coreRowsFeature", "to": "reference/variables/coreRowsFeature" },
+        { "label": "coreTablesFeature", "to": "reference/variables/coreTablesFeature" },
+        { "label": "columnFilteringFeature", "to": "reference/variables/columnFilteringFeature" },
+        { "label": "columnFacetingFeature", "to": "reference/variables/columnFacetingFeature" },
+        { "label": "columnGroupingFeature", "to": "reference/variables/columnGroupingFeature" },
+        { "label": "columnOrderingFeature", "to": "reference/variables/columnOrderingFeature" },
+        { "label": "columnPinningFeature", "to": "reference/variables/columnPinningFeature" },
+        { "label": "columnResizingFeature", "to": "reference/variables/columnResizingFeature" },
+        { "label": "columnSizingFeature", "to": "reference/variables/columnSizingFeature" },
+        { "label": "columnVisibilityFeature", "to": "reference/variables/columnVisibilityFeature" },
+        { "label": "globalFilteringFeature", "to": "reference/variables/globalFilteringFeature" },
+        { "label": "rowExpandingFeature", "to": "reference/variables/rowExpandingFeature" },
+        { "label": "rowPaginationFeature", "to": "reference/variables/rowPaginationFeature" },
+        { "label": "rowPinningFeature", "to": "reference/variables/rowPinningFeature" },
+        { "label": "rowSelectionFeature", "to": "reference/variables/rowSelectionFeature" },
+        { "label": "rowSortingFeature", "to": "reference/variables/rowSortingFeature" },
+        { "label": "Column_ColumnFiltering", "to": "reference/interfaces/Column_ColumnFiltering" },
+        { "label": "Column_ColumnFaceting", "to": "reference/interfaces/Column_ColumnFaceting" },
+        { "label": "Column_ColumnGrouping", "to": "reference/interfaces/Column_ColumnGrouping" },
+        { "label": "Column_ColumnOrdering", "to": "reference/interfaces/Column_ColumnOrdering" },
+        { "label": "Column_ColumnPinning", "to": "reference/interfaces/Column_ColumnPinning" },
+        { "label": "Column_ColumnResizing", "to": "reference/interfaces/Column_ColumnResizing" },
+        { "label": "Column_ColumnSizing", "to": "reference/interfaces/Column_ColumnSizing" },
+        { "label": "Column_ColumnVisibility", "to": "reference/interfaces/Column_ColumnVisibility" },
+        { "label": "Column_GlobalFiltering", "to": "reference/interfaces/Column_GlobalFiltering" },
+        { "label": "Column_RowSorting", "to": "reference/interfaces/Column_RowSorting" },
+        { "label": "Table_ColumnFiltering", "to": "reference/interfaces/Table_ColumnFiltering" },
+        { "label": "Table_ColumnFaceting", "to": "reference/interfaces/Table_ColumnFaceting" },
+        { "label": "Table_ColumnGrouping", "to": "reference/interfaces/Table_ColumnGrouping" },
+        { "label": "Table_ColumnOrdering", "to": "reference/interfaces/Table_ColumnOrdering" },
+        { "label": "Table_ColumnPinning", "to": "reference/interfaces/Table_ColumnPinning" },
+        { "label": "Table_ColumnResizing", "to": "reference/interfaces/Table_ColumnResizing" },
+        { "label": "Table_ColumnSizing", "to": "reference/interfaces/Table_ColumnSizing" },
+        { "label": "Table_ColumnVisibility", "to": "reference/interfaces/Table_ColumnVisibility" },
+        { "label": "Table_GlobalFiltering", "to": "reference/interfaces/Table_GlobalFiltering" },
+        { "label": "Table_RowExpanding", "to": "reference/interfaces/Table_RowExpanding" },
+        { "label": "Table_RowPagination", "to": "reference/interfaces/Table_RowPagination" },
+        { "label": "Table_RowPinning", "to": "reference/interfaces/Table_RowPinning" },
+        { "label": "Table_RowSelection", "to": "reference/interfaces/Table_RowSelection" },
+        { "label": "Table_RowSorting", "to": "reference/interfaces/Table_RowSorting" },
+        { "label": "Row_ColumnFiltering", "to": "reference/interfaces/Row_ColumnFiltering" },
+        { "label": "Row_ColumnGrouping", "to": "reference/interfaces/Row_ColumnGrouping" },
+        { "label": "Row_ColumnPinning", "to": "reference/interfaces/Row_ColumnPinning" },
+        { "label": "Row_ColumnVisibility", "to": "reference/interfaces/Row_ColumnVisibility" },
+        { "label": "Row_RowExpanding", "to": "reference/interfaces/Row_RowExpanding" },
+        { "label": "Row_RowPinning", "to": "reference/interfaces/Row_RowPinning" },
+        { "label": "Row_RowSelection", "to": "reference/interfaces/Row_RowSelection" },
+        { "label": "Header_ColumnResizing", "to": "reference/interfaces/Header_ColumnResizing" },
+        { "label": "Header_ColumnSizing", "to": "reference/interfaces/Header_ColumnSizing" },
+        { "label": "TableOptions_ColumnFiltering", "to": "reference/interfaces/TableOptions_ColumnFiltering" },
+        { "label": "TableOptions_ColumnGrouping", "to": "reference/interfaces/TableOptions_ColumnGrouping" },
+        { "label": "TableOptions_ColumnOrdering", "to": "reference/interfaces/TableOptions_ColumnOrdering" },
+        { "label": "TableOptions_ColumnPinning", "to": "reference/interfaces/TableOptions_ColumnPinning" },
+        { "label": "TableOptions_ColumnResizing", "to": "reference/interfaces/TableOptions_ColumnResizing" },
+        { "label": "TableOptions_ColumnSizing", "to": "reference/interfaces/TableOptions_ColumnSizing" },
+        { "label": "TableOptions_ColumnVisibility", "to": "reference/interfaces/TableOptions_ColumnVisibility" },
+        { "label": "TableOptions_GlobalFiltering", "to": "reference/interfaces/TableOptions_GlobalFiltering" },
+        { "label": "TableOptions_RowExpanding", "to": "reference/interfaces/TableOptions_RowExpanding" },
+        { "label": "TableOptions_RowPagination", "to": "reference/interfaces/TableOptions_RowPagination" },
+        { "label": "TableOptions_RowPinning", "to": "reference/interfaces/TableOptions_RowPinning" },
+        { "label": "TableOptions_RowSelection", "to": "reference/interfaces/TableOptions_RowSelection" },
+        { "label": "TableOptions_RowSorting", "to": "reference/interfaces/TableOptions_RowSorting" },
+        { "label": "TableState_ColumnFiltering", "to": "reference/interfaces/TableState_ColumnFiltering" },
+        { "label": "TableState_ColumnGrouping", "to": "reference/interfaces/TableState_ColumnGrouping" },
+        { "label": "TableState_ColumnOrdering", "to": "reference/interfaces/TableState_ColumnOrdering" },
+        { "label": "TableState_ColumnPinning", "to": "reference/interfaces/TableState_ColumnPinning" },
+        { "label": "TableState_ColumnResizing", "to": "reference/interfaces/TableState_ColumnResizing" },
+        { "label": "TableState_ColumnSizing", "to": "reference/interfaces/TableState_ColumnSizing" },
+        { "label": "TableState_ColumnVisibility", "to": "reference/interfaces/TableState_ColumnVisibility" },
+        { "label": "TableState_GlobalFiltering", "to": "reference/interfaces/TableState_GlobalFiltering" },
+        { "label": "TableState_RowExpanding", "to": "reference/interfaces/TableState_RowExpanding" },
+        { "label": "TableState_RowPagination", "to": "reference/interfaces/TableState_RowPagination" },
+        { "label": "TableState_RowPinning", "to": "reference/interfaces/TableState_RowPinning" },
+        { "label": "TableState_RowSelection", "to": "reference/interfaces/TableState_RowSelection" },
+        { "label": "TableState_RowSorting", "to": "reference/interfaces/TableState_RowSorting" },
+        { "label": "ColumnDef_ColumnFiltering", "to": "reference/interfaces/ColumnDef_ColumnFiltering" },
+        { "label": "ColumnDef_ColumnGrouping", "to": "reference/interfaces/ColumnDef_ColumnGrouping" },
+        { "label": "ColumnDef_ColumnPinning", "to": "reference/interfaces/ColumnDef_ColumnPinning" },
+        { "label": "ColumnDef_ColumnResizing", "to": "reference/interfaces/ColumnDef_ColumnResizing" },
+        { "label": "ColumnDef_ColumnSizing", "to": "reference/interfaces/ColumnDef_ColumnSizing" },
+        { "label": "ColumnDef_ColumnVisibility", "to": "reference/interfaces/ColumnDef_ColumnVisibility" },
+        { "label": "ColumnDef_GlobalFiltering", "to": "reference/interfaces/ColumnDef_GlobalFiltering" },
+        { "label": "ColumnDef_RowSorting", "to": "reference/interfaces/ColumnDef_RowSorting" },
+        { "label": "ColumnDef_Plugins", "to": "reference/interfaces/ColumnDef_Plugins" },
+        { "label": "ColumnPinningState", "to": "reference/interfaces/ColumnPinningState" },
+        { "label": "ColumnSort", "to": "reference/interfaces/ColumnSort" },
+        { "label": "ColumnFilter", "to": "reference/interfaces/ColumnFilter" },
+        { "label": "PaginationState", "to": "reference/interfaces/PaginationState" },
+        { "label": "RowPinningState", "to": "reference/interfaces/RowPinningState" },
+        { "label": "columnResizingState", "to": "reference/interfaces/columnResizingState" },
+        { "label": "ColumnFiltersState", "to": "reference/type-aliases/ColumnFiltersState" },
+        { "label": "ColumnOrderState", "to": "reference/type-aliases/ColumnOrderState" },
+        { "label": "ColumnSizingState", "to": "reference/type-aliases/ColumnSizingState" },
+        { "label": "ColumnVisibilityState", "to": "reference/type-aliases/ColumnVisibilityState" },
+        { "label": "ExpandedState", "to": "reference/type-aliases/ExpandedState" },
+        { "label": "GroupingState", "to": "reference/type-aliases/GroupingState" },
+        { "label": "RowSelectionState", "to": "reference/type-aliases/RowSelectionState" },
+        { "label": "SortingState", "to": "reference/type-aliases/SortingState" },
+        { "label": "FilterFn", "to": "reference/interfaces/FilterFn" },
+        { "label": "FilterFns", "to": "reference/interfaces/FilterFns" },
+        { "label": "FilterMeta", "to": "reference/interfaces/FilterMeta" },
+        { "label": "SortFn", "to": "reference/interfaces/SortFn" },
+        { "label": "SortFns", "to": "reference/interfaces/SortFns" },
+        { "label": "AggregationFns", "to": "reference/interfaces/AggregationFns" },
+        { "label": "filterFns", "to": "reference/variables/filterFns" },
+        { "label": "sortFns", "to": "reference/variables/sortFns" },
+        { "label": "aggregationFns", "to": "reference/variables/aggregationFns" }
+      ]
+    },
+    {
+      "collapsible": true,
+      "defaultCollapsed": true,
+      "label": "Legacy API Reference",
+      "children": [],
+      "frameworks": [
         {
-          "label": "Column Visibility",
-          "to": "api/features/column-visibility"
-        },
-        {
-          "label": "Global Faceting",
-          "to": "api/features/global-faceting"
-        },
-        {
-          "label": "Global Filtering",
-          "to": "api/features/global-filtering"
-        },
-        {
-          "label": "Sorting",
-          "to": "api/features/sorting"
-        },
-        {
-          "label": "Grouping",
-          "to": "api/features/grouping"
-        },
-        {
-          "label": "Expanding",
-          "to": "api/features/expanding"
-        },
-        {
-          "label": "Pagination",
-          "to": "api/features/pagination"
-        },
-        {
-          "label": "Row Pinning",
-          "to": "api/features/row-pinning"
-        },
-        {
-          "label": "Row Selection",
-          "to": "api/features/row-selection"
+          "label": "react",
+          "children": [
+            { "label": "Legacy API Overview", "to": "framework/react/reference/legacy/index" },
+            { "label": "useLegacyTable", "to": "framework/react/reference/legacy/functions/useLegacyTable" },
+            { "label": "legacyCreateColumnHelper", "to": "framework/react/reference/legacy/functions/legacyCreateColumnHelper" },
+            { "label": "getCoreRowModel", "to": "framework/react/reference/legacy/functions/getCoreRowModel" },
+            { "label": "getFilteredRowModel", "to": "framework/react/reference/legacy/functions/getFilteredRowModel" },
+            { "label": "getSortedRowModel", "to": "framework/react/reference/legacy/functions/getSortedRowModel" },
+            { "label": "getGroupedRowModel", "to": "framework/react/reference/legacy/functions/getGroupedRowModel" },
+            { "label": "getExpandedRowModel", "to": "framework/react/reference/legacy/functions/getExpandedRowModel" },
+            { "label": "getPaginationRowModel", "to": "framework/react/reference/legacy/functions/getPaginationRowModel" },
+            { "label": "getFacetedRowModel", "to": "framework/react/reference/legacy/functions/getFacetedRowModel" },
+            { "label": "getFacetedMinMaxValues", "to": "framework/react/reference/legacy/functions/getFacetedMinMaxValues" },
+            { "label": "getFacetedUniqueValues", "to": "framework/react/reference/legacy/functions/getFacetedUniqueValues" },
+            { "label": "LegacyRowModelOptions", "to": "framework/react/reference/legacy/interfaces/LegacyRowModelOptions" },
+            { "label": "LegacyTable", "to": "framework/react/reference/legacy/type-aliases/LegacyTable" },
+            { "label": "LegacyTableOptions", "to": "framework/react/reference/legacy/type-aliases/LegacyTableOptions" },
+            { "label": "LegacyReactTable", "to": "framework/react/reference/legacy/type-aliases/LegacyReactTable" },
+            { "label": "LegacyColumnDef", "to": "framework/react/reference/legacy/type-aliases/LegacyColumnDef" },
+            { "label": "LegacyColumn", "to": "framework/react/reference/legacy/type-aliases/LegacyColumn" },
+            { "label": "LegacyRow", "to": "framework/react/reference/legacy/type-aliases/LegacyRow" },
+            { "label": "LegacyCell", "to": "framework/react/reference/legacy/type-aliases/LegacyCell" },
+            { "label": "LegacyHeader", "to": "framework/react/reference/legacy/type-aliases/LegacyHeader" },
+            { "label": "LegacyHeaderGroup", "to": "framework/react/reference/legacy/type-aliases/LegacyHeaderGroup" }
+          ]
         }
       ]
     },
