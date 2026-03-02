@@ -11,7 +11,7 @@ export function OptionsPanel() {
   const tableInstance = table()
   const tableState = tableInstance
     ? useStore(
-        tableInstance.baseOptionsStore,
+        tableInstance.optionsStore,
         ({ state, data, _features, _rowModels, ...options }) => options,
       )
     : undefined
