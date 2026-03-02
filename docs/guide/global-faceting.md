@@ -18,24 +18,27 @@ Global Faceting allows you to generate lists of values for all columns from the 
 
 ### Global Faceting Row Models
 
-In order to use any of the global faceting features, you must include the appropriate row models in your table options.
+In order to use any of the global faceting features, add the appropriate faceted row models to your `_rowModels`:
 
 ```ts
-//only import the row models you need
 import {
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedMinMaxValues, //depends on getFacetedRowModel
-  getFacetedUniqueValues, //depends on getFacetedRowModel
+  useTable,
+  tableFeatures,
+  createFacetedRowModel,
+  createFacetedMinMaxValues,
+  createFacetedUniqueValues,
 } from '@tanstack/react-table'
-//...
-const table = useReactTable({
+
+const _features = tableFeatures({}) // add globalFilteringFeature if using global filtering
+
+const table = useTable({
+  _features,
+  _rowModels: {
+    facetedRowModel: createFacetedRowModel(), // required (other faceting methods depend on this)
+    facetedMinMaxValues: createFacetedMinMaxValues(), // if you need min/max values
+    facetedUniqueValues: createFacetedUniqueValues(), // if you need a list of unique values
+  },
   // other options...
-  getCoreRowModel: getCoreRowModel(),
-  getFacetedRowModel: getFacetedRowModel(), //Faceting model for client-side faceting (other faceting methods depend on this model)
-  getFacetedMinMaxValues: getFacetedMinMaxValues(), //if you need min/max values
-  getFacetedUniqueValues: getFacetedUniqueValues(), //if you need a list of unique values
-  //...
 })
 ```
 

@@ -37,20 +37,26 @@ The only way to change the order of the pinned columns is in the `columnPinning.
 Managing the `columnPinning` state is optional, and usually not necessary unless you are adding persistent state features. TanStack Table will already keep track of the column pinning state for you. Manage the `columnPinning` state just like any other table state if you need to.
 
 ```jsx
+import { useTable, tableFeatures, columnPinningFeature } from '@tanstack/react-table'
+
+const _features = tableFeatures({ columnPinningFeature })
+
 const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
   left: [],
   right: [],
-});
-//...
+})
+
 const table = useTable({
+  _features,
+  _rowModels: {},
   //...
   state: {
     columnPinning,
     //...
-  }
+  },
   onColumnPinningChange: setColumnPinning,
   //...
-});
+})
 ```
 
 ### Pin Columns by Default
@@ -59,6 +65,8 @@ A very common use case is to pin some columns by default. You can do this by eit
 
 ```jsx
 const table = useTable({
+  _features,
+  _rowModels: {},
   //...
   initialState: {
     columnPinning: {
@@ -66,14 +74,14 @@ const table = useTable({
       right: ['actions-column'],
     },
     //...
-  }
+  },
   //...
-});
+})
 ```
 
 ### Useful Column Pinning APIs
 
-> Note: Some of these APIs are new in v8.12.0
+> Note: These APIs are available when using `columnPinningFeature`.
 
 There are a handful of useful Column API methods to help you implement column pinning features:
 

@@ -41,12 +41,14 @@ const columns = [
 ]
 
 const table = useTable({
-  //override default column sizing
+  _features: tableFeatures({ columnSizingFeature, columnResizingFeature }), // columnResizingFeature for drag-to-resize
+  _rowModels: {},
   defaultColumn: {
-    size: 200, //starting column size
-    minSize: 50, //enforced during column resizing
-    maxSize: 500, //enforced during column resizing
+    size: 200, // starting column size
+    minSize: 50, // enforced during column resizing
+    maxSize: 500, // enforced during column resizing
   },
+  //...
 })
 ```
 

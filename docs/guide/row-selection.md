@@ -22,7 +22,7 @@ The row selection feature keeps track of which rows are selected and allows you 
 
 The table instance already manages the row selection state for you (though as seen down below, it may be more convenient to manage the row selection state in your own scope). You can access the internal row selection state or the selected rows from a few APIs.
 
-- `getState().rowSelection` - returns the internal row selection state
+- `table.store.state.rowSelection` - returns the internal row selection state
 - `getSelectedRowModel()` - returns selected rows
 - `getFilteredSelectedRowModel()` - returns selected rows after filtering
 - `getGroupedSelectedRowModel()` - returns selected rows after grouping and sorting
@@ -43,13 +43,19 @@ Even though the table instance will already manage the row selection state for y
 Use the `onRowSelectionChange` table option to hoist up the row selection state to your own scope. Then pass the row selection state back to the table instance using in the `state` table option.
 
 ```ts
-const [rowSelection, setRowSelection] = useState<RowSelectionState>({}) //manage your own row selection state
+import { useTable, tableFeatures, rowSelectionFeature } from '@tanstack/react-table'
+
+const _features = tableFeatures({ rowSelectionFeature })
+
+const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
 const table = useTable({
+  _features,
+  _rowModels: {},
   //...
-  onRowSelectionChange: setRowSelection, //hoist up the row selection state to your own scope
+  onRowSelectionChange: setRowSelection,
   state: {
-    rowSelection, //pass the row selection state back to the table instance
+    rowSelection,
   },
 })
 ```
@@ -60,8 +66,10 @@ By default, the row id for each row is simply the `row.index`. If you are using 
 
 ```ts
 const table = useTable({
+  _features,
+  _rowModels: {},
   //...
-  getRowId: row => row.uuid, //use the row's uuid from your database as the row id
+  getRowId: (row) => row.uuid, // use the row's uuid from your database as the row id
 })
 ```
 

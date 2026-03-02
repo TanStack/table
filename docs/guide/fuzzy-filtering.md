@@ -52,22 +52,37 @@ In this function, we're using the rankItem function from the @tanstack/match-sor
 To use fuzzy filtering with global filtering, you can specify the fuzzy filter function in the globalFilterFn option of the table instance:
 
 ```typescript
-const table = useReactTable({ // or your framework's equivalent function
-    columns,
-    data,
-    filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
-    },
-    globalFilterFn: 'fuzzy', //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(), //client side filtering
-    getSortedRowModel: getSortedRowModel(), //client side sorting needed if you want to use sorting too.
+import {
+  useTable,
+  tableFeatures,
+  globalFilteringFeature,
+  rowSortingFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  filterFns,
+  sortFns,
+} from '@tanstack/react-table'
+
+const _features = tableFeatures({ globalFilteringFeature, rowSortingFeature })
+
+const table = useTable({
+  _features,
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel({
+      ...filterFns,
+      fuzzy: fuzzyFilter,
+    }),
+    sortedRowModel: createSortedRowModel(sortFns), // needed if you want sorting with fuzzy rank
+  },
+  columns,
+  data,
+  globalFilterFn: 'fuzzy',
 })
 ```
 
 ### Using Fuzzy Filtering with Column Filtering
 
-To use fuzzy filtering with column filtering, you should first define the fuzzy filter function in the filterFns option of the table instance. You can then specify the fuzzy filter function in the filterFn option of the column definition:
+To use fuzzy filtering with column filtering, pass your fuzzy filter function to `createFilteredRowModel` (merging it with the built-in `filterFns`). You can then specify the fuzzy filter by name in the `filterFn` option of the column definition:
 
 ```typescript
 const column = [

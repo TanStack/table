@@ -47,14 +47,14 @@ If you're not sure, you can always start with client-side filtering and paginati
 
 If you have decided that you need to implement server-side filtering instead of using the built-in client-side filtering, here's how you do that.
 
-No `getFilteredRowModel` table option is needed for manual server-side filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have passed a `getFilteredRowModel` table option, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
+No `filteredRowModel` is needed for manual server-side filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `_rowModels`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
 
 ```jsx
 const table = useTable({
+  _features: tableFeatures({ columnFilteringFeature }),
+  _rowModels: {}, // no filteredRowModel needed for manual server-side filtering
   data,
   columns,
-  getCoreRowModel: createCoreRowModel(),
-  // getFilteredRowModel: createFilteredRowModel(filterFns), // not needed for manual server-side filtering
   manualFiltering: true,
 })
 ```
@@ -63,16 +63,26 @@ const table = useTable({
 
 ### Client-Side Filtering
 
-If you are using the built-in client-side filtering features, first you need to pass in a `getFilteredRowModel` function to the table options. This function will be called whenever the table needs to filter the data. You can either import the default `getFilteredRowModel` function from TanStack Table or create your own.
+If you are using the built-in client-side filtering features, add the `columnFilteringFeature` to your features and the `filteredRowModel` to your row models. Import `createFilteredRowModel` and `filterFns` from TanStack Table:
 
 ```jsx
-import { useTable, createCoreRowModel, createFilteredRowModel } from '@tanstack/react-table'
-//...
+import {
+  useTable,
+  tableFeatures,
+  columnFilteringFeature,
+  createFilteredRowModel,
+  filterFns,
+} from '@tanstack/react-table'
+
+const _features = tableFeatures({ columnFilteringFeature })
+
 const table = useTable({
+  _features,
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel(filterFns),
+  },
   data,
   columns,
-  getCoreRowModel: createCoreRowModel(),
-  getFilteredRowModel: createFilteredRowModel(filterFns), // needed for client-side filtering
 })
 ```
 
@@ -98,6 +108,8 @@ You can access the column filter state from the table instance just like any oth
 
 ```jsx
 const table = useTable({
+  _features,
+  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -116,6 +128,8 @@ If you need easy access to the column filter state, you can control/manage the c
 const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]) // can set initial column filter state here
 //...
 const table = useTable({
+  _features,
+  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -132,6 +146,8 @@ If you do not need to control the column filter state in your own state manageme
 
 ```jsx
 const table = useTable({
+  _features,
+  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -213,16 +229,18 @@ const columns = [
 ]
 //...
 const table = useTable({
+  _features,
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel({
+      ...filterFns,
+      myCustomFilterFn: (row, columnId, filterValue) => {
+        return // true or false based on your custom logic
+      },
+      startsWith: startsWithFilterFn, // defined elsewhere
+    }),
+  },
   columns,
   data,
-  getCoreRowModel: createCoreRowModel(),
-  getFilteredRowModel: createFilteredRowModel(filterFns),
-  filterFns: { // add a custom global filter function
-    myCustomFilterFn: (row, columnId, filterValue) => { // defined inline here
-      return // true or false based on your custom logic
-    },
-    startsWith: startsWithFilterFn, // defined elsewhere
-  },
 })
 ```
 
@@ -275,6 +293,8 @@ const columns = [
 ]
 //...
 const table = useTable({
+  _features,
+  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   enableColumnFilters: false, // disable column filtering for all columns
@@ -293,11 +313,13 @@ However, if you want to allow sub-rows to be filtered and searched through, rega
 
 ```jsx
 const table = useTable({
+  _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel(filterFns),
+    expandedRowModel: createExpandedRowModel(),
+  },
   columns,
   data,
-  getCoreRowModel: createCoreRowModel(),
-  getFilteredRowModel: createFilteredRowModel(filterFns),
-  getExpandedRowModel: createExpandedRowModel(),
   filterFromLeafRows: true, // filter and search through sub-rows
 })
 ```
@@ -310,11 +332,13 @@ Use `maxLeafRowFilterDepth: 0` if you want to preserve a parent row's sub-rows f
 
 ```jsx
 const table = useTable({
+  _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel(filterFns),
+    expandedRowModel: createExpandedRowModel(),
+  },
   columns,
   data,
-  getCoreRowModel: createCoreRowModel(),
-  getFilteredRowModel: createFilteredRowModel(filterFns),
-  getExpandedRowModel: createExpandedRowModel(),
   maxLeafRowFilterDepth: 0, // only filter root level parent rows out
 })
 ```

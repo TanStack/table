@@ -22,14 +22,25 @@ There are 3 table features that can reorder columns, which happen in the followi
 
 Grouping in TanStack table is a feature that applies to columns and allows you to categorize and organize the table rows based on specific columns. This can be useful in cases where you have a large amount of data and you want to group them together based on certain criteria.
 
-To use the grouping feature, you will need to use the grouped row model. This model is responsible for grouping the rows based on the grouping state.
+To use the grouping feature, add the `columnGroupingFeature` to your features and the `groupedRowModel` to your row models. The grouped row model is responsible for grouping the rows based on the grouping state.
 
 ```tsx
-import { getGroupedRowModel, useLegacyTable } from '@tanstack/react-table/legacy'
+import {
+  useTable,
+  tableFeatures,
+  columnGroupingFeature,
+  createGroupedRowModel,
+  aggregationFns,
+} from '@tanstack/react-table'
 
-const table = useLegacyTable({
+const _features = tableFeatures({ columnGroupingFeature })
+
+const table = useTable({
+  _features,
+  _rowModels: {
+    groupedRowModel: createGroupedRowModel(aggregationFns),
+  },
   // other options...
-  getGroupedRowModel: getGroupedRowModel(),
 })
 ```
 
@@ -37,12 +48,15 @@ When grouping state is active, the table will add matching rows as subRows to th
 To allow the user to expand and collapse the grouped rows, you can use the expanding feature.
 
 ```tsx
-import { getGroupedRowModel, getExpandedRowModel, useLegacyTable } from '@tanstack/react-table/legacy'
+const _features = tableFeatures({ columnGroupingFeature, rowExpandingFeature })
 
-const table = useLegacyTable({
+const table = useTable({
+  _features,
+  _rowModels: {
+    groupedRowModel: createGroupedRowModel(aggregationFns),
+    expandedRowModel: createExpandedRowModel(),
+  },
   // other options...
-  getGroupedRowModel: getGroupedRowModel(),
-  getExpandedRowModel: getExpandedRowModel(),
 })
 ```
 
@@ -63,7 +77,9 @@ table.resetGrouping();
 By default, when a column is grouped, it is moved to the start of the table. You can control this behavior using the groupedColumnMode option. If you set it to 'reorder', then the grouped columns will be moved to the start of the table. If you set it to 'remove', then the grouped columns will be removed from the table. If you set it to false, then the grouped columns will not be moved or removed.
 
 ```tsx
-const table = useReactTable({
+const table = useTable({
+  _features,
+  _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   groupedColumnMode: 'reorder',
 })
@@ -99,13 +115,17 @@ There are several built-in aggregation functions that you can use:
 When rows are grouped, you can aggregate the data in the grouped rows using the aggregationFns option. This is a record where the keys are the IDs of the aggregation functions, and the values are the aggregation functions themselves. You can then reference these aggregation functions in a column's aggregationFn option.
 
 ```tsx
-const table = useReactTable({
-  // other options...
-  aggregationFns: {
-    myCustomAggregation: (columnId, leafRows, childRows) => {
-      // return the aggregated value
-    },
+const table = useTable({
+  _features,
+  _rowModels: {
+    groupedRowModel: createGroupedRowModel({
+      ...aggregationFns,
+      myCustomAggregation: (columnId, leafRows, childRows) => {
+        // return the aggregated value
+      },
+    }),
   },
+  // other options...
 })
 ```
 
@@ -122,7 +142,9 @@ const column = columnHelper.accessor('key', {
 If you are doing server-side grouping and aggregation, you can enable manual grouping using the manualGrouping option. When this option is set to true, the table will not automatically group rows using getGroupedRowModel() and instead will expect you to manually group the rows before passing them to the table.
 
 ```tsx
-const table = useReactTable({
+const table = useTable({
+  _features: tableFeatures({ columnGroupingFeature }),
+  _rowModels: {}, // no groupedRowModel needed for manual grouping
   // other options...
   manualGrouping: true,
 })
@@ -137,11 +159,13 @@ If you want to manage the grouping state yourself, you can use the onGroupingCha
 ```tsx
 const [grouping, setGrouping] = useState<string[]>([])
 
-const table = useReactTable({
+const table = useTable({
+  _features,
+  _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   state: {
-    grouping: grouping,
+    grouping,
   },
-  onGroupingChange: setGrouping
+  onGroupingChange: setGrouping,
 })
 ```

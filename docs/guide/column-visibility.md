@@ -21,27 +21,31 @@ Want to skip to the implementation? Check out these examples:
 
 ## Column Visibility Guide
 
-The column visibility feature allows table columns to be hidden or shown dynamically. In previous versions of react-table, this feature was a static property on a column, but in v8, there is a dedicated `columnVisibility` state and APIs for managing column visibility dynamically.
+The column visibility feature allows table columns to be hidden or shown dynamically. In v9, add `columnVisibilityFeature` to your `_features` to enable this. There is a dedicated `columnVisibility` state and APIs for managing column visibility dynamically.
 
 ### Column Visibility State
 
 The `columnVisibility` state is a map of column IDs to boolean values. A column will be hidden if its ID is present in the map and the value is `false`. If the column ID is not present in the map, or the value is `true`, the column will be shown.
 
 ```jsx
+import { useTable, tableFeatures, columnVisibilityFeature } from '@tanstack/react-table'
+
 const [columnVisibility, setColumnVisibility] = useState({
   columnId1: true,
-  columnId2: false, //hide this column by default
+  columnId2: false, // hide this column by default
   columnId3: true,
-});
+})
 
 const table = useTable({
+  _features: tableFeatures({ columnVisibilityFeature }),
+  _rowModels: {},
   //...
   state: {
     columnVisibility,
     //...
   },
   onColumnVisibilityChange: setColumnVisibility,
-});
+})
 ```
 
 Alternatively, if you don't need to manage the column visibility state outside of the table, you can still set the initial default column visibility state using the `initialState` option.
@@ -50,16 +54,18 @@ Alternatively, if you don't need to manage the column visibility state outside o
 
 ```jsx
 const table = useTable({
+  _features: tableFeatures({ columnVisibilityFeature }),
+  _rowModels: {},
   //...
   initialState: {
     columnVisibility: {
       columnId1: true,
-      columnId2: false, //hide this column by default
+      columnId2: false, // hide this column by default
       columnId3: true,
     },
     //...
   },
-});
+})
 ```
 
 ### Disable Hiding Columns

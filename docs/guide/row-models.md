@@ -7,57 +7,77 @@ title: Row Models Guide
 If you take a look at the most basic example of TanStack Table, you'll see a code snippet like this:
 
 ```ts
-import { getCoreRowModel, useTable } from '@tanstack/react-table'
+import { tableFeatures, useTable } from '@tanstack/react-table'
+
+const _features = tableFeatures({}) // Core features only
 
 function Component() {
   const table = useTable({
+    _features,
+    _rowModels: {}, // Core row model is automatic; add others as needed
     columns,
     data,
-    getCoreRowModel: createCoreRowModel(), //row model
   })
 }
 ```
 
-What is this `getCoreRowModel` function? And why do you have to import it from TanStack Table only to just pass it back to itself?
-
-Well, the answer is that TanStack Table is a modular library. Not all code for every single feature is included in the _createTable functions/hooks by default. You only need to import and include the code that you will need to correctly generate rows based on the features you want to use.
+In v9, row models are configured via the `_rowModels` option. The core row model is always included automatically. You only add the row models you need for filtering, sorting, pagination, etc. This keeps your bundle small—you only import and use the code for the features you enable.
 
 ### What are Row Models?
 
 Row models run under the hood of TanStack Table to transform your original data in useful ways that are needed for data grid features like filtering, sorting, grouping, expanding, and pagination. The rows that get generated and render on screen won't necessarily be a 1:1 mapping of the original data that you passed to the table. They may be sorted, filtered, paginated, etc.
 
-### Import Row Models
+### Configuring Row Models
 
-You should only import the row models that you need. Here are all of the row models that are available:
+You should only add the row models that you need. Here are all of the row models that are available via `_rowModels`:
+
+| `_rowModels` Key | Factory Function | Purpose |
+|------------------|------------------|---------|
+| (automatic) | — | Core row model (always included) |
+| `filteredRowModel` | `createFilteredRowModel(filterFns)` | Filtering (column + global) |
+| `sortedRowModel` | `createSortedRowModel(sortFns)` | Sorting |
+| `paginatedRowModel` | `createPaginatedRowModel()` | Pagination |
+| `expandedRowModel` | `createExpandedRowModel()` | Row expanding |
+| `groupedRowModel` | `createGroupedRowModel(aggregationFns)` | Grouping and aggregation |
+| `facetedRowModel` | `createFacetedRowModel()` | Faceted filtering |
+| `facetedMinMaxValues` | `createFacetedMinMaxValues()` | Min/max for faceted filters |
+| `facetedUniqueValues` | `createFacetedUniqueValues()` | Unique values for faceted filters |
+
+You must also add the corresponding features to `_features` for each row model you use. For example:
 
 ```ts
-//only import the row models you need
 import {
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getGroupedRowModel,
-  getPaginatedRowModel,
-  getSortedRowModel,
-}
-//...
+  tableFeatures,
+  useTable,
+  columnFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  createPaginatedRowModel,
+  filterFns,
+  sortFns,
+} from '@tanstack/react-table'
+
+const _features = tableFeatures({
+  columnFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+})
+
 const table = useTable({
+  _features,
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel(filterFns),
+    sortedRowModel: createSortedRowModel(sortFns),
+    paginatedRowModel: createPaginatedRowModel(),
+  },
   columns,
   data,
-  getCoreRowModel: createCoreRowModel(),
-  getExpandedRowModel: createExpandedRowModel(),
-  getFacetedMinMaxValues: getFacetedMinMaxValues(),
-  getFacetedRowModel: createFacetedRowModel(),
-  getFacetedUniqueValues: getFacetedUniqueValues(),
-  getFilteredRowModel: createFilteredRowModel(filterFns),
-  getGroupedRowModel: createGroupedRowModel(),
-  getPaginatedRowModel: createPaginatedRowModel(),
-  getSortedRowModel: createSortedRowModel(sortFns),
 })
 ```
+
+Note that `createFilteredRowModel`, `createSortedRowModel`, and `createGroupedRowModel` accept their processing functions (`filterFns`, `sortFns`, `aggregationFns`) as parameters. This enables tree-shaking—if you use a custom filter, you don't pay for built-in filters you never use.
 
 ### Customize/Fork Row Models
 

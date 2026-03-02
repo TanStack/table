@@ -27,12 +27,24 @@ There are multiple use cases for expanding features in TanStack Table that will 
 
 ### Enable Client-Side Expanding
 
-To use the client-side expanding features, you need to define the getExpandedRowModel function in your table options. This function is responsible for returning the expanded row model.
+To use the client-side expanding features, add the `rowExpandingFeature` to your features and the `expandedRowModel` to your row models:
 
 ```ts
-const table = useReactTable({
+import {
+  useTable,
+  tableFeatures,
+  rowExpandingFeature,
+  createExpandedRowModel,
+} from '@tanstack/react-table'
+
+const _features = tableFeatures({ rowExpandingFeature })
+
+const table = useTable({
+  _features,
+  _rowModels: {
+    expandedRowModel: createExpandedRowModel(),
+  },
   // other options...
-  getExpandedRowModel: getExpandedRowModel(),
 })
 ```
 
@@ -74,11 +86,13 @@ const data: Person[] =  [
 Then you can use the getSubRows function to return the children array in each row as expanded rows. The table instance will now understand where to look for the sub rows on each row.
 
 ```ts
-const table = useReactTable({
-  // other options...
+const table = useTable({
+  _features,
+  _rowModels: {
+    expandedRowModel: createExpandedRowModel(),
+  },
   getSubRows: (row) => row.children, // return the children array as sub-rows
-  getCoreRowModel: getCoreRowModel(),
-  getExpandedRowModel: getExpandedRowModel(),
+  // other options...
 })
 ```
 
@@ -92,11 +106,13 @@ By default, the `row.getCanExpand()` row instance API will return false unless i
 
 ```ts
 //...
-const table = useReactTable({
-  // other options...
+const table = useTable({
+  _features,
+  _rowModels: {
+    expandedRowModel: createExpandedRowModel(),
+  },
   getRowCanExpand: (row) => true, // Add your logic to determine if a row can be expanded. True means all rows include expanded data
-  getCoreRowModel: getCoreRowModel(),
-  getExpandedRowModel: getExpandedRowModel(),
+  // other options...
 })
 //...
 <tbody>
@@ -106,10 +122,7 @@ const table = useReactTable({
       <tr>
         {row.getVisibleCells().map((cell) => (
           <td key={cell.id}>
-            <FlexRender
-              render={cell.column.columnDef.cell}
-              props={cell.getContext()}
-            />
+            {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </td>
         ))}
       </tr>
@@ -134,12 +147,14 @@ If you need to control the expanded state of the rows in your table, you can do 
 ```ts
 const [expanded, setExpanded] = useState<ExpandedState>({})
 
-const table = useReactTable({
+const table = useTable({
+  _features,
+  _rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   state: {
-    expanded: expanded, // must pass expanded state back to the table
+    expanded,
   },
-  onExpandedChange: setExpanded
+  onExpandedChange: setExpanded,
 })
 ```
 
@@ -187,14 +202,16 @@ By default, the filtering process starts from the parent rows and moves downward
 
 ```ts
 //...
-const table = useReactTable({
-  // other options...
-  getSubRows: row => row.subRows,
-  getCoreRowModel: getCoreRowModel(),
-  getFilteredRowModel: getFilteredRowModel(),
-  getExpandedRowModel: getExpandedRowModel(),
+const table = useTable({
+  _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+  _rowModels: {
+    filteredRowModel: createFilteredRowModel(filterFns),
+    expandedRowModel: createExpandedRowModel(),
+  },
+  getSubRows: (row) => row.subRows,
   filterFromLeafRows: true, // search through the expanded rows
   maxLeafRowFilterDepth: 1, // limit the depth of the expanded rows that are searched
+  // other options...
 })
 ```
 
@@ -203,7 +220,9 @@ const table = useReactTable({
 By default, expanded rows are paginated along with the rest of the table (which means expanded rows may span multiple pages). If you want to disable this behavior (which means expanded rows will always render on their parents page. This also means more rows will be rendered than the set page size) you can use the `paginateExpandedRows` option.
 
 ```ts
-const table = useReactTable({
+const table = useTable({
+  _features,
+  _rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   paginateExpandedRows: false,
 })
@@ -222,7 +241,9 @@ By default, expanded rows are sorted along with the rest of the table.
 If you are doing server-side expansion, you can enable manual row expansion by setting the manualExpanding option to true. This means that the `getExpandedRowModel` will not be used to expand rows and you would be expected to perform the expansion in your own data model.
 
 ```ts
-const table = useReactTable({
+const table = useTable({
+  _features: tableFeatures({ rowExpandingFeature }),
+  _rowModels: {}, // no expandedRowModel needed for manual expanding
   // other options...
   manualExpanding: true,
 })

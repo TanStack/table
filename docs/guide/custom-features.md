@@ -10,7 +10,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## Custom Features Guide
 
-In this guide, we'll cover how to extend TanStack Table with custom features, and along the way, we'll learn more about how the TanStack Table v8 codebase is structured and how it works.
+In this guide, we'll cover how to extend TanStack Table with custom features, and along the way, we'll learn more about how the TanStack Table v9 codebase is structured and how it works.
 
 ### TanStack Table Strives to be Lean
 
@@ -18,11 +18,9 @@ TanStack Table has a core set of features that are built into the library such a
 
 TanStack Table has always been built in a way that allows it to be highly extensible (at least since v7). The `table` instance that is returned from whichever framework adapter that you are using (`createTable`, `useTable`, etc) is a plain JavaScript object that can have extra properties or APIs added to it. It has always been possible to use composition to add custom logic, state, and APIs to the table instance. Libraries like [Material React Table](https://github.com/KevinVandy/material-react-table/blob/v2/packages/material-react-table/src/hooks/useMRT_TableInstance.ts) have simply created custom wrapper hooks around the `useTable` hook to extend the table instance with custom functionality.
 
-However, starting in version 8.14.0, TanStack Table has exposed a new `_features` table option that allows you to more tightly and cleanly integrate custom code into the table instance in exactly the same way that the built-in table features are already integrated.
+In v9, TanStack Table uses the `_features` option (via `tableFeatures()`) to declare which features your table uses. This enables tree-shaking—you only bundle the code for the features you need. You can add custom features to the table instance in exactly the same way as the built-in features.
 
-> TanStack Table v8.14.0 introduced a new `_features` option that allows you to add custom features to the table instance.
-
-With this new tighter integration, you can easily add more complex custom features to your tables, and possibly even package them up and share them with the community. We'll see how this evolves over time. In a future v9 release, we may even lower the bundle size of TanStack Table by making all features opt-in, but that is still being explored.
+> In v9, features are opt-in. Use `tableFeatures({ ... })` to declare which features your table uses, including custom features.
 
 ### How TanStack Table Features Work
 
@@ -230,11 +228,14 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
 
 #### Step 4: Add the Feature to the Table
 
-Now that we have our feature object, we can add it to the table instance by passing it to the `_features` option when we create the table instance.
+Now that we have our feature object, we can add it to the table instance by including it in the `tableFeatures()` call and passing the result to the `_features` option when we create the table instance.
 
 ```ts
+const _features = tableFeatures({ DensityFeature })
+
 const table = useTable({
-  _features: [DensityFeature], //pass the new feature to merge with all of the built-in features under the hood
+  _features,
+  _rowModels: {},
   columns,
   data,
   //..
@@ -246,15 +247,18 @@ const table = useTable({
 Now that the feature is added to the table instance, you can use the new instance APIs options, and state in your application.
 
 ```tsx
+const _features = tableFeatures({ DensityFeature })
+
 const table = useTable({
-  _features: [DensityFeature], //pass our custom feature to the table to be instantiated upon creation
+  _features,
+  _rowModels: {},
   columns,
   data,
   //...
   state: {
-    density, //passing the density state to the table, TS is still happy :)
+    density,
   },
-  onDensityChange: setDensity, //using the new onDensityChange option, TS is still happy :)
+  onDensityChange: setDensity,
 })
 //...
 const { density } = table.store.state
@@ -272,10 +276,7 @@ return(
       transition: 'padding 0.2s',
     }}
   >
-    {flexRender(
-      cell.column.columnDef.cell,
-      cell.getContext()
-    )}
+    {flexRender(cell.column.columnDef.cell, cell.getContext())}
   </td>
 )
 ```

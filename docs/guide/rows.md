@@ -54,9 +54,11 @@ Every row object has an `id` property that makes it unique within the table inst
 
 ```js
 const table = useTable({
+  _features,
+  _rowModels: {},
   columns,
   data,
-  getRowId: originalRow => originalRow.uuid, //override the row.id with the uuid from the original row's data
+  getRowId: (originalRow) => originalRow.uuid, // override the row.id with the uuid from the original row's data
 })
 ```
 

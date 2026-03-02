@@ -46,18 +46,29 @@ Alternatively, instead of paginating the data, you can render all rows of a larg
 
 #### Pagination Row Model
 
-If you want to take advantage of the built-in client-side pagination in TanStack Table, you first need to pass in the pagination row model.
+If you want to take advantage of the built-in client-side pagination in TanStack Table, add the `rowPaginationFeature` to your features and the `paginatedRowModel` to your row models:
 
 ```jsx
-import { useLegacyTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table/legacy';
-//...
-const table = useLegacyTable({
+import {
+  useTable,
+  tableFeatures,
+  rowPaginationFeature,
+  createPaginatedRowModel,
+} from '@tanstack/react-table'
+
+const _features = tableFeatures({ rowPaginationFeature })
+
+const table = useTable({
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+  },
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(), //load client-side pagination code
-});
+})
 ```
+
+> **Migrating from v8?** See [useLegacyTable](../framework/react/guide/use-legacy-table) for incremental migration.
 
 ### Manual Server-Side Pagination
 
@@ -70,17 +81,23 @@ No pagination row model is needed for server-side pagination, but if you have pr
 The table instance will have no way of knowing how many rows/pages there are in total in your back-end unless you tell it. Provide either the `rowCount` or `pageCount` table option to let the table instance know how many pages there are in total. If you provide a `rowCount`, the table instance will calculate the `pageCount` internally from `rowCount` and `pageSize`. Otherwise, you can directly provide the `pageCount` if you already have it. If you don't know the page count, you can just pass in `-1` for the `pageCount`, but the `getCanNextPage` and `getCanPreviousPage` row model functions will always return `true` in this case.
 
 ```jsx
-import { useLegacyTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table/legacy';
-//...
-const table = useLegacyTable({
+import {
+  useTable,
+  tableFeatures,
+  rowPaginationFeature,
+} from '@tanstack/react-table'
+
+const _features = tableFeatures({ rowPaginationFeature })
+
+const table = useTable({
+  _features,
+  _rowModels: {}, // no paginatedRowModel needed for server-side pagination
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  // getPaginationRowModel: getPaginationRowModel(), //not needed for server-side pagination
-  manualPagination: true, //turn off client-side pagination
-  rowCount: dataQuery.data?.rowCount, //pass in the total row count so the table knows how many pages there are (pageCount calculated internally if not provided)
-  // pageCount: dataQuery.data?.pageCount, //alternatively directly pass in pageCount instead of rowCount
-});
+  manualPagination: true, // turn off client-side pagination
+  rowCount: dataQuery.data?.rowCount, // pass in the total row count so the table knows how many pages there are (pageCount calculated internally if not provided)
+  // pageCount: dataQuery.data?.pageCount, // alternatively directly pass in pageCount instead of rowCount
+})
 ```
 
 > **Note**: Setting the `manualPagination` option to `true` will make the table instance assume that the `data` that you pass in is already paginated.
@@ -97,41 +114,51 @@ The `pagination` state is an object that contains the following properties:
 You can manage the `pagination` state just like any other state in the table instance.
 
 ```jsx
-import { useLegacyTable, getCoreRowModel, getPaginationRowModel } from '@tanstack/react-table/legacy';
-//...
-const [pagination, setPagination] = useState({
-  pageIndex: 0, //initial page index
-  pageSize: 10, //default page size
-});
+import {
+  useTable,
+  tableFeatures,
+  rowPaginationFeature,
+  createPaginatedRowModel,
+} from '@tanstack/react-table'
 
-const table = useLegacyTable({
+const _features = tableFeatures({ rowPaginationFeature })
+
+const [pagination, setPagination] = useState({
+  pageIndex: 0, // initial page index
+  pageSize: 10, // default page size
+})
+
+const table = useTable({
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+  },
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
-  onPaginationChange: setPagination, //update the pagination state when internal APIs mutate the pagination state
+  onPaginationChange: setPagination,
   state: {
-    //...
     pagination,
   },
-});
+})
 ```
 
 Alternatively, if you have no need for managing the `pagination` state in your own scope, but you need to set different initial values for the `pageIndex` and `pageSize`, you can use the `initialState` option.
 
 ```jsx
-const table = useLegacyTable({
+const table = useTable({
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+  },
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
   initialState: {
     pagination: {
-      pageIndex: 2, //custom initial page index
-      pageSize: 25, //custom default page size
+      pageIndex: 2, // custom initial page index
+      pageSize: 25, // custom default page size
     },
   },
-});
+})
 ```
 
 > **Note**: Do NOT pass the `pagination` state to both the `state` and `initialState` options. `state` will overwrite `initialState`. Only use one or the other.
@@ -145,13 +172,15 @@ Besides the `manualPagination`, `pageCount`, and `rowCount` options which are us
 By default, `pageIndex` is reset to `0` when page-altering state changes occur, such as when the `data` is updated, filters change, grouping changes, etc. This behavior is automatically disabled when `manualPagination` is true but it can be overridden by explicitly assigning a boolean value to the `autoResetPageIndex` table option.
 
 ```jsx
-const table = useLegacyTable({
+const table = useTable({
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+  },
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(),
-  getPaginationRowModel: getPaginationRowModel(),
-  autoResetPageIndex: false, //turn off auto reset of pageIndex
-});
+  autoResetPageIndex: false, // turn off auto reset of pageIndex
+})
 ```
 
 Be aware, however, that if you turn off `autoResetPageIndex`, you may need to add some logic to handle resetting the `pageIndex` yourself to avoid showing empty pages.
@@ -175,7 +204,7 @@ There are several pagination table instance APIs that are useful for hooking up 
 - `setPagination`: Useful for setting all of the pagination state at once.
 - `resetPagination`: Useful for resetting the table state to the original pagination state.
 
-> **Note**: Some of these APIs are new in `v8.13.0`.
+> **Note**: These pagination APIs are available when using `rowPaginationFeature`.
 
 ```jsx
 <Button

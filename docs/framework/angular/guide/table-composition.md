@@ -1,12 +1,19 @@
 ---
-title: Table Composition
+title: Table Composition (createTableHook)
 ---
 
 `createTableHook` is a convenience API for creating reusable, type-safe table configurations with pre-bound components. It is inspired by [TanStack Form's `createFormHook`](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition) — a pattern where you define shared infrastructure once and consume it across your application with minimal boilerplate.
 
+> **When to use it:** Use `createTableHook` when you have multiple tables that share the same configuration (features, row models, and reusable components). For a single table, `injectTable` is sufficient.
+
+## Examples
+
+- [Composable Tables](../examples/composable-tables) — Two tables (Users and Products) sharing the same `createTableHook` configuration, with table/cell/header components, sorting, filtering, and pagination.
+- [Basic App Table](../examples/basic-app-table) — Minimal example using `createTableHook` with no pre-bound components.
+
 ### createTableHook
 
-`createTableHook` centralize your table configuration into a single factory call. It returns a set of typed functions — `injectAppTable`, `createAppColumnHelper`, and pre-typed injection helpers — that you use instead of the base APIs.
+`createTableHook` centralizes your table configuration into a single factory call. It returns a set of typed functions — `injectAppTable`, `createAppColumnHelper`, and pre-typed injection helpers — that you use instead of the base APIs.
 
 ## Setup
 
@@ -284,5 +291,5 @@ export const {
 
 ## Examples
 
-- [Composable Tables](../examples/composable-tables) — full example with two tables sharing the same `createTableHook` configuration, including table/cell/header component registries, sorting, filtering, and pagination.
-- [Basic App Table](../examples/basic-app-table) — minimal example using `createTableHook` with no pre-bound components.
+- [Composable Tables](../examples/composable-tables) — Full example with two tables sharing the same `createTableHook` configuration.
+- [Basic App Table](../examples/basic-app-table) — Minimal example with no pre-bound components.

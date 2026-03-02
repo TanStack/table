@@ -61,12 +61,25 @@
               "to": "framework/react/react-table"
             },
             {
+              "label": "createTableHook Guide",
+              "to": "framework/react/guide/create-table-hook"
+            },
+            {
               "label": "Migrating to V9",
               "to": "framework/react/guide/migrating"
             },
             {
               "label": "useLegacyTable Guide",
               "to": "framework/react/guide/use-legacy-table"
+            }
+          ]
+        },
+        {
+          "label": "preact",
+          "children": [
+            {
+              "label": "createTableHook Guide",
+              "to": "framework/preact/guide/create-table-hook"
             }
           ]
         },
@@ -474,447 +487,234 @@
       ]
     },
     {
-      "label": "Examples",
+      "label": "Basic Examples",
       "children": [],
       "frameworks": [
         {
           "label": "angular",
           "children": [
-            {
-              "to": "framework/angular/examples/basic",
-              "label": "Basic"
-            },
-            {
-              "to": "framework/angular/examples/basic-app-table",
-              "label": "Basic (App Table)"
-            },
-            {
-              "to": "framework/angular/examples/composable-tables",
-              "label": "Composable tables"
-            },
-            {
-              "to": "framework/angular/examples/custom-plugin",
-              "label": "Custom plugin"
-            },
-            {
-              "to": "framework/angular/examples/row-selection",
-              "label": "Row Selection"
-            },
-            {
-              "to": "framework/angular/examples/row-selection-signal",
-              "label": "Row Selection (Signal)"
-            },
-            {
-              "to": "framework/angular/examples/expanding",
-              "label": "Row Expanding"
-            },
-            {
-              "to": "framework/angular/examples/column-ordering",
-              "label": "Column Ordering"
-            },
-            {
-              "to": "framework/angular/examples/column-pinning",
-              "label": "Column Pinning"
-            },
-            {
-              "to": "framework/angular/examples/column-pinning-sticky",
-              "label": "Column Pinning (Sticky)"
-            },
-            {
-              "to": "framework/angular/examples/column-visibility",
-              "label": "Column Visibility"
-            },
-            {
-              "to": "framework/angular/examples/filters",
-              "label": "Column Filters"
-            },
-            {
-              "to": "framework/angular/examples/column-resizing-performant",
-              "label": "Column Resizing"
-            },
-            {
-              "to": "framework/angular/examples/grouping",
-              "label": "Column Grouping"
-            },
-            {
-              "to": "framework/angular/examples/remote-data",
-              "label": "Fetch API data (SPA / SSR)"
-            },
-            {
-              "to": "framework/angular/examples/sub-components",
-              "label": "Sub Components"
-            },
-            {
-              "to": "framework/angular/examples/signal-input",
-              "label": "Signal Input"
-            },
-            {
-              "to": "framework/angular/examples/editable",
-              "label": "Editable data"
-            },
-            {
-              "to": "framework/angular/examples/row-dnd",
-              "label": "Row Drag & Drop"
-            }
+            { "to": "framework/angular/examples/basic", "label": "Basic" },
+            { "to": "framework/angular/examples/basic-app-table", "label": "Basic (App Table)" }
           ]
         },
         {
           "label": "lit",
           "children": [
-            {
-              "to": "framework/lit/examples/basic",
-              "label": "Basic"
-            },
-            {
-              "to": "framework/lit/examples/column-sizing",
-              "label": "Column Sizing"
-            },
-            {
-              "to": "framework/lit/examples/filters",
-              "label": "Filters"
-            },
-            {
-              "to": "framework/lit/examples/row-selection",
-              "label": "Row Selection"
-            },
-            {
-              "to": "framework/lit/examples/sorting",
-              "label": "Sorting"
-            },
-            {
-              "to": "framework/lit/examples/sorting-dynamic-data",
-              "label": "Sorting (Dynamic Data)"
-            },
-            {
-              "to": "framework/lit/examples/virtualized-rows",
-              "label": "Virtualized Rows"
-            }
+            { "to": "framework/lit/examples/basic", "label": "Basic" }
           ]
         },
         {
           "label": "react",
           "children": [
-            {
-              "to": "framework/react/examples/basic",
-              "label": "Basic"
-            },
-            {
-              "to": "framework/react/examples/basic-shadcn",
-              "label": "Shadcn Basic"
-            },
-            {
-              "to": "framework/react/examples/basic-use-table",
-              "label": "Basic (useTable)"
-            },
-            {
-              "to": "framework/react/examples/basic-use-app-table",
-              "label": "Basic (useAppTable)"
-            },
-            {
-              "to": "framework/react/examples/basic-use-legacy-table",
-              "label": "Basic (useLegacyTable)"
-            },
-            {
-              "to": "framework/react/examples/basic-external-state",
-              "label": "Basic (External State)"
-            },
-            {
-              "to": "framework/react/examples/basic-external-store",
-              "label": "Basic (External Store)"
-            },
-            {
-              "to": "framework/react/examples/column-groups",
-              "label": "Header Groups"
-            },
-            {
-              "to": "framework/react/examples/filters",
-              "label": "Column Filters"
-            },
-            {
-              "to": "framework/react/examples/filters-faceted",
-              "label": "Column Filters (Faceted)"
-            },
-            {
-              "to": "framework/react/examples/filters-fuzzy",
-              "label": "Fuzzy Search Filters"
-            },
-            {
-              "to": "framework/react/examples/column-ordering",
-              "label": "Column Ordering"
-            },
-            {
-              "to": "framework/react/examples/column-dnd",
-              "label": "Column Ordering (DnD)"
-            },
-            {
-              "to": "framework/react/examples/column-pinning",
-              "label": "Column Pinning"
-            },
-            {
-              "to": "framework/react/examples/column-pinning-split",
-              "label": "Column Pinning (Split)"
-            },
-            {
-              "to": "framework/react/examples/column-pinning-sticky",
-              "label": "Sticky Column Pinning"
-            },
-            {
-              "to": "framework/react/examples/column-sizing",
-              "label": "Column Sizing"
-            },
-            {
-              "to": "framework/react/examples/column-resizing",
-              "label": "Column Resizing"
-            },
-            {
-              "to": "framework/react/examples/column-resizing-performant",
-              "label": "Performant Column Resizing"
-            },
-            {
-              "to": "framework/react/examples/column-visibility",
-              "label": "Column Visibility"
-            },
-            {
-              "to": "framework/react/examples/composable-tables",
-              "label": "Composable Tables"
-            },
-            {
-              "to": "framework/react/examples/custom-plugin",
-              "label": "Custom Plugin"
-            },
-            {
-              "to": "framework/react/examples/expanding",
-              "label": "Expanding"
-            },
-            {
-              "to": "framework/react/examples/sub-components",
-              "label": "Sub Components"
-            },
-            {
-              "to": "framework/react/examples/grouping",
-              "label": "Grouping"
-            },
-            {
-              "to": "framework/react/examples/pagination",
-              "label": "Pagination"
-            },
-            {
-              "to": "framework/react/examples/row-dnd",
-              "label": "Row DnD"
-            },
-            {
-              "to": "framework/react/examples/row-pinning",
-              "label": "Row Pinning"
-            },
-            {
-              "to": "framework/react/examples/row-selection",
-              "label": "Row Selection"
-            },
-            {
-              "to": "framework/react/examples/sorting",
-              "label": "Sorting"
-            },
-            {
-              "to": "framework/react/examples/virtualized-columns",
-              "label": "Virtualized Columns"
-            },
-            {
-              "to": "framework/react/examples/virtualized-columns-experimental",
-              "label": "Virtualized Columns (Experimental)"
-            },
-            {
-              "to": "framework/react/examples/virtualized-rows",
-              "label": "Virtualized Rows"
-            },
-            {
-              "to": "framework/react/examples/virtualized-rows-experimental",
-              "label": "Virtualized Rows (Experimental)"
-            },
-            {
-              "to": "framework/react/examples/virtualized-infinite-scrolling",
-              "label": "Virtualized Infinite Scrolling"
-            },
-            {
-              "to": "framework/react/examples/kitchen-sink-shadcn",
-              "label": "Kitchen Sink (Shadcn)"
-            },
-            {
-              "to": "framework/react/examples/with-tanstack-form",
-              "label": "With TanStack Form"
-            },
-            {
-              "to": "framework/react/examples/with-tanstack-query",
-              "label": "With TanStack Query"
-            },
-            {
-              "to": "framework/react/examples/with-tanstack-router",
-              "label": "With TanStack Router"
-            }
+            { "to": "framework/react/examples/basic-use-table", "label": "Basic (useTable)" },
+            { "to": "framework/react/examples/basic-use-app-table", "label": "Basic (useAppTable)" },
+            { "to": "framework/react/examples/basic-use-legacy-table", "label": "Basic (useLegacyTable)" },
+            { "to": "framework/react/examples/basic-external-state", "label": "Basic (External State)" },
+            { "to": "framework/react/examples/basic-external-store", "label": "Basic (External Store)" },
+            { "to": "framework/react/examples/basic-shadcn", "label": "Shadcn Basic" },
+            { "to": "framework/react/examples/column-groups", "label": "Header Groups" }
           ]
         },
         {
           "label": "solid",
           "children": [
-            {
-              "to": "framework/solid/examples/basic",
-              "label": "Basic"
-            },
-            {
-              "to": "framework/solid/examples/basic-table-helper",
-              "label": "Basic with Helpers"
-            },
-            {
-              "to": "framework/solid/examples/column-groups",
-              "label": "Column Groups"
-            },
-            {
-              "to": "framework/solid/examples/column-ordering",
-              "label": "Column Ordering"
-            },
-            {
-              "to": "framework/solid/examples/column-visibility",
-              "label": "Column Visibility"
-            },
-            {
-              "to": "framework/solid/examples/filters",
-              "label": "Filters"
-            },
-            {
-              "to": "framework/solid/examples/filters-faceted",
-              "label": "Filters (Faceted)"
-            },
-            {
-              "to": "framework/solid/examples/row-selection",
-              "label": "Row Selection"
-            },
-            {
-              "to": "framework/solid/examples/sorting",
-              "label": "Sorting"
-            },
-            {
-              "to": "framework/solid/examples/bootstrap",
-              "label": "Solid Bootstrap"
-            }
+            { "to": "framework/solid/examples/basic", "label": "Basic" },
+            { "to": "framework/solid/examples/basic-table-helper", "label": "Basic with Helpers" },
+            { "to": "framework/solid/examples/column-groups", "label": "Header Groups" }
           ]
         },
         {
           "label": "svelte",
           "children": [
-            {
-              "to": "framework/svelte/examples/basic",
-              "label": "Basic"
-            },
-            {
-              "to": "framework/svelte/examples/basic-snippets",
-              "label": "Basic Snippets"
-            },
-            {
-              "to": "framework/svelte/examples/basic-table-helper",
-              "label": "Basic with Helpers"
-            },
-            {
-              "to": "framework/svelte/examples/column-groups",
-              "label": "Column Groups"
-            },
-            {
-              "to": "framework/svelte/examples/column-ordering",
-              "label": "Column Ordering"
-            },
-            {
-              "to": "framework/svelte/examples/column-pinning",
-              "label": "Column Pinning"
-            },
-            {
-              "to": "framework/svelte/examples/column-visibility",
-              "label": "Column Visibility"
-            },
-            {
-              "to": "framework/svelte/examples/filtering",
-              "label": "Filtering"
-            },
-            {
-              "to": "framework/svelte/examples/row-selection",
-              "label": "Row Selection"
-            },
-            {
-              "to": "framework/svelte/examples/sorting",
-              "label": "Sorting"
-            }
+            { "to": "framework/svelte/examples/basic", "label": "Basic" },
+            { "to": "framework/svelte/examples/basic-snippets", "label": "Basic Snippets" },
+            { "to": "framework/svelte/examples/basic-table-helper", "label": "Basic with Helpers" },
+            { "to": "framework/svelte/examples/column-groups", "label": "Header Groups" }
           ]
         },
         {
           "label": "vue",
           "children": [
-            {
-              "to": "framework/vue/examples/basic",
-              "label": "Basic"
-            },
-            {
-              "to": "framework/vue/examples/column-ordering",
-              "label": "Column Ordering"
-            },
-            {
-              "to": "framework/vue/examples/column-pinning",
-              "label": "Column Pinning"
-            },
-            {
-              "to": "framework/vue/examples/pagination",
-              "label": "Pagination"
-            },
-            {
-              "to": "framework/vue/examples/pagination-controlled",
-              "label": "Pagination Controlled"
-            },
-            {
-              "to": "framework/vue/examples/row-selection",
-              "label": "Row Selection"
-            },
-            {
-              "to": "framework/vue/examples/sorting",
-              "label": "Sorting"
-            },
-            {
-              "to": "framework/vue/examples/sub-components",
-              "label": "Sub Components"
-            },
-            {
-              "to": "framework/vue/examples/filters",
-              "label": "Column Filters"
-            },
-            {
-              "to": "framework/vue/examples/virtualized-rows",
-              "label": "Virtualized Rows"
-            }
+            { "to": "framework/vue/examples/basic", "label": "Basic" }
           ]
         },
         {
           "label": "preact",
           "children": [
-            {
-              "to": "framework/preact/examples/basic",
-              "label": "Basic"
-            },
-            {
-              "to": "framework/preact/examples/sorting",
-              "label": "Sorting"
-            }
+            { "to": "framework/preact/examples/basic", "label": "Basic" }
           ]
         },
         {
           "label": "vanilla",
           "children": [
-            {
-              "to": "framework/vanilla/examples/basic",
-              "label": "Basic"
-            },
-            {
-              "to": "framework/vanilla/examples/pagination",
-              "label": "Pagination"
-            },
-            {
-              "to": "framework/vanilla/examples/sorting",
-              "label": "Sorting"
-            }
+            { "to": "framework/vanilla/examples/basic", "label": "Basic" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Feature Examples",
+      "children": [],
+      "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            { "to": "framework/angular/examples/row-selection", "label": "Row Selection" },
+            { "to": "framework/angular/examples/row-selection-signal", "label": "Row Selection (Signal)" },
+            { "to": "framework/angular/examples/expanding", "label": "Row Expanding" },
+            { "to": "framework/angular/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/angular/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/angular/examples/column-pinning-sticky", "label": "Column Pinning (Sticky)" },
+            { "to": "framework/angular/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/angular/examples/filters", "label": "Column Filters" },
+            { "to": "framework/angular/examples/column-resizing-performant", "label": "Column Resizing" },
+            { "to": "framework/angular/examples/grouping", "label": "Column Grouping" }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            { "to": "framework/lit/examples/column-sizing", "label": "Column Sizing" },
+            { "to": "framework/lit/examples/filters", "label": "Filters" },
+            { "to": "framework/lit/examples/row-selection", "label": "Row Selection" },
+            { "to": "framework/lit/examples/sorting", "label": "Sorting" },
+            { "to": "framework/lit/examples/sorting-dynamic-data", "label": "Sorting (Dynamic Data)" }
+          ]
+        },
+        {
+          "label": "react",
+          "children": [
+            { "to": "framework/react/examples/filters", "label": "Column Filters" },
+            { "to": "framework/react/examples/filters-faceted", "label": "Column Filters (Faceted)" },
+            { "to": "framework/react/examples/filters-fuzzy", "label": "Fuzzy Search Filters" },
+            { "to": "framework/react/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/react/examples/column-dnd", "label": "Column Ordering (DnD)" },
+            { "to": "framework/react/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/react/examples/column-pinning-split", "label": "Column Pinning (Split)" },
+            { "to": "framework/react/examples/column-pinning-sticky", "label": "Sticky Column Pinning" },
+            { "to": "framework/react/examples/column-sizing", "label": "Column Sizing" },
+            { "to": "framework/react/examples/column-resizing", "label": "Column Resizing" },
+            { "to": "framework/react/examples/column-resizing-performant", "label": "Performant Column Resizing" },
+            { "to": "framework/react/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/react/examples/expanding", "label": "Expanding" },
+            { "to": "framework/react/examples/grouping", "label": "Grouping" },
+            { "to": "framework/react/examples/pagination", "label": "Pagination" },
+            { "to": "framework/react/examples/row-dnd", "label": "Row DnD" },
+            { "to": "framework/react/examples/row-pinning", "label": "Row Pinning" },
+            { "to": "framework/react/examples/row-selection", "label": "Row Selection" },
+            { "to": "framework/react/examples/sorting", "label": "Sorting" }
+          ]
+        },
+        {
+          "label": "solid",
+          "children": [
+            { "to": "framework/solid/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/solid/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/solid/examples/filters", "label": "Filters" },
+            { "to": "framework/solid/examples/filters-faceted", "label": "Filters (Faceted)" },
+            { "to": "framework/solid/examples/row-selection", "label": "Row Selection" },
+            { "to": "framework/solid/examples/sorting", "label": "Sorting" }
+          ]
+        },
+        {
+          "label": "svelte",
+          "children": [
+            { "to": "framework/svelte/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/svelte/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/svelte/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/svelte/examples/filtering", "label": "Filtering" },
+            { "to": "framework/svelte/examples/row-selection", "label": "Row Selection" },
+            { "to": "framework/svelte/examples/sorting", "label": "Sorting" }
+          ]
+        },
+        {
+          "label": "vue",
+          "children": [
+            { "to": "framework/vue/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/vue/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/vue/examples/pagination", "label": "Pagination" },
+            { "to": "framework/vue/examples/pagination-controlled", "label": "Pagination Controlled" },
+            { "to": "framework/vue/examples/row-selection", "label": "Row Selection" },
+            { "to": "framework/vue/examples/sorting", "label": "Sorting" },
+            { "to": "framework/vue/examples/filters", "label": "Column Filters" }
+          ]
+        },
+        {
+          "label": "preact",
+          "children": [
+            { "to": "framework/preact/examples/sorting", "label": "Sorting" }
+          ]
+        },
+        {
+          "label": "vanilla",
+          "children": [
+            { "to": "framework/vanilla/examples/pagination", "label": "Pagination" },
+            { "to": "framework/vanilla/examples/sorting", "label": "Sorting" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Specialized Examples",
+      "children": [],
+      "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            { "to": "framework/angular/examples/composable-tables", "label": "Composable Tables" },
+            { "to": "framework/angular/examples/custom-plugin", "label": "Custom Plugin" },
+            { "to": "framework/angular/examples/remote-data", "label": "Fetch API data (SPA / SSR)" },
+            { "to": "framework/angular/examples/sub-components", "label": "Sub Components" },
+            { "to": "framework/angular/examples/signal-input", "label": "Signal Input" },
+            { "to": "framework/angular/examples/editable", "label": "Editable data" },
+            { "to": "framework/angular/examples/row-dnd", "label": "Row Drag & Drop" }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            { "to": "framework/lit/examples/virtualized-rows", "label": "With TanStack Virtual - Rows" }
+          ]
+        },
+        {
+          "label": "react",
+          "children": [
+            { "to": "framework/react/examples/composable-tables", "label": "Composable Tables" },
+            { "to": "framework/react/examples/custom-plugin", "label": "Custom Plugin" },
+            { "to": "framework/react/examples/sub-components", "label": "Sub Components" },
+            { "to": "framework/react/examples/virtualized-columns", "label": "With TanStack Virtual - Columns" },
+            { "to": "framework/react/examples/virtualized-columns-experimental", "label": "With TanStack Virtual - Columns (Exp)" },
+            { "to": "framework/react/examples/virtualized-rows", "label": "With TanStack Virtual - Rows" },
+            { "to": "framework/react/examples/virtualized-rows-experimental", "label": "With TanStack Virtual - Rows (Exp)" },
+            { "to": "framework/react/examples/virtualized-infinite-scrolling", "label": "With TanStack Virtual - Infinite Scrolling" },
+            { "to": "framework/react/examples/with-tanstack-form", "label": "With TanStack Form" },
+            { "to": "framework/react/examples/with-tanstack-query", "label": "With TanStack Query" },
+            { "to": "framework/react/examples/with-tanstack-router", "label": "With TanStack Router" }
+          ]
+        },
+        {
+          "label": "solid",
+          "children": [
+            { "to": "framework/solid/examples/bootstrap", "label": "Solid Bootstrap" }
+          ]
+        },
+        {
+          "label": "vue",
+          "children": [
+            { "to": "framework/vue/examples/sub-components", "label": "Sub Components" },
+            { "to": "framework/vue/examples/virtualized-rows", "label": "With TanStack Virtual (Rows)" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Kitchen Sink",
+      "children": [],
+      "frameworks": [
+        {
+          "label": "react",
+          "children": [
+            { "to": "framework/react/examples/kitchen-sink-shadcn", "label": "Kitchen Sink (Shadcn)" }
           ]
         }
       ]

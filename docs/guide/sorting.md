@@ -37,6 +37,8 @@ You can access the sorting state directly from the table instance just like any 
 
 ```tsx
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -57,6 +59,8 @@ const [sorting, setSorting] = useState<SortingState>([]) // can set initial sort
 // use sorting state to fetch data from your server or something...
 //...
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -73,6 +77,8 @@ If you do not need to control the sorting state in your own state management or 
 
 ```jsx
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -101,11 +107,11 @@ If you plan to just use your own server-side sorting in your back-end logic, you
 const [sorting, setSorting] = useState<SortingState>([])
 //...
 const table = useTable({
+  _features: tableFeatures({ rowSortingFeature }), // feature needed for sorting state/APIs
+  _rowModels: {}, // no sortedRowModel needed for manual sorting
   columns,
   data,
-  getCoreRowModel: createCoreRowModel(),
-  //getSortedRowModel: createSortedRowModel(sortFns), //not needed for manual sorting
-  manualSorting: true, //use pre-sorted row model instead of sorted row model
+  manualSorting: true, // use pre-sorted row model instead of sorted row model
   state: {
     sorting,
   },
@@ -117,16 +123,26 @@ const table = useTable({
 
 ### Client-Side Sorting
 
-To implement client-side sorting, first you have to provide a sorting row model to the table. You can import the `getSortedRowModel` function from TanStack Table, and it will be used to transform your rows into sorted rows.
+To implement client-side sorting, add the `rowSortingFeature` to your features and the `sortedRowModel` to your row models. Import `createSortedRowModel` and `sortFns` from TanStack Table:
 
 ```jsx
-import { useTable } from '@tanstack/react-table'
-//...
+import {
+  useTable,
+  tableFeatures,
+  rowSortingFeature,
+  createSortedRowModel,
+  sortFns,
+} from '@tanstack/react-table'
+
+const _features = tableFeatures({ rowSortingFeature })
+
 const table = useTable({
+  _features,
+  _rowModels: {
+    sortedRowModel: createSortedRowModel(sortFns),
+  },
   columns,
   data,
-  getCoreRowModel: createCoreRowModel(),
-  getSortedRowModel: createSortedRowModel(sortFns), //provide a sorting row model
 })
 ```
 
@@ -196,15 +212,20 @@ const columns = [
 ]
 //...
 const table = useTable({
+  _features,
+  _rowModels: {
+    sortedRowModel: createSortedRowModel({
+      ...sortFns,
+      myCustomSortFn: (rowA, rowB, columnId) =>
+        rowA.original[columnId] > rowB.original[columnId]
+          ? 1
+          : rowA.original[columnId] < rowB.original[columnId]
+            ? -1
+            : 0,
+    }),
+  },
   columns,
   data,
-  getCoreRowModel: createCoreRowModel(),
-  getSortedRowModel: createSortedRowModel(sortFns),
-  sortFns: { //add a custom sorting function
-    myCustomSortFn: (rowA, rowB, columnId) => {
-      return rowA.original[columnId] > rowB.original[columnId] ? 1 : rowA.original[columnId] < rowB.original[columnId] ? -1 : 0
-    },
-  },
 })
 ```
 
@@ -231,6 +252,8 @@ const columns = [
 ]
 //...
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSorting: false, // disable sorting for the entire table
@@ -257,6 +280,8 @@ const columns = [
 ]
 //...
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   sortDescFirst: true, //sort by all columns in descending order first (default is ascending for string columns and descending for number columns)
@@ -292,7 +317,7 @@ In not specified, the default value for `sortUndefined` is `1`, and undefined va
 - `-1` - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
 - `1` - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
 
-> NOTE: `'first'` and `'last'` options are new in v8.16.0
+> NOTE: `'first'` and `'last'` options are available in v9.
 
 ```jsx
 const columns = [
@@ -322,6 +347,8 @@ Once a column is sorted and `enableSortingRemoval` is `false`, toggling the sort
 
 ```jsx
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSortingRemoval: false, // disable the ability to remove sorting on columns (always none -> asc -> desc -> asc)
@@ -347,6 +374,8 @@ const columns = [
 ]
 //...
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiSort: false, // disable multi-sorting for the entire table
@@ -359,6 +388,8 @@ By default, the `Shift` key is used to trigger multi-sorting. You can change thi
 
 ```jsx
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   isMultiSortEvent: (e) => true, // normal click triggers multi-sorting
@@ -373,6 +404,8 @@ By default, there is no limit to the number of columns that can be sorted at onc
 
 ```jsx
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once
@@ -385,6 +418,8 @@ By default, the ability to remove multi-sorts is enabled. You can disable this b
 
 ```jsx
 const table = useTable({
+  _features,
+  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiRemove: false, // disable the ability to remove multi-sorts

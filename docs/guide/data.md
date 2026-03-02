@@ -189,6 +189,7 @@ This will depend on which framework adapter you are using, but in React, you sho
 
 ```tsx
 const fallbackData = []
+const _features = tableFeatures({}) // Define outside component for stable reference
 
 export default function MyComponent() {
   //✅ GOOD: This will not cause an infinite loop of re-renders because `columns` is a stable reference
@@ -203,6 +204,8 @@ export default function MyComponent() {
 
   // Columns and data are defined in a stable reference, will not cause infinite loop!
   const table = useTable({
+    _features,
+    _rowModels: {},
     columns,
     data ?? fallbackData, //also good to use a fallback array that is defined outside of the component (stable reference)
   });
@@ -229,6 +232,8 @@ export default function MyComponent() {
 
   //❌ Columns and data are defined in the same scope as `useTable` without a stable reference, will cause infinite loop!
   const table = useTable({
+    _features: tableFeatures({}), //❌ Also re-created on every render
+    _rowModels: {},
     columns,
     data ?? [], //❌ Also bad because the fallback array is re-created on every render
   });
