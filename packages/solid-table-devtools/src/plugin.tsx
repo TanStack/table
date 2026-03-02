@@ -1,4 +1,3 @@
-import React from 'react'
 import { TableDevtoolsPanel } from './SolidTableDevtools'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 

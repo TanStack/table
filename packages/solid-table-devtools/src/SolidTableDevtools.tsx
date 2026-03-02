@@ -1,9 +1,9 @@
-import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/solid'
 import { createSolidPanel } from '@tanstack/devtools-utils/solid'
 import {
-  setTableDevtoolsTarget,
   TableDevtoolsCore,
+  setTableDevtoolsTarget,
 } from '@tanstack/table-devtools'
+import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/solid'
 
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
