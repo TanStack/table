@@ -1,6 +1,6 @@
 import { ResolvedColumnFilter } from '../features/ColumnFiltering'
 import { Table, RowModel, Row, RowData } from '../types'
-import { getMemoOptions, memo } from '../utils'
+import { getMemoOptions, isDev, memo } from '../utils'
 import { filterRows } from './filterRowsUtils'
 
 export function getFilteredRowModel<TData extends RowData>(): (
@@ -38,7 +38,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
           const filterFn = column.getFilterFn()
 
           if (!filterFn) {
-            if (process.env.NODE_ENV !== 'production') {
+            if (isDev()) {
               console.warn(
                 `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`,
               )
