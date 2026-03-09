@@ -35,6 +35,10 @@
               "to": "framework/angular/angular-table"
             },
             {
+              "label": "Migrating to V9",
+              "to": "framework/angular/guide/migrating"
+            },
+            {
               "label": "Rendering components",
               "to": "framework/angular/guide/rendering"
             },
@@ -859,16 +863,16 @@
         {
           "label": "angular",
           "children": [
-            { "to": "framework/angular/examples/row-selection", "label": "Row Selection" },
-            { "to": "framework/angular/examples/row-selection-signal", "label": "Row Selection (Signal)" },
-            { "to": "framework/angular/examples/expanding", "label": "Row Expanding" },
+            { "to": "framework/angular/examples/filters", "label": "Column Filters" },
             { "to": "framework/angular/examples/column-ordering", "label": "Column Ordering" },
             { "to": "framework/angular/examples/column-pinning", "label": "Column Pinning" },
             { "to": "framework/angular/examples/column-pinning-sticky", "label": "Column Pinning (Sticky)" },
-            { "to": "framework/angular/examples/column-visibility", "label": "Column Visibility" },
-            { "to": "framework/angular/examples/filters", "label": "Column Filters" },
             { "to": "framework/angular/examples/column-resizing-performant", "label": "Column Resizing" },
-            { "to": "framework/angular/examples/grouping", "label": "Column Grouping" }
+            { "to": "framework/angular/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/angular/examples/expanding", "label": "Row Expanding" },
+            { "to": "framework/angular/examples/grouping", "label": "Column Grouping" },
+            { "to": "framework/angular/examples/row-selection", "label": "Row Selection" },
+            { "to": "framework/angular/examples/row-selection-signal", "label": "Row Selection (Signal)" }
           ]
         },
         {
@@ -963,8 +967,8 @@
           "children": [
             { "to": "framework/angular/examples/composable-tables", "label": "Composable Tables" },
             { "to": "framework/angular/examples/custom-plugin", "label": "Custom Plugin" },
-            { "to": "framework/angular/examples/remote-data", "label": "Fetch API data (SPA / SSR)" },
             { "to": "framework/angular/examples/sub-components", "label": "Sub Components" },
+            { "to": "framework/angular/examples/remote-data", "label": "Fetch API data (SPA / SSR)" },
             { "to": "framework/angular/examples/signal-input", "label": "Signal Input" },
             { "to": "framework/angular/examples/editable", "label": "Editable data" },
             { "to": "framework/angular/examples/row-dnd", "label": "Row Drag & Drop" }

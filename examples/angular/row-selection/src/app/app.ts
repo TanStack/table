@@ -106,7 +106,7 @@ export class App {
     },
   }))
 
-  readonly paginationState = this.table.subscribe({
+  readonly paginationState = this.table.computed({
     selector: (state) => state.pagination,
   })
 

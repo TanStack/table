@@ -36,9 +36,10 @@ export type AngularTable<
    */
   readonly value: Signal<AngularTable<TFeatures, TData, TSelected>>
   /**
-   * Subscribe to changes in the table store with a custom selector.
+   * Creates a computed that subscribe to changes in the table store with a custom selector.
+   * Default equality function is "shallow".
    */
-  subscribe: <TSubSelected = {}>(props: {
+  computed: <TSubSelected = {}>(props: {
     selector: (state: TableState<TFeatures>) => TSubSelected
     equal?: ValueEqualityFn<TSubSelected>
   }) => Signal<Readonly<TSubSelected>>
@@ -166,7 +167,7 @@ export function injectTable<
       { injector, debugName: 'tableStateNotifier' },
     )
 
-    table.subscribe = function Subscribe<TSubSelected = {}>(props: {
+    table.computed = function Subscribe<TSubSelected = {}>(props: {
       selector: (state: TableState<TFeatures>) => TSubSelected
       equal?: ValueEqualityFn<TSubSelected>
     }) {

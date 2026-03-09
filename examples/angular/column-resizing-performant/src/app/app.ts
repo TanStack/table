@@ -92,7 +92,7 @@ export class App {
     debugColumns: true,
   }))
 
-  readonly columnSizing = this.table.subscribe({
+  readonly columnSizing = this.table.computed({
     selector: (state) => state.columnSizing,
   })
 
