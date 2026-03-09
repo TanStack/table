@@ -299,7 +299,7 @@ describe('FlexRenderDirective', () => {
     expect(fixture.componentInstance.expandState()).toEqual({
       '0': true,
     })
-    fixture.detectChanges()
+    await fixture.whenStable()
 
     expect(callExpandRender).toHaveBeenCalledTimes(2)
     expect(callExpandRender).toHaveBeenNthCalledWith(1, false)
@@ -319,7 +319,7 @@ describe('FlexRenderDirective', () => {
           callExpandRender()
           return flexRenderComponent(ExpandCell, {
             bindings: [
-              inputBinding('expanded', row.getIsExpanded),
+              inputBinding('expanded', () => row.getIsExpanded()),
               outputBinding('toggleExpand', () => row.toggleExpanded()),
             ],
           })

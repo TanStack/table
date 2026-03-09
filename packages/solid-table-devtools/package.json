@@ -1,13 +1,13 @@
 {
-  "name": "@tanstack/table-devtools",
+  "name": "@tanstack/solid-table-devtools",
   "version": "9.0.0-alpha.11",
-  "description": "Devtools for TanStack Table.",
+  "description": "Solid devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/TanStack/table.git",
-    "directory": "packages/table-devtools"
+    "directory": "packages/react-table-devtools"
   },
   "homepage": "https://tanstack.com/table",
   "funding": {
@@ -15,13 +15,13 @@
     "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
+    "solid",
     "tanstack",
     "table",
     "devtools"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
-    "lint:fix": "eslint ./src --fix",
     "test:eslint": "eslint ./src",
     "test:lib": "vitest --passWithNoTests",
     "test:lib:dev": "pnpm test:lib --watch",
@@ -56,14 +56,12 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/devtools-ui": "^0.5.0",
     "@tanstack/devtools-utils": "^0.3.2",
-    "@tanstack/solid-store": "^0.9.2",
-    "goober": "^2.1.18",
-    "solid-js": "^1.9.11"
+    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-devtools": "workspace:*"
   },
   "peerDependencies": {
-    "@tanstack/table-core": "workspace:*"
+    "solid-js": "^1.9.11"
   },
   "devDependencies": {
     "vite-plugin-solid": "^2.11.10"

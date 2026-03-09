@@ -105,7 +105,7 @@ export class App {
     JSON.stringify(this.expanded(), undefined, 2),
   )
 
-  readonly rowSelectionState = this.table.Subscribe({
+  readonly rowSelectionState = this.table.subscribe({
     selector: (state) => state.rowSelection,
   })
   readonly rawRowSelectionState = computed(() =>

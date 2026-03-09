@@ -5,6 +5,8 @@ const Component = lazy(() => import('./TableDevtools'))
 
 export interface TableDevtoolsInit {}
 
-const [TableDevtoolsCore, TableDevtoolsCoreNoOp] = constructCoreClass(Component)
+const [TableDevtoolsCore, TableDevtoolsCoreNoOp] = constructCoreClass(
+  Component.preload,
+)
 
 export { TableDevtoolsCore, TableDevtoolsCoreNoOp }

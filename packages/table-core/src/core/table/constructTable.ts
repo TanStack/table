@@ -34,6 +34,12 @@ export function constructTable<
     _features: { ...coreFeatures, ...tableOptions._features },
     _rowModels: {},
     _rowModelFns: {},
+    get options() {
+      return this.optionsStore.state
+    },
+    set options(value) {
+      this.optionsStore.setState(() => value)
+    },
   } as Table_Internal<TFeatures, TData>
 
   const featuresList: Array<TableFeature<{}>> = Object.values(table._features)
@@ -42,10 +48,10 @@ export function constructTable<
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
   }, {}) as TableOptions<TFeatures, TData>
 
-  table.options = {
+  table.optionsStore = createStore({
     ...defaultOptions,
     ...tableOptions,
-  }
+  })
 
   table.initialState = getInitialTableState(
     table._features,
@@ -58,7 +64,7 @@ export function constructTable<
     const state = table.baseStore.state
     return {
       ...state,
-      ...(table.options.state ?? {}),
+      ...(table.optionsStore.state.state ?? {}),
     }
   })
 

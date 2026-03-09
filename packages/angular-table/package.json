@@ -51,7 +51,7 @@
     "test:types": "tsc && vitest --typecheck"
   },
   "dependencies": {
-    "@tanstack/angular-store": "^0.9.1",
+    "@tanstack/angular-store": "^0.9.2",
     "@tanstack/table-core": "workspace:*",
     "tslib": "^2.8.1"
   },

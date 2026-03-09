@@ -88,9 +88,14 @@ const columns = columnHelper.columns([
 ])
 
 const data = ref(makeData(10))
+const enableRowSelection = ref(true)
 
 const rerender = () => {
   data.value = makeData(10)
+}
+
+const toggleRowSelection = () => {
+  enableRowSelection.value = !enableRowSelection.value
 }
 
 const table = useTable(
@@ -99,7 +104,10 @@ const table = useTable(
     _rowModels: {},
     data,
     columns,
-    enableRowSelection: true, //enable row selection for all rows
+    // enable row selection for all rows
+    get enableRowSelection() {
+      return enableRowSelection.value
+    },
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
   },
   (state) => ({ rowSelection: state.rowSelection }),
@@ -152,6 +160,9 @@ const table = useTable(
     </table>
     <div class="h-4" />
     <button @click="rerender" class="border p-2">Rerender</button>
+    <button @click="toggleRowSelection" class="border p-2">
+      {{ enableRowSelection ? 'Disable' : 'Enable' }} Row Selection
+    </button>
   </div>
 </template>
 
