@@ -70,20 +70,26 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const table = useTable({
-    _features,
-    _rowModels: {},
-    columns,
-    data,
-    defaultColumn: {
-      minSize: 60,
-      maxSize: 800,
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {},
+      columns,
+      data,
+      defaultColumn: {
+        minSize: 60,
+        maxSize: 800,
+      },
+      columnResizeMode: 'onChange',
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
     },
-    columnResizeMode: 'onChange',
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-  })
+    (state) => ({
+      columnSizing: state.columnSizing,
+      columnResizing: state.columnResizing,
+    }),
+  )
 
   /**
    * Instead of calling `column.getSize()` on every render for every header
@@ -99,7 +105,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.store.state.columnResizing, table.store.state.columnSizing])
+  }, [table.state.columnResizing, table.state.columnSizing])
 
   // demo purposes
   const [enableMemo, setEnableMemo] = React.useState(true)

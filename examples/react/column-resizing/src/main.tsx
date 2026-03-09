@@ -110,17 +110,20 @@ function App() {
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const table = useTable({
-    _features,
-    _rowModels: {},
-    columns,
-    data,
-    columnResizeMode,
-    columnResizeDirection,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-  })
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {},
+      columns,
+      data,
+      columnResizeMode,
+      columnResizeDirection,
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
+    },
+    (state) => state,
+  )
 
   return (
     <div className="p-2">
