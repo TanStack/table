@@ -823,6 +823,7 @@
           "label": "solid",
           "children": [
             { "to": "framework/solid/examples/basic", "label": "Basic" },
+            { "to": "framework/solid/examples/basic-app-table", "label": "Basic (useAppTable)" },
             { "to": "framework/solid/examples/basic-table-helper", "label": "Basic with Helpers" },
             { "to": "framework/solid/examples/column-groups", "label": "Header Groups" }
           ]
@@ -999,8 +1000,8 @@
         {
           "label": "solid",
           "children": [
-            { "to": "framework/solid/examples/bootstrap", "label": "Solid Bootstrap" }
-          ]
+            { "to": "framework/solid/examples/bootstrap", "label": "Solid Bootstrap" },
+            { "to": "framework/solid/examples/composable-tables", "label": "Composable Tables" }]
         },
         {
           "label": "vue",

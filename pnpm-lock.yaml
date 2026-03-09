@@ -2647,6 +2647,25 @@ importers:
         specifier: ^2.11.10
         version: 2.11.10(@testing-library/jest-dom@6.9.1)(solid-js@1.9.11)(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.97.1)(terser@5.44.1)(tsx@4.19.2)(yaml@2.8.2))
 
+  examples/solid/basic-app-table:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.11
+        version: 1.9.11
+    devDependencies:
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^7.3.1
+        version: 7.3.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.97.1)(terser@5.44.1)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.10
+        version: 2.11.10(@testing-library/jest-dom@6.9.1)(solid-js@1.9.11)(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.97.1)(terser@5.44.1)(tsx@4.19.2)(yaml@2.8.2))
+
   examples/solid/basic-table-helper:
     dependencies:
       '@tanstack/solid-table':
@@ -2708,6 +2727,25 @@ importers:
         version: 2.11.10(@testing-library/jest-dom@6.9.1)(solid-js@1.9.11)(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.97.1)(terser@5.44.1)(tsx@4.19.2)(yaml@2.8.2))
 
   examples/solid/column-visibility:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.11
+        version: 1.9.11
+    devDependencies:
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^7.3.1
+        version: 7.3.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.97.1)(terser@5.44.1)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.10
+        version: 2.11.10(@testing-library/jest-dom@6.9.1)(solid-js@1.9.11)(vite@7.3.1(@types/node@25.0.10)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.30.2)(sass@1.97.1)(terser@5.44.1)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/composable-tables:
     dependencies:
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.10

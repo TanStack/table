@@ -1,5 +1,5 @@
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
-import { createContext, createMemo, mergeProps, useContext } from 'solid-js'
+import { Show, createContext, mergeProps, useContext } from 'solid-js'
 import { createTable } from './createTable'
 import { FlexRender } from './FlexRender'
 import type { SolidTable } from './createTable'
@@ -250,7 +250,7 @@ export type CreateTableHookOptions<
 > & {
   /**
    * Table-level components that need access to the table instance.
-   * These are available directly on the table object returned by useAppTable.
+   * These are available directly on the table object returned by createAppTable.
    * Use `useTableContext()` inside these components.
    * @example { PaginationControls, GlobalFilter, RowCount }
    */
@@ -286,7 +286,7 @@ export interface AppTablePropsWithSelector<
   TFeatures extends TableFeatures,
   TSelected,
 > {
-  children: (state: TSelected) => JSXElement
+  children: (state: Accessor<TSelected>) => JSXElement
   selector: (state: TableState<TFeatures>) => TSelected
 }
 
@@ -427,7 +427,7 @@ export interface AppTableComponent<TFeatures extends TableFeatures> {
 }
 
 /**
- * Extended table API returned by useAppTable with all App wrapper components
+ * Extended table API returned by createAppTable with all App wrapper components
  */
 export type AppSolidTable<
   TFeatures extends TableFeatures,
@@ -499,6 +499,17 @@ export type AppSolidTable<
      * ```
      */
     AppFooter: AppHeaderComponent<TFeatures, TData, NoInfer<THeaderComponents>>
+    /**
+     * Convenience FlexRender component attached to the table instance.
+     * Renders cell, header, or footer content from column definitions.
+     * @example
+     * ```tsx
+     * <table.FlexRender header={header} />
+     * <table.FlexRender cell={cell} />
+     * <table.FlexRender footer={footer} />
+     * ```
+     */
+    FlexRender: typeof FlexRender
   }
 
 /**
@@ -508,14 +519,14 @@ export type AppSolidTable<
  * - Define features, row models, and default options once, shared across all tables
  * - Register reusable table, cell, and header components
  * - Access table/cell/header instances via context in those components
- * - Get a `useAppTable` hook that returns an extended table with App wrapper components
+ * - Get a `createAppTable` hook that returns an extended table with App wrapper components
  * - Get a `createAppColumnHelper` function pre-bound to your features
  *
  * @example
  * ```tsx
  * // hooks/table.ts
  * export const {
- *   useAppTable,
+ *   createAppTable,
  *   createAppColumnHelper,
  *   useTableContext,
  *   useCellContext,
@@ -547,7 +558,7 @@ export type AppSolidTable<
  *
  * // features/users.tsx
  * function UsersTable({ data }: { data: Person[] }) {
- *   const table = useAppTable({
+ *   const table = createAppTable({
  *     columns,
  *     data, // TData inferred from Person[]
  *   })
@@ -556,31 +567,39 @@ export type AppSolidTable<
  *     <table.AppTable>
  *       <table>
  *         <thead>
- *           {table.getHeaderGroups().map(headerGroup => (
- *             <tr key={headerGroup.id}>
- *               {headerGroup.headers.map(h => (
- *                 <table.AppHeader header={h} key={h.id}>
- *                   {(header) => (
- *                     <th>
- *                       <table.FlexRender header={h} />
- *                       <header.SortIndicator />
- *                     </th>
+ *           <For each={table.getHeaderGroups()}>
+ *             {(headerGroup) => (
+ *               <tr>
+ *                 <For each={headerGroup.headers}>
+ *                   {(h) => (
+ *                     <table.AppHeader header={h}>
+ *                       {(header) => (
+ *                         <th>
+ *                           <header.FlexRender />
+ *                           <header.SortIndicator />
+ *                         </th>
+ *                       )}
+ *                     </table.AppHeader>
  *                   )}
- *                 </table.AppHeader>
- *               ))}
- *             </tr>
- *           ))}
+ *                 </For>
+ *               </tr>
+ *             )}
+ *           </For>
  *         </thead>
  *         <tbody>
- *           {table.getRowModel().rows.map(row => (
- *             <tr key={row.id}>
- *               {row.getAllCells().map(c => (
- *                 <table.AppCell cell={c} key={c.id}>
- *                   {(cell) => <td><cell.TextCell /></td>}
- *                 </table.AppCell>
- *               ))}
- *             </tr>
- *           ))}
+ *           <For each={table.getRowModel().rows}>
+ *             {(row) => (
+ *               <tr>
+ *                 <For each={row.getAllCells()}>
+ *                   {(c) => (
+ *                     <table.AppCell cell={c}>
+ *                       {(cell) => <td><cell.TextCell /></td>}
+ *                     </table.AppCell>
+ *                   )}
+ *                 </For>
+ *               </tr>
+ *             )}
+ *           </For>
  *         </tbody>
  *       </table>
  *       <table.PaginationControls />
@@ -822,238 +841,217 @@ export function createTableHook<
       selector,
     )
 
-    // AppTable - Root wrapper that provides table context with optional Subscribe
-    const AppTable = createMemo(() => {
-      function AppTableImpl(props: AppTablePropsWithoutSelector): JSXElement
-      function AppTableImpl<TAppTableSelected>(
-        props: AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
-      ): JSXElement
-      function AppTableImpl<TAppTableSelected>(
-        props:
-          | AppTablePropsWithoutSelector
-          | AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
-      ): JSXElement {
-        const { children, selector: appTableSelector } = props as any
-
-        return (
-          <TableContext.Provider value={table}>
-            {appTableSelector ? (
-              <table.Subscribe selector={appTableSelector}>
-                {(state: Accessor<TAppTableSelected>) => children(state)}
+    // AppTable - Root wrapper that provides table context with optional state selector
+    function AppTable(props: AppTablePropsWithoutSelector): JSXElement
+    function AppTable<TAppTableSelected>(
+      props: AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
+    ): JSXElement
+    function AppTable<TAppTableSelected>(
+      props:
+        | AppTablePropsWithoutSelector
+        | AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
+    ): JSXElement {
+      return (
+        <TableContext.Provider value={table}>
+          <Show when={props.selector} fallback={props.children as JSXElement}>
+            {(selector) => (
+              <table.Subscribe selector={selector()}>
+                {(state: Accessor<TAppTableSelected>) =>
+                  (props.children as (state: Accessor<TAppTableSelected>) => JSXElement)(state)
+                }
               </table.Subscribe>
-            ) : (
-              children
             )}
-          </TableContext.Provider>
-        )
-      }
-      return AppTableImpl as AppTableComponent<TFeatures>
-    }, [table])
+          </Show>
+        </TableContext.Provider>
+      )
+    }
 
-    // AppCell - Wraps cell with context, pre-bound cellComponents, and optional Subscribe
-    const AppCell = createMemo(() => {
-      function AppCellImpl<TValue extends CellData = CellData>(
-        props: AppCellPropsWithoutSelector<
-          TFeatures,
-          TData,
-          TValue,
-          TCellComponents
-        >,
-      ): JSXElement
-      function AppCellImpl<
-        TValue extends CellData = CellData,
-        TAppCellSelected = unknown,
-      >(
-        props: AppCellPropsWithSelector<
-          TFeatures,
-          TData,
-          TValue,
-          TCellComponents,
-          TAppCellSelected
-        >,
-      ): JSXElement
-      function AppCellImpl<
-        TValue extends CellData = CellData,
-        TAppCellSelected = unknown,
-      >(
-        props:
-          | AppCellPropsWithoutSelector<
-              TFeatures,
-              TData,
-              TValue,
-              TCellComponents
-            >
-          | AppCellPropsWithSelector<
-              TFeatures,
-              TData,
-              TValue,
-              TCellComponents,
-              TAppCellSelected
-            >,
-      ): JSXElement {
-        const { cell, children, selector: appCellSelector } = props as any
-        const extendedCell = Object.assign(cell, {
-          FlexRender: CellFlexRender,
-          ...cellComponents,
-        })
+    // AppCell - Wraps cell with context, pre-bound cellComponents, and optional state selector
+    function AppCell<TValue extends CellData = CellData>(
+      props: AppCellPropsWithoutSelector<
+        TFeatures,
+        TData,
+        TValue,
+        TCellComponents
+      >,
+    ): JSXElement
+    function AppCell<
+      TValue extends CellData = CellData,
+      TAppCellSelected = unknown,
+    >(
+      props: AppCellPropsWithSelector<
+        TFeatures,
+        TData,
+        TValue,
+        TCellComponents,
+        TAppCellSelected
+      >,
+    ): JSXElement
+    function AppCell<
+      TValue extends CellData = CellData,
+      TAppCellSelected = unknown,
+    >(
+      props:
+        | AppCellPropsWithoutSelector<TFeatures, TData, TValue, TCellComponents>
+        | AppCellPropsWithSelector<
+            TFeatures,
+            TData,
+            TValue,
+            TCellComponents,
+            TAppCellSelected
+          >,
+    ): JSXElement {
+      const extendedCell = Object.assign(props.cell, {
+        FlexRender: CellFlexRender,
+        ...cellComponents,
+      }) as Cell<TFeatures, TData, TValue> &
+        TCellComponents & { FlexRender: () => JSXElement }
 
-        return (
-          <CellContext.Provider value={cell}>
-            {appCellSelector ? (
-              <table.Subscribe selector={appCellSelector}>
+      return (
+        <CellContext.Provider value={props.cell}>
+          <Show
+            when={props.selector}
+            fallback={(props.children as (cell: any) => JSXElement)(extendedCell as any)}
+          >
+            {(selector) => (
+              <table.Subscribe selector={selector()}>
                 {(state: Accessor<TAppCellSelected>) =>
-                  children(extendedCell, state)
+                  props.children(extendedCell as any, state)
                 }
               </table.Subscribe>
-            ) : (
-              children(extendedCell)
             )}
-          </CellContext.Provider>
-        )
-      }
-      return AppCellImpl as AppCellComponent<TFeatures, TData, TCellComponents>
-    }, [table])
+          </Show>
+        </CellContext.Provider>
+      )
+    }
 
-    // AppHeader - Wraps header with context, pre-bound headerComponents, and optional Subscribe
-    const AppHeader = createMemo(() => {
-      function AppHeaderImpl<TValue extends CellData = CellData>(
-        props: AppHeaderPropsWithoutSelector<
-          TFeatures,
-          TData,
-          TValue,
-          THeaderComponents
-        >,
-      ): JSXElement
-      function AppHeaderImpl<
-        TValue extends CellData = CellData,
-        TAppHeaderSelected = unknown,
-      >(
-        props: AppHeaderPropsWithSelector<
-          TFeatures,
-          TData,
-          TValue,
-          THeaderComponents,
-          TAppHeaderSelected
-        >,
-      ): JSXElement
-      function AppHeaderImpl<
-        TValue extends CellData = CellData,
-        TAppHeaderSelected = unknown,
-      >(
-        props:
-          | AppHeaderPropsWithoutSelector<
-              TFeatures,
-              TData,
-              TValue,
-              THeaderComponents
-            >
-          | AppHeaderPropsWithSelector<
-              TFeatures,
-              TData,
-              TValue,
-              THeaderComponents,
-              TAppHeaderSelected
-            >,
-      ): JSXElement {
-        const { header, children, selector: appHeaderSelector } = props as any
-        const extendedHeader = Object.assign(header, {
-          FlexRender: HeaderFlexRender,
-          ...headerComponents,
-        })
+    // AppHeader - Wraps header with context, pre-bound headerComponents, and optional state selector
+    function AppHeader<TValue extends CellData = CellData>(
+      props: AppHeaderPropsWithoutSelector<
+        TFeatures,
+        TData,
+        TValue,
+        THeaderComponents
+      >,
+    ): JSXElement
+    function AppHeader<
+      TValue extends CellData = CellData,
+      TAppHeaderSelected = unknown,
+    >(
+      props: AppHeaderPropsWithSelector<
+        TFeatures,
+        TData,
+        TValue,
+        THeaderComponents,
+        TAppHeaderSelected
+      >,
+    ): JSXElement
+    function AppHeader<
+      TValue extends CellData = CellData,
+      TAppHeaderSelected = unknown,
+    >(
+      props:
+        | AppHeaderPropsWithoutSelector<
+            TFeatures,
+            TData,
+            TValue,
+            THeaderComponents
+          >
+        | AppHeaderPropsWithSelector<
+            TFeatures,
+            TData,
+            TValue,
+            THeaderComponents,
+            TAppHeaderSelected
+          >,
+    ): JSXElement {
+      const extendedHeader = Object.assign(props.header, {
+        FlexRender: HeaderFlexRender,
+        ...headerComponents,
+      }) as Header<TFeatures, TData, TValue> &
+        THeaderComponents & { FlexRender: () => JSXElement }
 
-        return (
-          <HeaderContext.Provider value={header}>
-            {appHeaderSelector ? (
-              <table.Subscribe selector={appHeaderSelector}>
+      return (
+        <HeaderContext.Provider value={props.header}>
+          <Show
+            when={props.selector}
+            fallback={(props.children as (header: any) => JSXElement)(extendedHeader as any)}
+          >
+            {(selector) => (
+              <table.Subscribe selector={selector()}>
                 {(state: Accessor<TAppHeaderSelected>) =>
-                  children(extendedHeader, state)
+                  props.children(extendedHeader as any, state)
                 }
               </table.Subscribe>
-            ) : (
-              children(extendedHeader)
             )}
-          </HeaderContext.Provider>
-        )
-      }
-      return AppHeaderImpl as AppHeaderComponent<
+          </Show>
+        </HeaderContext.Provider>
+      )
+    }
+
+    // AppFooter - Same as AppHeader but uses FooterFlexRender (footers use Header type)
+    function AppFooter<TValue extends CellData = CellData>(
+      props: AppHeaderPropsWithoutSelector<
         TFeatures,
         TData,
+        TValue,
         THeaderComponents
-      >
-    }, [table])
+      >,
+    ): JSXElement
+    function AppFooter<
+      TValue extends CellData = CellData,
+      TAppFooterSelected = unknown,
+    >(
+      props: AppHeaderPropsWithSelector<
+        TFeatures,
+        TData,
+        TValue,
+        THeaderComponents,
+        TAppFooterSelected
+      >,
+    ): JSXElement
+    function AppFooter<
+      TValue extends CellData = CellData,
+      TAppFooterSelected = unknown,
+    >(
+      props:
+        | AppHeaderPropsWithoutSelector<
+            TFeatures,
+            TData,
+            TValue,
+            THeaderComponents
+          >
+        | AppHeaderPropsWithSelector<
+            TFeatures,
+            TData,
+            TValue,
+            THeaderComponents,
+            TAppFooterSelected
+          >,
+    ): JSXElement {
+      const extendedHeader = Object.assign(props.header, {
+        FlexRender: FooterFlexRender,
+        ...headerComponents,
+      }) as Header<TFeatures, TData, TValue> &
+        THeaderComponents & { FlexRender: () => JSXElement }
 
-    // AppFooter - Same as AppHeader (footers use Header type)
-    const AppFooter = createMemo(() => {
-      function AppFooterImpl<TValue extends CellData = CellData>(
-        props: AppHeaderPropsWithoutSelector<
-          TFeatures,
-          TData,
-          TValue,
-          THeaderComponents
-        >,
-      ): JSXElement
-      function AppFooterImpl<
-        TValue extends CellData = CellData,
-        TAppFooterSelected = unknown,
-      >(
-        props: AppHeaderPropsWithSelector<
-          TFeatures,
-          TData,
-          TValue,
-          THeaderComponents,
-          TAppFooterSelected
-        >,
-      ): JSXElement
-      function AppFooterImpl<
-        TValue extends CellData = CellData,
-        TAppFooterSelected = unknown,
-      >(
-        props:
-          | AppHeaderPropsWithoutSelector<
-              TFeatures,
-              TData,
-              TValue,
-              THeaderComponents
-            >
-          | AppHeaderPropsWithSelector<
-              TFeatures,
-              TData,
-              TValue,
-              THeaderComponents,
-              TAppFooterSelected
-            >,
-      ): JSXElement {
-        const { header, children, selector: appFooterSelector } = props as any
-        const extendedHeader = Object.assign(header, {
-          FlexRender: FooterFlexRender,
-          ...headerComponents,
-        })
-
-        return (
-          <HeaderContext.Provider value={header}>
-            {appFooterSelector ? (
-              <table.Subscribe selector={appFooterSelector}>
+      return (
+        <HeaderContext.Provider value={props.header}>
+          <Show
+            when={props.selector}
+            fallback={(props.children as (header: any) => JSXElement)(extendedHeader as any)}
+          >
+            {(selector) => (
+              <table.Subscribe selector={selector()}>
                 {(state: Accessor<TAppFooterSelected>) =>
-                  children(extendedHeader, state)
+                  props.children(extendedHeader as any, state)
                 }
               </table.Subscribe>
-            ) : (
-              (
-                children as (
-                  header: Header<TFeatures, TData, TValue> &
-                    THeaderComponents & { FlexRender: () => JSXElement },
-                ) => JSXElement
-              )(extendedHeader)
             )}
-          </HeaderContext.Provider>
-        )
-      }
-      return AppFooterImpl as AppHeaderComponent<
-        TFeatures,
-        TData,
-        THeaderComponents
-      >
-    }, [table])
+          </Show>
+        </HeaderContext.Provider>
+      )
+    }
 
     // Combine everything into the extended table API
     return Object.assign(table, {
@@ -1061,6 +1059,7 @@ export function createTableHook<
       AppCell,
       AppHeader,
       AppFooter,
+      FlexRender,
       ...tableComponents,
     }) as AppSolidTable<
       TFeatures,
@@ -1075,7 +1074,7 @@ export function createTableHook<
   return {
     appFeatures: defaultTableOptions._features as TFeatures,
     createAppColumnHelper,
-    useAppTable: createAppTable,
+    createAppTable: createAppTable,
     useTableContext,
     useCellContext,
     useHeaderContext,
