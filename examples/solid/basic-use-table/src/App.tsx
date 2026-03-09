@@ -1,9 +1,7 @@
-import { createTableHelper, flexRender } from '@tanstack/solid-table'
+import { createTable, flexRender, tableFeatures } from '@tanstack/solid-table'
 import { For, createSignal } from 'solid-js'
+import type { ColumnDef } from '@tanstack/solid-table'
 
-// This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `createTable` hook and `createColumnHelper` method. You can choose to use either way.
-
-// 1. Define what the shape of your data will be for each row
 type Person = {
   firstName: string
   lastName: string
@@ -13,7 +11,6 @@ type Person = {
   progress: number
 }
 
-// 2. Create some dummy data with a stable reference (this could be an API response stored in useState or similar)
 const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
@@ -39,69 +36,61 @@ const defaultData: Array<Person> = [
     status: 'Complicated',
     progress: 10,
   },
+  {
+    firstName: 'kevin',
+    lastName: 'vandy',
+    age: 12,
+    visits: 100,
+    status: 'Single',
+    progress: 70,
+  },
 ]
 
-// 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
-const tableHelper = createTableHelper({
-  _features: {},
-  _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
+const _features = tableFeatures({})
 
-  TData: {} as Person,
-  debugTable: true,
-})
-
-// 4. Create a helper object to help define our columns
-// const { columnHelper } = tableHelper // if TData was set in the table helper options - otherwise use the createColumnHelper method below
-const columnHelper = tableHelper.createColumnHelper<Person>()
-
-// 5. Define the columns for your table with a stable reference (in this case, defined statically outside of a react component)
-const columns = columnHelper.columns([
-  // accessorKey method (most common for simple use-cases)
-  columnHelper.accessor('firstName', {
+const columns: Array<ColumnDef<typeof _features, Person>> = [
+  {
+    accessorKey: 'firstName',
+    header: 'First Name',
     cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
-  }),
-  // accessorFn used (alternative) along with a custom id
-  columnHelper.accessor((row) => row.lastName, {
+  },
+  {
+    accessorFn: (row) => row.lastName,
     id: 'lastName',
-    cell: (info) => <i>{info.getValue()}</i>,
     header: () => <span>Last Name</span>,
-    footer: (info) => info.column.id,
-  }),
-  // accessorFn used to transform the data
-  columnHelper.accessor((row) => Number(row.age), {
+    cell: (info) => <i>{info.getValue<string>()}</i>,
+  },
+  {
+    accessorFn: (row) => Number(row.age),
     id: 'age',
     header: () => 'Age',
     cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('visits', {
+  },
+  {
+    accessorKey: 'visits',
     header: () => <span>Visits</span>,
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('status', {
+  },
+  {
+    accessorKey: 'status',
     header: 'Status',
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor('progress', {
+  },
+  {
+    accessorKey: 'progress',
     header: 'Profile Progress',
-    footer: (info) => info.column.id,
-  }),
-])
+  },
+]
 
 function App() {
-  // 6. Store data with a stable reference
-  const [data, setData] = createSignal(defaultData)
-  const rerender = () => setData(defaultData)
+  const [data, setData] = createSignal([...defaultData])
+  const rerender = () => setData([...defaultData])
 
-  // 7. Create the table instance with the required columns and data.
-  // Features and row models are already defined in the table helper object above
-  const table = tableHelper.createTable({
+  const table = createTable({
+    _features,
+    _rowModels: {},
     columns,
     get data() {
       return data()
     },
-    // add additional table options here or in the table helper above
   })
 
   return (
@@ -167,7 +156,7 @@ function App() {
         </tfoot>
       </table>
       <div class="h-4" />
-      <button onClick={() => rerender()} class="border p-2">
+      <button onClick={rerender} class="border p-2">
         Rerender
       </button>
     </div>
