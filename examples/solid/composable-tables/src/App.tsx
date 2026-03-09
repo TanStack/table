@@ -83,136 +83,136 @@ function UsersTable() {
         const sorting = () => state().sorting
         const columnFilters = () => state().columnFilters
         return (
-        <div class="table-container">
-          {/* Table toolbar using pre-bound component */}
-          <table.TableToolbar title="Users Table" onRefresh={refreshData} />
+          <div class="table-container">
+            {/* Table toolbar using pre-bound component */}
+            <table.TableToolbar title="Users Table" onRefresh={refreshData} />
 
-          {/* Table element */}
-          <table>
-            <thead>
-              <For each={table.getHeaderGroups()}>
-                {(headerGroup) => (
-                  <tr>
-                    <For each={headerGroup.headers}>
-                      {(h) => (
-                        <table.AppHeader header={h}>
-                          {(header) => (
-                            <th
-                              colSpan={header.colSpan}
-                              class={
-                                header.column.getCanSort()
-                                  ? 'sortable-header'
-                                  : ''
-                              }
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              {header.isPlaceholder ? null : (
-                                <>
-                                  <header.FlexRender />
-                                  <header.SortIndicator />
-                                  <header.ColumnFilter />
-                                  {/* Show sort order number when multiple columns sorted */}
-                                  {sorting().length > 1 &&
-                                    sorting().findIndex(
-                                      (s) => s.id === header.column.id,
-                                    ) > -1 && (
-                                      <span class="sort-order">
-                                        {sorting().findIndex(
-                                          (s) => s.id === header.column.id,
-                                        ) + 1}
-                                      </span>
-                                    )}
-                                </>
-                              )}
-                            </th>
-                          )}
-                        </table.AppHeader>
-                      )}
-                    </For>
-                  </tr>
-                )}
-              </For>
-            </thead>
-            <tbody>
-              <For each={table.getRowModel().rows}>
-                {(row) => (
-                  <tr>
-                    <For each={row.getAllCells()}>
-                      {(c) => (
-                        <table.AppCell cell={c}>
-                          {(cell) => (
-                            <td>
-                              {/* Cell components are pre-bound via AppCell */}
-                              <cell.FlexRender />
-                            </td>
-                          )}
-                        </table.AppCell>
-                      )}
-                    </For>
-                  </tr>
-                )}
-              </For>
-            </tbody>
-            <tfoot>
-              <For each={table.getFooterGroups()}>
-                {(footerGroup) => (
-                  <tr>
-                    <For each={footerGroup.headers}>
-                      {(f) => (
-                        <table.AppFooter header={f}>
-                          {(footer) => {
-                            const columnId = footer.column.id
-                            const hasFilter = () =>
-                              columnFilters().some((cf) => cf.id === columnId)
-
-                            return (
-                              <td colSpan={footer.colSpan}>
-                                {footer.isPlaceholder ? null : (
+            {/* Table element */}
+            <table>
+              <thead>
+                <For each={table.getHeaderGroups()}>
+                  {(headerGroup) => (
+                    <tr>
+                      <For each={headerGroup.headers}>
+                        {(h) => (
+                          <table.AppHeader header={h}>
+                            {(header) => (
+                              <th
+                                colSpan={header.colSpan}
+                                class={
+                                  header.column.getCanSort()
+                                    ? 'sortable-header'
+                                    : ''
+                                }
+                                onClick={header.column.getToggleSortingHandler()}
+                              >
+                                {header.isPlaceholder ? null : (
                                   <>
-                                    {/* Use FooterSum for numeric columns, FooterColumnId for others */}
-                                    {columnId === 'age' ||
-                                    columnId === 'visits' ||
-                                    columnId === 'progress' ? (
-                                      <>
-                                        <footer.FooterSum />
-                                        {hasFilter() && (
-                                          <span class="filtered-indicator">
-                                            {' '}
-                                            (filtered)
-                                          </span>
-                                        )}
-                                      </>
-                                    ) : columnId === 'actions' ? null : (
-                                      <>
-                                        <footer.FooterColumnId />
-                                        {hasFilter() && (
-                                          <span class="filtered-indicator">
-                                            {' '}
-                                            ✓
-                                          </span>
-                                        )}
-                                      </>
-                                    )}
+                                    <header.FlexRender />
+                                    <header.SortIndicator />
+                                    <header.ColumnFilter />
+                                    {/* Show sort order number when multiple columns sorted */}
+                                    {sorting().length > 1 &&
+                                      sorting().findIndex(
+                                        (s) => s.id === header.column.id,
+                                      ) > -1 && (
+                                        <span class="sort-order">
+                                          {sorting().findIndex(
+                                            (s) => s.id === header.column.id,
+                                          ) + 1}
+                                        </span>
+                                      )}
                                   </>
                                 )}
+                              </th>
+                            )}
+                          </table.AppHeader>
+                        )}
+                      </For>
+                    </tr>
+                  )}
+                </For>
+              </thead>
+              <tbody>
+                <For each={table.getRowModel().rows}>
+                  {(row) => (
+                    <tr>
+                      <For each={row.getAllCells()}>
+                        {(c) => (
+                          <table.AppCell cell={c}>
+                            {(cell) => (
+                              <td>
+                                {/* Cell components are pre-bound via AppCell */}
+                                <cell.FlexRender />
                               </td>
-                            )
-                          }}
-                        </table.AppFooter>
-                      )}
-                    </For>
-                  </tr>
-                )}
-              </For>
-            </tfoot>
-          </table>
+                            )}
+                          </table.AppCell>
+                        )}
+                      </For>
+                    </tr>
+                  )}
+                </For>
+              </tbody>
+              <tfoot>
+                <For each={table.getFooterGroups()}>
+                  {(footerGroup) => (
+                    <tr>
+                      <For each={footerGroup.headers}>
+                        {(f) => (
+                          <table.AppFooter header={f}>
+                            {(footer) => {
+                              const columnId = footer.column.id
+                              const hasFilter = () =>
+                                columnFilters().some((cf) => cf.id === columnId)
 
-          {/* Pagination using pre-bound component */}
-          <table.PaginationControls />
+                              return (
+                                <td colSpan={footer.colSpan}>
+                                  {footer.isPlaceholder ? null : (
+                                    <>
+                                      {/* Use FooterSum for numeric columns, FooterColumnId for others */}
+                                      {columnId === 'age' ||
+                                      columnId === 'visits' ||
+                                      columnId === 'progress' ? (
+                                        <>
+                                          <footer.FooterSum />
+                                          {hasFilter() && (
+                                            <span class="filtered-indicator">
+                                              {' '}
+                                              (filtered)
+                                            </span>
+                                          )}
+                                        </>
+                                      ) : columnId === 'actions' ? null : (
+                                        <>
+                                          <footer.FooterColumnId />
+                                          {hasFilter() && (
+                                            <span class="filtered-indicator">
+                                              {' '}
+                                              ✓
+                                            </span>
+                                          )}
+                                        </>
+                                      )}
+                                    </>
+                                  )}
+                                </td>
+                              )
+                            }}
+                          </table.AppFooter>
+                        )}
+                      </For>
+                    </tr>
+                  )}
+                </For>
+              </tfoot>
+            </table>
 
-          {/* Row count using pre-bound component */}
-          <table.RowCount />
-        </div>
+            {/* Pagination using pre-bound component */}
+            <table.PaginationControls />
+
+            {/* Row count using pre-bound component */}
+            <table.RowCount />
+          </div>
         )
       }}
     </table.AppTable>
@@ -279,135 +279,138 @@ function ProductsTable() {
         const sorting = () => state().sorting
         const columnFilters = () => state().columnFilters
         return (
-        <div class="table-container">
-          {/* Table toolbar using the same pre-bound component */}
-          <table.TableToolbar title="Products Table" onRefresh={refreshData} />
+          <div class="table-container">
+            {/* Table toolbar using the same pre-bound component */}
+            <table.TableToolbar
+              title="Products Table"
+              onRefresh={refreshData}
+            />
 
-          {/* Table element */}
-          <table>
-            <thead>
-              <For each={table.getHeaderGroups()}>
-                {(headerGroup) => (
-                  <tr>
-                    <For each={headerGroup.headers}>
-                      {(h) => (
-                        <table.AppHeader header={h}>
-                          {(header) => (
-                            <th
-                              colSpan={header.colSpan}
-                              class={
-                                header.column.getCanSort()
-                                  ? 'sortable-header'
-                                  : ''
-                              }
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              {header.isPlaceholder ? null : (
-                                <>
-                                  <header.FlexRender />
-                                  <header.SortIndicator />
-                                  <header.ColumnFilter />
-                                  {sorting().length > 1 &&
-                                    sorting().findIndex(
-                                      (s) => s.id === header.column.id,
-                                    ) > -1 && (
-                                      <span class="sort-order">
-                                        {sorting().findIndex(
-                                          (s) => s.id === header.column.id,
-                                        ) + 1}
-                                      </span>
-                                    )}
-                                </>
-                              )}
-                            </th>
-                          )}
-                        </table.AppHeader>
-                      )}
-                    </For>
-                  </tr>
-                )}
-              </For>
-            </thead>
-            <tbody>
-              <For each={table.getRowModel().rows}>
-                {(row) => (
-                  <tr>
-                    <For each={row.getAllCells()}>
-                      {(c) => (
-                        <table.AppCell cell={c}>
-                          {(cell) => (
-                            <td>
-                              {/* Cell components are pre-bound via AppCell */}
-                              <cell.FlexRender />
-                            </td>
-                          )}
-                        </table.AppCell>
-                      )}
-                    </For>
-                  </tr>
-                )}
-              </For>
-            </tbody>
-            <tfoot>
-              <For each={table.getFooterGroups()}>
-                {(footerGroup) => (
-                  <tr>
-                    <For each={footerGroup.headers}>
-                      {(f) => (
-                        <table.AppFooter header={f}>
-                          {(footer) => {
-                            const columnId = footer.column.id
-                            const hasFilter = () =>
-                              columnFilters().some((cf) => cf.id === columnId)
-
-                            return (
-                              <td colSpan={footer.colSpan}>
-                                {footer.isPlaceholder ? null : (
+            {/* Table element */}
+            <table>
+              <thead>
+                <For each={table.getHeaderGroups()}>
+                  {(headerGroup) => (
+                    <tr>
+                      <For each={headerGroup.headers}>
+                        {(h) => (
+                          <table.AppHeader header={h}>
+                            {(header) => (
+                              <th
+                                colSpan={header.colSpan}
+                                class={
+                                  header.column.getCanSort()
+                                    ? 'sortable-header'
+                                    : ''
+                                }
+                                onClick={header.column.getToggleSortingHandler()}
+                              >
+                                {header.isPlaceholder ? null : (
                                   <>
-                                    {/* Use FooterSum for numeric columns, FooterColumnId for others */}
-                                    {columnId === 'price' ||
-                                    columnId === 'stock' ||
-                                    columnId === 'rating' ? (
-                                      <>
-                                        <footer.FooterSum />
-                                        {hasFilter() && (
-                                          <span class="filtered-indicator">
-                                            {' '}
-                                            (filtered)
-                                          </span>
-                                        )}
-                                      </>
-                                    ) : (
-                                      <>
-                                        <footer.FooterColumnId />
-                                        {hasFilter() && (
-                                          <span class="filtered-indicator">
-                                            {' '}
-                                            ✓
-                                          </span>
-                                        )}
-                                      </>
-                                    )}
+                                    <header.FlexRender />
+                                    <header.SortIndicator />
+                                    <header.ColumnFilter />
+                                    {sorting().length > 1 &&
+                                      sorting().findIndex(
+                                        (s) => s.id === header.column.id,
+                                      ) > -1 && (
+                                        <span class="sort-order">
+                                          {sorting().findIndex(
+                                            (s) => s.id === header.column.id,
+                                          ) + 1}
+                                        </span>
+                                      )}
                                   </>
                                 )}
+                              </th>
+                            )}
+                          </table.AppHeader>
+                        )}
+                      </For>
+                    </tr>
+                  )}
+                </For>
+              </thead>
+              <tbody>
+                <For each={table.getRowModel().rows}>
+                  {(row) => (
+                    <tr>
+                      <For each={row.getAllCells()}>
+                        {(c) => (
+                          <table.AppCell cell={c}>
+                            {(cell) => (
+                              <td>
+                                {/* Cell components are pre-bound via AppCell */}
+                                <cell.FlexRender />
                               </td>
-                            )
-                          }}
-                        </table.AppFooter>
-                      )}
-                    </For>
-                  </tr>
-                )}
-              </For>
-            </tfoot>
-          </table>
+                            )}
+                          </table.AppCell>
+                        )}
+                      </For>
+                    </tr>
+                  )}
+                </For>
+              </tbody>
+              <tfoot>
+                <For each={table.getFooterGroups()}>
+                  {(footerGroup) => (
+                    <tr>
+                      <For each={footerGroup.headers}>
+                        {(f) => (
+                          <table.AppFooter header={f}>
+                            {(footer) => {
+                              const columnId = footer.column.id
+                              const hasFilter = () =>
+                                columnFilters().some((cf) => cf.id === columnId)
 
-          {/* Pagination using the same pre-bound component */}
-          <table.PaginationControls />
+                              return (
+                                <td colSpan={footer.colSpan}>
+                                  {footer.isPlaceholder ? null : (
+                                    <>
+                                      {/* Use FooterSum for numeric columns, FooterColumnId for others */}
+                                      {columnId === 'price' ||
+                                      columnId === 'stock' ||
+                                      columnId === 'rating' ? (
+                                        <>
+                                          <footer.FooterSum />
+                                          {hasFilter() && (
+                                            <span class="filtered-indicator">
+                                              {' '}
+                                              (filtered)
+                                            </span>
+                                          )}
+                                        </>
+                                      ) : (
+                                        <>
+                                          <footer.FooterColumnId />
+                                          {hasFilter() && (
+                                            <span class="filtered-indicator">
+                                              {' '}
+                                              ✓
+                                            </span>
+                                          )}
+                                        </>
+                                      )}
+                                    </>
+                                  )}
+                                </td>
+                              )
+                            }}
+                          </table.AppFooter>
+                        )}
+                      </For>
+                    </tr>
+                  )}
+                </For>
+              </tfoot>
+            </table>
 
-          {/* Row count using the same pre-bound component */}
-          <table.RowCount />
-        </div>
+            {/* Pagination using the same pre-bound component */}
+            <table.PaginationControls />
+
+            {/* Row count using the same pre-bound component */}
+            <table.RowCount />
+          </div>
         )
       }}
     </table.AppTable>

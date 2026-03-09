@@ -857,7 +857,11 @@ export function createTableHook<
             {(selector) => (
               <table.Subscribe selector={selector()}>
                 {(state: Accessor<TAppTableSelected>) =>
-                  (props.children as (state: Accessor<TAppTableSelected>) => JSXElement)(state)
+                  (
+                    props.children as (
+                      state: Accessor<TAppTableSelected>,
+                    ) => JSXElement
+                  )(state)
                 }
               </table.Subscribe>
             )}
@@ -911,7 +915,9 @@ export function createTableHook<
         <CellContext.Provider value={props.cell}>
           <Show
             when={props.selector}
-            fallback={(props.children as (cell: any) => JSXElement)(extendedCell as any)}
+            fallback={(props.children as (cell: any) => JSXElement)(
+              extendedCell as any,
+            )}
           >
             {(selector) => (
               <table.Subscribe selector={selector()}>
@@ -975,7 +981,9 @@ export function createTableHook<
         <HeaderContext.Provider value={props.header}>
           <Show
             when={props.selector}
-            fallback={(props.children as (header: any) => JSXElement)(extendedHeader as any)}
+            fallback={(props.children as (header: any) => JSXElement)(
+              extendedHeader as any,
+            )}
           >
             {(selector) => (
               <table.Subscribe selector={selector()}>
@@ -1039,7 +1047,9 @@ export function createTableHook<
         <HeaderContext.Provider value={props.header}>
           <Show
             when={props.selector}
-            fallback={(props.children as (header: any) => JSXElement)(extendedHeader as any)}
+            fallback={(props.children as (header: any) => JSXElement)(
+              extendedHeader as any,
+            )}
           >
             {(selector) => (
               <table.Subscribe selector={selector()}>
