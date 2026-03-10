@@ -1,6 +1,7 @@
 'use client'
 /* eslint-disable @eslint-react/no-context-provider */
-import React, { createContext, use, useMemo } from 'react'
+// eslint-disable-next-line @eslint-react/no-use-context -- intentional useContext for older React support
+import React, { createContext, useContext, useMemo } from 'react'
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
 import { FlexRender } from './FlexRender'
@@ -674,7 +675,9 @@ export function createTableHook<
     TFeatures,
     TData
   > {
-    const table = use(TableContext)
+    // useContext used for React 18 compatibility - use() requires React 19+
+    // eslint-disable-next-line @eslint-react/no-use-context -- intentional useContext for older React support
+    const table = useContext(TableContext)
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!table) {
@@ -706,7 +709,9 @@ export function createTableHook<
    * ```
    */
   function useCellContext<TValue extends CellData = CellData>() {
-    const cell = use(CellContext)
+    // useContext used for React 18 compatibility - use() requires React 19+
+    // eslint-disable-next-line @eslint-react/no-use-context -- intentional useContext for older React support
+    const cell = useContext(CellContext)
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!cell) {
@@ -746,7 +751,9 @@ export function createTableHook<
    * ```
    */
   function useHeaderContext<TValue extends CellData = CellData>() {
-    const header = use(HeaderContext)
+    // useContext used for React 18 compatibility - use() requires React 19+
+    // eslint-disable-next-line @eslint-react/no-use-context -- intentional useContext for older React support
+    const header = useContext(HeaderContext)
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!header) {
