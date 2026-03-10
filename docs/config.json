@@ -822,8 +822,10 @@
         {
           "label": "solid",
           "children": [
-            { "to": "framework/solid/examples/basic", "label": "Basic" },
-            { "to": "framework/solid/examples/basic-table-helper", "label": "Basic with Helpers" },
+            { "to": "framework/solid/examples/basic-use-table", "label": "Basic (createTable)" },
+            { "to": "framework/solid/examples/basic-app-table", "label": "Basic (createAppTable)" },
+            { "to": "framework/solid/examples/basic-external-state", "label": "Basic (External State)" },
+            { "to": "framework/solid/examples/basic-external-store", "label": "Basic (External Store)" },
             { "to": "framework/solid/examples/column-groups", "label": "Header Groups" }
           ]
         },
@@ -999,8 +1001,9 @@
         {
           "label": "solid",
           "children": [
-            { "to": "framework/solid/examples/bootstrap", "label": "Solid Bootstrap" }
-          ]
+            { "to": "framework/solid/examples/bootstrap", "label": "Solid Bootstrap" },
+            { "to": "framework/solid/examples/composable-tables", "label": "Composable Tables" },
+            { "to": "framework/solid/examples/with-tanstack-query", "label": "With TanStack Query" }]
         },
         {
           "label": "vue",

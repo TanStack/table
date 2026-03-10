@@ -1,7 +1,7 @@
-import { createTableHelper, flexRender } from '@tanstack/solid-table'
+import { createTableHook } from '@tanstack/solid-table'
 import { For, createSignal } from 'solid-js'
 
-// This example uses the new `createTableHelper` method to create a re-usable table helper object instead of independently using the standalone `createTable` hook and `createColumnHelper` method. You can choose to use either way.
+// This example uses the new `createTableHook` method to create a re-usable table hook factory instead of independently using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
 
 // 1. Define what the shape of your data will be for each row
 type Person = {
@@ -39,20 +39,25 @@ const defaultData: Array<Person> = [
     status: 'Complicated',
     progress: 10,
   },
+  {
+    firstName: 'kevin',
+    lastName: 'vandy',
+    age: 28,
+    visits: 100,
+    status: 'Single',
+    progress: 70,
+  },
 ]
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
-const tableHelper = createTableHelper({
+const { createAppTable, createAppColumnHelper } = createTableHook({
   _features: {},
   _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
-
-  TData: {} as Person,
   debugTable: true,
 })
 
 // 4. Create a helper object to help define our columns
-// const { columnHelper } = tableHelper // if TData was set in the table helper options - otherwise use the createColumnHelper method below
-const columnHelper = tableHelper.createColumnHelper<Person>()
+const columnHelper = createAppColumnHelper<Person>()
 
 // 5. Define the columns for your table with a stable reference (in this case, defined statically outside of a react component)
 const columns = columnHelper.columns([
@@ -89,21 +94,28 @@ const columns = columnHelper.columns([
   }),
 ])
 
-function App() {
+export function App() {
   // 6. Store data with a stable reference
-  const [data, setData] = createSignal(defaultData)
-  const rerender = () => setData(defaultData)
+  const [data, setData] = createSignal([...defaultData])
+
+  // Helper to rerender with sorted data (by age ascending)
+  function rerender() {
+    setData((prev) =>
+      prev.slice().sort((a: Person, b: Person) => a.age - b.age),
+    )
+  }
 
   // 7. Create the table instance with the required columns and data.
-  // Features and row models are already defined in the table helper object above
-  const table = tableHelper.createTable({
+  // Features and row models are already defined in the createTableHook call above
+  const table = createAppTable({
     columns,
     get data() {
       return data()
     },
-    // add additional table options here or in the table helper above
+    // add additional table options here or in the createTableHook call above
   })
 
+  // 8. Render your table markup from the table instance APIs
   return (
     <div class="p-2">
       <table>
@@ -114,12 +126,7 @@ function App() {
                 <For each={headerGroup.headers}>
                   {(header) => (
                     <th>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                      <table.FlexRender header={header} />
                     </th>
                   )}
                 </For>
@@ -134,10 +141,7 @@ function App() {
                 <For each={row.getAllCells()}>
                   {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <table.FlexRender cell={cell} />
                     </td>
                   )}
                 </For>
@@ -152,12 +156,7 @@ function App() {
                 <For each={footerGroup.headers}>
                   {(header) => (
                     <th>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext(),
-                          )}
+                      <table.FlexRender footer={header} />
                     </th>
                   )}
                 </For>
@@ -167,11 +166,9 @@ function App() {
         </tfoot>
       </table>
       <div class="h-4" />
-      <button onClick={() => rerender()} class="border p-2">
-        Rerender
+      <button onClick={rerender} class="border p-2">
+        Rerender (sort by age)
       </button>
     </div>
   )
 }
-
-export default App

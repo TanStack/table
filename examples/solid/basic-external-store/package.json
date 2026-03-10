@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-table-example-solid-basic",
+  "name": "tanstack-table-example-solid-basic-external-store",
   "version": "0.0.0",
   "description": "",
   "scripts": {
@@ -11,6 +11,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@faker-js/faker": "^10.2.0",
     "typescript": "5.9.3",
     "vite": "^7.3.1",
     "vite-plugin-solid": "^2.11.10"
