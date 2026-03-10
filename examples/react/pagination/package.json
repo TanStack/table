@@ -13,7 +13,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.2.0",
     "@tanstack/react-store": "^0.9.2",
-    "@tanstack/react-table": "^9.0.0-alpha.16",
+    "@tanstack/react-table": "^9.0.0-alpha.18",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
