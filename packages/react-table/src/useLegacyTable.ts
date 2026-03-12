@@ -15,8 +15,8 @@ import {
   sortFns,
   stockFeatures,
 } from '@tanstack/table-core'
-import { useMemo } from 'react'
-import { useStore } from '@tanstack/react-store'
+import { useCallback, useMemo } from 'react'
+import { shallow, useStore } from '@tanstack/react-store'
 import { useTable } from './useTable'
 import type {
   Cell,
@@ -419,20 +419,21 @@ export function useLegacyTable<TData extends RowData>(
   }
 
   // Call useTable with the v9 API, subscribing to all state changes
-  const table = useTable<StockFeatures, TData, TableState<StockFeatures>>({
-    ...restOptions,
-    _features: stockFeatures,
-    _rowModels,
-  } as TableOptions<StockFeatures, TData>)
-
-  const state = useStore(table.store, (state) => state)
+  const table = useTable<StockFeatures, TData, TableState<StockFeatures>>(
+    {
+      ...restOptions,
+      _features: stockFeatures,
+      _rowModels,
+    } as TableOptions<StockFeatures, TData>,
+    (state) => state,
+  )
 
   return useMemo(
     () =>
       ({
         ...table,
-        getState: () => state,
+        getState: () => table.state,
       }) as LegacyReactTable<TData>,
-    [table, state],
+    [table],
   )
 }

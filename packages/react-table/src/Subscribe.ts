@@ -1,6 +1,6 @@
 'use client'
 
-import { useStore } from '@tanstack/react-store'
+import { shallow, useStore } from '@tanstack/react-store'
 import type {
   NoInfer,
   RowData,
@@ -63,7 +63,7 @@ export function Subscribe<
 >(
   props: SubscribeProps<TFeatures, TData, TSelected>,
 ): ReturnType<FunctionComponent> {
-  const selected = useStore(props.table.store, props.selector)
+  const selected = useStore(props.table.store, props.selector, shallow)
 
   return typeof props.children === 'function'
     ? props.children(selected)
