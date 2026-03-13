@@ -81,8 +81,8 @@ A headless table library for building powerful datagrids with full control over 
     <td>
      <a href="https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable" style="display: flex; align-items: center; border: none;">
        <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="./media/ag-grid-dark.svg" height="40" />
-        <source media="(prefers-color-scheme: light)" srcset="./media/ag-grid-light.svg" height="40" />
+        <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/ag-grid-dark.svg" height="40" />
+        <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/ag-grid-light.svg" height="40" />
         <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/partners/ag-grid.svg" height="60" alt="AG Grid" />
       </picture>
       </a>
