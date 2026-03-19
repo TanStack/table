@@ -231,7 +231,7 @@ export const RowPagination: TableFeature = {
         if (queued) return
         queued = true
         table._queue(() => {
-          table.resetPageIndex()
+          table.resetPageIndex(true)
           queued = false
         })
       }
