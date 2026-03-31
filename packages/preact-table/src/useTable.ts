@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'preact/hooks'
 import { constructTable } from '@tanstack/table-core'
-import { useStore } from '@tanstack/preact-store'
+import { shallow, useStore } from '@tanstack/preact-store'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type {
@@ -120,7 +120,7 @@ export function useTable<
     table.options.state, // sync preact state to the table store
   ])
 
-  const state = useStore(table.store, selector)
+  const state = useStore(table.store, selector, { equal: shallow })
 
   return useMemo(
     () => ({
