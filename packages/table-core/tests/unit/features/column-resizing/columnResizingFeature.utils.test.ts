@@ -287,6 +287,110 @@ describe('header_getResizeHandler', () => {
     document.dispatchEvent(moveEvent)
 
     expect(onColumnSizingChange).toHaveBeenCalled()
+
+    const upEvent = new MouseEvent('mouseup', { clientX: 150 })
+    document.dispatchEvent(upEvent)
+  })
+
+  it('should allow resizing a column from zero width', () => {
+    const table = generateTestTableWithData<TestFeatures>(1, {
+      columnResizeMode: 'onChange',
+    })
+
+    let resizingState = getDefaultColumnResizingState()
+    table.options.onColumnResizingChange = (updater: any) => {
+      resizingState =
+        typeof updater === 'function' ? updater(resizingState) : updater
+      ;(table.store.state as any).columnResizing = resizingState
+    }
+
+    const sizingUpdates: Record<string, number>[] = []
+    table.options.onColumnSizingChange = (updater: any) => {
+      if (typeof updater === 'function') {
+        const result = updater(table.store.state.columnSizing ?? {})
+        sizingUpdates.push(result)
+      } else {
+        sizingUpdates.push(updater)
+      }
+    }
+
+    const zeroSizeColumn = {
+      ...table.getAllColumns()[0],
+      id: 'firstName',
+      columnDef: { enableResizing: true, minSize: 0, size: 0 },
+      table,
+    }
+    const header = createTestResizeHeader(table, {
+      getSize: () => 0,
+      getLeafHeaders: () => [
+        {
+          column: zeroSizeColumn,
+          getSize: () => 0,
+          subHeaders: [],
+        },
+      ],
+    })
+
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+
+    const moveEvent = new MouseEvent('mousemove', { clientX: 150 })
+    document.dispatchEvent(moveEvent)
+
+    const lastUpdate = sizingUpdates[sizingUpdates.length - 1]
+    expect(lastUpdate).toBeDefined()
+    const newSize = lastUpdate!['firstName']
+    expect(newSize).toBeGreaterThan(0)
+    expect(Number.isNaN(newSize)).toBe(false)
+
+    const upEvent = new MouseEvent('mouseup', { clientX: 150 })
+    document.dispatchEvent(upEvent)
+  })
+
+  it('should not produce NaN when startSize is zero', () => {
+    const table = generateTestTableWithData<TestFeatures>(1, {
+      columnResizeMode: 'onChange',
+    })
+
+    let resizingState = getDefaultColumnResizingState()
+    const resizingUpdates: any[] = []
+    table.options.onColumnResizingChange = (updater: any) => {
+      resizingState =
+        typeof updater === 'function' ? updater(resizingState) : updater
+      ;(table.store.state as any).columnResizing = resizingState
+      resizingUpdates.push(resizingState)
+    }
+
+    const zeroSizeColumn = {
+      ...table.getAllColumns()[0],
+      id: 'firstName',
+      columnDef: { enableResizing: true, minSize: 0, size: 0 },
+      table,
+    }
+    const header = createTestResizeHeader(table, {
+      getSize: () => 0,
+      getLeafHeaders: () => [
+        {
+          column: zeroSizeColumn,
+          getSize: () => 0,
+          subHeaders: [],
+        },
+      ],
+    })
+
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+
+    const moveEvent = new MouseEvent('mousemove', { clientX: 150 })
+    document.dispatchEvent(moveEvent)
+
+    const lastResizing = resizingUpdates[resizingUpdates.length - 1]
+    expect(lastResizing).toBeDefined()
+    expect(Number.isNaN(lastResizing.deltaPercentage)).toBe(false)
+    expect(Number.isFinite(lastResizing.deltaPercentage)).toBe(true)
+
+    const upEvent = new MouseEvent('mouseup', { clientX: 150 })
+    document.dispatchEvent(upEvent)
   })
 
   it('should cleanup event listeners on mouse up', () => {
@@ -305,7 +409,7 @@ describe('header_getResizeHandler', () => {
     document.dispatchEvent(upEvent)
 
     // Should remove mousemove and mouseup listeners
-    expect(removeEventListenerSpy).toHaveBeenCalledTimes(4)
+    expect(removeEventListenerSpy).toHaveBeenCalledTimes(2)
     expect(removeEventListenerSpy).toHaveBeenCalledWith(
       'mousemove',
       expect.any(Function),
