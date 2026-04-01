@@ -89,15 +89,21 @@ export function header_getResizeHandler<
           column.table.options.columnResizeDirection === 'rtl' ? -1 : 1
         const deltaOffset =
           (clientXPos - (old.startOffset ?? 0)) * deltaDirection
+        const startSize = old.startSize ?? 0
         const deltaPercentage = Math.max(
-          deltaOffset / (old.startSize ?? 0),
+          startSize > 0 ? deltaOffset / startSize : 0,
           -0.999999,
         )
 
         old.columnSizingStart.forEach(([columnId, headerSize]) => {
           newColumnSizing[columnId] =
             Math.round(
-              Math.max(headerSize + headerSize * deltaPercentage, 0) * 100,
+              Math.max(
+                headerSize > 0
+                  ? headerSize + headerSize * deltaPercentage
+                  : deltaOffset / old.columnSizingStart.length,
+                0,
+              ) * 100,
             ) / 100
         })
 
