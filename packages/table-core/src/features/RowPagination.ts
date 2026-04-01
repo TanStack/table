@@ -11,6 +11,7 @@ import {
   getMemoOptions,
   makeStateUpdater,
   memo,
+  shallowEqual,
 } from '../utils'
 
 export interface PaginationState {
@@ -241,6 +242,12 @@ export const RowPagination: TableFeature = {
         let newState = functionalUpdate(updater, old)
 
         return newState
+      }
+
+      const currentPagination = table.getState().pagination
+      const newPagination = functionalUpdate(safeUpdater, currentPagination)
+      if (shallowEqual(currentPagination, newPagination)) {
+        return
       }
 
       return table.options.onPaginationChange?.(safeUpdater)
