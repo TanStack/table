@@ -16,7 +16,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@faker-js/faker": "^10.2.0",
-    "@tanstack/react-table": "^9.0.0-alpha.21",
+    "@tanstack/react-table": "^9.0.0-alpha.22",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
