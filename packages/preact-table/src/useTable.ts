@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import { constructTable } from '@tanstack/table-core'
 import { shallow, useStore } from '@tanstack/preact-store'
 import { FlexRender } from './FlexRender'
@@ -15,9 +15,6 @@ import type {
 import type { ComponentChildren } from 'preact'
 import type { FlexRenderProps } from './FlexRender'
 import type { SubscribeProps } from './Subscribe'
-
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 export type PreactTable<
   TFeatures extends TableFeatures,
@@ -71,7 +68,10 @@ export type PreactTable<
    *
    * console.log(table.state.globalFilter)
    */
-  readonly state: Readonly<TSelected>
+  readonly state: Readonly<TSelected> & {
+    columns: TableOptions<TFeatures, TData>['columns']
+    data: TableOptions<TFeatures, TData>['data']
+  }
 }
 
 export function useTable<
@@ -107,20 +107,15 @@ export function useTable<
     ...tableOptions,
   }))
 
-  useIsomorphicLayoutEffect(() => {
-    // prevent race condition between table.setOptions and table.baseStore.setState
-    queueMicrotask(() => {
-      table.baseStore.setState((prev) => ({
-        ...prev,
-      }))
-    })
-  }, [
-    table.options.columns, // re-render when columns change
-    table.options.data, // re-render when data changes
-    table.options.state, // sync preact state to the table store
-  ])
+  const selectorWithDataAndColumns = (state: TableState<TFeatures>) => ({
+    columns: tableOptions.columns,
+    data: tableOptions.data,
+    ...selector(state),
+  })
 
-  const state = useStore(table.store, selector, { equal: shallow })
+  const state = useStore(table.store, selectorWithDataAndColumns, {
+    equal: shallow,
+  })
 
   return useMemo(
     () => ({
@@ -128,5 +123,5 @@ export function useTable<
       state,
     }),
     [state, table],
-  )
+  ) as PreactTable<TFeatures, TData, TSelected>
 }

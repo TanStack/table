@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
 import { shallow, useStore } from '@tanstack/react-store'
 import { FlexRender } from './FlexRender'
@@ -17,9 +17,6 @@ import type {
 import type { FunctionComponent, ReactNode } from 'react'
 import type { FlexRenderProps } from './FlexRender'
 import type { SubscribeProps } from './Subscribe'
-
-const useIsomorphicLayoutEffect =
-  typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 export type ReactTable<
   TFeatures extends TableFeatures,
@@ -73,7 +70,10 @@ export type ReactTable<
    *
    * console.log(table.state.globalFilter)
    */
-  readonly state: Readonly<TSelected>
+  readonly state: Readonly<TSelected> & {
+    columns: TableOptions<TFeatures, TData>['columns']
+    data: TableOptions<TFeatures, TData>['data']
+  }
 }
 
 export function useTable<
@@ -109,20 +109,13 @@ export function useTable<
     ...tableOptions,
   }))
 
-  useIsomorphicLayoutEffect(() => {
-    // prevent race condition between table.setOptions and table.baseStore.setState
-    queueMicrotask(() => {
-      table.baseStore.setState((prev) => ({
-        ...prev,
-      }))
-    })
-  }, [
-    table.options.columns, // re-render when columns change
-    table.options.data, // re-render when data changes
-    table.options.state, // sync react state to the table store
-  ])
+  const selectorWithDataAndColumns = (state: TableState<TFeatures>) => ({
+    columns: tableOptions.columns,
+    data: tableOptions.data,
+    ...selector(state),
+  })
 
-  const state = useStore(table.store, selector, shallow)
+  const state = useStore(table.store, selectorWithDataAndColumns, shallow)
 
   return useMemo(
     () => ({
@@ -130,5 +123,5 @@ export function useTable<
       state,
     }),
     [state, table],
-  )
+  ) as ReactTable<TFeatures, TData, TSelected>
 }
