@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/preact-table",
-  "version": "9.0.0-alpha.20",
+  "version": "9.0.0-alpha.21",
   "description": "Headless UI for building powerful tables & datagrids for Preact.",
   "author": "Tanner Linsley",
   "license": "MIT",
