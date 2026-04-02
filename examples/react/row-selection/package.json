@@ -11,20 +11,20 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.2.0",
-    "@tanstack/react-store": "^0.9.2",
+    "@faker-js/faker": "^10.4.0",
+    "@tanstack/react-store": "^0.9.3",
     "@tanstack/react-table": "^9.0.0-alpha.22",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.3",
-    "@tanstack/react-devtools": "0.9.6",
+    "@tanstack/react-devtools": "0.10.1",
     "@tanstack/react-table-devtools": "9.0.0-alpha.11",
-    "@types/react": "^19.2.10",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.2",
-    "typescript": "5.9.3",
-    "vite": "^7.3.1"
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "6.0.2",
+    "vite": "^8.0.3"
   }
 }

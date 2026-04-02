@@ -4,6 +4,7 @@ import {
   setTableDevtoolsTarget,
 } from '@tanstack/table-devtools'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/solid'
+import type { JSX } from 'solid-js'
 
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
@@ -14,12 +15,21 @@ export interface TableDevtoolsSolidInit<
   table?: Table<TFeatures, TData>
 }
 
-const [TableDevtoolsPanelBase, TableDevtoolsPanelNoOp] =
+type TableDevtoolsPanelComponent = (
+  props: TableDevtoolsSolidInit,
+) => JSX.Element
+
+const [TableDevtoolsPanelBase, TableDevtoolsPanelNoOpBase] =
   createSolidPanel(TableDevtoolsCore)
 
-function TableDevtoolsPanel(props: TableDevtoolsSolidInit) {
-  setTableDevtoolsTarget(props.table)
-  return <TableDevtoolsPanelBase theme={props.theme} />
+function TableDevtoolsPanelImpl(props: TableDevtoolsSolidInit) {
+  const { table, ...panelProps } = props
+  setTableDevtoolsTarget(table)
+  return <TableDevtoolsPanelBase {...panelProps} />
 }
 
-export { TableDevtoolsPanel, TableDevtoolsPanelNoOp }
+export const TableDevtoolsPanel: TableDevtoolsPanelComponent =
+  TableDevtoolsPanelImpl
+
+export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent =
+  TableDevtoolsPanelNoOpBase as TableDevtoolsPanelComponent

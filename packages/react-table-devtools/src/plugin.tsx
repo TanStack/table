@@ -1,5 +1,8 @@
 import React from 'react'
+import { createReactPlugin } from '@tanstack/devtools-utils/react'
 import { TableDevtoolsPanel } from './ReactTableDevtools'
+import type { TanStackDevtoolsReactPlugin } from '@tanstack/react-devtools'
+import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/react'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 export interface TableDevtoolsPluginOptions<
@@ -12,23 +15,29 @@ export interface TableDevtoolsPluginOptions<
 function tableDevtoolsPlugin<
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = RowData,
->(options: TableDevtoolsPluginOptions<TFeatures, TData>) {
-  return {
+>(
+  options: TableDevtoolsPluginOptions<TFeatures, TData>,
+): TanStackDevtoolsReactPlugin {
+  const [Plugin] = createReactPlugin({
     name: 'TanStack Table',
-    render: (_el: HTMLElement, theme: 'light' | 'dark') => (
-      <TableDevtoolsPanel table={options.table} theme={theme} />
+    Component: (props: DevtoolsPanelProps) => (
+      <TableDevtoolsPanel {...props} table={options.table} />
     ),
-  }
+  })
+  return Plugin() as TanStackDevtoolsReactPlugin
 }
 
 function tableDevtoolsNoOpPlugin<
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = RowData,
->(_options: TableDevtoolsPluginOptions<TFeatures, TData>) {
-  return {
+>(
+  _options: TableDevtoolsPluginOptions<TFeatures, TData>,
+): TanStackDevtoolsReactPlugin {
+  const [, NoOp] = createReactPlugin({
     name: 'TanStack Table',
-    render: (_el: HTMLElement, _theme: 'light' | 'dark') => <></>,
-  }
+    Component: TableDevtoolsPanel,
+  })
+  return NoOp() as TanStackDevtoolsReactPlugin
 }
 
 export { tableDevtoolsPlugin, tableDevtoolsNoOpPlugin }

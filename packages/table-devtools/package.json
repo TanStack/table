@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TanStack/table.git",
+    "url": "git+https://github.com/TanStack/table.git",
     "directory": "packages/table-devtools"
   },
   "homepage": "https://tanstack.com/table",
@@ -21,51 +21,41 @@
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
+    "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
     "test:eslint": "eslint ./src",
     "test:lib": "vitest --passWithNoTests",
     "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc",
     "test:build": "publint --strict",
-    "build": "vite build"
+    "build": "tsdown"
   },
   "type": "module",
-  "types": "dist/esm/index.d.ts",
-  "module": "dist/esm/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
-      }
-    },
-    "./production": {
-      "import": {
-        "types": "./dist/esm/production.d.ts",
-        "default": "./dist/esm/production.js"
-      }
-    },
+    ".": "./dist/index.js",
+    "./production": "./dist/production.js",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "files": [
-    "dist",
+    "dist/",
     "src"
   ],
   "dependencies": {
-    "@tanstack/devtools-ui": "^0.5.0",
-    "@tanstack/devtools-utils": "^0.3.2",
-    "@tanstack/solid-store": "^0.9.2",
+    "@tanstack/devtools-ui": "^0.5.1",
+    "@tanstack/devtools-utils": "^0.4.0",
+    "@tanstack/solid-store": "^0.9.3",
     "goober": "^2.1.18",
-    "solid-js": "^1.9.11"
+    "solid-js": "^1.9.12"
   },
   "peerDependencies": {
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "vite-plugin-solid": "^2.11.10"
+    "vite-plugin-solid": "^2.11.11"
   }
 }

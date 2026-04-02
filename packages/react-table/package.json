@@ -21,23 +21,19 @@
     "datagrid"
   ],
   "type": "module",
-  "types": "dist/esm/index.d.ts",
-  "main": "dist/esm/index.js",
-  "module": "dist/esm/index.js",
+  "types": "./dist/index.d.cts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
-      }
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
-    "./package.json": "./package.json",
     "./legacy": {
-      "import": {
-        "types": "./dist/esm/legacy.d.ts",
-        "default": "./dist/esm/legacy.js"
-      }
-    }
+      "import": "./dist/legacy.js",
+      "require": "./dist/legacy.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "engines": {
@@ -54,16 +50,16 @@
     "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc",
     "test:build": "publint --strict",
-    "build": "vite build"
+    "build": "tsdown"
   },
   "dependencies": {
-    "@tanstack/react-store": "^0.9.2",
+    "@tanstack/react-store": "^0.9.3",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^2.13.0",
-    "@types/react": "^19.2.10",
-    "@vitejs/plugin-react": "^5.1.2",
+    "@eslint-react/eslint-plugin": "^4.2.1",
+    "@types/react": "^19.2.14",
+    "@vitejs/plugin-react": "^6.0.1",
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "react": "^19.2.4"

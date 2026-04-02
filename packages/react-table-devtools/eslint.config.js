@@ -24,6 +24,12 @@ const config = [
       'react-hooks/rules-of-hooks': 'error',
     },
   },
+  {
+    files: ['**/plugin.tsx'],
+    rules: {
+      '@eslint-react/component-hook-factories': 'off',
+    },
+  },
 ]
 
 export default config

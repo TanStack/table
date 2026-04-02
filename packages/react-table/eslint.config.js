@@ -30,6 +30,13 @@ const config = [
       // 'react-compiler/react-compiler': 'off',
     },
   },
+  {
+    files: ['**/createTableHook.tsx'],
+    rules: {
+      '@eslint-react/component-hook-factories': 'off',
+      '@eslint-react/purity': 'off',
+    },
+  },
 ]
 
 export default config

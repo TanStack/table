@@ -21,15 +21,13 @@
     "datagrid"
   ],
   "type": "module",
-  "types": "dist/esm/index.d.ts",
-  "main": "dist/esm/index.js",
-  "module": "dist/esm/index.js",
+  "types": "./dist/index.d.cts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
-      }
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -46,16 +44,16 @@
     "test:eslint": "eslint ./src",
     "test:types": "tsc",
     "test:build": "publint --strict",
-    "build": "vite build"
+    "build": "tsdown"
   },
   "dependencies": {
     "@tanstack/table-core": "workspace:*",
-    "@tanstack/vue-store": "^0.9.2"
+    "@tanstack/vue-store": "^0.9.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.3",
-    "eslint-plugin-vue": "^10.7.0",
-    "vue": "^3.5.27"
+    "@vitejs/plugin-vue": "^6.0.5",
+    "eslint-plugin-vue": "^10.8.0",
+    "vue": "^3.5.31"
   },
   "peerDependencies": {
     "vue": ">=3.2"

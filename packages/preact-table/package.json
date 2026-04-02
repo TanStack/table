@@ -21,15 +21,13 @@
     "datagrid"
   ],
   "type": "module",
-  "types": "dist/esm/index.d.ts",
-  "main": "dist/esm/index.js",
-  "module": "dist/esm/index.js",
+  "types": "./dist/index.d.cts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.js"
-      }
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -48,15 +46,15 @@
     "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc",
     "test:build": "publint --strict",
-    "build": "vite build"
+    "build": "tsdown"
   },
   "dependencies": {
-    "@tanstack/preact-store": "^0.11.1",
+    "@tanstack/preact-store": "^0.11.3",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@preact/preset-vite": "^2.10.3",
-    "preact": "^10.28.2"
+    "@preact/preset-vite": "^2.10.5",
+    "preact": "^10.29.0"
   },
   "peerDependencies": {
     "preact": ">=10"

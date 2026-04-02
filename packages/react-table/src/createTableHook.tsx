@@ -1,6 +1,5 @@
 'use client'
 /* eslint-disable @eslint-react/no-context-provider */
-// eslint-disable-next-line @eslint-react/no-use-context -- intentional useContext for older React support
 import React, { createContext, useContext, useMemo } from 'react'
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
@@ -675,8 +674,8 @@ export function createTableHook<
     TFeatures,
     TData
   > {
-    // useContext used for React 18 compatibility - use() requires React 19+
-    // eslint-disable-next-line @eslint-react/no-use-context -- intentional useContext for older React support
+    // `useContext` keeps React 18 support; `use(Context)` is React 19+ only.
+    // eslint-disable-next-line @eslint-react/no-use-context -- intentional for React 18
     const table = useContext(TableContext)
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -709,8 +708,8 @@ export function createTableHook<
    * ```
    */
   function useCellContext<TValue extends CellData = CellData>() {
-    // useContext used for React 18 compatibility - use() requires React 19+
-    // eslint-disable-next-line @eslint-react/no-use-context -- intentional useContext for older React support
+    // `useContext` keeps React 18 support; `use(Context)` is React 19+ only.
+    // eslint-disable-next-line @eslint-react/no-use-context -- intentional for React 18
     const cell = useContext(CellContext)
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -751,8 +750,8 @@ export function createTableHook<
    * ```
    */
   function useHeaderContext<TValue extends CellData = CellData>() {
-    // useContext used for React 18 compatibility - use() requires React 19+
-    // eslint-disable-next-line @eslint-react/no-use-context -- intentional useContext for older React support
+    // `useContext` keeps React 18 support; `use(Context)` is React 19+ only.
+    // eslint-disable-next-line @eslint-react/no-use-context -- intentional for React 18
     const header = useContext(HeaderContext)
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

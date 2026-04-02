@@ -51,17 +51,17 @@
     "test:types": "tsc && vitest --typecheck"
   },
   "dependencies": {
-    "@tanstack/angular-store": "^0.9.2",
+    "@tanstack/angular-store": "^0.9.3",
     "@tanstack/table-core": "workspace:*",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "^2.2.2",
-    "@analogjs/vitest-angular": "^2.2.2",
-    "@angular/core": "^21.1.1",
-    "@angular/platform-browser": "^21.1.1",
-    "ng-packagr": "^21.1.0",
-    "typescript": "5.9.3"
+    "@analogjs/vite-plugin-angular": "^2.4.0",
+    "@analogjs/vitest-angular": "^2.4.0",
+    "@angular/core": "^21.2.7",
+    "@angular/platform-browser": "^21.2.7",
+    "ng-packagr": "^21.2.2",
+    "typescript": "6.0.2"
   },
   "peerDependencies": {
     "@angular/core": ">=19"

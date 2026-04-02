@@ -10,10 +10,16 @@ export function OptionsPanel() {
 
   const tableInstance = table()
   const tableState = tableInstance
-    ? useStore(
-        tableInstance.optionsStore,
-        ({ state, data, _features, _rowModels, ...options }) => options,
-      )
+    ? useStore(tableInstance.optionsStore, (state: unknown) => {
+        const {
+          state: _s,
+          data: _d,
+          _features: _f,
+          _rowModels: _r,
+          ...options
+        } = state as Record<string, unknown>
+        return options
+      })
     : undefined
 
   const getState = (): unknown => {

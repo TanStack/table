@@ -66,7 +66,7 @@ function getRowCountForModel(
   const getter = ROW_MODEL_TO_GETTER[rowModelName]
   if (!getter || typeof tableInstance?.[getter] !== 'function') return 0
   const result = (tableInstance[getter] as () => { rows?: Array<unknown> })()
-  return result?.rows?.length ?? 0
+  return result.rows?.length ?? 0
 }
 
 export function FeaturesPanel() {

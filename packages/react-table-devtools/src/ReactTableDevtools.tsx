@@ -4,9 +4,9 @@ import {
   TableDevtoolsCore,
   setTableDevtoolsTarget,
 } from '@tanstack/table-devtools'
-
-import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/react'
+import type { JSX } from 'react'
+import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 export interface TableDevtoolsReactInit<
   TFeatures extends TableFeatures = TableFeatures,
@@ -15,12 +15,21 @@ export interface TableDevtoolsReactInit<
   table?: Table<TFeatures, TData>
 }
 
-const [TableDevtoolsPanelBase, TableDevtoolsPanelNoOp] =
+type TableDevtoolsPanelComponent = (
+  props: TableDevtoolsReactInit,
+) => JSX.Element
+
+const [TableDevtoolsPanelBase, TableDevtoolsPanelNoOpBase] =
   createReactPanel(TableDevtoolsCore)
 
-function TableDevtoolsPanel(props: TableDevtoolsReactInit) {
-  setTableDevtoolsTarget(props.table)
-  return <TableDevtoolsPanelBase theme={props.theme} />
+function TableDevtoolsPanelImpl(props: TableDevtoolsReactInit) {
+  const { table, ...panelProps } = props
+  setTableDevtoolsTarget(table)
+  return <TableDevtoolsPanelBase {...panelProps} />
 }
 
-export { TableDevtoolsPanel, TableDevtoolsPanelNoOp }
+export const TableDevtoolsPanel: TableDevtoolsPanelComponent =
+  TableDevtoolsPanelImpl
+
+export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent =
+  TableDevtoolsPanelNoOpBase as TableDevtoolsPanelComponent

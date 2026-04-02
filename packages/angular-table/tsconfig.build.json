@@ -2,6 +2,7 @@
   "extends": "./node_modules/ng-packagr/src/lib/ts/conf/tsconfig.ngc.json",
   "compilerOptions": {
     "allowJs": true,
+    "ignoreDeprecations": "6.0",
     "module": "ESNext",
     "moduleDetection": "force",
     "moduleResolution": "Bundler",

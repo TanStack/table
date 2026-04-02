@@ -47,15 +47,15 @@
     "build": "svelte-package --input ./src --output ./dist"
   },
   "dependencies": {
-    "@tanstack/svelte-store": "^0.10.1",
+    "@tanstack/svelte-store": "^0.10.3",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
     "@sveltejs/package": "^2.5.7",
-    "@sveltejs/vite-plugin-svelte": "^6.2.4",
-    "eslint-plugin-svelte": "^3.14.0",
-    "svelte": "^5.48.5",
-    "svelte-check": "^4.3.5"
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "eslint-plugin-svelte": "^3.16.0",
+    "svelte": "^5.55.1",
+    "svelte-check": "^4.4.6"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"

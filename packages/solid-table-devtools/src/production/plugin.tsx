@@ -1,9 +1,11 @@
 import { createSolidPlugin } from '@tanstack/devtools-utils/solid'
+import type { TanStackDevtoolsPlugin } from '@tanstack/devtools'
 import { TableDevtoolsPanel } from './TableDevtools'
 
-const [tableDevtoolsPlugin] = createSolidPlugin({
+const [tableDevtoolsPluginFn] = createSolidPlugin({
   name: 'TanStack Table',
   Component: TableDevtoolsPanel,
 })
 
-export { tableDevtoolsPlugin }
+export const tableDevtoolsPlugin: () => TanStackDevtoolsPlugin =
+  tableDevtoolsPluginFn
