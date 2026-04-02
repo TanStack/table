@@ -1,4 +1,4 @@
-import { functionalUpdate } from '../../utils'
+import { functionalUpdate, shallowEqual } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -35,6 +35,14 @@ export function table_setPagination<
     const newState = functionalUpdate(updater, old)
 
     return newState
+  }
+
+  const currentPagination = table.store.state.pagination
+  if (currentPagination) {
+    const newPagination = functionalUpdate(safeUpdater, currentPagination)
+    if (shallowEqual(currentPagination, newPagination)) {
+      return
+    }
   }
 
   return table.options.onPaginationChange?.(safeUpdater)
