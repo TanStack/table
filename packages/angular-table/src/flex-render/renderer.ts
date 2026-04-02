@@ -5,26 +5,24 @@ import {
   runInInjectionContext,
   untracked,
 } from '@angular/core'
-import { TanStackTableToken } from '../helpers/table'
 import { TanStackTableCellToken } from '../helpers/cell'
 import { TanStackTableHeaderToken } from '../helpers/header'
+import { TanStackTableToken } from '../helpers/table'
 import { FlexRenderComponentProps } from './context'
 import { FlexRenderFlags } from './flags'
+import { flexRenderComponent } from './flexRenderComponent'
+import { FlexRenderComponentFactory } from './flexRenderComponentFactory'
 import {
   FlexRenderComponentView,
   FlexRenderTemplateView,
   mapToFlexRenderTypedContent,
 } from './view'
-import { flexRenderComponent } from './flexRenderComponent'
-import { FlexRenderComponentFactory } from './flexRenderComponentFactory'
-import type { FlexRenderComponent } from './flexRenderComponent'
 import type {
-  EffectRef,
-  TemplateRef,
-  Type,
-  ViewContainerRef,
-} from '@angular/core'
-import type { FlexRenderTypedContent, FlexRenderView } from './view'
+  FlexRenderTypedContent,
+  FlexRenderView,
+  FlexRenderViewAllowedType,
+} from './view'
+import type { FlexRenderComponent } from './flexRenderComponent'
 import type {
   CellContext,
   CellData,
@@ -32,6 +30,12 @@ import type {
   RowData,
   TableFeatures,
 } from '@tanstack/table-core'
+import type {
+  EffectRef,
+  TemplateRef,
+  Type,
+  ViewContainerRef,
+} from '@angular/core'
 
 /**
  * Content supported by the `flexRender` directive when declaring
@@ -106,7 +110,10 @@ export class FlexViewRenderer<
     | HeaderContext<TFeatures, TRowData, TValue>,
 > {
   #renderFlags = FlexRenderFlags.ViewFirstRender
-  #renderView: FlexRenderView<any> | null = null
+  #renderView: FlexRenderView<
+    FlexRenderViewAllowedType,
+    FlexRenderTypedContent
+  > | null = null
   #currentRenderEffectRef: EffectRef | null = null
   #content: () => FlexRenderInputContent<TProps>
   #props: () => TProps
@@ -257,18 +264,21 @@ export class FlexViewRenderer<
     if (latestContent.kind === 'null' || !this.#renderView) {
       this.#renderFlags |= FlexRenderFlags.ContentChanged
     } else {
-      this.#renderView.content = latestContent
-      const { kind: previousKind } = this.#renderView.previousContent
-      if (latestContent.kind !== previousKind) {
+      const { kind: currentKind } = this.#renderView.content
+      if (
+        latestContent.kind !== currentKind ||
+        !this.#renderView.eq(latestContent)
+      ) {
         this.#renderFlags |= FlexRenderFlags.ContentChanged
       }
+      this.#renderView.content = latestContent
     }
     this.#update()
   }
 
   #renderViewByContent(
     content: FlexRenderTypedContent,
-  ): FlexRenderView<any> | null {
+  ): FlexRenderView<FlexRenderViewAllowedType, FlexRenderTypedContent> | null {
     if (content.kind === 'primitive') {
       return this.#renderStringContent(content)
     } else if (content.kind === 'templateRef') {

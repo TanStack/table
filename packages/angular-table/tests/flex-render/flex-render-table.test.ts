@@ -124,6 +124,42 @@ describe('FlexRenderDirective', () => {
     expect(firstCell!.textContent).toEqual('Updated status')
   })
 
+  test('Render content reactively when flexRenderComponent class changes', async () => {
+    const showBadgeA = signal(true)
+
+    const { dom, fixture } = createTestTable(defaultData, [
+      {
+        id: 'first_cell',
+        header: 'Status',
+        cell: () => {
+          return showBadgeA()
+            ? flexRenderComponent(TestABadgeComponent, {
+                inputs: { status: 'From A' },
+              })
+            : flexRenderComponent(TestBBadgeComponent, {
+                inputs: { status: 'From B' },
+              })
+        },
+      },
+    ])
+
+    const row = dom.getBodyRow(0)!
+    const firstCell = row.querySelector('td')!
+
+    let firstElement = firstCell.firstElementChild as HTMLElement | null
+    expect(firstElement).not.toBeNull()
+    expect(firstElement!.tagName).toEqual('APP-TEST-A-BADGE')
+    expect(firstCell.textContent).toContain('From A')
+
+    showBadgeA.set(false)
+    fixture.detectChanges()
+
+    firstElement = firstCell.firstElementChild as HTMLElement | null
+    expect(firstElement).not.toBeNull()
+    expect(firstElement!.tagName).toEqual('APP-TEST-B-BADGE')
+    expect(firstCell.textContent).toContain('From B')
+  })
+
   test('Render content reactively based on signal value', async () => {
     const statusComponent = signal<FlexRenderContent<any>>('Initial status')
 
@@ -544,5 +580,25 @@ class TestBadgeComponent {
   readonly context =
     injectFlexRenderContext<CellContext<typeof stockFeatures, TestData, any>>()
 
+  readonly status = input.required<string>()
+}
+
+@Component({
+  selector: 'app-test-a-badge',
+  template: `<span>A {{ status() }}</span>`,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TestABadgeComponent {
+  readonly status = input.required<string>()
+}
+
+@Component({
+  selector: 'app-test-b-badge',
+  template: `<span>B {{ status() }}</span>`,
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class TestBBadgeComponent {
   readonly status = input.required<string>()
 }
