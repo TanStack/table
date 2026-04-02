@@ -16,7 +16,7 @@
     "@angular/core": "^21.2.7",
     "@angular/forms": "^21.2.7",
     "@angular/platform-browser": "^21.2.7",
-    "@tanstack/angular-table": "^9.0.0-alpha.21",
+    "@tanstack/angular-table": "^9.0.0-alpha.23",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1"
   },
