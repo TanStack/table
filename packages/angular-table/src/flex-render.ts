@@ -15,6 +15,7 @@ import {
   Type,
   ViewContainerRef,
 } from '@angular/core'
+import { memo } from '@tanstack/table-core'
 import { FlexRenderComponentProps } from './flex-render/context'
 import { FlexRenderFlags } from './flex-render/flags'
 import {
@@ -27,9 +28,9 @@ import {
   FlexRenderTemplateView,
   type FlexRenderTypedContent,
   FlexRenderView,
+  FlexRenderViewAllowedType,
   mapToFlexRenderTypedContent,
 } from './flex-render/view'
-import { memo } from '@tanstack/table-core'
 
 export {
   injectFlexRenderContext,
@@ -72,7 +73,10 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
   injector: Injector = inject(Injector)
 
   renderFlags = FlexRenderFlags.ViewFirstRender
-  renderView: FlexRenderView<any> | null = null
+  renderView: FlexRenderView<
+    FlexRenderViewAllowedType,
+    FlexRenderTypedContent
+  > | null = null
 
   readonly #latestContent = () => {
     const { content, props } = this
@@ -121,11 +125,14 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
     if (latestContent.kind === 'null' || !this.renderView) {
       this.renderFlags |= FlexRenderFlags.ContentChanged
     } else {
-      this.renderView.content = latestContent
-      const { kind: previousKind } = this.renderView.previousContent
-      if (latestContent.kind !== previousKind) {
+      const { kind: currentKind } = this.renderView.content
+      if (
+        latestContent.kind !== currentKind ||
+        !this.renderView.eq(latestContent)
+      ) {
         this.renderFlags |= FlexRenderFlags.ContentChanged
       }
+      this.renderView.content = latestContent
     }
     this.update()
   }
@@ -205,7 +212,7 @@ export class FlexRenderDirective<TProps extends NonNullable<unknown>>
 
   #renderViewByContent(
     content: FlexRenderTypedContent,
-  ): FlexRenderView<any> | null {
+  ): FlexRenderView<FlexRenderViewAllowedType, FlexRenderTypedContent> | null {
     if (content.kind === 'primitive') {
       return this.#renderStringContent(content)
     } else if (content.kind === 'templateRef') {

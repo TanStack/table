@@ -1,9 +1,9 @@
 import {
   Component,
-  ViewChild,
   input,
+  signal,
+  ViewChild,
   type TemplateRef,
-  effect,
 } from '@angular/core'
 import { TestBed, type ComponentFixture } from '@angular/core/testing'
 import { createColumnHelper } from '@tanstack/table-core'
@@ -12,11 +12,8 @@ import {
   FlexRenderDirective,
   injectFlexRenderContext,
 } from '../src/flex-render'
+import { flexRenderComponent } from '../src/flex-render/flex-render-component'
 import { setFixtureSignalInput, setFixtureSignalInputs } from './test-utils'
-import {
-  flexRenderComponent,
-  FlexRenderComponent,
-} from '../src/flex-render/flex-render-component'
 
 interface Data {
   id: string
@@ -129,6 +126,44 @@ describe('FlexRenderDirective', () => {
     fixture.detectChanges()
 
     expect(fixture.nativeElement.textContent).toEqual('Updated value')
+  })
+
+  test('should rerender when content has conditional return with different component types', () => {
+    @Component({
+      selector: 'app-fake-a',
+      template: `A component`,
+      standalone: true,
+    })
+    class FakeComponentA {
+      context = injectFlexRenderContext<{ property: string }>()
+    }
+
+    @Component({
+      selector: 'app-fake-b',
+      template: `B component`,
+      standalone: true,
+    })
+    class FakeComponentB {}
+
+    const fixture = TestBed.createComponent(TestRenderComponent)
+    const showB = signal(false)
+
+    setFixtureSignalInputs(fixture, {
+      content: () => {
+        return showB()
+          ? flexRenderComponent(FakeComponentB)
+          : flexRenderComponent(FakeComponentA)
+      },
+      context: {},
+    })
+
+    expect(fixture.nativeElement.textContent).toEqual('A component')
+
+    showB.set(true)
+
+    fixture.detectChanges()
+
+    expect(fixture.nativeElement.textContent).toEqual('B component')
   })
 
   // Skip for now, test framework (using ComponentRef.setInput) cannot recognize signal inputs
