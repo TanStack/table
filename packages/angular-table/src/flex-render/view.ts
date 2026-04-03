@@ -33,8 +33,14 @@ export function mapToFlexRenderTypedContent(
   }
 }
 
+export type FlexRenderViewAllowedType =
+  | FlexRenderComponentRef<any>
+  | EmbeddedViewRef<unknown>
+  | null
+
 export abstract class FlexRenderView<
-  TView extends FlexRenderComponentRef<any> | EmbeddedViewRef<unknown> | null,
+  TView extends FlexRenderViewAllowedType,
+  TContent extends FlexRenderTypedContent,
 > {
   readonly view: TView
   #previousContent: FlexRenderTypedContent | undefined
@@ -66,10 +72,13 @@ export abstract class FlexRenderView<
   abstract dirtyCheck(): void
 
   abstract onDestroy(callback: Function): void
+
+  abstract eq(view: TContent): boolean
 }
 
 export class FlexRenderTemplateView extends FlexRenderView<
-  EmbeddedViewRef<unknown>
+  EmbeddedViewRef<unknown>,
+  Extract<FlexRenderTypedContent, { kind: 'primitive' | 'templateRef' }>
 > {
   constructor(
     initialContent: Extract<
@@ -97,10 +106,27 @@ export class FlexRenderTemplateView extends FlexRenderView<
   override onDestroy(callback: Function) {
     this.view.onDestroy(callback)
   }
+
+  override eq(
+    compare: Extract<
+      FlexRenderTypedContent,
+      { kind: 'primitive' | 'templateRef' }
+    >,
+  ): boolean {
+    return (
+      (this.content.kind === 'primitive' &&
+        compare.kind === 'primitive' &&
+        this.content.content === compare.content) ||
+      (this.content.kind === 'templateRef' &&
+        compare.kind === 'templateRef' &&
+        this.content.content === compare.content)
+    )
+  }
 }
 
 export class FlexRenderComponentView extends FlexRenderView<
-  FlexRenderComponentRef<unknown>
+  FlexRenderComponentRef<unknown>,
+  Extract<FlexRenderTypedContent, { kind: 'component' | 'flexRenderComponent' }>
 > {
   constructor(
     initialContent: Extract<
@@ -149,5 +175,21 @@ export class FlexRenderComponentView extends FlexRenderView<
 
   override onDestroy(callback: Function) {
     this.view.componentRef.onDestroy(callback)
+  }
+
+  override eq(
+    compare: Extract<
+      FlexRenderTypedContent,
+      { kind: 'component' | 'flexRenderComponent' }
+    >,
+  ): boolean {
+    return (
+      (this.content.kind === 'component' &&
+        compare.kind === 'component' &&
+        this.content.content === compare.content) ||
+      (this.content.kind === 'flexRenderComponent' &&
+        compare.kind === 'flexRenderComponent' &&
+        this.content.content.component === compare.content.component)
+    )
   }
 }
