@@ -21,12 +21,12 @@
     "datagrid"
   ],
   "type": "module",
-  "module": "dist/fesm2022/tanstack-angular-table.mjs",
-  "types": "dist/types/tanstack-angular-table.d.ts",
+  "module": "dist/fesm2022/tanstack-angular-table.js",
+  "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/tanstack-angular-table.d.ts",
-      "default": "./dist/fesm2022/tanstack-angular-table.mjs"
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/fesm2022/tanstack-angular-table.js"
     },
     "./package.json": {
       "default": "./package.json"
@@ -40,7 +40,7 @@
     "src"
   ],
   "scripts": {
-    "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./dist/package.json",
+    "build": "vite build",
     "build:types": "tsc --emitDeclarationOnly",
     "clean": "rimraf ./build && rimraf ./dist",
     "test:build": "publint --strict",

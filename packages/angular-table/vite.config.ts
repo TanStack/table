@@ -1,23 +1,31 @@
-import * as path from 'node:path'
-import { defineConfig } from 'vitest/config'
+import path from 'node:path'
+import { defineConfig } from 'vite'
 import angular from '@analogjs/vite-plugin-angular'
-import packageJson from './package.json'
-
-const tsconfigPath = path.join(import.meta.dirname, 'tsconfig.test.json')
-const testDirPath = path.join(import.meta.dirname, 'tests')
-const angularPlugin = angular({ tsconfig: tsconfigPath, jit: true })
 
 export default defineConfig({
-  plugins: [angularPlugin],
-  test: {
-    name: packageJson.name,
-    watch: false,
-    dir: testDirPath,
-    pool: 'threads',
-    environment: 'jsdom',
-    setupFiles: [path.join(testDirPath, 'test-setup.ts')],
-    globals: true,
-    reporters: 'default',
-    disableConsoleIntercept: true,
+  root: import.meta.dirname,
+  plugins: [
+    angular({
+      tsconfig: path.join(import.meta.dirname, 'tsconfig.build.json'),
+    }),
+  ],
+  resolve: {
+    mainFields: ['module'],
+  },
+  build: {
+    target: ['esnext'],
+    sourcemap: true,
+    lib: {
+      entry: 'src/index.ts',
+      fileName: `fesm2022/tanstack-angular-table`,
+      formats: ['es'],
+    },
+    rolldownOptions: {
+      external: [/^@angular\/.*/, /^@tanstack\/.*/, 'rxjs', 'rxjs/operators'],
+      output: {
+        preserveModules: false,
+      },
+    },
+    minify: false,
   },
 })
