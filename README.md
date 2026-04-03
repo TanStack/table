@@ -109,7 +109,7 @@ We're looking for TanStack Table Partners to join our mission! Partner with us t
 - <a href="https://github.com/tanstack/query"><b>TanStack Query</b></a> – Async state & caching
 - <a href="https://github.com/tanstack/ranger"><b>TanStack Ranger</b></a> – Range & slider primitives
 - <a href="https://github.com/tanstack/router"><b>TanStack Router</b></a> – Type‑safe routing, caching & URL state
-- <a href="https://github.com/tanstack/router"><b>TanStack Start</b></a> – Full‑stack SSR & streaming
+- <a href="https://github.com/tanstack/start"><b>TanStack Start</b></a> – Full‑stack SSR & streaming
 - <a href="https://github.com/tanstack/store"><b>TanStack Store</b></a> – Reactive data store
 - <a href="https://github.com/tanstack/virtual"><b>TanStack Virtual</b></a> – Virtualized rendering
 
