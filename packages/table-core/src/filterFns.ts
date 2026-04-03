@@ -42,6 +42,19 @@ const equalsString: FilterFn<any> = (
 
 equalsString.autoRemove = (val: any) => testFalsey(val)
 
+const equalsStringSensitive: FilterFn<any> = (
+  row,
+  columnId: string,
+  filterValue: string
+) => {
+  return (
+    row.getValue<string | null>(columnId)?.toString() ===
+    filterValue?.toLowerCase()
+  )
+}
+
+equalsStringSensitive.autoRemove = (val: any) => testFalsey(val)
+
 const arrIncludes: FilterFn<any> = (
   row,
   columnId: string,
@@ -133,6 +146,7 @@ export const filterFns = {
   includesString,
   includesStringSensitive,
   equalsString,
+  equalsStringSensitive,
   arrIncludes,
   arrIncludesAll,
   arrIncludesSome,
