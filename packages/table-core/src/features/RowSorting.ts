@@ -387,12 +387,13 @@ export const RowSorting: TableFeature = {
             sortAction = 'add'
           }
         } else {
-          // Normal mode
-          if (old?.length && existingIndex !== old.length - 1) {
-            sortAction = 'replace'
-          } else if (existingSorting) {
+          // Normal mode - always replace when not in multi-sort mode
+          // This ensures that clicking without shift key clears existing multi-sort
+          if (existingSorting && old?.length === 1) {
+            // Only one column sorted, so we can toggle
             sortAction = 'toggle'
           } else {
+            // Multiple columns sorted or no existing sort, replace all
             sortAction = 'replace'
           }
         }
