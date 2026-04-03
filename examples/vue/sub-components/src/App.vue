@@ -4,9 +4,9 @@ import {
   createExpandedRowModel,
   createTableHelper,
   rowExpandingFeature,
-  type Row,
 } from '@tanstack/vue-table'
 import { Text, h, ref } from 'vue'
+import type { Row } from '@tanstack/vue-table'
 
 type Person = {
   firstName: string
@@ -17,7 +17,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',

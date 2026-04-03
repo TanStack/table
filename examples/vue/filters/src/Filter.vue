@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import type { Column, Table } from '@tanstack/vue-table'
-import { computed, PropType } from 'vue'
+import { computed } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
-import { Person, tableHelper } from './tableHelper'
+import type { PropType } from 'vue'
+import type { Person, tableHelper } from './tableHelper'
+import type { Column, Table } from '@tanstack/vue-table'
 
 const props = defineProps({
   column: {

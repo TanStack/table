@@ -1,8 +1,11 @@
 import { createSolidPlugin } from '@tanstack/devtools-utils/solid'
 import { TableDevtoolsPanel } from './TableDevtools'
-import type { TanStackDevtoolsPlugin } from '@tanstack/devtools'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/solid'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
+
+type SolidTableDevtoolsPlugin = ReturnType<
+  ReturnType<typeof createSolidPlugin>[0]
+>
 
 export interface TableDevtoolsPluginOptions<
   TFeatures extends TableFeatures = TableFeatures,
@@ -16,14 +19,14 @@ function tableDevtoolsPlugin<
   TData extends RowData = RowData,
 >(
   options: TableDevtoolsPluginOptions<TFeatures, TData>,
-): TanStackDevtoolsPlugin {
+): SolidTableDevtoolsPlugin {
   const [Plugin] = createSolidPlugin({
     name: 'TanStack Table',
     Component: (props: DevtoolsPanelProps) => (
       <TableDevtoolsPanel {...props} table={options.table} />
     ),
   })
-  return Plugin() as TanStackDevtoolsPlugin
+  return Plugin()
 }
 
 function tableDevtoolsNoOpPlugin<
@@ -31,12 +34,12 @@ function tableDevtoolsNoOpPlugin<
   TData extends RowData = RowData,
 >(
   _options: TableDevtoolsPluginOptions<TFeatures, TData>,
-): TanStackDevtoolsPlugin {
+): SolidTableDevtoolsPlugin {
   const [, NoOp] = createSolidPlugin({
     name: 'TanStack Table',
     Component: TableDevtoolsPanel,
   })
-  return NoOp() as TanStackDevtoolsPlugin
+  return NoOp()
 }
 
 export { tableDevtoolsPlugin, tableDevtoolsNoOpPlugin }

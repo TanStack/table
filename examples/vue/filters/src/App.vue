@@ -3,7 +3,8 @@ import { FlexRender } from '@tanstack/vue-table'
 import { ref } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
 import Filter from './Filter.vue'
-import { Person, tableHelper } from './tableHelper'
+import { tableHelper } from './tableHelper'
+import type { Person } from './tableHelper'
 
 const defaultData: Array<Person> = [
   {

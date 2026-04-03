@@ -5,12 +5,13 @@ import {
   columnVisibilityFeature,
   createColumnHelper,
   tableFeatures,
-  type Column,
   useTable,
 } from '@tanstack/vue-table'
-import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import { faker } from '@faker-js/faker'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { Column } from '@tanstack/vue-table'
 
 const _features = tableFeatures({
   columnOrderingFeature,

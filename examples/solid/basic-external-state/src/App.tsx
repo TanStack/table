@@ -2,12 +2,12 @@ import {
   createColumnHelper,
   createPaginatedRowModel,
   createSortedRowModel,
+  createTable,
   flexRender,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
   tableFeatures,
-  createTable,
 } from '@tanstack/solid-table'
 import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'

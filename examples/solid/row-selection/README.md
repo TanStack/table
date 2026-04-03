@@ -8,7 +8,7 @@ This example demonstrates row selection functionality with TanStack Table in Sol
 - Select all / deselect all functionality
 - Page-level row selection
 - Filtering and pagination with row selection
-- Fine-grained reactivity using `table.Subscribe` for optimal performance
+- Reactive reads from `table.store.state` keep the UI in sync with table state
 
 ## Running the Example
 

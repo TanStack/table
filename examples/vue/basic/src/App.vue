@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  useTable,
   createColumnHelper,
   tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
 
@@ -16,7 +16,7 @@ type Person = {
   progress: number
 }
 
-const defaultData: Person[] = [
+const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
     lastName: 'linsley',

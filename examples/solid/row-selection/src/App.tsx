@@ -1,9 +1,6 @@
-import type {
-  Column,
-  ColumnDef,
-  SolidTable,
-  Table,
-} from '@tanstack/solid-table'
+import { For, Show, createEffect, createSignal } from 'solid-js'
+import { TanStackDevtools } from '@tanstack/solid-devtools'
+import { tableDevtoolsPlugin } from '@tanstack/solid-table-devtools'
 import {
   columnFilteringFeature,
   createFilteredRowModel,
@@ -16,12 +13,15 @@ import {
   rowSelectionFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { For, Show, createEffect, createSignal } from 'solid-js'
-import type { Person } from './makeData'
 import { makeData } from './makeData'
+import type {
+  Column,
+  ColumnDef,
+  SolidTable,
+  Table,
+} from '@tanstack/solid-table'
+import type { Person } from './makeData'
 import './index.css'
-import { TanStackDevtools } from '@tanstack/solid-devtools'
-import { tableDevtoolsPlugin } from '@tanstack/solid-table-devtools'
 
 export const _features = tableFeatures({
   rowPaginationFeature,
@@ -35,25 +35,18 @@ function App() {
   const refreshData = () => setData(makeData(100_000)) // stress test
   const [enableRowSelection, setEnableRowSelection] = createSignal(true)
 
-  // Create table first with a placeholder for columns
-  let table: SolidTable<typeof _features, Person>
+  const tableRef: { current?: SolidTable<typeof _features, Person> } = {}
 
   const columns: Array<ColumnDef<typeof _features, Person>> = [
     {
       id: 'select',
-      header: () => {
-        return (
-          <table.Subscribe selector={(state) => state.rowSelection}>
-            {() => (
-              <IndeterminateCheckbox
-                checked={table.getIsAllRowsSelected()}
-                indeterminate={table.getIsSomeRowsSelected()}
-                onChange={table.getToggleAllRowsSelectedHandler()}
-              />
-            )}
-          </table.Subscribe>
-        )
-      },
+      header: () => (
+        <IndeterminateCheckbox
+          checked={tableRef.current!.getIsAllRowsSelected()}
+          indeterminate={tableRef.current!.getIsSomeRowsSelected()}
+          onChange={tableRef.current!.getToggleAllRowsSelectedHandler()}
+        />
+      ),
       cell: ({ row }) => {
         return (
           <div class="px-1">
@@ -118,7 +111,7 @@ function App() {
     },
   ]
 
-  table = createTable({
+  const table = createTable({
     _features,
     _rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
@@ -134,33 +127,19 @@ function App() {
     },
     debugTable: true,
   })
+  tableRef.current = table
 
   return (
-    // <table.Subscribe
-    //   selector={(state) => ({
-    //     // don't include row selection state to optimize re-renders
-    //     columnFilters: state.columnFilters,
-    //     globalFilter: state.globalFilter,
-    //     pagination: state.pagination,
-    //   })}
-    // >
-    //   {(state) => (
     <div class="p-2">
       <TanStackDevtools plugins={[tableDevtoolsPlugin({ table })]} />
 
       <div>
-        <table.Subscribe
-          selector={(state) => ({ globalFilter: state.globalFilter })}
-        >
-          {(state) => (
-            <input
-              value={state().globalFilter ?? ''}
-              onInput={(e) => table.setGlobalFilter(e.target.value)}
-              class="p-2 font-lg shadow border border-block"
-              placeholder="Search all columns..."
-            />
-          )}
-        </table.Subscribe>
+        <input
+          value={table.store.state.globalFilter ?? ''}
+          onInput={(e) => table.setGlobalFilter(e.target.value)}
+          class="p-2 font-lg shadow border border-block"
+          placeholder="Search all columns..."
+        />
       </div>
       <div class="h-2" />
       <table>
@@ -194,39 +173,29 @@ function App() {
         <tbody>
           <For each={table.getRowModel().rows}>
             {(row) => (
-              <table.Subscribe
-                selector={(state) => state.rowSelection[row.id]} // only re-render row when row selection changes (could down move to cell render too)
-              >
-                {() => (
-                  <tr>
-                    <For each={row.getAllCells()}>
-                      {(cell) => (
-                        <td>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
+              <tr>
+                <For each={row.getAllCells()}>
+                  {(cell) => (
+                    <td>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
                       )}
-                    </For>
-                  </tr>
-                )}
-              </table.Subscribe>
+                    </td>
+                  )}
+                </For>
+              </tr>
             )}
           </For>
         </tbody>
         <tfoot>
           <tr>
             <td class="p-1">
-              <table.Subscribe selector={(state) => state.rowSelection}>
-                {() => (
-                  <IndeterminateCheckbox
-                    checked={table.getIsAllPageRowsSelected()}
-                    indeterminate={table.getIsSomePageRowsSelected()}
-                    onChange={table.getToggleAllPageRowsSelectedHandler()}
-                  />
-                )}
-              </table.Subscribe>
+              <IndeterminateCheckbox
+                checked={table.getIsAllPageRowsSelected()}
+                indeterminate={table.getIsSomePageRowsSelected()}
+                onChange={table.getToggleAllPageRowsSelectedHandler()}
+              />
             </td>
             <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
           </tr>
@@ -262,56 +231,41 @@ function App() {
         >
           {'>>'}
         </button>
-        <table.Subscribe
-          selector={(state) => ({ pagination: state.pagination })}
+        <span class="flex items-center gap-1">
+          <div>Page</div>
+          <strong>
+            {table.store.state.pagination.pageIndex + 1} of{' '}
+            {table.getPageCount()}
+          </strong>
+        </span>
+        <span class="flex items-center gap-1">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            max={table.getPageCount()}
+            value={table.store.state.pagination.pageIndex + 1}
+            onInput={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              table.setPageIndex(page)
+            }}
+            class="border p-1 rounded w-16"
+          />
+        </span>
+        <select
+          value={table.store.state.pagination.pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number((e.target as HTMLSelectElement).value))
+          }}
         >
-          {(state) => (
-            <>
-              <span class="flex items-center gap-1">
-                <div>Page</div>
-                <strong>
-                  {state().pagination.pageIndex + 1} of {table.getPageCount()}
-                </strong>
-              </span>
-              <span class="flex items-center gap-1">
-                | Go to page:
-                <input
-                  type="number"
-                  min="1"
-                  max={table.getPageCount()}
-                  value={state().pagination.pageIndex + 1}
-                  onInput={(e) => {
-                    const page = e.target.value ? Number(e.target.value) - 1 : 0
-                    table.setPageIndex(page)
-                  }}
-                  class="border p-1 rounded w-16"
-                />
-              </span>
-              <select
-                value={state().pagination.pageSize}
-                onChange={(e) => {
-                  table.setPageSize(
-                    Number((e.target as HTMLSelectElement).value),
-                  )
-                }}
-              >
-                {[10, 20, 30, 40, 50].map((pageSize) => (
-                  <option value={pageSize}>Show {pageSize}</option>
-                ))}
-              </select>
-            </>
-          )}
-        </table.Subscribe>
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option value={pageSize}>Show {pageSize}</option>
+          ))}
+        </select>
       </div>
       <br />
       <div>
-        <table.Subscribe
-          selector={(state) => ({
-            numSelected: Object.keys(state.rowSelection).length,
-          })}
-        >
-          {(state) => <>{state().numSelected} of </>}
-        </table.Subscribe>
+        {Object.keys(table.store.state.rowSelection).length} of{' '}
         {table.getPreFilteredRowModel().rows.length} Total Rows Selected
       </div>
       <hr />
@@ -342,9 +296,7 @@ function App() {
       </div>
       <div>
         <label>Row Selection State:</label>
-        <table.Subscribe selector={(state) => state}>
-          {(state) => <pre>{JSON.stringify(state(), null, 2)}</pre>}
-        </table.Subscribe>
+        <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
       </div>
     </div>
   )

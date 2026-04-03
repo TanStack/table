@@ -8,7 +8,8 @@ import {
   useTable,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 
 const _features = tableFeatures({
   rowPaginationFeature,

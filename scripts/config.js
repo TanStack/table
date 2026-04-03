@@ -36,10 +36,10 @@ export const packages = [
   //   name: '@tanstack/react-table-devtools',
   //   packageDir: 'packages/react-table-devtools',
   // },
-  // {
-  //   name: '@tanstack/solid-table',
-  //   packageDir: 'packages/solid-table',
-  // },
+  {
+    name: '@tanstack/solid-table',
+    packageDir: 'packages/solid-table',
+  },
   // {
   //   name: '@tanstack/svelte-table',
   //   packageDir: 'packages/svelte-table',

@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  rowSortingFeature,
-  useTable,
   createColumnHelper,
   createSortedRowModel,
+  rowSortingFeature,
   sortFns,
   tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
 import { h, ref } from 'vue'
-import { makeData, Person } from './makeData'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 
 const _features = tableFeatures({
   rowSortingFeature,
