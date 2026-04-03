@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.3",
-    "@tanstack/react-devtools": "0.10.1",
+    "@tanstack/react-devtools": "^0.10.1",
     "@tanstack/react-table-devtools": "9.0.0-alpha.11",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
