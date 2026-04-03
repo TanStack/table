@@ -78,13 +78,13 @@ export interface CoreOptions<TData extends RowData> {
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#columns)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  columns: ColumnDef<TData, any>[]
+  columns: readonly ColumnDef<TData, any>[]
   /**
    * The data for the table to display. This array should match the type you provided to `table.setRowType<...>`. Columns can access this data via string/index or a functional accessor. When the `data` option changes reference, the table will reprocess the data.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#data)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/tables)
    */
-  data: TData[]
+  data: readonly TData[]
   /**
    * Set this option to `true` to output all debugging information to the console.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/table#debugall)
@@ -195,7 +195,7 @@ export interface CoreOptions<TData extends RowData> {
 export interface CoreInstance<TData extends RowData> {
   _features: readonly TableFeature[]
   _getAllFlatColumnsById: () => Record<string, Column<TData, unknown>>
-  _getColumnDefs: () => ColumnDef<TData, unknown>[]
+  _getColumnDefs: () => readonly ColumnDef<TData, unknown>[]
   _getCoreRowModel?: () => RowModel<TData>
   _getDefaultColumnDef: () => Partial<ColumnDef<TData, unknown>>
   _getRowId: (_: TData, index: number, parent?: Row<TData>) => string
@@ -447,7 +447,7 @@ export function createTable<TData extends RowData>(
       () => [table._getColumnDefs()],
       (columnDefs) => {
         const recurseColumns = (
-          columnDefs: ColumnDef<TData, unknown>[],
+          columnDefs: readonly ColumnDef<TData, unknown>[],
           parent?: Column<TData, unknown>,
           depth = 0,
         ): Column<TData, unknown>[] => {
