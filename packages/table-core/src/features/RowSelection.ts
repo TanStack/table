@@ -645,6 +645,7 @@ export function isSubRowSelected<TData extends RowData>(
 
   let allChildrenSelected = true
   let someSelected = false
+  let someSelectable = false
 
   row.subRows.forEach((subRow) => {
     // Bail out early if we know both of these
@@ -653,6 +654,7 @@ export function isSubRowSelected<TData extends RowData>(
     }
 
     if (subRow.getCanSelect()) {
+      someSelectable = true
       if (isRowSelected(subRow, selection)) {
         someSelected = true
       } else {
@@ -665,14 +667,18 @@ export function isSubRowSelected<TData extends RowData>(
       const subRowChildrenSelected = isSubRowSelected(subRow, selection, table)
       if (subRowChildrenSelected === 'all') {
         someSelected = true
+        someSelectable = true
       } else if (subRowChildrenSelected === 'some') {
         someSelected = true
         allChildrenSelected = false
+        someSelectable = true
       } else {
         allChildrenSelected = false
       }
     }
   })
+
+  if (!someSelectable) return false
 
   return allChildrenSelected ? 'all' : someSelected ? 'some' : false
 }
