@@ -30,10 +30,11 @@ export const FlexRender = defineComponent({
   props: ['render', 'props'],
   setup: (props: { render: any; props: any }) => {
     return () => {
-      if (
-        typeof props.render === 'function' ||
-        typeof props.render === 'object'
-      ) {
+      if (typeof props.render === 'function') {
+        return props.render(props.props)
+      }
+
+      if (typeof props.render === 'object') {
         return h(props.render, props.props)
       }
 
