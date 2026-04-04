@@ -320,4 +320,471 @@ describe('RowSelection', () => {
       expect(result).toEqual('some')
     })
   })
+
+  describe('getSubRowSelectionsCount', () => {
+    describe('selectableCount', () => {
+      it('should be 0 when there are no sub-rows', () => {
+        const data = makeData(1)
+        const columns = generateColumns(data)
+
+        const table = createTable<Person>({
+          enableRowSelection: true,
+          onStateChange() {},
+          renderFallbackValue: '',
+          data,
+          state: { rowSelection: {} },
+          columns,
+          getCoreRowModel: getCoreRowModel(),
+        })
+
+        const firstRow = table.getCoreRowModel().rows[0]
+        const { selectableCount } = RowSelection.getSubRowSelectionsCount(firstRow)
+        expect(selectableCount).toBe(0)
+      })
+
+      it('should be 0 when all sub-rows are not selectable', () => {
+        const data = makeData(1, 2)
+        const columns = generateColumns(data)
+
+        const table = createTable<Person>({
+          enableRowSelection: (row) => row.depth === 0, // only root rows are selectable
+          onStateChange() {},
+          renderFallbackValue: '',
+          data,
+          getSubRows: (row) => row.subRows,
+          state: { rowSelection: {} },
+          columns,
+          getCoreRowModel: getCoreRowModel(),
+        })
+
+        const firstRow = table.getCoreRowModel().rows[0]
+        const { selectableCount } = RowSelection.getSubRowSelectionsCount(firstRow)
+        expect(selectableCount).toBe(0)
+      })
+
+      it('should be number of selectable sub-rows', () => {
+        const data = makeData(1, 2)
+        const columns = generateColumns(data)
+
+        const table = createTable<Person>({
+          enableRowSelection: true,
+          onStateChange() {},
+          renderFallbackValue: '',
+          data,
+          getSubRows: (row) => row.subRows,
+          state: { rowSelection: {} },
+          columns,
+          getCoreRowModel: getCoreRowModel(),
+        })
+
+        const firstRow = table.getCoreRowModel().rows[0]
+        const { selectableCount } = RowSelection.getSubRowSelectionsCount(firstRow)
+        expect(selectableCount).toBe(2)
+      })
+
+      it('should include all nested selectable sub-rows', () => {
+        const data = makeData(1, 2, 2)
+        const columns = generateColumns(data)
+
+        const table = createTable<Person>({
+          enableRowSelection: (row) => row.id !== '0.0.1', // make one of the sub-rows non-selectable
+          onStateChange() {},
+          renderFallbackValue: '',
+          data,
+          getSubRows: (row) => row.subRows,
+          state: { rowSelection: {} },
+          columns,
+          getCoreRowModel: getCoreRowModel(),
+        })
+
+        const firstRow = table.getCoreRowModel().rows[0]
+        const { selectableCount } = RowSelection.getSubRowSelectionsCount(firstRow)
+        expect(selectableCount).toBe(5) // 2 direct sub-rows + 3 nested sub-rows
+      })
+    })
+
+    describe('selectedCount', () => {
+      it('should be 0 when there are no sub-rows', () => {
+        const data = makeData(3)
+        const columns = generateColumns(data)
+
+        const table = createTable<Person>({
+          enableRowSelection: true,
+          onStateChange() {},
+          renderFallbackValue: '',
+          data,
+          state: { rowSelection: {} },
+          columns,
+          getCoreRowModel: getCoreRowModel(),
+        })
+
+        const firstRow = table.getCoreRowModel().rows[0]
+        const { selectedCount } = RowSelection.getSubRowSelectionsCount(firstRow)
+        expect(selectedCount).toBe(0)
+      })
+
+      it('should be 0 when all sub-rows are not selectable', () => {
+        const data = makeData(1, 2)
+        const columns = generateColumns(data)
+
+        const table = createTable<Person>({
+          enableRowSelection: (row) => row.depth === 0, // only root rows are selectable
+          onStateChange() {},
+          renderFallbackValue: '',
+          data,
+          getSubRows: (row) => row.subRows,
+          state: { rowSelection: {} },
+          columns,
+          getCoreRowModel: getCoreRowModel(),
+        })
+
+        const firstRow = table.getCoreRowModel().rows[0]
+        const { selectedCount } = RowSelection.getSubRowSelectionsCount(firstRow)
+        expect(selectedCount).toBe(0)
+      })
+
+      it('should be 0 when no sub-rows are selected', () => {
+        const data = makeData(1, 2)
+        const columns = generateColumns(data)
+
+        const table = createTable<Person>({
+          enableRowSelection: true,
+          onStateChange() {},
+          renderFallbackValue: '',
+          data,
+          getSubRows: (row) => row.subRows,
+          state: { rowSelection: {} },
+          columns,
+          getCoreRowModel: getCoreRowModel(),
+        })
+
+        const firstRow = table.getCoreRowModel().rows[0]
+        const { selectedCount } = RowSelection.getSubRowSelectionsCount(firstRow)
+        expect(selectedCount).toBe(0)
+      })
+
+      it('should be number of selectable and selected sub-rows', () => {
+        const data = makeData(1, 2)
+        const columns = generateColumns(data)
+
+        const table = createTable<Person>({
+          enableRowSelection: (row) => row.id !== '0.1', // second sub-row is not selectable
+          onStateChange() {},
+          renderFallbackValue: '',
+          data,
+          getSubRows: (row) => row.subRows,
+          state: {
+            rowSelection: {
+              '0.0': true,
+              '0.1': true,
+            },
+          },
+          columns,
+          getCoreRowModel: getCoreRowModel(),
+        })
+
+        const firstRow = table.getCoreRowModel().rows[0]
+        const { selectedCount } = RowSelection.getSubRowSelectionsCount(firstRow)
+        expect(selectedCount).toBe(1)
+      })
+
+      it('should include all nested selectable and selected sub-rows', () => {
+        const data = makeData(1, 2, 2)
+        const columns = generateColumns(data)
+
+        const table = createTable<Person>({
+          enableRowSelection: (row) => row.id !== '0.0.1', // make one of the sub-rows non-selectable
+          onStateChange() {},
+          renderFallbackValue: '',
+          data,
+          getSubRows: (row) => row.subRows,
+          state: {
+            rowSelection: {
+              '0.0': true,
+              '0.0.0': true,
+              '0.0.1': true,
+              '0.1.1': true,
+            },
+          },
+          columns,
+          getCoreRowModel: getCoreRowModel(),
+        })
+
+        const firstRow = table.getCoreRowModel().rows[0]
+        const { selectedCount } = RowSelection.getSubRowSelectionsCount(firstRow)
+        expect(selectedCount).toBe(3)
+      })
+    });
+  });
+
+  describe('RowSelectionRow.getIsSomeSelected', () => {
+    it('should return false if there are no sub-rows', () => {
+      const data = makeData(2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        state: { rowSelection: {} },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const { rows } = table.getCoreRowModel();
+      rows.forEach(row => {
+        expect(row.getIsSomeSelected()).toBe(false)
+      });
+    })
+
+    it('should return false if all sub-rows are not selectable', () => {
+      const data = makeData(1, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: (row) => row.depth === 0, // only root rows selectable
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: { '0.0': true, '0.1': true } }, // even if all sub-rows are selected, they are not selectable
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsSomeSelected()).toBe(false)
+    })
+
+    it('should return false if all selectable sub-rows are not selected', () => {
+      const data = makeData(1, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: { '0': true } },  // parent row's own selection does not impact outcome
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsSomeSelected()).toBe(false)
+    })
+
+    it('should return false if all selectable sub-rows are selected', () => {
+      const data = makeData(1, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: { '0.0': true, '0.1': true } },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsSomeSelected()).toBe(false)
+    })
+
+    it('should return true if some selectable sub-rows are selected', () => {
+      const data = makeData(1, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: { '0.0': true } },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsSomeSelected()).toBe(true)
+    })
+
+    it('should return true if one nested selectable sub-row is selected', () => {
+      const data = makeData(1, 2, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: { '0.0.0': true } },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsSomeSelected()).toBe(true)
+    })
+  });
+
+  describe('RowSelectionRow.getIsAllSubRowsSelected', () => {
+    it('should return false if there are no sub-rows', () => {
+      const data = makeData(2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        state: { rowSelection: {} },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const { rows } = table.getCoreRowModel();
+      rows.forEach(row => {
+        expect(row.getIsAllSubRowsSelected()).toBe(false)
+      });
+    })
+
+    it('should return false if all sub-rows are not selectable', () => {
+      const data = makeData(1, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: (row) => row.depth === 0, // only root rows selectable
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: {} },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsAllSubRowsSelected()).toBe(false)
+    })
+
+    it('should return false if any selectable sub-row is not selected', () => {
+      const data = makeData(1, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: { '0.0': true } }, // only one of two selected
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsAllSubRowsSelected()).toBe(false)
+    })
+
+    it('should return false if any nested selectable sub-row is not selected', () => {
+      const data = makeData(1, 2, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: {
+          rowSelection: {
+            '0.0': true,
+            '0.0.0': true,
+            '0.0.1': true,
+            '0.1': true,
+            '0.1.0': true,
+            // '0.1.1' not selected
+          },
+        },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsAllSubRowsSelected()).toBe(false)
+    })
+
+    it('should return true if all selectable sub-rows are selected', () => {
+      const data = makeData(1, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: { '0.0': true, '0.1': true } },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsAllSubRowsSelected()).toBe(true)
+    })
+
+    it('should return true if all selectable sub-rows including nested ones are selected', () => {
+      const data = makeData(1, 2, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: true,
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: {
+          rowSelection: {
+            '0.0': true,
+            '0.0.0': true,
+            '0.0.1': true,
+            '0.1': true,
+            '0.1.0': true,
+            '0.1.1': true,
+          },
+        },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsAllSubRowsSelected()).toBe(true)
+    })
+
+    it('should return true when all selectable sub-rows are selected and some are non-selectable', () => {
+      const data = makeData(1, 2)
+      const columns = generateColumns(data)
+
+      const table = createTable<Person>({
+        enableRowSelection: (row) => row.id !== '0.1', // second sub-row is NOT selectable
+        onStateChange() {},
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        state: { rowSelection: { '0.0': true } }, // only selectable sub-row selected
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]
+      expect(firstRow.getIsAllSubRowsSelected()).toBe(true)
+    })
+  });
 })

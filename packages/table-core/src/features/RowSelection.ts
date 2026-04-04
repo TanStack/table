@@ -76,7 +76,7 @@ export interface RowSelectionRow {
    */
   getCanSelectSubRows: () => boolean
   /**
-   * Returns whether or not all of the row's sub rows are selected.
+   * Returns whether or not all of the row's selectable sub rows are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getisallsubrowsselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
@@ -88,7 +88,7 @@ export interface RowSelectionRow {
    */
   getIsSelected: () => boolean
   /**
-   * Returns whether or not some of the row's sub rows are selected.
+   * Returns whether or not some of the row's selectable sub rows are selected.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/row-selection#getissomeselected)
    * @link [Guide](https://tanstack.com/table/v8/docs/guide/row-selection)
    */
@@ -503,13 +503,14 @@ export const RowSelection: TableFeature = {
     }
 
     row.getIsSomeSelected = () => {
-      const { rowSelection } = table.getState()
-      return isSubRowSelected(row, rowSelection, table) === 'some'
+      const { selectableCount, selectedCount } = getSubRowSelectionsCount(row);
+      return selectedCount > 0 && selectedCount < selectableCount;
     }
 
     row.getIsAllSubRowsSelected = () => {
-      const { rowSelection } = table.getState()
-      return isSubRowSelected(row, rowSelection, table) === 'all'
+      const { selectableCount, selectedCount } = getSubRowSelectionsCount(row);
+
+      return selectedCount > 0 && selectedCount === selectableCount;
     }
 
     row.getCanSelect = () => {
@@ -636,43 +637,41 @@ export function isRowSelected<TData extends RowData>(
   return selection[row.id] ?? false
 }
 
+/**
+ * Determines the number of selectable sub-rows and selected sub-rows (checked via BFS across all nested sub-rows).
+ *
+ * @param row The table row to evaluate.
+ * @returns The number of sub-rows that satisfy the condition.
+ */
+export function getSubRowSelectionsCount<TData extends RowData>(row: Row<TData>): { selectableCount: number, selectedCount: number } {
+  const q = [...row.subRows];
+  let selectableCount = 0;
+  let selectedCount = 0;
+  let index = 0;
+  while (index < q.length) {
+    const node = q[index]!;
+    if (node.getCanSelect()) {
+      selectableCount += 1;
+      if (node.getIsSelected()) {
+        selectedCount += 1;
+      }
+    }
+    q.push(...node.subRows);
+    index += 1;
+  }
+
+  return { selectableCount, selectedCount };
+}
+
 export function isSubRowSelected<TData extends RowData>(
   row: Row<TData>,
-  selection: Record<string, boolean>,
-  table: Table<TData>,
+  _selection: Record<string, boolean>,
+  _table: Table<TData>,
 ): boolean | 'some' | 'all' {
-  if (!row.subRows?.length) return false
-
-  let allChildrenSelected = true
-  let someSelected = false
-
-  row.subRows.forEach((subRow) => {
-    // Bail out early if we know both of these
-    if (someSelected && !allChildrenSelected) {
-      return
-    }
-
-    if (subRow.getCanSelect()) {
-      if (isRowSelected(subRow, selection)) {
-        someSelected = true
-      } else {
-        allChildrenSelected = false
-      }
-    }
-
-    // Check row selection of nested subrows
-    if (subRow.subRows && subRow.subRows.length) {
-      const subRowChildrenSelected = isSubRowSelected(subRow, selection, table)
-      if (subRowChildrenSelected === 'all') {
-        someSelected = true
-      } else if (subRowChildrenSelected === 'some') {
-        someSelected = true
-        allChildrenSelected = false
-      } else {
-        allChildrenSelected = false
-      }
-    }
-  })
-
-  return allChildrenSelected ? 'all' : someSelected ? 'some' : false
+  if (row.getIsSomeSelected()) {
+    return 'some';
+  } else if (row.getIsAllSubRowsSelected()) {
+    return 'all';
+  }
+  return false;
 }
