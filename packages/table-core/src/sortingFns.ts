@@ -1,5 +1,8 @@
 import { SortingFn } from './features/RowSorting'
 
+/**
+ * @deprecated No longer used internally. Kept for backwards compatibility.
+ */
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
 const alphanumeric: SortingFn<any> = (rowA, rowB, columnId) => {
@@ -67,51 +70,58 @@ function toString(a: any) {
   return ''
 }
 
+function isDigitChar(ch: string): boolean {
+  return ch >= '0' && ch <= '9'
+}
+
 // Mixed sorting is slow, but very inclusive of many edge cases.
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
+//
+// Uses a character-by-character approach to ensure consistent ordering
+// between letters and digits regardless of their position in the string.
+// Letters always sort before digits (e.g. "appleA" < "apple1").
 function compareAlphanumeric(aStr: string, bStr: string) {
-  // Split on number groups, but keep the delimiter
-  // Then remove falsey split values
-  const a = aStr.split(reSplitAlphaNumeric).filter(Boolean)
-  const b = bStr.split(reSplitAlphaNumeric).filter(Boolean)
+  let ai = 0
+  let bi = 0
 
-  // While
-  while (a.length && b.length) {
-    const aa = a.shift()!
-    const bb = b.shift()!
+  while (ai < aStr.length && bi < bStr.length) {
+    const aIsDigit = isDigitChar(aStr[ai]!)
+    const bIsDigit = isDigitChar(bStr[bi]!)
 
-    const an = parseInt(aa, 10)
-    const bn = parseInt(bb, 10)
-
-    const combo = [an, bn].sort()
-
-    // Both are string
-    if (isNaN(combo[0]!)) {
-      if (aa > bb) {
+    if (aIsDigit && bIsDigit) {
+      // Both are digits - extract full numeric sequences and compare as numbers
+      let aNumStr = ''
+      let bNumStr = ''
+      while (ai < aStr.length && isDigitChar(aStr[ai]!)) {
+        aNumStr += aStr[ai]
+        ai++
+      }
+      while (bi < bStr.length && isDigitChar(bStr[bi]!)) {
+        bNumStr += bStr[bi]
+        bi++
+      }
+      const diff = parseInt(aNumStr, 10) - parseInt(bNumStr, 10)
+      if (diff !== 0) {
+        return diff
+      }
+    } else if (aIsDigit !== bIsDigit) {
+      // One is a digit, one is a letter - letters sort before digits
+      return aIsDigit ? 1 : -1
+    } else {
+      // Both are non-digit characters - compare lexicographically
+      if (aStr[ai]! > bStr[bi]!) {
         return 1
       }
-      if (bb > aa) {
+      if (aStr[ai]! < bStr[bi]!) {
         return -1
       }
-      continue
-    }
-
-    // One is a string, one is a number
-    if (isNaN(combo[1]!)) {
-      return isNaN(an) ? -1 : 1
-    }
-
-    // Both are numbers
-    if (an > bn) {
-      return 1
-    }
-    if (bn > an) {
-      return -1
+      ai++
+      bi++
     }
   }
 
-  return a.length - b.length
+  return aStr.length - bStr.length
 }
 
 // Exports
