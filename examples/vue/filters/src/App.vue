@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { FlexRender } from '@tanstack/vue-table'
 import { ref } from 'vue'
 import DebouncedInput from './DebouncedInput.vue'
 import Filter from './Filter.vue'
-import { tableHelper } from './tableHelper'
-import type { Person } from './tableHelper'
+import { createAppColumnHelper, useAppTable, type Person } from './tableHelper'
 
 const defaultData: Array<Person> = [
   {
@@ -33,7 +31,7 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const { columnHelper } = tableHelper
+const columnHelper = createAppColumnHelper<Person>()
 
 const columns = ref(
   columnHelper.columns([
@@ -88,7 +86,7 @@ const rerender = () => {
   data.value = defaultData
 }
 
-const table = tableHelper.useTable(
+const table = useAppTable(
   {
     data,
     get columns() {
@@ -124,10 +122,10 @@ const table = tableHelper.useTable(
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
+            <component
               v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.header"
-              :props="header.getContext()"
+              :is="table.FlexRender"
+              :header="header"
             />
             <template
               v-if="!header.isPlaceholder && header.column.getCanFilter()"
@@ -140,10 +138,7 @@ const table = tableHelper.useTable(
       <tbody>
         <tr v-for="row in table.getRowModel().rows" :key="row.id">
           <td v-for="cell in row.getAllCells()" :key="cell.id">
-            <FlexRender
-              :render="cell.column.columnDef.cell"
-              :props="cell.getContext()"
-            />
+            <component :is="table.FlexRender" :cell="cell" />
           </td>
         </tr>
       </tbody>
@@ -157,10 +152,10 @@ const table = tableHelper.useTable(
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
+            <component
               v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.footer"
-              :props="header.getContext()"
+              :is="table.FlexRender"
+              :footer="header"
             />
           </th>
         </tr>

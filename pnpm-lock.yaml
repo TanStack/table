@@ -2751,6 +2751,132 @@ importers:
         specifier: ^2.11.11
         version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
 
+  examples/solid/column-pinning:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/column-pinning-split:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/column-pinning-sticky:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/column-resizing:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/column-resizing-performant:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/column-sizing:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
   examples/solid/column-visibility:
     dependencies:
       '@tanstack/solid-table':
@@ -2779,6 +2905,28 @@ importers:
         specifier: ^1.9.12
         version: 1.9.12
     devDependencies:
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/expanding:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -2819,6 +2967,97 @@ importers:
       '@solid-primitives/scheduled':
         specifier: ^1.5.3
         version: 1.5.3(solid-js@1.9.12)
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/filters-fuzzy:
+    dependencies:
+      '@tanstack/match-sorter-utils':
+        specifier: ^8.19.4
+        version: 8.19.4
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/grouping:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/pagination:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/row-pinning:
+    dependencies:
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/solid-table
@@ -2889,6 +3128,137 @@ importers:
         specifier: ^2.11.11
         version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
 
+  examples/solid/sub-components:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/virtualized-columns:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      '@tanstack/solid-virtual':
+        specifier: ^3.13.13
+        version: 3.13.23(solid-js@1.9.12)
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/virtualized-infinite-scrolling:
+    dependencies:
+      '@tanstack/solid-query':
+        specifier: ^5.96.1
+        version: 5.96.1(solid-js@1.9.12)
+      '@tanstack/solid-store':
+        specifier: ^0.9.3
+        version: 0.9.3(solid-js@1.9.12)
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      '@tanstack/solid-virtual':
+        specifier: ^3.13.13
+        version: 3.13.23(solid-js@1.9.12)
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/virtualized-rows:
+    dependencies:
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      '@tanstack/solid-virtual':
+        specifier: ^3.13.13
+        version: 3.13.23(solid-js@1.9.12)
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/with-tanstack-form:
+    dependencies:
+      '@tanstack/solid-form':
+        specifier: ^1.28.6
+        version: 1.28.6(solid-js@1.9.12)
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
   examples/solid/with-tanstack-query:
     dependencies:
       '@tanstack/solid-query':
@@ -2907,6 +3277,37 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vite-plugin-solid:
+        specifier: ^2.11.11
+        version: 2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+
+  examples/solid/with-tanstack-router:
+    dependencies:
+      '@tanstack/solid-query':
+        specifier: ^5.96.1
+        version: 5.96.1(solid-js@1.9.12)
+      '@tanstack/solid-router':
+        specifier: ^1.168.9
+        version: 1.168.9(solid-js@1.9.12)
+      '@tanstack/solid-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/solid-table
+      solid-js:
+        specifier: ^1.9.12
+        version: 1.9.12
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/router-vite-plugin':
+        specifier: ^1.166.27
+        version: 1.166.27(@tanstack/react-router@1.168.10(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(vite-plugin-solid@2.11.11(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)))(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))(webpack@5.105.2(esbuild@0.27.4))
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3302,6 +3703,31 @@ importers:
         specifier: ^3.2.6
         version: 3.2.6(typescript@6.0.2)
 
+  examples/vue/basic-use-app-table:
+    dependencies:
+      '@tanstack/vue-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/vue-table
+      vue:
+        specifier: ^3.5.31
+        version: 3.5.31(typescript@6.0.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.5.0
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.5
+        version: 6.0.5(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))(vue@3.5.31(typescript@6.0.2))
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vue-tsc:
+        specifier: ^3.2.6
+        version: 3.2.6(typescript@6.0.2)
+
   examples/vue/column-ordering:
     dependencies:
       '@faker-js/faker':
@@ -3335,6 +3761,31 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/vue-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/vue-table
+      vue:
+        specifier: ^3.5.31
+        version: 3.5.31(typescript@6.0.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.5.0
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.5
+        version: 6.0.5(vite@8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))(vue@3.5.31(typescript@6.0.2))
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.3
+        version: 8.0.3(@types/node@25.5.0)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+      vue-tsc:
+        specifier: ^3.2.6
+        version: 3.2.6(typescript@6.0.2)
+
+  examples/vue/composable-tables:
+    dependencies:
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/vue-table
@@ -6004,6 +6455,9 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
+  '@nothing-but/utils@0.17.0':
+    resolution: {integrity: sha512-TuCHcHLOqDL0SnaAxACfuRHBNRgNJcNn9X0GiH5H3YSDBVquCr3qEIG3FOQAuMyZCbu9w8nk2CHhOsn7IvhIwQ==}
+
   '@npmcli/agent@4.0.0':
     resolution: {integrity: sha512-kAQTcEN9E8ERLVg5AsGwLNoFb+oEG6engbqAU2P43gD4JEIkNGMHdVQ096FsOAAYpZPB0RSt0zgInKIAS1l5QA==}
     engines: {node: ^20.17.0 || >=22.9.0}
@@ -7306,8 +7760,33 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
+  '@solid-devtools/debugger@0.28.1':
+    resolution: {integrity: sha512-6qIUI6VYkXoRnL8oF5bvh2KgH71qlJ18hNw/mwSyY6v48eb80ZR48/5PDXufUa3q+MBSuYa1uqTMwLewpay9eg==}
+    peerDependencies:
+      solid-js: ^1.9.0
+
+  '@solid-devtools/logger@0.9.11':
+    resolution: {integrity: sha512-THbiY1iQlieL6vdgJc4FIsLe7V8a57hod/Thm8zdKrTkWL88UPZjkBBfM+mVNGusd4OCnAN20tIFBhNnuT1Dew==}
+    peerDependencies:
+      solid-js: ^1.9.0
+
+  '@solid-devtools/shared@0.20.0':
+    resolution: {integrity: sha512-o5TACmUOQsxpzpOKCjbQqGk8wL8PMi+frXG9WNu4Lh3PQVUB6hs95Kl/S8xc++zwcMguUKZJn8h5URUiMOca6Q==}
+    peerDependencies:
+      solid-js: ^1.9.0
+
+  '@solid-primitives/bounds@0.1.5':
+    resolution: {integrity: sha512-JFym8zijMfWp1FaAmJlH3xMfenCuhjaUsoBn3kt9FtoWwLj+yt+EGYt+p3SkOKwF7h4gaGtZ5PIdSbSNVWkRmg==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
   '@solid-primitives/event-listener@2.4.4':
     resolution: {integrity: sha512-6MMhPO1PcPhrGUPlkNXXtOzpEVLbmCkfzjRMLdjtlO/VE05sFyzjP0VwZUTnB2hT95+IEh4h6xCMxGxTUrcTcg==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/event-listener@2.4.5':
+    resolution: {integrity: sha512-nwRV558mIabl4yVAhZKY8cb6G+O1F0M6Z75ttTu5hk+SxdOnKSGj+eetDIu7Oax1P138ZdUU01qnBPR8rnxaEA==}
     peerDependencies:
       solid-js: ^1.6.12
 
@@ -7316,13 +7795,33 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
+  '@solid-primitives/media@2.3.5':
+    resolution: {integrity: sha512-LX9fB5WDaK87FMDtUB1qokBOfT2et9Uobv/zZaKLH9caFSz4+P70MBKEIBHcZQy+9MV5M2XvGYLTbLskjkzMjA==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/refs@1.1.3':
+    resolution: {integrity: sha512-aam02fjNKpBteewF/UliPSQCVJsIIGOLEWQOh+ll6R/QePzBOOBMcC4G+5jTaO75JuUS1d/14Q1YXT3X0Ow6iA==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
   '@solid-primitives/resize-observer@2.1.4':
     resolution: {integrity: sha512-dxKYLU1cjfnEuJP42Ar0pTOmx4E57/lNabKAhKQc4kjqL/OC/h/9MSRMv0/d2/TcAKAkBxHMKKf+uRSUxDTt+g==}
     peerDependencies:
       solid-js: ^1.6.12
 
+  '@solid-primitives/resize-observer@2.1.5':
+    resolution: {integrity: sha512-AiyTknKcNBaKHbcSMuxtSNM8FjIuiSuFyFghdD0TcCMU9hKi9EmsC5pjfjDwxE+5EueB1a+T/34PLRI5vbBbKw==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
   '@solid-primitives/rootless@1.5.2':
     resolution: {integrity: sha512-9HULb0QAzL2r47CCad0M+NKFtQ+LrGGNHZfteX/ThdGvKIg2o2GYhBooZubTCd/RTu2l2+Nw4s+dEfiDGvdrrQ==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/rootless@1.5.3':
+    resolution: {integrity: sha512-N8cIDAHbWcLahNRLr0knAAQvXyEdEMoAZvIMZKmhNb1mlx9e2UOv9BRD5YNwQUJwbNoYVhhLwFOEOcVXFx0HqA==}
     peerDependencies:
       solid-js: ^1.6.12
 
@@ -7336,10 +7835,30 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
+  '@solid-primitives/static-store@0.1.3':
+    resolution: {integrity: sha512-uxez7SXnr5GiRnzqO2IEDjOJRIXaG+0LZLBizmUA1FwSi+hrpuMzVBwyk70m4prcl8X6FDDXUl9O8hSq8wHbBQ==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/styles@0.1.3':
+    resolution: {integrity: sha512-7YdA21prMeCX+oOF/1RAn02+cGz/pG4dyPWtHBC2H8aZvnC7IfThBt80mP+TioejrdfE7Lc54Uh18f7Pig+gRQ==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
   '@solid-primitives/utils@6.3.2':
     resolution: {integrity: sha512-hZ/M/qr25QOCcwDPOHtGjxTD8w2mNyVAYvcfgwzBHq2RwNqHNdDNsMZYap20+ruRwW4A3Cdkczyoz0TSxLCAPQ==}
     peerDependencies:
       solid-js: ^1.6.12
+
+  '@solid-primitives/utils@6.4.0':
+    resolution: {integrity: sha512-AeGTBg8Wtkh/0s+evyLtP8piQoS4wyqqQaAFs2HJcFMMjYAtUgo+ZPduRXLjPlqKVc2ejeR544oeqpbn8Egn8A==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solidjs/meta@0.29.4':
+    resolution: {integrity: sha512-zdIWBGpR9zGx1p1bzIPqF5Gs+Ks/BH8R6fWhmUa/dcK1L2rUC8BAcZJzNRYBQv74kScf1TSOs0EY//Vd/I0V8g==}
+    peerDependencies:
+      solid-js: '>=1.8.4'
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -7539,6 +8058,10 @@ packages:
     peerDependencies:
       lit: ^3.1.0
 
+  '@tanstack/match-sorter-utils@8.19.4':
+    resolution: {integrity: sha512-Wo1iKt2b9OT7d+YGhvEPD3DXvPv2etTusIMhMUoG7fbhmxcXCtIjJDEygy91Y2JFlwGyjqiBPRozme7UD8hoqg==}
+    engines: {node: '>=12'}
+
   '@tanstack/pacer-lite@0.1.1':
     resolution: {integrity: sha512-y/xtNPNt/YeyoVxE/JCx+T7yjEzpezmbb+toK8DDD1P4m7Kzs5YR956+7OKexG3f8aXgC3rLZl7b1V+yNUSy5w==}
     engines: {node: '>=18'}
@@ -7642,15 +8165,32 @@ packages:
     peerDependencies:
       solid-js: '>=1.9.7'
 
+  '@tanstack/solid-form@1.28.6':
+    resolution: {integrity: sha512-XsSrlq7F/ySph+A2XyvW4WW92zHMw4CcEc/UeQBXMod1J5tCkZ/zPByLoKSmRNxSupU3o6T1trfs13gBjrfMKg==}
+    peerDependencies:
+      solid-js: '>=1.9.9'
+
   '@tanstack/solid-query@5.96.1':
     resolution: {integrity: sha512-cXGBd4LICE2fpnW6Tmk7dCqBcwJyBhWftIXa42ZZrjVMrr6OEl8/HLTif6G/IZ2DxCTk18pZUGRvV+i3mQa/Dg==}
     peerDependencies:
       solid-js: ^1.6.0
 
+  '@tanstack/solid-router@1.168.9':
+    resolution: {integrity: sha512-ZgfcBS7lVhVlScxMhoh3U37K/LnNltMJV6Lor98ON3mKnE9XkOwZKvzkOVYj1JEi5HiQsYnC1lmZR5Ww0tc2og==}
+    engines: {node: '>=20.19'}
+    hasBin: true
+    peerDependencies:
+      solid-js: ^1.9.10
+
   '@tanstack/solid-store@0.9.3':
     resolution: {integrity: sha512-XThXDzwJT8zeatmxFK1UISikfzz1z76mMlpg1IBDPrJp6df6U3cpJInZRbYs3xlVsnhMziuZigaSkzMyZESK9Q==}
     peerDependencies:
       solid-js: ^1.6.0
+
+  '@tanstack/solid-virtual@3.13.23':
+    resolution: {integrity: sha512-knSNOb1ev78yaf4CnhCY+JS2NZXzp6WO/8pzI/P9GitrG6QLgBzltOl3duN8+13QkVdSMxRrUKl8mioWNlTQxA==}
+    peerDependencies:
+      solid-js: ^1.3.0
 
   '@tanstack/store@0.9.3':
     resolution: {integrity: sha512-8reSzl/qGWGGVKhBoxXPMWzATSbZLZFWhwBAFO9NAyp0TxzfBP0mIrGb8CP8KrQTmvzXlR/vFPPUrHTLBGyFyw==}
@@ -15018,6 +15558,8 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
+  '@nothing-but/utils@0.17.0': {}
+
   '@npmcli/agent@4.0.0':
     dependencies:
       agent-base: 7.1.3
@@ -16109,9 +16651,56 @@ snapshots:
   '@socket.io/component-emitter@3.1.2':
     optional: true
 
+  '@solid-devtools/debugger@0.28.1(solid-js@1.9.12)':
+    dependencies:
+      '@nothing-but/utils': 0.17.0
+      '@solid-devtools/shared': 0.20.0(solid-js@1.9.12)
+      '@solid-primitives/bounds': 0.1.5(solid-js@1.9.12)
+      '@solid-primitives/event-listener': 2.4.4(solid-js@1.9.12)
+      '@solid-primitives/keyboard': 1.3.4(solid-js@1.9.12)
+      '@solid-primitives/rootless': 1.5.2(solid-js@1.9.12)
+      '@solid-primitives/scheduled': 1.5.3(solid-js@1.9.12)
+      '@solid-primitives/static-store': 0.1.2(solid-js@1.9.12)
+      '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
+      solid-js: 1.9.12
+
+  '@solid-devtools/logger@0.9.11(solid-js@1.9.12)':
+    dependencies:
+      '@nothing-but/utils': 0.17.0
+      '@solid-devtools/debugger': 0.28.1(solid-js@1.9.12)
+      '@solid-devtools/shared': 0.20.0(solid-js@1.9.12)
+      '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
+      solid-js: 1.9.12
+
+  '@solid-devtools/shared@0.20.0(solid-js@1.9.12)':
+    dependencies:
+      '@nothing-but/utils': 0.17.0
+      '@solid-primitives/event-listener': 2.4.4(solid-js@1.9.12)
+      '@solid-primitives/media': 2.3.5(solid-js@1.9.12)
+      '@solid-primitives/refs': 1.1.3(solid-js@1.9.12)
+      '@solid-primitives/rootless': 1.5.2(solid-js@1.9.12)
+      '@solid-primitives/scheduled': 1.5.3(solid-js@1.9.12)
+      '@solid-primitives/static-store': 0.1.2(solid-js@1.9.12)
+      '@solid-primitives/styles': 0.1.3(solid-js@1.9.12)
+      '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
+      solid-js: 1.9.12
+
+  '@solid-primitives/bounds@0.1.5(solid-js@1.9.12)':
+    dependencies:
+      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
+      '@solid-primitives/resize-observer': 2.1.5(solid-js@1.9.12)
+      '@solid-primitives/static-store': 0.1.3(solid-js@1.9.12)
+      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
+      solid-js: 1.9.12
+
   '@solid-primitives/event-listener@2.4.4(solid-js@1.9.12)':
     dependencies:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
+      solid-js: 1.9.12
+
+  '@solid-primitives/event-listener@2.4.5(solid-js@1.9.12)':
+    dependencies:
+      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
       solid-js: 1.9.12
 
   '@solid-primitives/keyboard@1.3.4(solid-js@1.9.12)':
@@ -16119,6 +16708,19 @@ snapshots:
       '@solid-primitives/event-listener': 2.4.4(solid-js@1.9.12)
       '@solid-primitives/rootless': 1.5.2(solid-js@1.9.12)
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
+      solid-js: 1.9.12
+
+  '@solid-primitives/media@2.3.5(solid-js@1.9.12)':
+    dependencies:
+      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
+      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
+      '@solid-primitives/static-store': 0.1.3(solid-js@1.9.12)
+      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
+      solid-js: 1.9.12
+
+  '@solid-primitives/refs@1.1.3(solid-js@1.9.12)':
+    dependencies:
+      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
       solid-js: 1.9.12
 
   '@solid-primitives/resize-observer@2.1.4(solid-js@1.9.12)':
@@ -16129,9 +16731,22 @@ snapshots:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
       solid-js: 1.9.12
 
+  '@solid-primitives/resize-observer@2.1.5(solid-js@1.9.12)':
+    dependencies:
+      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
+      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
+      '@solid-primitives/static-store': 0.1.3(solid-js@1.9.12)
+      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
+      solid-js: 1.9.12
+
   '@solid-primitives/rootless@1.5.2(solid-js@1.9.12)':
     dependencies:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
+      solid-js: 1.9.12
+
+  '@solid-primitives/rootless@1.5.3(solid-js@1.9.12)':
+    dependencies:
+      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
       solid-js: 1.9.12
 
   '@solid-primitives/scheduled@1.5.3(solid-js@1.9.12)':
@@ -16143,7 +16758,26 @@ snapshots:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
       solid-js: 1.9.12
 
+  '@solid-primitives/static-store@0.1.3(solid-js@1.9.12)':
+    dependencies:
+      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
+      solid-js: 1.9.12
+
+  '@solid-primitives/styles@0.1.3(solid-js@1.9.12)':
+    dependencies:
+      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
+      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
+      solid-js: 1.9.12
+
   '@solid-primitives/utils@6.3.2(solid-js@1.9.12)':
+    dependencies:
+      solid-js: 1.9.12
+
+  '@solid-primitives/utils@6.4.0(solid-js@1.9.12)':
+    dependencies:
+      solid-js: 1.9.12
+
+  '@solidjs/meta@0.29.4(solid-js@1.9.12)':
     dependencies:
       solid-js: 1.9.12
 
@@ -16335,6 +16969,10 @@ snapshots:
       '@tanstack/virtual-core': 3.13.23
       lit: 3.3.2
 
+  '@tanstack/match-sorter-utils@8.19.4':
+    dependencies:
+      remove-accents: 0.5.0
+
   '@tanstack/pacer-lite@0.1.1': {}
 
   '@tanstack/preact-store@0.11.3(preact@10.29.0)':
@@ -16478,14 +17116,35 @@ snapshots:
       - csstype
       - utf-8-validate
 
+  '@tanstack/solid-form@1.28.6(solid-js@1.9.12)':
+    dependencies:
+      '@tanstack/form-core': 1.28.6
+      '@tanstack/solid-store': 0.9.3(solid-js@1.9.12)
+      solid-js: 1.9.12
+
   '@tanstack/solid-query@5.96.1(solid-js@1.9.12)':
     dependencies:
       '@tanstack/query-core': 5.96.1
       solid-js: 1.9.12
 
+  '@tanstack/solid-router@1.168.9(solid-js@1.9.12)':
+    dependencies:
+      '@solid-devtools/logger': 0.9.11(solid-js@1.9.12)
+      '@solid-primitives/refs': 1.1.3(solid-js@1.9.12)
+      '@solidjs/meta': 0.29.4(solid-js@1.9.12)
+      '@tanstack/history': 1.161.6
+      '@tanstack/router-core': 1.168.9
+      isbot: 5.1.32
+      solid-js: 1.9.12
+
   '@tanstack/solid-store@0.9.3(solid-js@1.9.12)':
     dependencies:
       '@tanstack/store': 0.9.3
+      solid-js: 1.9.12
+
+  '@tanstack/solid-virtual@3.13.23(solid-js@1.9.12)':
+    dependencies:
+      '@tanstack/virtual-core': 3.13.23
       solid-js: 1.9.12
 
   '@tanstack/store@0.9.3': {}

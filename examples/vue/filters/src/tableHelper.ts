@@ -5,7 +5,7 @@ import {
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
-  createTableHelper,
+  createTableHook,
   filterFns,
   globalFilteringFeature,
 } from '@tanstack/vue-table'
@@ -19,17 +19,17 @@ export type Person = {
   progress: number
 }
 
-export const tableHelper = createTableHelper({
-  _features: {
-    columnFilteringFeature,
-    globalFilteringFeature,
-    columnFacetingFeature,
-  },
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    facetedRowModel: createFacetedRowModel(),
-    facetedMinMaxValues: createFacetedMinMaxValues(),
-    facetedUniqueValues: createFacetedUniqueValues(),
-  },
-  TData: {} as Person,
-})
+export const { appFeatures, createAppColumnHelper, useAppTable } =
+  createTableHook({
+    _features: {
+      columnFilteringFeature,
+      globalFilteringFeature,
+      columnFacetingFeature,
+    },
+    _rowModels: {
+      filteredRowModel: createFilteredRowModel(filterFns),
+      facetedRowModel: createFacetedRowModel(),
+      facetedMinMaxValues: createFacetedMinMaxValues(),
+      facetedUniqueValues: createFacetedUniqueValues(),
+    },
+  })

@@ -1,4 +1,4 @@
 export * from './FlexRender'
+export * from './createTableHook'
 export * from './useTable'
-export * from './createTableHelper'
 export * from '@tanstack/table-core'

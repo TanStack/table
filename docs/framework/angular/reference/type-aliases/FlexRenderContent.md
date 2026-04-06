@@ -19,7 +19,7 @@ type FlexRenderContent<TProps> =
   | undefined;
 ```
 
-Defined in: [flex-render/renderer.ts:40](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/renderer.ts#L40)
+Defined in: [flex-render/renderer.ts:44](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/renderer.ts#L44)
 
 Content supported by the `flexRender` directive when declaring
 a table column header/cell.

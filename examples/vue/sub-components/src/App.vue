@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import {
-  FlexRender,
   createExpandedRowModel,
-  createTableHelper,
+  createTableHook,
   rowExpandingFeature,
 } from '@tanstack/vue-table'
 import { Text, h, ref } from 'vue'
@@ -44,17 +43,16 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const tableHelper = createTableHelper({
+const { appFeatures, createAppColumnHelper, useAppTable } = createTableHook({
   _features: { rowExpandingFeature },
   _rowModels: {
     expandedRowModel: createExpandedRowModel(),
   },
-  TData: {} as Person,
 })
 
-const columnHelper = tableHelper.createColumnHelper<Person>()
+const columnHelper = createAppColumnHelper<Person>()
 
-function renderExpanded(row: Row<typeof tableHelper.features, Person>) {
+function renderExpanded(row: Row<typeof appFeatures, Person>) {
   if (!row.getCanExpand()) {
     return h(Text, '🔵')
   }
@@ -107,9 +105,9 @@ const rerender = () => {
   data.value = defaultData
 }
 
-const table = tableHelper.useTable(
+const table = useAppTable(
   {
-    // features and row models are already defined in the tableHelper
+    // features and row models are already defined in the createTableHook call
     data,
     columns,
     getRowCanExpand: () => true,
@@ -131,10 +129,10 @@ const table = tableHelper.useTable(
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
+            <component
               v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.header"
-              :props="header.getContext()"
+              :is="table.FlexRender"
+              :header="header"
             />
           </th>
         </tr>
@@ -143,10 +141,7 @@ const table = tableHelper.useTable(
         <template v-for="row in table.getRowModel().rows" :key="row.id">
           <tr>
             <td v-for="cell in row.getAllCells()" :key="cell.id">
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+              <component :is="table.FlexRender" :cell="cell" />
             </td>
           </tr>
           <tr v-if="row.getIsExpanded()">
@@ -168,10 +163,10 @@ const table = tableHelper.useTable(
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
+            <component
               v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.footer"
-              :props="header.getContext()"
+              :is="table.FlexRender"
+              :footer="header"
             />
           </th>
         </tr>

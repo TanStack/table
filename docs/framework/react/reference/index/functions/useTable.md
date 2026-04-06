@@ -9,7 +9,7 @@ title: useTable
 function useTable<TFeatures, TData, TSelected>(tableOptions, selector): ReactTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [useTable.ts:78](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L78)
+Defined in: [useTable.ts:79](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L79)
 
 ## Type Parameters
 

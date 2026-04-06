@@ -425,6 +425,7 @@ title: "@tanstack/table-core"
 - [constructCoreTablesFeature](functions/constructCoreTablesFeature.md)
 - [constructGlobalFilteringFeature](functions/constructGlobalFilteringFeature.md)
 - [constructHeader](functions/constructHeader.md)
+- [constructReactivityFeature](functions/constructReactivityFeature.md)
 - [constructRow](functions/constructRow.md)
 - [constructRowExpandingFeature](functions/constructRowExpandingFeature.md)
 - [constructRowPaginationFeature](functions/constructRowPaginationFeature.md)

@@ -5,7 +5,7 @@ title: Table_Table
 
 # Interface: Table\_Table\<TFeatures, TData\>
 
-Defined in: [core/table/coreTablesFeature.types.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L111)
+Defined in: [core/table/coreTablesFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L115)
 
 ## Extends
 
@@ -157,7 +157,7 @@ The base store for the table. This can be used to write to the table state.
 initialState: TableState<TFeatures>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L100)
+Defined in: [core/table/coreTablesFeature.types.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L104)
 
 This is the resolved initial state of the table.
 
@@ -170,10 +170,10 @@ This is the resolved initial state of the table.
 ### options
 
 ```ts
-options: TableOptions<TFeatures, TData>;
+readonly options: TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L104)
+Defined in: [core/table/coreTablesFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L108)
 
 A read-only reference to the table's current options.
 
@@ -183,13 +183,29 @@ A read-only reference to the table's current options.
 
 ***
 
+### optionsStore
+
+```ts
+optionsStore: Store<TableOptions<TFeatures, TData>>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L100)
+
+The base store for the table options.
+
+#### Inherited from
+
+[`Table_CoreProperties`](Table_CoreProperties.md).[`optionsStore`](Table_CoreProperties.md#optionsstore)
+
+***
+
 ### reset()
 
 ```ts
 reset: () => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:118](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L118)
+Defined in: [core/table/coreTablesFeature.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L122)
 
 Call this function to reset the table state to the initial state.
 
@@ -205,7 +221,7 @@ Call this function to reset the table state to the initial state.
 setOptions: (newOptions) => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L122)
+Defined in: [core/table/coreTablesFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L126)
 
 This function can be used to update the table options.
 
@@ -227,7 +243,7 @@ This function can be used to update the table options.
 store: ReadonlyStore<TableState<TFeatures>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L108)
+Defined in: [core/table/coreTablesFeature.types.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L112)
 
 Where the table state is stored.
 

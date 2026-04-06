@@ -125,7 +125,7 @@ The base store for the table. This can be used to write to the table state.
 initialState: TableState<TFeatures>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L100)
+Defined in: [core/table/coreTablesFeature.types.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L104)
 
 This is the resolved initial state of the table.
 
@@ -134,12 +134,24 @@ This is the resolved initial state of the table.
 ### options
 
 ```ts
-options: TableOptions<TFeatures, TData>;
+readonly options: TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L104)
+Defined in: [core/table/coreTablesFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L108)
 
 A read-only reference to the table's current options.
+
+***
+
+### optionsStore
+
+```ts
+optionsStore: Store<TableOptions<TFeatures, TData>>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L100)
+
+The base store for the table options.
 
 ***
 
@@ -149,6 +161,6 @@ A read-only reference to the table's current options.
 store: ReadonlyStore<TableState<TFeatures>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L108)
+Defined in: [core/table/coreTablesFeature.types.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L112)
 
 Where the table state is stored.

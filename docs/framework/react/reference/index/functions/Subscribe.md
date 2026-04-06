@@ -9,7 +9,7 @@ title: Subscribe
 function Subscribe<TFeatures, TData, TSelected>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [Subscribe.ts:58](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L58)
+Defined in: [Subscribe.ts:59](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L59)
 
 A React component that allows you to subscribe to the table state.
 

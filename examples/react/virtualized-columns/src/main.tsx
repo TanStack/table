@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
   columnSizingFeature,
+  columnVisibilityFeature,
   createSortedRowModel,
   rowSortingFeature,
   sortFns,
@@ -21,7 +22,11 @@ import type {
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 
-const features = { columnSizingFeature, rowSortingFeature }
+const features = {
+  columnSizingFeature,
+  columnVisibilityFeature,
+  rowSortingFeature,
+}
 
 function App() {
   const columns = React.useMemo<Array<ColumnDef<typeof features, Person>>>(

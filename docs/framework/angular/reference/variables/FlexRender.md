@@ -9,7 +9,7 @@ title: FlexRender
 const FlexRender: readonly [typeof FlexRenderDirective, typeof FlexRenderCell];
 ```
 
-Defined in: [index.ts:25](https://github.com/TanStack/table/blob/main/packages/angular-table/src/index.ts#L25)
+Defined in: [index.ts:24](https://github.com/TanStack/table/blob/main/packages/angular-table/src/index.ts#L24)
 
 Constant helper to import FlexRender directives.
 

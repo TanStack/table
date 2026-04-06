@@ -9,25 +9,18 @@ title: AngularTable
 type AngularTable<TFeatures, TData, TSelected> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [injectTable.ts:21](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L21)
+Defined in: [injectTable.ts:25](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L25)
 
 ## Type Declaration
 
-### state
+### computed()
 
 ```ts
-readonly state: Signal<Readonly<TSelected>>;
+computed: <TSubSelected>(props) => Signal<Readonly<TSubSelected>>;
 ```
 
-The selected state from the table store, based on the selector provided.
-
-### Subscribe()
-
-```ts
-Subscribe: <TSubSelected>(props) => Signal<Readonly<TSubSelected>>;
-```
-
-Subscribe to changes in the table store with a custom selector.
+Creates a computed that subscribe to changes in the table store with a custom selector.
+Default equality function is "shallow".
 
 #### Type Parameters
 
@@ -51,6 +44,22 @@ Subscribe to changes in the table store with a custom selector.
 #### Returns
 
 `Signal`\<`Readonly`\<`TSubSelected`\>\>
+
+### state
+
+```ts
+readonly state: Signal<Readonly<TSelected>>;
+```
+
+The selected state from the table store, based on the selector provided.
+
+### value
+
+```ts
+readonly value: Signal<AngularTable<TFeatures, TData, TSelected>>;
+```
+
+A signal that returns the entire table instance. Will update on table/options change.
 
 ## Type Parameters
 

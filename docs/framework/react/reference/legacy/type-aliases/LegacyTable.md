@@ -9,7 +9,7 @@ title: LegacyTable
 type LegacyTable<TData> = Table<StockFeatures, TData>;
 ```
 
-Defined in: [useLegacyTable.ts:309](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L309)
+Defined in: [useLegacyTable.ts:311](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L311)
 
 ## Type Parameters
 

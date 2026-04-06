@@ -44,10 +44,10 @@ export const packages = [
   //   name: '@tanstack/svelte-table',
   //   packageDir: 'packages/svelte-table',
   // },
-  // {
-  //   name: '@tanstack/vue-table',
-  //   packageDir: 'packages/vue-table',
-  // },
+  {
+    name: '@tanstack/vue-table',
+    packageDir: 'packages/vue-table',
+  },
   // {
   //   name: '@tanstack/match-sorter-utils',
   //   packageDir: 'packages/match-sorter-utils',
