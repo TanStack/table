@@ -98,14 +98,20 @@ import { CellContext, CoreCell } from './core/cell'
 import { CoreColumn } from './core/column'
 
 export interface TableFeature<TData extends RowData = any> {
-  createCell?: (
-    cell: Cell<TData, unknown>,
-    column: Column<TData>,
+  createCell?: <TValue>(
+    cell: Cell<TData, TValue>,
+    column: Column<TData, TValue>,
     row: Row<TData>,
     table: Table<TData>,
   ) => void
-  createColumn?: (column: Column<TData, unknown>, table: Table<TData>) => void
-  createHeader?: (header: Header<TData, unknown>, table: Table<TData>) => void
+  createColumn?: <TValue>(
+    column: Column<TData, TValue>,
+    table: Table<TData>
+  ) => void
+  createHeader?: <TValue>(
+    header: Header<TData, TValue>,
+    table: Table<TData>
+  ) => void
   createRow?: (row: Row<TData>, table: Table<TData>) => void
   createTable?: (table: Table<TData>) => void
   getDefaultColumnDef?: () => Partial<ColumnDef<TData, unknown>>
@@ -227,7 +233,7 @@ export interface RowModel<TData extends RowData> {
   rowsById: Record<string, Row<TData>>
 }
 
-export type AccessorFn<TData extends RowData, TValue = unknown> = (
+export type AccessorFn<in TData extends RowData, out TValue = unknown> = (
   originalRow: TData,
   index: number,
 ) => TValue
@@ -256,7 +262,7 @@ type ColumnIdentifiers<TData extends RowData, TValue> =
 
 //
 
-interface ColumnDefExtensions<TData extends RowData, TValue = unknown>
+interface ColumnDefExtensions<in out TData extends RowData, in out TValue = unknown>
   extends
     VisibilityColumnDef,
     ColumnPinningColumnDef,
@@ -267,8 +273,8 @@ interface ColumnDefExtensions<TData extends RowData, TValue = unknown>
     ColumnSizingColumnDef {}
 
 export interface ColumnDefBase<
-  TData extends RowData,
-  TValue = unknown,
+  in out TData extends RowData,
+  in out TValue = unknown,
 > extends ColumnDefExtensions<TData, TValue> {
   getUniqueValues?: AccessorFn<TData, unknown[]>
   footer?: ColumnDefTemplate<HeaderContext<TData, TValue>>
@@ -279,8 +285,8 @@ export interface ColumnDefBase<
 //
 
 export interface IdentifiedColumnDef<
-  TData extends RowData,
-  TValue = unknown,
+  in out TData extends RowData,
+  in out TValue = unknown,
 > extends ColumnDefBase<TData, TValue> {
   id?: string
   header?: StringOrTemplateHeader<TData, TValue>
@@ -292,8 +298,8 @@ export type DisplayColumnDef<
 > = ColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
 interface GroupColumnDefBase<
-  TData extends RowData,
-  TValue = unknown,
+  in out TData extends RowData,
+  in out TValue = unknown,
 > extends ColumnDefBase<TData, TValue> {
   columns?: ColumnDef<TData, any>[]
 }
@@ -304,8 +310,8 @@ export type GroupColumnDef<
 > = GroupColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
 export interface AccessorFnColumnDefBase<
-  TData extends RowData,
-  TValue = unknown,
+  in out TData extends RowData,
+  in out TValue = unknown,
 > extends ColumnDefBase<TData, TValue> {
   accessorFn: AccessorFn<TData, TValue>
 }
@@ -316,8 +322,8 @@ export type AccessorFnColumnDef<
 > = AccessorFnColumnDefBase<TData, TValue> & ColumnIdentifiers<TData, TValue>
 
 export interface AccessorKeyColumnDefBase<
-  TData extends RowData,
-  TValue = unknown,
+  in out TData extends RowData,
+  in out TValue = unknown,
 > extends ColumnDefBase<TData, TValue> {
   id?: string
   accessorKey: (string & {}) | keyof TData
@@ -347,7 +353,7 @@ export type ColumnDefResolved<
   accessorKey?: string
 }
 
-export interface Column<TData extends RowData, TValue = unknown>
+export interface Column<in out TData extends RowData, in out TValue = unknown>
   extends
     CoreColumn<TData, TValue>,
     ColumnVisibilityColumn,
@@ -360,11 +366,13 @@ export interface Column<TData extends RowData, TValue = unknown>
     ColumnSizingColumn,
     ColumnOrderColumn {}
 
-export interface Cell<TData extends RowData, TValue>
-  extends CoreCell<TData, TValue>, GroupingCell {}
+export interface Cell<in out TData extends RowData, in out TValue>
+  extends CoreCell<TData, TValue>,
+    GroupingCell {}
 
-export interface Header<TData extends RowData, TValue>
-  extends CoreHeader<TData, TValue>, ColumnSizingHeader {}
+export interface Header<in out TData extends RowData, in out TValue>
+  extends CoreHeader<TData, TValue>,
+    ColumnSizingHeader {}
 
 export interface HeaderGroup<
   TData extends RowData,

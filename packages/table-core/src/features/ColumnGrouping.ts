@@ -34,7 +34,7 @@ export type AggregationFnOption<TData extends RowData> =
   | BuiltInAggregationFn
   | AggregationFn<TData>
 
-export interface GroupingColumnDef<TData extends RowData, TValue> {
+export interface GroupingColumnDef<in out TData extends RowData, in out TValue> {
   /**
    * The cell to display each row for the column if the cell is an aggregate. If a function is passed, it will be passed a props object with the context of the cell and should return the property type for your adapter (the exact type depends on the adapter being used).
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/features/grouping#aggregatedcell)
