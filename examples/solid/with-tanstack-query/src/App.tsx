@@ -3,7 +3,7 @@ import { createStore, useStore } from '@tanstack/solid-store'
 import {
   createColumnHelper,
   createTable,
-  flexRender,
+  FlexRender,
   getInitialTableState,
   rowPaginationFeature,
   tableFeatures,
@@ -84,12 +84,9 @@ function App() {
                 <For each={headerGroup.headers}>
                   {(header) => (
                     <th colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                      {header.isPlaceholder ? null : (
+                        <FlexRender header={header} />
+                      )}
                     </th>
                   )}
                 </For>
@@ -104,10 +101,7 @@ function App() {
                 <For each={row.getAllCells()}>
                   {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>

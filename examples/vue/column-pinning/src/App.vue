@@ -170,11 +170,7 @@ function toggleAllColumnsVisibility() {
               :colSpan="header.colSpan"
             >
               <div class="whitespace-nowrap">
-                <FlexRender
-                  v-if="!header.isPlaceholder"
-                  :render="header.column.columnDef.header"
-                  :props="header.getContext()"
-                />
+                <FlexRender v-if="!header.isPlaceholder" :header="header" />
               </div>
               <div
                 v-if="!header.isPlaceholder && header.column.getCanPin()"
@@ -211,10 +207,7 @@ function toggleAllColumnsVisibility() {
             :key="row.id"
           >
             <td v-for="cell in row.getLeftVisibleCells()" :key="cell.id">
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+              <FlexRender :cell="cell" />
             </td>
           </tr>
         </tbody>
@@ -234,11 +227,7 @@ function toggleAllColumnsVisibility() {
               :colSpan="header.colSpan"
             >
               <div class="whitespace-nowrap">
-                <FlexRender
-                  v-if="!header.isPlaceholder"
-                  :render="header.column.columnDef.header"
-                  :props="header.getContext()"
-                />
+                <FlexRender v-if="!header.isPlaceholder" :header="header" />
               </div>
               <div
                 v-if="!header.isPlaceholder && header.column.getCanPin()"
@@ -280,10 +269,7 @@ function toggleAllColumnsVisibility() {
                 : row.getVisibleCells()"
               :key="cell.id"
             >
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+              <FlexRender :cell="cell" />
             </td>
           </tr>
         </tbody>
@@ -301,11 +287,7 @@ function toggleAllColumnsVisibility() {
               :colSpan="header.colSpan"
             >
               <div class="whitespace-nowrap">
-                <FlexRender
-                  v-if="!header.isPlaceholder"
-                  :render="header.column.columnDef.header"
-                  :props="header.getContext()"
-                />
+                <FlexRender v-if="!header.isPlaceholder" :header="header" />
               </div>
               <div
                 v-if="!header.isPlaceholder && header.column.getCanPin()"
@@ -342,10 +324,7 @@ function toggleAllColumnsVisibility() {
             :key="row.id"
           >
             <td v-for="cell in row.getRightVisibleCells()" :key="cell.id">
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+              <FlexRender :cell="cell" />
             </td>
           </tr>
         </tbody>

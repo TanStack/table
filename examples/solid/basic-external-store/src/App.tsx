@@ -3,7 +3,7 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   createTable,
-  flexRender,
+  FlexRender,
   getInitialTableState,
   rowPaginationFeature,
   rowSortingFeature,
@@ -106,10 +106,7 @@ function App() {
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          <FlexRender header={header} />
                           {{
                             asc: ' 🔼',
                             desc: ' 🔽',
@@ -130,10 +127,7 @@ function App() {
                 <For each={row.getAllCells()}>
                   {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>

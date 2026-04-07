@@ -1,5 +1,10 @@
-import { constructTable } from '@tanstack/table-core'
+import {
+  constructReactivityFeature,
+  constructTable,
+} from '@tanstack/table-core'
 import { useStore } from '@tanstack/svelte-store'
+import { untrack } from 'svelte'
+import { mergeObjects } from './merge-objects'
 import type {
   NoInfer,
   RowData,
@@ -53,10 +58,25 @@ export function createTable<
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): SvelteTable<TFeatures, TData, TSelected> {
-  const statefulOptions: TableOptions<TFeatures, TData> = mergeObjects(
-    tableOptions,
+  // 1. Create $state-based notifier for reactivity feature
+  let notifierValue = $state(0)
+
+  // 2. Construct reactivity feature (same pattern as solid/vue/angular)
+  const svelteReactivityFeature = constructReactivityFeature<TFeatures, TData>({
+    stateNotifier: () => notifierValue,
+    optionsNotifier: () => notifierValue,
+  })
+
+  // 3. Merge reactivity feature into options using mergeObjects (preserves getters)
+  const mergedOptions = mergeObjects(tableOptions, {
+    _features: mergeObjects(tableOptions._features, {
+      svelteReactivityFeature,
+    }),
+  }) as any
+
+  // 4. Set up resolved options with mergeOptions handler
+  const resolvedOptions = mergeObjects(
     {
-      // Remove state and onStateChange - store handles it internally
       mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
         newOptions: Partial<TableOptions<TFeatures, TData>>,
@@ -64,44 +84,64 @@ export function createTable<
         return mergeObjects(defaultOptions, newOptions)
       },
     },
-  )
+    mergedOptions,
+  ) as TableOptions<TFeatures, TData>
 
-  const table = constructTable(statefulOptions) as SvelteTable<
+  // 5. Construct table
+  const table = constructTable(resolvedOptions) as SvelteTable<
     TFeatures,
     TData,
     TSelected
   >
 
-  function updateOptions() {
-    table.setOptions((prev) => {
-      return mergeObjects(prev, tableOptions)
-    })
-  }
-
-  updateOptions()
-
-  /**
-   * Temp force reactivity to all state changes on every table.get* method
-   */
+  // 6. Subscribe to all state and options via useStore
   const allState = useStore(table.store, (state) => state)
+  const allOptions = useStore(table.optionsStore, (options) => options)
 
-  // Wrap all "get*" methods to make them reactive
-  // Access allState.current directly to create reactive dependency
-  Object.keys(table).forEach((key) => {
-    const value = (table as any)[key]
-    if (typeof value === 'function' && key.startsWith('get')) {
-      const originalMethod = value.bind(table)
-      ;(table as any)[key] = (...args: Array<any>) => {
-        // Access state to create reactive dependency
-        allState.current
-        return originalMethod(...args)
-      }
-    }
+  // 7. Sync store changes -> notifier.
+  // Use $effect.pre so this runs before DOM updates (like Solid's createComputed).
+  // Use untrack for the write so the effect only depends on allState/allOptions,
+  // not on notifierValue itself (which would cause an infinite loop).
+  $effect.pre(() => {
+    allState.current
+    allOptions.current
+    untrack(() => {
+      notifierValue++
+    })
   })
 
-  table.Subscribe = function Subscribe<TSelected>(props: {
-    selector: (state: TableState<TFeatures>) => TSelected
-    children: ((state: Readonly<TSelected>) => Snippet) | Snippet
+  // 8. Sync options reactively. When controlled state changes (e.g., $state
+  // inside createTableState), the effect re-runs and calls setOptions.
+  // Use $effect.pre so the table sees updated options BEFORE the DOM renders,
+  // ensuring getRowModel() returns current data (not stale, one-frame-behind data).
+  // The reactive reads (state getters, data getter) happen OUTSIDE untrack
+  // so they become dependencies. The setOptions call is INSIDE untrack to
+  // prevent tracking notifierValue (read via store.state's stateNotifier
+  // interceptor inside setOptions), which would cause an infinite loop.
+  $effect.pre(() => {
+    // Read reactive getters to create $effect dependencies on external state
+    const state = mergedOptions.state
+    if (state) {
+      for (const key in state) {
+        void state[key]
+      }
+    }
+    void mergedOptions.data
+
+    untrack(() => {
+      table.setOptions((prev) => {
+        return mergeObjects(prev, mergedOptions) as TableOptions<
+          TFeatures,
+          TData
+        >
+      })
+    })
+  })
+
+  // 9. Subscribe component
+  table.Subscribe = function Subscribe<TSel>(props: {
+    selector: (state: TableState<TFeatures>) => TSel
+    children: ((state: Readonly<TSel>) => Snippet) | Snippet
   }): any {
     const selected = useStore(table.store, props.selector)
     if (typeof props.children === 'function') {
@@ -110,52 +150,16 @@ export function createTable<
     return props.children
   }
 
+  // 10. State selector
   const stateStore = useStore(table.store, selector)
 
-  return {
-    ...table,
-    get state() {
+  Object.defineProperty(table, 'state', {
+    get() {
       return stateStore.current
     },
-  } as SvelteTable<TFeatures, TData, TSelected>
-}
+    configurable: true,
+    enumerable: true,
+  })
 
-/**
- * Merges objects together while keeping their getters alive.
- * Taken from SolidJS: {https://github.com/solidjs/solid/blob/24abc825c0996fd2bc8c1de1491efe9a7e743aff/packages/solid/src/server/rendering.ts#L82-L115}
- * */
-function mergeObjects<T>(source: T): T
-function mergeObjects<T, U>(source: T, source1: U): T & U
-function mergeObjects<T, U, V>(source: T, source1: U, source2: V): T & U & V
-function mergeObjects<T, U, V, W>(
-  source: T,
-  source1: U,
-  source2: V,
-  source3: W,
-): T & U & V & W
-function mergeObjects(...sources: any): any {
-  const target = {}
-  for (let source of sources) {
-    if (typeof source === 'function') source = source()
-    if (source) {
-      const descriptors = Object.getOwnPropertyDescriptors(source)
-      for (const key in descriptors) {
-        if (key in target) continue
-        Object.defineProperty(target, key, {
-          enumerable: true,
-          get() {
-            for (let i = sources.length - 1; i >= 0; i--) {
-              let v,
-                s = sources[i]
-              if (typeof s === 'function') s = s()
-              // eslint-disable-next-line prefer-const
-              v = (s || {})[key]
-              if (v !== undefined) return v
-            }
-          },
-        })
-      }
-    }
-  }
-  return target
+  return table
 }

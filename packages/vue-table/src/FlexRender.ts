@@ -1,28 +1,109 @@
 import { defineComponent, h, isVNode } from 'vue'
+import type { PropType } from 'vue'
+import type {
+  Cell,
+  CellData,
+  Header,
+  RowData,
+  TableFeatures,
+} from '@tanstack/table-core'
 
+/**
+ * If rendering headers, cells, or footers with custom markup, use flexRender instead of `cell.getValue()` or `cell.renderValue()`.
+ * @example flexRender(cell.column.columnDef.cell, cell.getContext())
+ */
+export function flexRender(render: any, props: any): any {
+  if (typeof render === 'function') {
+    const rendered = render(props)
+
+    if (isVNode(rendered)) {
+      return rendered
+    }
+
+    if (typeof rendered === 'function' || typeof rendered === 'object') {
+      return h(rendered, props)
+    }
+
+    return rendered
+  }
+
+  if (typeof render === 'object') {
+    return h(render, props)
+  }
+
+  return render
+}
+
+/**
+ * Simplified component for rendering headers, cells, or footers.
+ *
+ * Supports both the new shorthand pattern and the legacy `:render`/`:props` pattern:
+ * @example
+ * ```vue
+ * <!-- New shorthand pattern -->
+ * <FlexRender :cell="cell" />
+ * <FlexRender :header="header" />
+ * <FlexRender :footer="header" />
+ *
+ * <!-- Legacy pattern (still supported) -->
+ * <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+ * ```
+ */
 export const FlexRender = defineComponent({
-  props: ['render', 'props'],
-  setup: (props: { render: any; props: any }) => {
+  props: {
+    render: {
+      type: [Function, Object, String] as PropType<any>,
+      default: undefined,
+    },
+    props: {
+      type: Object as PropType<any>,
+      default: undefined,
+    },
+    cell: {
+      type: Object as PropType<Cell<any, any, any>>,
+      default: undefined,
+    },
+    header: {
+      type: Object as PropType<Header<any, any, any>>,
+      default: undefined,
+    },
+    footer: {
+      type: Object as PropType<Header<any, any, any>>,
+      default: undefined,
+    },
+  },
+  setup: (props: {
+    render?: any
+    props?: any
+    cell?: Cell<any, any, any>
+    header?: Header<any, any, any>
+    footer?: Header<any, any, any>
+  }) => {
     return () => {
-      if (typeof props.render === 'function') {
-        const rendered = props.render(props.props)
-
-        if (isVNode(rendered)) {
-          return rendered
-        }
-
-        if (typeof rendered === 'function' || typeof rendered === 'object') {
-          return h(rendered, props.props)
-        }
-
-        return rendered
+      // New shorthand pattern: extract render and props from cell/header/footer
+      if (props.cell) {
+        return flexRender(
+          props.cell.column.columnDef.cell,
+          props.cell.getContext(),
+        )
       }
 
-      if (typeof props.render === 'object') {
-        return h(props.render, props.props)
+      if (props.header) {
+        return flexRender(
+          props.header.column.columnDef.header,
+          props.header.getContext(),
+        )
       }
 
-      return props.render
+      if (props.footer) {
+        return flexRender(
+          props.footer.column.columnDef.footer,
+          props.footer.getContext(),
+        )
+      }
+
+      // Legacy pattern: use render and props directly
+      return flexRender(props.render, props.props)
     }
   },
 })

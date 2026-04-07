@@ -103,15 +103,12 @@
   <div class="h-2"></div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
         <tr>
-          {#each headerGroup.headers as header}
+          {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <FlexRender
-                  content={header.column.columnDef.header}
-                  context={header.getContext()}
-                />
+                <FlexRender header={header} />
               {/if}
             </th>
           {/each}
@@ -119,29 +116,23 @@
       {/each}
     </thead>
     <tbody>
-      {#each table.getRowModel().rows.slice(0, 10) as row}
+      {#each table.getRowModel().rows.slice(0, 10) as row (row.id)}
         <tr>
-          {#each row.getAllCells() as cell}
+          {#each row.getAllCells() as cell (cell.id)}
             <td>
-              <FlexRender
-                content={cell.column.columnDef.cell}
-                context={cell.getContext()}
-              />
+              <FlexRender cell={cell} />
             </td>
           {/each}
         </tr>
       {/each}
     </tbody>
     <tfoot>
-      {#each table.getFooterGroups() as footerGroup}
+      {#each table.getFooterGroups() as footerGroup (footerGroup.id)}
         <tr>
-          {#each footerGroup.headers as header}
+          {#each footerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
-                <FlexRender
-                  content={header.column.columnDef.footer}
-                  context={header.getContext()}
-                />
+                <FlexRender footer={header} />
               {/if}
             </th>
           {/each}

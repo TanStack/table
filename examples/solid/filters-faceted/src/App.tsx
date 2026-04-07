@@ -7,7 +7,7 @@ import {
   createFilteredRowModel,
   createTable,
   filterFns,
-  flexRender,
+  FlexRender,
   globalFilteringFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
@@ -121,10 +121,7 @@ function App() {
                     <th colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          <FlexRender header={header} />
                           {header.column.getCanFilter() ? (
                             <div>
                               <ColumnFilter
@@ -149,10 +146,7 @@ function App() {
                 <For each={row.getAllCells()}>
                   {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>

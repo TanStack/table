@@ -832,16 +832,19 @@
         {
           "label": "svelte",
           "children": [
-            { "to": "framework/svelte/examples/basic", "label": "Basic" },
-            { "to": "framework/svelte/examples/basic-snippets", "label": "Basic Snippets" },
-            { "to": "framework/svelte/examples/basic-table-helper", "label": "Basic with Helpers" },
+            { "to": "framework/svelte/examples/basic-create-table", "label": "Basic (createTable)" },
+            { "to": "framework/svelte/examples/basic-app-table", "label": "Basic (createAppTable)" },
+            { "to": "framework/svelte/examples/basic-snippets", "label": "Basic (Snippets)" },
+            { "to": "framework/svelte/examples/basic-external-state", "label": "Basic (External State)" },
+            { "to": "framework/svelte/examples/basic-external-store", "label": "Basic (External Store)" },
             { "to": "framework/svelte/examples/column-groups", "label": "Header Groups" }
           ]
         },
         {
           "label": "vue",
           "children": [
-            { "to": "framework/vue/examples/basic", "label": "Basic" }
+            { "to": "framework/vue/examples/basic", "label": "Basic" },
+            { "to": "framework/vue/examples/basic-use-app-table", "label": "Basic (useAppTable)" }
           ]
         },
         {
@@ -914,10 +917,21 @@
         {
           "label": "solid",
           "children": [
+            { "to": "framework/solid/examples/filters", "label": "Column Filters" },
+            { "to": "framework/solid/examples/filters-faceted", "label": "Column Filters (Faceted)" },
+            { "to": "framework/solid/examples/filters-fuzzy", "label": "Fuzzy Search Filters" },
             { "to": "framework/solid/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/solid/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/solid/examples/column-pinning-split", "label": "Column Pinning (Split)" },
+            { "to": "framework/solid/examples/column-pinning-sticky", "label": "Sticky Column Pinning" },
+            { "to": "framework/solid/examples/column-sizing", "label": "Column Sizing" },
+            { "to": "framework/solid/examples/column-resizing", "label": "Column Resizing" },
+            { "to": "framework/solid/examples/column-resizing-performant", "label": "Performant Column Resizing" },
             { "to": "framework/solid/examples/column-visibility", "label": "Column Visibility" },
-            { "to": "framework/solid/examples/filters", "label": "Filters" },
-            { "to": "framework/solid/examples/filters-faceted", "label": "Filters (Faceted)" },
+            { "to": "framework/solid/examples/expanding", "label": "Expanding" },
+            { "to": "framework/solid/examples/grouping", "label": "Grouping" },
+            { "to": "framework/solid/examples/pagination", "label": "Pagination" },
+            { "to": "framework/solid/examples/row-pinning", "label": "Row Pinning" },
             { "to": "framework/solid/examples/row-selection", "label": "Row Selection" },
             { "to": "framework/solid/examples/sorting", "label": "Sorting" }
           ]
@@ -925,10 +939,21 @@
         {
           "label": "svelte",
           "children": [
+            { "to": "framework/svelte/examples/filtering", "label": "Column Filters" },
+            { "to": "framework/svelte/examples/filters-faceted", "label": "Column Filters (Faceted)" },
+            { "to": "framework/svelte/examples/filters-fuzzy", "label": "Fuzzy Search Filters" },
             { "to": "framework/svelte/examples/column-ordering", "label": "Column Ordering" },
             { "to": "framework/svelte/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/svelte/examples/column-pinning-split", "label": "Column Pinning (Split)" },
+            { "to": "framework/svelte/examples/column-pinning-sticky", "label": "Sticky Column Pinning" },
+            { "to": "framework/svelte/examples/column-sizing", "label": "Column Sizing" },
+            { "to": "framework/svelte/examples/column-resizing", "label": "Column Resizing" },
+            { "to": "framework/svelte/examples/column-resizing-performant", "label": "Performant Column Resizing" },
             { "to": "framework/svelte/examples/column-visibility", "label": "Column Visibility" },
-            { "to": "framework/svelte/examples/filtering", "label": "Filtering" },
+            { "to": "framework/svelte/examples/expanding", "label": "Expanding" },
+            { "to": "framework/svelte/examples/grouping", "label": "Grouping" },
+            { "to": "framework/svelte/examples/pagination", "label": "Pagination" },
+            { "to": "framework/svelte/examples/row-pinning", "label": "Row Pinning" },
             { "to": "framework/svelte/examples/row-selection", "label": "Row Selection" },
             { "to": "framework/svelte/examples/sorting", "label": "Sorting" }
           ]
@@ -1001,13 +1026,32 @@
         {
           "label": "solid",
           "children": [
-            { "to": "framework/solid/examples/bootstrap", "label": "Solid Bootstrap" },
             { "to": "framework/solid/examples/composable-tables", "label": "Composable Tables" },
-            { "to": "framework/solid/examples/with-tanstack-query", "label": "With TanStack Query" }]
+            { "to": "framework/solid/examples/sub-components", "label": "Sub Components" },
+            { "to": "framework/solid/examples/virtualized-columns", "label": "With TanStack Virtual - Columns" },
+            { "to": "framework/solid/examples/virtualized-rows", "label": "With TanStack Virtual - Rows" },
+            { "to": "framework/solid/examples/virtualized-infinite-scrolling", "label": "With TanStack Virtual - Infinite Scrolling" },
+            { "to": "framework/solid/examples/with-tanstack-form", "label": "With TanStack Form" },
+            { "to": "framework/solid/examples/with-tanstack-query", "label": "With TanStack Query" },
+            { "to": "framework/solid/examples/with-tanstack-router", "label": "With TanStack Router" }
+          ]
+        },
+        {
+          "label": "svelte",
+          "children": [
+            { "to": "framework/svelte/examples/composable-tables", "label": "Composable Tables" },
+            { "to": "framework/svelte/examples/sub-components", "label": "Sub Components" },
+            { "to": "framework/svelte/examples/virtualized-columns", "label": "With TanStack Virtual - Columns" },
+            { "to": "framework/svelte/examples/virtualized-rows", "label": "With TanStack Virtual - Rows" },
+            { "to": "framework/svelte/examples/virtualized-infinite-scrolling", "label": "With TanStack Virtual - Infinite Scrolling" },
+            { "to": "framework/svelte/examples/with-tanstack-form", "label": "With TanStack Form" },
+            { "to": "framework/svelte/examples/with-tanstack-query", "label": "With TanStack Query" }
+          ]
         },
         {
           "label": "vue",
           "children": [
+            { "to": "framework/vue/examples/composable-tables", "label": "Composable Tables" },
             { "to": "framework/vue/examples/sub-components", "label": "Sub Components" },
             { "to": "framework/vue/examples/virtualized-rows", "label": "With TanStack Virtual (Rows)" }
           ]

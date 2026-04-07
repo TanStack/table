@@ -1,118 +1,158 @@
 <script lang="ts">
-  import { rankItem } from '@tanstack/match-sorter-utils'
-  import type { ColumnDef, FilterFn } from '@tanstack/svelte-table'
+  import type { ColumnDef } from '@tanstack/svelte-table'
   import {
     FlexRender,
+    Subscribe,
+    columnFacetingFeature,
     columnFilteringFeature,
-    columnVisibilityFeature,
+    createFacetedMinMaxValues,
+    createFacetedRowModel,
+    createFacetedUniqueValues,
     createFilteredRowModel,
-    createPaginatedRowModel,
     createTable,
     filterFns,
     globalFilteringFeature,
     tableFeatures,
   } from '@tanstack/svelte-table'
+  import DebouncedInput from './DebouncedInput.svelte'
+  import ColumnFilter from './ColumnFilter.svelte'
   import './index.css'
   import { makeData, type Person } from './makeData'
 
   const _features = tableFeatures({
-    columnVisibilityFeature,
-    globalFilteringFeature,
     columnFilteringFeature,
+    globalFilteringFeature,
+    columnFacetingFeature,
   })
 
-  const fuzzyFilter: FilterFn<typeof _features, Person> = (
-    row,
-    columnId,
-    value,
-    addMeta,
-  ) => {
-    // Rank the item
-    const itemRank = rankItem(row.getValue(columnId), value)
-
-    // Store the itemRank info
-    addMeta?.({ itemRank })
-
-    // Return if the item should be filtered in/out
-    return itemRank.passed
-  }
-
-  const columns: ColumnDef<typeof _features, Person>[] = [
+  const columns: Array<ColumnDef<typeof _features, Person>> = [
     {
-      accessorFn: (row) => `${row.firstName} ${row.lastName}`,
-      id: 'fullName',
       header: 'Name',
-      cell: (info) => info.getValue(),
       footer: (props) => props.column.id,
-      filterFn: 'fuzzy',
+      columns: [
+        {
+          accessorKey: 'firstName',
+          cell: (info) => info.getValue(),
+          footer: (props) => props.column.id,
+        },
+        {
+          accessorFn: (row) => row.lastName,
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => 'Last Name',
+          footer: (props) => props.column.id,
+        },
+      ],
+    },
+    {
+      header: 'Info',
+      footer: (props) => props.column.id,
+      columns: [
+        {
+          accessorKey: 'age',
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+          filterFn: 'inNumberRange',
+        },
+        {
+          header: 'More Info',
+          columns: [
+            {
+              accessorKey: 'visits',
+              header: () => 'Visits',
+              footer: (props) => props.column.id,
+              filterFn: 'inNumberRange',
+            },
+            {
+              accessorKey: 'status',
+              header: 'Status',
+              footer: (props) => props.column.id,
+            },
+            {
+              accessorKey: 'progress',
+              header: 'Profile Progress',
+              footer: (props) => props.column.id,
+              filterFn: 'inNumberRange',
+            },
+          ],
+        },
+      ],
     },
   ]
+
+  let data = $state(makeData(1_000))
+  const refreshData = () => {
+    data = makeData(50_000) // stress test
+  }
 
   const table = createTable(
     {
       _features,
       _rowModels: {
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        paginatedRowModel: createPaginatedRowModel(),
+        facetedRowModel: createFacetedRowModel(),
+        facetedMinMaxValues: createFacetedMinMaxValues(),
+        facetedUniqueValues: createFacetedUniqueValues(),
+        filteredRowModel: createFilteredRowModel(filterFns),
       },
-      data: makeData(25),
+      get data() {
+        return data
+      },
       columns,
-      globalFilterFn: fuzzyFilter,
+      globalFilterFn: 'includesString',
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: false,
     },
-    (state) => ({
-      globalFilter: state.globalFilter,
-    }),
+    (state) => state,
   )
-
-  // Access selected state reactively
-  $effect(() => {
-    // Access table.state to create reactive dependency
-    table.state
-  })
 </script>
 
-<input
-  type="text"
-  placeholder="Global filter"
-  class="border w-full p-1"
-  value={table.state.globalFilter ?? ''}
-  oninput={(e) => table.setGlobalFilter(e.target.value)}
-/>
-<div class="h-2"></div>
-<table class="w-full">
-  <thead>
-    {#each table.getHeaderGroups() as headerGroup}
-      <tr>
-        {#each headerGroup.headers as header, idx}
-          <th scope="col">
-            {#if !header.isPlaceholder}
-              <FlexRender
-                content={header.column.columnDef.header}
-                context={header.getContext()}
-              />
-            {/if}
-          </th>
-        {/each}
-      </tr>
-    {/each}
-  </thead>
-  <tbody>
-    {#each table.getRowModel().rows as row}
-      <tr>
-        {#each row.getVisibleCells() as cell}
-          <td>
-            <FlexRender
-              content={cell.column.columnDef.cell}
-              context={cell.getContext()}
-            />
-          </td>
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table>
-<div class="h-2"></div>
-<pre>"globalFilter": "{table.state.globalFilter}"</pre>
+<div class="p-2">
+  <DebouncedInput
+    value={table.state.globalFilter ?? ''}
+    onchange={(value) => table.setGlobalFilter(String(value))}
+    class="p-2 font-lg shadow border border-block"
+    placeholder="Search all columns..."
+  />
+  <div class="h-2"></div>
+  <table>
+    <thead>
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+        <tr>
+          {#each headerGroup.headers as header (header.id)}
+            <th colSpan={header.colSpan}>
+              {#if !header.isPlaceholder}
+                <FlexRender header={header} />
+                {#if header.column.getCanFilter()}
+                  <div>
+                    <ColumnFilter column={header.column} {table} />
+                  </div>
+                {/if}
+              {/if}
+            </th>
+          {/each}
+        </tr>
+      {/each}
+    </thead>
+    <tbody>
+      {#each table.getRowModel().rows.slice(0, 10) as row (row.id)}
+        <tr>
+          {#each row.getAllCells() as cell (cell.id)}
+            <td>
+              <FlexRender cell={cell} />
+            </td>
+          {/each}
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+  <div>{table.getRowModel().rows.length} Rows</div>
+  <div>
+    <button onclick={() => refreshData()}>Refresh Data</button>
+  </div>
+  <Subscribe selector={(state) => state} {table}>
+    {#snippet children(state)}
+      <pre>{JSON.stringify(state, null, 2)}</pre>
+    {/snippet}
+  </Subscribe>
+</div>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import {
-    createTableHelper,
+    createTableHook,
     FlexRender,
     renderSnippet,
   } from '@tanstack/svelte-table'
@@ -58,18 +58,15 @@
 
   // 3. New in V9! Tell the table which features and row models we want to use.
   //    In this case, this will be a basic table with no additional features
-  const tableHelper = createTableHelper({
+  const { createAppTable, createAppColumnHelper } = createTableHook({
     _features: {},
     // 3a. `_rowModels` defines client-side row models. `Core` row model is now
     //     included by default, but you can still override it here.
     _rowModels: {},
-    // 3b. Optionally, set the `TData` type. Omit TData is this table helper
-    //     will be used to create multiple tables with different data types.
-    TData: {} as Person,
   })
 
-  // 4. For convenience, destructure the desired utilities from `tableHelper`
-  const { columnHelper, createTable } = tableHelper
+  // 4. Create a column helper pre-bound to our features
+  const columnHelper = createAppColumnHelper<Person>()
 
   // 5. Define the columns for your table with a stable reference (in this case,
   //    defined statically).
@@ -107,9 +104,9 @@
   ])
 
   // 6. Create the table instance with columns and data. Features and row
-  //    models are already defined in the `tableHelper` object that
-  //    `createTable` was destructured from.
-  const table = createTable({
+  //    models are already defined in the `createTableHook` call that
+  //    `createAppTable` was returned from.
+  const table = createAppTable({
     columns,
     data,
   })
@@ -119,15 +116,12 @@
 <div class="p-2">
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
         <tr>
-          {#each headerGroup.headers as header}
+          {#each headerGroup.headers as header (header.id)}
             <th>
               {#if !header.isPlaceholder}
-                <FlexRender
-                  content={header.column.columnDef.header}
-                  context={header.getContext()}
-                />
+                <FlexRender header={header} />
               {/if}
             </th>
           {/each}
@@ -135,14 +129,11 @@
       {/each}
     </thead>
     <tbody>
-      {#each table.getRowModel().rows as row}
+      {#each table.getRowModel().rows as row (row.id)}
         <tr>
-          {#each row.getAllCells() as cell}
+          {#each row.getAllCells() as cell (cell.id)}
             <td>
-              <FlexRender
-                content={cell.column.columnDef.cell}
-                context={cell.getContext()}
-              />
+              <FlexRender cell={cell} />
             </td>
           {/each}
         </tr>

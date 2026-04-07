@@ -1,4 +1,4 @@
-import { createTable, flexRender, tableFeatures } from '@tanstack/solid-table'
+import { createTable, FlexRender, tableFeatures } from '@tanstack/solid-table'
 import { For, createSignal } from 'solid-js'
 import type { ColumnDef } from '@tanstack/solid-table'
 
@@ -103,12 +103,9 @@ function App() {
                 <For each={headerGroup.headers}>
                   {(header) => (
                     <th>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                      {header.isPlaceholder ? null : (
+                        <FlexRender header={header} />
+                      )}
                     </th>
                   )}
                 </For>
@@ -123,10 +120,7 @@ function App() {
                 <For each={row.getAllCells()}>
                   {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>
@@ -141,12 +135,9 @@ function App() {
                 <For each={footerGroup.headers}>
                   {(header) => (
                     <th>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext(),
-                          )}
+                      {header.isPlaceholder ? null : (
+                        <FlexRender footer={header} />
+                      )}
                     </th>
                   )}
                 </For>
