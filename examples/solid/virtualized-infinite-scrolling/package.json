@@ -19,7 +19,7 @@
   "dependencies": {
     "@tanstack/solid-query": "^5.96.2",
     "@tanstack/solid-store": "^0.9.3",
-    "@tanstack/solid-table": "^9.0.0-alpha.10",
+    "@tanstack/solid-table": "^9.0.0-alpha.26",
     "@tanstack/solid-virtual": "^3.13.23",
     "solid-js": "^1.9.12"
   }
