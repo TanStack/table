@@ -56,6 +56,6 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "vite-plugin-solid": "^2.11.11"
+    "vite-plugin-solid": "^2.11.12"
   }
 }

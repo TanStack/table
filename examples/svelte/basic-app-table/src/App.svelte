@@ -1,0 +1,180 @@
+<script lang="ts">
+  // This example uses the new `createTableHook` method to create a re-usable table hook factory
+  // instead of independently using the standalone `createTable` function and `createColumnHelper` method.
+  // You can choose to use either way.
+
+  import {
+    createTableHook,
+    FlexRender,
+    rowSortingFeature,
+    createSortedRowModel,
+    sortFns,
+  } from '@tanstack/svelte-table'
+  import './index.css'
+
+  // 1. Define what the shape of your data will be for each row
+  type Person = {
+    firstName: string
+    lastName: string
+    age: number
+    visits: number
+    status: string
+    progress: number
+  }
+
+  // 2. Create some dummy data with a stable reference (this could be an API response stored in a $state rune)
+  const defaultData: Array<Person> = [
+    {
+      firstName: 'tanner',
+      lastName: 'linsley',
+      age: 24,
+      visits: 100,
+      status: 'In Relationship',
+      progress: 50,
+    },
+    {
+      firstName: 'tandy',
+      lastName: 'miller',
+      age: 40,
+      visits: 40,
+      status: 'Single',
+      progress: 80,
+    },
+    {
+      firstName: 'joe',
+      lastName: 'dirte',
+      age: 45,
+      visits: 20,
+      status: 'Complicated',
+      progress: 10,
+    },
+    {
+      firstName: 'kevin',
+      lastName: 'vandy',
+      age: 28,
+      visits: 100,
+      status: 'Single',
+      progress: 70,
+    },
+  ]
+
+  // 3. New in V9! Tell the table which features and row models we want to use.
+  const { createAppTable, createAppColumnHelper } = createTableHook({
+    _features: { rowSortingFeature },
+    _rowModels: {
+      sortedRowModel: createSortedRowModel(sortFns),
+    },
+    debugTable: true,
+  })
+
+  // 4. Create a helper object to help define our columns
+  const columnHelper = createAppColumnHelper<Person>()
+
+  // 5. Define the columns for your table with a stable reference
+  const columns = columnHelper.columns([
+    columnHelper.accessor('firstName', {
+      cell: (info) => info.getValue(),
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor((row) => row.lastName, {
+      id: 'lastName',
+      header: () => 'Last Name',
+      cell: (info) => info.getValue(),
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor((row) => Number(row.age), {
+      id: 'age',
+      header: () => 'Age',
+      cell: (info) => info.renderValue(),
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor('visits', {
+      header: () => 'Visits',
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor('status', {
+      header: 'Status',
+      footer: (info) => info.column.id,
+    }),
+    columnHelper.accessor('progress', {
+      header: 'Profile Progress',
+      footer: (info) => info.column.id,
+    }),
+  ])
+
+  // 6. Store data with a $state rune for reactivity
+  let data = $state([...defaultData])
+
+  // 7. Create the table instance with the required columns and data.
+  //    Features and row models are already defined in the createTableHook call above
+  const table = createAppTable({
+    columns,
+    get data() {
+      return data
+    },
+  })
+</script>
+
+<!-- 8. Render your table markup from the table instance APIs -->
+<div class="p-2">
+  <table>
+    <thead>
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+        <tr>
+          {#each headerGroup.headers as header (header.id)}
+            <th>
+              {#if !header.isPlaceholder}
+                <div
+                  class={header.column.getCanSort()
+                    ? 'cursor-pointer select-none'
+                    : ''}
+                  role="button"
+                  tabindex="0"
+                  onclick={header.column.getToggleSortingHandler()}
+                  onkeydown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      header.column.getToggleSortingHandler()?.(e)
+                    }
+                  }}
+                >
+                  <FlexRender header={header} />
+                  {#if header.column.getIsSorted() === 'asc'}
+                    {' '}🔼
+                  {:else if header.column.getIsSorted() === 'desc'}
+                    {' '}🔽
+                  {/if}
+                </div>
+              {/if}
+            </th>
+          {/each}
+        </tr>
+      {/each}
+    </thead>
+    <tbody>
+      {#each table.getRowModel().rows as row (row.id)}
+        <tr>
+          {#each row.getAllCells() as cell (cell.id)}
+            <td>
+              <FlexRender cell={cell} />
+            </td>
+          {/each}
+        </tr>
+      {/each}
+    </tbody>
+    <tfoot>
+      {#each table.getFooterGroups() as footerGroup (footerGroup.id)}
+        <tr>
+          {#each footerGroup.headers as header (header.id)}
+            <th>
+              {#if !header.isPlaceholder}
+                <FlexRender footer={header} />
+              {/if}
+            </th>
+          {/each}
+        </tr>
+      {/each}
+    </tfoot>
+  </table>
+  <div class="h-4"></div>
+  <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+</div>

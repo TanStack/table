@@ -127,10 +127,7 @@
   <th colSpan={header.colSpan}>
     <div class="whitespace-nowrap">
       {#if !header.isPlaceholder}
-        <FlexRender
-          content={header.column.columnDef.header}
-          context={header.getContext()}
-        />
+        <FlexRender header={header} />
       {/if}
     </div>
     {#if !header.isPlaceholder && header.column.getCanPin()}
@@ -226,23 +223,20 @@
     {#if isSplit}
       <table class="border-2 border-black">
         <thead>
-          {#each table.getLeftHeaderGroups() as headerGroup}
+          {#each table.getLeftHeaderGroups() as headerGroup (headerGroup.id)}
             <tr>
-              {#each headerGroup.headers as header}
+              {#each headerGroup.headers as header (header.id)}
                 {@render headerCell(header)}
               {/each}
             </tr>
           {/each}
         </thead>
         <tbody>
-          {#each table.getCoreRowModel().rows.slice(0, 20) as row}
+          {#each table.getCoreRowModel().rows.slice(0, 20) as row (row.id)}
             <tr>
-              {#each row.getLeftVisibleCells() as cell}
+              {#each row.getLeftVisibleCells() as cell (cell.id)}
                 <td>
-                  <FlexRender
-                    content={cell.column.columnDef.cell}
-                    context={cell.getContext()}
-                  />
+                  <FlexRender cell={cell} />
                 </td>
               {/each}
             </tr>
@@ -252,23 +246,20 @@
     {/if}
     <table class="border-2 border-black">
       <thead>
-        {#each isSplit ? table.getCenterHeaderGroups() : table.getHeaderGroups() as headerGroup}
+        {#each isSplit ? table.getCenterHeaderGroups() : table.getHeaderGroups() as headerGroup (headerGroup.id)}
           <tr>
-            {#each headerGroup.headers as header}
+            {#each headerGroup.headers as header (header.id)}
               {@render headerCell(header)}
             {/each}
           </tr>
         {/each}
       </thead>
       <tbody>
-        {#each table.getCoreRowModel().rows.slice(0, 20) as row}
+        {#each table.getCoreRowModel().rows.slice(0, 20) as row (row.id)}
           <tr>
-            {#each isSplit ? row.getCenterVisibleCells() : row.getVisibleCells() as cell}
+            {#each isSplit ? row.getCenterVisibleCells() : row.getVisibleCells() as cell (cell.id)}
               <td>
-                <FlexRender
-                  content={cell.column.columnDef.cell}
-                  context={cell.getContext()}
-                />
+                <FlexRender cell={cell} />
               </td>
             {/each}
           </tr>
@@ -278,23 +269,20 @@
     {#if isSplit}
       <table class="border-2 border-black">
         <thead>
-          {#each table.getRightHeaderGroups() as headerGroup}
+          {#each table.getRightHeaderGroups() as headerGroup (headerGroup.id)}
             <tr>
-              {#each headerGroup.headers as header}
+              {#each headerGroup.headers as header (header.id)}
                 {@render headerCell(header)}
               {/each}
             </tr>
           {/each}
         </thead>
         <tbody>
-          {#each table.getRowModel().rows.slice(0, 20) as row}
+          {#each table.getRowModel().rows.slice(0, 20) as row (row.id)}
             <tr>
-              {#each row.getRightVisibleCells() as cell}
+              {#each row.getRightVisibleCells() as cell (cell.id)}
                 <td>
-                  <FlexRender
-                    content={cell.column.columnDef.cell}
-                    context={cell.getContext()}
-                  />
+                  <FlexRender cell={cell} />
                 </td>
               {/each}
             </tr>

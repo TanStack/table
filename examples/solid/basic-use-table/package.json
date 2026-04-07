@@ -12,8 +12,8 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "6.0.2",
-    "vite": "^8.0.3",
-    "vite-plugin-solid": "^2.11.11"
+    "vite": "^8.0.7",
+    "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
     "@tanstack/solid-table": "^9.0.0-alpha.10",

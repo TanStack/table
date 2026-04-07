@@ -1,0 +1,24 @@
+{
+  "name": "tanstack-table-example-svelte-column-pinning-sticky",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "test:types": "svelte-check --tsconfig ./tsconfig.json",
+    "lint": "eslint ./src"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "@rollup/plugin-replace": "^6.0.3",
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "@tanstack/svelte-table": "^9.0.0-alpha.10",
+    "@tsconfig/svelte": "^5.0.8",
+    "svelte": "^5.55.1",
+    "svelte-check": "^4.4.6",
+    "typescript": "6.0.2",
+    "vite": "^8.0.7"
+  }
+}

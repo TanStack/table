@@ -187,10 +187,7 @@ function measureElement(el?: Element) {
                 }"
                 @click="(e) => header.column.getToggleSortingHandler()?.(e)"
               >
-                <FlexRender
-                  :render="header.column.columnDef.header"
-                  :props="header.getContext()"
-                />
+                <FlexRender :header="header" />
                 <span v-if="header.column.getIsSorted() === 'asc'"> 🔼</span>
                 <span v-if="header.column.getIsSorted() === 'desc'"> 🔽</span>
               </div>
@@ -226,10 +223,7 @@ function measureElement(el?: Element) {
                 width: `${cell.column.getSize()}px`,
               }"
             >
-              <FlexRender
-                :render="cell.column.columnDef.cell"
-                :props="cell.getContext()"
-              />
+              <FlexRender :cell="cell" />
             </td>
           </tr>
         </tbody>

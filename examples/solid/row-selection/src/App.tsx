@@ -7,7 +7,7 @@ import {
   createPaginatedRowModel,
   createTable,
   filterFns,
-  flexRender,
+  FlexRender,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -152,10 +152,7 @@ function App() {
                     <th colSpan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
                         <>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          <FlexRender header={header} />
                           <Show when={header.column.getCanFilter()}>
                             <div>
                               <Filter column={header.column} table={table} />
@@ -177,10 +174,7 @@ function App() {
                 <For each={row.getAllCells()}>
                   {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>

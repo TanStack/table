@@ -4,9 +4,7 @@
   export { capitalized, spectrum, countup }
 
   function getColor(value: number, min: number, max: number) {
-    console.log(value, min, max)
     const ratio = (value - min) / (max - min)
-    console.log(value - min, max - min, ratio)
     const hue = Math.floor(120 * ratio) // 0 (red) to 120 (green)
     return `hsl(${hue}, 100%, 50%)`
   }

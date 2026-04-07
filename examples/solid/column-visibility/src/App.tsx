@@ -1,7 +1,7 @@
 import {
   columnVisibilityFeature,
   createTable,
-  flexRender,
+  FlexRender,
   tableFeatures,
 } from '@tanstack/solid-table'
 import { For, Show, createSignal } from 'solid-js'
@@ -147,10 +147,7 @@ function App() {
                   {(header) => (
                     <th colSpan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                        <FlexRender header={header} />
                       </Show>
                     </th>
                   )}
@@ -166,10 +163,7 @@ function App() {
                 <For each={row.getVisibleCells()}>
                   {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>
@@ -185,10 +179,7 @@ function App() {
                   {(header) => (
                     <th colSpan={header.colSpan}>
                       <Show when={!header.isPlaceholder}>
-                        {flexRender(
-                          header.column.columnDef.footer,
-                          header.getContext(),
-                        )}
+                        <FlexRender footer={header} />
                       </Show>
                     </th>
                   )}

@@ -11,7 +11,7 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.96.1",
+    "@tanstack/react-query": "^5.96.2",
     "@tanstack/react-router": "^1.168.10",
     "@tanstack/react-table": "^9.0.0-alpha.23",
     "react": "^19.2.4",
@@ -25,6 +25,6 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
     "typescript": "6.0.2",
-    "vite": "^8.0.3"
+    "vite": "^8.0.7"
   }
 }

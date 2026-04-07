@@ -5,7 +5,7 @@
     createPaginatedRowModel,
     createTable,
     filterFns,
-    flexRender,
+    FlexRender,
     globalFilteringFeature,
     rowPaginationFeature,
     rowSelectionFeature,
@@ -30,6 +30,16 @@
   let data = $state(makeData(1_000))
   const refreshData = () => {
     data = makeData(100_000) // stress test
+  }
+
+  // Svelte action to set indeterminate property on checkbox inputs
+  function setIndeterminate(node: HTMLInputElement, value: boolean) {
+    node.indeterminate = value
+    return {
+      update(newValue: boolean) {
+        node.indeterminate = newValue
+      },
+    }
   }
 
   // Create table with selector to track specific state
@@ -109,46 +119,39 @@
       pagination: state.pagination,
     }),
   )
-
-  // Access selected state reactively
-  $effect(() => {
-    // Access table.state to create reactive dependency
-    table.state
-  })
 </script>
 
 <div class="p-2">
   <div>
     <input
       value={table.state.globalFilter ?? ''}
-      oninput={(e) => table.setGlobalFilter(e.target.value)}
+      oninput={(e) => table.setGlobalFilter((e.target as HTMLInputElement).value)}
       class="p-2 font-lg shadow border border-block"
       placeholder="Search all columns..."
     />
   </div>
-  <div class="h-2" />
+  <div class="h-2"></div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
         <tr>
-          {#each headerGroup.headers as header}
+          {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
                 {#if header.id === 'select'}
-                  <IndeterminateCheckbox
+                  <input
+                    type="checkbox"
                     checked={table.getIsAllRowsSelected()}
-                    indeterminate={table.getIsSomeRowsSelected()}
-                    onChange={table.getToggleAllRowsSelectedHandler()}
+                    use:setIndeterminate={!table.getIsAllRowsSelected() && table.getIsSomeRowsSelected()}
+                    onchange={table.getToggleAllRowsSelectedHandler()}
+                    class="cursor-pointer"
                   />
                 {:else}
-                  <flexRender
-                    content={header.column.columnDef.header}
-                    context={header.getContext()}
-                  />
+                  <FlexRender header={header} />
                 {/if}
                 {#if header.column.getCanFilter()}
                   <div>
-                    <Filter column={header.column} {table} />
+                    {@render Filter(header.column, table)}
                   </div>
                 {/if}
               {/if}
@@ -158,22 +161,21 @@
       {/each}
     </thead>
     <tbody>
-      {#each table.getRowModel().rows as row}
+      {#each table.getRowModel().rows as row (row.id)}
         <tr>
-          {#each row.getAllCells() as cell}
+          {#each row.getAllCells() as cell (cell.id)}
             <td>
               {#if cell.column.id === 'select'}
-                <IndeterminateCheckbox
+                <input
+                  type="checkbox"
                   checked={row.getIsSelected()}
                   disabled={!row.getCanSelect()}
-                  indeterminate={row.getIsSomeSelected()}
-                  onChange={row.getToggleSelectedHandler()}
+                  use:setIndeterminate={!row.getIsSelected() && row.getIsSomeSelected()}
+                  onchange={row.getToggleSelectedHandler()}
+                  class="cursor-pointer"
                 />
               {:else}
-                <flexRender
-                  content={cell.column.columnDef.cell}
-                  context={cell.getContext()}
-                />
+                <FlexRender cell={cell} />
               {/if}
             </td>
           {/each}
@@ -183,17 +185,19 @@
     <tfoot>
       <tr>
         <td class="p-1">
-          <IndeterminateCheckbox
+          <input
+            type="checkbox"
             checked={table.getIsAllPageRowsSelected()}
-            indeterminate={table.getIsSomePageRowsSelected()}
-            onChange={table.getToggleAllPageRowsSelectedHandler()}
+            use:setIndeterminate={!table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected()}
+            onchange={table.getToggleAllPageRowsSelectedHandler()}
+            class="cursor-pointer"
           />
         </td>
         <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
       </tr>
     </tfoot>
   </table>
-  <div class="h-2" />
+  <div class="h-2"></div>
   <div class="flex items-center gap-2">
     <button
       class="border rounded p-1"
@@ -237,7 +241,7 @@
         max={table.getPageCount()}
         value={table.state.pagination.pageIndex + 1}
         oninput={(e) => {
-          const page = e.target.value ? Number(e.target.value) - 1 : 0
+          const page = (e.target as HTMLInputElement).value ? Number((e.target as HTMLInputElement).value) - 1 : 0
           table.setPageIndex(page)
         }}
         class="border p-1 rounded w-16"
@@ -246,7 +250,7 @@
     <select
       value={table.state.pagination.pageSize}
       onchange={(e) => {
-        table.setPageSize(Number(e.target.value))
+        table.setPageSize(Number((e.target as HTMLSelectElement).value))
       }}
     >
       {#each [10, 20, 30, 40, 50] as pageSize}
@@ -280,12 +284,12 @@
     </button>
   </div>
   <div>
-    <label>Row Selection State:</label>
+    <strong>Row Selection State:</strong>
     <pre>{JSON.stringify(table.state, null, 2)}</pre>
   </div>
 </div>
 
-{#snippet Filter({ column, table }: { column: Column<typeof _features, Person>; table: SvelteTable<typeof _features, Person> })}
+{#snippet Filter(column: Column<typeof _features, Person>, table: SvelteTable<typeof _features, Person>)}
   {@const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)}
@@ -296,7 +300,7 @@
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
         oninput={(e) =>
-          column.setFilterValue((old: any) => [e.target.value, old?.[1]])
+          column.setFilterValue((old: any) => [(e.target as HTMLInputElement).value, old?.[1]])
         }
         placeholder={`Min`}
         class="w-24 border shadow rounded"
@@ -305,7 +309,7 @@
         type="number"
         value={((column.getFilterValue() as any)?.[1] ?? '') as string}
         oninput={(e) =>
-          column.setFilterValue((old: any) => [old?.[0], e.target.value])
+          column.setFilterValue((old: any) => [old?.[0], (e.target as HTMLInputElement).value])
         }
         placeholder={`Max`}
         class="w-24 border shadow rounded"
@@ -315,28 +319,9 @@
     <input
       type="text"
       value={(column.getFilterValue() ?? '') as string}
-      oninput={(e) => column.setFilterValue(e.target.value)}
+      oninput={(e) => column.setFilterValue((e.target as HTMLInputElement).value)}
       placeholder={`Search...`}
       class="w-36 border shadow rounded"
     />
   {/if}
-{/snippet}
-
-{#snippet IndeterminateCheckbox({ indeterminate, class: className = '', checked, disabled, onChange }: { indeterminate?: boolean; class?: string; checked?: boolean; disabled?: boolean; onChange?: (event: Event) => void })}
-  {@const ref = $state<HTMLInputElement | null>(null)}
-
-  $effect(() => {
-    if (typeof indeterminate === 'boolean' && ref) {
-      ref.indeterminate = !checked && indeterminate
-    }
-  })
-
-  <input
-    type="checkbox"
-    bind:this={ref}
-    class={className + ' cursor-pointer'}
-    {checked}
-    {disabled}
-    {onChange}
-  />
 {/snippet}

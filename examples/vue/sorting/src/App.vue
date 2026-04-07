@@ -88,10 +88,7 @@ const table = useTable(
             @click="header.column.getToggleSortingHandler()?.($event)"
           >
             <template v-if="!header.isPlaceholder">
-              <FlexRender
-                :render="header.column.columnDef.header"
-                :props="header.getContext()"
-              />
+              <FlexRender :header="header" />
 
               {{
                 { asc: ' 🔼', desc: ' 🔽' }[
@@ -106,10 +103,7 @@ const table = useTable(
       <tbody>
         <tr v-for="row in table.getRowModel().rows.slice(0, 10)" :key="row.id">
           <td v-for="cell in row.getAllCells()" :key="cell.id">
-            <FlexRender
-              :render="cell.column.columnDef.cell"
-              :props="cell.getContext()"
-            />
+            <FlexRender :cell="cell" />
           </td>
         </tr>
       </tbody>
@@ -124,11 +118,7 @@ const table = useTable(
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender
-              v-if="!header.isPlaceholder"
-              :render="header.column.columnDef.footer"
-              :props="header.getContext()"
-            />
+            <FlexRender v-if="!header.isPlaceholder" :footer="header" />
           </th>
         </tr>
       </tfoot>

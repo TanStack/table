@@ -40,10 +40,10 @@ export const packages = [
     name: '@tanstack/solid-table',
     packageDir: 'packages/solid-table',
   },
-  // {
-  //   name: '@tanstack/svelte-table',
-  //   packageDir: 'packages/svelte-table',
-  // },
+  {
+    name: '@tanstack/svelte-table',
+    packageDir: 'packages/svelte-table',
+  },
   {
     name: '@tanstack/vue-table',
     packageDir: 'packages/vue-table',

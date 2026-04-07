@@ -2,7 +2,6 @@
   lang="ts"
   generics="TFeatures extends TableFeatures, TData extends RowData, TSelected = unknown"
 >
-  import { useStore } from '@tanstack/svelte-store'
   import type {
     NoInfer,
     RowData,
@@ -34,14 +33,13 @@
     table: SvelteTable<TFeatures, TData, unknown>
   }
 
-  const props: Props<TFeatures, TData, TSelected> = $props()
-
-  // Subscribe to the store and get the selected state
-  // Access table and selector from props object to avoid closure warnings
-  const selectedState = useStore(
-    props.table.store,
-    props.selector as (state: any) => any,
-  )
+  let { table, selector, children }: Props<TFeatures, TData, TSelected> =
+    $props()
 </script>
 
-{@render props.children(selectedState.current)}
+<!--
+  Access table.store.state in the template (a reactive context).
+  The constructReactivityFeature interceptor makes this trigger
+  the $state-based notifier, so Svelte tracks it automatically.
+-->
+{@render children(selector(table.store.state as TableState<TFeatures>))}

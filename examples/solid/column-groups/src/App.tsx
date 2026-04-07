@@ -1,5 +1,5 @@
 import { For, createSignal } from 'solid-js'
-import { createTable, flexRender, tableFeatures } from '@tanstack/solid-table'
+import { createTable, FlexRender, tableFeatures } from '@tanstack/solid-table'
 import type { ColumnDef } from '@tanstack/solid-table'
 
 type Person = {
@@ -114,12 +114,9 @@ function App() {
                 <For each={headerGroup.headers}>
                   {(header) => (
                     <th colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                      {header.isPlaceholder ? null : (
+                        <FlexRender header={header} />
+                      )}
                     </th>
                   )}
                 </For>
@@ -134,10 +131,7 @@ function App() {
                 <For each={row.getAllCells()}>
                   {(cell) => (
                     <td>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      <FlexRender cell={cell} />
                     </td>
                   )}
                 </For>
@@ -152,12 +146,9 @@ function App() {
                 <For each={footerGroup.headers}>
                   {(header) => (
                     <th colSpan={header.colSpan}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext(),
-                          )}
+                      {header.isPlaceholder ? null : (
+                        <FlexRender footer={header} />
+                      )}
                     </th>
                   )}
                 </For>
