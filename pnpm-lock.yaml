@@ -4842,12 +4842,6 @@ importers:
       '@tanstack/solid-store':
         specifier: ^0.9.3
         version: 0.9.3(solid-js@1.9.12)
-      '@tanstack/solid-table':
-        specifier: workspace:*
-        version: link:../solid-table
-      '@tanstack/solid-virtual':
-        specifier: ^3.13.23
-        version: 3.13.23(solid-js@1.9.12)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
