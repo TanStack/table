@@ -55,10 +55,10 @@
     "@tanstack/publish-config": "0.2.7",
     "@tanstack/typedoc-config": "0.3.3",
     "@testing-library/jest-dom": "^6.9.1",
-    "@types/node": "^25.5.0",
-    "eslint": "^10.1.0",
-    "jsdom": "^29.0.1",
-    "knip": "^6.2.0",
+    "@types/node": "^25.5.2",
+    "eslint": "^10.2.0",
+    "jsdom": "^29.0.2",
+    "knip": "^6.3.0",
     "markdown-link-extractor": "^4.0.3",
     "nx": "^22.6.4",
     "prettier": "^3.8.1",
@@ -70,8 +70,8 @@
     "tinyglobby": "^0.2.15",
     "tsdown": "^0.21.7",
     "typescript": "6.0.2",
-    "vite": "^8.0.3",
-    "vitest": "^4.1.2"
+    "vite": "^8.0.7",
+    "vitest": "^4.1.3"
   },
   "overrides": {
     "@tanstack/angular-table": "workspace:*",

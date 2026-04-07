@@ -11,9 +11,9 @@
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
     "@rollup/plugin-replace": "^6.0.3",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.5.2",
     "typescript": "6.0.2",
-    "vite": "^8.0.3"
+    "vite": "^8.0.7"
   },
   "dependencies": {
     "@tanstack/table-core": "^9.0.0-alpha.23",

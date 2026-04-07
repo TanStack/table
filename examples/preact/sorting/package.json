@@ -13,11 +13,11 @@
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
     "@tanstack/preact-table": "^9.0.0-alpha.23",
-    "preact": "^10.29.0"
+    "preact": "^10.29.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
     "typescript": "6.0.2",
-    "vite": "^8.0.3"
+    "vite": "^8.0.7"
   }
 }

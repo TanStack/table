@@ -51,7 +51,7 @@
     "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^4.2.1",
+    "@eslint-react/eslint-plugin": "^4.2.3",
     "@tanstack/react-devtools": "^0.10.1",
     "@tanstack/table-core": "workspace:*",
     "@types/react": "^19.2.14",

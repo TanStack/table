@@ -18,12 +18,12 @@
     "svelte": "^5.55.1",
     "svelte-check": "^4.4.6",
     "typescript": "6.0.2",
-    "vite": "^8.0.3"
+    "vite": "^8.0.7"
   },
   "dependencies": {
-    "@tanstack/form-core": "^1.12.2",
-    "@tanstack/svelte-form": "^1.12.2",
+    "@tanstack/form-core": "^1.28.6",
+    "@tanstack/svelte-form": "^1.28.6",
     "@tanstack/svelte-table": "^9.0.0-alpha.10",
-    "zod": "^3.24.4"
+    "zod": "^4.3.6"
   }
 }
