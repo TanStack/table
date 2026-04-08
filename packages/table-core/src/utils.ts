@@ -50,7 +50,7 @@ export type DeepKeys<T, TDepth extends any[] = []> = TDepth['length'] extends 5
     : T extends readonly any[] & IsTuple<T>
       ? AllowedIndexes<T> | DeepKeysPrefix<T, AllowedIndexes<T>, TDepth>
       : T extends any[]
-        ? DeepKeys<T[number], [...TDepth, any]>
+        ? `${number}` | ObjectPathPrefix<T, number, TDepth>
         : T extends Date
           ? never
           : T extends object
