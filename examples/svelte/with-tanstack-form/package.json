@@ -23,7 +23,7 @@
   "dependencies": {
     "@tanstack/form-core": "^1.28.6",
     "@tanstack/svelte-form": "^1.28.6",
-    "@tanstack/svelte-table": "^9.0.0-alpha.28",
+    "@tanstack/svelte-table": "^9.0.0-alpha.29",
     "zod": "^4.3.6"
   }
 }
