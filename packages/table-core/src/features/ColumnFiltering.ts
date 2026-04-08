@@ -418,10 +418,11 @@ export function shouldAutoRemoveFilter<TData extends RowData>(
   value?: any,
   column?: Column<TData, unknown>,
 ) {
+  if (filterFn && filterFn.autoRemove) {
+    return filterFn.autoRemove(value, column)
+  }
+
   return (
-    (filterFn && filterFn.autoRemove
-      ? filterFn.autoRemove(value, column)
-      : false) ||
     typeof value === 'undefined' ||
     (typeof value === 'string' && !value)
   )
