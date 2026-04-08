@@ -9,5 +9,11 @@
     "checkJs": true,
     "isolatedModules": true
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.d.ts", "src/**/*.svelte"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.d.ts",
+    "src/**/*.svelte",
+    "../vite-env.d.ts"
+  ]
 }
