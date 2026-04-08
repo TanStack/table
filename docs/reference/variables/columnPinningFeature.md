@@ -9,6 +9,6 @@ title: columnPinningFeature
 const columnPinningFeature: TableFeature<ColumnPinningFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.ts:324](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L324)
+Defined in: [features/column-pinning/columnPinningFeature.ts:327](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L327)
 
 The Column Pinning feature adds column pinning state and APIs to the table, row, and column objects.

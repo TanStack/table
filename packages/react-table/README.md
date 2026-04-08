@@ -114,4 +114,4 @@ We're looking for TanStack Table Partners to join our mission! Partner with us t
 
 … and more at <a href="https://tanstack.com"><b>TanStack.com »</b></a>
 
-<!-- USE THE FORCE LUKE -->
+<!-- USE THE FORCE, LUKE -->
