@@ -804,7 +804,11 @@
         {
           "label": "lit",
           "children": [
-            { "to": "framework/lit/examples/basic", "label": "Basic" }
+            { "to": "framework/lit/examples/basic-table-controller", "label": "Basic (TableController)" },
+            { "to": "framework/lit/examples/basic-app-table", "label": "Basic (useAppTable)" },
+            { "to": "framework/lit/examples/basic-external-state", "label": "Basic (External State)" },
+            { "to": "framework/lit/examples/basic-external-store", "label": "Basic (External Store)" },
+            { "to": "framework/lit/examples/column-groups", "label": "Header Groups" }
           ]
         },
         {
@@ -883,8 +887,21 @@
         {
           "label": "lit",
           "children": [
+            { "to": "framework/lit/examples/filters", "label": "Column Filters" },
+            { "to": "framework/lit/examples/filters-faceted", "label": "Column Filters (Faceted)" },
+            { "to": "framework/lit/examples/filters-fuzzy", "label": "Fuzzy Search Filters" },
+            { "to": "framework/lit/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/lit/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/lit/examples/column-pinning-split", "label": "Column Pinning (Split)" },
+            { "to": "framework/lit/examples/column-pinning-sticky", "label": "Sticky Column Pinning" },
             { "to": "framework/lit/examples/column-sizing", "label": "Column Sizing" },
-            { "to": "framework/lit/examples/filters", "label": "Filters" },
+            { "to": "framework/lit/examples/column-resizing", "label": "Column Resizing" },
+            { "to": "framework/lit/examples/column-resizing-performant", "label": "Performant Column Resizing" },
+            { "to": "framework/lit/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/lit/examples/expanding", "label": "Expanding" },
+            { "to": "framework/lit/examples/grouping", "label": "Grouping" },
+            { "to": "framework/lit/examples/pagination", "label": "Pagination" },
+            { "to": "framework/lit/examples/row-pinning", "label": "Row Pinning" },
             { "to": "framework/lit/examples/row-selection", "label": "Row Selection" },
             { "to": "framework/lit/examples/sorting", "label": "Sorting" },
             { "to": "framework/lit/examples/sorting-dynamic-data", "label": "Sorting (Dynamic Data)" }
@@ -1004,7 +1021,11 @@
         {
           "label": "lit",
           "children": [
-            { "to": "framework/lit/examples/virtualized-rows", "label": "With TanStack Virtual - Rows" }
+            { "to": "framework/lit/examples/composable-tables", "label": "Composable Tables" },
+            { "to": "framework/lit/examples/sub-components", "label": "Sub Components" },
+            { "to": "framework/lit/examples/virtualized-columns", "label": "With TanStack Virtual - Columns" },
+            { "to": "framework/lit/examples/virtualized-rows", "label": "With TanStack Virtual - Rows" },
+            { "to": "framework/lit/examples/virtualized-infinite-scrolling", "label": "With TanStack Virtual - Infinite Scrolling" }
           ]
         },
         {

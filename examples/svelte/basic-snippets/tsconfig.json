@@ -12,6 +12,7 @@
   "include": [
     "../basic-snippets/src/**/*.ts",
     "../basic-snippets/src/**/*.js",
+    "../basic-snippets/src/**/*.d.ts",
     "../basic-snippets/src/**/*.svelte"
   ]
 }
