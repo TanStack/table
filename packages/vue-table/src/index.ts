@@ -37,6 +37,13 @@ export const FlexRender = defineComponent({
         return h(props.render, props.props)
       }
 
+      // Return null for empty/nullish values to avoid Vue SSR hydration
+      // mismatches (e.g. empty string renders a text node on the client
+      // but nothing on the server)
+      if (props.render == null || props.render === '') {
+        return null
+      }
+
       return props.render
     }
   },
