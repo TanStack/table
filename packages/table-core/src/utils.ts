@@ -1,5 +1,17 @@
 import { TableOptionsResolved, TableState, Updater } from './types'
 
+/**
+ * Safely checks if we are in a non-production (development) environment.
+ * Guards against `process` not being defined in environments like
+ * vanilla JS loaded via importmaps without a bundler (e.g. Rails, browser ESM).
+ */
+export function isDev(): boolean {
+  return (
+    typeof process !== 'undefined' &&
+    process.env?.NODE_ENV !== 'production'
+  )
+}
+
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &
   Required<Pick<T, K>>
@@ -213,7 +225,7 @@ export function getMemoOptions(
 ) {
   return {
     debug: () => tableOptions?.debugAll ?? tableOptions[debugLevel],
-    key: process.env.NODE_ENV === 'development' && key,
+    key: isDev() && key,
     onChange,
   }
 }
