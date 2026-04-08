@@ -1,0 +1,22 @@
+{
+  "name": "tanstack-lit-table-example-filters-faceted",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "@tanstack/lit-table": "^9.0.0-alpha.10",
+    "lit": "^3.3.2"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.3",
+    "typescript": "6.0.2",
+    "vite": "^8.0.7"
+  }
+}

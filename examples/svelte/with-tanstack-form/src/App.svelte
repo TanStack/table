@@ -264,10 +264,7 @@
                 <th colSpan={header.colSpan}>
                   {#if !header.isPlaceholder}
                     <div>
-                      <FlexRender
-                        content={header.column.columnDef.header}
-                        context={header.getContext()}
-                      />
+                      <FlexRender header={header} />
                       {#if header.column.getCanFilter()}
                         <div>
                           {@render filterSnippet(header.column)}
@@ -285,10 +282,7 @@
             <tr>
               {#each row.getAllCells() as cell (cell.id)}
                 <td>
-                  <FlexRender
-                    content={cell.column.columnDef.cell}
-                    context={cell.getContext()}
-                  />
+                  <FlexRender cell={cell} />
                 </td>
               {/each}
             </tr>

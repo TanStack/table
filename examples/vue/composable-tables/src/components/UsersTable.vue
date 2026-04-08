@@ -59,19 +59,18 @@ const table = useAppTable({
     },
   },
 })
+
+// Typed selector — avoids implicit 'any' for `state` in the template
+function tableSelector(state: ReturnType<typeof table.store.get>) {
+  return {
+    sorting: state.sorting,
+    columnFilters: state.columnFilters,
+  }
+}
 </script>
 
 <template>
-  <component
-    :is="table.AppTable"
-    :selector="
-      (state) => ({
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
-      })
-    "
-    v-slot="{ state }"
-  >
+  <component :is="table.AppTable" :selector="tableSelector" v-slot="{ state }">
     <section class="table-container">
       <component
         :is="table.TableToolbar"
@@ -104,7 +103,8 @@ const table = useAppTable({
                   <span v-if="state.sorting.length > 1" class="sort-indicator">
                     {{
                       state.sorting.findIndex(
-                        (sort) => sort.id === appHeader.column.id,
+                        (sort: { id: string }) =>
+                          sort.id === appHeader.column.id,
                       ) + 1 || ''
                     }}
                   </span>

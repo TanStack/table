@@ -147,6 +147,7 @@ export function constructColumnPinningFeature<
               table_getVisibleLeafColumns,
             ),
             table.store.state.columnPinning?.left,
+            table.store.state.columnOrder,
           ],
         },
         table_getCenterHeaderGroups: {
@@ -159,6 +160,7 @@ export function constructColumnPinningFeature<
               table_getVisibleLeafColumns,
             ),
             table.store.state.columnPinning,
+            table.store.state.columnOrder,
           ],
         },
         table_getRightHeaderGroups: {
@@ -171,6 +173,7 @@ export function constructColumnPinningFeature<
               table_getVisibleLeafColumns,
             ),
             table.store.state.columnPinning?.right,
+            table.store.state.columnOrder,
           ],
         },
         // footer groups

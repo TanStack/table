@@ -2,9 +2,9 @@ import { customElement } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
+  FlexRender,
   TableController,
   createSortedRowModel,
-  flexRender,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -114,10 +114,7 @@ class LitTableExample extends LitElement {
                               ? 'pointer'
                               : 'not-allowed'}"
                           >
-                            ${flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            ${FlexRender({ header })}
                             ${{ asc: ' 🔼', desc: ' 🔽' }[
                               header.column.getIsSorted() as string
                             ] ?? null}
@@ -138,16 +135,7 @@ class LitTableExample extends LitElement {
                 <tr>
                   ${row
                     .getAllCells()
-                    .map(
-                      (cell) => html`
-                        <td>
-                          ${flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      `,
-                    )}
+                    .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
                 </tr>
               `,
             )}

@@ -115,6 +115,7 @@ export function constructColumnVisibilityFeature<
           fn: () => table_getVisibleFlatColumns(table),
           memoDeps: () => [
             table.store.state.columnVisibility,
+            table.store.state.columnOrder,
             table.options.columns,
           ],
         },
@@ -122,6 +123,7 @@ export function constructColumnVisibilityFeature<
           fn: () => table_getVisibleLeafColumns(table),
           memoDeps: () => [
             table.store.state.columnVisibility,
+            table.store.state.columnOrder,
             table.options.columns,
           ],
         },

@@ -50,9 +50,11 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
+    "@lit/context": "^1.1.6",
     "lit": "^3.3.2"
   },
   "peerDependencies": {
+    "@lit/context": "^1.1.0",
     "lit": "^3.1.3"
   }
 }

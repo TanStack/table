@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import './index.css'
-import { computed, ref, h } from 'vue'
+import { computed, ref, h, type ComponentPublicInstance } from 'vue'
 import {
   type ColumnDef,
   FlexRender,
@@ -40,7 +40,7 @@ const filteredData = computed<Person[]>(() => {
   })
 })
 
-let searchTimeout: NodeJS.Timeout
+let searchTimeout: ReturnType<typeof setTimeout>
 function handleDebounceSearch(ev: Event) {
   if (searchTimeout) {
     clearTimeout(searchTimeout)
@@ -120,14 +120,12 @@ const rowVirtualizer = useVirtualizer(rowVirtualizerOptions)
 const virtualRows = computed(() => rowVirtualizer.value.getVirtualItems())
 const totalSize = computed(() => rowVirtualizer.value.getTotalSize())
 
-function measureElement(el?: Element) {
-  if (!el) {
+function measureElement(el: Element | ComponentPublicInstance | null) {
+  if (!el || !(el instanceof Element)) {
     return
   }
 
   rowVirtualizer.value.measureElement(el)
-
-  return undefined
 }
 </script>
 

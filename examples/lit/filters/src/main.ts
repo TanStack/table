@@ -2,13 +2,13 @@ import { customElement, property } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
+  FlexRender,
   TableController,
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
-  flexRender,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -169,7 +169,10 @@ class LitTableExample extends LitElement {
         debugHeaders: true,
         debugColumns: false,
       },
-      (state) => ({ columnFilters: state.columnFilters }),
+      (state) => ({
+        columnFilters: state.columnFilters,
+        pagination: state.pagination,
+      }),
     )
 
     return html`
@@ -201,10 +204,7 @@ class LitTableExample extends LitElement {
                                 ? 'pointer'
                                 : 'not-allowed'}"
                             >
-                              ${flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
+                              ${FlexRender({ header })}
                               ${{ asc: ' 🔼', desc: ' 🔽' }[
                                 header.column.getIsSorted() as string
                               ] ?? null}
@@ -232,16 +232,7 @@ class LitTableExample extends LitElement {
                 <tr>
                   ${row
                     .getAllCells()
-                    .map(
-                      (cell) => html`
-                        <td>
-                          ${flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      `,
-                    )}
+                    .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
                 </tr>
               `,
             )}
@@ -275,8 +266,7 @@ class LitTableExample extends LitElement {
         <span style="display: flex;gap:2px">
           <span>Page</span>
           <strong>
-            ${table.store.state.pagination.pageIndex + 1} of
-            ${table.getPageCount()}
+            ${table.state.pagination.pageIndex + 1} of ${table.getPageCount()}
           </strong>
         </span>
       </div>

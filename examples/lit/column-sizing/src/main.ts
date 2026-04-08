@@ -3,10 +3,10 @@ import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
   ColumnDef,
+  FlexRender,
   TableController,
   columnResizingFeature,
   columnSizingFeature,
-  flexRender,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { Person, makeData } from './makeData'
@@ -92,10 +92,7 @@ class LitTableExample extends LitElement {
                       colspan="${header.colSpan}"
                       style="width: ${header.getSize()}px"
                     >
-                      ${flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                      ${FlexRender({ header })}
                       ${header.isPlaceholder
                         ? null
                         : html`<div
@@ -123,16 +120,7 @@ class LitTableExample extends LitElement {
                 <tr>
                   ${row
                     .getAllCells()
-                    .map(
-                      (cell) => html`
-                        <td>
-                          ${flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      `,
-                    )}
+                    .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
                 </tr>
               `,
             )}

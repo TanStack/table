@@ -2,10 +2,10 @@ import { customElement } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
+  FlexRender,
   TableController,
   columnSizingFeature,
   createSortedRowModel,
-  flexRender,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -135,10 +135,7 @@ class LitTableExample extends LitElement {
                           })}"
                           @click="${header.column.getToggleSortingHandler()}"
                         >
-                          ${flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          ${FlexRender({ header })}
                           ${{ asc: ' 🔼', desc: ' 🔽' }[
                             header.column.getIsSorted() as string
                           ] ?? null}
@@ -174,7 +171,7 @@ class LitTableExample extends LitElement {
                       ${ref((node) =>
                         this.rowVirtualizerController
                           .getVirtualizer()
-                          .measureElement(node),
+                          .measureElement(node ?? null),
                       )}
                     >
                       ${repeat(
@@ -187,10 +184,7 @@ class LitTableExample extends LitElement {
                               width: `${cell.column.getSize()}px`,
                             })}
                           >
-                            ${flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
+                            ${FlexRender({ cell })}
                           </td>
                         `,
                       )}

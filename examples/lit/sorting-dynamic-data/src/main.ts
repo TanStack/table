@@ -1,19 +1,18 @@
 import { customElement } from 'lit/decorators.js'
-import { html, LitElement, PropertyValueMap } from 'lit'
+import { LitElement, PropertyValueMap, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { state } from 'lit/decorators/state.js'
 import {
   ColumnDef,
-  flexRender,
-  createSortedRowModel,
+  FlexRender,
   TableController,
+  createSortedRowModel,
   rowSortingFeature,
   sortFns,
   tableFeatures,
 } from '@tanstack/lit-table'
+import { Person, makeData } from './makeData'
 import type { SortFn } from '@tanstack/lit-table'
-
-import { makeData, Person } from './makeData'
 
 const _features = tableFeatures({
   rowSortingFeature,
@@ -30,34 +29,34 @@ const sortStatusFn: SortFn<typeof _features, Person> = (
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columns: ColumnDef<typeof _features, Person>[] = [
+const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
-    //this column will sort in ascending order by default since it is a string column
+    // this column will sort in ascending order by default since it is a string column
   },
   {
     accessorFn: (row) => row.lastName,
     id: 'lastName',
     cell: (info) => info.getValue(),
     header: () => html`<span>Last Name</span>`,
-    sortUndefined: 'last', //force undefined values to the end
-    sortDescFirst: false, //first sort order will be ascending (nullable values can mess up auto detection of sort order)
+    sortUndefined: 'last', // force undefined values to the end
+    sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
   },
   {
     accessorKey: 'age',
     header: () => 'Age',
-    //this column will sort in descending order by default since it is a number column
+    // this column will sort in descending order by default since it is a number column
   },
   {
     accessorKey: 'visits',
     header: () => html`<span>Visits</span>`,
-    sortUndefined: 'last', //force undefined values to the end
+    sortUndefined: 'last', // force undefined values to the end
   },
   {
     accessorKey: 'status',
     header: 'Status',
-    sortFn: sortStatusFn, //use our custom sorting function for this enum column
+    sortFn: sortStatusFn, // use our custom sorting function for this enum column
   },
   {
     accessorKey: 'progress',
@@ -67,7 +66,7 @@ const columns: ColumnDef<typeof _features, Person>[] = [
   {
     accessorKey: 'rank',
     header: 'Rank',
-    invertSorting: true, //invert the sorting order (golf score-like where smaller is better)
+    invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
   },
   {
     accessorKey: 'createdAt',
@@ -76,15 +75,15 @@ const columns: ColumnDef<typeof _features, Person>[] = [
   },
 ]
 
-const data: Person[] = makeData(1000)
+const data: Array<Person> = makeData(1000)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
-  private _multiplier: number = 1
+  private _multiplier = 1
 
   @state()
-  private _data: Person[] = new Array<Person>()
+  private _data: Array<Person> = new Array<Person>()
 
   private tableController = new TableController<typeof _features, Person>(this)
 
@@ -98,7 +97,7 @@ class LitTableExample extends LitElement {
   ): void {
     super.willUpdate(_changedProperties)
     if (_changedProperties.has('_multiplier')) {
-      const newData: Person[] = data.map((d) => {
+      const newData: Array<Person> = data.map((d) => {
         const p: Person = {
           ...d,
           visits: d.visits ? d.visits * this._multiplier : undefined,
@@ -129,7 +128,9 @@ class LitTableExample extends LitElement {
         max="100"
         id="multiplier"
         @change="${(e: Event) => {
-          const inputElement = (e as CustomEvent).target as HTMLInputElement
+          const inputElement = (e as CustomEvent).target as
+            | HTMLInputElement
+            | undefined
           if (inputElement) {
             this._multiplier = +inputElement.value
             this.requestUpdate('_multiplier')
@@ -161,10 +162,7 @@ class LitTableExample extends LitElement {
                               ? 'pointer'
                               : 'not-allowed'}"
                           >
-                            ${flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                            ${FlexRender({ header })}
                             ${{ asc: ' 🔼', desc: ' 🔽' }[
                               header.column.getIsSorted() as string
                             ] ?? null}
@@ -184,17 +182,8 @@ class LitTableExample extends LitElement {
               (row) => html`
                 <tr>
                   ${row
-                    .getVisibleCells()
-                    .map(
-                      (cell) => html`
-                        <td>
-                          ${flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      `,
-                    )}
+                    .getAllCells()
+                    .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
                 </tr>
               `,
             )}

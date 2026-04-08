@@ -2,12 +2,12 @@ import { customElement } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
+  FlexRender,
   TableController,
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   filterFns,
-  flexRender,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,
@@ -96,7 +96,10 @@ class LitTableExample extends LitElement {
         enableRowSelection: true,
         debugTable: true,
       },
-      (state) => ({ rowSelection: state.rowSelection }),
+      (state) => ({
+        rowSelection: state.rowSelection,
+        pagination: state.pagination,
+      }),
     )
 
     return html`
@@ -114,12 +117,7 @@ class LitTableExample extends LitElement {
                     <th colspan="${header.colSpan}">
                       ${header.isPlaceholder
                         ? null
-                        : html`<div>
-                            ${flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                          </div>`}
+                        : html`<div>${FlexRender({ header })}</div>`}
                     </th>
                   `,
                 )}
@@ -136,16 +134,7 @@ class LitTableExample extends LitElement {
                 <tr>
                   ${row
                     .getAllCells()
-                    .map(
-                      (cell) => html`
-                        <td>
-                          ${flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      `,
-                    )}
+                    .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
                 </tr>
               `,
             )}
@@ -179,8 +168,7 @@ class LitTableExample extends LitElement {
         <span style="display: flex;gap:2px">
           <span>Page</span>
           <strong>
-            ${table.store.state.pagination.pageIndex + 1} of
-            ${table.getPageCount()}
+            ${table.state.pagination.pageIndex + 1} of ${table.getPageCount()}
           </strong>
         </span>
       </div>

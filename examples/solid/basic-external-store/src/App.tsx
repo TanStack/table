@@ -15,6 +15,8 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/solid-table'
 
+// This example demonstrates managing ALL table state in a single unified object using getInitialTableState, instead of using separate createSignal calls per state slice.
+
 const _features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
@@ -47,6 +49,7 @@ const columns = columnHelper.columns([
 
 function App() {
   const [data] = createSignal(makeData(1000))
+  // Store all table state in one unified object, initialized with defaults from features
   const [tableState, setTableState] = createSignal(
     getInitialTableState(_features, {
       sorting: [] as SortingState,
@@ -54,6 +57,7 @@ function App() {
     }),
   )
 
+  // Create the table and pass the unified state object
   const table = createTable({
     _features,
     _rowModels: {

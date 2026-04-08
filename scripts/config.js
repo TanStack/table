@@ -12,18 +12,18 @@ export const packages = [
     name: '@tanstack/table-core',
     packageDir: 'packages/table-core',
   },
-  // {
-  //   name: '@tanstack/table-devtools',
-  //   packageDir: 'packages/table-devtools',
-  // },
+  {
+    name: '@tanstack/table-devtools',
+    packageDir: 'packages/table-devtools',
+  },
   {
     name: '@tanstack/angular-table',
     packageDir: 'packages/angular-table',
   },
-  // {
-  //   name: '@tanstack/lit-table',
-  //   packageDir: 'packages/lit-table',
-  // },
+  {
+    name: '@tanstack/lit-table',
+    packageDir: 'packages/lit-table',
+  },
   {
     name: '@tanstack/preact-table',
     packageDir: 'packages/preact-table',
@@ -32,10 +32,10 @@ export const packages = [
     name: '@tanstack/react-table',
     packageDir: 'packages/react-table',
   },
-  // {
-  //   name: '@tanstack/react-table-devtools',
-  //   packageDir: 'packages/react-table-devtools',
-  // },
+  {
+    name: '@tanstack/react-table-devtools',
+    packageDir: 'packages/react-table-devtools',
+  },
   {
     name: '@tanstack/solid-table',
     packageDir: 'packages/solid-table',
@@ -48,10 +48,10 @@ export const packages = [
     name: '@tanstack/vue-table',
     packageDir: 'packages/vue-table',
   },
-  // {
-  //   name: '@tanstack/match-sorter-utils',
-  //   packageDir: 'packages/match-sorter-utils',
-  // },
+  {
+    name: '@tanstack/match-sorter-utils',
+    packageDir: 'packages/match-sorter-utils',
+  },
 ]
 
 /**

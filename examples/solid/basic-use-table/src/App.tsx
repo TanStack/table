@@ -2,6 +2,9 @@ import { createTable, FlexRender, tableFeatures } from '@tanstack/solid-table'
 import { For, createSignal } from 'solid-js'
 import type { ColumnDef } from '@tanstack/solid-table'
 
+// This example uses the standalone `createTable` function to create a table without the `createTableHook` util.
+
+// 1. Define what the shape of your data will be for each row
 type Person = {
   firstName: string
   lastName: string
@@ -11,6 +14,7 @@ type Person = {
   progress: number
 }
 
+// 2. Create some dummy data with a stable reference (this could be an API response stored in createSignal or similar)
 const defaultData: Array<Person> = [
   {
     firstName: 'tanner',
@@ -46,22 +50,24 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const _features = tableFeatures({})
+// 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
+const _features = tableFeatures({}) // util method to create sharable TFeatures object/type
 
+// 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns. Alternatively, check out the createTableHook/createAppColumnHelper util for an even more type-safe way to define columns.
 const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
-    accessorKey: 'firstName',
+    accessorKey: 'firstName', // accessorKey method (most common for simple use-cases)
     header: 'First Name',
     cell: (info) => info.getValue(),
   },
   {
-    accessorFn: (row) => row.lastName,
+    accessorFn: (row) => row.lastName, // accessorFn used (alternative) along with a custom id
     id: 'lastName',
     header: () => <span>Last Name</span>,
     cell: (info) => <i>{info.getValue<string>()}</i>,
   },
   {
-    accessorFn: (row) => Number(row.age),
+    accessorFn: (row) => Number(row.age), // accessorFn used to transform the data
     id: 'age',
     header: () => 'Age',
     cell: (info) => info.renderValue(),
@@ -81,18 +87,21 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 ]
 
 function App() {
+  // 5. Store data with a reactive reference
   const [data, setData] = createSignal([...defaultData])
   const rerender = () => setData([...defaultData])
 
+  // 6. Create the table instance with required _features, columns, and data
   const table = createTable({
-    _features,
-    _rowModels: {},
+    _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
+    _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
     columns,
     get data() {
       return data()
     },
   })
 
+  // 7. Render your table markup from the table instance APIs
   return (
     <div class="p-2">
       <table>

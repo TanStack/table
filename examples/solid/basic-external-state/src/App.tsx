@@ -14,6 +14,8 @@ import { makeData } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
+// This example demonstrates managing table state externally via Solid's createSignal instead of letting the table manage its own state internally.
+
 const _features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
@@ -46,12 +48,17 @@ const columns = columnHelper.columns([
 
 function App() {
   const [data] = createSignal(makeData(1000))
+
+  // Manage sorting state with createSignal
   const [sorting, setSorting] = createSignal<SortingState>([])
+
+  // Manage pagination state with createSignal
   const [pagination, setPagination] = createSignal<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
 
+  // Create the table and pass state + onChange handlers
   const table = createTable({
     _features,
     _rowModels: {
@@ -64,14 +71,14 @@ function App() {
     },
     state: {
       get sorting() {
-        return sorting()
+        return sorting() // connect our sorting state back down to the table
       },
       get pagination() {
-        return pagination()
+        return pagination() // connect our pagination state back down to the table
       },
     },
-    onSortingChange: setSorting,
-    onPaginationChange: setPagination,
+    onSortingChange: setSorting, // raise sorting state changes to our own state management
+    onPaginationChange: setPagination, // raise pagination state changes to our own state management
   })
 
   return (

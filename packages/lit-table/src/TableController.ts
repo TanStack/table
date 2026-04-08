@@ -1,13 +1,108 @@
-import { constructTable, coreFeatures } from '@tanstack/table-core'
+import {
+  constructReactivityFeature,
+  constructTable,
+} from '@tanstack/table-core'
+import { FlexRender } from './flexRender'
 import type {
+  NoInfer,
   RowData,
   Table,
   TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { ReactiveController, ReactiveControllerHost } from 'lit'
+import type {
+  ReactiveController,
+  ReactiveControllerHost,
+  TemplateResult,
+} from 'lit'
 
+/**
+ * The extended table type returned by the Lit adapter.
+ * Includes a `Subscribe` method for fine-grained state subscriptions
+ * and a `state` property with the selected state.
+ */
+export type LitTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TSelected = {},
+> = Table<TFeatures, TData> & {
+  /**
+   * Subscribe to a selected slice of table state.
+   * Useful for fine-grained reactivity in Lit components.
+   *
+   * @example
+   * ```ts
+   * table.Subscribe({
+   *   selector: (state) => ({ rowSelection: state.rowSelection }),
+   *   children: (state) => html`<div>${JSON.stringify(state)}</div>`,
+   * })
+   * ```
+   */
+  Subscribe: <TSubscribeSelected>(props: {
+    selector: (state: NoInfer<TableState<TFeatures>>) => TSubscribeSelected
+    children:
+      | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
+      | TemplateResult
+      | string
+  }) => TemplateResult | string
+  /**
+   * The selected state of the table. This state may not match the structure of
+   * `table.store.state` because it is selected by the `selector` function that
+   * you pass as the 2nd argument to `controller.table()`.
+   *
+   * @example
+   * ```ts
+   * const table = this.tableController.table(options, (state) => ({
+   *   globalFilter: state.globalFilter,
+   * }))
+   *
+   * console.log(table.state.globalFilter)
+   * ```
+   */
+  readonly state: Readonly<TSelected>
+  /**
+   * Convenience FlexRender function attached to the table instance.
+   * Renders cell, header, or footer content from column definitions.
+   *
+   * @example
+   * ```ts
+   * ${table.FlexRender({ header })}
+   * ${table.FlexRender({ cell })}
+   * ${table.FlexRender({ footer: header })}
+   * ```
+   */
+  FlexRender: typeof FlexRender
+}
+
+/**
+ * A Lit ReactiveController for TanStack Table integration.
+ *
+ * Uses `constructReactivityFeature` from table-core to properly integrate
+ * with the TanStack Store reactivity system, matching the pattern used by
+ * all other framework adapters (React, Vue, Solid, Svelte, Angular).
+ *
+ * @example
+ * ```ts
+ * @customElement('my-table')
+ * class MyTable extends LitElement {
+ *   private tableController = new TableController<typeof _features, Person>(this)
+ *
+ *   protected render() {
+ *     const table = this.tableController.table(
+ *       {
+ *         _features,
+ *         _rowModels: {},
+ *         columns,
+ *         data,
+ *       },
+ *       (state) => ({ sorting: state.sorting }),
+ *     )
+ *     // use table in your template...
+ *   }
+ * }
+ * ```
+ */
 export class TableController<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -15,24 +110,33 @@ export class TableController<
   host: ReactiveControllerHost
 
   private _table: Table<TFeatures, TData> | null = null
-  private _subscription?: () => void
-  private _allState: TableState<TFeatures> | null = null
+  private _storeSubscription?: { unsubscribe: () => void }
+  private _optionsSubscription?: { unsubscribe: () => void }
+  private _notifier = 0
 
   constructor(host: ReactiveControllerHost) {
     ;(this.host = host).addController(this)
   }
 
-  public table(
+  public table<TSelected = {}>(
     tableOptions: TableOptions<TFeatures, TData>,
-    selector: (state: TableState<TFeatures>) => any = () => ({}),
-  ): Table<TFeatures, TData> & { state: any } {
+    selector: (state: TableState<TFeatures>) => TSelected = () =>
+      ({}) as TSelected,
+  ): LitTable<TFeatures, TData, TSelected> {
     if (!this._table) {
-      const _features = { ...coreFeatures, ...tableOptions._features }
+      const litReactivityFeature = constructReactivityFeature<TFeatures, TData>(
+        {
+          stateNotifier: () => this._notifier,
+          optionsNotifier: () => this._notifier,
+        },
+      )
 
-      const statefulOptions: TableOptions<TFeatures, TData> = {
+      const mergedOptions: TableOptions<TFeatures, TData> = {
         ...tableOptions,
-        _features,
-        // Remove state and onStateChange - store handles it internally
+        _features: {
+          ...tableOptions._features,
+          litReactivityFeature,
+        },
         mergeOptions: (
           defaultOptions: TableOptions<TFeatures, TData>,
           newOptions: Partial<TableOptions<TFeatures, TData>>,
@@ -44,42 +148,10 @@ export class TableController<
         },
       }
 
-      this._table = constructTable(statefulOptions)
-      this._allState = this._table.store.state
+      this._table = constructTable(mergedOptions)
 
-      // Wrap all "get*" methods to make them reactive
-      Object.keys(this._table).forEach((key) => {
-        const value = (this._table as any)[key]
-        if (typeof value === 'function' && key.startsWith('get')) {
-          const originalMethod = value.bind(this._table)
-          ;(this._table as any)[key] = (...args: Array<any>) => {
-            // Access state to create reactive dependency
-            this._allState
-            return originalMethod(...args)
-          }
-        }
-      })
-
-      // Set up subscription immediately when table is created
-      // This ensures reactivity works even if hostConnected() was called before table creation
-      this._setupSubscription()
-
-      // Add Subscribe function
-      // For Lit, this could be used with a directive or component
-      // This is a basic implementation that can be enhanced
-      ;(this._table as any).Subscribe = function Subscribe<TSelected>(props: {
-        selector: (state: TableState<TFeatures>) => TSelected
-        children: ((state: Readonly<TSelected>) => any) | any
-      }) {
-        // This is a simplified version - in practice, you'd want to use
-        // a Lit directive or component to handle the subscription and rendering
-        const selectedState = props.selector(this.store.state)
-
-        if (typeof props.children === 'function') {
-          return props.children(selectedState)
-        }
-        return props.children
-      }
+      // Set up subscriptions immediately when table is created
+      this._setupSubscriptions()
     }
 
     // Update options when they change
@@ -88,37 +160,56 @@ export class TableController<
       ...tableOptions,
     }))
 
-    // Capture selector and table for the state getter
-    const selectorFn = selector
+    // Capture for closure
     const tableInstance = this._table
+
+    // Attach Subscribe function
+    const Subscribe = function Subscribe<TSubscribeSelected>(props: {
+      selector: (state: TableState<TFeatures>) => TSubscribeSelected
+      children:
+        | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
+        | TemplateResult
+        | string
+    }): TemplateResult | string {
+      const selectedState = props.selector(tableInstance.store.state)
+      if (typeof props.children === 'function') {
+        return props.children(selectedState)
+      }
+      return props.children
+    }
 
     return {
       ...this._table,
+      Subscribe,
+      FlexRender,
       get state() {
-        return selectorFn(tableInstance.store.state)
+        return selector(tableInstance.store.state)
       },
-    } as Table<TFeatures, TData> & { state: any }
+    } as LitTable<TFeatures, TData, TSelected>
   }
 
-  private _setupSubscription() {
-    // Only set up if not already subscribed
-    if (this._table && !this._subscription) {
-      this._subscription = this._table.store.subscribe(({ currentVal }) => {
-        this._allState = currentVal
-        // Request update to trigger re-render
+  private _setupSubscriptions() {
+    if (this._table && !this._storeSubscription) {
+      this._storeSubscription = this._table.store.subscribe(() => {
+        this._notifier++
+        this.host.requestUpdate()
+      })
+
+      this._optionsSubscription = this._table.optionsStore.subscribe(() => {
+        this._notifier++
         this.host.requestUpdate()
       })
     }
   }
 
   hostConnected() {
-    // Set up subscription if table exists but subscription wasn't set up yet
-    // (This handles the case where hostConnected() is called before table creation)
-    this._setupSubscription()
+    this._setupSubscriptions()
   }
 
   hostDisconnected() {
-    this._subscription?.()
-    this._subscription = undefined
+    this._storeSubscription?.unsubscribe()
+    this._storeSubscription = undefined
+    this._optionsSubscription?.unsubscribe()
+    this._optionsSubscription = undefined
   }
 }

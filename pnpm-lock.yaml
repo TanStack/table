@@ -36,8 +36,8 @@ importers:
         specifier: ^29.0.2
         version: 29.0.2
       knip:
-        specifier: ^6.3.0
-        version: 6.3.0
+        specifier: ^6.3.1
+        version: 6.3.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
       markdown-link-extractor:
         specifier: ^4.0.3
         version: 4.0.3
@@ -49,7 +49,7 @@ importers:
         version: 3.8.1
       prettier-plugin-svelte:
         specifier: ^3.5.1
-        version: 3.5.1(prettier@3.8.1)(svelte@5.55.1)
+        version: 3.5.1(prettier@3.8.1)(svelte@5.55.2)
       publint:
         specifier: ^0.3.18
         version: 0.3.18
@@ -63,11 +63,11 @@ importers:
         specifier: ^12.0.1
         version: 12.0.1(jiti@2.6.1)
       tinyglobby:
-        specifier: ^0.2.15
-        version: 0.2.15
+        specifier: ^0.2.16
+        version: 0.2.16
       tsdown:
         specifier: ^0.21.7
-        version: 0.21.7(oxc-resolver@11.19.1)(publint@0.3.18)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2))
+        version: 0.21.7(oxc-resolver@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(publint@0.3.18)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2))
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -967,23 +967,228 @@ importers:
         specifier: 6.0.2
         version: 6.0.2
 
-  examples/lit/basic:
+  examples/lit/basic-app-table:
+    dependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/basic-external-state:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/basic-external-store:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/basic-table-controller:
     dependencies:
       '@tanstack/lit-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/lit-table
-      '@twind/core':
-        specifier: ^1.1.3
-        version: 1.1.3(typescript@6.0.2)
-      '@twind/preset-autoprefix':
-        specifier: ^1.0.7
-        version: 1.0.7(@twind/core@1.1.3(typescript@6.0.2))(typescript@6.0.2)
-      '@twind/preset-tailwind':
-        specifier: ^1.1.4
-        version: 1.1.4(@twind/core@1.1.3(typescript@6.0.2))(typescript@6.0.2)
-      '@twind/with-web-components':
-        specifier: ^1.1.3
-        version: 1.1.3(@twind/core@1.1.3(typescript@6.0.2))(typescript@6.0.2)
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/column-groups:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/column-ordering:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/column-pinning:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/column-pinning-split:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/column-pinning-sticky:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/column-resizing:
+    dependencies:
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/column-resizing-performant:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
         version: 3.3.2
@@ -1020,7 +1225,189 @@ importers:
         specifier: ^8.0.7
         version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
 
+  examples/lit/column-visibility:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/composable-tables:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/expanding:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
   examples/lit/filters:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/filters-faceted:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/filters-fuzzy:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      '@tanstack/match-sorter-utils':
+        specifier: ^9.0.0-alpha.4
+        version: link:../../../packages/match-sorter-utils
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/grouping:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/pagination:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/row-pinning:
     dependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -1094,6 +1481,78 @@ importers:
       '@tanstack/lit-table':
         specifier: ^9.0.0-alpha.10
         version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/sub-components:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/virtualized-columns:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      '@tanstack/lit-virtual':
+        specifier: ^3.13.24
+        version: 3.13.24(lit@3.3.2)
+      lit:
+        specifier: ^3.3.2
+        version: 3.3.2
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.53.3)
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+      vite:
+        specifier: ^8.0.7
+        version: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
+
+  examples/lit/virtualized-infinite-scrolling:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: ^9.0.0-alpha.10
+        version: link:../../../packages/lit-table
+      '@tanstack/lit-virtual':
+        specifier: ^3.13.24
+        version: 3.13.24(lit@3.3.2)
       lit:
         specifier: ^3.3.2
         version: 3.3.2
@@ -2228,8 +2687,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.53.3)
       '@tanstack/react-devtools':
-        specifier: ^0.10.1
-        version: 0.10.1(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.12)
+        specifier: ^0.10.2
+        version: 0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.12)
       '@tanstack/react-table-devtools':
         specifier: 9.0.0-alpha.11
         version: link:../../../packages/react-table-devtools
@@ -3081,8 +3540,8 @@ importers:
   examples/solid/row-selection:
     dependencies:
       '@tanstack/solid-devtools':
-        specifier: ^0.8.1
-        version: 0.8.1(solid-js@1.9.12)
+        specifier: ^0.8.2
+        version: 0.8.2(solid-js@1.9.12)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/solid-table
@@ -3325,7 +3784,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3333,11 +3792,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3352,7 +3811,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3360,11 +3819,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3382,7 +3841,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3390,11 +3849,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3412,7 +3871,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3420,11 +3879,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3439,7 +3898,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3447,11 +3906,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3466,7 +3925,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3474,11 +3933,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3496,7 +3955,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3504,11 +3963,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3526,7 +3985,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3534,11 +3993,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3556,7 +4015,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3564,11 +4023,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3586,7 +4045,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3594,11 +4053,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3613,7 +4072,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3621,11 +4080,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3643,7 +4102,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3651,11 +4110,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3670,7 +4129,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3678,11 +4137,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3697,7 +4156,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3705,11 +4164,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3727,7 +4186,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3735,11 +4194,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3757,7 +4216,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3765,11 +4224,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3787,7 +4246,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3795,11 +4254,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3817,7 +4276,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3825,11 +4284,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3847,7 +4306,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
@@ -3858,11 +4317,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3880,7 +4339,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3888,11 +4347,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3910,7 +4369,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3918,11 +4377,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3940,7 +4399,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3948,11 +4407,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -3970,7 +4429,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -3978,11 +4437,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -4000,7 +4459,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -4008,11 +4467,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -4030,7 +4489,7 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -4038,11 +4497,11 @@ importers:
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -4060,22 +4519,22 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
       '@tanstack/svelte-virtual':
         specifier: ^3.13.23
-        version: 3.13.23(svelte@5.55.1)
+        version: 3.13.23(svelte@5.55.2)
       '@tsconfig/svelte':
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -4093,25 +4552,25 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-query':
         specifier: ^6.1.13
-        version: 6.1.13(svelte@5.55.1)
+        version: 6.1.13(svelte@5.55.2)
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
       '@tanstack/svelte-virtual':
         specifier: ^3.13.23
-        version: 3.13.23(svelte@5.55.1)
+        version: 3.13.23(svelte@5.55.2)
       '@tsconfig/svelte':
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -4129,22 +4588,22 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
       '@tanstack/svelte-virtual':
         specifier: ^3.13.23
-        version: 3.13.23(svelte@5.55.1)
+        version: 3.13.23(svelte@5.55.2)
       '@tsconfig/svelte':
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -4159,7 +4618,7 @@ importers:
         version: 1.28.6
       '@tanstack/svelte-form':
         specifier: ^1.28.6
-        version: 1.28.6(svelte@5.55.1)
+        version: 1.28.6(svelte@5.55.2)
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -4175,16 +4634,16 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tsconfig/svelte':
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -4196,7 +4655,7 @@ importers:
     dependencies:
       '@tanstack/svelte-query':
         specifier: ^6.1.13
-        version: 6.1.13(svelte@5.55.1)
+        version: 6.1.13(svelte@5.55.2)
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/svelte-table
@@ -4209,16 +4668,16 @@ importers:
         version: 6.0.3(rollup@4.53.3)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       '@tsconfig/svelte':
         specifier: ^5.0.8
         version: 5.0.8
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -4406,6 +4865,9 @@ importers:
 
   examples/vue/composable-tables:
     dependencies:
+      '@tanstack/vue-store':
+        specifier: ^0.9.3
+        version: 0.9.3(vue@3.5.32(typescript@6.0.2))
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.26
         version: link:../../../packages/vue-table
@@ -4644,11 +5106,11 @@ importers:
         version: 2.8.1
     devDependencies:
       '@analogjs/vite-plugin-angular':
-        specifier: ^2.4.1
-        version: 2.4.1(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2))
+        specifier: ^2.4.2
+        version: 2.4.2(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2))
       '@analogjs/vitest-angular':
-        specifier: ^2.4.1
-        version: 2.4.1(@analogjs/vite-plugin-angular@2.4.1(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2)))(@angular-devkit/architect@0.2102.6(chokidar@5.0.0))(@angular-devkit/schematics@21.2.6(chokidar@5.0.0))(vitest@4.1.3(@types/node@25.5.2)(jsdom@29.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)))(zone.js@0.16.0)
+        specifier: ^2.4.2
+        version: 2.4.2(@analogjs/vite-plugin-angular@2.4.2(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2)))(@angular-devkit/architect@0.2102.6(chokidar@5.0.0))(@angular-devkit/schematics@21.2.6(chokidar@5.0.0))(vitest@4.1.3(@types/node@25.5.2)(jsdom@29.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)))(zone.js@0.16.0)
       '@angular/core':
         specifier: ^21.2.7
         version: 21.2.7(@angular/compiler@21.2.7)(rxjs@7.8.2)(zone.js@0.16.0)
@@ -4668,6 +5130,9 @@ importers:
         specifier: workspace:*
         version: link:../table-core
     devDependencies:
+      '@lit/context':
+        specifier: ^1.1.6
+        version: 1.1.6
       lit:
         specifier: ^3.3.2
         version: 3.3.2
@@ -4735,8 +5200,8 @@ importers:
         specifier: ^4.2.3
         version: 4.2.3(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)
       '@tanstack/react-devtools':
-        specifier: ^0.10.1
-        version: 0.10.1(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.12)
+        specifier: ^0.10.2
+        version: 0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.12)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -4781,8 +5246,8 @@ importers:
   packages/solid-table-devtools:
     dependencies:
       '@tanstack/devtools':
-        specifier: ^0.11.1
-        version: 0.11.1(csstype@3.2.3)(solid-js@1.9.12)
+        specifier: ^0.11.2
+        version: 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
       '@tanstack/devtools-utils':
         specifier: ^0.4.0
         version: 0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.4)(solid-js@1.9.12)(vue@3.5.32(typescript@6.0.2))
@@ -4804,26 +5269,26 @@ importers:
     dependencies:
       '@tanstack/svelte-store':
         specifier: ^0.10.3
-        version: 0.10.3(svelte@5.55.1)
+        version: 0.10.3(svelte@5.55.2)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
     devDependencies:
       '@sveltejs/package':
         specifier: ^2.5.7
-        version: 2.5.7(svelte@5.55.1)(typescript@6.0.2)
+        version: 2.5.7(svelte@5.55.2)(typescript@6.0.2)
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.0.0
-        version: 7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+        version: 7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
       eslint-plugin-svelte:
         specifier: ^3.17.0
-        version: 3.17.0(eslint@10.2.0(jiti@2.6.1))(svelte@5.55.1)
+        version: 3.17.0(eslint@10.2.0(jiti@2.6.1))(svelte@5.55.2)
       svelte:
-        specifier: ^5.55.1
-        version: 5.55.1
+        specifier: ^5.55.2
+        version: 5.55.2
       svelte-check:
         specifier: ^4.4.6
-        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2)
+        version: 4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2)
 
   packages/table-core:
     dependencies:
@@ -4940,8 +5405,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@analogjs/vite-plugin-angular@2.4.1':
-    resolution: {integrity: sha512-jXo1cNKSS/mslXA3SfzDro6H7ntCH7wx19uaClKM6Sz0WJx+g3s59338Md4whASxvCsrCJdYG7ptoHQxud7wqg==}
+  '@analogjs/vite-plugin-angular@2.4.2':
+    resolution: {integrity: sha512-XoplVw+7hU2d/A8qNgKIBmo7b5DWhNHsGQhcf4HP2HR5OcLuqIldGlvohRTlkPiyL9vbxMVIpEKKmCqRcBFZSQ==}
     peerDependencies:
       '@angular-devkit/build-angular': ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0
       '@angular/build': ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0
@@ -4951,8 +5416,8 @@ packages:
       '@angular/build':
         optional: true
 
-  '@analogjs/vitest-angular@2.4.1':
-    resolution: {integrity: sha512-Z7WMAuc3ppedOZM9ACF1FY+tXY5SdvkpOWeK6yOJGrYF/fcCvv2xKX3sd+wId60PwSP+76BcAbjxpiYHc9UGyQ==}
+  '@analogjs/vitest-angular@2.4.2':
+    resolution: {integrity: sha512-u1XFbBRCGpQp/+alwLdRvept4i3B4mlKPfFNG2sen3/8XMhtyBkM5OYf2iwQFlILD8RtVoUzGnrUiTrgOiLHEw==}
     peerDependencies:
       '@analogjs/vite-plugin-angular': '*'
       '@angular-devkit/architect': '>=0.1500.0 < 0.2200.0'
@@ -6857,6 +7322,9 @@ packages:
   '@lit-labs/ssr-dom-shim@1.4.0':
     resolution: {integrity: sha512-ficsEARKnmmW5njugNYKipTm4SFnbik7CXtoencDZzmzo/dQ+2Q0bgkzJuoJP20Aj0F+izzJjOqsnkd6F/o1bw==}
 
+  '@lit/context@1.1.6':
+    resolution: {integrity: sha512-M26qDE6UkQbZA2mQ3RjJ3Gzd8TxP+/0obMgE5HfkfLhEEyYE3Bui4A5XHiGPjy0MUGAyxB3QgVuw2ciS0kHn6A==}
+
   '@lit/reactive-element@2.1.1':
     resolution: {integrity: sha512-N+dm5PAYdQ8e6UlywyyrgI2t++wFGXfHx+dSJ1oBrg6FAxUj40jId++EaRm80MKX5JnlH1sBsyZ5h0bcZKemCg==}
 
@@ -8541,11 +9009,6 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
-  '@solid-primitives/resize-observer@2.1.4':
-    resolution: {integrity: sha512-dxKYLU1cjfnEuJP42Ar0pTOmx4E57/lNabKAhKQc4kjqL/OC/h/9MSRMv0/d2/TcAKAkBxHMKKf+uRSUxDTt+g==}
-    peerDependencies:
-      solid-js: ^1.6.12
-
   '@solid-primitives/resize-observer@2.1.5':
     resolution: {integrity: sha512-AiyTknKcNBaKHbcSMuxtSNM8FjIuiSuFyFghdD0TcCMU9hKi9EmsC5pjfjDwxE+5EueB1a+T/34PLRI5vbBbKw==}
     peerDependencies:
@@ -8769,8 +9232,8 @@ packages:
       vue:
         optional: true
 
-  '@tanstack/devtools@0.11.1':
-    resolution: {integrity: sha512-g3nHgVP76kT9190d6O32AjANoEnujLEB+51PDtBzlah8hvKeEygK53cunN+HXhjlfhM4PoOCi8/B96cdJVSnLg==}
+  '@tanstack/devtools@0.11.2':
+    resolution: {integrity: sha512-K8+tsBx+ptTLqqd4dOF10B6laj1g+XYImqYZL9n0jBINGaT+sOf17PKV9pbBt8kdbZeIGsHaJ5OZWCyZoHqN4A==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -8810,8 +9273,8 @@ packages:
   '@tanstack/query-core@5.96.2':
     resolution: {integrity: sha512-hzI6cTVh4KNRk8UtoIBS7Lv9g6BnJPXvBKsvYH1aGWvv0347jT3BnSvztOE+kD76XGvZnRC/t6qdW1CaIfwCeA==}
 
-  '@tanstack/react-devtools@0.10.1':
-    resolution: {integrity: sha512-cvcd0EqN7Q2LYatQXxFhOkEa9RUQXZlhXnM1mwuibxmyRX+CMyohUZcgjodtIfgh+RT0Pmvt49liTdZby5ovZw==}
+  '@tanstack/react-devtools@0.10.2':
+    resolution: {integrity: sha512-1BmZyxOrI5SqmRJ5MgkYZNNdnlLsJxQRI2YgorrAvcF2MxK6x5RcuStvD8+YlXoMw3JtNukPxoITirKAnKYDQA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/react': '>=16.8'
@@ -8891,8 +9354,8 @@ packages:
     resolution: {integrity: sha512-aus9GoDzZ85Wb5aVeztq6lw6rm0n2MLn8jBtioXbDyMZNNCn0Oahm5/KZYxmB9fBxT9QPuVroH2QputUCIZB9Q==}
     engines: {node: '>=20.19'}
 
-  '@tanstack/solid-devtools@0.8.1':
-    resolution: {integrity: sha512-85hGt6mcyF8bk7XnO+Uwfjl2sKBQoKUlNaiz5DAunOntlwS3iz6Z9+MPAcAxUkcXiYdE7b15WpJEfBzuRn+5tw==}
+  '@tanstack/solid-devtools@0.8.2':
+    resolution: {integrity: sha512-tzHF9rNPd9mO5vCArBkVABNe3qs+hvocra4LyRi/aFZC/0leLtD/TpXGnYx4IjDixTqkMCv3PLaG0HTwI5sdnw==}
     engines: {node: '>=18'}
     peerDependencies:
       solid-js: '>=1.9.7'
@@ -8990,45 +9453,6 @@ packages:
   '@tufjs/models@4.0.0':
     resolution: {integrity: sha512-h5x5ga/hh82COe+GoD4+gKUeV4T3iaYOxqLt41GRKApinPI7DMidhCmNVTjKfhCWFJIGXaFJee07XczdT4jdZQ==}
     engines: {node: ^20.17.0 || >=22.9.0}
-
-  '@twind/core@1.1.3':
-    resolution: {integrity: sha512-/B/aNFerMb2IeyjSJy3SJxqVxhrT77gBDknLMiZqXIRr4vNJqiuhx7KqUSRzDCwUmyGuogkamz+aOLzN6MeSLw==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.8.4
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@twind/preset-autoprefix@1.0.7':
-    resolution: {integrity: sha512-3wmHO0pG/CVxYBNZUV0tWcL7CP0wD5KpyWAQE/KOalWmOVBj+nH6j3v6Y3I3pRuMFaG5DC78qbYbhA1O11uG3w==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      '@twind/core': ^1.1.0
-      typescript: ^4.8.4
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@twind/preset-tailwind@1.1.4':
-    resolution: {integrity: sha512-zv85wrP/DW4AxgWrLfH7kyGn/KJF3K04FMLVl2AjoxZGYdCaoZDkL8ma3hzaKQ+WGgBFRubuB/Ku2Rtv/wjzVw==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      '@twind/core': ^1.1.0
-      typescript: ^4.8.4
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
-  '@twind/with-web-components@1.1.3':
-    resolution: {integrity: sha512-pM2Ps58pkLQva2HsC/cm2y5kTIwojJ6896w4+kXIMCOhuoOfTeyNOkYvBdr8Cpkvm+vR+ggPITNdvpzAOXa+Dg==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      '@twind/core': ^1.1.0
-      typescript: ^4.8.4
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -10137,9 +10561,6 @@ packages:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
     engines: {node: '>=4'}
     hasBin: true
-
-  csstype@3.1.3:
-    resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
@@ -11410,8 +11831,8 @@ packages:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
 
-  knip@6.3.0:
-    resolution: {integrity: sha512-g6dVPoTw6iNm3cubC5IWxVkVsd0r5hXhTBTbAGIEQN53GdA2ZM/slMTPJ7n5l8pBebNQPHpxjmKxuR4xVQ2/hQ==}
+  knip@6.3.1:
+    resolution: {integrity: sha512-22kLJloVcOVOAudCxlFOC0ICAMme7dKsS7pVTEnrmyKGpswb8ieznvAiSKUeFVDJhb01ect6dkDc1Ha1g1sPpg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -13000,9 +13421,6 @@ packages:
     resolution: {integrity: sha512-1tB5mhVo7U+ETBKNf92xT4hrQa3pm0MZ0PQvuDnWgAAGHDsfp4lPSpiS6psrSiet87wyGPh9ft6wmhOMQ0hDiw==}
     engines: {node: '>=14.16'}
 
-  style-vendorizer@2.2.3:
-    resolution: {integrity: sha512-/VDRsWvQAgspVy9eATN3z6itKTuyg+jW1q6UoTCQCFRqPDw8bi3E1hXIKnGw5LvXS2AQPuJ7Af4auTLYeBOLEg==}
-
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
@@ -13038,8 +13456,8 @@ packages:
       svelte: ^3.55 || ^4.0.0-next.0 || ^4.0 || ^5.0.0-next.0
       typescript: ^4.9.4 || ^5.0.0
 
-  svelte@5.55.1:
-    resolution: {integrity: sha512-QjvU7EFemf6mRzdMGlAFttMWtAAVXrax61SZYHdkD6yoVGQ89VeyKfZD4H1JrV1WLmJBxWhFch9H6ig/87VGjw==}
+  svelte@5.55.2:
+    resolution: {integrity: sha512-z41M/hi0ZPTzrwVKLvB/R1/Oo08gL1uIib8HZ+FncqxxtY9MLb01emg2fqk+WLZ/lNrrtNDFh7BZLDxAHvMgLw==}
     engines: {node: '>=18'}
 
   symbol-tree@3.2.4:
@@ -13111,6 +13529,10 @@ packages:
 
   tinyglobby@0.2.15:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
+    engines: {node: '>=12.0.0'}
+
+  tinyglobby@0.2.16:
+    resolution: {integrity: sha512-pn99VhoACYR8nFHhxqix+uvsbXineAasWm5ojXoN8xEwK5Kd3/TrhNn1wByuD52UxWRLy8pu+kRMniEi6Eq9Zg==}
     engines: {node: '>=12.0.0'}
 
   tinyrainbow@3.1.0:
@@ -13839,9 +14261,6 @@ packages:
     resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
     engines: {node: '>=18'}
 
-  zimmerframe@1.1.2:
-    resolution: {integrity: sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w==}
-
   zimmerframe@1.1.4:
     resolution: {integrity: sha512-B58NGBEoc8Y9MWWCQGl/gq9xBCe4IiKM0a2x7GZdQKOW5Exr8S1W24J6OgM1njK8xCRGvAJIL/MxXHf6SkmQKQ==}
 
@@ -13964,17 +14383,17 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.13
       '@jridgewell/trace-mapping': 0.3.31
 
-  '@analogjs/vite-plugin-angular@2.4.1(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2))':
+  '@analogjs/vite-plugin-angular@2.4.2(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2))':
     dependencies:
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       ts-morph: 21.0.1
     optionalDependencies:
       '@angular-devkit/build-angular': 21.2.6(94a8d7facc63d2b636da72db756fba85)
       '@angular/build': 21.2.6(4cee6253c5b25265b24ef43a54e938c2)
 
-  '@analogjs/vitest-angular@2.4.1(@analogjs/vite-plugin-angular@2.4.1(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2)))(@angular-devkit/architect@0.2102.6(chokidar@5.0.0))(@angular-devkit/schematics@21.2.6(chokidar@5.0.0))(vitest@4.1.3(@types/node@25.5.2)(jsdom@29.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)))(zone.js@0.16.0)':
+  '@analogjs/vitest-angular@2.4.2(@analogjs/vite-plugin-angular@2.4.2(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2)))(@angular-devkit/architect@0.2102.6(chokidar@5.0.0))(@angular-devkit/schematics@21.2.6(chokidar@5.0.0))(vitest@4.1.3(@types/node@25.5.2)(jsdom@29.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)))(zone.js@0.16.0)':
     dependencies:
-      '@analogjs/vite-plugin-angular': 2.4.1(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2))
+      '@analogjs/vite-plugin-angular': 2.4.2(@angular-devkit/build-angular@21.2.6(94a8d7facc63d2b636da72db756fba85))(@angular/build@21.2.6(4cee6253c5b25265b24ef43a54e938c2))
       '@angular-devkit/architect': 0.2102.6(chokidar@5.0.0)
       '@angular-devkit/schematics': 21.2.6(chokidar@5.0.0)
       vitest: 4.1.3(@types/node@25.5.2)(jsdom@29.0.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
@@ -16134,6 +16553,10 @@ snapshots:
 
   '@lit-labs/ssr-dom-shim@1.4.0': {}
 
+  '@lit/context@1.1.6':
+    dependencies:
+      '@lit/reactive-element': 2.1.1
+
   '@lit/reactive-element@2.1.1':
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.4.0
@@ -16459,9 +16882,12 @@ snapshots:
   '@oxc-parser/binding-openharmony-arm64@0.121.0':
     optional: true
 
-  '@oxc-parser/binding-wasm32-wasi@0.121.0':
+  '@oxc-parser/binding-wasm32-wasi@0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.1.1
+      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@emnapi/runtime'
     optional: true
 
   '@oxc-parser/binding-win32-arm64-msvc@0.121.0':
@@ -16529,9 +16955,12 @@ snapshots:
   '@oxc-resolver/binding-openharmony-arm64@11.19.1':
     optional: true
 
-  '@oxc-resolver/binding-wasm32-wasi@11.19.1':
+  '@oxc-resolver/binding-wasm32-wasi@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)':
     dependencies:
-      '@napi-rs/wasm-runtime': 1.1.1
+      '@napi-rs/wasm-runtime': 1.1.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@emnapi/runtime'
     optional: true
 
   '@oxc-resolver/binding-win32-arm64-msvc@11.19.1':
@@ -17520,9 +17949,9 @@ snapshots:
 
   '@solid-primitives/keyboard@1.3.4(solid-js@1.9.12)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.4(solid-js@1.9.12)
-      '@solid-primitives/rootless': 1.5.2(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
+      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
+      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
+      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
       solid-js: 1.9.12
 
   '@solid-primitives/media@2.3.5(solid-js@1.9.12)':
@@ -17536,14 +17965,6 @@ snapshots:
   '@solid-primitives/refs@1.1.3(solid-js@1.9.12)':
     dependencies:
       '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
-
-  '@solid-primitives/resize-observer@2.1.4(solid-js@1.9.12)':
-    dependencies:
-      '@solid-primitives/event-listener': 2.4.4(solid-js@1.9.12)
-      '@solid-primitives/rootless': 1.5.2(solid-js@1.9.12)
-      '@solid-primitives/static-store': 0.1.2(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.3.2(solid-js@1.9.12)
       solid-js: 1.9.12
 
   '@solid-primitives/resize-observer@2.1.5(solid-js@1.9.12)':
@@ -17608,27 +18029,27 @@ snapshots:
       estraverse: 5.3.0
       picomatch: 4.0.3
 
-  '@sveltejs/acorn-typescript@1.0.8(acorn@8.15.0)':
+  '@sveltejs/acorn-typescript@1.0.8(acorn@8.16.0)':
     dependencies:
-      acorn: 8.15.0
+      acorn: 8.16.0
 
-  '@sveltejs/package@2.5.7(svelte@5.55.1)(typescript@6.0.2)':
+  '@sveltejs/package@2.5.7(svelte@5.55.2)(typescript@6.0.2)':
     dependencies:
       chokidar: 5.0.0
       kleur: 4.1.5
       sade: 1.8.1
       semver: 7.6.3
-      svelte: 5.55.1
-      svelte2tsx: 0.7.45(svelte@5.55.1)(typescript@6.0.2)
+      svelte: 5.55.2
+      svelte2tsx: 0.7.45(svelte@5.55.2)(typescript@6.0.2)
     transitivePeerDependencies:
       - typescript
 
-  '@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.1)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))':
+  '@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.55.2)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))':
     dependencies:
       deepmerge: 4.3.1
       magic-string: 0.30.21
       obug: 2.1.1
-      svelte: 5.55.1
+      svelte: 5.55.2
       vite: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
       vitefu: 1.1.3(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
 
@@ -17739,11 +18160,11 @@ snapshots:
       solid-js: 1.9.12
       vue: 3.5.32(typescript@6.0.2)
 
-  '@tanstack/devtools@0.11.1(csstype@3.2.3)(solid-js@1.9.12)':
+  '@tanstack/devtools@0.11.2(csstype@3.2.3)(solid-js@1.9.12)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.4(solid-js@1.9.12)
+      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
       '@solid-primitives/keyboard': 1.3.4(solid-js@1.9.12)
-      '@solid-primitives/resize-observer': 2.1.4(solid-js@1.9.12)
+      '@solid-primitives/resize-observer': 2.1.5(solid-js@1.9.12)
       '@tanstack/devtools-client': 0.0.6
       '@tanstack/devtools-event-bus': 0.4.1
       '@tanstack/devtools-ui': 0.5.1(csstype@3.2.3)(solid-js@1.9.12)
@@ -17802,9 +18223,9 @@ snapshots:
 
   '@tanstack/query-core@5.96.2': {}
 
-  '@tanstack/react-devtools@0.10.1(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.12)':
+  '@tanstack/react-devtools@0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.12)':
     dependencies:
-      '@tanstack/devtools': 0.11.1(csstype@3.2.3)(solid-js@1.9.12)
+      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
       '@types/react': 19.2.14
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
       react: 19.2.4
@@ -17903,7 +18324,7 @@ snapshots:
       babel-dead-code-elimination: 1.0.12
       diff: 8.0.2
       pathe: 2.0.3
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
     transitivePeerDependencies:
       - supports-color
 
@@ -17918,9 +18339,9 @@ snapshots:
       - vite-plugin-solid
       - webpack
 
-  '@tanstack/solid-devtools@0.8.1(solid-js@1.9.12)':
+  '@tanstack/solid-devtools@0.8.2(solid-js@1.9.12)':
     dependencies:
-      '@tanstack/devtools': 0.11.1(csstype@3.2.3)(solid-js@1.9.12)
+      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
       solid-js: 1.9.12
     transitivePeerDependencies:
       - bufferutil
@@ -17960,26 +18381,26 @@ snapshots:
 
   '@tanstack/store@0.9.3': {}
 
-  '@tanstack/svelte-form@1.28.6(svelte@5.55.1)':
+  '@tanstack/svelte-form@1.28.6(svelte@5.55.2)':
     dependencies:
       '@tanstack/form-core': 1.28.6
-      '@tanstack/svelte-store': 0.10.3(svelte@5.55.1)
-      svelte: 5.55.1
+      '@tanstack/svelte-store': 0.10.3(svelte@5.55.2)
+      svelte: 5.55.2
 
-  '@tanstack/svelte-query@6.1.13(svelte@5.55.1)':
+  '@tanstack/svelte-query@6.1.13(svelte@5.55.2)':
     dependencies:
       '@tanstack/query-core': 5.96.2
-      svelte: 5.55.1
+      svelte: 5.55.2
 
-  '@tanstack/svelte-store@0.10.3(svelte@5.55.1)':
+  '@tanstack/svelte-store@0.10.3(svelte@5.55.2)':
     dependencies:
       '@tanstack/store': 0.9.3
-      svelte: 5.55.1
+      svelte: 5.55.2
 
-  '@tanstack/svelte-virtual@3.13.23(svelte@5.55.1)':
+  '@tanstack/svelte-virtual@3.13.23(svelte@5.55.2)':
     dependencies:
       '@tanstack/virtual-core': 3.13.23
-      svelte: 5.55.1
+      svelte: 5.55.2
 
   '@tanstack/typedoc-config@0.3.3(typescript@6.0.2)':
     dependencies:
@@ -18028,31 +18449,6 @@ snapshots:
     dependencies:
       '@tufjs/canonical-json': 2.0.0
       minimatch: 9.0.5
-
-  '@twind/core@1.1.3(typescript@6.0.2)':
-    dependencies:
-      csstype: 3.1.3
-    optionalDependencies:
-      typescript: 6.0.2
-
-  '@twind/preset-autoprefix@1.0.7(@twind/core@1.1.3(typescript@6.0.2))(typescript@6.0.2)':
-    dependencies:
-      '@twind/core': 1.1.3(typescript@6.0.2)
-      style-vendorizer: 2.2.3
-    optionalDependencies:
-      typescript: 6.0.2
-
-  '@twind/preset-tailwind@1.1.4(@twind/core@1.1.3(typescript@6.0.2))(typescript@6.0.2)':
-    dependencies:
-      '@twind/core': 1.1.3(typescript@6.0.2)
-    optionalDependencies:
-      typescript: 6.0.2
-
-  '@twind/with-web-components@1.1.3(@twind/core@1.1.3(typescript@6.0.2))(typescript@6.0.2)':
-    dependencies:
-      '@twind/core': 1.1.3(typescript@6.0.2)
-    optionalDependencies:
-      typescript: 6.0.2
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
@@ -18296,7 +18692,7 @@ snapshots:
       debug: 4.4.3
       minimatch: 10.2.5
       semver: 7.7.4
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       ts-api-utils: 2.5.0(typescript@6.0.2)
       typescript: 6.0.2
     transitivePeerDependencies:
@@ -18697,10 +19093,6 @@ snapshots:
   acorn-import-phases@1.0.4(acorn@8.16.0):
     dependencies:
       acorn: 8.16.0
-
-  acorn-jsx@5.3.2(acorn@8.15.0):
-    dependencies:
-      acorn: 8.15.0
 
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:
@@ -19293,7 +19685,7 @@ snapshots:
       normalize-path: 3.0.0
       schema-utils: 4.3.3
       serialize-javascript: 7.0.5
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       webpack: 5.105.2(esbuild@0.27.4)
 
   core-js-compat@3.49.0:
@@ -19363,8 +19755,6 @@ snapshots:
   css.escape@1.5.1: {}
 
   cssesc@3.0.0: {}
-
-  csstype@3.1.3: {}
 
   csstype@3.2.3: {}
 
@@ -19502,9 +19892,9 @@ snapshots:
 
   dotenv@16.4.5: {}
 
-  dts-resolver@2.1.3(oxc-resolver@11.19.1):
+  dts-resolver@2.1.3(oxc-resolver@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)):
     optionalDependencies:
-      oxc-resolver: 11.19.1
+      oxc-resolver: 11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
 
   dunder-proto@1.0.1:
     dependencies:
@@ -19908,7 +20298,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-svelte@3.17.0(eslint@10.2.0(jiti@2.6.1))(svelte@5.55.1):
+  eslint-plugin-svelte@3.17.0(eslint@10.2.0(jiti@2.6.1))(svelte@5.55.2):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.1(eslint@10.2.0(jiti@2.6.1))
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -19920,9 +20310,9 @@ snapshots:
       postcss-load-config: 3.1.4(postcss@8.5.8)
       postcss-safe-parser: 7.0.1(postcss@8.5.8)
       semver: 7.7.4
-      svelte-eslint-parser: 1.4.1(svelte@5.55.1)
+      svelte-eslint-parser: 1.4.1(svelte@5.55.2)
     optionalDependencies:
-      svelte: 5.55.1
+      svelte: 5.55.2
     transitivePeerDependencies:
       - ts-node
 
@@ -20004,8 +20394,8 @@ snapshots:
 
   espree@10.4.0:
     dependencies:
-      acorn: 8.15.0
-      acorn-jsx: 5.3.2(acorn@8.15.0)
+      acorn: 8.16.0
+      acorn-jsx: 5.3.2(acorn@8.16.0)
       eslint-visitor-keys: 4.2.1
 
   espree@11.2.0:
@@ -20023,7 +20413,7 @@ snapshots:
   esrap@2.2.4:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
-      '@typescript-eslint/types': 8.56.0
+      '@typescript-eslint/types': 8.58.0
 
   esrecurse@4.3.0:
     dependencies:
@@ -20826,7 +21216,7 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  knip@6.3.0:
+  knip@6.3.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1):
     dependencies:
       '@nodelib/fs.walk': 1.2.8
       fast-glob: 3.3.3
@@ -20834,8 +21224,8 @@ snapshots:
       get-tsconfig: 4.13.7
       jiti: 2.6.1
       minimist: 1.2.8
-      oxc-parser: 0.121.0
-      oxc-resolver: 11.19.1
+      oxc-parser: 0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
+      oxc-resolver: 11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
       picocolors: 1.1.1
       picomatch: 4.0.4
       smol-toml: 1.6.1
@@ -20843,6 +21233,9 @@ snapshots:
       unbash: 2.2.0
       yaml: 2.8.2
       zod: 4.3.6
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@emnapi/runtime'
 
   known-css-properties@0.37.0: {}
 
@@ -21353,7 +21746,7 @@ snapshots:
       proc-log: 6.1.0
       semver: 7.7.4
       tar: 7.5.2
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       which: 6.0.0
     transitivePeerDependencies:
       - supports-color
@@ -21560,7 +21953,7 @@ snapshots:
   ordered-binary@1.5.3:
     optional: true
 
-  oxc-parser@0.121.0:
+  oxc-parser@0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1):
     dependencies:
       '@oxc-project/types': 0.121.0
     optionalDependencies:
@@ -21580,12 +21973,15 @@ snapshots:
       '@oxc-parser/binding-linux-x64-gnu': 0.121.0
       '@oxc-parser/binding-linux-x64-musl': 0.121.0
       '@oxc-parser/binding-openharmony-arm64': 0.121.0
-      '@oxc-parser/binding-wasm32-wasi': 0.121.0
+      '@oxc-parser/binding-wasm32-wasi': 0.121.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
       '@oxc-parser/binding-win32-arm64-msvc': 0.121.0
       '@oxc-parser/binding-win32-ia32-msvc': 0.121.0
       '@oxc-parser/binding-win32-x64-msvc': 0.121.0
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@emnapi/runtime'
 
-  oxc-resolver@11.19.1:
+  oxc-resolver@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1):
     optionalDependencies:
       '@oxc-resolver/binding-android-arm-eabi': 11.19.1
       '@oxc-resolver/binding-android-arm64': 11.19.1
@@ -21603,10 +21999,13 @@ snapshots:
       '@oxc-resolver/binding-linux-x64-gnu': 11.19.1
       '@oxc-resolver/binding-linux-x64-musl': 11.19.1
       '@oxc-resolver/binding-openharmony-arm64': 11.19.1
-      '@oxc-resolver/binding-wasm32-wasi': 11.19.1
+      '@oxc-resolver/binding-wasm32-wasi': 11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)
       '@oxc-resolver/binding-win32-arm64-msvc': 11.19.1
       '@oxc-resolver/binding-win32-ia32-msvc': 11.19.1
       '@oxc-resolver/binding-win32-x64-msvc': 11.19.1
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@emnapi/runtime'
 
   p-limit@3.1.0:
     dependencies:
@@ -21818,10 +22217,10 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-svelte@3.5.1(prettier@3.8.1)(svelte@5.55.1):
+  prettier-plugin-svelte@3.5.1(prettier@3.8.1)(svelte@5.55.2):
     dependencies:
       prettier: 3.8.1
-      svelte: 5.55.1
+      svelte: 5.55.2
 
   prettier@3.8.1: {}
 
@@ -22069,7 +22468,7 @@ snapshots:
       glob: 13.0.6
       package-json-from-dist: 1.0.1
 
-  rolldown-plugin-dts@0.23.2(oxc-resolver@11.19.1)(rolldown@1.0.0-rc.12)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2)):
+  rolldown-plugin-dts@0.23.2(oxc-resolver@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(rolldown@1.0.0-rc.12)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2)):
     dependencies:
       '@babel/generator': 8.0.0-rc.3
       '@babel/helper-validator-identifier': 8.0.0-rc.3
@@ -22077,7 +22476,7 @@ snapshots:
       '@babel/types': 8.0.0-rc.3
       ast-kit: 3.0.0-beta.1
       birpc: 4.0.0
-      dts-resolver: 2.1.3(oxc-resolver@11.19.1)
+      dts-resolver: 2.1.3(oxc-resolver@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))
       get-tsconfig: 4.13.7
       obug: 2.1.1
       picomatch: 4.0.4
@@ -22466,7 +22865,7 @@ snapshots:
       lilconfig: 3.1.3
       nanospinner: 1.2.2
       picocolors: 1.1.1
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
     optionalDependencies:
       jiti: 2.6.1
 
@@ -22674,8 +23073,6 @@ snapshots:
 
   strip-json-comments@5.0.3: {}
 
-  style-vendorizer@2.2.3: {}
-
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
@@ -22686,19 +23083,19 @@ snapshots:
 
   supports-preserve-symlinks-flag@1.0.0: {}
 
-  svelte-check@4.4.6(picomatch@4.0.4)(svelte@5.55.1)(typescript@6.0.2):
+  svelte-check@4.4.6(picomatch@4.0.4)(svelte@5.55.2)(typescript@6.0.2):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       chokidar: 4.0.3
       fdir: 6.5.0(picomatch@4.0.4)
       picocolors: 1.1.1
       sade: 1.8.1
-      svelte: 5.55.1
+      svelte: 5.55.2
       typescript: 6.0.2
     transitivePeerDependencies:
       - picomatch
 
-  svelte-eslint-parser@1.4.1(svelte@5.55.1):
+  svelte-eslint-parser@1.4.1(svelte@5.55.2):
     dependencies:
       eslint-scope: 8.4.0
       eslint-visitor-keys: 4.2.1
@@ -22707,23 +23104,23 @@ snapshots:
       postcss-scss: 4.0.9(postcss@8.5.8)
       postcss-selector-parser: 7.1.1
     optionalDependencies:
-      svelte: 5.55.1
+      svelte: 5.55.2
 
-  svelte2tsx@0.7.45(svelte@5.55.1)(typescript@6.0.2):
+  svelte2tsx@0.7.45(svelte@5.55.2)(typescript@6.0.2):
     dependencies:
       dedent-js: 1.0.1
       scule: 1.3.0
-      svelte: 5.55.1
+      svelte: 5.55.2
       typescript: 6.0.2
 
-  svelte@5.55.1:
+  svelte@5.55.2:
     dependencies:
       '@jridgewell/remapping': 2.3.5
       '@jridgewell/sourcemap-codec': 1.5.5
-      '@sveltejs/acorn-typescript': 1.0.8(acorn@8.15.0)
+      '@sveltejs/acorn-typescript': 1.0.8(acorn@8.16.0)
       '@types/estree': 1.0.8
       '@types/trusted-types': 2.0.7
-      acorn: 8.15.0
+      acorn: 8.16.0
       aria-query: 5.3.1
       axobject-query: 4.1.0
       clsx: 2.1.1
@@ -22733,7 +23130,7 @@ snapshots:
       is-reference: 3.0.3
       locate-character: 3.0.0
       magic-string: 0.30.21
-      zimmerframe: 1.1.2
+      zimmerframe: 1.1.4
 
   symbol-tree@3.2.4: {}
 
@@ -22798,6 +23195,11 @@ snapshots:
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
 
+  tinyglobby@0.2.16:
+    dependencies:
+      fdir: 6.5.0(picomatch@4.0.4)
+      picomatch: 4.0.4
+
   tinyrainbow@3.1.0: {}
 
   tldts-core@7.0.19: {}
@@ -22850,7 +23252,7 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tsdown@0.21.7(oxc-resolver@11.19.1)(publint@0.3.18)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2)):
+  tsdown@0.21.7(oxc-resolver@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(publint@0.3.18)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2)):
     dependencies:
       ansis: 4.2.0
       cac: 7.0.0
@@ -22861,10 +23263,10 @@ snapshots:
       obug: 2.1.1
       picomatch: 4.0.4
       rolldown: 1.0.0-rc.12
-      rolldown-plugin-dts: 0.23.2(oxc-resolver@11.19.1)(rolldown@1.0.0-rc.12)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2))
+      rolldown-plugin-dts: 0.23.2(oxc-resolver@11.19.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1))(rolldown@1.0.0-rc.12)(typescript@6.0.2)(vue-tsc@3.2.6(typescript@6.0.2))
       semver: 7.7.4
       tinyexec: 1.0.4
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       tree-kill: 1.2.2
       unconfig-core: 7.5.0
       unrun: 0.2.34
@@ -23108,7 +23510,7 @@ snapshots:
       picomatch: 4.0.4
       postcss: 8.5.8
       rollup: 4.53.3
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
     optionalDependencies:
       '@types/node': 25.5.2
       fsevents: 2.3.3
@@ -23160,7 +23562,7 @@ snapshots:
       std-env: 4.0.0
       tinybench: 2.9.0
       tinyexec: 1.0.4
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
       vite: 7.3.1(@types/node@25.5.2)(jiti@2.6.1)(less@4.4.2)(lightningcss@1.32.0)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
       why-is-node-running: 2.3.0
@@ -23189,7 +23591,7 @@ snapshots:
       std-env: 4.0.0
       tinybench: 2.9.0
       tinyexec: 1.0.4
-      tinyglobby: 0.2.15
+      tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
       vite: 8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2)
       why-is-node-running: 2.3.0
@@ -23493,8 +23895,6 @@ snapshots:
   yoctocolors-cjs@2.1.3: {}
 
   yoctocolors@2.1.2: {}
-
-  zimmerframe@1.1.2: {}
 
   zimmerframe@1.1.4: {}
 

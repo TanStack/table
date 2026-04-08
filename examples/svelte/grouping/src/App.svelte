@@ -154,7 +154,7 @@
                 </button>
               {:else if cell.getIsAggregated()}
                 <FlexRender
-                  content={cell.column.columnDef.aggregatedCell}
+                  content={cell.column.columnDef.aggregatedCell as any}
                   context={cell.getContext()}
                 />
               {:else if !cell.getIsPlaceholder()}

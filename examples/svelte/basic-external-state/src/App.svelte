@@ -1,4 +1,7 @@
 <script lang="ts">
+  // This example demonstrates managing table state externally via Svelte's createTableState
+  // instead of letting the table manage its own state internally.
+
   import {
     createColumnHelper,
     createPaginatedRowModel,

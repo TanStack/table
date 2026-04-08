@@ -6,7 +6,10 @@ export const PaginationControls = defineComponent({
   name: 'PaginationControls',
   setup() {
     const table = useTableContext()
-    const pagination = useStore(table.store, (state) => state.pagination)
+    const pagination = useStore(
+      table.store,
+      (state: ReturnType<typeof table.store.get>) => state.pagination,
+    )
 
     return () =>
       h('div', { class: 'pager' }, [
@@ -39,12 +42,15 @@ export const RowCount = defineComponent({
   name: 'RowCount',
   setup() {
     const table = useTableContext()
-    const stateSnapshot = useStore(table.store, (state) => ({
-      pagination: state.pagination,
-      columnFilters: state.columnFilters,
-      globalFilter: state.globalFilter,
-      sorting: state.sorting,
-    }))
+    const stateSnapshot = useStore(
+      table.store,
+      (state: ReturnType<typeof table.store.get>) => ({
+        pagination: state.pagination,
+        columnFilters: state.columnFilters,
+        globalFilter: state.globalFilter,
+        sorting: state.sorting,
+      }),
+    )
 
     return () => {
       stateSnapshot.value
@@ -74,7 +80,7 @@ export const TableToolbar = defineComponent({
     const table = useTableContext()
     const globalFilterState = useStore(
       table.store,
-      (state) => state.globalFilter,
+      (state: ReturnType<typeof table.store.get>) => state.globalFilter,
     )
     const globalFilter = computed(
       () => (globalFilterState.value as string | undefined) ?? '',
