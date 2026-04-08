@@ -290,9 +290,13 @@ export const RowExpanding: TableFeature = {
     table: Table<TData>,
   ): void => {
     row.toggleExpanded = (expanded) => {
-      table.setExpanded((old) => {
-        const exists = old === true ? true : !!old?.[row.id]
+      const isCurrentlyExpanded = row.getIsExpanded()
+      const newExpanded = expanded ?? !isCurrentlyExpanded
 
+      // Bail out early if the state won't change to avoid unnecessary re-renders
+      if (!!newExpanded === isCurrentlyExpanded) return
+
+      table.setExpanded((old) => {
         let oldExpanded: ExpandedStateList = {}
 
         if (old === true) {
@@ -303,21 +307,15 @@ export const RowExpanding: TableFeature = {
           oldExpanded = old
         }
 
-        expanded = expanded ?? !exists
-
-        if (!exists && expanded) {
+        if (newExpanded) {
           return {
             ...oldExpanded,
             [row.id]: true,
           }
         }
 
-        if (exists && !expanded) {
-          const { [row.id]: _, ...rest } = oldExpanded
-          return rest
-        }
-
-        return old
+        const { [row.id]: _, ...rest } = oldExpanded
+        return rest
       })
     }
     row.getIsExpanded = () => {
