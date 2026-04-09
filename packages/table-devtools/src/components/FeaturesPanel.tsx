@@ -184,7 +184,8 @@ export function FeaturesPanel() {
     .reduce((total, rowModelName) => {
       return total + (ROW_MODEL_SIZE_ESTIMATES_BYTES[rowModelName] ?? 0)
     }, 0)
-  const totalEstimatedBundleSize = enabledFeatureEstimate + enabledRowModelEstimate
+  const totalEstimatedBundleSize =
+    enabledFeatureEstimate + enabledRowModelEstimate
 
   const renderFeatureItem = (
     name: string,
@@ -223,33 +224,34 @@ export function FeaturesPanel() {
                 <span>{formatEstimatedSize(totalEstimatedBundleSize)}</span>
               </div>
               <div class={styles().featureEstimateSummaryNote}>
-                Allocated from the current `size-limit` metric: minified and brotlied.
+                Allocated from the current `size-limit` metric: minified and
+                brotlied.
               </div>
             </div>
 
             <div class={styles().featureSubsection}>
               <div class={styles().featureSubsectionTitle}>Core Features</div>
               <For each={CORE_FEATURE_NAMES}>
-                {(name) => (
+                {(name) =>
                   renderFeatureItem(
                     name,
                     tableFeatures.has(name),
                     formatEstimatedSize(FEATURE_SIZE_ESTIMATES_BYTES[name]),
                   )
-                )}
+                }
               </For>
             </div>
 
             <div class={styles().featureSubsection}>
               <div class={styles().featureSubsectionTitle}>Stock Features</div>
               <For each={STOCK_FEATURE_NAMES}>
-                {(name) => (
+                {(name) =>
                   renderFeatureItem(
                     name,
                     tableFeatures.has(name),
                     formatEstimatedSize(FEATURE_SIZE_ESTIMATES_BYTES[name]),
                   )
-                )}
+                }
               </For>
             </div>
 
@@ -259,9 +261,7 @@ export function FeaturesPanel() {
                   Additional Plugins
                 </div>
                 <For each={getAdditionalPlugins()}>
-                  {(name) => (
-                    renderFeatureItem(name, true, 'custom')
-                  )}
+                  {(name) => renderFeatureItem(name, true, 'custom')}
                 </For>
               </div>
             )}
@@ -275,7 +275,10 @@ export function FeaturesPanel() {
             <For each={rowModelNames}>
               {(rowModelName) => {
                 const fns = getRowModelFunctions(rowModelName)
-                const rowCount = getRowCountForModel(tableInstance, rowModelName)
+                const rowCount = getRowCountForModel(
+                  tableInstance,
+                  rowModelName,
+                )
                 const sharedLabel = ROW_MODEL_SHARED_SIZE_LABELS[rowModelName]
                 const estimateLabel =
                   sharedLabel ??
@@ -305,7 +308,8 @@ export function FeaturesPanel() {
               <div class={styles().rowModelItem}>No row models configured</div>
             )}
             <div class={styles().featureEstimateSummaryNote}>
-              Full package reference: {formatEstimatedSize(PACKAGE_SIZE_LIMIT_BYTES)}
+              Full package reference:{' '}
+              {formatEstimatedSize(PACKAGE_SIZE_LIMIT_BYTES)}
             </div>
             <div class={styles().rowModelExecutionOrder}>
               <div class={styles().featureSubsectionTitle}>Execution Order</div>
