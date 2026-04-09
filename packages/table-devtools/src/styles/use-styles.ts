@@ -162,6 +162,45 @@ const stylesFactory = (theme: 'light' | 'dark') => {
       margin-bottom: ${size[2]};
       color: ${t(colors.gray[700], colors.gray[300])};
     `,
+    featureEstimateSummary: css`
+      border: 1px solid ${t(colors.gray[200], colors.darkGray[700])};
+      border-radius: ${border.radius.md};
+      background: ${t(colors.white, colors.darkGray[900])};
+      padding: ${size[3]};
+      margin-bottom: ${size[3]};
+      display: flex;
+      flex-direction: column;
+      gap: ${size[2]};
+    `,
+    featureEstimateSummaryTitle: css`
+      font-size: ${font.size.sm};
+      font-weight: ${font.weight.semibold};
+      color: ${t(colors.gray[900], colors.gray[100])};
+    `,
+    featureEstimateSummaryRow: css`
+      display: flex;
+      justify-content: space-between;
+      gap: ${size[3]};
+      font-size: ${font.size.sm};
+      color: ${t(colors.gray[700], colors.gray[200])};
+      font-family: ${font.family.mono};
+    `,
+    featureEstimateSummaryTotal: css`
+      display: flex;
+      justify-content: space-between;
+      gap: ${size[3]};
+      padding-top: ${size[2]};
+      border-top: 1px solid ${t(colors.gray[200], colors.darkGray[700])};
+      font-size: ${font.size.sm};
+      font-weight: ${font.weight.semibold};
+      color: ${t(colors.gray[900], colors.gray[100])};
+      font-family: ${font.family.mono};
+    `,
+    featureEstimateSummaryNote: css`
+      font-size: ${font.size.xs};
+      color: ${t(colors.gray[500], colors.darkGray[600])};
+      line-height: 1.4;
+    `,
     featureListItem: css`
       display: flex;
       align-items: center;
@@ -170,6 +209,16 @@ const stylesFactory = (theme: 'light' | 'dark') => {
       font-size: ${font.size.sm};
       font-family: ${font.family.mono};
       color: ${t(colors.gray[700], colors.gray[200])};
+    `,
+    featureLabel: css`
+      flex: 1;
+      min-width: 0;
+    `,
+    featureMeta: css`
+      flex-shrink: 0;
+      color: ${t(colors.gray[500], colors.gray[300])};
+      font-size: ${font.size.xs};
+      text-align: right;
     `,
     featureCheck: css`
       color: ${t('#16a34a', '#4ade80')};
@@ -180,6 +229,9 @@ const stylesFactory = (theme: 'light' | 'dark') => {
       flex-shrink: 0;
     `,
     rowModelItem: css`
+      display: flex;
+      align-items: baseline;
+      gap: ${size[2]};
       padding: ${size[1]} 0;
       font-size: ${font.size.sm};
       font-family: ${font.family.mono};

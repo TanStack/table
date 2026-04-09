@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
-    "@tanstack/lit-table": "^9.0.0-alpha.30",
+    "@tanstack/lit-table": "^9.0.0-alpha.31",
     "@tanstack/lit-virtual": "^3.13.24",
     "lit": "^3.3.2"
   },

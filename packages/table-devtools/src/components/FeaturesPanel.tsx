@@ -17,6 +17,46 @@ function toFnBuckets(value: unknown): FnBuckets {
 const CORE_FEATURE_NAMES: Array<string> = Object.keys(coreFeatures)
 const STOCK_FEATURE_NAMES: Array<string> = Object.keys(stockFeatures)
 
+const PACKAGE_SIZE_LIMIT_BYTES = 16_987
+
+const FEATURE_SIZE_ESTIMATES_BYTES: Record<string, number> = {
+  coreCellsFeature: 358,
+  coreColumnsFeature: 803,
+  coreHeadersFeature: 1012,
+  coreRowModelsFeature: 633,
+  coreRowsFeature: 695,
+  coreTablesFeature: 508,
+  columnFacetingFeature: 953,
+  columnFilteringFeature: 1266,
+  columnGroupingFeature: 1141,
+  columnOrderingFeature: 511,
+  columnPinningFeature: 995,
+  columnResizingFeature: 779,
+  columnSizingFeature: 678,
+  columnVisibilityFeature: 612,
+  globalFilteringFeature: 435,
+  rowExpandingFeature: 650,
+  rowPaginationFeature: 605,
+  rowPinningFeature: 671,
+  rowSelectionFeature: 883,
+  rowSortingFeature: 798,
+}
+
+const ROW_MODEL_SIZE_ESTIMATES_BYTES: Record<string, number> = {
+  coreRowModel: 223,
+  filteredRowModel: 588,
+  groupedRowModel: 459,
+  sortedRowModel: 341,
+  expandedRowModel: 181,
+  paginatedRowModel: 209,
+}
+
+const ROW_MODEL_SHARED_SIZE_LABELS: Record<string, string> = {
+  preFilteredRowModel: 'shared',
+  preGroupedRowModel: 'shared',
+  preSortedRowModel: 'shared',
+}
+
 const ROW_MODEL_TO_FN_KIND: Record<
   string,
   'filterFns' | 'sortFns' | 'aggregationFns' | null
@@ -70,6 +110,18 @@ function getRowCountForModel(
   return result.rows?.length ?? 0
 }
 
+function formatEstimatedSize(sizeInBytes: number | undefined): string {
+  if (typeof sizeInBytes !== 'number') return 'n/a'
+  return `~${(sizeInBytes / 1000).toFixed(2)} kB brotli`
+}
+
+function normalizeRowModelEstimateKey(rowModelName: string): string {
+  if (rowModelName === 'preFilteredRowModel') return 'filteredRowModel'
+  if (rowModelName === 'preGroupedRowModel') return 'groupedRowModel'
+  if (rowModelName === 'preSortedRowModel') return 'sortedRowModel'
+  return rowModelName
+}
+
 export function FeaturesPanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
@@ -120,6 +172,33 @@ export function FeaturesPanel() {
 
   const tableFeatures = getTableFeatures()
   const rowModelNames = getRowModelNames()
+  const enabledFeatureEstimate = [...tableFeatures].reduce(
+    (total, featureName) => {
+      return total + (FEATURE_SIZE_ESTIMATES_BYTES[featureName] ?? 0)
+    },
+    0,
+  )
+  const enabledRowModelEstimate = [...new Set(rowModelNames)]
+    .map((rowModelName) => normalizeRowModelEstimateKey(rowModelName))
+    .filter((rowModelName, index, all) => all.indexOf(rowModelName) === index)
+    .reduce((total, rowModelName) => {
+      return total + (ROW_MODEL_SIZE_ESTIMATES_BYTES[rowModelName] ?? 0)
+    }, 0)
+  const totalEstimatedBundleSize = enabledFeatureEstimate + enabledRowModelEstimate
+
+  const renderFeatureItem = (
+    name: string,
+    isEnabled: boolean,
+    sizeLabel: string,
+  ) => (
+    <div class={styles().featureListItem}>
+      <span class={isEnabled ? styles().featureCheck : styles().featureUncheck}>
+        {isEnabled ? '✓' : '○'}
+      </span>
+      <span class={styles().featureLabel}>{name}</span>
+      <span class={styles().featureMeta}>{sizeLabel}</span>
+    </div>
+  )
 
   return (
     <div class={styles().panelScroll}>
@@ -127,23 +206,36 @@ export function FeaturesPanel() {
         left={
           <>
             <div class={styles().sectionTitle}>Features</div>
+            <div class={styles().featureEstimateSummary}>
+              <div class={styles().featureEstimateSummaryTitle}>
+                Estimated table-core package
+              </div>
+              <div class={styles().featureEstimateSummaryRow}>
+                <span>Registered features</span>
+                <span>{formatEstimatedSize(enabledFeatureEstimate)}</span>
+              </div>
+              <div class={styles().featureEstimateSummaryRow}>
+                <span>Client row models</span>
+                <span>{formatEstimatedSize(enabledRowModelEstimate)}</span>
+              </div>
+              <div class={styles().featureEstimateSummaryTotal}>
+                <span>Total</span>
+                <span>{formatEstimatedSize(totalEstimatedBundleSize)}</span>
+              </div>
+              <div class={styles().featureEstimateSummaryNote}>
+                Allocated from the current `size-limit` metric: minified and brotlied.
+              </div>
+            </div>
 
             <div class={styles().featureSubsection}>
               <div class={styles().featureSubsectionTitle}>Core Features</div>
               <For each={CORE_FEATURE_NAMES}>
                 {(name) => (
-                  <div class={styles().featureListItem}>
-                    <span
-                      class={
-                        tableFeatures.has(name)
-                          ? styles().featureCheck
-                          : styles().featureUncheck
-                      }
-                    >
-                      {tableFeatures.has(name) ? '✓' : '○'}
-                    </span>
-                    {name}
-                  </div>
+                  renderFeatureItem(
+                    name,
+                    tableFeatures.has(name),
+                    formatEstimatedSize(FEATURE_SIZE_ESTIMATES_BYTES[name]),
+                  )
                 )}
               </For>
             </div>
@@ -152,18 +244,11 @@ export function FeaturesPanel() {
               <div class={styles().featureSubsectionTitle}>Stock Features</div>
               <For each={STOCK_FEATURE_NAMES}>
                 {(name) => (
-                  <div class={styles().featureListItem}>
-                    <span
-                      class={
-                        tableFeatures.has(name)
-                          ? styles().featureCheck
-                          : styles().featureUncheck
-                      }
-                    >
-                      {tableFeatures.has(name) ? '✓' : '○'}
-                    </span>
-                    {name}
-                  </div>
+                  renderFeatureItem(
+                    name,
+                    tableFeatures.has(name),
+                    formatEstimatedSize(FEATURE_SIZE_ESTIMATES_BYTES[name]),
+                  )
                 )}
               </For>
             </div>
@@ -175,10 +260,7 @@ export function FeaturesPanel() {
                 </div>
                 <For each={getAdditionalPlugins()}>
                   {(name) => (
-                    <div class={styles().featureListItem}>
-                      <span class={styles().featureCheck}>✓</span>
-                      {name}
-                    </div>
+                    renderFeatureItem(name, true, 'custom')
                   )}
                 </For>
               </div>
@@ -193,9 +275,23 @@ export function FeaturesPanel() {
             <For each={rowModelNames}>
               {(rowModelName) => {
                 const fns = getRowModelFunctions(rowModelName)
+                const rowCount = getRowCountForModel(tableInstance, rowModelName)
+                const sharedLabel = ROW_MODEL_SHARED_SIZE_LABELS[rowModelName]
+                const estimateLabel =
+                  sharedLabel ??
+                  formatEstimatedSize(
+                    ROW_MODEL_SIZE_ESTIMATES_BYTES[
+                      normalizeRowModelEstimateKey(rowModelName)
+                    ],
+                  )
                 return (
                   <div>
-                    <div class={styles().rowModelItem}>{rowModelName}</div>
+                    <div class={styles().rowModelItem}>
+                      <span class={styles().featureLabel}>{rowModelName}</span>
+                      <span class={styles().featureMeta}>
+                        {rowCount} rows, {estimateLabel}
+                      </span>
+                    </div>
                     <For each={fns}>
                       {(fnName) => (
                         <div class={styles().rowModelFnItem}>{fnName}</div>
@@ -208,6 +304,9 @@ export function FeaturesPanel() {
             {rowModelNames.length === 0 && (
               <div class={styles().rowModelItem}>No row models configured</div>
             )}
+            <div class={styles().featureEstimateSummaryNote}>
+              Full package reference: {formatEstimatedSize(PACKAGE_SIZE_LIMIT_BYTES)}
+            </div>
             <div class={styles().rowModelExecutionOrder}>
               <div class={styles().featureSubsectionTitle}>Execution Order</div>
               <For each={EXECUTION_ORDER_GETTERS}>

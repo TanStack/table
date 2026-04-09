@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/preact-table-devtools",
-  "version": "9.0.0-alpha.30",
+  "version": "9.0.0-alpha.31",
   "description": "Preact devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
