@@ -858,7 +858,11 @@
         {
           "label": "preact",
           "children": [
-            { "to": "framework/preact/examples/basic", "label": "Basic" }
+            { "to": "framework/preact/examples/basic", "label": "Basic (useTable)" },
+            { "to": "framework/preact/examples/basic-use-app-table", "label": "Basic (useAppTable)" },
+            { "to": "framework/preact/examples/basic-external-state", "label": "Basic (External State)" },
+            { "to": "framework/preact/examples/basic-external-store", "label": "Basic (External Store)" },
+            { "to": "framework/preact/examples/column-groups", "label": "Header Groups" }
           ]
         },
         {
@@ -994,6 +998,22 @@
         {
           "label": "preact",
           "children": [
+            { "to": "framework/preact/examples/filters", "label": "Column Filters" },
+            { "to": "framework/preact/examples/filters-faceted", "label": "Column Filters (Faceted)" },
+            { "to": "framework/preact/examples/filters-fuzzy", "label": "Fuzzy Search Filters" },
+            { "to": "framework/preact/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/preact/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/preact/examples/column-pinning-split", "label": "Column Pinning (Split)" },
+            { "to": "framework/preact/examples/column-pinning-sticky", "label": "Sticky Column Pinning" },
+            { "to": "framework/preact/examples/column-sizing", "label": "Column Sizing" },
+            { "to": "framework/preact/examples/column-resizing", "label": "Column Resizing" },
+            { "to": "framework/preact/examples/column-resizing-performant", "label": "Performant Column Resizing" },
+            { "to": "framework/preact/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/preact/examples/expanding", "label": "Expanding" },
+            { "to": "framework/preact/examples/grouping", "label": "Grouping" },
+            { "to": "framework/preact/examples/pagination", "label": "Pagination" },
+            { "to": "framework/preact/examples/row-pinning", "label": "Row Pinning" },
+            { "to": "framework/preact/examples/row-selection", "label": "Row Selection" },
             { "to": "framework/preact/examples/sorting", "label": "Sorting" }
           ]
         },
@@ -1079,6 +1099,15 @@
             { "to": "framework/vue/examples/composable-tables", "label": "Composable Tables" },
             { "to": "framework/vue/examples/sub-components", "label": "Sub Components" },
             { "to": "framework/vue/examples/virtualized-rows", "label": "With TanStack Virtual (Rows)" }
+          ]
+        },
+        {
+          "label": "preact",
+          "children": [
+            { "to": "framework/preact/examples/composable-tables", "label": "Composable Tables" },
+            { "to": "framework/preact/examples/custom-plugin", "label": "Custom Plugin" },
+            { "to": "framework/preact/examples/sub-components", "label": "Sub Components" },
+            { "to": "framework/preact/examples/with-tanstack-query", "label": "With TanStack Query" }
           ]
         }
       ]

@@ -1,0 +1,24 @@
+{
+  "name": "tanstack-table-example-preact-filters-faceted",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:types": "tsc"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
+    "@tanstack/preact-table": "^9.0.0-alpha.32",
+    "preact": "^10.29.1"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.5",
+    "typescript": "6.0.2",
+    "vite": "^8.0.8"
+  }
+}
