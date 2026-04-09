@@ -132,7 +132,9 @@ function App() {
             <div>
               <input
                 value={state.globalFilter ?? ''}
-                onChange={(e) => table.setGlobalFilter((e.target as HTMLInputElement).value)}
+                onChange={(e) =>
+                  table.setGlobalFilter((e.target as HTMLInputElement).value)
+                }
                 className="p-2 font-lg shadow border border-block"
                 placeholder="Search all columns..."
               />
@@ -250,7 +252,9 @@ function App() {
                   max={table.getPageCount()}
                   defaultValue={table.store.state.pagination.pageIndex + 1}
                   onChange={(e) => {
-                    const page = (e.target as HTMLInputElement).value ? Number((e.target as HTMLInputElement).value) - 1 : 0
+                    const page = (e.target as HTMLInputElement).value
+                      ? Number((e.target as HTMLInputElement).value) - 1
+                      : 0
                     table.setPageIndex(page)
                   }}
                   className="border p-1 rounded w-16"
@@ -259,7 +263,9 @@ function App() {
               <select
                 value={table.store.state.pagination.pageSize}
                 onChange={(e) => {
-                  table.setPageSize(Number((e.target as HTMLInputElement).value))
+                  table.setPageSize(
+                    Number((e.target as HTMLInputElement).value),
+                  )
                 }}
               >
                 {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -341,7 +347,10 @@ function Filter({
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
         onChange={(e) =>
-          column.setFilterValue((old: any) => [(e.target as HTMLInputElement).value, old?.[1]])
+          column.setFilterValue((old: any) => [
+            (e.target as HTMLInputElement).value,
+            old?.[1],
+          ])
         }
         placeholder={`Min`}
         className="w-24 border shadow rounded"
@@ -350,7 +359,10 @@ function Filter({
         type="number"
         value={((column.getFilterValue() as any)?.[1] ?? '') as string}
         onChange={(e) =>
-          column.setFilterValue((old: any) => [old?.[0], (e.target as HTMLInputElement).value])
+          column.setFilterValue((old: any) => [
+            old?.[0],
+            (e.target as HTMLInputElement).value,
+          ])
         }
         placeholder={`Max`}
         className="w-24 border shadow rounded"
@@ -360,7 +372,9 @@ function Filter({
     <input
       type="text"
       value={(column.getFilterValue() ?? '') as string}
-      onChange={(e) => column.setFilterValue((e.target as HTMLInputElement).value)}
+      onChange={(e) =>
+        column.setFilterValue((e.target as HTMLInputElement).value)
+      }
       placeholder={`Search...`}
       className="w-36 border shadow rounded"
     />

@@ -55,7 +55,9 @@ export function PaginationControls() {
               max={table.getPageCount()}
               defaultValue={pagination.pageIndex + 1}
               onChange={(e) => {
-                const page = (e.target as HTMLInputElement).value ? Number((e.target as HTMLInputElement).value) - 1 : 0
+                const page = (e.target as HTMLInputElement).value
+                  ? Number((e.target as HTMLInputElement).value) - 1
+                  : 0
                 table.setPageIndex(page)
               }}
             />

@@ -176,7 +176,9 @@ function App() {
             max={table.getPageCount()}
             defaultValue={state.pagination.pageIndex + 1}
             onChange={(e) => {
-              const page = (e.target as HTMLInputElement).value ? Number((e.target as HTMLInputElement).value) - 1 : 0
+              const page = (e.target as HTMLInputElement).value
+                ? Number((e.target as HTMLInputElement).value) - 1
+                : 0
               table.setPageIndex(page)
             }}
             className="border p-1 rounded w-16"
