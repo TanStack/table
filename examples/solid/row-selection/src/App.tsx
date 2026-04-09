@@ -1,6 +1,5 @@
 import { For, Show, createEffect, createSignal } from 'solid-js'
-import { TanStackDevtools } from '@tanstack/solid-devtools'
-import { tableDevtoolsPlugin } from '@tanstack/solid-table-devtools'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import {
   columnFilteringFeature,
   createFilteredRowModel,
@@ -128,11 +127,10 @@ function App() {
     debugTable: true,
   })
   tableRef.current = table
+  useTanStackTableDevtools(table, 'Row Selection Example')
 
   return (
     <div class="p-2">
-      <TanStackDevtools plugins={[tableDevtoolsPlugin({ table })]} />
-
       <div>
         <input
           value={table.store.state.globalFilter ?? ''}

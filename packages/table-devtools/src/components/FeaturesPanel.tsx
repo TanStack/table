@@ -3,6 +3,7 @@ import { coreFeatures, stockFeatures } from '@tanstack/table-core'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
+import { NoTableConnected } from './NoTableConnected'
 import { ResizableSplit } from './ResizableSplit'
 
 type FnBuckets = Partial<
@@ -78,6 +79,10 @@ export function FeaturesPanel() {
     tableInstance ? tableInstance.store : undefined,
     (state) => state,
   )
+
+  if (!tableInstance) {
+    return <NoTableConnected title="Features" />
+  }
 
   const getTableFeatures = (): Set<string> => {
     tableState?.()

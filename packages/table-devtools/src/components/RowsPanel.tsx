@@ -3,6 +3,7 @@ import { JsonTree } from '@tanstack/devtools-ui'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
+import { NoTableConnected } from './NoTableConnected'
 import { ResizableSplit } from './ResizableSplit'
 
 import type {
@@ -55,14 +56,12 @@ export function RowsPanel() {
   const [selectedRowModel, setSelectedRowModel] =
     createSignal<(typeof ROW_MODEL_GETTERS)[number]>('getRowModel')
 
+  if (!tableInstance) {
+    return <NoTableConnected title="Rows" />
+  }
+
   const getRawData = (): unknown => {
     tableState?.()
-    if (!tableInstance) {
-      return {
-        message:
-          'No table instance is connected. Pass a table instance to TableDevtoolsPanel.',
-      }
-    }
     const data = tableInstance.options.data as ReadonlyArray<unknown>
     if (!Array.isArray(data)) return data
     if (data.length <= ROW_LIMIT) return data as unknown
@@ -71,15 +70,12 @@ export function RowsPanel() {
 
   const getRawDataTotalCount = (): number => {
     tableState?.()
-    if (!tableInstance) return 0
     const data = tableInstance.options.data as ReadonlyArray<unknown>
     return Array.isArray(data) ? data.length : 0
   }
 
   const getColumns = (): Array<AnyColumn> => {
     tableState?.()
-    if (!tableInstance) return []
-
     const tableWithColumnFns = tableInstance as unknown as {
       getVisibleLeafColumns?: () => Array<AnyColumn>
       getAllLeafColumns?: () => Array<AnyColumn>
@@ -117,7 +113,6 @@ export function RowsPanel() {
   }
 
   const getAvailableGetters = (): Array<(typeof ROW_MODEL_GETTERS)[number]> => {
-    if (!tableInstance) return []
     return ROW_MODEL_GETTERS.filter(
       (name) => typeof tableInstance[name] === 'function',
     )

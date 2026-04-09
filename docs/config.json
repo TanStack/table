@@ -22,6 +22,10 @@
           "to": "installation"
         },
         {
+          "label": "Devtools",
+          "to": "devtools"
+        },
+        {
           "label": "FAQ",
           "to": "faq"
         }

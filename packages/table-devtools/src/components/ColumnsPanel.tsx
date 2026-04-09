@@ -2,6 +2,7 @@ import { For } from 'solid-js'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
+import { NoTableConnected } from './NoTableConnected'
 
 import type { Column, RowData, TableFeatures } from '@tanstack/table-core'
 
@@ -37,10 +38,12 @@ export function ColumnsPanel() {
     (state) => state,
   )
 
+  if (!tableInstance) {
+    return <NoTableConnected title="Columns" />
+  }
+
   const getColumns = (): Array<AnyColumn> => {
     tableState?.()
-    if (!tableInstance) return []
-
     const tableWithColumnFns = tableInstance as unknown as {
       getAllFlatColumns?: () => Array<AnyColumn>
       getAllLeafColumns?: () => Array<AnyColumn>
@@ -54,18 +57,6 @@ export function ColumnsPanel() {
   }
 
   const columns = getColumns()
-
-  if (!tableInstance) {
-    return (
-      <div class={styles().panelScroll}>
-        <div class={styles().sectionTitle}>Columns</div>
-        <div class={styles().rowModelItem}>
-          No table instance is connected. Pass a table instance to
-          TableDevtoolsPanel.
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div class={styles().panelScroll}>

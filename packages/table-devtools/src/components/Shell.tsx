@@ -1,5 +1,5 @@
-import { Match, Switch } from 'solid-js'
-import { Header, HeaderLogo, MainPanel } from '@tanstack/devtools-ui'
+import { Match, Show, Switch } from 'solid-js'
+import { Header, HeaderLogo, MainPanel, Select } from '@tanstack/devtools-ui'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useStyles } from '../styles/use-styles'
 import { ColumnsPanel } from './ColumnsPanel'
@@ -7,6 +7,8 @@ import { FeaturesPanel } from './FeaturesPanel'
 import { RowsPanel } from './RowsPanel'
 import { StatePanel } from './StatePanel'
 import { OptionsPanel } from './OptionsPanel'
+
+const EMPTY_PANEL_KEY = '__table-devtools-empty__'
 
 const tabs = [
   { id: 'features', label: 'Features' },
@@ -18,7 +20,20 @@ const tabs = [
 
 export function Shell() {
   const styles = useStyles()
-  const { activeTab, setActiveTab } = useTableDevtoolsContext()
+  const {
+    activeTab,
+    setActiveTab,
+    selectedTargetId,
+    setSelectedTargetId,
+    table,
+    targets,
+  } = useTableDevtoolsContext()
+
+  const tableOptions = () =>
+    targets().map((target) => ({
+      value: target.id,
+      label: target.name ?? target.fallbackName,
+    }))
 
   return (
     <MainPanel>
@@ -34,6 +49,19 @@ export function Shell() {
       </Header>
 
       <div class={styles().mainContainer}>
+        <Show when={tableOptions().length > 0}>
+          <Show when={selectedTargetId() ?? EMPTY_PANEL_KEY} keyed>
+            {(_selectedTargetId) => (
+              <Select
+                label="Table"
+                options={tableOptions()}
+                value={selectedTargetId()}
+                onChange={(value) => setSelectedTargetId(value)}
+              />
+            )}
+          </Show>
+        </Show>
+
         <div class={styles().tabBar}>
           {tabs.map((tab) => (
             <button
@@ -49,23 +77,27 @@ export function Shell() {
         </div>
 
         <div class={styles().contentArea}>
-          <Switch>
-            <Match when={activeTab() === 'features'}>
-              <FeaturesPanel />
-            </Match>
-            <Match when={activeTab() === 'state'}>
-              <StatePanel />
-            </Match>
-            <Match when={activeTab() === 'options'}>
-              <OptionsPanel />
-            </Match>
-            <Match when={activeTab() === 'rows'}>
-              <RowsPanel />
-            </Match>
-            <Match when={activeTab() === 'columns'}>
-              <ColumnsPanel />
-            </Match>
-          </Switch>
+          <Show when={table() ?? EMPTY_PANEL_KEY} keyed>
+            {(_table) => (
+              <Switch>
+                <Match when={activeTab() === 'features'}>
+                  <FeaturesPanel />
+                </Match>
+                <Match when={activeTab() === 'state'}>
+                  <StatePanel />
+                </Match>
+                <Match when={activeTab() === 'options'}>
+                  <OptionsPanel />
+                </Match>
+                <Match when={activeTab() === 'rows'}>
+                  <RowsPanel />
+                </Match>
+                <Match when={activeTab() === 'columns'}>
+                  <ColumnsPanel />
+                </Match>
+              </Switch>
+            )}
+          </Show>
         </div>
       </div>
     </MainPanel>

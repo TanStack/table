@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import {
   FlexRender,
   useTable,
@@ -104,6 +105,7 @@ const table = useTable(
     _rowModels: {},
     data,
     columns,
+    debugTable: true,
     // enable row selection for all rows
     get enableRowSelection() {
       return enableRowSelection.value
@@ -112,6 +114,8 @@ const table = useTable(
   },
   (state) => ({ rowSelection: state.rowSelection }),
 )
+
+useTanStackTableDevtools(table, 'Row Selection Example')
 </script>
 
 <template>

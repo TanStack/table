@@ -29,6 +29,10 @@ export const packages = [
     packageDir: 'packages/preact-table',
   },
   {
+    name: '@tanstack/preact-table-devtools',
+    packageDir: 'packages/preact-table-devtools',
+  },
+  {
     name: '@tanstack/react-table',
     packageDir: 'packages/react-table',
   },
@@ -41,12 +45,20 @@ export const packages = [
     packageDir: 'packages/solid-table',
   },
   {
+    name: '@tanstack/solid-table-devtools',
+    packageDir: 'packages/solid-table-devtools',
+  },
+  {
     name: '@tanstack/svelte-table',
     packageDir: 'packages/svelte-table',
   },
   {
     name: '@tanstack/vue-table',
     packageDir: 'packages/vue-table',
+  },
+  {
+    name: '@tanstack/vue-table-devtools',
+    packageDir: 'packages/vue-table-devtools',
   },
   {
     name: '@tanstack/match-sorter-utils',

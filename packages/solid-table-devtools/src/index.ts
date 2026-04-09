@@ -1,5 +1,6 @@
 import * as Devtools from './TableDevtools'
 import * as plugin from './plugin'
+import * as hook from './useTanStackTableDevtools'
 
 export const TableDevtoolsPanel: typeof Devtools.TableDevtoolsPanel =
   process.env.NODE_ENV !== 'development'
@@ -11,5 +12,10 @@ export const tableDevtoolsPlugin: typeof plugin.tableDevtoolsPlugin =
     ? plugin.tableDevtoolsNoOpPlugin
     : plugin.tableDevtoolsPlugin
 
+export const useTanStackTableDevtools: typeof hook.useTanStackTableDevtools =
+  process.env.NODE_ENV !== 'development'
+    ? hook.useTanStackTableDevtoolsNoOp
+    : hook.useTanStackTableDevtools
+
 export type { TableDevtoolsSolidInit } from './TableDevtools'
-export type { TableDevtoolsPluginOptions } from './plugin'
+export type { UseTanStackTableDevtoolsOptions } from './useTanStackTableDevtools'

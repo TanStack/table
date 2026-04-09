@@ -1626,6 +1626,12 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.0)(preact@10.29.1)(rollup@4.53.3)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.0
+        version: 0.10.2(preact@10.29.1)(solid-js@1.9.12)
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -4987,6 +4993,12 @@ importers:
         specifier: ^3.5.32
         version: 3.5.32(typescript@6.0.2)
     devDependencies:
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.13
+        version: 0.2.16(solid-js@1.9.12)
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
       '@types/node':
         specifier: ^25.5.2
         version: 25.5.2
@@ -5159,6 +5171,25 @@ importers:
         specifier: ^10.29.1
         version: 10.29.1
 
+  packages/preact-table-devtools:
+    dependencies:
+      '@tanstack/devtools-utils':
+        specifier: ^0.4.0
+        version: 0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.4)(solid-js@1.9.12)(vue@3.5.32(typescript@6.0.2))
+      '@tanstack/table-devtools':
+        specifier: workspace:*
+        version: link:../table-devtools
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.0)(preact@10.29.1)(rollup@4.53.3)(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
+      '@tanstack/table-core':
+        specifier: workspace:*
+        version: link:../table-core
+      preact:
+        specifier: ^10.29.1
+        version: 10.29.1
+
   packages/react-table:
     dependencies:
       '@tanstack/react-store':
@@ -5192,25 +5223,28 @@ importers:
       '@tanstack/devtools-utils':
         specifier: ^0.4.0
         version: 0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.4)(solid-js@1.9.12)(vue@3.5.32(typescript@6.0.2))
+      '@tanstack/react-devtools':
+        specifier: '>=0.10.0'
+        version: 0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.12)
       '@tanstack/table-devtools':
         specifier: workspace:*
         version: link:../table-devtools
+      '@types/react-dom':
+        specifier: '>=18.0.0'
+        version: 19.2.3(@types/react@19.2.14)
+      react-dom:
+        specifier: '>=18'
+        version: 19.2.4(react@19.2.4)
     devDependencies:
       '@eslint-react/eslint-plugin':
         specifier: ^4.2.3
         version: 4.2.3(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2)
-      '@tanstack/react-devtools':
-        specifier: ^0.10.2
-        version: 0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(solid-js@1.9.12)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
-      '@types/react-dom':
-        specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.14)
       '@vitejs/plugin-react':
         specifier: ^6.0.1
         version: 6.0.1(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))
@@ -5223,9 +5257,6 @@ importers:
       react:
         specifier: ^19.2.4
         version: 19.2.4
-      react-dom:
-        specifier: ^19.2.4
-        version: 19.2.4(react@19.2.4)
 
   packages/solid-table:
     dependencies:
@@ -5336,6 +5367,25 @@ importers:
       eslint-plugin-vue:
         specifier: ^10.8.0
         version: 10.8.0(@stylistic/eslint-plugin@5.10.0(eslint@10.2.0(jiti@2.6.1)))(@typescript-eslint/parser@8.58.0(eslint@10.2.0(jiti@2.6.1))(typescript@6.0.2))(eslint@10.2.0(jiti@2.6.1))(vue-eslint-parser@10.4.0(eslint@10.2.0(jiti@2.6.1)))
+      vue:
+        specifier: ^3.5.32
+        version: 3.5.32(typescript@6.0.2)
+
+  packages/vue-table-devtools:
+    dependencies:
+      '@tanstack/devtools-utils':
+        specifier: ^0.4.0
+        version: 0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.4)(solid-js@1.9.12)(vue@3.5.32(typescript@6.0.2))
+      '@tanstack/table-devtools':
+        specifier: workspace:*
+        version: link:../table-devtools
+    devDependencies:
+      '@tanstack/table-core':
+        specifier: workspace:*
+        version: link:../table-core
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.5
+        version: 6.0.5(vite@8.0.7(@types/node@25.5.2)(esbuild@0.27.4)(jiti@2.6.1)(less@4.4.2)(sass@1.97.3)(terser@5.46.0)(tsx@4.19.2)(yaml@2.8.2))(vue@3.5.32(typescript@6.0.2))
       vue:
         specifier: ^3.5.32
         version: 3.5.32(typescript@6.0.2)
@@ -9261,6 +9311,12 @@ packages:
     resolution: {integrity: sha512-y/xtNPNt/YeyoVxE/JCx+T7yjEzpezmbb+toK8DDD1P4m7Kzs5YR956+7OKexG3f8aXgC3rLZl7b1V+yNUSy5w==}
     engines: {node: '>=18'}
 
+  '@tanstack/preact-devtools@0.10.2':
+    resolution: {integrity: sha512-riIk07IEu8mNTNgHO1ewI1V8h6s6phQBjDbeWh+cHGDe7sO+46mWl+We+nHMc/UXyjJgUDDbKnUR48ipyK95sA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      preact: '>=10.0.0'
+
   '@tanstack/preact-store@0.11.3':
     resolution: {integrity: sha512-GFcjQxSF7+dAae+6vvxl1Wk80hZm3ysruZ+rcaeKO8gfot1ewUmdauYE3Qevq4H5iiFg2Ogj/Fankkeem/JMfw==}
     peerDependencies:
@@ -9421,6 +9477,10 @@ packages:
     resolution: {integrity: sha512-olW33+Cn+bsCsZKPwEGhlkqS6w3M2slFv11JIobdnCFKMLG97oAI2kWKdx5/zsywTL8flpnoIgaZZPlQTFYhdQ==}
     engines: {node: '>=20.19'}
     hasBin: true
+
+  '@tanstack/vue-devtools@0.2.16':
+    resolution: {integrity: sha512-/pJRaphqPvu/7T9x3AuWgjhXt44rOuIa2XJli5fJJFmZj9t6cWtXUUFNm4i2hSJdM2d19MB9Yo1kHGv6NYVrgA==}
+    engines: {node: '>=18'}
 
   '@tanstack/vue-store@0.9.3':
     resolution: {integrity: sha512-YZb5SAR3f2kLt58Ip6gig2+z8vRAfSkJK30Bq7enZ7cG4epyygmRsbrrDMxvmoYSJu33CY5uJ6MvI74KGP0ZvQ==}
@@ -18207,6 +18267,16 @@ snapshots:
 
   '@tanstack/pacer-lite@0.1.1': {}
 
+  '@tanstack/preact-devtools@0.10.2(preact@10.29.1)(solid-js@1.9.12)':
+    dependencies:
+      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
+      preact: 10.29.1
+    transitivePeerDependencies:
+      - bufferutil
+      - csstype
+      - solid-js
+      - utf-8-validate
+
   '@tanstack/preact-store@0.11.3(preact@10.29.1)':
     dependencies:
       '@tanstack/store': 0.9.3
@@ -18413,6 +18483,15 @@ snapshots:
   '@tanstack/virtual-core@3.13.23': {}
 
   '@tanstack/virtual-file-routes@1.161.7': {}
+
+  '@tanstack/vue-devtools@0.2.16(solid-js@1.9.12)':
+    dependencies:
+      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
+    transitivePeerDependencies:
+      - bufferutil
+      - csstype
+      - solid-js
+      - utf-8-validate
 
   '@tanstack/vue-store@0.9.3(vue@3.5.32(typescript@6.0.2))':
     dependencies:

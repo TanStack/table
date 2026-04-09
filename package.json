@@ -15,7 +15,7 @@
     "clean": "find . -name 'dist' -type d -prune -exec rm -rf {} +",
     "clean:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf {} +",
     "dev": "pnpm run watch",
-    "copy:readme": "cp README.md packages/table-core/README.md && cp README.md packages/table-devtools/README.md && cp README.md packages/react-table/README.md && cp README.md packages/react-table-devtools/README.md && cp README.md packages/preact-table/README.md && cp README.md packages/angular-table/README.md && cp README.md packages/solid-table/README.md && cp README.md packages/solid-table-devtools/README.md && cp README.md packages/vue-table/README.md && cp README.md packages/lit-table/README.md && cp README.md packages/svelte-table/README.md && cp README.md packages/match-sorter-utils/README.md",
+    "copy:readme": "cp README.md packages/table-core/README.md && cp README.md packages/table-devtools/README.md && cp README.md packages/react-table/README.md && cp README.md packages/react-table-devtools/README.md && cp README.md packages/preact-table/README.md && cp README.md packages/preact-table-devtools/README.md && cp README.md packages/angular-table/README.md && cp README.md packages/solid-table/README.md && cp README.md packages/solid-table-devtools/README.md && cp README.md packages/vue-table/README.md && cp README.md packages/vue-table-devtools/README.md && cp README.md packages/lit-table/README.md && cp README.md packages/svelte-table/README.md && cp README.md packages/match-sorter-utils/README.md",
     "generate-docs": "node scripts/generateDocs.js && pnpm run copy:readme",
     "format": "prettier --experimental-cli --ignore-unknown '**/*' --write",
     "lint:fix:all": "pnpm run format && nx run-many --targets=lint --fix",
@@ -78,6 +78,7 @@
     "@tanstack/lit-table": "workspace:*",
     "@tanstack/match-sorter-utils": "workspace:*",
     "@tanstack/preact-table": "workspace:*",
+    "@tanstack/preact-table-devtools": "workspace:*",
     "@tanstack/react-table": "workspace:*",
     "@tanstack/react-table-devtools": "workspace:*",
     "@tanstack/solid-table": "workspace:*",
@@ -85,6 +86,7 @@
     "@tanstack/svelte-table": "workspace:*",
     "@tanstack/table-core": "workspace:*",
     "@tanstack/table-devtools": "workspace:*",
-    "@tanstack/vue-table": "workspace:*"
+    "@tanstack/vue-table": "workspace:*",
+    "@tanstack/vue-table-devtools": "workspace:*"
   }
 }

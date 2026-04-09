@@ -1,0 +1,70 @@
+{
+  "name": "@tanstack/vue-table-devtools",
+  "version": "9.0.0-alpha.30",
+  "description": "Vue devtools for TanStack Table.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TanStack/table.git",
+    "directory": "packages/vue-table-devtools"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "vue",
+    "tanstack",
+    "table",
+    "devtools"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build && rimraf ./dist",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "test:eslint": "eslint ./src",
+    "test:lib": "vitest --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib --watch",
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "tsdown"
+  },
+  "type": "module",
+  "types": "./dist/index.d.cts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./production": {
+      "import": "./dist/production.js",
+      "require": "./dist/production.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist/",
+    "src"
+  ],
+  "dependencies": {
+    "@tanstack/devtools-utils": "^0.4.0",
+    "@tanstack/table-devtools": "workspace:*"
+  },
+  "devDependencies": {
+    "@tanstack/table-core": "workspace:*",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "vue": "^3.5.32"
+  },
+  "peerDependencies": {
+    "@tanstack/table-core": "workspace:*",
+    "vue": ">=3.2"
+  }
+}

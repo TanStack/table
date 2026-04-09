@@ -3,6 +3,7 @@ import { JsonTree } from '@tanstack/devtools-ui'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
+import { NoTableConnected } from './NoTableConnected'
 import { ResizableSplit } from './ResizableSplit'
 
 export function StatePanel() {
@@ -18,22 +19,17 @@ export function StatePanel() {
     (state) => state,
   )
 
+  if (!tableInstance) {
+    return <NoTableConnected title="State" />
+  }
+
   const getInitialState = (): unknown => {
     tableState?.()
-    if (!tableInstance) {
-      return {
-        message:
-          'No table instance is connected. Pass a table instance to TableDevtoolsPanel.',
-      }
-    }
     return tableInstance.initialState as unknown
   }
 
   const getState = (): unknown => {
     tableState?.()
-    if (!tableInstance) {
-      return undefined
-    }
     return tableInstance.store.state as unknown
   }
 
@@ -76,7 +72,7 @@ export function StatePanel() {
   }
 
   const handleReset = () => {
-    tableInstance?.reset()
+    tableInstance.reset()
   }
 
   const getStateSummaries = (): Array<{ key: string; summary: string }> => {

@@ -9,4 +9,14 @@ export const TableDevtoolsCore: ClassType =
     : Devtools.TableDevtoolsCore
 
 export type { TableDevtoolsInit } from './core'
-export { setTableDevtoolsTarget } from './tableTarget'
+export {
+  getTableDevtoolsTargets,
+  removeTableDevtoolsTarget,
+  setTableDevtoolsTarget,
+  subscribeTableDevtoolsTargets,
+  upsertTableDevtoolsTarget,
+} from './tableTarget'
+export type {
+  TableDevtoolsRegistration,
+  UpsertTableDevtoolsTargetOptions,
+} from './tableTarget'

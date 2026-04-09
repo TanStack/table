@@ -1,6 +1,11 @@
 import { render } from 'preact'
 import { useMemo, useReducer, useState } from 'preact/hooks'
 import './index.css'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/preact-table-devtools'
 import {
   createSortedRowModel,
   rowSortingFeature,
@@ -108,86 +113,97 @@ function App() {
     // (state) => ({ state }), // uncomment to subscribe to the entire table state (this is how it worked in v8 by default)
   )
 
+  useTanStackTableDevtools(table, 'Sorting Example')
+
   return (
-    <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
-      {(_state) => (
-        <div className="p-2">
-          <div className="h-2" />
-          <table>
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
+    <div className="p-2">
+      <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
+        {(_state) => (
+          <>
+            <div className="h-2" />
+            <table>
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <th key={header.id} colSpan={header.colSpan}>
+                          {header.isPlaceholder ? null : (
+                            <div
+                              className={
+                                header.column.getCanSort()
+                                  ? 'cursor-pointer select-none'
+                                  : ''
+                              }
+                              onClick={header.column.getToggleSortingHandler()}
+                              title={
+                                header.column.getCanSort()
+                                  ? header.column.getNextSortingOrder() ===
+                                    'asc'
+                                    ? 'Sort ascending'
+                                    : header.column.getNextSortingOrder() ===
+                                        'desc'
+                                      ? 'Sort descending'
+                                      : 'Clear sort'
+                                  : undefined
+                              }
+                            >
+                              <table.FlexRender header={header} />
+                              {{
+                                asc: ' 🔼',
+                                desc: ' 🔽',
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </div>
+                          )}
+                        </th>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </thead>
+              <tbody>
+                {table
+                  .getRowModel()
+                  .rows.slice(0, 10)
+                  .map((row) => {
                     return (
-                      <th key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <div
-                            className={
-                              header.column.getCanSort()
-                                ? 'cursor-pointer select-none'
-                                : ''
-                            }
-                            onClick={header.column.getToggleSortingHandler()}
-                            title={
-                              header.column.getCanSort()
-                                ? header.column.getNextSortingOrder() === 'asc'
-                                  ? 'Sort ascending'
-                                  : header.column.getNextSortingOrder() ===
-                                      'desc'
-                                    ? 'Sort descending'
-                                    : 'Clear sort'
-                                : undefined
-                            }
-                          >
-                            <table.FlexRender header={header} />
-                            {{
-                              asc: ' 🔼',
-                              desc: ' 🔽',
-                            }[header.column.getIsSorted() as string] ?? null}
-                          </div>
-                        )}
-                      </th>
+                      <tr key={row.id}>
+                        {row.getAllCells().map((cell) => {
+                          return (
+                            <td key={cell.id}>
+                              <table.FlexRender cell={cell} />
+                            </td>
+                          )
+                        })}
+                      </tr>
                     )
                   })}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table
-                .getRowModel()
-                .rows.slice(0, 10)
-                .map((row) => {
-                  return (
-                    <tr key={row.id}>
-                      {row.getAllCells().map((cell) => {
-                        return (
-                          <td key={cell.id}>
-                            <table.FlexRender cell={cell} />
-                          </td>
-                        )
-                      })}
-                    </tr>
-                  )
-                })}
-            </tbody>
-          </table>
-          <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-          <div>
-            <button onClick={() => rerender(0)}>Force Rerender</button>
-          </div>
-          <div>
-            <button onClick={() => refreshData()}>Refresh Data</button>
-          </div>
-          <table.Subscribe selector={(state) => state}>
-            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-          </table.Subscribe>
-        </div>
-      )}
-    </table.Subscribe>
+              </tbody>
+            </table>
+            <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+            <div>
+              <button onClick={() => rerender(0)}>Force Rerender</button>
+            </div>
+            <div>
+              <button onClick={() => refreshData()}>Refresh Data</button>
+            </div>
+            <table.Subscribe selector={(state) => state}>
+              {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+            </table.Subscribe>
+          </>
+        )}
+      </table.Subscribe>
+    </div>
   )
 }
 
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
-render(<App />, rootElement)
+render(
+  <>
+    <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+  </>,
+  rootElement,
+)

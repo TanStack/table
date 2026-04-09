@@ -12,7 +12,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import { tableDevtoolsPlugin } from '@tanstack/react-table-devtools'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
@@ -111,6 +114,8 @@ function App() {
     },
     // (state) => state, // uncomment to subscribe to the entire table state (this is how v8 used to work by default)
   )
+
+  useTanStackTableDevtools(table, 'Row Selection Example')
 
   return (
     <>
@@ -315,7 +320,6 @@ function App() {
           </div>
         )}
       </table.Subscribe>
-      <TanStackDevtools plugins={[tableDevtoolsPlugin({ table })]} />
     </>
   )
 }
@@ -392,5 +396,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

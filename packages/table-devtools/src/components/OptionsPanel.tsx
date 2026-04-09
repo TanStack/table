@@ -2,6 +2,7 @@ import { JsonTree } from '@tanstack/devtools-ui'
 import { useStore } from '@tanstack/solid-store'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useStyles } from '../styles/use-styles'
+import { NoTableConnected } from './NoTableConnected'
 import { ResizableSplit } from './ResizableSplit'
 
 export function OptionsPanel() {
@@ -22,11 +23,12 @@ export function OptionsPanel() {
       })
     : undefined
 
+  if (!tableInstance) {
+    return <NoTableConnected title="Options" />
+  }
+
   const getState = (): unknown => {
     tableState?.()
-    if (!tableInstance) {
-      return undefined
-    }
     return tableState?.()
   }
 

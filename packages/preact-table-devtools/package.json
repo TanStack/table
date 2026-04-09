@@ -1,0 +1,62 @@
+{
+  "name": "@tanstack/preact-table-devtools",
+  "version": "9.0.0-alpha.30",
+  "description": "Preact devtools for TanStack Table.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TanStack/table.git",
+    "directory": "packages/preact-table-devtools"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "preact",
+    "tanstack",
+    "table",
+    "devtools"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build && rimraf ./dist",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "test:eslint": "eslint ./src",
+    "test:lib": "vitest --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib --watch",
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "tsdown"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./production": "./dist/production.js",
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist/",
+    "src"
+  ],
+  "dependencies": {
+    "@tanstack/devtools-utils": "^0.4.0",
+    "@tanstack/table-devtools": "workspace:*"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.5",
+    "@tanstack/table-core": "workspace:*",
+    "preact": "^10.29.1"
+  },
+  "peerDependencies": {
+    "@tanstack/table-core": "workspace:*",
+    "preact": ">=10.0.0"
+  }
+}
