@@ -48,7 +48,7 @@
   "dependencies": {
     "@tanstack/devtools-ui": "^0.5.1",
     "@tanstack/devtools-utils": "^0.4.0",
-    "@tanstack/solid-store": "^0.9.3",
+    "@tanstack/solid-store": "^0.10.0",
     "goober": "^2.1.18",
     "solid-js": "^1.9.12"
   },

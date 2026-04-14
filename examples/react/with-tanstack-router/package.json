@@ -11,8 +11,8 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.96.2",
-    "@tanstack/react-router": "^1.168.10",
+    "@tanstack/react-query": "^5.99.0",
+    "@tanstack/react-router": "^1.168.21",
     "@tanstack/react-table": "^9.0.0-alpha.32",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
     "@rollup/plugin-replace": "^6.0.3",
-    "@tanstack/router-vite-plugin": "^1.166.27",
+    "@tanstack/router-vite-plugin": "^1.166.37",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",

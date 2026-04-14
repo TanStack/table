@@ -53,7 +53,7 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "@tanstack/react-store": "^0.9.3",
+    "@tanstack/react-store": "^0.10.0",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {

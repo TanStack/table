@@ -55,6 +55,6 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "@tanstack/store": "^0.9.3"
+    "@tanstack/store": "^0.10.0"
   }
 }
