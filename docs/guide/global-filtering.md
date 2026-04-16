@@ -75,7 +75,7 @@ const table = useReactTable({
   columns,
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
-  globalFilterFn: 'text' // built-in filter function
+  globalFilterFn: 'includesString' // built-in and default filter function
 })
 ```
 
