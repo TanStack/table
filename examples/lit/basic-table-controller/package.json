@@ -10,7 +10,7 @@
     "lint": "eslint ./src"
   },
   "dependencies": {
-    "@tanstack/lit-table": "^9.0.0-alpha.32",
+    "@tanstack/lit-table": "^9.0.0-alpha.33",
     "lit": "^3.3.2"
   },
   "devDependencies": {
