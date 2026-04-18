@@ -2,7 +2,7 @@ import {
   constructReactivityFeature,
   constructTable,
 } from '@tanstack/table-core'
-import { useStore } from '@tanstack/svelte-store'
+import { useSelector } from '@tanstack/svelte-store'
 import { untrack } from 'svelte'
 import { mergeObjects } from './merge-objects'
 import type {
@@ -94,9 +94,9 @@ export function createTable<
     TSelected
   >
 
-  // 6. Subscribe to all state and options via useStore
-  const allState = useStore(table.store, (state) => state)
-  const allOptions = useStore(table.optionsStore, (options) => options)
+  // 6. Subscribe to all state and options via useSelector
+  const allState = useSelector(table.store, (state) => state)
+  const allOptions = useSelector(table.optionsStore, (options) => options)
 
   // 7. Sync store changes -> notifier.
   // Use $effect.pre so this runs before DOM updates (like Solid's createComputed).
@@ -143,7 +143,7 @@ export function createTable<
     selector: (state: TableState<TFeatures>) => TSel
     children: ((state: Readonly<TSel>) => Snippet) | Snippet
   }): any {
-    const selected = useStore(table.store, props.selector)
+    const selected = useSelector(table.store, props.selector)
     if (typeof props.children === 'function') {
       return props.children(selected.current)
     }
@@ -151,7 +151,7 @@ export function createTable<
   }
 
   // 10. State selector
-  const stateStore = useStore(table.store, selector)
+  const stateStore = useSelector(table.store, selector)
 
   Object.defineProperty(table, 'state', {
     get() {

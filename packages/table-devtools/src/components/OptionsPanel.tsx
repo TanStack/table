@@ -1,5 +1,5 @@
 import { JsonTree } from '@tanstack/devtools-ui'
-import { useStore } from '@tanstack/solid-store'
+import { useSelector } from '@tanstack/solid-store'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useStyles } from '../styles/use-styles'
 import { NoTableConnected } from './NoTableConnected'
@@ -11,7 +11,7 @@ export function OptionsPanel() {
 
   const tableInstance = table()
   const tableState = tableInstance
-    ? useStore(tableInstance.optionsStore, (state: unknown) => {
+    ? useSelector(tableInstance.optionsStore, (state: unknown) => {
         const {
           state: _s,
           data: _d,

@@ -15,8 +15,7 @@ import {
   sortFns,
   stockFeatures,
 } from '@tanstack/table-core'
-import { useCallback, useMemo } from 'react'
-import { shallow, useStore } from '@tanstack/react-store'
+import { useMemo } from 'react'
 import { useTable } from './useTable'
 import type {
   Cell,

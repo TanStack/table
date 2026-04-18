@@ -1,7 +1,7 @@
 import { render } from 'preact'
 import { useReducer, useState } from 'preact/hooks'
 import './index.css'
-import { createStore, useStore } from '@tanstack/preact-store'
+import { useCreateStore, useSelector } from '@tanstack/preact-store'
 import {
   createColumnHelper,
   createPaginatedRowModel,
@@ -59,22 +59,20 @@ function App() {
 
   const rerender = useReducer(() => ({}), {})[1]
 
-  // create our own TanStack Store in our own scope (This could just be a global store if defined outside of this component)
-  const [myTableStore] = useState(() =>
-    createStore(
-      getInitialTableState(
-        _features, // get default initial state from features
-        // custom initial state
-        {
-          sorting: [],
-          pagination: { pageIndex: 0, pageSize: 10 },
-        },
-      ),
+  // Create a stable TanStack Store instance for this component.
+  const myTableStore = useCreateStore(
+    getInitialTableState(
+      _features, // get default initial state from features
+      // custom initial state
+      {
+        sorting: [],
+        pagination: { pageIndex: 0, pageSize: 10 },
+      },
     ),
   )
 
   // Subscribe to store state for reactive updates, custom selector available too
-  const state = useStore(myTableStore, (state) => state)
+  const state = useSelector(myTableStore, (state) => state)
 
   console.log('state', state)
 

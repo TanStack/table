@@ -9,7 +9,7 @@ title: legacyCreateColumnHelper
 function legacyCreateColumnHelper<TData>(): ColumnHelper<StockFeatures, TData>;
 ```
 
-Defined in: [useLegacyTable.ts:323](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L323)
+Defined in: [useLegacyTable.ts:322](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L322)
 
 ## Type Parameters
 

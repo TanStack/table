@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from '@tanstack/solid-query'
-import { createStore, useStore } from '@tanstack/solid-store'
+import { createStore, useSelector } from '@tanstack/solid-store'
 import {
   createColumnHelper,
   createTable,
@@ -48,7 +48,7 @@ const myTableStore = createStore(
 )
 
 function App() {
-  const state = useStore(myTableStore)
+  const state = useSelector(myTableStore)
 
   const dataQuery = useQuery(() => ({
     queryKey: ['data', state().pagination],

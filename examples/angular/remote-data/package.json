@@ -13,14 +13,14 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^21.2.8",
-    "@angular/compiler": "^21.2.8",
-    "@angular/core": "^21.2.8",
-    "@angular/forms": "^21.2.8",
-    "@angular/platform-browser": "^21.2.8",
-    "@angular/platform-browser-dynamic": "^21.2.8",
-    "@angular/platform-server": "^21.2.8",
-    "@angular/router": "^21.2.8",
+    "@angular/common": "^21.2.9",
+    "@angular/compiler": "^21.2.9",
+    "@angular/core": "^21.2.9",
+    "@angular/forms": "^21.2.9",
+    "@angular/platform-browser": "^21.2.9",
+    "@angular/platform-browser-dynamic": "^21.2.9",
+    "@angular/platform-server": "^21.2.9",
+    "@angular/router": "^21.2.9",
     "@angular/ssr": "^21.2.7",
     "@tanstack/angular-table": "^9.0.0-alpha.32",
     "express": "^5.2.1",
@@ -29,10 +29,10 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "^21.2.7",
     "@angular/cli": "^21.2.7",
-    "@angular/compiler-cli": "^21.2.8",
+    "@angular/compiler-cli": "^21.2.9",
     "@types/express": "^5.0.6",
     "@types/node": "^25.6.0",
     "tslib": "^2.8.1",
-    "typescript": "6.0.2"
+    "typescript": "6.0.3"
   }
 }

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'preact/hooks'
 import { constructTable } from '@tanstack/table-core'
-import { shallow, useStore } from '@tanstack/preact-store'
+import { shallow, useSelector } from '@tanstack/preact-store'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type {
@@ -113,8 +113,8 @@ export function useTable<
     ...selector(state),
   })
 
-  const state = useStore(table.store, selectorWithDataAndColumns, {
-    equal: shallow,
+  const state = useSelector(table.store, selectorWithDataAndColumns, {
+    compare: shallow,
   })
 
   return useMemo(

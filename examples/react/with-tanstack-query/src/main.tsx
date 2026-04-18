@@ -6,7 +6,7 @@ import {
   keepPreviousData,
   useQuery,
 } from '@tanstack/react-query'
-import { createStore, useStore } from '@tanstack/react-store'
+import { useCreateStore, useSelector } from '@tanstack/react-store'
 import './index.css'
 import {
   createColumnHelper,
@@ -49,17 +49,17 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const myTableStore = createStore(
-  getInitialTableState(_features, {
-    pagination: { pageIndex: 0, pageSize: 10 },
-  }),
-)
-
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
+  const myTableStore = useCreateStore(
+    getInitialTableState(_features, {
+      pagination: { pageIndex: 0, pageSize: 10 },
+    }),
+  )
+
   // Subscribe to store state for reactive updates
-  const state = useStore(myTableStore, (state) => state)
+  const state = useSelector(myTableStore, (state) => state)
 
   const dataQuery = useQuery({
     queryKey: ['data', state.pagination],

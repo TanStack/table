@@ -1,4 +1,4 @@
-import { useStore } from '@tanstack/preact-store'
+import { useSelector } from '@tanstack/preact-store'
 import type {
   NoInfer,
   RowData,
@@ -59,7 +59,7 @@ export function Subscribe<
   TData extends RowData,
   TSelected = {},
 >(props: SubscribeProps<TFeatures, TData, TSelected>): ComponentChildren {
-  const selected = useStore(props.table.store, props.selector)
+  const selected = useSelector(props.table.store, props.selector)
 
   return typeof props.children === 'function'
     ? props.children(selected)

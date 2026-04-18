@@ -9,7 +9,7 @@ title: LegacyColumn
 type LegacyColumn<TData, TValue> = Column<StockFeatures, TData, TValue>;
 ```
 
-Defined in: [useLegacyTable.ts:275](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L275)
+Defined in: [useLegacyTable.ts:274](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L274)
 
 ## Type Parameters
 

@@ -47,7 +47,7 @@
     "build": "svelte-package --input ./src --output ./dist"
   },
   "dependencies": {
-    "@tanstack/svelte-store": "^0.11.0",
+    "@tanstack/svelte-store": "^0.12.0",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {

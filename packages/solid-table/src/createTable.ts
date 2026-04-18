@@ -2,7 +2,7 @@ import {
   constructReactivityFeature,
   constructTable,
 } from '@tanstack/table-core'
-import { useStore } from '@tanstack/solid-store'
+import { useSelector } from '@tanstack/solid-store'
 import { createComputed, createSignal, mergeProps } from 'solid-js'
 import type { Accessor, JSX } from 'solid-js'
 import type {
@@ -88,8 +88,8 @@ export function createTable<
     TSelected
   >
 
-  const allState = useStore(table.store, (state) => state)
-  const allOptions = useStore(table.optionsStore, (options) => options)
+  const allState = useSelector(table.store)
+  const allOptions = useSelector(table.optionsStore)
 
   createComputed(() => {
     table.setOptions((prev) => {
@@ -107,13 +107,13 @@ export function createTable<
     selector: (state: TableState<TFeatures>) => TSelected
     children: ((state: Accessor<TSelected>) => JSX.Element) | JSX.Element
   }) {
-    const selected = useStore(table.store, props.selector)
+    const selected = useSelector(table.store, props.selector)
     return typeof props.children === 'function'
       ? props.children(selected)
       : props.children
   }
 
-  const state = useStore(table.store, selector)
+  const state = useSelector(table.store, selector)
 
   return {
     ...table,

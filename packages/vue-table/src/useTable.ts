@@ -3,7 +3,7 @@ import {
   constructReactivityFeature,
   constructTable,
 } from '@tanstack/table-core'
-import { useStore } from '@tanstack/vue-store'
+import { useSelector } from '@tanstack/vue-store'
 import { mergeProxy } from './merge-proxy'
 import type {
   NoInfer,
@@ -117,8 +117,8 @@ export function useTable<
     TSelected
   >
 
-  const allState = useStore(table.store, (state) => state)
-  const allOptions = useStore(table.optionsStore, (state) => state)
+  const allState = useSelector(table.store, (state) => state)
+  const allOptions = useSelector(table.optionsStore, (state) => state)
 
   watchEffect(() => {
     allState.value
@@ -154,14 +154,14 @@ export function useTable<
       | VNode
       | Array<VNode>
   }): VNode | Array<VNode> {
-    const selected = useStore(table.store, props.selector)
+    const selected = useSelector(table.store, props.selector)
     if (typeof props.children === 'function') {
       return props.children(selected.value)
     }
     return props.children
   }
 
-  const stateStore = useStore(table.store, selector)
+  const stateStore = useSelector(table.store, selector)
 
   return {
     ...table,

@@ -137,7 +137,7 @@ Pass in individual self-managed state to the table.
 ### store?
 
 ```ts
-optional store: Store<TableState<TFeatures>>;
+optional store: Store<TableState<TFeatures>, never>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L58)

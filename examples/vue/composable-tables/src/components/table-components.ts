@@ -1,12 +1,12 @@
 import { computed, defineComponent, h, type PropType } from 'vue'
-import { useStore } from '@tanstack/vue-store'
+import { useSelector } from '@tanstack/vue-store'
 import { useTableContext } from '../hooks/table'
 
 export const PaginationControls = defineComponent({
   name: 'PaginationControls',
   setup() {
     const table = useTableContext()
-    const pagination = useStore(
+    const pagination = useSelector(
       table.store,
       (state: ReturnType<typeof table.store.get>) => state.pagination,
     )
@@ -42,7 +42,7 @@ export const RowCount = defineComponent({
   name: 'RowCount',
   setup() {
     const table = useTableContext()
-    const stateSnapshot = useStore(
+    const stateSnapshot = useSelector(
       table.store,
       (state: ReturnType<typeof table.store.get>) => ({
         pagination: state.pagination,
@@ -78,7 +78,7 @@ export const TableToolbar = defineComponent({
   },
   setup(props) {
     const table = useTableContext()
-    const globalFilterState = useStore(
+    const globalFilterState = useSelector(
       table.store,
       (state: ReturnType<typeof table.store.get>) => state.globalFilter,
     )

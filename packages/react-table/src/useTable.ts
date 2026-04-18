@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
-import { shallow, useStore } from '@tanstack/react-store'
+import { shallow, useSelector } from '@tanstack/react-store'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type {
@@ -115,7 +115,9 @@ export function useTable<
     ...selector(state),
   })
 
-  const state = useStore(table.store, selectorWithDataAndColumns, shallow)
+  const state = useSelector(table.store, selectorWithDataAndColumns, {
+    compare: shallow,
+  })
 
   return useMemo(
     () => ({

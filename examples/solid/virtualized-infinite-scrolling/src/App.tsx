@@ -10,7 +10,7 @@ import {
   tableFeatures,
 } from '@tanstack/solid-table'
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/solid-query'
-import { createStore, useStore } from '@tanstack/solid-store'
+import { createStore, useSelector } from '@tanstack/solid-store'
 import { createVirtualizer } from '@tanstack/solid-virtual'
 import { For, Show, createMemo, onMount } from 'solid-js'
 import { fetchData } from './makeData'
@@ -70,7 +70,7 @@ const tableStore = createStore(
 function App() {
   let tableContainerRef: HTMLDivElement | undefined
 
-  const state = useStore(tableStore)
+  const state = useSelector(tableStore)
 
   const query = useInfiniteQuery<PersonApiResponse>(() => ({
     queryKey: ['people', state().sorting],

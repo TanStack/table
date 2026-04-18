@@ -11,13 +11,13 @@
   "private": true,
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
-    "@angular/cdk": "^21.2.6",
-    "@angular/common": "^21.2.8",
-    "@angular/compiler": "^21.2.8",
-    "@angular/core": "^21.2.8",
-    "@angular/forms": "^21.2.8",
-    "@angular/platform-browser": "^21.2.8",
-    "@angular/router": "^21.2.8",
+    "@angular/cdk": "^21.2.7",
+    "@angular/common": "^21.2.9",
+    "@angular/compiler": "^21.2.9",
+    "@angular/core": "^21.2.9",
+    "@angular/forms": "^21.2.9",
+    "@angular/platform-browser": "^21.2.9",
+    "@angular/router": "^21.2.9",
     "@faker-js/faker": "^10.4.0",
     "@tanstack/angular-table": "^9.0.0-alpha.32",
     "rxjs": "~7.8.2",
@@ -26,7 +26,7 @@
   "devDependencies": {
     "@angular/build": "^21.2.7",
     "@angular/cli": "^21.2.7",
-    "@angular/compiler-cli": "^21.2.8",
-    "typescript": "6.0.2"
+    "@angular/compiler-cli": "^21.2.9",
+    "typescript": "6.0.3"
   }
 }

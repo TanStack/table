@@ -1,5 +1,5 @@
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
-import { useStore } from '@tanstack/vue-store'
+import { useSelector } from '@tanstack/vue-store'
 import { defineComponent, h, inject, provide } from 'vue'
 import { FlexRender } from './FlexRender'
 import { mergeProxy } from './merge-proxy'
@@ -424,7 +424,7 @@ export function createTableHook<
       setup(props, { slots }) {
         provide(TableContext, table)
         const selected = props.selector
-          ? useStore(table.store, props.selector)
+          ? useSelector(table.store, props.selector)
           : undefined
 
         return () => {
@@ -455,7 +455,7 @@ export function createTableHook<
         provide(CellContext, cell)
 
         const selected = props.selector
-          ? useStore(table.store, props.selector)
+          ? useSelector(table.store, props.selector)
           : undefined
 
         const extendedCell = Object.assign(cell, {
@@ -492,7 +492,7 @@ export function createTableHook<
         provide(HeaderContext, header)
 
         const selected = props.selector
-          ? useStore(table.store, props.selector)
+          ? useSelector(table.store, props.selector)
           : undefined
 
         const extendedHeader = Object.assign(header, {
@@ -529,7 +529,7 @@ export function createTableHook<
         provide(HeaderContext, header)
 
         const selected = props.selector
-          ? useStore(table.store, props.selector)
+          ? useSelector(table.store, props.selector)
           : undefined
 
         const extendedHeader = Object.assign(header, {
