@@ -11,7 +11,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## API
 
-[Column Sizing API](../api/features/column-sizing)
+[Column Sizing API](/table/latest/docs/api/features/column-sizing)
 
 ## Column Sizing Guide
 
