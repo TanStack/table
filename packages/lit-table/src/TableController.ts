@@ -44,9 +44,17 @@ export type LitTable<
    * ```
    */
   Subscribe: {
-    <TSubscribeSelected, TAtomValue>(props: {
+    <TAtomValue>(props: {
       atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-      selector?: (state: TAtomValue) => TSubscribeSelected
+      selector?: undefined
+      children:
+        | ((state: Readonly<TAtomValue>) => TemplateResult | string)
+        | TemplateResult
+        | string
+    }): TemplateResult | string
+    <TAtomValue, TSubscribeSelected>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector: (state: TAtomValue) => TSubscribeSelected
       children:
         | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
         | TemplateResult

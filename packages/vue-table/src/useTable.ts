@@ -55,12 +55,22 @@ export type VueTable<
   TSelected = {},
 > = Table<TFeatures, TData> & {
   /**
-   * Store mode: `selector` required. Atom mode: pass `atom`, optional `selector` (omit for whole slice).
+   * Store mode: `selector` required. Atom mode: pass `atom`; omit `selector` for the
+   * whole slice (identity), or pass `selector` to project. Split overloads so atom-only
+   * infers `TAtomValue` for `children` (see React `Subscribe`).
    */
   Subscribe: {
-    <TSubSelected, TAtomValue>(props: {
+    <TAtomValue>(props: {
       atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-      selector?: (state: TAtomValue) => TSubSelected
+      selector?: undefined
+      children:
+        | ((state: Readonly<TAtomValue>) => VNode | Array<VNode>)
+        | VNode
+        | Array<VNode>
+    }): VNode | Array<VNode>
+    <TAtomValue, TSubSelected>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector: (state: TAtomValue) => TSubSelected
       children:
         | ((state: Readonly<TSubSelected>) => VNode | Array<VNode>)
         | VNode
@@ -203,25 +213,27 @@ export function useTable<
     { immediate: true },
   )
 
-  table.Subscribe = function Subscribe(props: {
+  table.Subscribe = ((props: {
     atom?: Atom<unknown> | ReadonlyAtom<unknown>
-    selector?: (state: unknown) => unknown
+    selector?: ((state: unknown) => unknown) | undefined
     children:
       | ((state: Readonly<unknown>) => VNode | Array<VNode>)
       | VNode
       | Array<VNode>
-  }): VNode | Array<VNode> {
+  }) => {
     const source = props.atom !== undefined ? props.atom : table.store
-    const selectorFn =
-      props.atom !== undefined ? props.selector : props.selector
-    const selected = useSelector(source as never, selectorFn as never, {
+    const selectFn =
+      props.atom !== undefined
+        ? (props.selector ?? ((x: unknown) => x))
+        : props.selector
+    const selected = useSelector(source as never, selectFn as never, {
       compare: shallow,
     })
     if (typeof props.children === 'function') {
       return props.children(selected.value as Readonly<unknown>)
     }
     return props.children
-  } as VueTable<TFeatures, TData, TSelected>['Subscribe']
+  }) as VueTable<TFeatures, TData, TSelected>['Subscribe']
 
   const stateStore = useSelector(table.store, selector)
 

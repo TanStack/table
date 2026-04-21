@@ -25,12 +25,18 @@ import type { Signal, ValueEqualityFn } from '@angular/core'
 
 /**
  * Store mode: pass `selector` (required) to project from full table state.
- * Atom mode: pass `atom` and optionally `selector`; omit `selector` to track the whole atom.
+ * Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
+ * `selector` to project. Split overloads match React `Subscribe` inference.
  */
 export interface AngularTableComputed<TFeatures extends TableFeatures> {
-  <TSubSelected, TAtomValue>(props: {
+  <TAtomValue>(props: {
     atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-    selector?: (state: TAtomValue) => TSubSelected
+    selector?: undefined
+    equal?: ValueEqualityFn<TAtomValue>
+  }): Signal<Readonly<TAtomValue>>
+  <TAtomValue, TSubSelected>(props: {
+    atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+    selector: (state: TAtomValue) => TSubSelected
     equal?: ValueEqualityFn<TSubSelected>
   }): Signal<Readonly<TSubSelected>>
   <TSubSelected>(props: {

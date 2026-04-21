@@ -9,7 +9,7 @@ title: AngularTable
 type AngularTable<TFeatures, TData, TSelected> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [injectTable.ts:42](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L42)
+Defined in: [injectTable.ts:48](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L48)
 
 ## Type Declaration
 

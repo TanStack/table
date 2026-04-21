@@ -20,13 +20,20 @@ export type SolidTable<
   TSelected = {},
 > = Table<TFeatures, TData> & {
   /**
-   * Subscribe to the store (selector required) or a single slice atom (optional selector = whole atom).
-   * Atom overload is listed first for JSX contextual typing.
+   * Subscribe to the store (selector required) or a single slice atom.
+   * Atom **without** `selector` is a separate overload so children receive
+   * `Accessor<TAtomValue>` (identity projection). Atom overloads are listed first
+   * for JSX contextual typing.
    */
   Subscribe: {
-    <TSubSelected, TAtomValue>(props: {
+    <TAtomValue>(props: {
       atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-      selector?: (state: TAtomValue) => TSubSelected
+      selector?: undefined
+      children: ((state: Accessor<TAtomValue>) => JSX.Element) | JSX.Element
+    }): JSX.Element
+    <TAtomValue, TSubSelected>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector: (state: TAtomValue) => TSubSelected
       children: ((state: Accessor<TSubSelected>) => JSX.Element) | JSX.Element
     }): JSX.Element
     <TSubSelected>(props: {
@@ -109,23 +116,25 @@ export function createTable<
     untrack(() => setNotifier(void 0))
   })
 
-  table.Subscribe = function Subscribe(props: {
+  table.Subscribe = ((props: {
     atom?: Atom<unknown> | ReadonlyAtom<unknown>
-    selector?: (state: unknown) => unknown
+    selector?: ((state: unknown) => unknown) | undefined
     children: ((state: Accessor<unknown>) => JSX.Element) | JSX.Element
-  }) {
+  }) => {
     const source = props.atom !== undefined ? props.atom : table.store
-    const selectorFn =
-      props.atom !== undefined ? props.selector : props.selector
+    const selectFn =
+      props.atom !== undefined
+        ? (props.selector ?? ((x: unknown) => x))
+        : props.selector
     const selected = useSelector(
       source as never,
-      selectorFn as ((s: unknown) => unknown) | undefined,
+      selectFn as Parameters<typeof useSelector>[1],
       { compare: shallow },
     )
     return typeof props.children === 'function'
       ? props.children(selected)
       : props.children
-  } as SolidTable<TFeatures, TData, TSelected>['Subscribe']
+  }) as SolidTable<TFeatures, TData, TSelected>['Subscribe']
 
   const state = useSelector(table.store, selector)
 
