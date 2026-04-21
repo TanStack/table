@@ -107,6 +107,7 @@
   //    models are already defined in the `createTableHook` call that
   //    `createAppTable` was returned from.
   const table = createAppTable({
+    debugTable: true,
     columns,
     data,
   })

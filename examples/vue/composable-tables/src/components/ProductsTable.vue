@@ -40,6 +40,7 @@ function refreshData() {
 }
 
 const table = useAppTable({
+  debugTable: true,
   columns,
   data,
   initialState: {

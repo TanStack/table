@@ -105,6 +105,7 @@ function rerender() {
 // 7. Create the table instance with the required columns and data.
 // Features and row models are already defined in the createTableHook call above
 const table = useAppTable({
+  debugTable: true,
   columns,
   data,
   // add additional table options here or in the createTableHook call above

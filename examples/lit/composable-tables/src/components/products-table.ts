@@ -50,6 +50,7 @@ export class ProductsTable extends LitElement {
     return useAppTable(
       this,
       {
+        debugTable: true,
         columns,
         get data() {
           return host.data

@@ -99,6 +99,7 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
+    debugTable: true,
     _features,
     _rowModels: {},
     columns,

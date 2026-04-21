@@ -102,6 +102,7 @@ export class App {
   readonly expanded = signal<ExpandedState>({})
 
   readonly table = injectTable(() => ({
+    debugTable: true,
     _features,
     _rowModels: {
       expandedRowModel: createExpandedRowModel<typeof _features, Person>(),

@@ -108,6 +108,7 @@ export function App() {
   // 7. Create the table instance with the required columns and data.
   // Features and row models are already defined in the createTableHook call above
   const table = createAppTable({
+    debugTable: true,
     columns,
     get data() {
       return data()

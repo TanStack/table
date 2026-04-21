@@ -76,6 +76,7 @@ type TableProps<TFeatures extends TableFeatures, TData extends RowData> = {
 
 function TableComponent(props: TableProps<typeof _features, Person>) {
   const table = createTable({
+    debugTable: true,
     _features,
     _rowModels: {
       expandedRowModel: createExpandedRowModel(),

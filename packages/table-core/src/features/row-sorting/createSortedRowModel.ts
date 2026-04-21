@@ -22,7 +22,7 @@ export function createSortedRowModel<
       feature: 'rowSortingFeature',
       table,
       fnName: 'table.getSortedRowModel',
-      memoDeps: () => [table.store.state.sorting, table.getPreSortedRowModel()],
+      memoDeps: () => [table.atoms.sorting.get(), table.getPreSortedRowModel()],
       fn: () => _createSortedRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
     })
@@ -34,7 +34,7 @@ function _createSortedRowModel<
   TData extends RowData = any,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const preSortedRowModel = table.getPreSortedRowModel()
-  const sorting = table.store.state.sorting
+  const sorting = table.atoms.sorting.get()
 
   if (!preSortedRowModel.rows.length || !sorting?.length) {
     return preSortedRowModel

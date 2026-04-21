@@ -9,7 +9,7 @@ import {
   table_getOrderColumnsFn,
   table_resetColumnOrder,
   table_setColumnOrder,
-} from '../../../../src/features/column-ordering/columnOrderingFeature.utils'
+} from '../../../../src/static-functions'
 import type { TableFeatures } from '../../../../src'
 
 describe('getDefaultColumnOrderState', () => {

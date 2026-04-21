@@ -123,6 +123,7 @@ class LitTableExample extends LitElement {
     return useAppTable(
       this,
       {
+        debugTable: true,
         columns,
         get data() {
           return host.data

@@ -33,6 +33,10 @@
       "import": "./dist/legacy.js",
       "require": "./dist/legacy.cjs"
     },
+    "./static-functions": {
+      "import": "./dist/static-functions.js",
+      "require": "./dist/static-functions.cjs"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,

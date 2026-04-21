@@ -4,17 +4,17 @@ import {
   createColumnHelper,
   createSortedRowModel,
   createTable,
-  getInitialTableState,
   rowSortingFeature,
   sortFns,
   tableFeatures,
 } from '@tanstack/solid-table'
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/solid-query'
-import { createStore, useSelector } from '@tanstack/solid-store'
+import { createAtom, useSelector } from '@tanstack/solid-store'
 import { createVirtualizer } from '@tanstack/solid-virtual'
 import { For, Show, createMemo, onMount } from 'solid-js'
 import { fetchData } from './makeData'
 import type { Person, PersonApiResponse } from './makeData'
+import type { SortingState } from '@tanstack/solid-table'
 import type { Virtualizer } from '@tanstack/solid-virtual'
 
 const fetchSize = 50
@@ -58,25 +58,17 @@ const columns = columnHelper.columns([
   }),
 ])
 
-// Use an external store to avoid the infinite loop that occurs when createTable's
-// internal createComputed cascades signal writes during async query resolution.
-// This matches the pattern used in the with-tanstack-query example.
-const tableStore = createStore(
-  getInitialTableState(_features, {
-    sorting: [],
-  }),
-)
-
 function App() {
   let tableContainerRef: HTMLDivElement | undefined
 
-  const state = useSelector(tableStore)
+  const sortingAtom = createAtom<SortingState>([])
+  const sorting = useSelector(sortingAtom)
 
   const query = useInfiniteQuery<PersonApiResponse>(() => ({
-    queryKey: ['people', state().sorting],
+    queryKey: ['people', sorting()],
     queryFn: async ({ pageParam = 0 }) => {
       const start = (pageParam as number) * fetchSize
-      return fetchData(start, fetchSize, state().sorting)
+      return fetchData(start, fetchSize, sorting())
     },
     initialPageParam: 0,
     getNextPageParam: (
@@ -123,7 +115,9 @@ function App() {
       return flatData()
     },
     columns,
-    store: tableStore,
+    atoms: {
+      sorting: sortingAtom,
+    },
     manualSorting: true,
     debugTable: true,
   })

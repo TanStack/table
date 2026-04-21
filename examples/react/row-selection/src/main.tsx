@@ -20,8 +20,9 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
 import type { Person } from './makeData'
-import type { Column, Table } from '@tanstack/react-table'
+import type { Column, RowSelectionState, Table } from '@tanstack/react-table'
 import './index.css'
+import { useCreateAtom } from '@tanstack/react-store'
 
 const _features = tableFeatures({
   rowPaginationFeature,
@@ -98,12 +99,17 @@ function App() {
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(100_000)) // stress test
 
+  const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
+
   const table = useTable(
     {
       _features,
       _rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
+      },
+      atoms: {
+        rowSelection: rowSelectionAtom,
       },
       columns,
       data,

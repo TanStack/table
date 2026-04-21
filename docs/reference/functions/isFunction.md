@@ -9,7 +9,7 @@ title: isFunction
 function isFunction<T>(d): d is T;
 ```
 
-Defined in: [utils.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L32)
+Defined in: [utils.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L27)
 
 ## Type Parameters
 

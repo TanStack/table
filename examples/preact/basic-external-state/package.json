@@ -2,6 +2,7 @@
   "name": "tanstack-table-example-preact-basic-external-state",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

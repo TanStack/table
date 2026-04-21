@@ -36,6 +36,7 @@ const columns = columnHelper.columns([
           <IndeterminateCheckbox
             checked={row.getIsSelected()}
             disabled={!row.getCanSelect()}
+            indeterminate={row.getIsSomeSelected()}
             onChange={row.getToggleSelectedHandler()}
           ></IndeterminateCheckbox>
           {/* @ts-ignore */}

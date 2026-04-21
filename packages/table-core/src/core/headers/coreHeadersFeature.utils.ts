@@ -50,7 +50,7 @@ export function table_getHeaderGroups<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const { left, right } =
-    table.store.state.columnPinning ?? getDefaultColumnPinningState()
+    table.atoms.columnPinning.get() ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
   const leafColumns = callMemoOrStaticFn(
     table,

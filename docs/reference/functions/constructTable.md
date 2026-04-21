@@ -9,7 +9,7 @@ title: constructTable
 function constructTable<TFeatures, TData>(tableOptions): Table<TFeatures, TData>;
 ```
 
-Defined in: [core/table/constructTable.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/constructTable.ts#L29)
+Defined in: [core/table/constructTable.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/constructTable.ts#L22)
 
 ## Type Parameters
 

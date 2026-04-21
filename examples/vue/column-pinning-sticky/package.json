@@ -1,0 +1,25 @@
+{
+  "name": "tanstack-table-example-vue-column-pinning-sticky",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint ./src",
+    "test:types": "vue-tsc"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "@tanstack/vue-table": "^9.0.0-alpha.33",
+    "vue": "^3.5.32"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "@vitejs/plugin-vue-jsx": "^5.1.5",
+    "typescript": "6.0.3",
+    "vite": "^8.0.8",
+    "vue-tsc": "^3.2.6"
+  }
+}

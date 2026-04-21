@@ -149,6 +149,7 @@ function App() {
 
   const table = useTable(
     {
+      debugTable: true,
       _features,
       _rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),

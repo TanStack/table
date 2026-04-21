@@ -1,22 +1,31 @@
 <script setup lang="ts">
-import { ref, toRefs } from 'vue'
+import { ref, watchEffect } from 'vue'
 
 const props = defineProps<{
+  checked?: boolean
+  disabled?: boolean
   indeterminate: boolean
   className?: string
+  onChange?: (event: Event) => void
 }>()
 
-const { indeterminate, className } = toRefs(props)
+const inputRef = ref<HTMLInputElement | null>(null)
 
-const inputRef = ref<any>(null)
+watchEffect(() => {
+  if (inputRef.value) {
+    inputRef.value.indeterminate = !props.checked && !!props.indeterminate
+  }
+})
 </script>
 
 <template>
   <input
     type="checkbox"
     ref="inputRef"
-    :class="`${className} cursor-pointer`"
-    :indeterminate="indeterminate"
+    :class="`${props.className ?? ''} cursor-pointer`"
+    :checked="props.checked"
+    :disabled="props.disabled"
+    @change="props.onChange"
     v-bind="$attrs"
   />
 </template>

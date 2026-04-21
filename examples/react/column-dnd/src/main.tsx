@@ -138,6 +138,7 @@ function App() {
 
   const table = useAppTable(
     {
+      debugTable: true,
       columns,
       data,
       initialState: {

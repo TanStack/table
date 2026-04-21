@@ -45,9 +45,6 @@ const columns = columnHelper.columns([
     header: 'Profile Progress',
     footer: (props) => props.column.id,
   }),
-  columnHelper.accessor('createdAt', {
-    header: 'Created At',
-  }),
 ])
 
 const data = ref(makeData(10000))

@@ -88,6 +88,7 @@ const rerender = () => {
 
 const table = useAppTable(
   {
+    debugTable: true,
     data,
     get columns() {
       return columns.value

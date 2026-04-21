@@ -3,7 +3,7 @@ import {
   constructTable,
 } from '@tanstack/table-core'
 import { useSelector } from '@tanstack/solid-store'
-import { createComputed, createSignal, mergeProps } from 'solid-js'
+import { createComputed, createSignal, mergeProps, untrack } from 'solid-js'
 import type { Accessor, JSX } from 'solid-js'
 import type {
   NoInfer,
@@ -92,15 +92,24 @@ export function createTable<
   const allOptions = useSelector(table.optionsStore)
 
   createComputed(() => {
-    table.setOptions((prev) => {
-      return mergeProps(prev, mergedOptions) as TableOptions<TFeatures, TData>
+    const userState = tableOptions.state
+    if (userState) {
+      for (const key in userState) {
+        void (userState as Record<string, unknown>)[key]
+      }
+    }
+
+    untrack(() => {
+      table.setOptions((prev) => {
+        return mergeProps(prev, mergedOptions) as TableOptions<TFeatures, TData>
+      })
     })
   })
 
   createComputed(() => {
     allState()
     allOptions()
-    setNotifier(void 0)
+    untrack(() => setNotifier(void 0))
   })
 
   table.Subscribe = function Subscribe<TSelected>(props: {

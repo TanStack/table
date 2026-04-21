@@ -102,6 +102,7 @@ function App() {
   const rerender = () => setData(defaultData)
 
   const table = createTable({
+    debugTable: true,
     _features,
     get data() {
       return data()

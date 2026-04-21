@@ -1,13 +1,19 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
   "ignoreWorkspaces": ["examples/**"],
-  "ignore": ["**/*benchmark*", "**/benchmarks/**", ".agents/**"],
+  "ignore": ["**/*benchmark*", "**/benchmarks/**"],
   "workspaces": {
     "packages/table-core": {
       "ignore": ["**/tests/**"]
     },
     "packages/match-sorter-utils": {
       "ignoreDependencies": ["remove-accents"]
+    },
+    "packages/angular-table": {
+      "entry": ["src/index.ts!", "static-functions/index.ts!"]
+    },
+    "packages/svelte-table": {
+      "entry": ["src/index.ts!", "src/static-functions.ts!"]
     }
   }
 }

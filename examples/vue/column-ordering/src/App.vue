@@ -91,11 +91,15 @@ const table = useTable(
 
 const randomizeColumns = () => {
   table.setColumnOrder(
-    faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
+    faker.helpers.shuffle(
+      table
+        .getAllLeafColumns()
+        .map((column: Column<typeof _features, Person>) => column.id),
+    ),
   )
 }
 
-function toggleColumnVisibility(column: Column<any, any>) {
+function toggleColumnVisibility(column: Column<typeof _features, Person>) {
   table.setColumnVisibility({
     ...table.state.columnVisibility,
     [column.id]: !column.getIsVisible(),
@@ -103,9 +107,11 @@ function toggleColumnVisibility(column: Column<any, any>) {
 }
 
 function toggleAllColumnsVisibility() {
-  table.getAllLeafColumns().forEach((column) => {
-    toggleColumnVisibility(column)
-  })
+  table
+    .getAllLeafColumns()
+    .forEach((column: Column<typeof _features, Person>) => {
+      toggleColumnVisibility(column)
+    })
 }
 </script>
 

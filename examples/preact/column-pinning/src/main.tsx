@@ -80,6 +80,7 @@ function App() {
   const rerender = () => setData(() => makeData(5000))
 
   const table = useAppTable({
+    debugTable: true,
     columns,
     data,
   })

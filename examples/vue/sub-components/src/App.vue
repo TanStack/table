@@ -107,6 +107,7 @@ const rerender = () => {
 
 const table = useAppTable(
   {
+    debugTable: true,
     // features and row models are already defined in the createTableHook call
     data,
     columns,

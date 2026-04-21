@@ -26,7 +26,7 @@ import {
   table_getVisibleLeafColumns,
   table_resetColumnPinning,
   table_setColumnPinning,
-} from '../../../../src'
+} from '../../../../src/static-functions'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
 import type { Header } from '../../../../src'

@@ -39,7 +39,7 @@ export function column_getIsResizing<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  return column.table.store.state.columnResizing?.isResizingColumn === column.id
+  return column.table.atoms.columnResizing.get()?.isResizingColumn === column.id
 }
 
 export function header_getResizeHandler<

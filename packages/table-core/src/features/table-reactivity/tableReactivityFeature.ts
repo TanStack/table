@@ -21,6 +21,12 @@ export function constructReactivityFeature<
         table.optionsStore,
         bindings.optionsNotifier,
       )
+      // Also wrap per-slice atoms so that feature code reading
+      // `table.atoms.<slice>.get()` (or the writable `table.baseAtoms` variant)
+      // registers a framework reactivity dep, the same way
+      // `table.store.state` does above.
+      table.atoms = bindAtoms(table.atoms, bindings.stateNotifier)
+      table.baseAtoms = bindAtoms(table.baseAtoms, bindings.stateNotifier)
     },
   }
 }
@@ -44,4 +50,48 @@ const bindStore = <T extends Store<any> | ReadonlyStore<any>>(
   })
 
   return store
+}
+
+// Wraps an atoms/baseAtoms map (Proxy-backed) so that `.get()` on any
+// individual atom calls the framework notifier first — matching how
+// `bindStore` wraps `store.state`.
+const bindAtoms = <T extends object>(atoms: T, notifier?: () => unknown): T => {
+  if (!notifier) return atoms
+  // Cache wrapped atoms so referential identity is stable per slice.
+  const wrappedCache = new Map<PropertyKey, any>()
+  return new Proxy(atoms, {
+    get(target, prop, receiver) {
+      const atom = Reflect.get(target, prop, receiver) as unknown
+      if (!atom || typeof prop !== 'string' || !isAtomLike(atom)) {
+        return atom
+      }
+      if (wrappedCache.has(prop)) return wrappedCache.get(prop)
+      const originalGet = atom.get.bind(atom)
+      const wrapped = new Proxy(atom, {
+        get(atomTarget, atomProp, atomReceiver) {
+          if (atomProp === 'get') {
+            return () => {
+              notifier()
+              return originalGet()
+            }
+          }
+          return Reflect.get(atomTarget, atomProp, atomReceiver)
+        },
+      })
+      wrappedCache.set(prop, wrapped)
+      return wrapped
+    },
+  })
+}
+
+interface AtomLike {
+  get: () => unknown
+}
+
+function isAtomLike(value: unknown): value is AtomLike {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as { get?: unknown }).get === 'function'
+  )
 }

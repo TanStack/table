@@ -3,7 +3,7 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 
-export type RowSelectionState = Record<string, boolean>
+export type RowSelectionState = Record<string, boolean | undefined>
 
 export interface TableState_RowSelection {
   rowSelection: RowSelectionState

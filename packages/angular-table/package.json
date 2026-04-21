@@ -28,6 +28,10 @@
       "types": "./dist/types/tanstack-angular-table.d.ts",
       "default": "./dist/fesm2022/tanstack-angular-table.mjs"
     },
+    "./static-functions": {
+      "types": "./dist/types/tanstack-angular-table-static-functions.d.ts",
+      "default": "./dist/fesm2022/tanstack-angular-table-static-functions.mjs"
+    },
     "./package.json": {
       "default": "./package.json"
     }
@@ -37,7 +41,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "static-functions"
   ],
   "scripts": {
     "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./dist/package.json",

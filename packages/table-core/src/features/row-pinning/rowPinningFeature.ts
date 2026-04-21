@@ -68,7 +68,7 @@ export function constructRowPinningFeature<
           fn: (row) => row_getPinnedIndex(row),
           memoDeps: (row) => [
             row.table.getRowModel().rows,
-            row.table.store.state.rowPinning,
+            row.table.atoms.rowPinning.get(),
           ],
         },
         row_pin: {
@@ -93,21 +93,21 @@ export function constructRowPinningFeature<
           fn: () => table_getTopRows(table),
           memoDeps: () => [
             table.getRowModel().rows,
-            table.store.state.rowPinning?.top,
+            table.atoms.rowPinning.get()?.top,
           ],
         },
         table_getBottomRows: {
           fn: () => table_getBottomRows(table),
           memoDeps: () => [
             table.getRowModel().rows,
-            table.store.state.rowPinning?.bottom,
+            table.atoms.rowPinning.get()?.bottom,
           ],
         },
         table_getCenterRows: {
           fn: () => table_getCenterRows(table),
           memoDeps: () => [
             table.getRowModel().rows,
-            table.store.state.rowPinning,
+            table.atoms.rowPinning.get(),
           ],
         },
       })

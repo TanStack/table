@@ -30,6 +30,11 @@
       "svelte": "./dist/index.js",
       "import": "./dist/index.js"
     },
+    "./static-functions": {
+      "types": "./dist/static-functions.d.ts",
+      "svelte": "./dist/static-functions.js",
+      "import": "./dist/static-functions.js"
+    },
     "./package.json": "./package.json"
   },
   "engines": {

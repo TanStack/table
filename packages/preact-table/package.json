@@ -29,6 +29,10 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./static-functions": {
+      "import": "./dist/static-functions.js",
+      "require": "./dist/static-functions.cjs"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,

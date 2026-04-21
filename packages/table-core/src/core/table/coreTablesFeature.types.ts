@@ -1,16 +1,63 @@
-import type { ReadonlyStore, Store } from '@tanstack/store'
+import type { Atom, ReadonlyAtom, ReadonlyStore, Store } from '@tanstack/store'
 import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { CachedRowModels, CreateRowModels_All } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
-import type { TableState } from '../../types/TableState'
+import type { TableState, TableState_All } from '../../types/TableState'
 
 export interface TableMeta<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {}
+
+/**
+ * A map of writable atoms, one per `TableState` slice. These are the internal
+ * writable atoms that the library always writes to via `makeStateUpdater`.
+ */
+export type BaseAtoms<TFeatures extends TableFeatures> = {
+  [K in keyof TableState<TFeatures>]-?: Atom<TableState<TFeatures>[K]>
+}
+
+/**
+ * A map of readonly derived atoms, one per `TableState` slice. Each derives
+ * from its corresponding `baseAtom` plus, optionally, a per-slice external
+ * atom or external state value.
+ *
+ * Precedence: `options.atoms[key]` > `options.state[key]` > `baseAtoms[key]`.
+ */
+export type Atoms<TFeatures extends TableFeatures> = {
+  [K in keyof TableState<TFeatures>]-?: ReadonlyAtom<TableState<TFeatures>[K]>
+}
+
+/**
+ * A map of optional external atoms, one per `TableState` slice. Consumers can
+ * provide their own writable atom for any state slice to take over ownership
+ * of that slice.
+ */
+export type ExternalAtoms<TFeatures extends TableFeatures> = Partial<{
+  [K in keyof TableState<TFeatures>]: Atom<TableState<TFeatures>[K]>
+}>
+
+/**
+ * Internal "all features" flat variants of the atom types. `Table_Internal`
+ * uses these so feature code (written generically over `TFeatures`) can access
+ * any slice atom (e.g. `table.atoms.columnPinning`) without TypeScript
+ * narrowing away slices that aren't in the current `TFeatures` union.
+ *
+ * This mirrors the pre-refactor pattern where `Table_Internal` overrode
+ * `store: ReadonlyStore<TableState_All>` for the same reason.
+ */
+export type BaseAtoms_All = {
+  [K in keyof TableState_All]-?: Atom<TableState_All[K]>
+}
+export type Atoms_All = {
+  [K in keyof TableState_All]-?: ReadonlyAtom<TableState_All[K]>
+}
+export type ExternalAtoms_All = Partial<{
+  [K in keyof TableState_All]: Atom<TableState_All[K]>
+}>
 
 export interface TableOptions_Table<
   TFeatures extends TableFeatures,
@@ -24,6 +71,14 @@ export interface TableOptions_Table<
    * The row model options that you want to enable for the table.
    */
   _rowModels?: CreateRowModels_All<TFeatures, TData>
+  /**
+   * Optionally, provide your own external writable atoms for individual state slices.
+   * When an atom is provided for a given slice, it takes precedence over `options.state[key]`
+   * and the internal base atom for that slice. Writes originating from the library are
+   * still routed through the internal base atom; consumers are responsible for
+   * mirroring changes back to their external atom via the corresponding `onXChange` callback.
+   */
+  atoms?: ExternalAtoms<TFeatures>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    */
@@ -52,10 +107,6 @@ export interface TableOptions_Table<
    * Pass in individual self-managed state to the table.
    */
   state?: Partial<TableState<TFeatures>>
-  /**
-   * Optionally, provide your own external TanStack Store instance if you want to manage the table state externally.
-   */
-  store?: Store<TableState<TFeatures>>
 }
 
 export interface Table_CoreProperties<
@@ -91,9 +142,16 @@ export interface Table_CoreProperties<
    */
   _rowPrototype?: object
   /**
-   * The base store for the table. This can be used to write to the table state.
+   * The internal writable atoms for each `TableState` slice. This is the library's
+   * single write surface — all state mutations from features land here.
    */
-  baseStore: Store<TableState<TFeatures>>
+  baseAtoms: BaseAtoms<TFeatures>
+  /**
+   * The readonly derived atoms for each `TableState` slice. Each derives from
+   * its corresponding `baseAtom` plus, optionally, a per-slice external atom or
+   * external state value (precedence: external atom > external state > base atom).
+   */
+  atoms: Atoms<TFeatures>
   /**
    * The base store for the table options.
    */
@@ -107,7 +165,8 @@ export interface Table_CoreProperties<
    */
   readonly options: TableOptions<TFeatures, TData>
   /**
-   * Where the table state is stored.
+   * The readonly flat store for the table state. Derives from `table.atoms`
+   * only; never reads external state directly.
    */
   store: ReadonlyStore<TableState<TFeatures>>
 }

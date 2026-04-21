@@ -39,8 +39,8 @@ export function constructColumnFacetingFeature<
         column_getFacetedRowModel: {
           memoDeps: () => [
             table.getPreFilteredRowModel().rows,
-            table.store.state.columnFilters,
-            table.store.state.globalFilter,
+            table.atoms.columnFilters.get(),
+            table.atoms.globalFilter.get(),
             table.getFilteredRowModel().rows,
           ],
           fn: (column) => column_getFacetedRowModel(column, column.table),
@@ -75,8 +75,8 @@ export function constructColumnFacetingFeature<
         table_getGlobalFacetedRowModel: {
           memoDeps: () => [
             table.getPreFilteredRowModel().rows,
-            table.store.state.columnFilters,
-            table.store.state.globalFilter,
+            table.atoms.columnFilters.get(),
+            table.atoms.globalFilter.get(),
             table.getFilteredRowModel().rows,
           ],
           fn: () => table_getGlobalFacetedRowModel(table),

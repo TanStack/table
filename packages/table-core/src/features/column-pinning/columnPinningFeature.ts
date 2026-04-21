@@ -102,24 +102,24 @@ export function constructColumnPinningFeature<
           fn: (row) => row_getCenterVisibleCells(row),
           memoDeps: (row) => [
             row.getAllCells(),
-            row.table.store.state.columnPinning,
-            row.table.store.state.columnVisibility,
+            row.table.atoms.columnPinning.get(),
+            row.table.atoms.columnVisibility.get(),
           ],
         },
         row_getLeftVisibleCells: {
           fn: (row) => row_getLeftVisibleCells(row),
           memoDeps: (row) => [
             row.getAllCells(),
-            row.table.store.state.columnPinning?.left,
-            row.table.store.state.columnVisibility,
+            row.table.atoms.columnPinning.get()?.left,
+            row.table.atoms.columnVisibility.get(),
           ],
         },
         row_getRightVisibleCells: {
           fn: (row) => row_getRightVisibleCells(row),
           memoDeps: (row) => [
             row.getAllCells(),
-            row.table.store.state.columnPinning?.right,
-            row.table.store.state.columnVisibility,
+            row.table.atoms.columnPinning.get()?.right,
+            row.table.atoms.columnVisibility.get(),
           ],
         },
       })
@@ -146,8 +146,8 @@ export function constructColumnPinningFeature<
               'getVisibleLeafColumns',
               table_getVisibleLeafColumns,
             ),
-            table.store.state.columnPinning?.left,
-            table.store.state.columnOrder,
+            table.atoms.columnPinning.get()?.left,
+            table.atoms.columnOrder.get(),
           ],
         },
         table_getCenterHeaderGroups: {
@@ -159,8 +159,8 @@ export function constructColumnPinningFeature<
               'getVisibleLeafColumns',
               table_getVisibleLeafColumns,
             ),
-            table.store.state.columnPinning,
-            table.store.state.columnOrder,
+            table.atoms.columnPinning.get(),
+            table.atoms.columnOrder.get(),
           ],
         },
         table_getRightHeaderGroups: {
@@ -172,8 +172,8 @@ export function constructColumnPinningFeature<
               'getVisibleLeafColumns',
               table_getVisibleLeafColumns,
             ),
-            table.store.state.columnPinning?.right,
-            table.store.state.columnOrder,
+            table.atoms.columnPinning.get()?.right,
+            table.atoms.columnOrder.get(),
           ],
         },
         // footer groups
@@ -274,21 +274,21 @@ export function constructColumnPinningFeature<
           fn: () => table_getLeftLeafColumns(table),
           memoDeps: () => [
             table.options.columns,
-            table.store.state.columnPinning,
+            table.atoms.columnPinning.get(),
           ],
         },
         table_getRightLeafColumns: {
           fn: () => table_getRightLeafColumns(table),
           memoDeps: () => [
             table.options.columns,
-            table.store.state.columnPinning,
+            table.atoms.columnPinning.get(),
           ],
         },
         table_getCenterLeafColumns: {
           fn: () => table_getCenterLeafColumns(table),
           memoDeps: () => [
             table.options.columns,
-            table.store.state.columnPinning,
+            table.atoms.columnPinning.get(),
           ],
         },
         // visible leaf columns
@@ -296,24 +296,24 @@ export function constructColumnPinningFeature<
           fn: () => table_getLeftVisibleLeafColumns(table),
           memoDeps: () => [
             table.options.columns,
-            table.store.state.columnPinning,
-            table.store.state.columnVisibility,
+            table.atoms.columnPinning.get(),
+            table.atoms.columnVisibility.get(),
           ],
         },
         table_getCenterVisibleLeafColumns: {
           fn: () => table_getCenterVisibleLeafColumns(table),
           memoDeps: () => [
             table.options.columns,
-            table.store.state.columnPinning,
-            table.store.state.columnVisibility,
+            table.atoms.columnPinning.get(),
+            table.atoms.columnVisibility.get(),
           ],
         },
         table_getRightVisibleLeafColumns: {
           fn: () => table_getRightVisibleLeafColumns(table),
           memoDeps: () => [
             table.options.columns,
-            table.store.state.columnPinning,
-            table.store.state.columnVisibility,
+            table.atoms.columnPinning.get(),
+            table.atoms.columnVisibility.get(),
           ],
         },
       })

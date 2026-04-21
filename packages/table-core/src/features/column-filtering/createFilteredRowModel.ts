@@ -34,8 +34,8 @@ export function createFilteredRowModel<
       fnName: 'table.getFilteredRowModel',
       memoDeps: () => [
         table.getPreFilteredRowModel(),
-        table.store.state.columnFilters,
-        table.store.state.globalFilter,
+        table.atoms.columnFilters.get(),
+        table.atoms.globalFilter.get(),
       ],
       fn: () => _createFilteredRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),

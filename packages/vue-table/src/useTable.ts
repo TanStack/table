@@ -18,17 +18,34 @@ import type { MaybeRef, VNode } from 'vue'
 export type TableOptionsWithReactiveData<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Omit<TableOptions<TFeatures, TData>, 'data'> & {
-  data: MaybeRef<ReadonlyArray<TData>>
+> = {
+  [K in keyof TableOptions<TFeatures, TData>]: K extends 'data'
+    ? MaybeRef<ReadonlyArray<TData>>
+    : MaybeRef<TableOptions<TFeatures, TData>[K]>
 }
 
-function getOptionsWithReactiveData<
+function getOptionsWithReactiveValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(options: TableOptionsWithReactiveData<TFeatures, TData>) {
-  return mergeProxy(options, {
-    data: unref(options.data),
-  })
+  const resolvedOptions: Record<string, unknown> = {}
+
+  for (const key of Object.keys(options)) {
+    resolvedOptions[key] = unref(
+      options[key as keyof TableOptionsWithReactiveData<TFeatures, TData>],
+    )
+  }
+
+  return mergeProxy(options, resolvedOptions)
+}
+
+function getReactiveOptionDeps<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(options: TableOptionsWithReactiveData<TFeatures, TData>) {
+  return Object.keys(options).map((key) =>
+    unref(options[key as keyof TableOptionsWithReactiveData<TFeatures, TData>]),
+  )
 }
 
 export type VueTable<
@@ -79,12 +96,20 @@ export function useTable<
 ): VueTable<TFeatures, TData, TSelected> {
   const notifier = ref<number>(0)
 
+  const syncTableOptions = (
+    table: Table<TFeatures, TData>,
+    options: TableOptionsWithReactiveData<TFeatures, TData>,
+  ) => {
+    table.setOptions(
+      () =>
+        getOptionsWithReactiveValues(options) as TableOptions<TFeatures, TData>,
+    )
+  }
+
   const vueReactivityFeature = constructReactivityFeature({
     stateNotifier: () => notifier.value,
     optionsNotifier: () => notifier.value,
   })
-
-  const IS_REACTIVE = isRef(tableOptions.data)
 
   const mergedOptions = {
     ...tableOptions,
@@ -95,11 +120,9 @@ export function useTable<
   }
 
   const resolvedOptions = mergeProxy(
-    IS_REACTIVE
-      ? getOptionsWithReactiveData(
-          mergedOptions as TableOptions<TFeatures, TData>,
-        )
-      : mergedOptions,
+    getOptionsWithReactiveValues(
+      mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
+    ),
     {
       // Remove state and onStateChange - store handles it internally
       mergeOptions: (
@@ -128,21 +151,52 @@ export function useTable<
 
   watch(
     () =>
-      [
-        IS_REACTIVE ? unref(tableOptions.data) : tableOptions.data,
-        tableOptions,
-      ] as const,
+      getReactiveOptionDeps(
+        mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
+      ),
     () => {
-      table.setOptions((prev) => {
-        return mergeProxy(
-          prev,
-          IS_REACTIVE
-            ? getOptionsWithReactiveData(
-                tableOptions as TableOptions<TFeatures, TData>,
-              )
-            : tableOptions,
-        ) as TableOptions<TFeatures, TData>
-      })
+      syncTableOptions(
+        table,
+        mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
+      )
+    },
+    { immediate: true },
+  )
+
+  watch(
+    () => {
+      const controlledState = unref(tableOptions.state) as
+        | Record<string, unknown>
+        | undefined
+      const controlledAtoms = unref(tableOptions.atoms) as
+        | Record<string, unknown>
+        | undefined
+
+      if (!controlledState) {
+        return []
+      }
+
+      const controlledValues: Array<unknown> = []
+
+      for (const key of Object.keys(table.initialState)) {
+        if (!(key in controlledState) || controlledAtoms?.[key] !== undefined) {
+          continue
+        }
+
+        // Reading only controlled state slices here lets Vue subscribe to
+        // getters/computed values that are passed through `options.state`.
+        controlledValues.push(controlledState[key])
+      }
+
+      return controlledValues
+    },
+    (controlledValues) => {
+      if (controlledValues.length > 0) {
+        syncTableOptions(
+          table,
+          mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
+        )
+      }
     },
     { immediate: true },
   )
