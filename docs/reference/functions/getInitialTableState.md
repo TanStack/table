@@ -9,7 +9,7 @@ title: getInitialTableState
 function getInitialTableState<TFeatures>(features, initialState): TableState<TFeatures>;
 ```
 
-Defined in: [core/table/constructTable.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/constructTable.ts#L10)
+Defined in: [core/table/constructTable.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/constructTable.ts#L9)
 
 ## Type Parameters
 

@@ -20,8 +20,9 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
 import type { Person } from './makeData'
-import type { Column, Table } from '@tanstack/react-table'
+import type { Column, RowSelectionState, Table } from '@tanstack/react-table'
 import './index.css'
+import { useCreateAtom } from '@tanstack/react-store'
 
 const _features = tableFeatures({
   rowPaginationFeature,
@@ -42,7 +43,10 @@ function App() {
           id: 'select',
           header: () => {
             return (
-              <table.Subscribe selector={(state) => state.rowSelection}>
+              <table.Subscribe
+                atom={table.atoms.rowSelection} // slice atom only — not the full derived store
+                // omit selector to subscribe to the whole rowSelection slice
+              >
                 {() => (
                   <IndeterminateCheckbox
                     checked={table.getIsAllRowsSelected()}
@@ -98,12 +102,17 @@ function App() {
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(100_000)) // stress test
 
+  const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
+
   const table = useTable(
     {
       _features,
       _rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
+      },
+      atoms: {
+        rowSelection: rowSelectionAtom,
       },
       columns,
       data,
@@ -121,7 +130,7 @@ function App() {
     <>
       <table.Subscribe
         selector={(state) => ({
-          // don't include row selection state to optimize re-renders
+          // Store mode: multiple slices — must use table.store + explicit selector
           columnFilters: state.columnFilters,
           globalFilter: state.globalFilter,
           pagination: state.pagination,
@@ -169,9 +178,10 @@ function App() {
                   return (
                     <table.Subscribe
                       key={row.id}
-                      selector={(state) => state.rowSelection[row.id]} // only re-render row when row selection changes (could down move to cell render too)
+                      atom={rowSelectionAtom} // same slice as table.atoms.rowSelection; external atom for clarity
+                      selector={(rowSelection) => rowSelection?.[row.id]} // optional: narrow to this row so the row re-renders only when this id toggles
                     >
-                      {() => (
+                      {(_isRowSelected) => (
                         <tr key={row.id}>
                           {row.getAllCells().map((cell) => {
                             return (
@@ -189,8 +199,10 @@ function App() {
               <tfoot>
                 <tr>
                   <td className="p-1">
-                    <table.Subscribe selector={(state) => state.rowSelection}>
-                      {() => (
+                    <table.Subscribe
+                      atom={table.atoms.rowSelection} // whole slice; footer toggles don’t need per-row projection
+                    >
+                      {(_rowSelection) => (
                         <IndeterminateCheckbox
                           checked={table.getIsAllPageRowsSelected()}
                           indeterminate={table.getIsSomePageRowsSelected()}

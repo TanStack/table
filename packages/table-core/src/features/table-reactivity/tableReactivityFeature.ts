@@ -16,11 +16,11 @@ export function constructReactivityFeature<
 }): TableFeature<TableReactivityFeatureConstructors<TFeatures, TData>> {
   return {
     constructTableAPIs: (table) => {
-      table.store = bindStore(table.store, bindings.stateNotifier)
       table.optionsStore = bindStore(
         table.optionsStore,
         bindings.optionsNotifier,
       )
+      table.atoms = bindAtoms(table.atoms, bindings.stateNotifier)
     },
   }
 }
@@ -44,4 +44,49 @@ const bindStore = <T extends Store<any> | ReadonlyStore<any>>(
   })
 
   return store
+}
+
+// Wraps an atoms/baseAtoms map so that `.get()` on any individual atom
+// calls the framework notifier first — matching how `bindStore` wraps
+// `store.state`. The proxy also transparently forwards missing slices
+// (atoms for features not registered on this table) as `undefined`.
+const bindAtoms = <T extends object>(atoms: T, notifier?: () => unknown): T => {
+  if (!notifier) return atoms
+  // Cache wrapped atoms so referential identity is stable per slice.
+  const wrappedCache = new Map<PropertyKey, any>()
+  return new Proxy(atoms, {
+    get(target, prop, receiver) {
+      const atom = Reflect.get(target, prop, receiver) as unknown
+      if (!atom || typeof prop !== 'string' || !isAtomLike(atom)) {
+        return atom
+      }
+      if (wrappedCache.has(prop)) return wrappedCache.get(prop)
+      const originalGet = atom.get.bind(atom)
+      const wrapped = new Proxy(atom, {
+        get(atomTarget, atomProp, atomReceiver) {
+          if (atomProp === 'get') {
+            return () => {
+              notifier()
+              return originalGet()
+            }
+          }
+          return Reflect.get(atomTarget, atomProp, atomReceiver)
+        },
+      })
+      wrappedCache.set(prop, wrapped)
+      return wrapped
+    },
+  })
+}
+
+interface AtomLike {
+  get: () => unknown
+}
+
+function isAtomLike(value: unknown): value is AtomLike {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as { get?: unknown }).get === 'function'
+  )
 }

@@ -53,6 +53,7 @@ export default function Table<T extends Record<string, string | number>>({
 }: Props<T>) {
   const table = useTable(
     {
+      debugTable: true,
       _features,
       _rowModels: {}, // no client-side row models since we're doing server-side sorting, filtering, and pagination
       columns,
@@ -66,13 +67,10 @@ export default function Table<T extends Record<string, string | number>>({
     (state) => state,
   )
 
-  // Sync controlled state with table store
+  // Sync controlled state with per-slice base atoms
   useEffect(() => {
-    table.baseStore.setState((prev) => ({
-      ...prev,
-      pagination,
-      sorting,
-    }))
+    table.baseAtoms.pagination.set(pagination)
+    table.baseAtoms.sorting.set(sorting)
   }, [table, pagination, sorting])
 
   return (

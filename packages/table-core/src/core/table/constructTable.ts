@@ -1,6 +1,5 @@
-import { createStore } from '@tanstack/store'
+import { createAtom, createStore } from '@tanstack/store'
 import { coreFeatures } from '../coreFeatures'
-import type { Store } from '@tanstack/store'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -19,13 +18,6 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   return structuredClone(initialState) as TableState<TFeatures>
 }
 
-export function createTableStore<TFeatures extends TableFeatures>(
-  features: TFeatures,
-  initialState: Partial<TableState<TFeatures>> | undefined = {},
-): Store<TableState<TFeatures>> {
-  return createStore(getInitialTableState(features, initialState))
-}
-
 export function constructTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -40,6 +32,8 @@ export function constructTable<
     set options(value) {
       this.optionsStore.setState(() => value)
     },
+    baseAtoms: {},
+    atoms: {},
   } as Table_Internal<TFeatures, TData>
 
   const featuresList: Array<TableFeature<{}>> = Object.values(table._features)
@@ -58,15 +52,37 @@ export function constructTable<
     table.options.initialState,
   )
 
-  table.baseStore = table.options.store ?? createStore(table.initialState)
+  const stateKeys = Object.keys(table.initialState) as Array<
+    string & keyof TableState<TFeatures>
+  >
+
+  for (const key of stateKeys) {
+    // create writable base atom
+    table.baseAtoms[key] = createAtom(table.initialState[key]) as any
+
+    // create readonly derived atom: on each get(), read current options (state, then external atom, then base)
+    ;(table.atoms as any)[key] = createAtom(() => {
+      // Reading optionsStore.state keeps this reactive to setOptions
+      const opts = table.optionsStore.state
+      const state = opts.state
+      if (key in (state ?? {})) {
+        return state![key]
+      }
+      const externalAtom = opts.atoms?.[key]
+      if (externalAtom) {
+        return externalAtom.get()
+      }
+      return table.baseAtoms[key].get()
+    })
+  }
 
   table.store = createStore(() => {
-    const state = table.baseStore.state
-    return {
-      ...state,
-      ...(table.optionsStore.state.state ?? {}),
+    const snapshot = {} as TableState<TFeatures>
+    for (const key of stateKeys) {
+      snapshot[key] = table.atoms[key].get()
     }
-  })
+    return snapshot
+  }) as typeof table.store
 
   if (
     process.env.NODE_ENV === 'development' &&

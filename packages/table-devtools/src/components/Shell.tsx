@@ -12,8 +12,8 @@ const EMPTY_PANEL_KEY = '__table-devtools-empty__'
 
 const tabs = [
   { id: 'features', label: 'Features' },
-  { id: 'state', label: 'State' },
   { id: 'options', label: 'Options' },
+  { id: 'state', label: 'State' },
   { id: 'rows', label: 'Rows' },
   { id: 'columns', label: 'Columns' },
 ] as const

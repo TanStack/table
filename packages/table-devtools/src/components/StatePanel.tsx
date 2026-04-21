@@ -1,22 +1,37 @@
 import { For, createSignal } from 'solid-js'
 import { JsonTree } from '@tanstack/devtools-ui'
+import { batch } from '@tanstack/solid-store'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
 import { NoTableConnected } from './NoTableConnected'
-import { ResizableSplit } from './ResizableSplit'
+import { ThreeWayResizableSplit } from './ThreeWayResizableSplit'
+
+type AtomSource = 'external-atom' | 'external-state' | 'internal'
+
+interface AtomSlice {
+  key: string
+  value: unknown
+  source: AtomSource
+}
 
 export function StatePanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
   const [initialStateCopied, setInitialStateCopied] = createSignal(false)
-  const [stateCopied, setStateCopied] = createSignal(false)
+  const [storeCopied, setStoreCopied] = createSignal(false)
   const [pasteError, setPasteError] = createSignal<string | null>(null)
 
   const tableInstance = table()
+  // Subscribe to both stores so the panel re-renders when either the table
+  // state or the options (e.g. options.atoms / options.state) change.
   const tableState = useTableStore(
     tableInstance ? tableInstance.store : undefined,
     (state) => state,
+  )
+  const tableOptions = useTableStore(
+    tableInstance ? tableInstance.optionsStore : undefined,
+    (opts) => opts,
   )
 
   if (!tableInstance) {
@@ -25,12 +40,47 @@ export function StatePanel() {
 
   const getInitialState = (): unknown => {
     tableState?.()
+    tableOptions?.()
     return tableInstance.initialState as unknown
   }
 
-  const getState = (): unknown => {
+  const getStoreState = (): unknown => {
     tableState?.()
+    tableOptions?.()
     return tableInstance.store.state as unknown
+  }
+
+  const getAtomSlices = (): Array<AtomSlice> => {
+    // Touch subscriptions so this recomputes on state or option change.
+    tableState?.()
+    tableOptions?.()
+
+    const options = tableInstance.options as Record<string, unknown>
+    const externalAtoms =
+      (options.atoms as Record<string, unknown> | undefined) ?? {}
+    const externalState =
+      (options.state as Record<string, unknown> | undefined) ?? {}
+    const storeState = tableInstance.store.state as Record<string, unknown>
+
+    return Object.keys(storeState).map((key) => {
+      const hasExternalAtom = externalAtoms[key] != null
+      const hasExternalState =
+        !hasExternalAtom &&
+        key in externalState &&
+        externalState[key] !== undefined
+
+      const source: AtomSource = hasExternalAtom
+        ? 'external-atom'
+        : hasExternalState
+          ? 'external-state'
+          : 'internal'
+
+      return {
+        key,
+        value: storeState[key],
+        source,
+      }
+    })
   }
 
   const copyToClipboard = async (
@@ -60,10 +110,17 @@ export function StatePanel() {
         setPasteError('Invalid state: must be a JSON object')
         return
       }
-      tableInstance.baseStore.setState(() => ({
-        ...tableInstance.store.state,
-        ...parsed,
-      }))
+      const baseAtoms = tableInstance.baseAtoms as Record<
+        string,
+        { set: (v: unknown) => void }
+      >
+      batch(() => {
+        for (const [key, value] of Object.entries(parsed)) {
+          if (key in baseAtoms) {
+            baseAtoms[key]!.set(value)
+          }
+        }
+      })
     } catch (e) {
       setPasteError(
         e instanceof Error ? e.message : 'Failed to parse clipboard',
@@ -75,143 +132,9 @@ export function StatePanel() {
     tableInstance.reset()
   }
 
-  const getStateSummaries = (): Array<{ key: string; summary: string }> => {
-    const state = getState() as Record<string, unknown> | undefined
-    if (!state || typeof state !== 'object') return []
-
-    const summaries: Array<{ key: string; summary: string }> = []
-
-    if (Array.isArray(state.sorting) && state.sorting.length > 0) {
-      const parts = (state.sorting as Array<{ id: string; desc: boolean }>).map(
-        (s) => `${s.id} (${s.desc ? 'desc' : 'asc'})`,
-      )
-      summaries.push({
-        key: 'sorting',
-        summary: `${state.sorting.length} column(s) sorted: ${parts.join(', ')}`,
-      })
-    }
-
-    if (Array.isArray(state.columnFilters) && state.columnFilters.length > 0) {
-      const parts = (
-        state.columnFilters as Array<{ id: string; value: unknown }>
-      ).map((f) => `${f.id}=${JSON.stringify(f.value)}`)
-      summaries.push({
-        key: 'columnFilters',
-        summary: `${state.columnFilters.length} filter(s): ${parts.join(', ')}`,
-      })
-    }
-
-    if (
-      state.rowSelection &&
-      typeof state.rowSelection === 'object' &&
-      !Array.isArray(state.rowSelection)
-    ) {
-      const count = Object.keys(
-        state.rowSelection as Record<string, unknown>,
-      ).filter((k) => (state.rowSelection as Record<string, boolean>)[k]).length
-      summaries.push({
-        key: 'rowSelection',
-        summary: `${count} row(s) selected`,
-      })
-    }
-
-    if (
-      state.pagination &&
-      typeof state.pagination === 'object' &&
-      !Array.isArray(state.pagination)
-    ) {
-      const p = state.pagination as { pageIndex?: number; pageSize?: number }
-      summaries.push({
-        key: 'pagination',
-        summary: `Page ${(p.pageIndex ?? 0) + 1}, size ${p.pageSize ?? 10}`,
-      })
-    }
-
-    if (Array.isArray(state.grouping) && state.grouping.length > 0) {
-      summaries.push({
-        key: 'grouping',
-        summary: `Grouped by: ${(state.grouping as Array<string>).join(', ')}`,
-      })
-    }
-
-    if (
-      state.columnPinning &&
-      typeof state.columnPinning === 'object' &&
-      !Array.isArray(state.columnPinning)
-    ) {
-      const p = state.columnPinning as {
-        left?: Array<string>
-        right?: Array<string>
-      }
-      const left = p.left?.length ?? 0
-      const right = p.right?.length ?? 0
-      summaries.push({
-        key: 'columnPinning',
-        summary: `${left} left, ${right} right pinned`,
-      })
-    }
-
-    if (state.expanded !== undefined && state.expanded !== null) {
-      if (state.expanded === true) {
-        summaries.push({ key: 'expanded', summary: 'All expanded' })
-      } else if (
-        typeof state.expanded === 'object' &&
-        !Array.isArray(state.expanded)
-      ) {
-        const count = Object.keys(
-          state.expanded as Record<string, unknown>,
-        ).filter((k) => (state.expanded as Record<string, boolean>)[k]).length
-        summaries.push({
-          key: 'expanded',
-          summary: `${count} row(s) expanded`,
-        })
-      }
-    }
-
-    if ('globalFilter' in state) {
-      const val = state.globalFilter
-      const str =
-        val === undefined || val === null
-          ? 'Not set'
-          : typeof val === 'string'
-            ? val
-              ? `"${val}"`
-              : '(empty)'
-            : JSON.stringify(val)
-      summaries.push({ key: 'globalFilter', summary: str })
-    }
-
-    if (
-      state.columnVisibility &&
-      typeof state.columnVisibility === 'object' &&
-      !Array.isArray(state.columnVisibility)
-    ) {
-      const hidden = Object.entries(
-        state.columnVisibility as Record<string, boolean>,
-      ).filter(([, v]) => v === false).length
-      if (hidden > 0) {
-        summaries.push({
-          key: 'columnVisibility',
-          summary: `${hidden} column(s) hidden`,
-        })
-      }
-    }
-
-    if (Array.isArray(state.columnOrder) && state.columnOrder.length > 0) {
-      summaries.push({
-        key: 'columnOrder',
-        summary: `Custom order (${state.columnOrder.length} columns)`,
-      })
-    }
-
-    return summaries
-  }
-
-  const stateSummaries = getStateSummaries()
-
   return (
     <div class={styles().panelScroll}>
-      <ResizableSplit
+      <ThreeWayResizableSplit
         left={
           <>
             <div class={styles().sectionTitle}>initialState</div>
@@ -230,9 +153,9 @@ export function StatePanel() {
             <JsonTree copyable value={getInitialState()} />
           </>
         }
-        right={
+        middle={
           <>
-            <div class={styles().sectionTitle}>State</div>
+            <div class={styles().sectionTitle}>Atoms</div>
             <div class={styles().buttonRow}>
               <button
                 type="button"
@@ -242,13 +165,23 @@ export function StatePanel() {
               >
                 Reset to initialState
               </button>
+            </div>
+            <For each={getAtomSlices()}>
+              {(slice) => <AtomRow slice={slice} />}
+            </For>
+          </>
+        }
+        right={
+          <>
+            <div class={styles().sectionTitle}>Store</div>
+            <div class={styles().buttonRow}>
               <button
                 type="button"
                 class={styles().copyButton}
-                onClick={() => copyToClipboard(getState(), setStateCopied)}
+                onClick={() => copyToClipboard(getStoreState(), setStoreCopied)}
                 disabled={!tableInstance}
               >
-                {stateCopied() ? 'Copied!' : 'Copy'}
+                {storeCopied() ? 'Copied!' : 'Copy'}
               </button>
               <button
                 type="button"
@@ -262,24 +195,49 @@ export function StatePanel() {
             {pasteError() && (
               <div class={styles().pasteError}>{pasteError()}</div>
             )}
-            {stateSummaries.length > 0 && (
-              <details class={styles().summarySection} open>
-                <summary class={styles().featureSubsectionTitle}>
-                  State Summary
-                </summary>
-                <For each={stateSummaries}>
-                  {(item) => (
-                    <div class={styles().summaryItem}>
-                      <strong>{item.key}:</strong> {item.summary}
-                    </div>
-                  )}
-                </For>
-              </details>
-            )}
-            <JsonTree copyable value={getState()} />
+            <JsonTree copyable value={getStoreState()} />
           </>
         }
       />
+    </div>
+  )
+}
+
+function AtomRow(props: { slice: AtomSlice }) {
+  const styles = useStyles()
+
+  const badgeLabel = () => {
+    switch (props.slice.source) {
+      case 'external-atom':
+        return 'External Atom'
+      case 'external-state':
+        return 'External State'
+      case 'internal':
+        return 'Internal'
+    }
+  }
+
+  const badgeClass = () => {
+    const base = styles().atomBadge
+    switch (props.slice.source) {
+      case 'external-atom':
+        return `${base} ${styles().atomBadgeExternalAtom}`
+      case 'external-state':
+        return `${base} ${styles().atomBadgeExternalState}`
+      case 'internal':
+        return `${base} ${styles().atomBadgeInternal}`
+    }
+  }
+
+  return (
+    <div class={styles().atomRow}>
+      <div class={styles().atomRowHeader}>
+        <span class={styles().atomKey}>{props.slice.key}</span>
+        <span class={badgeClass()}>{badgeLabel()}</span>
+      </div>
+      <div class={styles().atomValue}>
+        <JsonTree copyable value={props.slice.value} />
+      </div>
     </div>
   )
 }

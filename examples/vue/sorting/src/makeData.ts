@@ -7,7 +7,6 @@ export type Person = {
   visits: number
   progress: number
   status: 'relationship' | 'complicated' | 'single'
-  createdAt: Date
   subRows?: Array<Person>
 }
 
@@ -26,7 +25,6 @@ const newPerson = (): Person => {
     age: faker.number.int(40),
     visits: faker.number.int(1000),
     progress: faker.number.int(100),
-    createdAt: faker.date.anytime(),
     status: faker.helpers.shuffle<Person['status']>([
       'relationship',
       'complicated',
@@ -38,7 +36,7 @@ const newPerson = (): Person => {
 export function makeData(...lens: Array<number>) {
   const makeDataLevel = (depth = 0): Array<Person> => {
     const len = lens[depth]
-    return range(len).map((): Person => {
+    return range(len).map((_d): Person => {
       return {
         ...newPerson(),
         subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,

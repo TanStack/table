@@ -1,6 +1,6 @@
-import { useSelector } from '@tanstack/preact-store'
+import { shallow, useSelector } from '@tanstack/preact-store'
+import type { Atom, ReadonlyAtom } from '@tanstack/preact-store'
 import type {
-  NoInfer,
   RowData,
   Table,
   TableFeatures,
@@ -8,60 +8,134 @@ import type {
 } from '@tanstack/table-core'
 import type { ComponentChildren } from 'preact'
 
-export type SubscribeProps<
+/**
+ * Subscribe to `table.store` (full table state). The selector receives the full
+ * {@link TableState}.
+ */
+export type SubscribePropsWithStore<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected,
 > = {
-  /**
-   * The table instance to subscribe to. Required when using as a standalone component.
-   * Not needed when using as `table.Subscribe`.
-   */
   table: Table<TFeatures, TData>
   /**
-   * A selector function that selects the part of the table state to subscribe to.
-   * This allows for fine-grained reactivity by only re-rendering when the selected state changes.
+   * Select from full table state. Re-renders when the selected value changes
+   * (shallow compare).
+   *
+   * Required in store mode so you never accidentally subscribe to the whole
+   * store without an explicit projection.
    */
-  selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
-  /**
-   * The children to render. Can be a function that receives the selected state, or a Preact node.
-   */
+  selector: (state: TableState<TFeatures>) => TSelected
   children: ((state: TSelected) => ComponentChildren) | ComponentChildren
 }
 
 /**
+ * Subscribe to the full value of a slice atom (e.g. `table.atoms.rowSelection`).
+ * Omitting `selector` is equivalent to the identity selector — children receive
+ * `TAtomValue`.
+ */
+export type SubscribePropsWithAtomIdentity<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TAtomValue,
+> = {
+  table: Table<TFeatures, TData>
+  atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+  selector?: undefined
+  children: ((state: TAtomValue) => ComponentChildren) | ComponentChildren
+}
+
+/**
+ * Subscribe to a projected value from a slice atom.
+ */
+export type SubscribePropsWithAtomWithSelector<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TAtomValue,
+  TSelected,
+> = {
+  table: Table<TFeatures, TData>
+  atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+  selector: (state: TAtomValue) => TSelected
+  children: ((state: TSelected) => ComponentChildren) | ComponentChildren
+}
+
+/**
+ * Subscribe to a single slice atom (identity or projected).
+ */
+export type SubscribePropsWithAtom<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TAtomValue,
+  TSelected = TAtomValue,
+> =
+  | SubscribePropsWithAtomIdentity<TFeatures, TData, TAtomValue>
+  | SubscribePropsWithAtomWithSelector<TFeatures, TData, TAtomValue, TSelected>
+
+export type SubscribeProps<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TSelected = unknown,
+  TAtomValue = unknown,
+> =
+  | SubscribePropsWithStore<TFeatures, TData, TSelected>
+  | SubscribePropsWithAtomIdentity<TFeatures, TData, TAtomValue>
+  | SubscribePropsWithAtomWithSelector<TFeatures, TData, TAtomValue, TSelected>
+
+/**
  * A Preact component that allows you to subscribe to the table state.
  *
- * This is useful for opting into state re-renders for specific parts of the table state.
- *
- * @example
- * ```tsx
- * // As a standalone component
- * <Subscribe table={table} selector={(state) => ({ rowSelection: state.rowSelection })}>
- *   {({ rowSelection }) => (
- *     <div>Selected rows: {Object.keys(rowSelection).length}</div>
- *   )}
- * </Subscribe>
- * ```
- *
- * @example
- * ```tsx
- * // As table.Subscribe (table instance method)
- * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
- *   {({ rowSelection }) => (
- *     <div>Selected rows: {Object.keys(rowSelection).length}</div>
- *   )}
- * </table.Subscribe>
- * ```
+ * For `table.Subscribe` from `useTable`, prefer that API — it uses overloads so
+ * JSX contextual typing works. This standalone component uses a union `props` type.
  */
 export function Subscribe<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
->(props: SubscribeProps<TFeatures, TData, TSelected>): ComponentChildren {
-  const selected = useSelector(props.table.store, props.selector)
+  TAtomValue,
+>(
+  props: SubscribePropsWithAtomIdentity<TFeatures, TData, TAtomValue>,
+): ComponentChildren
+export function Subscribe<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TAtomValue,
+  TSelected,
+>(
+  props: SubscribePropsWithAtomWithSelector<
+    TFeatures,
+    TData,
+    TAtomValue,
+    TSelected
+  >,
+): ComponentChildren
+export function Subscribe<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TSelected,
+>(
+  props: SubscribePropsWithStore<TFeatures, TData, TSelected>,
+): ComponentChildren
+export function Subscribe<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TSelected,
+  TAtomValue,
+>(
+  props: SubscribeProps<TFeatures, TData, TSelected, TAtomValue>,
+): ComponentChildren {
+  const source = 'atom' in props ? props.atom : props.table.store
+  const selectFn =
+    'atom' in props ? (props.selector ?? ((x: unknown) => x)) : props.selector
+
+  const selected = useSelector(
+    source as never,
+    selectFn as Parameters<typeof useSelector>[1],
+    {
+      compare: shallow,
+    },
+  ) as TSelected
 
   return typeof props.children === 'function'
-    ? props.children(selected)
+    ? (props.children as (state: TSelected) => ComponentChildren)(selected)
     : props.children
 }

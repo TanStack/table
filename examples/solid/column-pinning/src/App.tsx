@@ -75,6 +75,7 @@ function App() {
   const rerender = () => setData(makeData(5000))
 
   const table = createAppTable({
+    debugTable: true,
     columns,
     get data() {
       return data()

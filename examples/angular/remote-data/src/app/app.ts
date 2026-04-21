@@ -136,6 +136,7 @@ export class App {
   readonly table = injectTable(() => {
     const data = this.dataWithLatest()
     return {
+      debugTable: true,
       _features,
       data: data.items,
       columns: this.columns,

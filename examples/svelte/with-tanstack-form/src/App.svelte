@@ -9,7 +9,6 @@
     FlexRender,
     renderComponent,
     rowPaginationFeature,
-    Subscribe,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import type { Column, Table } from '@tanstack/svelte-table'

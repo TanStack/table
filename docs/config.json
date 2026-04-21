@@ -811,7 +811,7 @@
             { "to": "framework/lit/examples/basic-table-controller", "label": "Basic (TableController)" },
             { "to": "framework/lit/examples/basic-app-table", "label": "Basic (useAppTable)" },
             { "to": "framework/lit/examples/basic-external-state", "label": "Basic (External State)" },
-            { "to": "framework/lit/examples/basic-external-store", "label": "Basic (External Store)" },
+            { "to": "framework/lit/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
             { "to": "framework/lit/examples/column-groups", "label": "Header Groups" }
           ]
         },
@@ -822,7 +822,7 @@
             { "to": "framework/react/examples/basic-use-app-table", "label": "Basic (useAppTable)" },
             { "to": "framework/react/examples/basic-use-legacy-table", "label": "Basic (useLegacyTable)" },
             { "to": "framework/react/examples/basic-external-state", "label": "Basic (External State)" },
-            { "to": "framework/react/examples/basic-external-store", "label": "Basic (External Store)" },
+            { "to": "framework/react/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
             { "to": "framework/react/examples/basic-shadcn", "label": "Shadcn Basic" },
             { "to": "framework/react/examples/column-groups", "label": "Header Groups" }
           ]
@@ -833,7 +833,7 @@
             { "to": "framework/solid/examples/basic-use-table", "label": "Basic (createTable)" },
             { "to": "framework/solid/examples/basic-app-table", "label": "Basic (createAppTable)" },
             { "to": "framework/solid/examples/basic-external-state", "label": "Basic (External State)" },
-            { "to": "framework/solid/examples/basic-external-store", "label": "Basic (External Store)" },
+            { "to": "framework/solid/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
             { "to": "framework/solid/examples/column-groups", "label": "Header Groups" }
           ]
         },
@@ -844,15 +844,18 @@
             { "to": "framework/svelte/examples/basic-app-table", "label": "Basic (createAppTable)" },
             { "to": "framework/svelte/examples/basic-snippets", "label": "Basic (Snippets)" },
             { "to": "framework/svelte/examples/basic-external-state", "label": "Basic (External State)" },
-            { "to": "framework/svelte/examples/basic-external-store", "label": "Basic (External Store)" },
+            { "to": "framework/svelte/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
             { "to": "framework/svelte/examples/column-groups", "label": "Header Groups" }
           ]
         },
         {
           "label": "vue",
           "children": [
-            { "to": "framework/vue/examples/basic", "label": "Basic" },
-            { "to": "framework/vue/examples/basic-use-app-table", "label": "Basic (useAppTable)" }
+            { "to": "framework/vue/examples/basic-use-table", "label": "Basic (useTable)" },
+            { "to": "framework/vue/examples/basic-use-app-table", "label": "Basic (useAppTable)" },
+            { "to": "framework/vue/examples/basic-external-state", "label": "Basic (External State)" },
+            { "to": "framework/vue/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
+            { "to": "framework/vue/examples/column-groups", "label": "Header Groups" }
           ]
         },
         {
@@ -861,7 +864,7 @@
             { "to": "framework/preact/examples/basic", "label": "Basic (useTable)" },
             { "to": "framework/preact/examples/basic-use-app-table", "label": "Basic (useAppTable)" },
             { "to": "framework/preact/examples/basic-external-state", "label": "Basic (External State)" },
-            { "to": "framework/preact/examples/basic-external-store", "label": "Basic (External Store)" },
+            { "to": "framework/preact/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
             { "to": "framework/preact/examples/column-groups", "label": "Header Groups" }
           ]
         },
@@ -986,13 +989,23 @@
         {
           "label": "vue",
           "children": [
+            { "to": "framework/vue/examples/filters", "label": "Column Filters" },
+            { "to": "framework/vue/examples/filters-faceted", "label": "Column Filters (Faceted)" },
+            { "to": "framework/vue/examples/filters-fuzzy", "label": "Fuzzy Search Filters" },
             { "to": "framework/vue/examples/column-ordering", "label": "Column Ordering" },
             { "to": "framework/vue/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/vue/examples/column-pinning-split", "label": "Column Pinning (Split)" },
+            { "to": "framework/vue/examples/column-pinning-sticky", "label": "Sticky Column Pinning" },
+            { "to": "framework/vue/examples/column-sizing", "label": "Column Sizing" },
+            { "to": "framework/vue/examples/column-resizing", "label": "Column Resizing" },
+            { "to": "framework/vue/examples/column-resizing-performant", "label": "Performant Column Resizing" },
+            { "to": "framework/vue/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/vue/examples/expanding", "label": "Expanding" },
+            { "to": "framework/vue/examples/grouping", "label": "Grouping" },
             { "to": "framework/vue/examples/pagination", "label": "Pagination" },
-            { "to": "framework/vue/examples/pagination-controlled", "label": "Pagination Controlled" },
+            { "to": "framework/vue/examples/row-pinning", "label": "Row Pinning" },
             { "to": "framework/vue/examples/row-selection", "label": "Row Selection" },
-            { "to": "framework/vue/examples/sorting", "label": "Sorting" },
-            { "to": "framework/vue/examples/filters", "label": "Column Filters" }
+            { "to": "framework/vue/examples/sorting", "label": "Sorting" }
           ]
         },
         {
@@ -1098,7 +1111,11 @@
           "children": [
             { "to": "framework/vue/examples/composable-tables", "label": "Composable Tables" },
             { "to": "framework/vue/examples/sub-components", "label": "Sub Components" },
-            { "to": "framework/vue/examples/virtualized-rows", "label": "With TanStack Virtual (Rows)" }
+            { "to": "framework/vue/examples/virtualized-columns", "label": "With TanStack Virtual - Columns" },
+            { "to": "framework/vue/examples/virtualized-rows", "label": "With TanStack Virtual - Rows" },
+            { "to": "framework/vue/examples/virtualized-infinite-scrolling", "label": "With TanStack Virtual - Infinite Scrolling" },
+            { "to": "framework/vue/examples/with-tanstack-form", "label": "With TanStack Form" },
+            { "to": "framework/vue/examples/with-tanstack-query", "label": "With TanStack Query" }
           ]
         },
         {

@@ -32,7 +32,7 @@ export function column_getSize<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): number {
   const defaultSizes = getDefaultColumnSizingColumnDef()
-  const columnSize = column.table.store.state.columnSizing?.[column.id]
+  const columnSize = column.table.atoms.columnSizing?.get()?.[column.id]
 
   return Math.min(
     Math.max(

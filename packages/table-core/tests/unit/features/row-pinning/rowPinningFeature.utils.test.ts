@@ -11,7 +11,7 @@ import {
   table_getTopRows,
   table_resetRowPinning,
   table_setRowPinning,
-} from '../../../../src/features/row-pinning/rowPinningFeature.utils'
+} from '../../../../src/static-functions'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
 import {
@@ -486,12 +486,10 @@ describe('row_pin', () => {
   it('should unpin a row when position is false', () => {
     const { table, onRowPinningChangeMock } =
       createTableWithMockOnPinningChange()
-    table.baseStore.setState(() => ({
-      rowPinning: {
-        top: [ROW[0]],
-        bottom: [],
-      },
-    }))
+    table.baseAtoms.rowPinning.set({
+      top: [ROW[0]],
+      bottom: [],
+    })
     const row = table.getRow('0')
 
     row_pin(row, false)
@@ -548,12 +546,10 @@ describe('row_pin', () => {
   it('should maintain existing pinned rows when pinning additional rows', () => {
     const { table, onRowPinningChangeMock } =
       createTableWithMockOnPinningChange()
-    table.baseStore.setState(() => ({
-      rowPinning: {
-        top: [ROW[1]],
-        bottom: [ROW[2]],
-      },
-    }))
+    table.baseAtoms.rowPinning.set({
+      top: [ROW[1]],
+      bottom: [ROW[2]],
+    })
     const row = table.getRow('0')
 
     row_pin(row, 'top')
@@ -573,12 +569,10 @@ describe('row_pin', () => {
   it('should remove row from other position when moving between top and bottom', () => {
     const { table, onRowPinningChangeMock } =
       createTableWithMockOnPinningChange()
-    table.baseStore.setState(() => ({
-      rowPinning: {
-        top: [ROW[0]],
-        bottom: [],
-      },
-    }))
+    table.baseAtoms.rowPinning.set({
+      top: [ROW[0]],
+      bottom: [],
+    })
     const row = table.getRow('0')
 
     row_pin(row, 'bottom')

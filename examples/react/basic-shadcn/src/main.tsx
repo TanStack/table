@@ -105,6 +105,7 @@ function App() {
 
   // 6. Create the table instance with required _features, columns, and data
   const table = useTable({
+    debugTable: true,
     _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
     _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
     columns,

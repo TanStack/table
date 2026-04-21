@@ -4,6 +4,7 @@
  * These components can be used via the pre-bound tableComponents
  * directly on the table object, e.g., <table.PaginationControls />
  */
+import type { PaginationState } from '@tanstack/react-table'
 import { useTableContext } from '../hooks/table'
 
 /**
@@ -13,8 +14,9 @@ export function PaginationControls() {
   const table = useTableContext()
 
   return (
-    <table.Subscribe selector={(state) => state.pagination}>
-      {(pagination) => (
+    <table.Subscribe atom={table.atoms.pagination}>
+      {/* whole pagination slice — no selector needed */}
+      {(pagination: PaginationState) => (
         <div className="pagination">
           <button
             onClick={() => table.firstPage()}

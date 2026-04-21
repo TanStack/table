@@ -37,7 +37,7 @@ export function column_getIsVisible<
       ? childColumns.some((childColumn) =>
           callMemoOrStaticFn(childColumn, 'getIsVisible', column_getIsVisible),
         )
-      : column.table.store.state.columnVisibility?.[column.id]) ?? true
+      : column.table.atoms.columnVisibility?.get()?.[column.id]) ?? true
   )
 }
 

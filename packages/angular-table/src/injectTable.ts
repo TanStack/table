@@ -11,8 +11,9 @@ import {
   constructReactivityFeature,
   constructTable,
 } from '@tanstack/table-core'
-import { injectStore } from '@tanstack/angular-store'
+import { injectSelector } from '@tanstack/angular-store'
 import { lazyInit } from './lazySignalInitializer'
+import type { Atom, ReadonlyAtom } from '@tanstack/angular-store'
 import type {
   RowData,
   Table,
@@ -21,6 +22,28 @@ import type {
   TableState,
 } from '@tanstack/table-core'
 import type { Signal, ValueEqualityFn } from '@angular/core'
+
+/**
+ * Store mode: pass `selector` (required) to project from full table state.
+ * Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
+ * `selector` to project. Split overloads match React `Subscribe` inference.
+ */
+export interface AngularTableComputed<TFeatures extends TableFeatures> {
+  <TAtomValue>(props: {
+    atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+    selector?: undefined
+    equal?: ValueEqualityFn<TAtomValue>
+  }): Signal<Readonly<TAtomValue>>
+  <TAtomValue, TSubSelected>(props: {
+    atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+    selector: (state: TAtomValue) => TSubSelected
+    equal?: ValueEqualityFn<TSubSelected>
+  }): Signal<Readonly<TSubSelected>>
+  <TSubSelected>(props: {
+    selector: (state: TableState<TFeatures>) => TSubSelected
+    equal?: ValueEqualityFn<TSubSelected>
+  }): Signal<Readonly<TSubSelected>>
+}
 
 export type AngularTable<
   TFeatures extends TableFeatures,
@@ -36,13 +59,10 @@ export type AngularTable<
    */
   readonly value: Signal<AngularTable<TFeatures, TData, TSelected>>
   /**
-   * Creates a computed that subscribe to changes in the table store with a custom selector.
-   * Default equality function is "shallow".
+   * Alias: **`Subscribe`** — same function reference as `computed` (naming parity with other adapters).
    */
-  computed: <TSubSelected = {}>(props: {
-    selector: (state: TableState<TFeatures>) => TSubSelected
-    equal?: ValueEqualityFn<TSubSelected>
-  }) => Signal<Readonly<TSubSelected>>
+  computed: AngularTableComputed<TFeatures>
+  Subscribe: AngularTableComputed<TFeatures>
 }
 
 /**
@@ -131,8 +151,10 @@ export function injectTable<
       TData,
       TSelected
     >
-    const tableState = injectStore(table.store, (state) => state, { injector })
-    const tableOptions = injectStore(table.optionsStore, (state) => state, {
+    const tableState = injectSelector(table.store, (state) => state, {
+      injector,
+    })
+    const tableOptions = injectSelector(table.optionsStore, (state) => state, {
       injector,
     })
 
@@ -167,18 +189,39 @@ export function injectTable<
       { injector, debugName: 'tableStateNotifier' },
     )
 
-    table.computed = function Subscribe<TSubSelected = {}>(props: {
-      selector: (state: TableState<TFeatures>) => TSubSelected
-      equal?: ValueEqualityFn<TSubSelected>
+    const computedFn = function computedSubscribe(props: {
+      atom?: Atom<unknown> | ReadonlyAtom<unknown>
+      selector?: (state: unknown) => unknown
+      equal?: ValueEqualityFn<unknown>
     }) {
-      return injectStore(table.store, props.selector, {
+      if (props.atom !== undefined) {
+        return injectSelector(
+          props.atom,
+          props.selector ?? ((value) => value),
+          {
+            injector,
+            ...(props.equal && { compare: props.equal }),
+          },
+        )
+      }
+      return injectSelector(table.store, props.selector, {
         injector,
-        equal: props.equal,
+        ...(props.equal && { compare: props.equal }),
       })
     }
+    table.computed = computedFn as AngularTable<
+      TFeatures,
+      TData,
+      TSelected
+    >['computed']
+    table.Subscribe = computedFn as AngularTable<
+      TFeatures,
+      TData,
+      TSelected
+    >['Subscribe']
 
     Object.defineProperty(table, 'state', {
-      value: injectStore(table.store, selector, { injector }),
+      value: injectSelector(table.store, selector, { injector }),
     })
 
     Object.defineProperty(table, 'value', {

@@ -8,13 +8,15 @@ TanStack Table v9 is a major release that introduces significant architectural i
 
 ### 1. Tree-shaking
 
-- **Features are tree-shakeable**: Features are now treated as plugins—import only what you use. If your table only needs sorting, you won't ship filtering, pagination, or other feature code. Bundlers can eliminate unused code, so for smaller tables you can expect to bundle ~6–7kb compared to 15–20kb for the same table in v8. This also lets TanStack Table add features over time without bloating everyone's bundles.
+- **Features are tree-shakeable**: Features are now treated as plugins—import only what you use. If your table only needs sorting, you won't ship filtering, pagination, or other feature code. Bundlers can eliminate unused code, so for smaller tables you can expect to bundle ~6–7kb compared to 15–20kb for the same table in v8. This also lets TanStack Table add more features over time without bloating everyone's bundles.
 - **Row models and their functions are refactored**: Row model factories (`createFilteredRowModel`, `createSortedRowModel`, etc.) now accept their processing functions (`filterFns`, `sortFns`, `aggregationFns`) as parameters. This enables tree-shaking of the functions themselves—if you use a custom filter, you don't pay for built-in filters you never use.
 
 ### 2. State Management
 
 - **Uses TanStack Store**: The internal state system has been rebuilt on [TanStack Store](https://tanstack.com/store), providing a reactive, framework-agnostic foundation. This works similarly to TanStack Form's state model.
+- **Three-layer atom architecture**: Each state slice (sorting, pagination, rowSelection, etc.) lives in its own [atom](https://tanstack.com/store/latest/docs/reference/atom) rather than a single monolithic state object. Internally, the library writes to per-slice `baseAtoms`; reads go through derived `table.atoms` and the flat `table.store`. This enables fine-grained reactivity — components can subscribe to just the slices they care about.
 - **Opt-in subscriptions instead of memo hacks**: Use `table.Subscribe` or pass a selector to `useTable` to subscribe to specific slices of state. Only re-render when the state you care about changes—no more `React.memo` or manual memoization. Pass `state => state` if you want v8-style behavior where any state change triggers a re-render.
+- **Bring your own atoms (optional)**: For advanced use cases, you can own individual state slices by passing your own writable atoms via the new `atoms` option. This is great for sharing a slice across components or integrating with other atom-based tools. Precedence: `options.atoms[key]` > `options.state[key]` > internal `baseAtoms[key]`.
 
 ### 3. Composability
 
@@ -271,6 +273,21 @@ const table = useTable({
 
 ## State Management Changes
 
+v9's state system is built on [TanStack Store](https://tanstack.com/store) and exposes three read surfaces on the table instance:
+
+| Surface | Type | When to use |
+|---------|------|-------------|
+| `table.state` | `TSelected` (the shape you return from your `useTable` selector) | The most ergonomic read surface inside a component rendered by `useTable`. |
+| `table.store` | `ReadonlyStore<TableState>` | A flat, framework-agnostic store of the entire table state. Use `table.store.state` for one-off reads, or pair with `useSelector` / `table.Subscribe` for fine-grained subscriptions. |
+| `table.atoms.<slice>` | `ReadonlyAtom<TableState[slice]>` | A per-slice readonly atom. Subscribe to a single slice (e.g. `table.atoms.sorting`) when you want the narrowest possible re-render surface. |
+
+Writable counterparts (mostly internal):
+
+| Surface | Type | When to use |
+|---------|------|-------------|
+| `table.baseAtoms.<slice>` | `Atom<TableState[slice]>` | The library's internal write target. You generally don't touch these directly — use `table.setSorting(...)`, `table.setPagination(...)`, etc. |
+| `options.atoms` | `Partial<{ [slice]: Atom }>` | Pass in your own writable atom for any slice to take ownership of that state externally. See [External Atoms](#external-atoms-advanced) below. |
+
 ### Accessing State
 
 In v8, you accessed state via `table.getState()`. In v9, state is accessed differently:
@@ -291,6 +308,9 @@ const table = useTable(options, (state) => ({
 }))
 // Now table.state only contains sorting and pagination
 const { sorting, pagination } = table.state
+
+// v9 - via a single slice atom (framework-agnostic, ideal for fine-grained subscriptions)
+const sorting = table.atoms.sorting.get()
 ```
 
 ### Optimized Rendering with `table.Subscribe`
@@ -369,6 +389,95 @@ const table = useTable({
   onPaginationChange: setPagination,
 })
 ```
+
+### Per-Slice Atom Subscriptions
+
+Because each state slice is backed by its own atom, you can subscribe a component to a single slice without re-rendering on any other state change. Use `useSelector` from `@tanstack/react-store` with `table.atoms.<slice>`:
+
+```tsx
+import { useSelector } from '@tanstack/react-store'
+
+function PaginationFooter({ table }) {
+  // Re-renders only when pagination changes — sorting, filtering, selection, etc. are all ignored.
+  const pagination = useSelector(table.atoms.pagination)
+
+  return <div>Page {pagination.pageIndex + 1}</div>
+}
+```
+
+This is the narrowest subscription surface available. Compared to `table.Subscribe`, which selects from the full `table.store.state`, reading a per-slice atom skips even constructing the full state snapshot on change.
+
+> **When to reach for `table.atoms` vs. `table.Subscribe`:** Both give you fine-grained re-renders. `table.Subscribe` is nicer when you want to project multiple slices into a single rendered block. `table.atoms.<slice>` is nicer when a component only cares about one slice, or when you're passing a subscription source to non-table code.
+
+### External Atoms (Advanced)
+
+For advanced patterns — sharing a slice across tables, integrating with atom-based libraries, or wiring a slice up to persistence — v9 lets you **own individual state slices yourself** by passing writable atoms via the new `atoms` option. See the [Basic External Atoms example](../examples/basic-external-atoms).
+
+```tsx
+import { useCreateAtom, useSelector } from '@tanstack/react-store'
+import {
+  useTable,
+  tableFeatures,
+  rowSortingFeature,
+  rowPaginationFeature,
+  createSortedRowModel,
+  createPaginatedRowModel,
+  sortFns,
+} from '@tanstack/react-table'
+import type { PaginationState, SortingState } from '@tanstack/react-table'
+
+const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+
+function MyTable({ data, columns }) {
+  // Create stable external atoms for the slices you want to own.
+  const sortingAtom = useCreateAtom<SortingState>([])
+  const paginationAtom = useCreateAtom<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  // Subscribe to each atom independently — fine-grained reactivity.
+  const sorting = useSelector(sortingAtom)
+  const pagination = useSelector(paginationAtom)
+
+  const table = useTable({
+    _features,
+    _rowModels: {
+      sortedRowModel: createSortedRowModel(sortFns),
+      paginatedRowModel: createPaginatedRowModel(),
+    },
+    columns,
+    data,
+    // Per-slice external atoms — the library writes directly to these,
+    // bypassing the internal baseAtoms for those slices.
+    atoms: {
+      sorting: sortingAtom,
+      pagination: paginationAtom,
+    },
+  })
+
+  // Table writes like table.setPageIndex(2) go straight to `paginationAtom`.
+  // Any other subscriber of `paginationAtom` will see the update too.
+  // ...
+}
+```
+
+#### How External Atoms Interact with `state` and `on*Change`
+
+When you register an external atom for a slice:
+
+- **Reads**: The derived `table.atoms[slice]` and `table.store.state[slice]` both read from your external atom.
+- **Writes**: Library writes (e.g. `table.setSorting(...)`, `column.toggleSorting()`) go directly to your external atom's `set()`. You do **not** need a corresponding `onSortingChange` handler — owning the atom is the subscription.
+- **Precedence**: If you pass both `options.atoms[key]` and `options.state[key]`, the atom wins. If you pass neither, v9 falls back to its internal `baseAtoms[key]` (v8-style self-managed state).
+- **Reset**: `table.reset()` does **not** clear external atoms — you own them, so you decide when to reset. Call `myAtom.set(defaultValue)` yourself if needed.
+
+#### When to Choose External Atoms vs. Controlled State
+
+| Pattern | Use when |
+|---------|----------|
+| Internal state (no `state`, no `atoms`) | Simplest path; the table manages everything. |
+| `state` + `on*Change` (v8-style controlled state) | You want your framework's idiomatic state (React `useState`, signals, etc.) to own the slice. |
+| `atoms` option | You want atom-based ergonomics (cross-component subscriptions, `useSelector`, `useAtom`) without the overhead of mirroring between React state and the table. |
 
 ---
 
@@ -913,6 +1022,8 @@ This change improves type safety. If you were passing unusual data types, ensure
 - [ ] Rename `columnSizingInfo` state → `columnResizing` (and related options)
 - [ ] Update `ColumnMeta` module augmentation to include `TFeatures` generic (if used)
 - [ ] (Optional) Add `table.Subscribe` for render optimizations
+- [ ] (Optional) Subscribe to individual slices via `table.atoms.<slice>` + `useSelector` for the narrowest re-renders
+- [ ] (Optional) Pass writable atoms via the new `atoms` option to own specific state slices externally
 - [ ] (Optional) Use `tableOptions()` for composable configurations
 - [ ] (Optional) Migrate to `createTableHook` for reusable table patterns
 
@@ -925,6 +1036,8 @@ Check out these examples to see v9 patterns in action:
 - [Basic useTable](../examples/basic-use-table) - Simple table with the new `useTable` hook
 - [Basic useLegacyTable](../examples/basic-use-legacy-table) - Migration example using `useLegacyTable`
 - [Basic useAppTable](../examples/basic-use-app-table) - Using `createTableHook`
+- [Basic External State](../examples/basic-external-state) - Classic `state` + `on*Change` controlled state
+- [Basic External Atoms](../examples/basic-external-atoms) - Owning state slices with `useCreateAtom` + the `atoms` option
 - [Filters](../examples/filters) - Filtering with the new API
 - [Sorting](../examples/sorting) - Sorting with the new API
 - [Composable Tables](../examples/composable-tables) - Advanced `createTableHook` patterns

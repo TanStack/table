@@ -62,3 +62,4 @@ vite.config.ts.timestamp-*
 
 Agents.md
 .agents/*
+terminalOutput

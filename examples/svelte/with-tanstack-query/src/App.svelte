@@ -5,7 +5,6 @@
     createTable,
     FlexRender,
     rowPaginationFeature,
-    Subscribe,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import type { PaginationState } from '@tanstack/svelte-table'
@@ -182,9 +181,5 @@
     Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
     {dataQuery.data?.rowCount?.toLocaleString() ?? 0} Rows
   </div>
-  <Subscribe selector={(state) => state} {table}>
-    {#snippet children(state)}
-      <pre>{JSON.stringify(state, null, 2)}</pre>
-    {/snippet}
-  </Subscribe>
+  <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

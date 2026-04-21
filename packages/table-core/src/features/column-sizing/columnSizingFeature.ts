@@ -81,7 +81,7 @@ export function constructColumnSizingFeature<
               table_getPinnedVisibleLeafColumns,
               position,
             ),
-            column.table.store.state.columnSizing,
+            column.table.atoms.columnSizing?.get(),
           ],
         },
         column_getAfter: {
@@ -94,7 +94,7 @@ export function constructColumnSizingFeature<
               table_getPinnedVisibleLeafColumns,
               position,
             ),
-            column.table.store.state.columnSizing,
+            column.table.atoms.columnSizing?.get(),
           ],
         },
         column_resetSize: {

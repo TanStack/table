@@ -130,6 +130,7 @@ const renderTable = () => {
 }
 
 const table = createTable({
+  debugTable: true,
   _features,
   _rowModels: {},
   columns,

@@ -128,6 +128,7 @@ function App() {
 
   const table = useAppTable(
     {
+      debugTable: true,
       columns,
       data,
       getRowId: (row) => row.userId, // required because row indexes will change

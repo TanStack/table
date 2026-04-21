@@ -50,6 +50,7 @@
 
   // Create the table using the same createAppTable hook
   const table = createAppTable({
+    debugTable: true,
     columns,
     get data() {
       return data

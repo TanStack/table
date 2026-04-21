@@ -50,6 +50,7 @@
 
   const table = createTable(
     {
+      debugTable: true,
       _features,
       _rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),

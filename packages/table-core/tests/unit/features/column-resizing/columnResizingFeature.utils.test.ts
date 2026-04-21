@@ -8,7 +8,7 @@ import {
   passiveEventSupported,
   table_resetHeaderSizeInfo,
   table_setColumnResizing,
-} from '../../../../src'
+} from '../../../../src/static-functions'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 
 // Add type for the features we need

@@ -110,8 +110,8 @@ function App() {
   // Notice how we use get*RowModel() options instead of _rowModels
   // and we don't need to define _features
   const table = useLegacyTable({
-    data,
     columns,
+    data,
     // V8-style row model options (these are mapped to v9 _rowModels under the hood)
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), // client side filtering
@@ -272,8 +272,8 @@ function App() {
       </div>
       <div className="mt-4">
         <h4 className="font-bold">Current State:</h4>
-        <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto max-h-64">
-          {JSON.stringify({ columnFilters, pagination, sorting }, null, 2)}
+        <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto">
+          {JSON.stringify(table.getState(), null, 2)}
         </pre>
       </div>
     </div>

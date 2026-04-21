@@ -1,15 +1,15 @@
 import { keepPreviousData, useQuery } from '@tanstack/solid-query'
-import { createStore, useSelector } from '@tanstack/solid-store'
+import { createAtom, useSelector } from '@tanstack/solid-store'
 import {
   createColumnHelper,
   createTable,
   FlexRender,
-  getInitialTableState,
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
 import { For } from 'solid-js'
 import { fetchData } from './fetchData'
+import type { PaginationState } from '@tanstack/solid-table'
 import type { Person } from './fetchData'
 
 const _features = tableFeatures({
@@ -41,18 +41,16 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const myTableStore = createStore(
-  getInitialTableState(_features, {
-    pagination: { pageIndex: 0, pageSize: 10 },
-  }),
-)
-
 function App() {
-  const state = useSelector(myTableStore)
+  const paginationAtom = createAtom<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+  const pagination = useSelector(paginationAtom)
 
   const dataQuery = useQuery(() => ({
-    queryKey: ['data', state().pagination],
-    queryFn: () => fetchData(state().pagination),
+    queryKey: ['data', pagination()],
+    queryFn: () => fetchData(pagination()),
     placeholderData: keepPreviousData,
   }))
 
@@ -68,7 +66,9 @@ function App() {
     get rowCount() {
       return dataQuery.data?.rowCount
     },
-    store: myTableStore,
+    atoms: {
+      pagination: paginationAtom,
+    },
     manualPagination: true,
     debugTable: true,
   })
@@ -143,7 +143,7 @@ function App() {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {state().pagination.pageIndex + 1} of{' '}
+            {pagination().pageIndex + 1} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -153,7 +153,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={state().pagination.pageIndex + 1}
+            value={pagination().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -164,7 +164,7 @@ function App() {
           />
         </span>
         <select
-          value={state().pagination.pageSize}
+          value={pagination().pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.currentTarget.value))
           }}
@@ -179,7 +179,7 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {dataQuery.data?.rowCount.toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(state(), null, 2)}</pre>
+      <pre>{JSON.stringify(pagination(), null, 2)}</pre>
     </div>
   )
 }

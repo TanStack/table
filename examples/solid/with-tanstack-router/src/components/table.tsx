@@ -46,6 +46,7 @@ export default function Table<T extends Record<string, string | number>>(
 ) {
   const table = createTable(
     {
+      debugTable: true,
       _features,
       _rowModels: {},
       get columns() {

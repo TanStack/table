@@ -1,7 +1,6 @@
 <script lang="ts">
   import {
     FlexRender,
-    Subscribe,
     columnFilteringFeature,
     createColumnHelper,
     createFilteredRowModel,
@@ -247,9 +246,5 @@
   <div>
     <button onclick={() => refreshData()}>Refresh Data</button>
   </div>
-  <Subscribe selector={(state) => state} {table}>
-    {#snippet children(state)}
-      <pre>{JSON.stringify(state, null, 2)}</pre>
-    {/snippet}
-  </Subscribe>
+  <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

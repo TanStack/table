@@ -9,7 +9,7 @@ title: getSortedRowModel
 function getSortedRowModel<TData>(): RowModelFactory<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:62](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L62)
+Defined in: [useLegacyTable.ts:65](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L65)
 
 ## Type Parameters
 

@@ -5,16 +5,16 @@ import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type {
   CellData,
-  NoInfer,
   RowData,
   Table,
   TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
+import type { Atom, ReadonlyAtom } from '@tanstack/preact-store'
 import type { ComponentChildren } from 'preact'
 import type { FlexRenderProps } from './FlexRender'
-import type { SubscribeProps } from './Subscribe'
+import type { SubscribePropsWithStore } from './Subscribe'
 
 export type PreactTable<
   TFeatures extends TableFeatures,
@@ -24,49 +24,56 @@ export type PreactTable<
   /**
    * A Preact HOC (Higher Order Component) that allows you to subscribe to the table state.
    *
-   * This is useful for opting into state re-renders for specific parts of the table state.
+   * Pass `atom` to subscribe to a single slice atom instead of the full `table.store`.
    *
    * @example
    * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
-   *   {({ rowSelection }) => ( // important to include `{() => {()}}` syntax
-   *     <tr key={row.id}>
-   *       // render the row
-   *     </tr>
+   *   {({ rowSelection }) => (
+   *     <tr key={row.id}>...</tr>
    *   )}
    * </table.Subscribe>
+   *
+   * @example
+   * <table.Subscribe atom={table.atoms.rowSelection}>
+   *   {(rowSelection) => <div>...</div>}
+   * </table.Subscribe>
+   *
+   * @example
+   * <table.Subscribe atom={table.atoms.rowSelection} selector={(s) => s?.[row.id]}>
+   *   {() => <tr key={row.id}>...</tr>}
+   * </table.Subscribe>
    */
-  Subscribe: <TSelected>(props: {
-    selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
-    children: ((state: TSelected) => ComponentChildren) | ComponentChildren
-  }) => ComponentChildren
+  /**
+   * Overloads (atom first, then store) so JSX contextual typing works for both modes.
+   * Atom without `selector` is separate so children infer `TAtomValue` (identity projection).
+   */
+  Subscribe: {
+    <TAtomValue>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector?: undefined
+      children: ((state: TAtomValue) => ComponentChildren) | ComponentChildren
+    }): ComponentChildren
+    <TAtomValue, TSubSelected>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector: (state: TAtomValue) => TSubSelected
+      children: ((state: TSubSelected) => ComponentChildren) | ComponentChildren
+    }): ComponentChildren
+    <TSubSelected>(
+      props: Omit<
+        SubscribePropsWithStore<TFeatures, TData, TSubSelected>,
+        'table'
+      >,
+    ): ComponentChildren
+  }
   /**
    * A Preact component that renders headers, cells, or footers with custom markup.
    * Use this utility component instead of manually calling flexRender.
-   *
-   * @example
-   * ```tsx
-   * <table.FlexRender cell={cell} />
-   * <table.FlexRender header={header} />
-   * <table.FlexRender footer={footer} />
-   * ```
-   *
-   * This replaces calling `flexRender` directly like this:
-   * ```tsx
-   * flexRender(cell.column.columnDef.cell, cell.getContext())
-   * flexRender(header.column.columnDef.header, header.getContext())
-   * flexRender(footer.column.columnDef.footer, footer.getContext())
-   * ```
    */
   FlexRender: <TValue extends CellData = CellData>(
     props: FlexRenderProps<TFeatures, TData, TValue>,
   ) => ComponentChildren
   /**
    * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
-   *
-   * @example
-   * const table = useTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
-   *
-   * console.log(table.state.globalFilter)
    */
   readonly state: Readonly<TSelected> & {
     columns: TableOptions<TFeatures, TData>['columns']
@@ -90,11 +97,12 @@ export function useTable<
       TSelected
     >
 
-    tableInstance.Subscribe = function SubscribeBound<TSelected>(
-      props: Omit<SubscribeProps<TFeatures, TData, TSelected>, 'table'>,
-    ) {
-      return Subscribe({ ...props, table: tableInstance })
-    }
+    tableInstance.Subscribe = ((props: any) => {
+      return Subscribe({
+        ...props,
+        table: tableInstance,
+      })
+    }) as PreactTable<TFeatures, TData, TSelected>['Subscribe']
 
     tableInstance.FlexRender = FlexRender
 

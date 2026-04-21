@@ -1,4 +1,4 @@
-import type { ReadonlyStore, Store } from '@tanstack/store'
+import type { ReadonlyStore } from '@tanstack/store'
 import type { Table_ColumnFaceting } from '../features/column-faceting/columnFacetingFeature.types'
 import type { Table_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 import type { Table_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -22,7 +22,12 @@ import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
 import type { Table_Columns } from '../core/columns/coreColumnsFeature.types'
 import type { Table_Headers } from '../core/headers/coreHeadersFeature.types'
 import type { Table_Rows } from '../core/rows/coreRowsFeature.types'
-import type { Table_Table } from '../core/table/coreTablesFeature.types'
+import type {
+  Atoms_All,
+  BaseAtoms_All,
+  ExternalAtoms_All,
+  Table_Table,
+} from '../core/table/coreTablesFeature.types'
 import type { TableOptions_All } from './TableOptions'
 
 /**
@@ -118,8 +123,10 @@ export type Table_Internal<
     _rowModels?: CreateRowModels_All<TFeatures, TData>
     state?: TableState_All
     initialState?: TableState_All
+    atoms?: ExternalAtoms_All
   }
   initialState: TableState_All
-  baseStore: Store<TableState_All>
+  baseAtoms: BaseAtoms_All
+  atoms: Atoms_All
   store: ReadonlyStore<TableState_All>
 }

@@ -9,7 +9,7 @@ title: getMemoFnMeta
 function getMemoFnMeta(fn): MemoFnMeta | null;
 ```
 
-Defined in: [utils.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L74)
+Defined in: [utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L69)
 
 **`Internal`**
 

@@ -3,15 +3,18 @@ function trueFn() {
 }
 
 const $PROXY = Symbol('merge-proxy')
+const $SOURCES = Symbol('merge-proxy-sources')
 
 // https://github.com/solidjs/solid/blob/c20ca4fd8c36bc0522fedb2c7f38a110b7ee2663/packages/solid/src/render/component.ts#L51-L118
 const propTraps: ProxyHandler<{
   get: (k: string | number | symbol) => any
   has: (k: string | number | symbol) => boolean
   keys: () => Array<string>
+  sources: Array<any>
 }> = {
   get(_, property, receiver) {
     if (property === $PROXY) return receiver
+    if (property === $SOURCES) return _.sources
     return _.get(property)
   },
   has(_, property) {
@@ -55,23 +58,37 @@ function resolveSource(s: any) {
 
 export function mergeProxy<T extends Array<any>>(...sources: T): MergeProxy<T>
 export function mergeProxy(...sources: any): any {
+  const flattenedSources = sources.flatMap((source: any) => {
+    if (
+      typeof source === 'object' &&
+      source !== null &&
+      $SOURCES in source &&
+      Array.isArray(source[$SOURCES])
+    ) {
+      return source[$SOURCES]
+    }
+
+    return [source]
+  })
+
   return new Proxy(
     {
+      sources: flattenedSources,
       get(property: string | number | symbol) {
-        for (let i = sources.length - 1; i >= 0; i--) {
-          const v = resolveSource(sources[i])[property]
+        for (let i = flattenedSources.length - 1; i >= 0; i--) {
+          const v = resolveSource(flattenedSources[i])[property]
           if (v !== undefined) return v
         }
       },
       has(property: string | number | symbol) {
-        for (let i = sources.length - 1; i >= 0; i--) {
-          if (property in resolveSource(sources[i])) return true
+        for (let i = flattenedSources.length - 1; i >= 0; i--) {
+          if (property in resolveSource(flattenedSources[i])) return true
         }
         return false
       },
       keys() {
         const keys = []
-        for (const source of sources)
+        for (const source of flattenedSources)
           keys.push(...Object.keys(resolveSource(source)))
         return [...Array.from(new Set(keys))]
       },

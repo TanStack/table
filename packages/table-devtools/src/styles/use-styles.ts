@@ -335,6 +335,64 @@ const stylesFactory = (theme: 'light' | 'dark') => {
       color: ${t(colors.red[700], colors.red[300])};
       margin-top: ${size[2]};
     `,
+    atomRow: css`
+      display: flex;
+      flex-direction: column;
+      gap: ${size[1]};
+      padding: ${size[2]};
+      border: 1px solid ${t(colors.gray[200], colors.darkGray[700])};
+      border-radius: ${border.radius.sm};
+      background: ${t(colors.white, colors.darkGray[900])};
+      margin-bottom: ${size[2]};
+    `,
+    atomRowHeader: css`
+      display: flex;
+      align-items: center;
+      gap: ${size[2]};
+      flex-wrap: wrap;
+    `,
+    atomKey: css`
+      font-size: ${font.size.sm};
+      font-weight: ${font.weight.semibold};
+      color: ${t(colors.gray[900], colors.gray[100])};
+      font-family: ${font.family.mono};
+      flex: 1;
+      min-width: 0;
+    `,
+    atomBadge: css`
+      display: inline-flex;
+      align-items: center;
+      gap: ${size[1]};
+      font-size: ${font.size.xs};
+      font-weight: ${font.weight.semibold};
+      padding: 2px ${size[2]};
+      border-radius: ${border.radius.sm};
+      white-space: nowrap;
+    `,
+    atomBadgeInternal: css`
+      color: ${t(colors.gray[700], colors.gray[200])};
+      background: ${t(colors.gray[100], colors.darkGray[800])};
+      border: 1px solid ${t(colors.gray[300], colors.darkGray[600])};
+    `,
+    atomBadgeExternalAtom: css`
+      color: ${t(colors.blue[700], colors.blue[500])};
+      background: ${t(
+        colors.blue[500] + alpha[20],
+        colors.blue[500] + alpha[20],
+      )};
+      border: 1px solid ${t(colors.blue[500], colors.blue[500])};
+    `,
+    atomBadgeExternalState: css`
+      color: ${t('#a16207', '#facc15')};
+      background: ${t('#fef9c3', '#422006')};
+      border: 1px solid ${t('#eab308', '#facc15')};
+    `,
+    atomValue: css`
+      font-family: ${font.family.mono};
+      font-size: ${font.size.xs};
+      color: ${t(colors.gray[700], colors.gray[300])};
+      padding: ${size[1]} 0;
+    `,
   }
 }
 

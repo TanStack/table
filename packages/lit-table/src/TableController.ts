@@ -3,6 +3,7 @@ import {
   constructTable,
 } from '@tanstack/table-core'
 import { FlexRender } from './flexRender'
+import type { Atom, ReadonlyAtom } from '@tanstack/store'
 import type {
   NoInfer,
   RowData,
@@ -28,8 +29,11 @@ export type LitTable<
   TSelected = {},
 > = Table<TFeatures, TData> & {
   /**
-   * Subscribe to a selected slice of table state.
-   * Useful for fine-grained reactivity in Lit components.
+   * Subscribe to a selected slice of table state, or to a single atom.
+   *
+   * **Lit note:** `TableController` still wires host updates via the full `table.store`
+   * subscription — atom mode matches the React API and reads `atom.get()` at render time.
+   * True atom-only invalidation can be added later via `atom.subscribe`.
    *
    * @example
    * ```ts
@@ -39,13 +43,31 @@ export type LitTable<
    * })
    * ```
    */
-  Subscribe: <TSubscribeSelected>(props: {
-    selector: (state: NoInfer<TableState<TFeatures>>) => TSubscribeSelected
-    children:
-      | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
-      | TemplateResult
-      | string
-  }) => TemplateResult | string
+  Subscribe: {
+    <TAtomValue>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector?: undefined
+      children:
+        | ((state: Readonly<TAtomValue>) => TemplateResult | string)
+        | TemplateResult
+        | string
+    }): TemplateResult | string
+    <TAtomValue, TSubscribeSelected>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector: (state: TAtomValue) => TSubscribeSelected
+      children:
+        | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
+        | TemplateResult
+        | string
+    }): TemplateResult | string
+    <TSubscribeSelected>(props: {
+      selector: (state: NoInfer<TableState<TFeatures>>) => TSubscribeSelected
+      children:
+        | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
+        | TemplateResult
+        | string
+    }): TemplateResult | string
+  }
   /**
    * The selected state of the table. This state may not match the structure of
    * `table.store.state` because it is selected by the `selector` function that
@@ -164,19 +186,26 @@ export class TableController<
     const tableInstance = this._table
 
     // Attach Subscribe function
-    const Subscribe = function Subscribe<TSubscribeSelected>(props: {
-      selector: (state: TableState<TFeatures>) => TSubscribeSelected
+    const Subscribe = function Subscribe(props: {
+      atom?: Atom<unknown> | ReadonlyAtom<unknown>
+      selector?: (state: unknown) => unknown
       children:
-        | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
+        | ((state: Readonly<unknown>) => TemplateResult | string)
         | TemplateResult
         | string
     }): TemplateResult | string {
-      const selectedState = props.selector(tableInstance.store.state)
+      let selectedState: unknown
+      if (props.atom !== undefined) {
+        const v = props.atom.get()
+        selectedState = props.selector !== undefined ? props.selector(v) : v
+      } else {
+        selectedState = props.selector!(tableInstance.store.state)
+      }
       if (typeof props.children === 'function') {
-        return props.children(selectedState)
+        return props.children(selectedState as Readonly<unknown>)
       }
       return props.children
-    }
+    } as LitTable<TFeatures, TData, TSelected>['Subscribe']
 
     return {
       ...this._table,

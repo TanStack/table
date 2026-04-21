@@ -9,7 +9,7 @@ title: getFacetedMinMaxValues
 function getFacetedMinMaxValues<TData>(): FacetedMinMaxValuesFactory<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:122](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L122)
+Defined in: [useLegacyTable.ts:125](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L125)
 
 ## Type Parameters
 

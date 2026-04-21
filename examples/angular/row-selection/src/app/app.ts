@@ -89,6 +89,7 @@ export class App {
   ])
 
   readonly table = injectTable(() => ({
+    debugTable: true,
     data: this.data(),
     columns: this.columns,
     state: {

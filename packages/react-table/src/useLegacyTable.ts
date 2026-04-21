@@ -15,18 +15,21 @@ import {
   sortFns,
   stockFeatures,
 } from '@tanstack/table-core'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTable } from './useTable'
 import type {
+  AggregationFns,
   Cell,
   Column,
   ColumnDef,
   CreateRowModels_All,
+  FilterFns,
   Header,
   HeaderGroup,
   Row,
   RowData,
   RowModel,
+  SortFns,
   StockFeatures,
   Table,
   TableOptions,
@@ -233,6 +236,21 @@ export interface LegacyRowModelOptions<TData extends RowData> {
    * @deprecated Use `_rowModels.facetedUniqueValues` with `createFacetedUniqueValues()` instead.
    */
   getFacetedUniqueValues?: FacetedUniqueValuesFactory<TData>
+  /**
+   * Additional filter functions to apply to the table.
+   * @deprecated Use `_rowModels.filteredRowModel` with `createFilteredRowModel(filterFns)` instead.
+   */
+  filterFns?: FilterFns
+  /**
+   * Additional sort functions to apply to the table.
+   * @deprecated Use `_rowModels.sortedRowModel` with `createSortedRowModel(sortFns)` instead.
+   */
+  sortFns?: SortFns
+  /**
+   * Additional aggregation functions to apply to the table.
+   * @deprecated Use `_rowModels.groupedRowModel` with `createGroupedRowModel(aggregationFns)` instead.
+   */
+  aggregationFns?: AggregationFns
 }
 
 /**
@@ -264,6 +282,11 @@ export type LegacyReactTable<TData extends RowData> = ReactTable<
    * @deprecated In v9, access state directly via `table.state` or use `table.store.state` for the full state.
    */
   getState: () => TableState<StockFeatures>
+  /**
+   * Sets the current table state.
+   * @deprecated In v9, access state directly via `table.baseAtoms`
+   */
+  setState: (state: TableState<StockFeatures>) => void
 }
 
 // =============================================================================
@@ -386,11 +409,17 @@ export function useLegacyTable<TData extends RowData>(
   // Note: getCoreRowModel is handled automatically in v9, so we ignore it
 
   if (getFilteredRowModel) {
-    _rowModels.filteredRowModel = createFilteredRowModel(filterFns)
+    _rowModels.filteredRowModel = createFilteredRowModel({
+      ...filterFns,
+      ...options.filterFns,
+    })
   }
 
   if (getSortedRowModel) {
-    _rowModels.sortedRowModel = createSortedRowModel(sortFns)
+    _rowModels.sortedRowModel = createSortedRowModel({
+      ...sortFns,
+      ...options.sortFns,
+    })
   }
 
   if (getPaginationRowModel) {
@@ -402,7 +431,10 @@ export function useLegacyTable<TData extends RowData>(
   }
 
   if (getGroupedRowModel) {
-    _rowModels.groupedRowModel = createGroupedRowModel(aggregationFns)
+    _rowModels.groupedRowModel = createGroupedRowModel({
+      ...aggregationFns,
+      ...options.aggregationFns,
+    })
   }
 
   if (getFacetedRowModel) {
@@ -427,12 +459,32 @@ export function useLegacyTable<TData extends RowData>(
     (state) => state,
   )
 
+  const getState = useCallback(() => {
+    // all state except for columns and data
+    return {
+      ...table.state,
+      columns: undefined,
+      data: undefined,
+    }
+  }, [table])
+
+  const setState = useCallback(
+    (state: TableState<StockFeatures>) => {
+      Object.entries(state).forEach(([key, value]) => {
+        // @ts-expect-error - baseAtoms is indexed by dynamic string keys
+        table.baseAtoms[key].set(value)
+      })
+    },
+    [table],
+  )
+
   return useMemo(
     () =>
       ({
         ...table,
-        getState: () => table.state,
+        getState,
+        setState,
       }) as LegacyReactTable<TData>,
-    [table],
+    [table, getState, setState],
   )
 }

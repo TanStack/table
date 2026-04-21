@@ -253,6 +253,7 @@ function ProductsTable() {
 
   // Create the table using the same useAppTable hook
   const table = useAppTable({
+    debugTable: true,
     columns,
     data,
     getRowId: (row) => row.id,

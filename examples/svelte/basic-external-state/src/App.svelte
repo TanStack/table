@@ -58,6 +58,7 @@
   })
 
   const table = createTable({
+    debugTable: true,
     _features,
     _rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),

@@ -60,6 +60,7 @@ function App() {
 
   // Create the table and pass state + onChange handlers
   const table = createTable({
+    debugTable: true,
     _features,
     _rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),

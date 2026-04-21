@@ -6,16 +6,16 @@ import {
   keepPreviousData,
   useQuery,
 } from '@tanstack/preact-query'
-import { useCreateStore, useSelector } from '@tanstack/preact-store'
+import { useCreateAtom, useSelector } from '@tanstack/preact-store'
 import './index.css'
 import {
   createColumnHelper,
-  getInitialTableState,
   rowPaginationFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/preact-table'
 import { fetchData } from './fetchData'
+import type { PaginationState } from '@tanstack/preact-table'
 import type { Person } from './fetchData'
 
 const queryClient = new QueryClient()
@@ -52,18 +52,18 @@ const columns = columnHelper.columns([
 function App() {
   const rerender = useReducer(() => ({}), {})[1]
 
-  const myTableStore = useCreateStore(
-    getInitialTableState(_features, {
-      pagination: { pageIndex: 0, pageSize: 10 },
-    }),
-  )
+  // Create a stable external atom for the pagination slice.
+  const paginationAtom = useCreateAtom<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
 
-  // Subscribe to store state for reactive updates
-  const state = useSelector(myTableStore, (state) => state)
+  // Subscribe to the atom for reactive updates.
+  const pagination = useSelector(paginationAtom, (s) => s)
 
   const dataQuery = useQuery({
-    queryKey: ['data', state.pagination],
-    queryFn: () => fetchData(state.pagination),
+    queryKey: ['data', pagination],
+    queryFn: () => fetchData(pagination),
     placeholderData: keepPreviousData, // don't have 0 rows flash while changing pages/loading next page
   })
 
@@ -75,7 +75,9 @@ function App() {
     columns,
     data: dataQuery.data?.rows ?? defaultData,
     rowCount: dataQuery.data?.rowCount,
-    store: myTableStore,
+    atoms: {
+      pagination: paginationAtom,
+    },
     manualPagination: true, // we're doing manual "server-side" pagination
     debugTable: true,
   })
@@ -142,7 +144,7 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {state.pagination.pageIndex + 1} of{' '}
+            {pagination.pageIndex + 1} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -152,7 +154,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={state.pagination.pageIndex + 1}
+            defaultValue={pagination.pageIndex + 1}
             onChange={(e) => {
               const page = (e.target as HTMLInputElement).value
                 ? Number((e.target as HTMLInputElement).value) - 1
@@ -163,7 +165,7 @@ function App() {
           />
         </span>
         <select
-          value={state.pagination.pageSize}
+          value={pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number((e.target as HTMLSelectElement).value))
           }}
@@ -183,7 +185,7 @@ function App() {
       <div>
         <button onClick={() => rerender(0)}>Force Rerender</button>
       </div>
-      <pre>{JSON.stringify(state, null, 2)}</pre>
+      <pre>{JSON.stringify({ pagination }, null, 2)}</pre>
     </div>
   )
 }

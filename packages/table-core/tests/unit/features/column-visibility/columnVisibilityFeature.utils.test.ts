@@ -1,15 +1,17 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   columnVisibilityFeature,
+  coreFeatures,
+  tableFeatures,
+} from '../../../../src'
+import {
   column_getCanHide,
   column_getIsVisible,
   column_getToggleVisibilityHandler,
   column_toggleVisibility,
-  coreFeatures,
   getDefaultColumnVisibilityState,
   row_getAllVisibleCells,
   row_getVisibleCells,
-  tableFeatures,
   table_getIsAllColumnsVisible,
   table_getIsSomeColumnsVisible,
   table_getToggleAllColumnsVisibilityHandler,
@@ -18,7 +20,7 @@ import {
   table_resetColumnVisibility,
   table_setColumnVisibility,
   table_toggleAllColumnsVisible,
-} from '../../../../src'
+} from '../../../../src/static-functions'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
 import type { Column } from '../../../../src'

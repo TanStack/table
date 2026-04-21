@@ -92,6 +92,7 @@ function Table({
   renderSubComponent,
 }: TableProps<typeof _features, Person>): JSX.Element {
   const table = useTable({
+    debugTable: true,
     _features,
     _rowModels: {
       expandedRowModel: createExpandedRowModel(),

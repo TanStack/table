@@ -16,14 +16,9 @@ export function makeStateUpdater<
   K extends (string & {}) | keyof TableState_All | keyof TableState<TFeatures>,
 >(key: K, instance: Table<TFeatures, any>) {
   return (updater: Updater<TableState<any>[K & keyof TableState<any>]>) => {
-    instance.baseStore.setState(
-      <TTableState extends TableState_All>(old: TTableState) => {
-        return {
-          ...old,
-          [key]: functionalUpdate(updater, (old as any)[key]),
-        }
-      },
-    )
+    const externalAtom = (instance.options as any).atoms?.[key]
+    const targetAtom = externalAtom ?? (instance.baseAtoms as any)[key]
+    targetAtom.set((old: any) => functionalUpdate(updater, old))
   }
 }
 
