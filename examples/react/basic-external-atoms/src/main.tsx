@@ -87,7 +87,7 @@ function App() {
       sorting: sortingAtom,
       pagination: paginationAtom,
     },
-    debugTable: pagination.pageIndex > 2,
+    debugTable: true,
   })
 
   return (

@@ -1,6 +1,5 @@
 import { createAtom, createStore } from '@tanstack/store'
 import { coreFeatures } from '../coreFeatures'
-import type { Atom } from '@tanstack/store'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -33,6 +32,8 @@ export function constructTable<
     set options(value) {
       this.optionsStore.setState(() => value)
     },
+    baseAtoms: {},
+    atoms: {},
   } as Table_Internal<TFeatures, TData>
 
   const featuresList: Array<TableFeature<{}>> = Object.values(table._features)
@@ -52,45 +53,33 @@ export function constructTable<
   )
 
   const stateKeys = Object.keys(table.initialState) as Array<
-    keyof TableState<TFeatures>
+    string & keyof TableState<TFeatures>
   >
 
-  const baseAtomsMap: Record<string, Atom<any>> = {}
-  const atomsMap: Record<string, Atom<any>> = {}
+  for (const key of stateKeys) {
+    // create writable base atom
+    table.baseAtoms[key] = createAtom(table.initialState[key]) as any
 
-  const makeDerivedAtom = (key: string) =>
-    createAtom(() => {
-      // Reading optionsStore.state keeps precedence reactive to setOptions.
+    // create readonly derived atom: on each get(), read current options (state, then external atom, then base)
+    ;(table.atoms as any)[key] = createAtom(() => {
+      // Reading optionsStore.state keeps this reactive to setOptions
       const opts = table.optionsStore.state
-      const externalAtom = (
-        opts.atoms as Record<string, Atom<any>> | undefined
-      )?.[key]
+      const state = opts.state
+      if (key in (state ?? {})) {
+        return state![key]
+      }
+      const externalAtom = opts.atoms?.[key]
       if (externalAtom) {
         return externalAtom.get()
       }
-      const externalState = (
-        opts.state as Record<string, unknown> | undefined
-      )?.[key]
-      if (externalState !== undefined) {
-        return externalState
-      }
-      return baseAtomsMap[key]!.get()
-    }) as unknown as Atom<any>
-
-  for (const key of stateKeys) {
-    baseAtomsMap[key as string] = createAtom(
-      table.initialState[key],
-    ) as unknown as Atom<any>
-    atomsMap[key as string] = makeDerivedAtom(key as string)
+      return table.baseAtoms[key].get()
+    })
   }
-
-  table.baseAtoms = baseAtomsMap as unknown as typeof table.baseAtoms
-  table.atoms = atomsMap as unknown as typeof table.atoms
 
   table.store = createStore(() => {
     const snapshot = {} as TableState<TFeatures>
     for (const key of stateKeys) {
-      ;(snapshot as any)[key] = atomsMap[key as string]!.get()
+      snapshot[key] = table.atoms[key].get()
     }
     return snapshot
   }) as typeof table.store

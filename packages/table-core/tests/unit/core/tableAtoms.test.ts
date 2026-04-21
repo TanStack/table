@@ -62,7 +62,7 @@ describe('three-layer atom architecture', () => {
       expect(table.store.state.sorting).toEqual(external)
     })
 
-    it('options.atoms[key] takes precedence over options.state[key]', () => {
+    it('options.state[key] takes precedence over options.atoms[key] when the key is present', () => {
       const externalAtom = createAtom<SortingState>([
         { id: 'fromAtom', desc: true },
       ])
@@ -70,11 +70,12 @@ describe('three-layer atom architecture', () => {
         state: { sorting: [{ id: 'fromState', desc: false }] },
         atoms: { sorting: externalAtom },
       })
+      // key is in `state` → that slice wins, even if an external atom is also set
       expect(table.atoms.sorting.get()).toEqual([
-        { id: 'fromAtom', desc: true },
+        { id: 'fromState', desc: false },
       ])
       expect(table.store.state.sorting).toEqual([
-        { id: 'fromAtom', desc: true },
+        { id: 'fromState', desc: false },
       ])
     })
 
