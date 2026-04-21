@@ -9,7 +9,7 @@ title: LegacyCell
 type LegacyCell<TData, TValue> = Cell<StockFeatures, TData, TValue>;
 ```
 
-Defined in: [useLegacyTable.ts:284](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L284)
+Defined in: [useLegacyTable.ts:307](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L307)
 
 ## Type Parameters
 

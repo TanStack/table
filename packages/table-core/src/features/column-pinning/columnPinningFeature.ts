@@ -70,6 +70,7 @@ export function constructColumnPinningFeature<
           ...getDefaultColumnPinningState(),
           ...initialState.columnPinning,
         },
+        ...initialState,
       }
     },
 
