@@ -89,16 +89,20 @@ describe('angularReactivityFeature', () => {
 
       data.set([{ id: '1', title: 'Title 3' }])
       TestBed.tick()
-      // In this case it will be called twice since `data` will change and
-      // the cell instance will be recreated
+      // Row/cell instances are memoized by id in the atoms-based table, so a
+      // data change that preserves ids does not emit a new cell reference.
+      // `cellGetValueCaptor` therefore stays at its initial count (the
+      // memoized `cellGetValue` computed is also a no-op here). Effects that
+      // read atoms directly (`isSelectedRow1Captor`, `columnIsVisibleCaptor`)
+      // still re-run because `stateNotifier` bumps on state/options changes.
       expect(isSelectedRow1Captor).toHaveBeenCalledTimes(3)
-      expect(cellGetValueCaptor).toHaveBeenCalledTimes(2)
+      expect(cellGetValueCaptor).toHaveBeenCalledTimes(1)
       expect(columnIsVisibleCaptor).toHaveBeenCalledTimes(3)
 
       cell().column.toggleVisibility(false)
       TestBed.tick()
       expect(isSelectedRow1Captor).toHaveBeenCalledTimes(4)
-      expect(cellGetValueCaptor).toHaveBeenCalledTimes(2)
+      expect(cellGetValueCaptor).toHaveBeenCalledTimes(1)
       expect(columnIsVisibleCaptor).toHaveBeenCalledTimes(4)
 
       expect(isSelectedRow1Captor.mock.calls).toEqual([
@@ -107,7 +111,7 @@ describe('angularReactivityFeature', () => {
         [true],
         [true],
       ])
-      expect(cellGetValueCaptor.mock.calls).toEqual([['1'], ['1']])
+      expect(cellGetValueCaptor.mock.calls).toEqual([['1']])
       expect(columnIsVisibleCaptor.mock.calls).toEqual([
         [true],
         [true],

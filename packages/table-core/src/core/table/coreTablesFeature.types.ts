@@ -46,14 +46,15 @@ export type ExternalAtoms<TFeatures extends TableFeatures> = Partial<{
  * any slice atom (e.g. `table.atoms.columnPinning`) without TypeScript
  * narrowing away slices that aren't in the current `TFeatures` union.
  *
- * This mirrors the pre-refactor pattern where `Table_Internal` overrode
- * `store: ReadonlyStore<TableState_All>` for the same reason.
+ * Keys are optional: feature code can read atoms from slices it doesn't own,
+ * but those slices may not be registered on the current table. Consumers must
+ * use optional chaining (`table.atoms.columnPinning?.get() ?? default`).
  */
 export type BaseAtoms_All = {
-  [K in keyof TableState_All]-?: Atom<TableState_All[K]>
+  [K in keyof TableState_All]?: Atom<TableState_All[K]>
 }
 export type Atoms_All = {
-  [K in keyof TableState_All]-?: ReadonlyAtom<TableState_All[K]>
+  [K in keyof TableState_All]?: ReadonlyAtom<TableState_All[K]>
 }
 export type ExternalAtoms_All = Partial<{
   [K in keyof TableState_All]: Atom<TableState_All[K]>

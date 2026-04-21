@@ -117,21 +117,21 @@ export function constructRowSelectionFeature<
         table_getSelectedRowModel: {
           fn: () => table_getSelectedRowModel(table),
           memoDeps: () => [
-            table.atoms.rowSelection.get(),
+            table.atoms.rowSelection?.get(),
             table.getCoreRowModel(),
           ],
         },
         table_getFilteredSelectedRowModel: {
           fn: () => table_getFilteredSelectedRowModel(table),
           memoDeps: () => [
-            table.atoms.rowSelection.get(),
+            table.atoms.rowSelection?.get(),
             table.getFilteredRowModel(),
           ],
         },
         table_getGroupedSelectedRowModel: {
           fn: () => table_getGroupedSelectedRowModel(table),
           memoDeps: () => [
-            table.atoms.rowSelection.get(),
+            table.atoms.rowSelection?.get(),
             table.getSortedRowModel(),
           ],
         },

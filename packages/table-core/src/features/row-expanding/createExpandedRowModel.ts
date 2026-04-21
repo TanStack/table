@@ -17,7 +17,7 @@ export function createExpandedRowModel<
       table,
       fnName: 'table.getExpandedRowModel',
       memoDeps: () => [
-        table.atoms.expanded.get(),
+        table.atoms.expanded?.get(),
         table.getPreExpandedRowModel(),
         table.options.paginateExpandedRows,
       ],
@@ -31,7 +31,7 @@ function _createExpandedRowModel<
   TData extends RowData = any,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreExpandedRowModel()
-  const expanded = table.atoms.expanded.get()
+  const expanded = table.atoms.expanded?.get()
 
   if (
     !rowModel.rows.length ||

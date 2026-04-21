@@ -97,7 +97,7 @@ export function table_getSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection.get() ?? {}).length) {
+  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -114,7 +114,7 @@ export function table_getFilteredSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection.get() ?? {}).length) {
+  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -131,7 +131,7 @@ export function table_getGroupedSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection.get() ?? {}).length) {
+  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -148,7 +148,7 @@ export function table_getIsAllRowsSelected<
 >(table: Table_Internal<TFeatures, TData>) {
   const preGroupedFlatRows = table.getFilteredRowModel().flatRows
   const rowSelection =
-    table.atoms.rowSelection.get() ?? ({} as RowSelectionState)
+    table.atoms.rowSelection?.get() ?? ({} as RowSelectionState)
 
   let isAllRowsSelected = Boolean(
     preGroupedFlatRows.length && Object.keys(rowSelection).length,
@@ -175,7 +175,7 @@ export function table_getIsAllPageRowsSelected<
     .getPaginatedRowModel()
     .flatRows.filter((row) => row_getCanSelect(row))
   const rowSelection =
-    table.atoms.rowSelection.get() ?? ({} as RowSelectionState)
+    table.atoms.rowSelection?.get() ?? ({} as RowSelectionState)
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
 
@@ -193,7 +193,9 @@ export function table_getIsSomeRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const totalSelected = Object.keys(table.atoms.rowSelection.get() ?? {}).length
+  const totalSelected = Object.keys(
+    table.atoms.rowSelection?.get() ?? {},
+  ).length
   return (
     totalSelected > 0 &&
     totalSelected < table.getFilteredRowModel().flatRows.length
@@ -419,7 +421,7 @@ export function isRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean {
-  return (row.table.atoms.rowSelection.get() ?? {})[row.id] ?? false
+  return (row.table.atoms.rowSelection?.get() ?? {})[row.id] ?? false
 }
 
 export function isSubRowSelected<

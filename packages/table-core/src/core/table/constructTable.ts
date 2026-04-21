@@ -74,50 +74,23 @@ export function constructTable<
       if (externalState !== undefined) {
         return externalState
       }
-      // Accessing through the proxy lazily creates the base atom if missing.
-      return baseAtomsProxy[key]!.get()
+      return baseAtomsMap[key]!.get()
     }) as unknown as Atom<any>
 
   for (const key of stateKeys) {
     baseAtomsMap[key as string] = createAtom(
       table.initialState[key],
     ) as unknown as Atom<any>
-  }
-
-  const baseAtomsProxy = new Proxy(baseAtomsMap, {
-    get(target, prop) {
-      if (typeof prop !== 'string') return (target as any)[prop]
-      if (!(prop in target)) {
-        target[prop] = createAtom(undefined) as unknown as Atom<any>
-      }
-      return target[prop]
-    },
-  })
-
-  // Pre-build derived atoms for known keys so the initial store snapshot is
-  // stable and subscriptions wire up eagerly. Unknown keys get a derived atom
-  // lazily via the proxy below.
-  for (const key of stateKeys) {
     atomsMap[key as string] = makeDerivedAtom(key as string)
   }
 
-  const atomsProxy = new Proxy(atomsMap, {
-    get(target, prop) {
-      if (typeof prop !== 'string') return (target as any)[prop]
-      if (!(prop in target)) {
-        target[prop] = makeDerivedAtom(prop)
-      }
-      return target[prop]
-    },
-  })
-
-  table.baseAtoms = baseAtomsProxy as unknown as typeof table.baseAtoms
-  table.atoms = atomsProxy as unknown as typeof table.atoms
+  table.baseAtoms = baseAtomsMap as unknown as typeof table.baseAtoms
+  table.atoms = atomsMap as unknown as typeof table.atoms
 
   table.store = createStore(() => {
     const snapshot = {} as TableState<TFeatures>
     for (const key of stateKeys) {
-      ;(snapshot as any)[key] = atomsProxy[key as string]!.get()
+      ;(snapshot as any)[key] = atomsMap[key as string]!.get()
     }
     return snapshot
   }) as typeof table.store

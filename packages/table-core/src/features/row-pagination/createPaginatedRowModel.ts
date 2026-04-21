@@ -19,9 +19,9 @@ export function createPaginatedRowModel<
       fnName: 'table.getPaginatedRowModel',
       memoDeps: () => [
         table.getPrePaginatedRowModel(),
-        table.atoms.pagination.get(),
+        table.atoms.pagination?.get(),
         table.options.paginateExpandedRows
-          ? table.atoms.expanded.get()
+          ? table.atoms.expanded?.get()
           : undefined,
       ],
       fn: () => _createPaginatedRowModel(table),
@@ -34,7 +34,7 @@ function _createPaginatedRowModel<
   TData extends RowData = any,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const prePaginatedRowModel = table.getPrePaginatedRowModel()
-  const pagination = table.atoms.pagination.get()
+  const pagination = table.atoms.pagination?.get()
 
   if (!prePaginatedRowModel.rows.length) {
     return prePaginatedRowModel

@@ -110,7 +110,7 @@ export function orderColumns<
   table: Table_Internal<TFeatures, TData>,
   leafColumns: Array<Column_Internal<TFeatures, TData, unknown>>,
 ) {
-  const grouping = table.atoms.grouping.get() ?? ([] as GroupingState)
+  const grouping = table.atoms.grouping?.get() ?? ([] as GroupingState)
   const { groupedColumnMode } = table.options
 
   if (!grouping.length || !groupedColumnMode) {

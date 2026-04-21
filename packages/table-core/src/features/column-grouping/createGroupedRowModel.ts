@@ -34,7 +34,7 @@ export function createGroupedRowModel<
       table,
       fnName: 'table.getGroupedRowModel',
       memoDeps: () => [
-        table.atoms.grouping.get(),
+        table.atoms.grouping?.get(),
         table.getPreGroupedRowModel(),
       ],
       fn: () => _createGroupedRowModel(table),
@@ -51,7 +51,7 @@ function _createGroupedRowModel<
   TData extends RowData = any,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreGroupedRowModel()
-  const grouping = table.atoms.grouping.get()
+  const grouping = table.atoms.grouping?.get()
 
   if (!rowModel.rows.length || !grouping?.length) {
     rowModel.rows.forEach((row) => {

@@ -52,9 +52,10 @@ const bindStore = <T extends Store<any> | ReadonlyStore<any>>(
   return store
 }
 
-// Wraps an atoms/baseAtoms map (Proxy-backed) so that `.get()` on any
-// individual atom calls the framework notifier first — matching how
-// `bindStore` wraps `store.state`.
+// Wraps an atoms/baseAtoms map so that `.get()` on any individual atom
+// calls the framework notifier first — matching how `bindStore` wraps
+// `store.state`. The proxy also transparently forwards missing slices
+// (atoms for features not registered on this table) as `undefined`.
 const bindAtoms = <T extends object>(atoms: T, notifier?: () => unknown): T => {
   if (!notifier) return atoms
   // Cache wrapped atoms so referential identity is stable per slice.

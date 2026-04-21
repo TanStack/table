@@ -55,9 +55,9 @@ export function constructColumnOrderingFeature<
           fn: (column, position) => column_getIndex(column, position),
           memoDeps: (column, position) => [
             position,
-            column.table.atoms.columnOrder.get(),
-            column.table.atoms.columnPinning.get(),
-            column.table.atoms.grouping.get(),
+            column.table.atoms.columnOrder?.get(),
+            column.table.atoms.columnPinning?.get(),
+            column.table.atoms.grouping?.get(),
           ],
         },
         column_getIsFirstColumn: {
@@ -80,8 +80,8 @@ export function constructColumnOrderingFeature<
         table_getOrderColumnsFn: {
           fn: () => table_getOrderColumnsFn(table),
           memoDeps: () => [
-            table.atoms.columnOrder.get(),
-            table.atoms.grouping.get(),
+            table.atoms.columnOrder?.get(),
+            table.atoms.grouping?.get(),
             table.options.groupedColumnMode,
           ],
         },

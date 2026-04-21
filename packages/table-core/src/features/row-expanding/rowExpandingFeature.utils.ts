@@ -75,7 +75,7 @@ export function table_getIsSomeRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const expanded = table.atoms.expanded.get() ?? {}
+  const expanded = table.atoms.expanded?.get() ?? {}
   return expanded === true || Object.values(expanded).some(Boolean)
 }
 
@@ -83,7 +83,7 @@ export function table_getIsAllRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const expanded = table.atoms.expanded.get() ?? {}
+  const expanded = table.atoms.expanded?.get() ?? {}
 
   // If expanded is true, save some cycles and return true
   if (expanded === true) {
@@ -110,9 +110,9 @@ export function table_getExpandedDepth<
   let maxDepth = 0
 
   const rowIds =
-    table.atoms.expanded.get() === true
+    table.atoms.expanded?.get() === true
       ? Object.keys(table.getRowModel().rowsById)
-      : Object.keys(table.atoms.expanded.get() ?? {})
+      : Object.keys(table.atoms.expanded?.get() ?? {})
 
   rowIds.forEach((id) => {
     const splitId = id.split('.')
@@ -161,7 +161,7 @@ export function row_getIsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const expanded = row.table.atoms.expanded.get() ?? ({} as ExpandedState)
+  const expanded = row.table.atoms.expanded?.get() ?? ({} as ExpandedState)
 
   return !!(
     row.table.options.getIsRowExpanded?.(row) ??
