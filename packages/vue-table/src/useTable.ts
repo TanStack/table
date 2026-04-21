@@ -90,7 +90,9 @@ export function useTable<
   TData extends RowData,
   TSelected = {},
 >(
-  tableOptions: TableOptionsWithReactiveData<TFeatures, TData>,
+  tableOptions:
+    | TableOptions<TFeatures, TData>
+    | TableOptionsWithReactiveData<TFeatures, TData>,
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): VueTable<TFeatures, TData, TSelected> {
