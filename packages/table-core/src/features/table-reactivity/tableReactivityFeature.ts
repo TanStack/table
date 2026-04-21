@@ -16,17 +16,11 @@ export function constructReactivityFeature<
 }): TableFeature<TableReactivityFeatureConstructors<TFeatures, TData>> {
   return {
     constructTableAPIs: (table) => {
-      table.store = bindStore(table.store, bindings.stateNotifier)
       table.optionsStore = bindStore(
         table.optionsStore,
         bindings.optionsNotifier,
       )
-      // Also wrap per-slice atoms so that feature code reading
-      // `table.atoms.<slice>.get()` (or the writable `table.baseAtoms` variant)
-      // registers a framework reactivity dep, the same way
-      // `table.store.state` does above.
       table.atoms = bindAtoms(table.atoms, bindings.stateNotifier)
-      table.baseAtoms = bindAtoms(table.baseAtoms, bindings.stateNotifier)
     },
   }
 }

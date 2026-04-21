@@ -68,7 +68,7 @@ export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { columnOrder = [] } = table.store.state
+  const columnOrder = table.atoms.columnOrder?.get()
 
   return (columns: Array<Column_Internal<TFeatures, TData, unknown>>) => {
     // Sort grouped columns to the start of the column list
@@ -76,7 +76,7 @@ export function table_getOrderColumnsFn<
     let orderedColumns: Array<Column_Internal<TFeatures, TData, unknown>> = []
 
     // If there is no order, return the normal columns
-    if (!columnOrder.length) {
+    if (!columnOrder?.length) {
       orderedColumns = columns
     } else {
       const columnOrderCopy = [...columnOrder]

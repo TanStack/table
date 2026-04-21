@@ -48,7 +48,8 @@ function _createFilteredRowModel<
   TData extends RowData = any,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreFilteredRowModel()
-  const { columnFilters, globalFilter } = table.store.state
+  const columnFilters = table.atoms.columnFilters?.get()
+  const globalFilter = table.atoms.globalFilter?.get()
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
     for (const row of rowModel.flatRows as Array<

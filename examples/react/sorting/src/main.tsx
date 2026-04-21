@@ -96,8 +96,9 @@ function App() {
   )
 
   return (
-    <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>
-      {(_state) => (
+    <table.Subscribe atom={table.atoms.sorting}>
+      {/* omit selector to subscribe to the entire sorting slice */}
+      {() => (
         <div className="p-2">
           <div className="h-2" />
           <table>
@@ -165,6 +166,7 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
+          {/* Store mode: dump full table state for debugging — selector required */}
           <table.Subscribe selector={(state) => state}>
             {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
           </table.Subscribe>

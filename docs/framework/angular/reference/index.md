@@ -16,6 +16,7 @@ title: "@tanstack/angular-table"
 
 ## Interfaces
 
+- [AngularTableComputed](interfaces/AngularTableComputed.md)
 - [FlexRenderComponent](interfaces/FlexRenderComponent.md)
 - [TanStackTableCellContext](interfaces/TanStackTableCellContext.md)
 - [TanStackTableHeaderContext](interfaces/TanStackTableHeaderContext.md)

@@ -3,8 +3,9 @@ import {
   constructReactivityFeature,
   constructTable,
 } from '@tanstack/table-core'
-import { useSelector } from '@tanstack/vue-store'
+import { shallow, useSelector } from '@tanstack/vue-store'
 import { mergeProxy } from './merge-proxy'
+import type { Atom, ReadonlyAtom } from '@tanstack/vue-store'
 import type {
   NoInfer,
   RowData,
@@ -54,26 +55,25 @@ export type VueTable<
   TSelected = {},
 > = Table<TFeatures, TData> & {
   /**
-   * A Vue component that allows you to subscribe to the table state.
-   *
-   * This is useful for opting into state subscriptions for specific parts of the table state.
-   *
-   * @example
-   * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
-   *   {(state) => (
-   *     <tr>
-   *       // render the row
-   *     </tr>
-   *   )}
-   * </table.Subscribe>
+   * Store mode: `selector` required. Atom mode: pass `atom`, optional `selector` (omit for whole slice).
    */
-  Subscribe: <TSelected>(props: {
-    selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
-    children:
-      | ((state: Readonly<TSelected>) => VNode | Array<VNode>)
-      | VNode
-      | Array<VNode>
-  }) => VNode | Array<VNode>
+  Subscribe: {
+    <TSubSelected, TAtomValue>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector?: (state: TAtomValue) => TSubSelected
+      children:
+        | ((state: Readonly<TSubSelected>) => VNode | Array<VNode>)
+        | VNode
+        | Array<VNode>
+    }): VNode | Array<VNode>
+    <TSubSelected>(props: {
+      selector: (state: NoInfer<TableState<TFeatures>>) => TSubSelected
+      children:
+        | ((state: Readonly<TSubSelected>) => VNode | Array<VNode>)
+        | VNode
+        | Array<VNode>
+    }): VNode | Array<VNode>
+  }
   /**
    * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
    *
@@ -201,19 +201,25 @@ export function useTable<
     { immediate: true },
   )
 
-  table.Subscribe = function Subscribe<TSelected>(props: {
-    selector: (state: TableState<TFeatures>) => TSelected
+  table.Subscribe = function Subscribe(props: {
+    atom?: Atom<unknown> | ReadonlyAtom<unknown>
+    selector?: (state: unknown) => unknown
     children:
-      | ((state: Readonly<TSelected>) => VNode | Array<VNode>)
+      | ((state: Readonly<unknown>) => VNode | Array<VNode>)
       | VNode
       | Array<VNode>
   }): VNode | Array<VNode> {
-    const selected = useSelector(table.store, props.selector)
+    const source = props.atom !== undefined ? props.atom : table.store
+    const selectorFn =
+      props.atom !== undefined ? props.selector : props.selector
+    const selected = useSelector(source as never, selectorFn as never, {
+      compare: shallow,
+    })
     if (typeof props.children === 'function') {
-      return props.children(selected.value)
+      return props.children(selected.value as Readonly<unknown>)
     }
     return props.children
-  }
+  } as VueTable<TFeatures, TData, TSelected>['Subscribe']
 
   const stateStore = useSelector(table.store, selector)
 

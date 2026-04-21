@@ -236,6 +236,6 @@ class FlexRenderComponentOutputManager {
   }
 
   diff(outputs: Record<string, OutputEmitterRef<unknown>['emit'] | undefined>) {
-    return this.#valueDiffer.diff(outputs ?? {})
+    return this.#valueDiffer.diff(outputs)
   }
 }

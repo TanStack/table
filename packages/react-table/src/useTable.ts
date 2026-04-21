@@ -7,16 +7,16 @@ import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type {
   CellData,
-  NoInfer,
   RowData,
   Table,
   TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
+import type { Atom, ReadonlyAtom } from '@tanstack/react-store'
 import type { FunctionComponent, ReactNode } from 'react'
 import type { FlexRenderProps } from './FlexRender'
-import type { SubscribeProps } from './Subscribe'
+import type { SubscribePropsWithStore } from './Subscribe'
 
 export type ReactTable<
   TFeatures extends TableFeatures,
@@ -28,19 +28,53 @@ export type ReactTable<
    *
    * This is useful for opting into state re-renders for specific parts of the table state.
    *
+   * Pass `atom` to subscribe to a single slice atom instead of the full `table.store`.
+   *
    * @example
    * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
-   *   {({ rowSelection }) => ( // important to include `{() => {()}}` syntax
-   *     <tr key={row.id}>
-            // render the row
-   *     </tr>
-   *   ))}
+   *   {({ rowSelection }) => (
+   *     <tr key={row.id}>...</tr>
+   *   )}
+   * </table.Subscribe>
+   *
+   * @example
+   * <table.Subscribe atom={table.atoms.rowSelection}>
+   *   {(rowSelection) => <div>...</div>}
+   * </table.Subscribe>
+   *
+   * @example
+   * <table.Subscribe atom={table.atoms.rowSelection} selector={(s) => s?.[row.id]}>
+   *   {() => <tr key={row.id}>...</tr>}
    * </table.Subscribe>
    */
-  Subscribe: <TSelected>(props: {
-    selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
-    children: ((state: TSelected) => ReactNode) | ReactNode
-  }) => ReturnType<FunctionComponent>
+  /**
+   * Overloads (not a single union) so `selector` callbacks get correct contextual
+   * types in JSX; a union of two `selector` signatures degrades to implicit `any`.
+   *
+   * Atom **without** `selector` is a separate overload so children receive `TAtomValue`
+   * (identity projection). If `selector` were optional on one overload, `TSubSelected`
+   * would default to `unknown` instead of inferring from the atom.
+   *
+   * The **atom** overloads are listed first so `TAtomValue` is inferred from `atom`.
+   */
+  Subscribe: {
+    <TAtomValue>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector?: undefined
+      children: ((state: TAtomValue) => ReactNode) | ReactNode
+    }): ReturnType<FunctionComponent>
+    <TAtomValue, TSubSelected>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector: (state: TAtomValue) => TSubSelected
+      children: ((state: TSubSelected) => ReactNode) | ReactNode
+    }): ReturnType<FunctionComponent>
+    <TSubSelected>(
+      props: Omit<
+        SubscribePropsWithStore<TFeatures, TData, TSubSelected>,
+        'table'
+      >,
+    ): ReturnType<FunctionComponent>
+  }
   /**
    * A React component that renders headers, cells, or footers with custom markup.
    * Use this utility component instead of manually calling flexRender.
@@ -92,11 +126,12 @@ export function useTable<
       TSelected
     >
 
-    tableInstance.Subscribe = function SubscribeBound<TSelected>(
-      props: Omit<SubscribeProps<TFeatures, TData, TSelected>, 'table'>,
-    ) {
-      return Subscribe({ ...props, table: tableInstance })
-    }
+    tableInstance.Subscribe = ((props: any) => {
+      return Subscribe({
+        ...props,
+        table: tableInstance,
+      })
+    }) as ReactTable<TFeatures, TData, TSelected>['Subscribe']
 
     tableInstance.FlexRender = FlexRender
 

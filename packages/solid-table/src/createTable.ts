@@ -2,11 +2,11 @@ import {
   constructReactivityFeature,
   constructTable,
 } from '@tanstack/table-core'
-import { useSelector } from '@tanstack/solid-store'
 import { createComputed, createSignal, mergeProps, untrack } from 'solid-js'
+import { shallow, useSelector } from '@tanstack/solid-store'
+import type { Atom, ReadonlyAtom } from '@tanstack/solid-store'
 import type { Accessor, JSX } from 'solid-js'
 import type {
-  NoInfer,
   RowData,
   Table,
   TableFeatures,
@@ -20,23 +20,20 @@ export type SolidTable<
   TSelected = {},
 > = Table<TFeatures, TData> & {
   /**
-   * A Solid component that allows you to subscribe to the table state.
-   *
-   * This is useful for opting into state subscriptions for specific parts of the table state.
-   *
-   * @example
-   * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
-   *   {(state) => (
-   *     <tr>
-   *       // render the row
-   *     </tr>
-   *   )}
-   * </table.Subscribe>
+   * Subscribe to the store (selector required) or a single slice atom (optional selector = whole atom).
+   * Atom overload is listed first for JSX contextual typing.
    */
-  Subscribe: <TSelected>(props: {
-    selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
-    children: ((state: Accessor<TSelected>) => JSX.Element) | JSX.Element
-  }) => JSX.Element
+  Subscribe: {
+    <TSubSelected, TAtomValue>(props: {
+      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+      selector?: (state: TAtomValue) => TSubSelected
+      children: ((state: Accessor<TSubSelected>) => JSX.Element) | JSX.Element
+    }): JSX.Element
+    <TSubSelected>(props: {
+      selector: (state: TableState<TFeatures>) => TSubSelected
+      children: ((state: Accessor<TSubSelected>) => JSX.Element) | JSX.Element
+    }): JSX.Element
+  }
   /**
    * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `createTable`.
    *
@@ -112,15 +109,23 @@ export function createTable<
     untrack(() => setNotifier(void 0))
   })
 
-  table.Subscribe = function Subscribe<TSelected>(props: {
-    selector: (state: TableState<TFeatures>) => TSelected
-    children: ((state: Accessor<TSelected>) => JSX.Element) | JSX.Element
+  table.Subscribe = function Subscribe(props: {
+    atom?: Atom<unknown> | ReadonlyAtom<unknown>
+    selector?: (state: unknown) => unknown
+    children: ((state: Accessor<unknown>) => JSX.Element) | JSX.Element
   }) {
-    const selected = useSelector(table.store, props.selector)
+    const source = props.atom !== undefined ? props.atom : table.store
+    const selectorFn =
+      props.atom !== undefined ? props.selector : props.selector
+    const selected = useSelector(
+      source as never,
+      selectorFn as ((s: unknown) => unknown) | undefined,
+      { compare: shallow },
+    )
     return typeof props.children === 'function'
       ? props.children(selected)
       : props.children
-  }
+  } as SolidTable<TFeatures, TData, TSelected>['Subscribe']
 
   const state = useSelector(table.store, selector)
 

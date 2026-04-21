@@ -12,7 +12,6 @@
     sortFns,
     tableFeatures,
     FlexRender,
-    Subscribe,
   } from '@tanstack/svelte-table'
   import type { Column, Table } from '@tanstack/svelte-table'
   import { makeData } from './makeData'
@@ -256,9 +255,5 @@
   <div>
     <button onclick={() => refreshData()}>Refresh Data</button>
   </div>
-  <Subscribe selector={(state) => state} {table}>
-    {#snippet children(state)}
-      <pre>{JSON.stringify(state, null, 2)}</pre>
-    {/snippet}
-  </Subscribe>
+  <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

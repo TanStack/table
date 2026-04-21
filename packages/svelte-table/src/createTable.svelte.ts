@@ -2,42 +2,22 @@ import {
   constructReactivityFeature,
   constructTable,
 } from '@tanstack/table-core'
-import { useSelector } from '@tanstack/svelte-store'
+import { shallow, useSelector } from '@tanstack/svelte-store'
 import { untrack } from 'svelte'
 import { mergeObjects } from './merge-objects'
 import type {
-  NoInfer,
   RowData,
   Table,
   TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { Snippet } from 'svelte'
 
 export type SvelteTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = {},
 > = Table<TFeatures, TData> & {
-  /**
-   * A Svelte component that allows you to subscribe to the table state.
-   *
-   * This is useful for opting into state subscriptions for specific parts of the table state.
-   *
-   * @example
-   * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
-   *   {(state) => (
-   *     <tr>
-   *       // render the row
-   *     </tr>
-   *   )}
-   * </table.Subscribe>
-   */
-  Subscribe: <TSelected>(props: {
-    selector: (state: NoInfer<TableState<TFeatures>>) => TSelected
-    children: ((state: Readonly<TSelected>) => Snippet) | Snippet
-  }) => any
   /**
    * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `createTable`.
    *
@@ -138,19 +118,7 @@ export function createTable<
     })
   })
 
-  // 9. Subscribe component
-  table.Subscribe = function Subscribe<TSel>(props: {
-    selector: (state: TableState<TFeatures>) => TSel
-    children: ((state: Readonly<TSel>) => Snippet) | Snippet
-  }): any {
-    const selected = useSelector(table.store, props.selector)
-    if (typeof props.children === 'function') {
-      return props.children(selected.current)
-    }
-    return props.children
-  }
-
-  // 10. State selector
+  // 9. State selector
   const stateStore = useSelector(table.store, selector)
 
   Object.defineProperty(table, 'state', {

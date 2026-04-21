@@ -86,22 +86,77 @@ console.log(table.state.globalFilter)
 ### Subscribe()
 
 ```ts
-Subscribe: <TSelected>(props) => ReturnType<FunctionComponent>;
+Subscribe: {
+<TAtomValue>  (props): ReactNode | Promise<ReactNode>;
+<TAtomValue, TSubSelected>  (props): ReactNode | Promise<ReactNode>;
+<TSubSelected>  (props): ReactNode | Promise<ReactNode>;
+};
 ```
 
-A React HOC (Higher Order Component) that allows you to subscribe to the table state.
+Overloads (not a single union) so `selector` callbacks get correct contextual
+types in JSX; a union of two `selector` signatures degrades to implicit `any`.
 
-This is useful for opting into state re-renders for specific parts of the table state.
+Atom **without** `selector` is a separate overload so children receive `TAtomValue`
+(identity projection). If `selector` were optional on one overload, `TSubSelected`
+would default to `unknown` instead of inferring from the atom.
 
-#### Type Parameters
+The **atom** overloads are listed first so `TAtomValue` is inferred from `atom`.
 
-##### TSelected
+#### Call Signature
 
-`TSelected`
+```ts
+<TAtomValue>(props): ReactNode | Promise<ReactNode>;
+```
 
-#### Parameters
+##### Type Parameters
 
-##### props
+###### TAtomValue
+
+`TAtomValue`
+
+##### Parameters
+
+###### props
+
+###### atom
+
+`Atom`\<`TAtomValue`\> \| `ReadonlyAtom`\<`TAtomValue`\>
+
+###### children
+
+(`state`) => `ReactNode` \| `ReactNode`
+
+###### selector?
+
+`undefined`
+
+##### Returns
+
+`ReactNode` \| `Promise`\<`ReactNode`\>
+
+#### Call Signature
+
+```ts
+<TAtomValue, TSubSelected>(props): ReactNode | Promise<ReactNode>;
+```
+
+##### Type Parameters
+
+###### TAtomValue
+
+`TAtomValue`
+
+###### TSubSelected
+
+`TSubSelected`
+
+##### Parameters
+
+###### props
+
+###### atom
+
+`Atom`\<`TAtomValue`\> \| `ReadonlyAtom`\<`TAtomValue`\>
 
 ###### children
 
@@ -109,23 +164,33 @@ This is useful for opting into state re-renders for specific parts of the table 
 
 ###### selector
 
-(`state`) => `TSelected`
+(`state`) => `TSubSelected`
 
-#### Returns
+##### Returns
 
-`ReturnType`\<`FunctionComponent`\>
+`ReactNode` \| `Promise`\<`ReactNode`\>
 
-#### Example
+#### Call Signature
 
 ```ts
-<table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
-  {({ rowSelection }) => ( // important to include `{() => {()}}` syntax
-    <tr key={row.id}>
-         // render the row
-    </tr>
-  ))}
-</table.Subscribe>
+<TSubSelected>(props): ReactNode | Promise<ReactNode>;
 ```
+
+##### Type Parameters
+
+###### TSubSelected
+
+`TSubSelected`
+
+##### Parameters
+
+###### props
+
+`Omit`\<[`SubscribePropsWithStore`](SubscribePropsWithStore.md)\<`TFeatures`, `TData`, `TSubSelected`\>, `"table"`\>
+
+##### Returns
+
+`ReactNode` \| `Promise`\<`ReactNode`\>
 
 ## Type Parameters
 
