@@ -1,18 +1,18 @@
 ---
-id: SubscribePropsWithAtomWithSelector
-title: SubscribePropsWithAtomWithSelector
+id: SubscribePropsWithSourceWithSelector
+title: SubscribePropsWithSourceWithSelector
 ---
 
-# Type Alias: SubscribePropsWithAtomWithSelector\<TFeatures, TData, TAtomValue, TSelected\>
+# Type Alias: SubscribePropsWithSourceWithSelector\<TFeatures, TData, TSourceValue, TSelected\>
 
 ```ts
-type SubscribePropsWithAtomWithSelector<TFeatures, TData, TAtomValue, TSelected> = object;
+type SubscribePropsWithSourceWithSelector<TFeatures, TData, TSourceValue, TSelected> = object;
 ```
 
 Defined in: [Subscribe.ts:54](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L54)
 
-Subscribe to a projected value from a slice atom. The selector receives the
-atom value; children receive the projected `TSelected`.
+Subscribe to a projected value from a source (atom or store). The selector
+receives the source value; children receive the projected `TSelected`.
 
 ## Type Parameters
 
@@ -24,25 +24,15 @@ atom value; children receive the projected `TSelected`.
 
 `TData` *extends* `RowData`
 
-### TAtomValue
+### TSourceValue
 
-`TAtomValue`
+`TSourceValue`
 
 ### TSelected
 
 `TSelected`
 
 ## Properties
-
-### atom
-
-```ts
-atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>;
-```
-
-Defined in: [Subscribe.ts:61](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L61)
-
-***
 
 ### children
 
@@ -66,11 +56,21 @@ Defined in: [Subscribe.ts:62](https://github.com/TanStack/table/blob/main/packag
 
 ##### state
 
-`TAtomValue`
+`TSourceValue`
 
 #### Returns
 
 `TSelected`
+
+***
+
+### source
+
+```ts
+source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>;
+```
+
+Defined in: [Subscribe.ts:61](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L61)
 
 ***
 

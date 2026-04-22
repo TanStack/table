@@ -25,18 +25,19 @@ import type { Signal, ValueEqualityFn } from '@angular/core'
 
 /**
  * Store mode: pass `selector` (required) to project from full table state.
- * Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
- * `selector` to project. Split overloads match React `Subscribe` inference.
+ * Source mode: pass `source` (atom or store); omit `selector` for the whole value
+ * (identity), or pass `selector` to project. Split overloads match React `Subscribe`
+ * inference.
  */
 export interface AngularTableComputed<TFeatures extends TableFeatures> {
-  <TAtomValue>(props: {
-    atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+  <TSourceValue>(props: {
+    source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
     selector?: undefined
-    equal?: ValueEqualityFn<TAtomValue>
-  }): Signal<Readonly<TAtomValue>>
-  <TAtomValue, TSubSelected>(props: {
-    atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-    selector: (state: TAtomValue) => TSubSelected
+    equal?: ValueEqualityFn<TSourceValue>
+  }): Signal<Readonly<TSourceValue>>
+  <TSourceValue, TSubSelected>(props: {
+    source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+    selector: (state: TSourceValue) => TSubSelected
     equal?: ValueEqualityFn<TSubSelected>
   }): Signal<Readonly<TSubSelected>>
   <TSubSelected>(props: {
@@ -190,13 +191,13 @@ export function injectTable<
     )
 
     const computedFn = function computedSubscribe(props: {
-      atom?: Atom<unknown> | ReadonlyAtom<unknown>
+      source?: Atom<unknown> | ReadonlyAtom<unknown>
       selector?: (state: unknown) => unknown
       equal?: ValueEqualityFn<unknown>
     }) {
-      if (props.atom !== undefined) {
+      if (props.source !== undefined) {
         return injectSelector(
-          props.atom,
+          props.source,
           props.selector ?? ((value) => value),
           {
             injector,

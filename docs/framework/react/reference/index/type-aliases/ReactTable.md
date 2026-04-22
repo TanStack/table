@@ -87,8 +87,8 @@ console.log(table.state.globalFilter)
 
 ```ts
 Subscribe: {
-<TAtomValue>  (props): ReactNode | Promise<ReactNode>;
-<TAtomValue, TSubSelected>  (props): ReactNode | Promise<ReactNode>;
+<TSourceValue>  (props): ReactNode | Promise<ReactNode>;
+<TSourceValue, TSubSelected>  (props): ReactNode | Promise<ReactNode>;
 <TSubSelected>  (props): ReactNode | Promise<ReactNode>;
 };
 ```
@@ -96,31 +96,27 @@ Subscribe: {
 Overloads (not a single union) so `selector` callbacks get correct contextual
 types in JSX; a union of two `selector` signatures degrades to implicit `any`.
 
-Atom **without** `selector` is a separate overload so children receive `TAtomValue`
+Source **without** `selector` is a separate overload so children receive `TSourceValue`
 (identity projection). If `selector` were optional on one overload, `TSubSelected`
-would default to `unknown` instead of inferring from the atom.
+would default to `unknown` instead of inferring from the source.
 
-The **atom** overloads are listed first so `TAtomValue` is inferred from `atom`.
+The **source** overloads are listed first so `TSourceValue` is inferred from `source`.
 
 #### Call Signature
 
 ```ts
-<TAtomValue>(props): ReactNode | Promise<ReactNode>;
+<TSourceValue>(props): ReactNode | Promise<ReactNode>;
 ```
 
 ##### Type Parameters
 
-###### TAtomValue
+###### TSourceValue
 
-`TAtomValue`
+`TSourceValue`
 
 ##### Parameters
 
 ###### props
-
-###### atom
-
-`Atom`\<`TAtomValue`\> \| `ReadonlyAtom`\<`TAtomValue`\>
 
 ###### children
 
@@ -130,6 +126,10 @@ The **atom** overloads are listed first so `TAtomValue` is inferred from `atom`.
 
 `undefined`
 
+###### source
+
+`Atom`\<`TSourceValue`\> \| `ReadonlyAtom`\<`TSourceValue`\>
+
 ##### Returns
 
 `ReactNode` \| `Promise`\<`ReactNode`\>
@@ -137,14 +137,14 @@ The **atom** overloads are listed first so `TAtomValue` is inferred from `atom`.
 #### Call Signature
 
 ```ts
-<TAtomValue, TSubSelected>(props): ReactNode | Promise<ReactNode>;
+<TSourceValue, TSubSelected>(props): ReactNode | Promise<ReactNode>;
 ```
 
 ##### Type Parameters
 
-###### TAtomValue
+###### TSourceValue
 
-`TAtomValue`
+`TSourceValue`
 
 ###### TSubSelected
 
@@ -154,10 +154,6 @@ The **atom** overloads are listed first so `TAtomValue` is inferred from `atom`.
 
 ###### props
 
-###### atom
-
-`Atom`\<`TAtomValue`\> \| `ReadonlyAtom`\<`TAtomValue`\>
-
 ###### children
 
 (`state`) => `ReactNode` \| `ReactNode`
@@ -165,6 +161,10 @@ The **atom** overloads are listed first so `TAtomValue` is inferred from `atom`.
 ###### selector
 
 (`state`) => `TSubSelected`
+
+###### source
+
+`Atom`\<`TSourceValue`\> \| `ReadonlyAtom`\<`TSourceValue`\>
 
 ##### Returns
 

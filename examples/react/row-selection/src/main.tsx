@@ -44,7 +44,7 @@ function App() {
           header: () => {
             return (
               <table.Subscribe
-                atom={table.atoms.rowSelection} // slice atom only — not the full derived store
+                source={table.atoms.rowSelection} // slice atom only — not the full derived store
                 // omit selector to subscribe to the whole rowSelection slice
               >
                 {() => (
@@ -178,7 +178,7 @@ function App() {
                   return (
                     <table.Subscribe
                       key={row.id}
-                      atom={rowSelectionAtom} // same slice as table.atoms.rowSelection; external atom for clarity
+                      source={rowSelectionAtom} // same slice as table.atoms.rowSelection; external atom for clarity
                       selector={(rowSelection) => rowSelection?.[row.id]} // optional: narrow to this row so the row re-renders only when this id toggles
                     >
                       {(_isRowSelected) => (
@@ -200,7 +200,7 @@ function App() {
                 <tr>
                   <td className="p-1">
                     <table.Subscribe
-                      atom={table.atoms.rowSelection} // whole slice; footer toggles don’t need per-row projection
+                      source={table.atoms.rowSelection} // whole slice; footer toggles don’t need per-row projection
                     >
                       {(_rowSelection) => (
                         <IndeterminateCheckbox

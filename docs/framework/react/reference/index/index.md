@@ -28,9 +28,9 @@ title: index
 - [ReactTable](type-aliases/ReactTable.md)
 - [Renderable](type-aliases/Renderable.md)
 - [SubscribeProps](type-aliases/SubscribeProps.md)
-- [SubscribePropsWithAtom](type-aliases/SubscribePropsWithAtom.md)
-- [SubscribePropsWithAtomIdentity](type-aliases/SubscribePropsWithAtomIdentity.md)
-- [SubscribePropsWithAtomWithSelector](type-aliases/SubscribePropsWithAtomWithSelector.md)
+- [SubscribePropsWithSource](type-aliases/SubscribePropsWithSource.md)
+- [SubscribePropsWithSourceIdentity](type-aliases/SubscribePropsWithSourceIdentity.md)
+- [SubscribePropsWithSourceWithSelector](type-aliases/SubscribePropsWithSourceWithSelector.md)
 - [SubscribePropsWithStore](type-aliases/SubscribePropsWithStore.md)
 
 ## Functions

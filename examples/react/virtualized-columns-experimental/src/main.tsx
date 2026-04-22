@@ -125,7 +125,7 @@ function TableContainer({ table }: TableContainerProps) {
         height: '800px', // should be a fixed height
       }}
     >
-      <table.Subscribe atom={table.atoms.sorting}>
+      <table.Subscribe source={table.atoms.sorting}>
         {() => (
           // Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights
           <table style={{ display: 'grid' }}>

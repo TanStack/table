@@ -96,7 +96,7 @@ function App() {
   )
 
   return (
-    <table.Subscribe atom={table.atoms.sorting}>
+    <table.Subscribe source={table.atoms.sorting}>
       {/* omit selector to subscribe to the entire sorting slice */}
       {() => (
         <div className="p-2">

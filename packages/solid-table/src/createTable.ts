@@ -20,20 +20,20 @@ export type SolidTable<
   TSelected = {},
 > = Table<TFeatures, TData> & {
   /**
-   * Subscribe to the store (selector required) or a single slice atom.
-   * Atom **without** `selector` is a separate overload so children receive
-   * `Accessor<TAtomValue>` (identity projection). Atom overloads are listed first
+   * Subscribe to the store (selector required) or a single source (atom or store).
+   * Source **without** `selector` is a separate overload so children receive
+   * `Accessor<TSourceValue>` (identity projection). Source overloads are listed first
    * for JSX contextual typing.
    */
   Subscribe: {
-    <TAtomValue>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+    <TSourceValue>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
       selector?: undefined
-      children: ((state: Accessor<TAtomValue>) => JSX.Element) | JSX.Element
+      children: ((state: Accessor<TSourceValue>) => JSX.Element) | JSX.Element
     }): JSX.Element
-    <TAtomValue, TSubSelected>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-      selector: (state: TAtomValue) => TSubSelected
+    <TSourceValue, TSubSelected>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      selector: (state: TSourceValue) => TSubSelected
       children: ((state: Accessor<TSubSelected>) => JSX.Element) | JSX.Element
     }): JSX.Element
     <TSubSelected>(props: {
@@ -117,13 +117,13 @@ export function createTable<
   })
 
   table.Subscribe = ((props: {
-    atom?: Atom<unknown> | ReadonlyAtom<unknown>
+    source?: Atom<unknown> | ReadonlyAtom<unknown>
     selector?: ((state: unknown) => unknown) | undefined
     children: ((state: Accessor<unknown>) => JSX.Element) | JSX.Element
   }) => {
-    const source = props.atom !== undefined ? props.atom : table.store
+    const source = props.source !== undefined ? props.source : table.store
     const selectFn =
-      props.atom !== undefined
+      props.source !== undefined
         ? (props.selector ?? ((x: unknown) => x))
         : props.selector
     const selected = useSelector(

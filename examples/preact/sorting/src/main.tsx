@@ -117,7 +117,7 @@ function App() {
 
   return (
     <div className="p-2">
-      <table.Subscribe atom={table.atoms.sorting}>
+      <table.Subscribe source={table.atoms.sorting}>
         {(_state) => (
           <>
             <div className="h-2" />

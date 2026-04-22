@@ -28,7 +28,8 @@ export type ReactTable<
    *
    * This is useful for opting into state re-renders for specific parts of the table state.
    *
-   * Pass `atom` to subscribe to a single slice atom instead of the full `table.store`.
+   * Pass `source` to subscribe to a single atom or store (e.g. `table.atoms.rowSelection`
+   * or `table.optionsStore`) instead of the full `table.store`.
    *
    * @example
    * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
@@ -38,12 +39,12 @@ export type ReactTable<
    * </table.Subscribe>
    *
    * @example
-   * <table.Subscribe atom={table.atoms.rowSelection}>
+   * <table.Subscribe source={table.atoms.rowSelection}>
    *   {(rowSelection) => <div>...</div>}
    * </table.Subscribe>
    *
    * @example
-   * <table.Subscribe atom={table.atoms.rowSelection} selector={(s) => s?.[row.id]}>
+   * <table.Subscribe source={table.atoms.rowSelection} selector={(s) => s?.[row.id]}>
    *   {() => <tr key={row.id}>...</tr>}
    * </table.Subscribe>
    */
@@ -51,21 +52,21 @@ export type ReactTable<
    * Overloads (not a single union) so `selector` callbacks get correct contextual
    * types in JSX; a union of two `selector` signatures degrades to implicit `any`.
    *
-   * Atom **without** `selector` is a separate overload so children receive `TAtomValue`
+   * Source **without** `selector` is a separate overload so children receive `TSourceValue`
    * (identity projection). If `selector` were optional on one overload, `TSubSelected`
-   * would default to `unknown` instead of inferring from the atom.
+   * would default to `unknown` instead of inferring from the source.
    *
-   * The **atom** overloads are listed first so `TAtomValue` is inferred from `atom`.
+   * The **source** overloads are listed first so `TSourceValue` is inferred from `source`.
    */
   Subscribe: {
-    <TAtomValue>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+    <TSourceValue>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
       selector?: undefined
-      children: ((state: TAtomValue) => ReactNode) | ReactNode
+      children: ((state: TSourceValue) => ReactNode) | ReactNode
     }): ReturnType<FunctionComponent>
-    <TAtomValue, TSubSelected>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-      selector: (state: TAtomValue) => TSubSelected
+    <TSourceValue, TSubSelected>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      selector: (state: TSourceValue) => TSubSelected
       children: ((state: TSubSelected) => ReactNode) | ReactNode
     }): ReturnType<FunctionComponent>
     <TSubSelected>(

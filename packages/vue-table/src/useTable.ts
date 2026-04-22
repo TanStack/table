@@ -55,22 +55,22 @@ export type VueTable<
   TSelected = {},
 > = Table<TFeatures, TData> & {
   /**
-   * Store mode: `selector` required. Atom mode: pass `atom`; omit `selector` for the
-   * whole slice (identity), or pass `selector` to project. Split overloads so atom-only
-   * infers `TAtomValue` for `children` (see React `Subscribe`).
+   * Store mode: `selector` required. Source mode: pass `source` (atom or store); omit
+   * `selector` for the whole value (identity), or pass `selector` to project. Split
+   * overloads so source-only infers `TSourceValue` for `children` (see React `Subscribe`).
    */
   Subscribe: {
-    <TAtomValue>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+    <TSourceValue>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
       selector?: undefined
       children:
-        | ((state: Readonly<TAtomValue>) => VNode | Array<VNode>)
+        | ((state: Readonly<TSourceValue>) => VNode | Array<VNode>)
         | VNode
         | Array<VNode>
     }): VNode | Array<VNode>
-    <TAtomValue, TSubSelected>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-      selector: (state: TAtomValue) => TSubSelected
+    <TSourceValue, TSubSelected>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      selector: (state: TSourceValue) => TSubSelected
       children:
         | ((state: Readonly<TSubSelected>) => VNode | Array<VNode>)
         | VNode
@@ -214,16 +214,16 @@ export function useTable<
   )
 
   table.Subscribe = ((props: {
-    atom?: Atom<unknown> | ReadonlyAtom<unknown>
+    source?: Atom<unknown> | ReadonlyAtom<unknown>
     selector?: ((state: unknown) => unknown) | undefined
     children:
       | ((state: Readonly<unknown>) => VNode | Array<VNode>)
       | VNode
       | Array<VNode>
   }) => {
-    const source = props.atom !== undefined ? props.atom : table.store
+    const source = props.source !== undefined ? props.source : table.store
     const selectFn =
-      props.atom !== undefined
+      props.source !== undefined
         ? (props.selector ?? ((x: unknown) => x))
         : props.selector
     const selected = useSelector(source as never, selectFn as never, {

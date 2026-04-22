@@ -29,11 +29,11 @@ export type LitTable<
   TSelected = {},
 > = Table<TFeatures, TData> & {
   /**
-   * Subscribe to a selected slice of table state, or to a single atom.
+   * Subscribe to a selected slice of table state, or to a single source (atom or store).
    *
    * **Lit note:** `TableController` still wires host updates via the full `table.store`
-   * subscription — atom mode matches the React API and reads `atom.get()` at render time.
-   * True atom-only invalidation can be added later via `atom.subscribe`.
+   * subscription — source mode matches the React API and reads `source.get()` at render
+   * time. True source-only invalidation can be added later via `source.subscribe`.
    *
    * @example
    * ```ts
@@ -44,17 +44,17 @@ export type LitTable<
    * ```
    */
   Subscribe: {
-    <TAtomValue>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+    <TSourceValue>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
       selector?: undefined
       children:
-        | ((state: Readonly<TAtomValue>) => TemplateResult | string)
+        | ((state: Readonly<TSourceValue>) => TemplateResult | string)
         | TemplateResult
         | string
     }): TemplateResult | string
-    <TAtomValue, TSubscribeSelected>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-      selector: (state: TAtomValue) => TSubscribeSelected
+    <TSourceValue, TSubscribeSelected>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      selector: (state: TSourceValue) => TSubscribeSelected
       children:
         | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
         | TemplateResult
@@ -187,7 +187,7 @@ export class TableController<
 
     // Attach Subscribe function
     const Subscribe = function Subscribe(props: {
-      atom?: Atom<unknown> | ReadonlyAtom<unknown>
+      source?: Atom<unknown> | ReadonlyAtom<unknown>
       selector?: (state: unknown) => unknown
       children:
         | ((state: Readonly<unknown>) => TemplateResult | string)
@@ -195,8 +195,8 @@ export class TableController<
         | string
     }): TemplateResult | string {
       let selectedState: unknown
-      if (props.atom !== undefined) {
-        const v = props.atom.get()
+      if (props.source !== undefined) {
+        const v = props.source.get()
         selectedState = props.selector !== undefined ? props.selector(v) : v
       } else {
         selectedState = props.selector!(tableInstance.store.state)

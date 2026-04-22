@@ -5,11 +5,12 @@ title: AngularTableComputed
 
 # Interface: AngularTableComputed()\<TFeatures\>
 
-Defined in: [injectTable.ts:31](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L31)
+Defined in: [injectTable.ts:32](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L32)
 
 Store mode: pass `selector` (required) to project from full table state.
-Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
-`selector` to project. Split overloads match React `Subscribe` inference.
+Source mode: pass `source` (atom or store); omit `selector` for the whole value
+(identity), or pass `selector` to project. Split overloads match React `Subscribe`
+inference.
 
 ## Type Parameters
 
@@ -20,58 +21,60 @@ Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
 ## Call Signature
 
 ```ts
-AngularTableComputed<TAtomValue>(props): Signal<Readonly<TAtomValue>>;
+AngularTableComputed<TSourceValue>(props): Signal<Readonly<TSourceValue>>;
 ```
 
-Defined in: [injectTable.ts:32](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L32)
+Defined in: [injectTable.ts:33](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L33)
 
 Store mode: pass `selector` (required) to project from full table state.
-Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
-`selector` to project. Split overloads match React `Subscribe` inference.
+Source mode: pass `source` (atom or store); omit `selector` for the whole value
+(identity), or pass `selector` to project. Split overloads match React `Subscribe`
+inference.
 
 ### Type Parameters
 
-#### TAtomValue
+#### TSourceValue
 
-`TAtomValue`
+`TSourceValue`
 
 ### Parameters
 
 #### props
 
-##### atom
-
-`Atom`\<`TAtomValue`\> \| `ReadonlyAtom`\<`TAtomValue`\>
-
 ##### equal?
 
-`ValueEqualityFn`\<`TAtomValue`\>
+`ValueEqualityFn`\<`TSourceValue`\>
 
 ##### selector?
 
 `undefined`
 
+##### source
+
+`Atom`\<`TSourceValue`\> \| `ReadonlyAtom`\<`TSourceValue`\>
+
 ### Returns
 
-`Signal`\<`Readonly`\<`TAtomValue`\>\>
+`Signal`\<`Readonly`\<`TSourceValue`\>\>
 
 ## Call Signature
 
 ```ts
-AngularTableComputed<TAtomValue, TSubSelected>(props): Signal<Readonly<TSubSelected>>;
+AngularTableComputed<TSourceValue, TSubSelected>(props): Signal<Readonly<TSubSelected>>;
 ```
 
-Defined in: [injectTable.ts:37](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L37)
+Defined in: [injectTable.ts:38](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L38)
 
 Store mode: pass `selector` (required) to project from full table state.
-Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
-`selector` to project. Split overloads match React `Subscribe` inference.
+Source mode: pass `source` (atom or store); omit `selector` for the whole value
+(identity), or pass `selector` to project. Split overloads match React `Subscribe`
+inference.
 
 ### Type Parameters
 
-#### TAtomValue
+#### TSourceValue
 
-`TAtomValue`
+`TSourceValue`
 
 #### TSubSelected
 
@@ -81,10 +84,6 @@ Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
 
 #### props
 
-##### atom
-
-`Atom`\<`TAtomValue`\> \| `ReadonlyAtom`\<`TAtomValue`\>
-
 ##### equal?
 
 `ValueEqualityFn`\<`TSubSelected`\>
@@ -92,6 +91,10 @@ Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
 ##### selector
 
 (`state`) => `TSubSelected`
+
+##### source
+
+`Atom`\<`TSourceValue`\> \| `ReadonlyAtom`\<`TSourceValue`\>
 
 ### Returns
 
@@ -103,11 +106,12 @@ Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
 AngularTableComputed<TSubSelected>(props): Signal<Readonly<TSubSelected>>;
 ```
 
-Defined in: [injectTable.ts:42](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L42)
+Defined in: [injectTable.ts:43](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L43)
 
 Store mode: pass `selector` (required) to project from full table state.
-Atom mode: pass `atom`; omit `selector` for the whole atom (identity), or pass
-`selector` to project. Split overloads match React `Subscribe` inference.
+Source mode: pass `source` (atom or store); omit `selector` for the whole value
+(identity), or pass `selector` to project. Split overloads match React `Subscribe`
+inference.
 
 ### Type Parameters
 

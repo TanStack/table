@@ -8,10 +8,10 @@ title: Subscribe
 ## Call Signature
 
 ```ts
-function Subscribe<TFeatures, TData, TAtomValue>(props): ReactNode | Promise<ReactNode>;
+function Subscribe<TFeatures, TData, TSourceValue>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [Subscribe.ts:138](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L138)
+Defined in: [Subscribe.ts:148](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L148)
 
 A React component that allows you to subscribe to the table state.
 
@@ -30,15 +30,15 @@ contextual typing works. This standalone component uses a union `props` type.
 
 `TData` *extends* `RowData`
 
-#### TAtomValue
+#### TSourceValue
 
-`TAtomValue`
+`TSourceValue`
 
 ### Parameters
 
 #### props
 
-[`SubscribePropsWithAtomIdentity`](../type-aliases/SubscribePropsWithAtomIdentity.md)\<`TFeatures`, `TData`, `TAtomValue`\>
+[`SubscribePropsWithSourceIdentity`](../type-aliases/SubscribePropsWithSourceIdentity.md)\<`TFeatures`, `TData`, `TSourceValue`\>
 
 ### Returns
 
@@ -56,17 +56,17 @@ contextual typing works. This standalone component uses a union `props` type.
 ```
 
 ```tsx
-// Entire slice atom (no selector)
-<Subscribe table={table} atom={table.atoms.rowSelection}>
+// Entire source (atom or store) — no selector
+<Subscribe table={table} source={table.atoms.rowSelection}>
   {(rowSelection) => <div>...</div>}
 </Subscribe>
 ```
 
 ```tsx
-// Project atom value (e.g. one row’s selection)
+// Project source value (e.g. one row’s selection)
 <Subscribe
   table={table}
-  atom={table.atoms.rowSelection}
+  source={table.atoms.rowSelection}
   selector={(rowSelection) => rowSelection?.[row.id]}
 >
   {(selected) => <tr data-selected={!!selected}>...</tr>}
@@ -85,10 +85,10 @@ contextual typing works. This standalone component uses a union `props` type.
 ## Call Signature
 
 ```ts
-function Subscribe<TFeatures, TData, TAtomValue, TSelected>(props): ReactNode | Promise<ReactNode>;
+function Subscribe<TFeatures, TData, TSourceValue, TSelected>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [Subscribe.ts:145](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L145)
+Defined in: [Subscribe.ts:155](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L155)
 
 A React component that allows you to subscribe to the table state.
 
@@ -107,9 +107,9 @@ contextual typing works. This standalone component uses a union `props` type.
 
 `TData` *extends* `RowData`
 
-#### TAtomValue
+#### TSourceValue
 
-`TAtomValue`
+`TSourceValue`
 
 #### TSelected
 
@@ -119,7 +119,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 #### props
 
-[`SubscribePropsWithAtomWithSelector`](../type-aliases/SubscribePropsWithAtomWithSelector.md)\<`TFeatures`, `TData`, `TAtomValue`, `TSelected`\>
+[`SubscribePropsWithSourceWithSelector`](../type-aliases/SubscribePropsWithSourceWithSelector.md)\<`TFeatures`, `TData`, `TSourceValue`, `TSelected`\>
 
 ### Returns
 
@@ -137,17 +137,17 @@ contextual typing works. This standalone component uses a union `props` type.
 ```
 
 ```tsx
-// Entire slice atom (no selector)
-<Subscribe table={table} atom={table.atoms.rowSelection}>
+// Entire source (atom or store) — no selector
+<Subscribe table={table} source={table.atoms.rowSelection}>
   {(rowSelection) => <div>...</div>}
 </Subscribe>
 ```
 
 ```tsx
-// Project atom value (e.g. one row’s selection)
+// Project source value (e.g. one row’s selection)
 <Subscribe
   table={table}
-  atom={table.atoms.rowSelection}
+  source={table.atoms.rowSelection}
   selector={(rowSelection) => rowSelection?.[row.id]}
 >
   {(selected) => <tr data-selected={!!selected}>...</tr>}
@@ -169,7 +169,7 @@ contextual typing works. This standalone component uses a union `props` type.
 function Subscribe<TFeatures, TData, TSelected>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [Subscribe.ts:158](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L158)
+Defined in: [Subscribe.ts:168](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L168)
 
 A React component that allows you to subscribe to the table state.
 
@@ -214,17 +214,17 @@ contextual typing works. This standalone component uses a union `props` type.
 ```
 
 ```tsx
-// Entire slice atom (no selector)
-<Subscribe table={table} atom={table.atoms.rowSelection}>
+// Entire source (atom or store) — no selector
+<Subscribe table={table} source={table.atoms.rowSelection}>
   {(rowSelection) => <div>...</div>}
 </Subscribe>
 ```
 
 ```tsx
-// Project atom value (e.g. one row’s selection)
+// Project source value (e.g. one row’s selection)
 <Subscribe
   table={table}
-  atom={table.atoms.rowSelection}
+  source={table.atoms.rowSelection}
   selector={(rowSelection) => rowSelection?.[row.id]}
 >
   {(selected) => <tr data-selected={!!selected}>...</tr>}

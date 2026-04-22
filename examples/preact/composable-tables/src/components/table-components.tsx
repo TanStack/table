@@ -14,7 +14,7 @@ export function PaginationControls() {
   const table = useTableContext()
 
   return (
-    <table.Subscribe atom={table.atoms.pagination}>
+    <table.Subscribe source={table.atoms.pagination}>
       {/* whole pagination slice — no selector needed */}
       {(pagination: PaginationState) => (
         <div className="pagination">

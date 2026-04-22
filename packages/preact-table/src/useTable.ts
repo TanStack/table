@@ -24,7 +24,8 @@ export type PreactTable<
   /**
    * A Preact HOC (Higher Order Component) that allows you to subscribe to the table state.
    *
-   * Pass `atom` to subscribe to a single slice atom instead of the full `table.store`.
+   * Pass `source` to subscribe to a single atom or store (e.g. `table.atoms.rowSelection`
+   * or `table.optionsStore`) instead of the full `table.store`.
    *
    * @example
    * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
@@ -34,28 +35,28 @@ export type PreactTable<
    * </table.Subscribe>
    *
    * @example
-   * <table.Subscribe atom={table.atoms.rowSelection}>
+   * <table.Subscribe source={table.atoms.rowSelection}>
    *   {(rowSelection) => <div>...</div>}
    * </table.Subscribe>
    *
    * @example
-   * <table.Subscribe atom={table.atoms.rowSelection} selector={(s) => s?.[row.id]}>
+   * <table.Subscribe source={table.atoms.rowSelection} selector={(s) => s?.[row.id]}>
    *   {() => <tr key={row.id}>...</tr>}
    * </table.Subscribe>
    */
   /**
-   * Overloads (atom first, then store) so JSX contextual typing works for both modes.
-   * Atom without `selector` is separate so children infer `TAtomValue` (identity projection).
+   * Overloads (source first, then store) so JSX contextual typing works for both modes.
+   * Source without `selector` is separate so children infer `TSourceValue` (identity projection).
    */
   Subscribe: {
-    <TAtomValue>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
+    <TSourceValue>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
       selector?: undefined
-      children: ((state: TAtomValue) => ComponentChildren) | ComponentChildren
+      children: ((state: TSourceValue) => ComponentChildren) | ComponentChildren
     }): ComponentChildren
-    <TAtomValue, TSubSelected>(props: {
-      atom: Atom<TAtomValue> | ReadonlyAtom<TAtomValue>
-      selector: (state: TAtomValue) => TSubSelected
+    <TSourceValue, TSubSelected>(props: {
+      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      selector: (state: TSourceValue) => TSubSelected
       children: ((state: TSubSelected) => ComponentChildren) | ComponentChildren
     }): ComponentChildren
     <TSubSelected>(

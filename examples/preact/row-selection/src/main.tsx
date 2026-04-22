@@ -45,7 +45,7 @@ function App() {
           header: () => {
             return (
               <table.Subscribe
-                atom={table.atoms.rowSelection} // slice atom only — not the full derived store
+                source={table.atoms.rowSelection} // slice atom only — not the full derived store
               >
                 {() => (
                   <IndeterminateCheckbox
@@ -180,7 +180,7 @@ function App() {
                   return (
                     <table.Subscribe
                       key={row.id}
-                      atom={rowSelectionAtom}
+                      source={rowSelectionAtom}
                       selector={(rowSelection) => rowSelection?.[row.id]} // optional: narrow to this row id
                     >
                       {(_isRowSelected) => (
@@ -201,7 +201,7 @@ function App() {
               <tfoot>
                 <tr>
                   <td className="p-1">
-                    <table.Subscribe atom={table.atoms.rowSelection}>
+                    <table.Subscribe source={table.atoms.rowSelection}>
                       {(_rowSelection) => (
                         <IndeterminateCheckbox
                           checked={table.getIsAllPageRowsSelected()}
