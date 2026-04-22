@@ -5,7 +5,7 @@ import packageJson from './package.json'
 
 const tsconfigPath = path.join(import.meta.dirname, 'tsconfig.test.json')
 const testDirPath = path.join(import.meta.dirname, 'tests')
-const angularPlugin = angular({ tsconfig: tsconfigPath, jit: true })
+const angularPlugin = angular({ tsconfig: tsconfigPath })
 
 export default defineConfig({
   plugins: [angularPlugin],
