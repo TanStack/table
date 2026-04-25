@@ -25,14 +25,14 @@ describe('constructTable with stockFeatures', () => {
     expect(table.initialState).toHaveProperty('expanded')
     expect(table.initialState).toHaveProperty('globalFilter')
 
-    expect(table.store.state).toHaveProperty('columnFilters')
-    expect(table.store.state).toHaveProperty('columnOrder')
-    expect(table.store.state).toHaveProperty('grouping')
-    expect(table.store.state).toHaveProperty('columnPinning')
+    expect(table.atoms.columnFilters).toBeDefined()
+    expect(table.atoms.columnOrder).toBeDefined()
+    expect(table.atoms.grouping).toBeDefined()
+    expect(table.atoms.columnPinning).toBeDefined()
 
     // Defaults
-    expect(table.store.state.columnFilters).toEqual([])
-    expect(table.store.state.columnOrder).toEqual([])
-    expect(table.store.state.grouping).toEqual([])
+    expect(table.atoms.columnFilters.get()).toEqual([])
+    expect(table.atoms.columnOrder.get()).toEqual([])
+    expect(table.atoms.grouping.get()).toEqual([])
   })
 })

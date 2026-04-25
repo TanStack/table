@@ -178,7 +178,7 @@ function App() {
                   return (
                     <table.Subscribe
                       key={row.id}
-                      source={rowSelectionAtom} // same slice as table.atoms.rowSelection; external atom for clarity
+                      source={table.atoms.rowSelection} // same slice as table.atoms.rowSelection; external atom for clarity
                       selector={(rowSelection) => rowSelection?.[row.id]} // optional: narrow to this row so the row re-renders only when this id toggles
                     >
                       {(_isRowSelected) => (
@@ -201,8 +201,9 @@ function App() {
                   <td className="p-1">
                     <table.Subscribe
                       source={table.atoms.rowSelection} // whole slice; footer toggles don’t need per-row projection
+                      selector={(a) => a}
                     >
-                      {(_rowSelection) => (
+                      {() => (
                         <IndeterminateCheckbox
                           checked={table.getIsAllPageRowsSelected()}
                           indeterminate={table.getIsSomePageRowsSelected()}

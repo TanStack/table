@@ -1,5 +1,6 @@
 import { createAtom, createStore } from '@tanstack/store'
 import { coreFeatures } from '../coreFeatures'
+import { cloneState } from '../../utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -15,7 +16,7 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
       feature.getInitialState?.(initialState as TableState<TFeatures>) ??
       initialState
   })
-  return structuredClone(initialState) as TableState<TFeatures>
+  return cloneState(initialState) as TableState<TFeatures>
 }
 
 export function constructTable<

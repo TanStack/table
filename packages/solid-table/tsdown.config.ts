@@ -3,7 +3,11 @@ import solid from 'vite-plugin-solid'
 
 export default defineConfig({
   plugins: [solid()],
-  entry: ['./src/index.tsx', './src/static-functions.ts'],
+  entry: [
+    './src/index.tsx',
+    './src/static-functions.ts',
+    './src/flex-render.tsx',
+  ],
   format: ['esm', 'cjs'],
   unbundle: true,
   dts: true,

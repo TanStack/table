@@ -82,7 +82,7 @@ describe('table methods', () => {
 
       table.resetRowPinning(true)
 
-      expect(table.store.state.rowPinning).toEqual(EMPTY_PINNING_STATE)
+      expect(table.atoms.rowPinning.get()).toEqual(EMPTY_PINNING_STATE)
     })
 
     it('should reset to initial state when defaultState is false', () => {
@@ -103,7 +103,7 @@ describe('table methods', () => {
 
       table.resetRowPinning(false)
 
-      expect(table.store.state.rowPinning).toEqual(initialState)
+      expect(table.atoms.rowPinning.get()).toEqual(initialState)
     })
   })
 

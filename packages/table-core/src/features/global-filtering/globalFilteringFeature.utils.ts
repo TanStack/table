@@ -1,5 +1,5 @@
 import { filterFn_includesString } from '../../fns/filterFns'
-import { isFunction } from '../../utils'
+import { cloneState, isFunction } from '../../utils'
 import type { Column_Internal } from '../../types/Column'
 import type { FilterFn } from '../column-filtering/columnFilteringFeature.types'
 import type { CellData, RowData } from '../../types/type-utils'
@@ -55,6 +55,6 @@ export function table_resetGlobalFilter<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setGlobalFilter(
     table,
-    defaultState ? undefined : table.initialState.globalFilter,
+    defaultState ? undefined : cloneState(table.initialState.globalFilter),
   )
 }

@@ -32,6 +32,10 @@
       "types": "./dist/types/tanstack-angular-table-static-functions.d.ts",
       "default": "./dist/fesm2022/tanstack-angular-table-static-functions.mjs"
     },
+    "./flex-render": {
+      "types": "./dist/types/tanstack-angular-table.d.ts",
+      "default": "./dist/fesm2022/tanstack-angular-table.mjs"
+    },
     "./package.json": {
       "default": "./package.json"
     }

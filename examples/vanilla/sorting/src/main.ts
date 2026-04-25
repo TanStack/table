@@ -1,15 +1,22 @@
 import './index.css'
 import {
-  constructTableHelper,
+  constructTable,
+  createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
   sortFns,
+  tableFeatures,
 } from '@tanstack/table-core'
+import { FlexRender } from '@tanstack/table-core/flex-render'
 import { makeData } from './makeData'
-import { createTable, flexRender } from './createTable'
 import type { SortFn } from '@tanstack/table-core'
+import type { Person } from './makeData'
 
 const data = makeData(1000)
+
+const _features = tableFeatures({
+  rowSortingFeature,
+})
 
 // Custom sorting logic for one of our enum columns
 const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
@@ -19,18 +26,9 @@ const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const tableHelper = constructTableHelper(createTable, {
-  _features: {
-    rowSortingFeature,
-  },
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
-})
+const columnHelper = createColumnHelper<typeof _features, Person>()
 
-const { columnHelper } = tableHelper
-
-const columns = [
+const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
     cell: (info) => info.getValue(),
     // This column will sort in ascending order by default since it is a string column
@@ -66,7 +64,7 @@ const columns = [
   columnHelper.accessor('createdAt', {
     header: 'Created At',
   }),
-]
+])
 
 const renderTable = () => {
   // Create table elements
@@ -96,7 +94,7 @@ const renderTable = () => {
         header.column.getToggleSortingHandler()?.(e)),
         (divElement.innerHTML = header.isPlaceholder
           ? ''
-          : flexRender(header.column.columnDef.header, header.getContext())))
+          : String(FlexRender({ header }) ?? '')))
       divElement.innerHTML +=
         {
           asc: ' 🔼',
@@ -116,10 +114,7 @@ const renderTable = () => {
       const trElement = document.createElement('tr')
       row.getAllCells().forEach((cell) => {
         const tdElement = document.createElement('td')
-        tdElement.innerHTML = flexRender(
-          cell.column.columnDef.cell,
-          cell.getContext(),
-        )
+        tdElement.innerHTML = String(FlexRender({ cell }) ?? '')
         trElement.appendChild(tdElement)
       })
       tbodyElement.appendChild(trElement)
@@ -142,11 +137,16 @@ const renderTable = () => {
   wrapperElement.appendChild(stateInfoElement)
 }
 
-const table = tableHelper.tableCreator({
+const table = constructTable({
+  _features,
+  _rowModels: {
+    sortedRowModel: createSortedRowModel(sortFns),
+  },
   data,
   columns,
-  onStateChange: () => renderTable(),
   debugTable: true,
 })
+
+table.store.subscribe(() => renderTable())
 
 renderTable()

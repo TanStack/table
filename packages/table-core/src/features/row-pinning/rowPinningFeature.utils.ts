@@ -1,5 +1,5 @@
 import { row_getIsAllParentsExpanded } from '../row-expanding/rowExpandingFeature.utils'
-import { callMemoOrStaticFn } from '../../utils'
+import { callMemoOrStaticFn, cloneState } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -12,10 +12,10 @@ import type {
 // State Utils
 
 export function getDefaultRowPinningState(): RowPinningState {
-  return structuredClone({
+  return {
     top: [],
     bottom: [],
-  })
+  }
 }
 
 export function table_setRowPinning<
@@ -36,7 +36,9 @@ export function table_resetRowPinning<
     table,
     defaultState
       ? getDefaultRowPinningState()
-      : (table.initialState.rowPinning ?? getDefaultRowPinningState()),
+      : cloneState(
+          table.initialState.rowPinning ?? getDefaultRowPinningState(),
+        ),
   )
 }
 

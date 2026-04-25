@@ -1,4 +1,4 @@
-import { functionalUpdate, isFunction } from '../../utils'
+import { cloneState, functionalUpdate, isFunction } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -9,7 +9,7 @@ import type {
 } from './columnFilteringFeature.types'
 
 export function getDefaultColumnFiltersState(): ColumnFiltersState {
-  return structuredClone([])
+  return []
 }
 
 export function column_getAutoFilterFn<
@@ -188,7 +188,7 @@ export function table_resetColumnFilters<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnFilters(
     table,
-    defaultState ? [] : (table.initialState.columnFilters ?? []),
+    defaultState ? [] : cloneState(table.initialState.columnFilters ?? []),
   )
 }
 

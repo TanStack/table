@@ -1,5 +1,5 @@
 import { reSplitAlphaNumeric, sortFn_basic } from '../../fns/sortFns'
-import { isFunction } from '../../utils'
+import { cloneState, isFunction } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -13,7 +13,7 @@ import type {
 // State Utils
 
 export function getDefaultSortingState(): SortingState {
-  return structuredClone([])
+  return []
 }
 
 export function table_setSorting<
@@ -29,7 +29,7 @@ export function table_resetSorting<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setSorting(
     table,
-    defaultState ? [] : (table.initialState.sorting ?? []),
+    defaultState ? [] : cloneState(table.initialState.sorting ?? []),
   )
 }
 

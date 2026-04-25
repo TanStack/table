@@ -9,4 +9,4 @@ title: $internalMemoFnMeta
 const $internalMemoFnMeta: typeof $internalMemoFnMeta;
 ```
 
-Defined in: [utils.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L56)
+Defined in: [utils.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L80)

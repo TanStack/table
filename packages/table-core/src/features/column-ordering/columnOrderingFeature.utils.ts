@@ -1,4 +1,5 @@
 import { table_getPinnedVisibleLeafColumns } from '../column-pinning/columnPinningFeature.utils'
+import { cloneState } from '../../utils'
 import type { GroupingState } from '../column-grouping/columnGroupingFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -8,7 +9,7 @@ import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeatu
 import type { ColumnOrderState } from './columnOrderingFeature.types'
 
 export function getDefaultColumnOrderState(): ColumnOrderState {
-  return structuredClone([])
+  return []
 }
 
 export function column_getIndex<
@@ -60,7 +61,7 @@ export function table_resetColumnOrder<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
-    defaultState ? [] : (table.initialState.columnOrder ?? []),
+    defaultState ? [] : cloneState(table.initialState.columnOrder ?? []),
   )
 }
 

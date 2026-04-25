@@ -3,17 +3,24 @@ import { TableDevtoolsCore } from '@tanstack/table-devtools'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/solid'
 import type { JSX } from 'solid-js'
 
-export interface TableDevtoolsSolidInit extends DevtoolsPanelProps {}
+export interface TableDevtoolsSolidInit extends Partial<DevtoolsPanelProps> {}
 
 type TableDevtoolsPanelComponent = (
-  props: TableDevtoolsSolidInit,
+  props?: TableDevtoolsSolidInit,
 ) => JSX.Element
 
 const [TableDevtoolsPanelBase, TableDevtoolsPanelNoOpBase] =
   createSolidPanel(TableDevtoolsCore)
 
-export const TableDevtoolsPanel: TableDevtoolsPanelComponent =
-  TableDevtoolsPanelBase as TableDevtoolsPanelComponent
+function resolvePanelProps(props?: TableDevtoolsSolidInit): DevtoolsPanelProps {
+  return {
+    theme: props?.theme ?? 'dark',
+    devtoolsOpen: props?.devtoolsOpen ?? false,
+  }
+}
 
-export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent =
-  TableDevtoolsPanelNoOpBase as TableDevtoolsPanelComponent
+export const TableDevtoolsPanel: TableDevtoolsPanelComponent = (props) =>
+  TableDevtoolsPanelBase(resolvePanelProps(props))
+
+export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent = (props) =>
+  TableDevtoolsPanelNoOpBase(resolvePanelProps(props))

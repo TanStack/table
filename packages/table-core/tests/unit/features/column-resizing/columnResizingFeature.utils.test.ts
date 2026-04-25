@@ -307,7 +307,7 @@ describe('header_getResizeHandler', () => {
     const sizingUpdates: Record<string, number>[] = []
     table.options.onColumnSizingChange = (updater: any) => {
       if (typeof updater === 'function') {
-        const result = updater(table.store.state.columnSizing ?? {})
+        const result = updater(table.atoms.columnSizing?.get() ?? {})
         sizingUpdates.push(result)
       } else {
         sizingUpdates.push(updater)

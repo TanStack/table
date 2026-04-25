@@ -1,4 +1,4 @@
-import { callMemoOrStaticFn } from '../../utils'
+import { callMemoOrStaticFn, cloneState } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -8,7 +8,7 @@ import type { ColumnVisibilityState } from './columnVisibilityFeature.types'
 import type { Row } from '../../types/Row'
 
 export function getDefaultColumnVisibilityState(): ColumnVisibilityState {
-  return structuredClone({})
+  return {}
 }
 
 export function column_toggleVisibility<
@@ -125,7 +125,7 @@ export function table_resetColumnVisibility<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnVisibility(
     table,
-    defaultState ? {} : (table.initialState.columnVisibility ?? {}),
+    defaultState ? {} : cloneState(table.initialState.columnVisibility ?? {}),
   )
 }
 

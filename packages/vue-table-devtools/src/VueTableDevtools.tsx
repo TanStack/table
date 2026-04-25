@@ -4,12 +4,12 @@ import { defineComponent, h } from 'vue'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/vue'
 import type { DefineComponent } from 'vue'
 
-export interface TableDevtoolsVueInit extends DevtoolsPanelProps {}
+export interface TableDevtoolsVueInit extends Partial<DevtoolsPanelProps> {}
 
 class TableDevtoolsVueCore {
   private readonly core = new TableDevtoolsCore()
 
-  constructor(_props: TableDevtoolsVueInit) {}
+  constructor(_props: DevtoolsPanelProps) {}
 
   mount(el: HTMLElement, props?: DevtoolsPanelProps) {
     void this.core.mount(el, {
@@ -24,7 +24,7 @@ class TableDevtoolsVueCore {
 }
 
 const [TableDevtoolsPanelBase, TableDevtoolsPanelNoOpBase] = createVuePanel<
-  TableDevtoolsVueInit,
+  DevtoolsPanelProps,
   TableDevtoolsVueCore
 >(TableDevtoolsVueCore)
 
@@ -36,10 +36,15 @@ function createPanelWrapper(
     name,
     props: ['theme', 'devtoolsOpen'] as unknown as undefined,
     setup(props: TableDevtoolsVueInit) {
+      const devtoolsProps = {
+        theme: props.theme ?? 'dark',
+        devtoolsOpen: props.devtoolsOpen ?? false,
+      }
+
       return () =>
         h(Component, {
           props,
-          devtoolsProps: props,
+          devtoolsProps,
         })
     },
   }) as DefineComponent<TableDevtoolsVueInit, {}, unknown>

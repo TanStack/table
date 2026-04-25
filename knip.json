@@ -13,7 +13,11 @@
       "entry": ["src/index.ts!", "static-functions/index.ts!"]
     },
     "packages/svelte-table": {
-      "entry": ["src/index.ts!", "src/static-functions.ts!"]
+      "entry": [
+        "src/index.ts!",
+        "src/static-functions.ts!",
+        "src/flex-render.ts!"
+      ]
     }
   }
 }

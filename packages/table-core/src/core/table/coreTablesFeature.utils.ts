@@ -1,5 +1,5 @@
 import { batch } from '@tanstack/store'
-import { functionalUpdate } from '../../utils'
+import { cloneState, functionalUpdate } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -9,7 +9,7 @@ export function table_reset<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): void {
-  const snap = structuredClone(table.initialState)
+  const snap = cloneState(table.initialState)
   batch(() => {
     for (const key of Object.keys(snap) as Array<keyof typeof snap>) {
       ;(table.baseAtoms as any)[key].set(snap[key] as any)

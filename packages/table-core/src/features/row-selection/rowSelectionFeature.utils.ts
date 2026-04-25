@@ -1,3 +1,4 @@
+import { cloneState } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -8,7 +9,7 @@ import type { RowSelectionState } from './rowSelectionFeature.types'
 // State APIs
 
 export function getDefaultRowSelectionState(): RowSelectionState {
-  return structuredClone({})
+  return {}
 }
 
 export function table_setRowSelection<
@@ -27,7 +28,7 @@ export function table_resetRowSelection<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setRowSelection(
     table,
-    defaultState ? {} : (table.initialState.rowSelection ?? {}),
+    defaultState ? {} : cloneState(table.initialState.rowSelection ?? {}),
   )
 }
 

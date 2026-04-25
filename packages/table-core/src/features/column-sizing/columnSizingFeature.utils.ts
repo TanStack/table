@@ -5,7 +5,7 @@ import {
   table_getRightHeaderGroups,
 } from '../column-pinning/columnPinningFeature.utils'
 import { column_getIndex } from '../column-ordering/columnOrderingFeature.utils'
-import { callMemoOrStaticFn } from '../../utils'
+import { callMemoOrStaticFn, cloneState } from '../../utils'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -15,15 +15,15 @@ import type { Column_Internal } from '../../types/Column'
 import type { ColumnSizingState } from './columnSizingFeature.types'
 
 export function getDefaultColumnSizingState(): ColumnSizingState {
-  return structuredClone({})
+  return {}
 }
 
 export function getDefaultColumnSizingColumnDef() {
-  return structuredClone({
+  return {
     size: 150,
     minSize: 20,
     maxSize: Number.MAX_SAFE_INTEGER,
-  })
+  }
 }
 
 export function column_getSize<
@@ -150,7 +150,7 @@ export function table_resetColumnSizing<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
-    defaultState ? {} : (table.initialState.columnSizing ?? {}),
+    defaultState ? {} : cloneState(table.initialState.columnSizing ?? {}),
   )
 }
 

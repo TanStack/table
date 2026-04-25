@@ -9,6 +9,30 @@ export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
     : updater
 }
 
+export function cloneState<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(cloneState) as T
+  }
+
+  if (value && typeof value === 'object') {
+    const proto = Object.getPrototypeOf(value)
+
+    if (proto !== Object.prototype && proto !== null) {
+      return value
+    }
+
+    const copy: Record<string, unknown> = {}
+
+    for (const key of Object.keys(value)) {
+      copy[key] = cloneState((value as Record<string, unknown>)[key])
+    }
+
+    return copy as T
+  }
+
+  return value
+}
+
 export function noop() {}
 
 export function makeStateUpdater<

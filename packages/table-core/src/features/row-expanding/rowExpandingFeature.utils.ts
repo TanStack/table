@@ -1,3 +1,4 @@
+import { cloneState } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -8,7 +9,7 @@ import type {
 } from './rowExpandingFeature.types'
 
 export function getDefaultExpandedState(): ExpandedState {
-  return structuredClone({})
+  return {}
 }
 
 export function table_autoResetExpanded<
@@ -48,7 +49,7 @@ export function table_resetExpanded<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setExpanded(
     table,
-    defaultState ? {} : (table.initialState.expanded ?? {}),
+    defaultState ? {} : cloneState(table.initialState.expanded ?? {}),
   )
 }
 

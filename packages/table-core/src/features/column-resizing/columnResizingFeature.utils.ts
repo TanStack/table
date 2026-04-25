@@ -4,6 +4,7 @@ import {
   table_setColumnSizing,
 } from '../column-sizing/columnSizingFeature.utils'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
+import { cloneState } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -13,14 +14,14 @@ import type { ColumnSizingState } from '../column-sizing/columnSizingFeature.typ
 import type { columnResizingState } from './columnResizingFeature.types'
 
 export function getDefaultColumnResizingState(): columnResizingState {
-  return structuredClone({
+  return {
     startOffset: null,
     startSize: null,
     deltaOffset: null,
     deltaPercentage: null,
     isResizingColumn: false,
     columnSizingStart: [],
-  })
+  }
 }
 
 export function column_getCanResize<
@@ -239,7 +240,9 @@ export function table_resetHeaderSizeInfo<
     table,
     defaultState
       ? getDefaultColumnResizingState()
-      : (table.initialState.columnResizing ?? getDefaultColumnResizingState()),
+      : cloneState(
+          table.initialState.columnResizing ?? getDefaultColumnResizingState(),
+        ),
   )
 }
 

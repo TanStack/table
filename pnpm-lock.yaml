@@ -5261,9 +5261,6 @@ importers:
       '@tanstack/table-core':
         specifier: ^9.0.0-alpha.34
         version: link:../../../packages/table-core
-      nanostores:
-        specifier: ^1.3.0
-        version: 1.3.0
     devDependencies:
       '@rollup/plugin-replace':
         specifier: ^6.0.3
@@ -5283,9 +5280,6 @@ importers:
       '@tanstack/table-core':
         specifier: ^9.0.0-alpha.34
         version: link:../../../packages/table-core
-      nanostores:
-        specifier: ^1.3.0
-        version: 1.3.0
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -5308,9 +5302,6 @@ importers:
       '@tanstack/table-core':
         specifier: ^9.0.0-alpha.34
         version: link:../../../packages/table-core
-      nanostores:
-        specifier: ^1.3.0
-        version: 1.3.0
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -13617,10 +13608,6 @@ packages:
 
   nanospinner@1.2.2:
     resolution: {integrity: sha512-Zt/AmG6qRU3e+WnzGGLuMCEAO/dAu45stNbHY223tUxldaDAeE+FxSPsd9Q+j+paejmm0ZbrNVs5Sraqy3dRxA==}
-
-  nanostores@1.3.0:
-    resolution: {integrity: sha512-XPUa/jz+P1oJvN9VBxw4L9MtdFfaH3DAryqPssqhb2kXjmb9npz0dly6rCsgFWOPr4Yg9mTfM3MDZgZZ+7A3lA==}
-    engines: {node: ^20.0.0 || >=22.0.0}
 
   napi-postinstall@0.3.4:
     resolution: {integrity: sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ==}
@@ -23064,8 +23051,6 @@ snapshots:
   nanospinner@1.2.2:
     dependencies:
       picocolors: 1.1.1
-
-  nanostores@1.3.0: {}
 
   napi-postinstall@0.3.4: {}
 

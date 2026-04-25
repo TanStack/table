@@ -35,6 +35,11 @@
       "svelte": "./dist/static-functions.js",
       "import": "./dist/static-functions.js"
     },
+    "./flex-render": {
+      "types": "./dist/flex-render.d.ts",
+      "svelte": "./dist/flex-render.js",
+      "import": "./dist/flex-render.js"
+    },
     "./package.json": "./package.json"
   },
   "engines": {

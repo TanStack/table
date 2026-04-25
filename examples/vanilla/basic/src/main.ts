@@ -1,6 +1,10 @@
 import './index.css'
-import { createColumnHelper, tableFeatures } from '@tanstack/table-core'
-import { createTable, flexRender } from './createTable'
+import {
+  constructTable,
+  createColumnHelper,
+  tableFeatures,
+} from '@tanstack/table-core'
+import { FlexRender } from '@tanstack/table-core/flex-render'
 
 type Person = {
   firstName: string
@@ -90,7 +94,7 @@ const renderTable = () => {
       const thElement = document.createElement('th')
       thElement.innerHTML = header.isPlaceholder
         ? ''
-        : flexRender(header.column.columnDef.header, header.getContext())
+        : String(FlexRender({ header }) ?? '')
       trElement.appendChild(thElement)
     })
     theadElement.appendChild(trElement)
@@ -101,10 +105,7 @@ const renderTable = () => {
     const trElement = document.createElement('tr')
     row.getAllCells().forEach((cell) => {
       const tdElement = document.createElement('td')
-      tdElement.innerHTML = flexRender(
-        cell.column.columnDef.cell,
-        cell.getContext(),
-      )
+      tdElement.innerHTML = String(FlexRender({ cell }) ?? '')
       trElement.appendChild(tdElement)
     })
     tbodyElement.appendChild(trElement)
@@ -117,7 +118,7 @@ const renderTable = () => {
       const thElement = document.createElement('th')
       thElement.innerHTML = header.isPlaceholder
         ? ''
-        : flexRender(header.column.columnDef.footer, header.getContext())
+        : String(FlexRender({ footer: header }) ?? '')
       trElement.appendChild(thElement)
     })
     tfootElement.appendChild(trElement)
@@ -129,7 +130,7 @@ const renderTable = () => {
   wrapperElement.appendChild(tableElement)
 }
 
-const table = createTable({
+const table = constructTable({
   debugTable: true,
   _features,
   _rowModels: {},

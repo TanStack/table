@@ -1,4 +1,4 @@
-import { isFunction } from '../../utils'
+import { cloneState, isFunction } from '../../utils'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import type { Column_Internal } from '../../types/Column'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
@@ -13,7 +13,7 @@ import type {
 } from './columnGroupingFeature.types'
 
 export function getDefaultGroupingState(): GroupingState {
-  return structuredClone([])
+  return []
 }
 
 export function column_toggleGrouping<
@@ -123,7 +123,7 @@ export function table_resetGrouping<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setGrouping(
     table,
-    defaultState ? [] : (table.initialState.grouping ?? []),
+    defaultState ? [] : cloneState(table.initialState.grouping ?? []),
   )
 }
 

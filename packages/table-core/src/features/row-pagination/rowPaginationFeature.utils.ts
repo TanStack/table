@@ -1,4 +1,4 @@
-import { functionalUpdate } from '../../utils'
+import { cloneState, functionalUpdate } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -8,10 +8,10 @@ const defaultPageIndex = 0
 const defaultPageSize = 10
 
 export function getDefaultPaginationState(): PaginationState {
-  return structuredClone({
+  return {
     pageIndex: defaultPageIndex,
     pageSize: defaultPageSize,
-  })
+  }
 }
 
 export function table_autoResetPageIndex<
@@ -48,7 +48,9 @@ export function table_resetPagination<
     table,
     defaultState
       ? getDefaultPaginationState()
-      : (table.initialState.pagination ?? getDefaultPaginationState()),
+      : cloneState(
+          table.initialState.pagination ?? getDefaultPaginationState(),
+        ),
   )
 }
 
@@ -78,24 +80,26 @@ export function table_resetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
-  table_setPageIndex(
-    table,
-    defaultState
-      ? defaultPageIndex
-      : (table.initialState.pagination?.pageIndex ?? defaultPageIndex),
-  )
+  const currentPageIndex =
+    table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
+  const newPageIndex = defaultState
+    ? defaultPageIndex
+    : (table.initialState.pagination?.pageIndex ?? defaultPageIndex)
+  if (newPageIndex === currentPageIndex) return
+  table_setPageIndex(table, newPageIndex)
 }
 
 export function table_resetPageSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
-  table_setPageSize(
-    table,
-    defaultState
-      ? defaultPageSize
-      : (table.initialState.pagination?.pageSize ?? defaultPageSize),
-  )
+  const currentPageSize =
+    table.atoms.pagination?.get()?.pageSize ?? defaultPageSize
+  const newPageSize = defaultState
+    ? defaultPageSize
+    : (table.initialState.pagination?.pageSize ?? defaultPageSize)
+  if (newPageSize === currentPageSize) return
+  table_setPageSize(table, newPageSize)
 }
 
 export function table_setPageSize<

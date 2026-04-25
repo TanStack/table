@@ -1,6 +1,7 @@
 import './index.css'
 
 import {
+  constructTable,
   createColumnHelper,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -9,8 +10,8 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/table-core'
+import { FlexRender } from '@tanstack/table-core/flex-render'
 import { makeData } from './makeData'
-import { createTable, flexRender } from './createTable'
 import type { Person } from './makeData'
 import type { Table } from '@tanstack/table-core'
 
@@ -81,7 +82,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
         header.column.getToggleSortingHandler()?.(e)),
         (divElement.innerHTML = header.isPlaceholder
           ? ''
-          : flexRender(header.column.columnDef.header, header.getContext())))
+          : String(FlexRender({ header }) ?? '')))
       divElement.innerHTML +=
         {
           asc: ' 🔼',
@@ -98,10 +99,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
     const trElement = document.createElement('tr')
     row.getAllCells().forEach((cell) => {
       const tdElement = document.createElement('td')
-      tdElement.innerHTML = flexRender(
-        cell.column.columnDef.cell,
-        cell.getContext(),
-      )
+      tdElement.innerHTML = String(FlexRender({ cell }) ?? '')
       trElement.appendChild(tdElement)
     })
     tbodyElement.appendChild(trElement)
@@ -204,7 +202,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   wrapperElement.appendChild(stateInfoElement)
 }
 
-const table = createTable({
+const table = constructTable({
   _features,
   _rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
@@ -224,8 +222,9 @@ const table = createTable({
       },
     ],
   },
-  onStateChange: () => renderTable(table),
   debugTable: true,
 })
+
+table.store.subscribe(() => renderTable(table))
 
 renderTable(table)

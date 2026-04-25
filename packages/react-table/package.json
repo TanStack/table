@@ -29,6 +29,10 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./flex-render": {
+      "import": "./dist/flex-render.js",
+      "require": "./dist/flex-render.cjs"
+    },
     "./legacy": {
       "import": "./dist/legacy.js",
       "require": "./dist/legacy.cjs"

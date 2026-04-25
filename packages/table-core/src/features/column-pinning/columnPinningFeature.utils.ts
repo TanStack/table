@@ -4,7 +4,7 @@ import {
   table_getVisibleLeafColumns,
 } from '../column-visibility/columnVisibilityFeature.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
-import { callMemoOrStaticFn } from '../../utils'
+import { callMemoOrStaticFn, cloneState } from '../../utils'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Cell } from '../../types/Cell'
 import type { Row } from '../../types/Row'
@@ -20,10 +20,10 @@ import type {
 // State
 
 export function getDefaultColumnPinningState(): ColumnPinningState {
-  return structuredClone({
+  return {
     left: [],
     right: [],
-  })
+  }
 }
 
 // Column APIs
@@ -192,7 +192,9 @@ export function table_resetColumnPinning<
     table,
     defaultState
       ? getDefaultColumnPinningState()
-      : (table.initialState.columnPinning ?? getDefaultColumnPinningState()),
+      : cloneState(
+          table.initialState.columnPinning ?? getDefaultColumnPinningState(),
+        ),
   )
 }
 
