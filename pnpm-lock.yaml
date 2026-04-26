@@ -3186,7 +3186,7 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(terser@5.46.0)(yaml@2.8.3)
 
-  examples/react/kitchen-sink-shadcn:
+  examples/react/kitchen-sink-shadcn-radix:
     dependencies:
       '@dnd-kit/core':
         specifier: ^6.3.1
