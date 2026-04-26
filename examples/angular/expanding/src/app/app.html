@@ -1,4 +1,8 @@
 <div class="p-2">
+  <button class="border rounded p-2 mb-2" (click)="refreshData()">Regenerate Data</button>
+  <button class="border rounded p-2 mb-2" (click)="stressTest()">
+    Stress Test (1k x 5 x 3 rows)
+  </button>
   <div class="h-4"></div>
 
   <div class="overflow-x-auto">
@@ -75,8 +79,8 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {{ table.store.state.pagination.pageIndex + 1 }} of
-        {{ table.getPageCount() }}
+        {{ (table.store.state.pagination.pageIndex + 1).toLocaleString() }} of
+        {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
     <span class="flex items-center gap-1">

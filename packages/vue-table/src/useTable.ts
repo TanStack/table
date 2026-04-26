@@ -167,10 +167,7 @@ export function useTable<
         mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
       ),
     () => {
-      syncTableOptions(
-        table,
-        mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
-      )
+      syncTableOptions(table, mergedOptions)
     },
     { immediate: true },
   )
@@ -204,10 +201,7 @@ export function useTable<
     },
     (controlledValues) => {
       if (controlledValues.length > 0) {
-        syncTableOptions(
-          table,
-          mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
-        )
+        syncTableOptions(table, mergedOptions)
       }
     },
     { immediate: true },
@@ -242,5 +236,5 @@ export function useTable<
     get state() {
       return stateStore.value
     },
-  } as VueTable<TFeatures, TData, TSelected>
+  }
 }

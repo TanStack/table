@@ -11,11 +11,14 @@ const productColumnHelper = createAppColumnHelper<Product>()
 // Users Table Component - Original implementation
 function UsersTable() {
   // Data state
-  const [data, setData] = createSignal(makeData(1000))
+  const [data, setData] = createSignal(makeData(1_000))
 
   // Refresh data callback
   const refreshData = () => {
-    setData(() => makeData(1000))
+    setData(() => makeData(1_000))
+  }
+  const stressTest = () => {
+    setData(() => makeData(100_000))
   }
 
   // Define columns using the column helper
@@ -86,6 +89,12 @@ function UsersTable() {
           <div class="table-container">
             {/* Table toolbar using pre-bound component */}
             <table.TableToolbar title="Users Table" onRefresh={refreshData} />
+            <div>
+              <button onClick={() => refreshData()}>Regenerate Data</button>
+              <button onClick={() => stressTest()}>
+                Stress Test (100k rows)
+              </button>
+            </div>
 
             {/* Table element */}
             <table>
@@ -228,6 +237,9 @@ function ProductsTable() {
   const refreshData = () => {
     setData(makeProductData(500))
   }
+  const stressTest = () => {
+    setData(makeProductData(100_000))
+  }
 
   // Define columns using the column helper - different structure than Users table
   const columns = productColumnHelper.columns([
@@ -286,6 +298,12 @@ function ProductsTable() {
               title="Products Table"
               onRefresh={refreshData}
             />
+            <div>
+              <button onClick={() => refreshData()}>Regenerate Data</button>
+              <button onClick={() => stressTest()}>
+                Stress Test (100k rows)
+              </button>
+            </div>
 
             {/* Table element */}
             <table>

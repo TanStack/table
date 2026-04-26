@@ -4,8 +4,8 @@
  * These components can be used via the pre-bound tableComponents
  * directly on the table object, e.g., <table.PaginationControls />
  */
-import type { PaginationState } from '@tanstack/react-table'
 import { useTableContext } from '../hooks/table'
+import type { PaginationState } from '@tanstack/react-table'
 
 /**
  * Pagination controls for the table
@@ -45,7 +45,7 @@ export function PaginationControls() {
           <span>
             Page{' '}
             <strong>
-              {pagination.pageIndex + 1} of{' '}
+              {(pagination.pageIndex + 1).toLocaleString()} of{' '}
               {table.getPageCount().toLocaleString()}
             </strong>
           </span>
@@ -114,7 +114,7 @@ export function TableToolbar({
           Clear Filters
         </button>
         <button onClick={() => table.resetSorting()}>Clear Sorting</button>
-        {onRefresh && <button onClick={onRefresh}>Refresh Data</button>}
+        {onRefresh && <button onClick={onRefresh}>Regenerate Data</button>}
       </div>
     </div>
   )

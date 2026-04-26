@@ -55,15 +55,16 @@ const columns = columnHelper.columns([
 
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
-  const refreshData = () => setData(makeData(100_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   return (
     <>
-      <MyTable data={data()} columns={columns} />
-      <hr />
       <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
       </div>
+      <MyTable data={data()} columns={columns} />
     </>
   )
 }
@@ -174,7 +175,7 @@ function MyTable(props: {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
+            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -231,10 +232,7 @@ function Filter({
     <div class="flex space-x-2" onClick={(e) => e.stopPropagation()}>
       <input
         type="number"
-        value={
-          ((columnFilterValue() as [number, number] | undefined)?.[0] ??
-            '') as string
-        }
+        value={(columnFilterValue() as [number, number] | undefined)?.[0] ?? ''}
         onInput={(e) =>
           column.setFilterValue((old: [number, number]) => [
             e.currentTarget.value,
@@ -246,10 +244,7 @@ function Filter({
       />
       <input
         type="number"
-        value={
-          ((columnFilterValue() as [number, number] | undefined)?.[1] ??
-            '') as string
-        }
+        value={(columnFilterValue() as [number, number] | undefined)?.[1] ?? ''}
         onInput={(e) =>
           column.setFilterValue((old: [number, number]) => [
             old[0],

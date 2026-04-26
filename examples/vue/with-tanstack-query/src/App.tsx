@@ -154,7 +154,7 @@ export default defineComponent({
           <span class="flex items-center gap-1">
             <div>Page</div>
             <strong>
-              {pagination.value.pageIndex + 1} of{' '}
+              {(pagination.value.pageIndex + 1).toLocaleString()} of{' '}
               {table.getPageCount().toLocaleString()}
             </strong>
           </span>

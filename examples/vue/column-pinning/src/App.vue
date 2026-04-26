@@ -8,12 +8,13 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
-import type { Column } from '@tanstack/vue-table'
-import { makeData, type Person } from './makeData'
 import { ref } from 'vue'
 import { faker } from '@faker-js/faker'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
+import type { Column } from '@tanstack/vue-table'
 
-const data = ref(makeData(5000))
+const data = ref(makeData(1_000))
 
 const _features = tableFeatures({
   columnOrderingFeature,
@@ -73,7 +74,13 @@ const columns = ref(
 
 const isSplit = ref(false)
 
-const rerender = () => (data.value = makeData(5000))
+const refreshData = () => {
+  data.value = makeData(1_000)
+}
+
+const stressTest = () => {
+  data.value = makeData(100_000)
+}
 
 const table = useTable(
   {
@@ -149,7 +156,10 @@ function toggleAllColumnsVisibility() {
     </div>
     <div class="h-4" />
     <div class="flex flex-wrap gap-2">
-      <button @click="rerender" class="p-1 border">Regenerate</button>
+      <button @click="refreshData" class="p-1 border">Regenerate Data</button>
+      <button @click="stressTest" class="p-1 border">
+        Stress Test (100k rows)
+      </button>
       <button @click="randomizeColumns" class="p-1 border">
         Shuffle Columns
       </button>

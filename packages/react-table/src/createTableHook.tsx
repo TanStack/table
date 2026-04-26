@@ -834,7 +834,7 @@ export function createTableHook<
           | AppTablePropsWithoutSelector
           | AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
       ): ReactNode {
-        const { children, selector: appTableSelector } = props as any
+        const { children, selector: appTableSelector } = props
 
         return (
           <TableContext.Provider value={table}>

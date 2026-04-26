@@ -70,7 +70,7 @@ const defaultColumns: Array<ColumnDef<typeof _tableFeatures, Person>> = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  readonly data = signal<Array<Person>>(makeData(20))
+  readonly data = signal<Array<Person>>(makeData(1_000))
 
   readonly table = injectTable(() => {
     return {
@@ -91,4 +91,7 @@ export class App {
     moveItemInArray(data, event.previousIndex, event.currentIndex)
     this.data.set(data)
   }
+
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

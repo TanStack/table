@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-solid-with-tanstack-router",
-  "version": "0.0.0",
+  "name": "tanstack-solid-table-example-with-tanstack-router",
   "description": "",
   "scripts": {
     "start": "vite",
@@ -12,14 +11,14 @@
   "license": "MIT",
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
-    "@tanstack/router-vite-plugin": "^1.166.37",
+    "@tanstack/router-vite-plugin": "^1.166.42",
     "typescript": "6.0.3",
-    "vite": "^8.0.8",
+    "vite": "^8.0.10",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "@tanstack/solid-query": "^5.99.0",
-    "@tanstack/solid-router": "^1.168.20",
+    "@tanstack/solid-query": "^5.100.5",
+    "@tanstack/solid-router": "^1.168.24",
     "@tanstack/solid-table": "^9.0.0-alpha.36",
     "solid-js": "^1.9.12"
   }

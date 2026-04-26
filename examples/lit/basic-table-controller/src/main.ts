@@ -2,55 +2,11 @@ import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { FlexRender, TableController, tableFeatures } from '@tanstack/lit-table'
+import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/lit-table'
+import type { Person } from './makeData'
 
 // This example uses the standalone `TableController` to create a table without the `createTableHook` util.
-
-// 1. Define what the shape of your data will be for each row
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-// 2. Create some dummy data with a stable reference (this could be an API response stored in @state or similar)
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-  {
-    firstName: 'kevin',
-    lastName: 'vandy',
-    age: 12,
-    visits: 100,
-    status: 'Single',
-    progress: 70,
-  },
-]
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
 const _features = tableFeatures({}) // util method to create sharable TFeatures object/type
@@ -98,12 +54,12 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 class LitTableExample extends LitElement {
   // 5. Store data with a reactive reference
   @state()
-  private data = [...defaultData]
+  private data: Array<Person> = makeData(1_000)
 
   private tableController = new TableController<typeof _features, Person>(this)
 
   private rerender() {
-    this.data = [...defaultData]
+    this.data = makeData(1_000)
   }
 
   protected render(): unknown {
@@ -126,6 +82,22 @@ class LitTableExample extends LitElement {
     // 7. Render your table markup from the table instance APIs
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this.data = makeData(1_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this.data = makeData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
         <table>
           <thead>
             ${repeat(

@@ -125,7 +125,7 @@ export function getFacetedRowModel<
 export function getFacetedMinMaxValues<
   TData extends RowData,
 >(): FacetedMinMaxValuesFactory<TData> {
-  return (() => () => undefined) as unknown as FacetedMinMaxValuesFactory<TData>
+  return () => () => undefined
 }
 
 /**
@@ -137,7 +137,7 @@ export function getFacetedMinMaxValues<
 export function getFacetedUniqueValues<
   TData extends RowData,
 >(): FacetedUniqueValuesFactory<TData> {
-  return (() => () => new Map()) as unknown as FacetedUniqueValuesFactory<TData>
+  return () => () => new Map()
 }
 
 /**
@@ -455,7 +455,7 @@ export function useLegacyTable<TData extends RowData>(
       ...restOptions,
       _features: stockFeatures,
       _rowModels,
-    } as TableOptions<StockFeatures, TData>,
+    },
     (state) => state,
   )
 
@@ -479,12 +479,11 @@ export function useLegacyTable<TData extends RowData>(
   )
 
   return useMemo(
-    () =>
-      ({
-        ...table,
-        getState,
-        setState,
-      }) as LegacyReactTable<TData>,
+    () => ({
+      ...table,
+      getState,
+      setState,
+    }),
     [table, getState, setState],
   )
 }

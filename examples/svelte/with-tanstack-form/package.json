@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-svelte-with-tanstack-form",
-  "version": "0.0.0",
+  "name": "tanstack-svelte-table-example-with-tanstack-form",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,14 +14,14 @@
     "@rollup/plugin-replace": "^6.0.3",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte": "^5.55.4",
+    "svelte": "^5.55.5",
     "svelte-check": "^4.4.6",
     "typescript": "6.0.3",
-    "vite": "^8.0.8"
+    "vite": "^8.0.10"
   },
   "dependencies": {
-    "@tanstack/form-core": "^1.29.0",
-    "@tanstack/svelte-form": "^1.29.0",
+    "@tanstack/form-core": "^1.29.1",
+    "@tanstack/svelte-form": "^1.29.1",
     "@tanstack/svelte-table": "^9.0.0-alpha.36",
     "zod": "^4.3.6"
   }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, type ComponentPublicInstance } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import {
   FlexRender,
   columnSizingFeature,
@@ -13,7 +13,9 @@ import {
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/vue-query'
 import { createAtom, useSelector } from '@tanstack/vue-store'
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { fetchData, type Person, type PersonApiResponse } from './makeData'
+import { fetchData } from './makeData'
+import type { ComponentPublicInstance } from 'vue'
+import type { Person, PersonApiResponse } from './makeData'
 
 const fetchSize = 50
 const isDev = import.meta.env.DEV
@@ -60,7 +62,7 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const sortingAtom = createAtom<any[]>([])
+const sortingAtom = createAtom<Array<any>>([])
 const sorting = useSelector(sortingAtom, (state) => state)
 
 const tableContainerRef = ref<HTMLDivElement | null>(null)
@@ -80,7 +82,7 @@ const query = useInfiniteQuery<PersonApiResponse>(() => ({
   placeholderData: keepPreviousData,
 }))
 
-const flatData = computed<Person[]>(
+const flatData = computed<Array<Person>>(
   () => query.data.value?.pages.flatMap((page) => page.data) ?? [],
 )
 

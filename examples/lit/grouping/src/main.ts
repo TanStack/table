@@ -1,4 +1,4 @@
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -69,10 +69,11 @@ const columns: Array<ColumnDef<typeof _features, Person>> =
     }),
   ])
 
-const data: Array<Person> = makeData(10_000)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(10_000)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
@@ -87,7 +88,7 @@ class LitTableExample extends LitElement {
           sortedRowModel: createSortedRowModel(sortFns),
         },
         columns,
-        data,
+        data: this._data,
         debugTable: true,
       },
       (state) => ({
@@ -99,6 +100,22 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(10_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
         <div class="h-2"></div>
         <table>
           <thead>
@@ -157,7 +174,8 @@ class LitTableExample extends LitElement {
                                   : 'normal'}"
                               >
                                 ${row.getIsExpanded() ? '👇' : '👉'}
-                                ${FlexRender({ cell })} (${row.subRows.length})
+                                ${FlexRender({ cell })}
+                                (${row.subRows.length.toLocaleString()})
                               </button>`
                             : cell.getIsAggregated()
                               ? FlexRender({ cell })
@@ -201,7 +219,8 @@ class LitTableExample extends LitElement {
           <span>
             Page
             <strong>
-              ${table.state.pagination.pageIndex + 1} of ${table.getPageCount()}
+              ${(table.state.pagination.pageIndex + 1).toLocaleString()} of
+              ${table.getPageCount().toLocaleString()}
             </strong>
           </span>
           <span>
@@ -231,7 +250,7 @@ class LitTableExample extends LitElement {
             )}
           </select>
         </div>
-        <div>${table.getRowModel().rows.length} Rows</div>
+        <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
         <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>

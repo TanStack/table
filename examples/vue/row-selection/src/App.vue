@@ -89,11 +89,15 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const data = ref(makeData(10))
+const data = ref(makeData(1_000))
 const enableRowSelection = ref(true)
 
-const rerender = () => {
-  data.value = makeData(10)
+const refreshData = () => {
+  data.value = makeData(1_000)
+}
+
+const stressTest = () => {
+  data.value = makeData(100_000)
 }
 
 const toggleRowSelection = () => {
@@ -121,6 +125,13 @@ useTanStackTableDevtools(table, 'Row Selection Example')
 
 <template>
   <div class="p-2">
+    <div class="flex flex-wrap gap-2">
+      <button @click="refreshData" class="border p-2">Regenerate Data</button>
+      <button @click="stressTest" class="border p-2">
+        Stress Test (100k rows)
+      </button>
+    </div>
+    <div class="h-4" />
     <table>
       <thead>
         <tr
@@ -152,12 +163,13 @@ useTanStackTableDevtools(table, 'Row Selection Example')
               :onChange="table.getToggleAllPageRowsSelectedHandler()"
             />
           </td>
-          <td :colSpan="20">Page Rows {{ table.getRowModel().rows.length }}</td>
+          <td :colSpan="20">
+            Page Rows {{ table.getRowModel().rows.length.toLocaleString() }}
+          </td>
         </tr>
       </tfoot>
     </table>
     <div class="h-4" />
-    <button @click="rerender" class="border p-2">Rerender</button>
     <button @click="toggleRowSelection" class="border p-2">
       {{ enableRowSelection ? 'Disable' : 'Enable' }} Row Selection
     </button>

@@ -1,4 +1,7 @@
 <div class="p-2">
+  <button (click)="refreshData()" class="border p-2">Regenerate Data</button>
+  <button (click)="stressTest()" class="border p-2">Stress Test (100k rows)</button>
+  <div class="h-4"></div>
   <table>
     <thead>
       @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
@@ -36,7 +39,4 @@
       }
     </tfoot>
   </table>
-
-  <div class="h-4"></div>
-  <button (click)="rerender()" class="border p-2">Rerender</button>
 </div>

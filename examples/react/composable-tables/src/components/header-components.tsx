@@ -4,7 +4,8 @@
  * These components can be used via the pre-bound headerComponents
  * in AppHeader children, e.g., <header.SortIndicator />
  */
-import { useHeaderContext } from '../hooks/table'
+import { shallow, useSelector } from '@tanstack/react-store'
+import { useHeaderContext, useTableContext } from '../hooks/table'
 
 /**
  * Sort indicator showing current sort direction
@@ -22,19 +23,31 @@ export function SortIndicator() {
 
 /**
  * Column filter input
+ *
+ * Subscribes to `table.store` for this column’s filter value so the controlled input
+ * stays in sync under the React compiler (a stable `header` from context alone is not enough).
  */
 export function ColumnFilter() {
   const header = useHeaderContext()
+  const table = useTableContext()
+  const columnId = header.column.id
+
+  const columnFilterValue = useSelector(
+    table.store,
+    (state) =>
+      state.columnFilters.find((f) => f.id === columnId)?.value as
+        | string
+        | undefined,
+    { compare: shallow },
+  )
 
   if (!header.column.getCanFilter()) return null
-
-  const columnFilterValue = header.column.getFilterValue()
 
   return (
     <div className="column-filter" onClick={(e) => e.stopPropagation()}>
       <input
         type="text"
-        value={(columnFilterValue ?? '') as string}
+        value={columnFilterValue ?? ''}
         onChange={(e) => header.column.setFilterValue(e.target.value)}
         placeholder={`Filter ${header.column.id}...`}
       />

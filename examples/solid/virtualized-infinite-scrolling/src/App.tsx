@@ -105,9 +105,6 @@ function App() {
     fetchMoreOnBottomReached(tableContainerRef)
   })
 
-  // Declare before table so the onSortingChange closure can reference it
-  let rowVirtualizer!: Virtualizer<HTMLDivElement, HTMLTableRowElement>
-
   const table = createTable({
     _features,
     _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
@@ -127,19 +124,21 @@ function App() {
   // Important: The virtualizer and the scroll container ref must be in the same
   // component scope, and NOT inside a <Show> wrapper. <Show> creates a reactive
   // boundary that disrupts the virtualizer's onMount timing.
-  rowVirtualizer = createVirtualizer<HTMLDivElement, HTMLTableRowElement>({
-    get count() {
-      return rows().length
+  const rowVirtualizer = createVirtualizer<HTMLDivElement, HTMLTableRowElement>(
+    {
+      get count() {
+        return rows().length
+      },
+      estimateSize: () => 33,
+      getScrollElement: () => tableContainerRef ?? null,
+      measureElement:
+        typeof window !== 'undefined' &&
+        navigator.userAgent.indexOf('Firefox') === -1
+          ? (element) => element.getBoundingClientRect().height
+          : undefined,
+      overscan: 5,
     },
-    estimateSize: () => 33,
-    getScrollElement: () => tableContainerRef ?? null,
-    measureElement:
-      typeof window !== 'undefined' &&
-      navigator.userAgent.indexOf('Firefox') === -1
-        ? (element) => element.getBoundingClientRect().height
-        : undefined,
-    overscan: 5,
-  })
+  )
 
   return (
     <div class="app">
@@ -150,7 +149,8 @@ function App() {
           degraded until this application is built for production.
         </p>
       </Show>
-      ({totalFetched()} of {totalDBRowCount()} rows fetched)
+      ({totalFetched().toLocaleString()} of {totalDBRowCount().toLocaleString()}{' '}
+      rows fetched)
       <div
         class="container"
         onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}

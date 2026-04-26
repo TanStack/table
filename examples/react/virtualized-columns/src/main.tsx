@@ -40,6 +40,10 @@ function App() {
     setData(makeData(1_000, columns))
   }, [columns])
 
+  const stressTest = React.useCallback(() => {
+    setData(makeData(10_000, columns))
+  }, [columns])
+
   const table = useTable({
     _features: features,
     _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
@@ -60,7 +64,10 @@ function App() {
       ) : null}
       <div>({columns.length.toLocaleString()} columns)</div>
       <div>({data.length.toLocaleString()} rows)</div>
-      <button onClick={refreshData}>Refresh Data</button>
+      <div>
+        <button onClick={refreshData}>Regenerate Data</button>
+        <button onClick={stressTest}>Stress Test (10k rows)</button>
+      </div>
       <TableContainer table={table} />
     </div>
   )

@@ -11,47 +11,13 @@ import {
   isFunction,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 import type { ColumnDef, ColumnVisibilityState } from '@tanstack/angular-table'
-
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
 
 const _features = tableFeatures({
   columnVisibilityFeature,
 })
-
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
 
 const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   {
@@ -112,7 +78,7 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  readonly data = signal<Array<Person>>(defaultData)
+  readonly data = signal<Array<Person>>(makeData(1_000))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
 
   readonly table = injectTable(() => ({
@@ -137,7 +103,6 @@ export class App {
     return JSON.stringify(this.table.state().columnVisibility)
   })
 
-  rerender() {
-    this.data.update((data) => [...data.reverse()])
-  }
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

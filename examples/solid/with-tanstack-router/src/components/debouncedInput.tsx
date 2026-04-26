@@ -27,7 +27,7 @@ export function DebouncedInput(props: DebouncedInputProps) {
   return (
     <input
       type={props.type ?? 'text'}
-      value={value() as string}
+      value={value()}
       onInput={(e) => {
         if (e.currentTarget.value === '') {
           setValue('')

@@ -1,4 +1,4 @@
-import { useReducer, useMemo } from 'preact/hooks'
+import { useMemo, useReducer } from 'preact/hooks'
 import { render } from 'preact'
 import {
   QueryClient,
@@ -144,7 +144,7 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {pagination.pageIndex + 1} of{' '}
+            {(pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>

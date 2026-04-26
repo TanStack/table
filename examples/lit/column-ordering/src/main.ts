@@ -74,11 +74,12 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
-const data: Array<Person> = makeData(20)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   private tableController = new TableController<typeof _features, Person>(this)
+
+  @state()
+  private _data: Array<Person> = makeData(1_000)
 
   @state()
   private columnOrder: ColumnOrderState = []
@@ -92,7 +93,7 @@ class LitTableExample extends LitElement {
         _features,
         _rowModels: {},
         columns: defaultColumns,
-        data,
+        data: this._data,
         state: {
           columnOrder: this.columnOrder,
           columnVisibility: this.columnVisibility,
@@ -126,6 +127,23 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(1_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
+        <div class="h-4"></div>
         <div class="inline-block border border-black shadow rounded">
           <div class="px-1 border-b border-black">
             <label>

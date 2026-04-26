@@ -40,8 +40,9 @@ function App() {
   const [includeParentRows, setIncludeParentRows] = createSignal(false)
   const [copyPinnedRows, setCopyPinnedRows] = createSignal(false)
 
-  const [data, setData] = createSignal(makeData(1000, 2, 2))
-  const refreshData = () => setData(makeData(1000, 2, 2))
+  const [data, setData] = createSignal(makeData(1_000, 2, 2))
+  const refreshData = () => setData(makeData(1_000, 2, 2))
+  const stressTest = () => setData(makeData(10_000, 2, 2))
 
   const columns = createMemo(() => [
     {
@@ -155,6 +156,10 @@ function App() {
 
   return (
     <div class="app">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (10k roots)</button>
+      </div>
       <div class="p-2 container">
         <div class="h-2" />
         <table>
@@ -245,8 +250,8 @@ function App() {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span class="flex items-center gap-1">
@@ -312,11 +317,6 @@ function App() {
           />
           <label class="ml-2">Duplicate/Keep Pinned Rows in main table</label>
         </div>
-      </div>
-      <div>
-        <button class="border rounded p-2 mb-2" onClick={() => refreshData()}>
-          Refresh Data
-        </button>
       </div>
       <div>{JSON.stringify(rowPinning(), null, 2)}</div>
     </div>

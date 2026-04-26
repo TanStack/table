@@ -18,7 +18,7 @@ export function createFacetedRowModel<
   columnId: string,
 ) => () => RowModel<TFeatures, TData> {
   return (_table, columnId) => {
-    const table = _table as Table_Internal<TFeatures, TData>
+    const table: Table_Internal<TFeatures, TData> = _table
     return tableMemo({
       feature: 'columnFacetingFeature',
       table,

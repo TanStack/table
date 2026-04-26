@@ -124,7 +124,8 @@ function App() {
     [data],
   )
 
-  const rerender = () => setData(() => makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(100_000))
 
   const table = useAppTable(
     {
@@ -165,8 +166,11 @@ function App() {
       <div className="p-2">
         <div className="h-4" />
         <div className="flex flex-wrap gap-2">
-          <button onClick={() => rerender()} className="border p-1">
-            Regenerate
+          <button onClick={() => refreshData()} className="border p-1">
+            Regenerate Data
+          </button>
+          <button onClick={() => stressTest()} className="border p-1">
+            Stress Test (100k rows)
           </button>
         </div>
         <div className="h-4" />

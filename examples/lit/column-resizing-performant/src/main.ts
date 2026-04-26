@@ -1,4 +1,4 @@
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import { styleMap } from 'lit/directives/style-map.js'
@@ -65,10 +65,11 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
-const data: Array<Person> = makeData(200)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(1_000)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
@@ -77,7 +78,7 @@ class LitTableExample extends LitElement {
         _features,
         _rowModels: {},
         columns,
-        data,
+        data: this._data,
         defaultColumn: { minSize: 60, maxSize: 800 },
         columnResizeMode: 'onChange',
         debugTable: true,
@@ -104,6 +105,22 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(1_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
         <i>
           This example has artificially slow cell renders to simulate complex
           usage
@@ -113,7 +130,7 @@ class LitTableExample extends LitElement {
 ${JSON.stringify(table.state, null, 2)}</pre
         >
         <div class="h-4"></div>
-        (${data.length} rows)
+        (${this._data.length.toLocaleString()} rows)
         <div class="overflow-x-auto">
           <div
             class="divTable"

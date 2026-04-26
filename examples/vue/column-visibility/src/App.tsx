@@ -1,52 +1,20 @@
 import { defineComponent, ref } from 'vue'
 import {
-  Cell,
-  Column,
   FlexRender,
-  Header,
-  HeaderGroup,
-  Row,
   columnVisibilityFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
-import type { ColumnDef } from '@tanstack/vue-table'
-
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
+import { makeData } from './makeData'
+import type {
+  Cell,
+  Column,
+  ColumnDef,
+  Header,
+  HeaderGroup,
+  Row,
+} from '@tanstack/vue-table'
+import type { Person } from './makeData'
 
 const _features = tableFeatures({ columnVisibilityFeature })
 
@@ -105,7 +73,16 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 export default defineComponent({
   name: 'ColumnVisibilityExample',
   setup() {
-    const data = ref(defaultData)
+    const data = ref(makeData(1_000))
+
+    const refreshData = () => {
+      data.value = makeData(1_000)
+    }
+
+    const stressTest = () => {
+      data.value = makeData(100_000)
+    }
+
     const table = useTable({
       debugTable: true,
       _features,
@@ -115,12 +92,17 @@ export default defineComponent({
       },
     })
 
-    const rerender = () => {
-      data.value = defaultData
-    }
-
     return () => (
       <div class="p-2">
+        <div class="flex flex-wrap gap-2">
+          <button class="border p-2" onClick={refreshData}>
+            Regenerate Data
+          </button>
+          <button class="border p-2" onClick={stressTest}>
+            Stress Test (100k rows)
+          </button>
+        </div>
+        <div class="h-4" />
         <div class="inline-block border border-black shadow rounded">
           <div class="px-1 border-b border-black">
             <label>
@@ -199,10 +181,6 @@ export default defineComponent({
               ))}
           </tfoot>
         </table>
-        <div class="h-4" />
-        <button onClick={rerender} class="border p-2">
-          Rerender
-        </button>
         <div class="h-4" />
         <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
       </div>

@@ -5,6 +5,7 @@
     renderSnippet,
   } from '@tanstack/svelte-table'
   import { capitalized, countup, spectrum } from './snippets.svelte'
+  import { makeData, type Person } from './makeData'
   import './index.css'
 
   /**
@@ -17,46 +18,12 @@
    * - Rendering a table with the instance APIs.
    */
 
-  // 1. Define what the shape of your data will be for each row
-  type Person = {
-    firstName: string
-    lastName: string
-    age: number
-    visits: number
-    status: string
-    progress: number
-  }
+  // 1. Store data with a $state rune for reactivity
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
-  // 2. Create some dummy data with a stable reference (this could be an API
-  //    response stored in a rune).
-  const data: Person[] = [
-    {
-      firstName: 'tanner',
-      lastName: 'linsley',
-      age: 24,
-      visits: 100,
-      status: 'In Relationship',
-      progress: 50,
-    },
-    {
-      firstName: 'tandy',
-      lastName: 'miller',
-      age: 40,
-      visits: 40,
-      status: 'Single',
-      progress: 80,
-    },
-    {
-      firstName: 'joe',
-      lastName: 'dirte',
-      age: 45,
-      visits: 20,
-      status: 'Complicated',
-      progress: 10,
-    },
-  ]
-
-  // 3. New in V9! Tell the table which features and row models we want to use.
+  // 2. New in V9! Tell the table which features and row models we want to use.
   //    In this case, this will be a basic table with no additional features
   const { createAppTable, createAppColumnHelper } = createTableHook({
     _features: {},
@@ -109,12 +76,18 @@
   const table = createAppTable({
     debugTable: true,
     columns,
-    data,
+    get data() {
+      return data
+    },
   })
 </script>
 
 <!-- 7. Render the table in markup using the Instance APIs. -->
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <table>
     <thead>
       {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}

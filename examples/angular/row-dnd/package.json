@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-angular-row-dnd",
-  "version": "0.0.0",
+  "name": "tanstack-angular-table-example-row-dnd",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -9,24 +8,24 @@
     "lint": "eslint ./src"
   },
   "private": true,
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@10.33.2",
   "dependencies": {
-    "@angular/cdk": "^21.2.7",
-    "@angular/common": "^21.2.9",
-    "@angular/compiler": "^21.2.9",
-    "@angular/core": "^21.2.9",
-    "@angular/forms": "^21.2.9",
-    "@angular/platform-browser": "^21.2.9",
-    "@angular/router": "^21.2.9",
+    "@angular/cdk": "^21.2.8",
+    "@angular/common": "^21.2.10",
+    "@angular/compiler": "^21.2.10",
+    "@angular/core": "^21.2.10",
+    "@angular/forms": "^21.2.10",
+    "@angular/platform-browser": "^21.2.10",
+    "@angular/router": "^21.2.10",
     "@faker-js/faker": "^10.4.0",
     "@tanstack/angular-table": "^9.0.0-alpha.36",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.7",
-    "@angular/cli": "^21.2.7",
-    "@angular/compiler-cli": "^21.2.9",
+    "@angular/build": "^21.2.8",
+    "@angular/cli": "^21.2.8",
+    "@angular/compiler-cli": "^21.2.10",
     "typescript": "6.0.3"
   }
 }

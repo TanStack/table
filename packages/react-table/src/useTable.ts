@@ -145,21 +145,16 @@ export function useTable<
     ...tableOptions,
   }))
 
-  const selectorWithDataAndColumns = (state: TableState<TFeatures>) => ({
-    columns: tableOptions.columns,
-    data: tableOptions.data,
-    ...selector(state),
-  })
+  const state = useSelector(table.store, selector, { compare: shallow })
 
-  const state = useSelector(table.store, selectorWithDataAndColumns, {
-    compare: shallow,
-  })
-
+  // we know this is not the most efficient way to return the table,
+  // but it is required for the react compiler to work
   return useMemo(
     () => ({
       ...table,
+      options: tableOptions,
       state,
     }),
-    [state, table],
+    [table, tableOptions, state],
   ) as ReactTable<TFeatures, TData, TSelected>
 }

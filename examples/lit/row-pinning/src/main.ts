@@ -1,4 +1,4 @@
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -71,7 +71,7 @@ function renderFilter(
   return html`
     <input
       type="text"
-      .value="${String((columnFilterValue ?? '') as string)}"
+      .value="${String(columnFilterValue ?? '')}"
       @input="${(e: InputEvent) =>
         column.setFilterValue((e.target as HTMLInputElement).value)}"
       placeholder="Search..."
@@ -166,10 +166,11 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
-const data = makeData(1000, 2, 2)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(1_000, 2, 2)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
@@ -182,7 +183,7 @@ class LitTableExample extends LitElement {
           paginatedRowModel: createPaginatedRowModel(),
         },
         columns,
-        data,
+        data: this._data,
         initialState: {
           pagination: { pageSize: 20, pageIndex: 0 },
         },
@@ -201,6 +202,22 @@ class LitTableExample extends LitElement {
     return html`
       <div class="app">
         <div class="p-2 container">
+          <div>
+            <button
+              @click=${() => {
+                this._data = makeData(1_000, 2, 2)
+              }}
+            >
+              Regenerate Data
+            </button>
+            <button
+              @click=${() => {
+                this._data = makeData(10_000, 2, 2)
+              }}
+            >
+              Stress Test (10k rows)
+            </button>
+          </div>
           <div class="h-2"></div>
           <table>
             <thead>
@@ -276,7 +293,8 @@ class LitTableExample extends LitElement {
           <span style="display:flex;align-items:center;gap:4px">
             <span>Page</span>
             <strong>
-              ${table.state.pagination.pageIndex + 1} of ${table.getPageCount()}
+              ${(table.state.pagination.pageIndex + 1).toLocaleString()} of
+              ${table.getPageCount().toLocaleString()}
             </strong>
           </span>
           <span style="display:flex;align-items:center;gap:4px">

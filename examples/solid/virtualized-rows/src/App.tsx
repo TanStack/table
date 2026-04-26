@@ -65,6 +65,7 @@ function App() {
   const [data, setData] = createSignal(makeData(100_000))
 
   const refreshData = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = createTable({
     _features,
@@ -79,8 +80,11 @@ function App() {
   return (
     <>
       <div class="app">
+        <div>
+          <button onClick={() => refreshData()}>Regenerate Data</button>
+          <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
+        </div>
         ({data().length.toLocaleString()} rows)
-        <button onClick={refreshData}>Refresh Data</button>
         <VirtualizedTable table={table} />
       </div>
       <pre>{JSON.stringify(table.store.state, null, 2)}</pre>

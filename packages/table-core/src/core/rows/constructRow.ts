@@ -52,7 +52,7 @@ export const constructRow = <
 
   // Initialize instance-specific data (e.g., caches) for features that need it
   for (const feature of Object.values(table._features)) {
-    feature.initRowInstanceData?.(row as Row<TFeatures, TData>)
+    feature.initRowInstanceData?.(row)
   }
 
   return row as Row<TFeatures, TData>

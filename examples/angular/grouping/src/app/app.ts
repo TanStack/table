@@ -17,7 +17,7 @@ import type { GroupingState, Updater } from '@tanstack/angular-table'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  readonly data = signal(makeData(10000))
+  readonly data = signal(makeData(1_000))
   readonly grouping = signal<GroupingState>([])
 
   readonly stringifiedGrouping = computed(() =>
@@ -51,7 +51,6 @@ export class App {
     this.table.setPageSize(Number(event.target.value))
   }
 
-  refreshData() {
-    this.data.set(makeData(10000))
-  }
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

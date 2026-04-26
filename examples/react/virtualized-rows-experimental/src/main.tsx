@@ -69,21 +69,9 @@ function App() {
     [],
   )
 
-  const [data, _setData] = React.useState(() => makeData(50_000))
-
-  const refreshData = React.useCallback(() => {
-    _setData(makeData(50_000))
-  }, [])
-
-  // refresh data every 5 seconds
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      refreshData()
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [refreshData])
-
-  console.log('data', data[0].firstName)
+  const [data, setData] = React.useState(() => makeData(50_000))
+  const refreshData = () => setData(makeData(50_000))
+  const stressTest = () => setData(makeData(500_000))
 
   const table = useTable({
     _features,
@@ -106,8 +94,11 @@ function App() {
           degraded until this application is built for production.
         </p>
       ) : null}
-      ({data.length} rows)
-      <button onClick={refreshData}>Refresh Data</button>
+      <div>
+        <button onClick={refreshData}>Regenerate Data</button>
+        <button onClick={stressTest}>Stress Test (500k rows)</button>
+      </div>
+      ({data.length.toLocaleString()} rows)
       <div
         className="container"
         ref={tableContainerRef}

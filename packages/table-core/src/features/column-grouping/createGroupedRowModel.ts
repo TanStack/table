@@ -26,7 +26,7 @@ export function createGroupedRowModel<
   aggregationFns: Record<keyof AggregationFns, AggregationFn<TFeatures, TData>>,
 ): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
-    const table = _table as Table_Internal<TFeatures, TData>
+    const table: Table_Internal<TFeatures, TData> = _table
     if (!table._rowModelFns.aggregationFns)
       table._rowModelFns.aggregationFns = aggregationFns
     return tableMemo({

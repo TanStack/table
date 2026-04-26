@@ -1,9 +1,9 @@
 import {
+  FlexRender,
   createColumnHelper,
   createPaginatedRowModel,
   createSortedRowModel,
   createTable,
-  FlexRender,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -51,7 +51,9 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data] = createSignal(makeData(1000))
+  const [data, setData] = createSignal(makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   // Create stable external atoms for the individual state slices you want to
   // own. The table still creates internal base atoms for everything else.
@@ -85,6 +87,10 @@ function App() {
 
   return (
     <div class="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -165,7 +171,8 @@ function App() {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {pagination().pageIndex + 1} of {table.getPageCount()}
+            {(pagination().pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span class="flex items-center gap-1">

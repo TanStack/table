@@ -1,4 +1,4 @@
-import { customElement, property } from 'lit/decorators.js'
+import { customElement, property, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -87,8 +87,6 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
-const data = makeData(5_000)
-
 @customElement('faceted-filter')
 class FacetedFilter extends LitElement {
   @property({ attribute: false })
@@ -168,7 +166,7 @@ class FacetedFilter extends LitElement {
         </datalist>
         <input
           type="text"
-          .value=${(columnFilterValue ?? '') as string}
+          .value=${columnFilterValue ?? ''}
           @input=${(e: InputEvent) => {
             const val = (e.target as HTMLInputElement).value
             this._debouncedSetFilterValue(val)
@@ -184,6 +182,9 @@ class FacetedFilter extends LitElement {
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(5_000)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   private _globalFilterDebounce: ReturnType<typeof setTimeout> | undefined
@@ -200,7 +201,7 @@ class LitTableExample extends LitElement {
           filteredRowModel: createFilteredRowModel(filterFns),
           sortedRowModel: createSortedRowModel(sortFns),
         },
-        data,
+        data: this._data,
         columns,
         globalFilterFn: 'includesString',
         debugTable: true,
@@ -215,6 +216,22 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(5_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
         <input
           style="padding: 8px; font-size: 16px; border: 1px solid gray; border-radius: 4px"
           .value=${(table.state.globalFilter ?? '') as string}
@@ -273,7 +290,7 @@ class LitTableExample extends LitElement {
               )}
           </tbody>
         </table>
-        <div>${table.getRowModel().rows.length} Rows</div>
+        <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
         <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>

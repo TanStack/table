@@ -147,7 +147,9 @@ function App() {
     [],
   )
 
-  const [data, _setData] = useState(() => makeData(1000))
+  const [data, setData] = useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
   const [density, setDensity] = useState<DensityState>('md')
 
   const table = useTable({
@@ -168,6 +170,10 @@ function App() {
 
   return (
     <div className="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <div className="h-2" />
       <button
         onClick={() => table.toggleDensity()}
@@ -281,7 +287,7 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
+            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>

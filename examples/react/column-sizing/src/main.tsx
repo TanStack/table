@@ -6,51 +6,19 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 import './index.css'
 
 const _features = tableFeatures({ columnSizingFeature })
-
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
 // This is not the Column Resizing Example, this is a simplified version that just sets static column sizes
 function App() {
-  const [data] = React.useState(() => [...defaultData])
+  const [data, setData] = React.useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const columns = React.useMemo(
     () =>
@@ -108,6 +76,15 @@ function App() {
 
   return (
     <div className="p-2">
+      <div>
+        <button onClick={() => refreshData()} className="border p-2">
+          Regenerate Data
+        </button>
+        <button onClick={() => stressTest()} className="border p-2">
+          Stress Test (100k rows)
+        </button>
+      </div>
+      <div className="h-4" />
       <div className="flex flex-wrap gap-2">
         <div className="text-xl">{'Initial Column Sizes'}</div>
         <br />

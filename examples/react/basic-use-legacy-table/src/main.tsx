@@ -233,7 +233,8 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {pagination.pageIndex + 1} of {table.getPageCount()}
+            {(pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
@@ -263,7 +264,9 @@ function App() {
           ))}
         </select>
       </div>
-      <div>{table.getPrePaginatedRowModel().rows.length} Rows</div>
+      <div>
+        {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
+      </div>
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>

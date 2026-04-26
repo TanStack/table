@@ -34,7 +34,7 @@ function createPanelWrapper(
 ) {
   return defineComponent({
     name,
-    props: ['theme', 'devtoolsOpen'] as unknown as undefined,
+    props: ['theme', 'devtoolsOpen'],
     setup(props: TableDevtoolsVueInit) {
       const devtoolsProps = {
         theme: props.theme ?? 'dark',

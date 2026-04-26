@@ -1,4 +1,4 @@
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -53,10 +53,11 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
-const data: Array<Person> = makeData(1000)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(1_000)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
@@ -64,7 +65,7 @@ class LitTableExample extends LitElement {
       {
         _features,
         _rowModels: {},
-        data,
+        data: this._data,
         columns,
         columnResizeMode: 'onChange',
         columnResizeDirection: 'ltr',
@@ -79,6 +80,22 @@ class LitTableExample extends LitElement {
     )
 
     return html`
+      <div>
+        <button
+          @click=${() => {
+            this._data = makeData(1_000)
+          }}
+        >
+          Regenerate Data
+        </button>
+        <button
+          @click=${() => {
+            this._data = makeData(100_000)
+          }}
+        >
+          Stress Test (100k rows)
+        </button>
+      </div>
       <table style="width: ${table.getCenterTotalSize()}px">
         <thead>
           ${repeat(

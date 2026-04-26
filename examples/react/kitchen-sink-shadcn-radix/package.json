@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-kitchen-sink-shadcn",
-  "version": "0.0.0",
+  "name": "tanstack-react-table-example-kitchen-sink-shadcn-radix",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -25,13 +24,13 @@
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-table": "^9.0.0-alpha.36",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.1.1",
     "date-fns": "^4.1.0",
-    "lucide-react": "^1.8.0",
+    "lucide-react": "^1.11.0",
     "react": "^19.2.5",
     "react-day-picker": "9.14.0",
     "react-dom": "^19.2.5",
@@ -39,12 +38,14 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "tailwindcss": "^4.2.2",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "tailwindcss": "^4.2.4",
     "typescript": "6.0.3",
-    "vite": "^8.0.8"
+    "vite": "^8.0.10"
   }
 }

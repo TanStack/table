@@ -1,10 +1,10 @@
 <div class="p-2">
+  <button (click)="refreshData()" class="border rounded p-2 mb-2">Regenerate Data</button>
+  <button (click)="stressTest()" class="border rounded p-2 mb-2">Stress Test (100k rows)</button>
   <div class="h-2"></div>
   <app-person-table [data]="data()" [(pagination)]="pagination" />
 
   <div>
-    <button class="border rounded p-2 mb-2" (click)="refreshData()">Refresh Data</button>
-
     <button class="border rounded p-2 mb-2" (click)="previousPage()">Previous page</button>
 
     <button class="border rounded p-2 mb-2" (click)="nextPage()">Next page</button>

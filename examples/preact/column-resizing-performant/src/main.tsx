@@ -1,4 +1,4 @@
-import { useState, useReducer, useMemo } from 'preact/hooks'
+import { useMemo, useReducer, useState } from 'preact/hooks'
 import { memo } from 'preact/compat'
 import { render } from 'preact'
 import {
@@ -67,7 +67,9 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data, _setData] = useState(() => makeData(200))
+  const [data, setData] = useState(() => makeData(200))
+  const refreshData = () => setData(makeData(200))
+  const stressTest = () => setData(makeData(100_000))
 
   const rerender = useReducer(() => ({}), {})[1]
 
@@ -113,6 +115,11 @@ function App() {
 
   return (
     <div className="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
+      <div className="h-4" />
       <i>
         This example has artificially slow cell renders to simulate complex
         usage
@@ -137,7 +144,7 @@ function App() {
           </pre>
         )}
       </table.Subscribe>
-      <div className="h-4" />({data.length} rows)
+      <div className="h-4" />({data.length.toLocaleString()} rows)
       <div className="overflow-x-auto">
         {/* Here in the <table> equivalent element (surrounds all table head and data cells), we will define our CSS variables for column sizes */}
         <div
@@ -220,7 +227,7 @@ function TableBody({ table }: { table: Table<typeof _features, Person> }) {
 export const MemoizedTableBody = memo(
   TableBody,
   (prev, next) => prev.table.options.data === next.table.options.data,
-) as typeof TableBody
+)
 
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')

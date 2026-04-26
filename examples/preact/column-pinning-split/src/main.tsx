@@ -75,7 +75,8 @@ function App() {
   const [data, setData] = useState(() => makeData(5000))
   const [columns] = useState(() => [...defaultColumns])
 
-  const rerender = () => setData(() => makeData(5000))
+  const refreshData = () => setData(() => makeData(5_000))
+  const stressTest = () => setData(() => makeData(100_000))
 
   const table = useTable({
     _features,
@@ -131,8 +132,11 @@ function App() {
           </div>
           <div className="h-4" />
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => rerender()} className="border p-1">
-              Regenerate
+            <button onClick={() => refreshData()} className="border p-1">
+              Regenerate Data
+            </button>
+            <button onClick={() => stressTest()} className="border p-1">
+              Stress Test (100k rows)
             </button>
             <button onClick={() => randomizeColumns()} className="border p-1">
               Shuffle Columns

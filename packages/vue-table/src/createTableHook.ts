@@ -429,10 +429,10 @@ export function createTableHook<
 
         return () => {
           if (!props.selector) {
-            return slots.default?.() as VNodeChild
+            return slots.default?.()
           }
 
-          return slots.default?.({ state: selected?.value }) as VNodeChild
+          return slots.default?.({ state: selected?.value })
         }
       },
     })
@@ -469,7 +469,7 @@ export function createTableHook<
             props.selector
               ? { cell: extendedCell, state: selected?.value }
               : { cell: extendedCell },
-          ) as VNodeChild
+          )
         }
       },
     })
@@ -506,7 +506,7 @@ export function createTableHook<
             props.selector
               ? { header: extendedHeader, state: selected?.value }
               : { header: extendedHeader },
-          ) as VNodeChild
+          )
         }
       },
     })
@@ -543,7 +543,7 @@ export function createTableHook<
             props.selector
               ? { header: extendedHeader, state: selected?.value }
               : { header: extendedHeader },
-          ) as VNodeChild
+          )
         }
       },
     })

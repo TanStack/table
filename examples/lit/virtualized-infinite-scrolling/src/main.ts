@@ -187,7 +187,8 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="app">
-        (${this._data.length} of ${this._totalRowCount} rows fetched)
+        (${this._data.length.toLocaleString()} of
+        ${this._totalRowCount.toLocaleString()} rows fetched)
         <div
           class="container"
           ${ref(this.tableContainerRef)}

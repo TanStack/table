@@ -1,4 +1,4 @@
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -72,10 +72,11 @@ function renderSubComponent(row: Row<typeof _features, Person>) {
   `
 }
 
-const data = makeData(10, 5)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(10, 5)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
@@ -86,7 +87,7 @@ class LitTableExample extends LitElement {
           expandedRowModel: createExpandedRowModel(),
         },
         columns,
-        data,
+        data: this._data,
         getRowCanExpand: () => true,
       },
       (state) => ({
@@ -96,6 +97,22 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(10, 5)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(100, 5)
+            }}
+          >
+            Stress Test (100 rows)
+          </button>
+        </div>
         <div class="h-2"></div>
         <table>
           <thead>
@@ -139,7 +156,7 @@ class LitTableExample extends LitElement {
           </tbody>
         </table>
         <div class="h-2"></div>
-        <div>${table.getRowModel().rows.length} Rows</div>
+        <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
       </div>
       <style>
         * {

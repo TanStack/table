@@ -1,4 +1,4 @@
-import { useState, useReducer, useMemo } from 'preact/hooks'
+import { useMemo, useReducer, useState } from 'preact/hooks'
 import { render } from 'preact'
 import './index.css'
 import {
@@ -87,7 +87,8 @@ function App() {
   )
 
   const [data, setData] = useState(() => makeData(10_000))
-  const refreshData = () => setData(() => makeData(100_000)) // stress test
+  const refreshData = () => setData(() => makeData(10_000))
+  const stressTest = () => setData(() => makeData(100_000))
 
   const table = useAppTable(
     {
@@ -100,6 +101,10 @@ function App() {
 
   return (
     <div className="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <div className="h-2" />
       <table>
         <thead>
@@ -159,7 +164,7 @@ function App() {
                           >
                             {row.getIsExpanded() ? '👇' : '👉'}{' '}
                             <table.FlexRender cell={cell} /> (
-                            {row.subRows.length})
+                            {row.subRows.length.toLocaleString()})
                           </button>
                         </>
                       ) : cell.getIsAggregated() ? (
@@ -211,7 +216,8 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.state.pagination.pageIndex + 1} of {table.getPageCount()}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
@@ -243,12 +249,9 @@ function App() {
           ))}
         </select>
       </div>
-      <div>{table.getRowModel().rows.length} Rows</div>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <div>
         <button onClick={() => rerender(0)}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
       <table.Subscribe selector={(state) => state}>
         {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}

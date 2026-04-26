@@ -54,7 +54,9 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data] = useState(() => makeData(1000))
+  const [data, setData] = useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const rerender = useReducer(() => ({}), {})[1]
 
@@ -90,6 +92,10 @@ function App() {
 
   return (
     <div className="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -162,7 +168,8 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {pagination.pageIndex + 1} of {table.getPageCount()}
+            {(pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span className="flex items-center gap-1">

@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-svelte-basic-create-table",
-  "version": "0.0.0",
+  "name": "tanstack-svelte-table-example-basic-create-table",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,13 +10,14 @@
     "lint": "eslint ./src"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.4.0",
     "@rollup/plugin-replace": "^6.0.3",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@tanstack/svelte-table": "^9.0.0-alpha.36",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte": "^5.55.4",
+    "svelte": "^5.55.5",
     "svelte-check": "^4.4.6",
     "typescript": "6.0.3",
-    "vite": "^8.0.8"
+    "vite": "^8.0.10"
   }
 }

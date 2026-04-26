@@ -49,7 +49,9 @@
     }),
   ])
 
-  const data = makeData(1000)
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
   const [sorting, setSorting] = createTableState<SortingState>([])
   const [pagination, setPagination] = createTableState<PaginationState>({
@@ -82,6 +84,10 @@
 </script>
 
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <table>
     <thead>
       {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
@@ -160,7 +166,7 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {pagination().pageIndex + 1} of {table.getPageCount()}
+        {(pagination().pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
       </strong>
     </span>
     <span class="flex items-center gap-1">

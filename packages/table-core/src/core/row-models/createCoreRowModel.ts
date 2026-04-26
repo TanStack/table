@@ -12,7 +12,7 @@ export function createCoreRowModel<
   TData extends RowData,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
-    const table = _table as Table_Internal<TFeatures, TData>
+    const table: Table_Internal<TFeatures, TData> = _table
     return tableMemo({
       feature: 'coreRowModelsFeature',
       table,

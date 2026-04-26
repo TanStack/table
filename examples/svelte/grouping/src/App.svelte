@@ -77,10 +77,9 @@
     }),
   ])
 
-  let data = $state(makeData(10_000))
-  const refreshData = () => {
-    data = makeData(100_000)
-  }
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
   const table = createAppTable(
     {
@@ -95,6 +94,10 @@
 </script>
 
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <div class="h-2"></div>
   <table>
     <thead>
@@ -150,7 +153,7 @@
                   {/if}
                   {' '}
                   <FlexRender cell={cell} />
-                  {' '}({row.subRows.length})
+                  {' '}({row.subRows.length.toLocaleString()})
                 </button>
               {:else if cell.getIsAggregated()}
                 <FlexRender
@@ -199,8 +202,8 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {table.state.pagination.pageIndex + 1} of{' '}
-        {table.getPageCount()}
+        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {table.getPageCount().toLocaleString()}
       </strong>
     </span>
     <span class="flex items-center gap-1">
@@ -228,9 +231,10 @@
       {/each}
     </select>
   </div>
-  <div>{table.getRowModel().rows.length} Rows</div>
+  <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
   <div>
-    <button onclick={() => refreshData()}>Refresh Data</button>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
   </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

@@ -55,7 +55,7 @@ const columns = columnHelper.columns([
   styleUrl: './app.css',
 })
 export class App {
-  readonly data = signal(makeData(1000))
+  readonly data = signal(makeData(1_000))
   readonly density = signal<DensityState>('md')
 
   readonly table = injectTable(() => ({
@@ -76,4 +76,7 @@ export class App {
         ? this.density.update(updater)
         : this.density.set(updater),
   }))
+
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

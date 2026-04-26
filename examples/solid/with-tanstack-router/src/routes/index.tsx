@@ -67,7 +67,7 @@ function UsersPage() {
         }}
       />
       <div class="flex items-center gap-2">
-        {dataQuery.data?.rowCount} users found
+        {dataQuery.data?.rowCount?.toLocaleString()} users found
         <button
           class="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
           onClick={resetFilters}

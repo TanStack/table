@@ -177,7 +177,8 @@ function App() {
           degraded until this application is built for production.
         </p>
       ) : null}
-      ({flatData.length} of {totalDBRowCount} rows fetched)
+      ({flatData.length.toLocaleString()} of {totalDBRowCount.toLocaleString()}{' '}
+      rows fetched)
       <div
         className="container"
         onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}

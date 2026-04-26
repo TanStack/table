@@ -930,9 +930,11 @@ export function DataTableFilterList<
             id={listId}
             className="flex max-h-[300px] flex-col gap-2 overflow-y-auto p-0.5"
           >
-            {columnFilters.map((filter, index) =>
-              onFilterRender({ filter, index }),
-            )}
+            {columnFilters.map((filter, index) => (
+              <React.Fragment key={filter.filterId}>
+                {onFilterRender({ filter, index })}
+              </React.Fragment>
+            ))}
           </div>
         )}
         <div className="flex items-center gap-2">

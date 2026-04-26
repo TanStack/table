@@ -6,45 +6,11 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 import './index.css'
 
 const _features = tableFeatures({ columnVisibilityFeature })
-
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
@@ -95,7 +61,9 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data, _setData] = React.useState(() => [...defaultData])
+  const [data, setData] = React.useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
@@ -116,6 +84,15 @@ function App() {
     >
       {(_state) => (
         <div className="p-2">
+          <div>
+            <button onClick={() => refreshData()} className="border p-2">
+              Regenerate Data
+            </button>
+            <button onClick={() => stressTest()} className="border p-2">
+              Stress Test (100k rows)
+            </button>
+          </div>
+          <div className="h-4" />
           <div className="inline-block border border-black shadow rounded">
             <div className="px-1 border-b border-black">
               <label>

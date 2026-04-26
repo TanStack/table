@@ -518,10 +518,7 @@ export function createTableHook<
     return new ContextConsumer(host, {
       context: tableContext,
       subscribe: true,
-    }) as ContextConsumer<
-      Context<symbol, LitTable<TFeatures, TData, any>>,
-      ReactiveControllerHost & HTMLElement
-    >
+    })
   }
 
   /**
@@ -553,10 +550,7 @@ export function createTableHook<
     return new ContextConsumer(host, {
       context: cellContext,
       subscribe: true,
-    }) as ContextConsumer<
-      Context<symbol, Cell<TFeatures, any, TValue>>,
-      ReactiveControllerHost & HTMLElement
-    >
+    })
   }
 
   /**
@@ -589,10 +583,7 @@ export function createTableHook<
     return new ContextConsumer(host, {
       context: headerContext,
       subscribe: true,
-    }) as ContextConsumer<
-      Context<symbol, Header<TFeatures, any, TValue>>,
-      ReactiveControllerHost & HTMLElement
-    >
+    })
   }
 
   /**

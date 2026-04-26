@@ -6,45 +6,10 @@
     FlexRender,
     tableFeatures,
   } from '@tanstack/svelte-table'
+  import { makeData, type Person } from './makeData'
   import './index.css'
 
   const _features = tableFeatures({ columnSizingFeature })
-
-  type Person = {
-    firstName: string
-    lastName: string
-    age: number
-    visits: number
-    status: string
-    progress: number
-  }
-
-  const defaultData: Array<Person> = [
-    {
-      firstName: 'tanner',
-      lastName: 'linsley',
-      age: 24,
-      visits: 100,
-      status: 'In Relationship',
-      progress: 50,
-    },
-    {
-      firstName: 'tandy',
-      lastName: 'miller',
-      age: 40,
-      visits: 40,
-      status: 'Single',
-      progress: 80,
-    },
-    {
-      firstName: 'joe',
-      lastName: 'dirte',
-      age: 45,
-      visits: 20,
-      status: 'Complicated',
-      progress: 10,
-    },
-  ]
 
   const columnHelper = createColumnHelper<typeof _features, Person>()
 
@@ -83,7 +48,9 @@
     }),
   ])
 
-  let data = $state([...defaultData])
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
   const table = createTable(
     {
@@ -102,6 +69,10 @@
 </script>
 
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <div class="flex flex-wrap gap-2">
     <div class="text-xl">Initial Column Sizes</div>
     <br />

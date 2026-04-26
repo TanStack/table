@@ -76,11 +76,8 @@
   ]
 
   let data = $state(makeData(1_000))
-
-  const refreshData = () => {
-    console.info('refresh')
-    data = makeData(100_000) // stress test
-  }
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
   const table = createTable(
     {
@@ -99,6 +96,10 @@
 </script>
 
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <div class="h-2"></div>
   <table>
     <thead>
@@ -139,9 +140,10 @@
       {/each}
     </tfoot>
   </table>
-  <div>{table.getRowModel().rows.length} Rows</div>
+  <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
   <div>
-    <button onclick={() => refreshData()}>Refresh Data</button>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
   </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

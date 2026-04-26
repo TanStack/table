@@ -12,7 +12,7 @@ import { makeData } from './makeData'
 import type { SortFn } from '@tanstack/table-core'
 import type { Person } from './makeData'
 
-const data = makeData(1000)
+let data = makeData(1_000)
 
 const _features = tableFeatures({
   rowSortingFeature,
@@ -67,6 +67,26 @@ const columns = columnHelper.columns([
 ])
 
 const renderTable = () => {
+  // Create buttons container
+  const buttonsDiv = document.createElement('div')
+
+  const regenerateBtn = document.createElement('button')
+  regenerateBtn.textContent = 'Regenerate Data'
+  regenerateBtn.addEventListener('click', () => {
+    data = makeData(1_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+  })
+
+  const stressTestBtn = document.createElement('button')
+  stressTestBtn.textContent = 'Stress Test (100k rows)'
+  stressTestBtn.addEventListener('click', () => {
+    data = makeData(100_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+  })
+
+  buttonsDiv.appendChild(regenerateBtn)
+  buttonsDiv.appendChild(stressTestBtn)
+
   // Create table elements
   const tableElement = document.createElement('table')
   const theadElement = document.createElement('thead')
@@ -133,6 +153,7 @@ const renderTable = () => {
   // Clear previous content and append new content
   const wrapperElement = document.getElementById('wrapper') as HTMLDivElement
   wrapperElement.innerHTML = ''
+  wrapperElement.appendChild(buttonsDiv)
   wrapperElement.appendChild(tableElement)
   wrapperElement.appendChild(stateInfoElement)
 }

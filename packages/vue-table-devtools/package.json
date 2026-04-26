@@ -61,7 +61,7 @@
   "devDependencies": {
     "@tanstack/table-core": "workspace:*",
     "@vitejs/plugin-vue": "^6.0.6",
-    "vue": "^3.5.32"
+    "vue": "^3.5.33"
   },
   "peerDependencies": {
     "@tanstack/table-core": "workspace:*",

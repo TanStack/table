@@ -63,10 +63,8 @@
   ]
 
   let data = $state(makeData(100_000))
-
-  const refreshData = () => {
-    data = makeData(100_000)
-  }
+  const refreshData = () => { data = makeData(100_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
   const table = createTable({
     _features,
@@ -120,8 +118,11 @@
 </script>
 
 <div class="app">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
+  </div>
   ({data.length.toLocaleString()} rows)
-  <button onclick={refreshData}>Refresh Data</button>
   <div
     class="container"
     bind:this={tableContainerRef}

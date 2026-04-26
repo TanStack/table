@@ -11,19 +11,23 @@ import {
   rowSelectionFeature,
   tableFeatures,
   useTable,
-  type PreactTable,
 } from '@tanstack/preact-table'
 import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/preact-table-devtools'
 import { TanStackDevtools } from '@tanstack/preact-devtools'
+import { useCreateAtom } from '@tanstack/preact-store'
 import { makeData } from './makeData'
+import type {
+  Column,
+  PreactTable,
+  RowSelectionState,
+  Table,
+} from '@tanstack/preact-table'
 import type { JSX } from 'preact'
 import type { Person } from './makeData'
-import type { Column, RowSelectionState, Table } from '@tanstack/preact-table'
 import './index.css'
-import { useCreateAtom } from '@tanstack/preact-store'
 
 const _features = tableFeatures({
   rowPaginationFeature,
@@ -100,7 +104,8 @@ function App() {
   )
 
   const [data, setData] = useState(() => makeData(1_000))
-  const refreshData = () => setData(() => makeData(100_000)) // stress test
+  const refreshData = () => setData(() => makeData(1_000))
+  const stressTest = () => setData(() => makeData(100_000))
 
   const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
 
@@ -122,7 +127,7 @@ function App() {
       debugTable: true,
     },
     // (state) => state, // uncomment to subscribe to the entire table state (this is how v8 used to work by default)
-  ) as PreactTable<typeof _features, Person>
+  )
 
   useTanStackTableDevtools(table, 'Row Selection Example')
 
@@ -138,6 +143,12 @@ function App() {
       >
         {(state) => (
           <div className="p-2">
+            <div>
+              <button onClick={() => refreshData()}>Regenerate Data</button>
+              <button onClick={() => stressTest()}>
+                Stress Test (100k rows)
+              </button>
+            </div>
             <div>
               <input
                 value={state.globalFilter ?? ''}
@@ -212,7 +223,8 @@ function App() {
                     </table.Subscribe>
                   </td>
                   <td colSpan={20}>
-                    Page Rows ({table.getRowModel().rows.length})
+                    Page Rows (
+                    {table.getRowModel().rows.length.toLocaleString()})
                   </td>
                 </tr>
               </tfoot>
@@ -250,8 +262,10 @@ function App() {
               <span className="flex items-center gap-1">
                 <div>Page</div>
                 <strong>
-                  {table.store.state.pagination.pageIndex + 1} of{' '}
-                  {table.getPageCount()}
+                  {(
+                    table.store.state.pagination.pageIndex + 1
+                  ).toLocaleString()}{' '}
+                  of {table.getPageCount().toLocaleString()}
                 </strong>
               </span>
               <span className="flex items-center gap-1">
@@ -292,9 +306,10 @@ function App() {
                   numSelected: Object.keys(state.rowSelection).length,
                 })}
               >
-                {({ numSelected }) => <>{numSelected} of </>}
+                {({ numSelected }) => <>{numSelected.toLocaleString()} of </>}
               </table.Subscribe>
-              {table.getPreFilteredRowModel().rows.length} Total Rows Selected
+              {table.getPreFilteredRowModel().rows.length.toLocaleString()}{' '}
+              Total Rows Selected
             </div>
             <hr />
             <br />
@@ -304,14 +319,6 @@ function App() {
                 onClick={() => rerender(0)}
               >
                 Force Rerender
-              </button>
-            </div>
-            <div>
-              <button
-                className="border rounded p-2 mb-2"
-                onClick={() => refreshData()}
-              >
-                Refresh Data
               </button>
             </div>
             <div>

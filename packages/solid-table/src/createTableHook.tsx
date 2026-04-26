@@ -922,7 +922,7 @@ export function createTableHook<
             {(selector) => (
               <table.Subscribe selector={selector()}>
                 {(state: Accessor<TAppCellSelected>) =>
-                  props.children(extendedCell as any, state)
+                  props.children(extendedCell, state)
                 }
               </table.Subscribe>
             )}
@@ -988,7 +988,7 @@ export function createTableHook<
             {(selector) => (
               <table.Subscribe selector={selector()}>
                 {(state: Accessor<TAppHeaderSelected>) =>
-                  props.children(extendedHeader as any, state)
+                  props.children(extendedHeader, state)
                 }
               </table.Subscribe>
             )}
@@ -1054,7 +1054,7 @@ export function createTableHook<
             {(selector) => (
               <table.Subscribe selector={selector()}>
                 {(state: Accessor<TAppFooterSelected>) =>
-                  props.children(extendedHeader as any, state)
+                  props.children(extendedHeader, state)
                 }
               </table.Subscribe>
             )}

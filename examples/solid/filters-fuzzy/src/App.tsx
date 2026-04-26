@@ -85,7 +85,8 @@ const columns = columnHelper.columns([
 
 function App() {
   const [data, setData] = createSignal<Array<Person>>(makeData(5_000))
-  const refreshData = () => setData(makeData(50_000))
+  const refreshData = () => setData(makeData(5_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const table = createTable<typeof _features, Person>({
     _features,
@@ -117,6 +118,10 @@ function App() {
 
   return (
     <div class="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <div>
         <DebouncedInput
           value={(table.store.state.globalFilter ?? '') as string}
@@ -215,8 +220,8 @@ function App() {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span class="flex items-center gap-1">
@@ -242,9 +247,8 @@ function App() {
           </For>
         </select>
       </div>
-      <div>{table.getPrePaginatedRowModel().rows.length} Rows</div>
       <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
+        {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
       <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
     </div>
@@ -290,7 +294,7 @@ function DebouncedInput(props: {
   return (
     <input
       type={props.type ?? 'text'}
-      value={value() as string}
+      value={value()}
       onInput={(e) => setValue(e.currentTarget.value)}
       placeholder={props.placeholder}
       class={props.class}

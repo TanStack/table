@@ -52,7 +52,7 @@ function App() {
   const form = useAppForm(() => ({
     defaultValues: {
       data: makeData(100),
-    } as FormData,
+    },
     onSubmit: ({ value }: { value: FormData }) => {
       alert(
         `Submitted ${value.data.length} records!\n\nFirst record: ${JSON.stringify(value.data[0], null, 2)}`,
@@ -169,6 +169,10 @@ function App() {
     form.reset({ data: makeData(100) })
   }
 
+  const stressTest = () => {
+    form.reset({ data: makeData(100_000) })
+  }
+
   const addRow = () => {
     form.pushFieldValue('data', {
       firstName: '',
@@ -182,6 +186,10 @@ function App() {
 
   return (
     <div class="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -299,8 +307,8 @@ function App() {
             <span class="flex items-center gap-1">
               <div>Page</div>
               <strong>
-                {table.store.state.pagination.pageIndex + 1} of{' '}
-                {table.getPageCount().toLocaleString()}
+                {(table.store.state.pagination.pageIndex + 1).toLocaleString()}{' '}
+                of {table.getPageCount().toLocaleString()}
               </strong>
             </span>
             <span class="flex items-center gap-1">

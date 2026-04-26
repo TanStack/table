@@ -28,9 +28,8 @@
   })
 
   let data = $state(makeData(1_000))
-  const refreshData = () => {
-    data = makeData(100_000) // stress test
-  }
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
   // Svelte action to set indeterminate property on checkbox inputs
   function setIndeterminate(node: HTMLInputElement, value: boolean) {
@@ -123,6 +122,10 @@
 
 <div class="p-2">
   <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
+  <div>
     <input
       value={table.state.globalFilter ?? ''}
       oninput={(e) => table.setGlobalFilter((e.target as HTMLInputElement).value)}
@@ -193,7 +196,7 @@
             class="cursor-pointer"
           />
         </td>
-        <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
+        <td colSpan={20}>Page Rows ({table.getRowModel().rows.length.toLocaleString()})</td>
       </tr>
     </tfoot>
   </table>
@@ -230,7 +233,7 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {table.state.pagination.pageIndex + 1} of {table.getPageCount()}
+        {(table.state.pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
       </strong>
     </span>
     <span class="flex items-center gap-1">
@@ -260,14 +263,17 @@
   </div>
   <br />
   <div>
-    {Object.keys(table.state.rowSelection).length} of{' '}
-    {table.getPreFilteredRowModel().rows.length} Total Rows Selected
+    {Object.keys(table.state.rowSelection).length.toLocaleString()} of{' '}
+    {table.getPreFilteredRowModel().rows.length.toLocaleString()} Total Rows Selected
   </div>
   <hr />
   <br />
   <div>
     <button class="border rounded p-2 mb-2" onclick={() => refreshData()}>
-      Refresh Data
+      Regenerate Data
+    </button>
+    <button class="border rounded p-2 mb-2" onclick={() => stressTest()}>
+      Stress Test (100k rows)
     </button>
   </div>
   <div>

@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks'
-import { render, Fragment } from 'preact'
+import { Fragment, render } from 'preact'
 import './index.css'
 import {
   createColumnHelper,
@@ -153,7 +153,7 @@ function Table({
             </tbody>
           </table>
           <div className="h-2" />
-          <div>{table.getRowModel().rows.length} Rows</div>
+          <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
         </div>
       )}
     </table.Subscribe>
@@ -173,15 +173,23 @@ const renderSubComponent = ({
 }
 
 function App() {
-  const [data] = useState(() => makeData(10))
+  const [data, setData] = useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   return (
-    <Table
-      columns={columns}
-      data={data}
-      getRowCanExpand={() => true}
-      renderSubComponent={renderSubComponent}
-    />
+    <>
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
+      <Table
+        columns={columns}
+        data={data}
+        getRowCanExpand={() => true}
+        renderSubComponent={renderSubComponent}
+      />
+    </>
   )
 }
 

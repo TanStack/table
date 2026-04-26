@@ -1,4 +1,4 @@
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -67,10 +67,11 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
-const data: Array<Person> = makeData(20)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(1_000)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
@@ -79,7 +80,7 @@ class LitTableExample extends LitElement {
         _features,
         _rowModels: {},
         columns,
-        data,
+        data: this._data,
         debugTable: true,
       },
       (state) => ({ columnVisibility: state.columnVisibility }),
@@ -87,6 +88,23 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(1_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
+        <div class="h-4"></div>
         <div class="inline-block border border-black shadow rounded">
           <div class="px-1 border-b border-black">
             <label>

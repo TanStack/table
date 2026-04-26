@@ -43,7 +43,7 @@ const _features = tableFeatures({
 export class AppComponent {
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
-  readonly data = signal(makeData(10_000))
+  readonly data = signal(makeData(1_000))
 
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
@@ -155,7 +155,6 @@ export class AppComponent {
     )
   }
 
-  refreshData(): void {
-    this.data.set(makeData(10_000))
-  }
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

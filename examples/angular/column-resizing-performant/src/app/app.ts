@@ -76,13 +76,13 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  readonly data = signal<Array<Person>>(makeData(200))
+  readonly data = signal<Array<Person>>(makeData(1_000))
 
   readonly table = injectTable(() => ({
     data: this.data(),
     _features,
     columns: defaultColumns,
-    columnResizeMode: 'onChange' as ColumnResizeMode,
+    columnResizeMode: 'onChange' as const,
     defaultColumn: {
       minSize: 60,
       maxSize: 800,
@@ -124,4 +124,7 @@ export class App {
       2,
     ),
   )
+
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

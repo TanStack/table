@@ -195,8 +195,8 @@ export default function Table<T extends Record<string, string | number>>(
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span class="flex items-center gap-1">

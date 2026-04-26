@@ -19,10 +19,9 @@ const columnHelper = createColumnHelper<typeof _features, Person>()
 
 const INITIAL_PAGE_INDEX = 0
 
-const defaultData = makeData(100)
 const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 const pageSizes = [10, 20, 30, 40, 50]
-const data = ref(defaultData)
+const data = ref(makeData(1_000))
 
 const columns = ref(
   columnHelper.columns([
@@ -87,8 +86,12 @@ const table = useTable(
   (state) => ({ pagination: state.pagination }),
 )
 
-function rerender() {
-  data.value = defaultData
+const refreshData = () => {
+  data.value = makeData(1_000)
+}
+
+const stressTest = () => {
+  data.value = makeData(100_000)
 }
 
 function handleGoToPage(e: any) {
@@ -104,6 +107,13 @@ function handlePageSizeChange(e: any) {
 
 <template>
   <div class="p-2">
+    <div class="flex flex-wrap gap-2">
+      <button @click="refreshData" class="border p-2">Regenerate Data</button>
+      <button @click="stressTest" class="border p-2">
+        Stress Test (100k rows)
+      </button>
+    </div>
+    <div class="h-4" />
     <table>
       <thead>
         <tr
@@ -174,8 +184,8 @@ function handlePageSizeChange(e: any) {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {{ table.state.pagination.pageIndex + 1 }} of
-            {{ table.getPageCount() }}
+            {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
+            {{ table.getPageCount().toLocaleString() }}
           </strong>
         </span>
         <span class="flex items-center gap-1">
@@ -200,11 +210,10 @@ function handlePageSizeChange(e: any) {
           </option>
         </select>
       </div>
-      <div>{{ table.getRowModel().rows.length }} Rows</div>
+      <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
       <pre>{{ JSON.stringify(table.state.pagination, null, 2) }}</pre>
     </div>
     <div class="h-2" />
-    <button @click="rerender" class="border p-2">Rerender</button>
   </div>
 </template>
 

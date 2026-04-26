@@ -1,4 +1,4 @@
-import { useReducer, useState, useMemo } from 'preact/hooks'
+import { useMemo, useReducer, useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnFilteringFeature,
@@ -144,8 +144,9 @@ function App() {
     [includeLeafRows, includeParentRows],
   )
 
-  const [data, setData] = useState(() => makeData(1000, 2, 2))
-  const refreshData = () => setData(() => makeData(1000, 2, 2))
+  const [data, setData] = useState(() => makeData(1_000, 2, 2))
+  const refreshData = () => setData(() => makeData(1_000, 2, 2))
+  const stressTest = () => setData(() => makeData(10_000, 2, 2))
 
   const table = useTable(
     {
@@ -174,6 +175,10 @@ function App() {
 
   return (
     <div className="app">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <div className="p-2 container">
         <div className="h-2" />
         <table>
@@ -259,8 +264,8 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
@@ -336,14 +341,6 @@ function App() {
       <div>
         <button className="border rounded p-2 mb-2" onClick={() => rerender(0)}>
           Force Rerender
-        </button>
-      </div>
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
-          onClick={() => refreshData()}
-        >
-          Refresh Data
         </button>
       </div>
       <div>{JSON.stringify(rowPinning, null, 2)}</div>

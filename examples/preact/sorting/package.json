@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-preact-sorting",
-  "version": "0.0.0",
+  "name": "tanstack-preact-table-example-sorting",
   "private": true,
   "type": "module",
   "scripts": {
@@ -21,6 +20,6 @@
     "@tanstack/preact-devtools": "^0.10.2",
     "@tanstack/preact-table-devtools": "^9.0.0-alpha.36",
     "typescript": "6.0.3",
-    "vite": "^8.0.8"
+    "vite": "^8.0.10"
   }
 }

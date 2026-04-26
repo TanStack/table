@@ -43,10 +43,9 @@
   let includeParentRows = $state(false)
   let copyPinnedRows = $state(false)
 
-  let data = $state(makeData(1000, 2, 2))
-  const refreshData = () => {
-    data = makeData(1000, 2, 2)
-  }
+  let data = $state(makeData(1_000, 2, 2))
+  const refreshData = () => { data = makeData(1_000, 2, 2) }
+  const stressTest = () => { data = makeData(10_000, 2, 2) }
 
   const table = createTable(
     {
@@ -219,6 +218,10 @@
 
 <div class="app">
   <div class="p-2 container">
+    <div>
+      <button onclick={() => refreshData()}>Regenerate Data</button>
+      <button onclick={() => stressTest()}>Stress Test (10k top rows)</button>
+    </div>
     <div class="h-2"></div>
     <table>
       <thead>
@@ -303,8 +306,8 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {table.state.pagination.pageIndex + 1} of{' '}
-        {table.getPageCount()}
+        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {table.getPageCount().toLocaleString()}
       </strong>
     </span>
     <span class="flex items-center gap-1">
@@ -379,7 +382,10 @@
   </div>
   <div>
     <button class="border rounded p-2 mb-2" onclick={() => refreshData()}>
-      Refresh Data
+      Regenerate Data
+    </button>
+    <button class="border rounded p-2 mb-2" onclick={() => stressTest()}>
+      Stress Test (10k top rows)
     </button>
   </div>
   <div>{JSON.stringify(table.state.rowPinning, null, 2)}</div>

@@ -10,55 +10,10 @@
     createSortedRowModel,
     sortFns,
   } from '@tanstack/svelte-table'
+  import { makeData, type Person } from './makeData'
   import './index.css'
 
-  // 1. Define what the shape of your data will be for each row
-  type Person = {
-    firstName: string
-    lastName: string
-    age: number
-    visits: number
-    status: string
-    progress: number
-  }
-
-  // 2. Create some dummy data with a stable reference (this could be an API response stored in a $state rune)
-  const defaultData: Array<Person> = [
-    {
-      firstName: 'tanner',
-      lastName: 'linsley',
-      age: 24,
-      visits: 100,
-      status: 'In Relationship',
-      progress: 50,
-    },
-    {
-      firstName: 'tandy',
-      lastName: 'miller',
-      age: 40,
-      visits: 40,
-      status: 'Single',
-      progress: 80,
-    },
-    {
-      firstName: 'joe',
-      lastName: 'dirte',
-      age: 45,
-      visits: 20,
-      status: 'Complicated',
-      progress: 10,
-    },
-    {
-      firstName: 'kevin',
-      lastName: 'vandy',
-      age: 28,
-      visits: 100,
-      status: 'Single',
-      progress: 70,
-    },
-  ]
-
-  // 3. New in V9! Tell the table which features and row models we want to use.
+  // 1. New in V9! Tell the table which features and row models we want to use.
   const { createAppTable, createAppColumnHelper } = createTableHook({
     _features: { rowSortingFeature },
     _rowModels: {
@@ -103,7 +58,9 @@
   ])
 
   // 6. Store data with a $state rune for reactivity
-  let data = $state([...defaultData])
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
   // 7. Create the table instance with the required columns and data.
   //    Features and row models are already defined in the createTableHook call above
@@ -118,6 +75,10 @@
 
 <!-- 8. Render your table markup from the table instance APIs -->
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <table>
     <thead>
       {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}

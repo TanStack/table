@@ -90,7 +90,8 @@ function App() {
   )
 
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
-  const refreshData = () => setData((_old) => makeData(50_000)) // stress test
+  const refreshData = () => setData(makeData(5_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const table = useTable({
     _features,
@@ -115,6 +116,12 @@ function App() {
     >
       {(state) => (
         <div className="p-2">
+          <div>
+            <button onClick={() => refreshData()}>Regenerate Data</button>
+            <button onClick={() => stressTest()}>
+              Stress Test (100k rows)
+            </button>
+          </div>
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -200,7 +207,8 @@ function App() {
             <span className="flex items-center gap-1">
               <div>Page</div>
               <strong>
-                {state.pagination.pageIndex + 1} of {table.getPageCount()}
+                {(state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+                {table.getPageCount().toLocaleString()}
               </strong>
             </span>
             <span className="flex items-center gap-1">
@@ -230,12 +238,11 @@ function App() {
               ))}
             </select>
           </div>
-          <div>{table.getPrePaginatedRowModel().rows.length} Rows</div>
           <div>
-            <button onClick={() => rerender()}>Force Rerender</button>
+            {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
           </div>
           <div>
-            <button onClick={() => refreshData()}>Refresh Data</button>
+            <button onClick={() => rerender()}>Force Rerender</button>
           </div>
           <table.Subscribe selector={(state) => state}>
             {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}

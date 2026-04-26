@@ -1,4 +1,7 @@
 <div class="p-2">
+  <button class="border rounded p-2 mb-2" (click)="refreshData()">Regenerate Data</button>
+  <button class="border rounded p-2 mb-2" (click)="stressTest()">Stress Test (100k rows)</button>
+  <div class="h-2"></div>
   <table>
     <thead>
       @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
@@ -76,11 +79,9 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {{ table.state().pagination.pageIndex + 1 }} of
-        {{ table.getPageCount() }}
+        {{ (table.state().pagination.pageIndex + 1).toLocaleString() }} of
+        {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
   </div>
-  <br />
-  <button class="border rounded p-2 mb-2" (click)="refresh()">Refresh data</button>
 </div>

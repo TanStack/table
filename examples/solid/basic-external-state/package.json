@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-solid-basic-external-state",
-  "version": "0.0.0",
+  "name": "tanstack-solid-table-example-basic-external-state",
   "description": "",
   "scripts": {
     "start": "vite",
@@ -13,7 +12,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.8",
+    "vite": "^8.0.10",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {

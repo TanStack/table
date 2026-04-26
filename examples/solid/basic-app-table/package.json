@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-solid-basic-app-table",
-  "version": "0.0.0",
+  "name": "tanstack-solid-table-example-basic-app-table",
   "description": "",
   "scripts": {
     "start": "vite",
@@ -12,10 +11,11 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "6.0.3",
-    "vite": "^8.0.8",
+    "vite": "^8.0.10",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.4.0",
     "@tanstack/solid-table": "^9.0.0-alpha.36",
     "solid-js": "^1.9.12"
   }

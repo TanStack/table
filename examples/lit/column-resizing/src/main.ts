@@ -9,52 +9,18 @@ import {
   columnSizingFeature,
   tableFeatures,
 } from '@tanstack/lit-table'
+import { makeData } from './makeData'
 import type {
   ColumnDef,
   ColumnResizeDirection,
   ColumnResizeMode,
 } from '@tanstack/lit-table'
+import type { Person } from './makeData'
 
 const _features = tableFeatures({
   columnResizingFeature,
   columnSizingFeature,
 })
-
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
 
 const columns: Array<ColumnDef<typeof _features, Person>> = [
   {
@@ -113,6 +79,9 @@ class LitTableExample extends LitElement {
   private tableController = new TableController<typeof _features, Person>(this)
 
   @state()
+  private _data: Array<Person> = makeData(1_000)
+
+  @state()
   private columnResizeMode: ColumnResizeMode = 'onChange'
 
   @state()
@@ -124,7 +93,7 @@ class LitTableExample extends LitElement {
         _features,
         _rowModels: {},
         columns,
-        data: defaultData,
+        data: this._data,
         columnResizeMode: this.columnResizeMode,
         columnResizeDirection: this.columnResizeDirection,
         debugTable: true,
@@ -152,6 +121,22 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(1_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
         <select
           .value="${this.columnResizeMode}"
           @change="${(e: Event) => {

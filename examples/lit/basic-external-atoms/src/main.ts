@@ -1,4 +1,4 @@
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -52,8 +52,6 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const data = makeData(1000)
-
 // Create stable external atoms for the individual state slices you want to
 // own. These live at module scope here, but could just as easily be created
 // in a shared store module and imported by multiple components.
@@ -65,6 +63,9 @@ const paginationAtom = createAtom<PaginationState>({
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(1_000)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
@@ -81,7 +82,7 @@ class LitTableExample extends LitElement {
           paginatedRowModel: createPaginatedRowModel(),
         },
         columns,
-        data,
+        data: this._data,
         atoms: {
           sorting: sortingAtom,
           pagination: paginationAtom,
@@ -99,6 +100,22 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(1_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
         <table>
           <thead>
             ${repeat(
@@ -181,7 +198,8 @@ class LitTableExample extends LitElement {
           <span class="flex items-center gap-1">
             <div>Page</div>
             <strong>
-              ${pagination.pageIndex + 1} of ${table.getPageCount()}
+              ${(pagination.pageIndex + 1).toLocaleString()} of
+              ${table.getPageCount().toLocaleString()}
             </strong>
           </span>
           <span class="flex items-center gap-1">

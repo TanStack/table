@@ -25,7 +25,7 @@ export const productColumnHelper = createAppColumnHelper<Product>()
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsTable {
-  readonly data = signal(makeProductData(5000))
+  readonly data = signal(makeProductData(1_000))
 
   readonly columns = productColumnHelper.columns([
     productColumnHelper.accessor('name', {
@@ -63,6 +63,9 @@ export class ProductsTable {
   }))
 
   onRefresh = () => {
-    this.data.set([...makeProductData(5000)])
+    this.data.set([...makeProductData(1_000)])
   }
+
+  refreshData = () => this.data.set(makeProductData(1_000))
+  stressTest = () => this.data.set(makeProductData(100_000))
 }

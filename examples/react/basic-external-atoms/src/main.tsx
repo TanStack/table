@@ -55,7 +55,9 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data] = React.useState(() => makeData(1000))
+  const [data, setData] = React.useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -75,23 +77,35 @@ function App() {
   console.log('pagination', pagination)
 
   // Create the table and pass your per-slice external atoms.
-  const table = useTable({
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {
+        sortedRowModel: createSortedRowModel(sortFns),
+        paginatedRowModel: createPaginatedRowModel(),
+      },
+      columns,
+      data,
+      atoms: {
+        sorting: sortingAtom,
+        pagination: paginationAtom,
+      },
+      debugTable: true,
     },
-    columns,
-    data,
-    atoms: {
-      sorting: sortingAtom,
-      pagination: paginationAtom,
-    },
-    debugTable: true,
-  })
+    (state) => state, // subscribe to all state changes for re-rendering
+  )
 
   return (
     <div className="p-2">
+      <div>
+        <button onClick={() => refreshData()} className="border p-2">
+          Regenerate Data
+        </button>
+        <button onClick={() => stressTest()} className="border p-2">
+          Stress Test (100k rows)
+        </button>
+      </div>
+      <div className="h-4" />
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -164,7 +178,8 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {pagination.pageIndex + 1} of {table.getPageCount()}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
@@ -173,7 +188,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={pagination.pageIndex + 1}
+            defaultValue={table.atoms.pagination.get().pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -182,7 +197,7 @@ function App() {
           />
         </span>
         <select
-          value={pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
@@ -198,7 +213,16 @@ function App() {
       <button onClick={() => rerender()} className="border p-2">
         Rerender
       </button>
-      <pre>{JSON.stringify({ sorting, pagination }, null, 2)}</pre>
+      <pre>
+        {JSON.stringify(
+          {
+            sorting: table.atoms.sorting.get(),
+            pagination: table.atoms.pagination.get(),
+          },
+          null,
+          2,
+        )}
+      </pre>
     </div>
   )
 }

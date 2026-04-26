@@ -128,7 +128,6 @@ export class App {
     },
   }))
 
-  refresh() {
-    this.data.set(makeData(10_000))
-  }
+  refreshData = () => this.data.set(makeData(10_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

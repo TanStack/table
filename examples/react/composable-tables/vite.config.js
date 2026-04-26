@@ -1,7 +1,15 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react, { reactCompilerPreset } from '@vitejs/plugin-react'
+import babel from '@rolldown/plugin-babel'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // React Compiler - comment out the next line to disable
+    babel({
+      presets: [reactCompilerPreset()],
+      include: [/\/src\/.*\.[jt]sx?$/],
+    }),
+  ],
 })

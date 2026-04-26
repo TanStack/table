@@ -295,7 +295,8 @@ function App() {
     columns.map((c) => c.id ?? ''),
   )
 
-  const refreshData = () => setData(() => makeData(100_000)) // stress test
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const table = useTable(
     {
@@ -351,7 +352,10 @@ function App() {
     <div className="container mx-auto p-4 flex flex-col gap-4">
       <div className="flex items-center justify-end gap-2">
         <Button variant="outline" size="sm" onClick={() => refreshData()}>
-          Refresh Data
+          Regenerate Data
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => stressTest()}>
+          Stress Test (100k rows)
         </Button>
         <Button variant="outline" size="sm" onClick={() => rerender()}>
           Force Rerender
@@ -397,6 +401,7 @@ function App() {
                     .map((header) => {
                       return (
                         <TableHead
+                          key={header.id}
                           colSpan={header.colSpan}
                           className={cn('relative', {
                             'border-r': header.id !== 'actions',

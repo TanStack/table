@@ -71,12 +71,11 @@
     },
   ]
 
-  let data = $state(makeData(5000))
-  const columns = defaultColumns
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
-  const rerender = () => {
-    data = makeData(5000)
-  }
+  const columns = defaultColumns
 
   const table = createTable(
     {
@@ -101,6 +100,10 @@
 </script>
 
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <div class="inline-block border border-black shadow rounded">
     <div class="px-1 border-b border-black">
       <label>
@@ -127,8 +130,11 @@
   </div>
   <div class="h-4"></div>
   <div class="flex flex-wrap gap-2">
-    <button onclick={() => rerender()} class="border p-1">
-      Regenerate
+    <button onclick={() => refreshData()} class="border p-1">
+      Regenerate Data
+    </button>
+    <button onclick={() => stressTest()} class="border p-1">
+      Stress Test (100k rows)
     </button>
     <button onclick={() => randomizeColumns()} class="border p-1">
       Shuffle Columns

@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-column-groups",
-  "version": "0.0.0",
+  "name": "tanstack-react-table-example-column-groups",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -11,16 +10,19 @@
     "test:types": "tsc"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.4.0",
     "@tanstack/react-table": "^9.0.0-alpha.36",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.8"
+    "vite": "^8.0.10"
   }
 }

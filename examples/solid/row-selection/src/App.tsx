@@ -1,12 +1,12 @@
 import { For, Show, createEffect, createSignal } from 'solid-js'
 import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import {
+  FlexRender,
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
   createTable,
   filterFns,
-  FlexRender,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -31,7 +31,8 @@ export const _features = tableFeatures({
 
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
-  const refreshData = () => setData(makeData(100_000)) // stress test
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
   const [enableRowSelection, setEnableRowSelection] = createSignal(true)
 
   const tableRef: { current?: SolidTable<typeof _features, Person> } = {}
@@ -132,6 +133,10 @@ function App() {
   return (
     <div class="p-2">
       <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
+      <div>
         <input
           value={table.store.state.globalFilter ?? ''}
           onInput={(e) => table.setGlobalFilter(e.target.value)}
@@ -189,7 +194,9 @@ function App() {
                 onChange={table.getToggleAllPageRowsSelectedHandler()}
               />
             </td>
-            <td colSpan={20}>Page Rows ({table.getRowModel().rows.length})</td>
+            <td colSpan={20}>
+              Page Rows ({table.getRowModel().rows.length.toLocaleString()})
+            </td>
           </tr>
         </tfoot>
       </table>
@@ -226,8 +233,8 @@ function App() {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span class="flex items-center gap-1">
@@ -247,7 +254,7 @@ function App() {
         <select
           value={table.store.state.pagination.pageSize}
           onChange={(e) => {
-            table.setPageSize(Number((e.target as HTMLSelectElement).value))
+            table.setPageSize(Number(e.target.value))
           }}
         >
           {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -257,16 +264,12 @@ function App() {
       </div>
       <br />
       <div>
-        {Object.keys(table.store.state.rowSelection).length} of{' '}
-        {table.getPreFilteredRowModel().rows.length} Total Rows Selected
+        {Object.keys(table.store.state.rowSelection).length.toLocaleString()} of{' '}
+        {table.getPreFilteredRowModel().rows.length.toLocaleString()} Total Rows
+        Selected
       </div>
       <hr />
       <br />
-      <div>
-        <button class="border rounded p-2 mb-2" onClick={() => refreshData()}>
-          Refresh Data
-        </button>
-      </div>
       <div>
         <button
           class="border rounded p-2 mb-2"

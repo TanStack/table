@@ -17,7 +17,11 @@ function UsersTable() {
 
   // Refresh data callback
   const refreshData = useCallback(() => {
-    setData(makeData(1000))
+    setData(makeData(1_000))
+  }, [])
+
+  const stressTest = useCallback(() => {
+    setData(makeData(100_000))
   }, [])
 
   // Define columns using the column helper
@@ -88,7 +92,11 @@ function UsersTable() {
       {({ sorting, columnFilters }) => (
         <div className="table-container">
           {/* Table toolbar using pre-bound component */}
-          <table.TableToolbar title="Users Table" onRefresh={refreshData} />
+          <table.TableToolbar
+            title="Users Table"
+            onRefresh={refreshData}
+            onStressTest={stressTest}
+          />
 
           {/* Table element */}
           <table>
@@ -218,6 +226,10 @@ function ProductsTable() {
     setData(makeProductData(500))
   }, [])
 
+  const stressTest = useCallback(() => {
+    setData(makeProductData(100_000))
+  }, [])
+
   // Define columns using the column helper - different structure than Users table
   const columns = useMemo(
     () =>
@@ -270,7 +282,11 @@ function ProductsTable() {
       {({ sorting, columnFilters }) => (
         <div className="table-container">
           {/* Table toolbar using the same pre-bound component */}
-          <table.TableToolbar title="Products Table" onRefresh={refreshData} />
+          <table.TableToolbar
+            title="Products Table"
+            onRefresh={refreshData}
+            onStressTest={stressTest}
+          />
 
           {/* Table element */}
           <table>

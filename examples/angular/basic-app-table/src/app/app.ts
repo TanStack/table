@@ -1,54 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { FlexRender, createTableHook } from '@tanstack/angular-table'
-
-// This example uses the new `createTableHook` method to create a re-usable table hook factory instead of independently
-// using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
-
-// 1. Define what the shape of your data will be for each row
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-// 2. Create some dummy data with a stable reference (this could be an API response stored in useState or similar)
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-  {
-    firstName: 'kevin',
-    lastName: 'vandy',
-    age: 28,
-    visits: 100,
-    status: 'Single',
-    progress: 70,
-  },
-]
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 
 // 3. New in V9! Tell the table which features and row models we want to use.
 // In this case, this will be a basic table with no additional features
@@ -103,7 +56,7 @@ const columns = columnHelper.columns([
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  readonly data = signal<Array<Person>>(defaultData)
+  readonly data = signal<Array<Person>>(makeData(1_000))
 
   // 6. Create the table instance with the required columns and data.
   // Features and row models are already defined in the createTableHook call above
@@ -113,7 +66,6 @@ export class App {
     // add additional table options here or in the createTableHook call above
   }))
 
-  rerender() {
-    this.data.set([...defaultData.sort(() => -1)])
-  }
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

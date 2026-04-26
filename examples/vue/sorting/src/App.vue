@@ -47,10 +47,14 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const data = ref(makeData(10000))
+const data = ref(makeData(1_000))
 
-const rerender = () => {
-  data.value = makeData(10000)
+const refreshData = () => {
+  data.value = makeData(1_000)
+}
+
+const stressTest = () => {
+  data.value = makeData(100_000)
 }
 
 const table = useTable(
@@ -69,6 +73,13 @@ const table = useTable(
 
 <template>
   <div class="p-2">
+    <div class="flex flex-wrap gap-2">
+      <button @click="refreshData" class="border p-2">Regenerate Data</button>
+      <button @click="stressTest" class="border p-2">
+        Stress Test (100k rows)
+      </button>
+    </div>
+    <div class="h-4" />
     <table>
       <thead>
         <tr
@@ -123,9 +134,7 @@ const table = useTable(
 
     <div class="h-4"></div>
 
-    <div>{{ table.getRowModel().rows.length }} Rows</div>
-
-    <button @click="rerender" class="border p-2">Rerender</button>
+    <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
 
     <pre>{{ JSON.stringify(table.state.sorting, null, 2) }}</pre>
   </div>

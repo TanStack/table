@@ -15,7 +15,7 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { Table } from '@tanstack/table-core'
 
-const data = makeData(100000)
+let data = makeData(100_000)
 
 const _features = tableFeatures({
   rowPaginationFeature,
@@ -55,6 +55,26 @@ const columns = columnHelper.columns([
 ])
 
 const renderTable = (table: Table<typeof _features, Person>) => {
+  // Create buttons container
+  const buttonsDiv = document.createElement('div')
+
+  const regenerateBtn = document.createElement('button')
+  regenerateBtn.textContent = 'Regenerate Data'
+  regenerateBtn.addEventListener('click', () => {
+    data = makeData(1_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+  })
+
+  const stressTestBtn = document.createElement('button')
+  stressTestBtn.textContent = 'Stress Test (100k rows)'
+  stressTestBtn.addEventListener('click', () => {
+    data = makeData(100_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+  })
+
+  buttonsDiv.appendChild(regenerateBtn)
+  buttonsDiv.appendChild(stressTestBtn)
+
   // Create table elements
   const tableElement = document.createElement('table')
   const theadElement = document.createElement('thead')
@@ -144,7 +164,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   // Render pagination info
   const paginationInfoElement = document.createElement('span')
   paginationInfoElement.classList.add('flex', 'items-center', 'gap-1')
-  paginationInfoElement.innerHTML = `<div>Page</div><strong>${table.store.state.pagination.pageIndex + 1} of ${table.getPageCount().toLocaleString()}</strong>`
+  paginationInfoElement.innerHTML = `<div>Page</div><strong>${(table.store.state.pagination.pageIndex + 1).toLocaleString()} of ${table.getPageCount().toLocaleString()}</strong>`
   paginationElement.appendChild(paginationInfoElement)
 
   // Render pagination set page
@@ -197,6 +217,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   // Clear previous content and append new content
   const wrapperElement = document.getElementById('wrapper') as HTMLDivElement
   wrapperElement.innerHTML = ''
+  wrapperElement.appendChild(buttonsDiv)
   wrapperElement.appendChild(tableElement)
   wrapperElement.appendChild(paginationElement)
   wrapperElement.appendChild(stateInfoElement)

@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-solid-composable-tables",
-  "version": "0.0.0",
+  "name": "tanstack-solid-table-example-composable-tables",
   "description": "",
   "scripts": {
     "start": "vite",
@@ -12,7 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "typescript": "6.0.3",
-    "vite": "^8.0.8",
+    "vite": "^8.0.10",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {

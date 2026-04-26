@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-svelte-virtualized-rows",
-  "version": "0.0.0",
+  "name": "tanstack-svelte-table-example-virtualized-rows",
   "private": true,
   "type": "module",
   "scripts": {
@@ -17,9 +16,9 @@
     "@tanstack/svelte-table": "^9.0.0-alpha.36",
     "@tanstack/svelte-virtual": "^3.13.24",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte": "^5.55.4",
+    "svelte": "^5.55.5",
     "svelte-check": "^4.4.6",
     "typescript": "6.0.3",
-    "vite": "^8.0.8"
+    "vite": "^8.0.10"
   }
 }

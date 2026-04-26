@@ -14,6 +14,8 @@
     "../basic-snippets/src/**/*.js",
     "../basic-snippets/src/**/*.d.ts",
     "../basic-snippets/src/**/*.svelte",
-    "../vite-env.d.ts"
+    "../vite-env.d.ts",
+    "vite.config.js",
+    "vite.config.ts"
   ]
 }

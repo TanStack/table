@@ -23,10 +23,8 @@
 
   const columns = makeColumns(1_000)
   let data = $state(makeData(1_000, columns))
-
-  const refreshData = () => {
-    data = makeData(1_000, columns)
-  }
+  const refreshData = () => { data = makeData(1_000, columns) }
+  const stressTest = () => { data = makeData(10_000, columns) }
 
   const table = createTable({
     _features,
@@ -117,9 +115,12 @@
 </script>
 
 <div class="app">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (10k rows)</button>
+  </div>
   <div>({columns.length.toLocaleString()} columns)</div>
   <div>({data.length.toLocaleString()} rows)</div>
-  <button onclick={refreshData}>Refresh Data</button>
   <div
     class="container"
     bind:this={tableContainerRef}

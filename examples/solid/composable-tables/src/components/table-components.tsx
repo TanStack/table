@@ -44,7 +44,7 @@ export function PaginationControls() {
       <span>
         Page{' '}
         <strong>
-          {pagination().pageIndex + 1} of{' '}
+          {(pagination().pageIndex + 1).toLocaleString()} of{' '}
           {table.getPageCount().toLocaleString()}
         </strong>
       </span>
@@ -109,7 +109,7 @@ export function TableToolbar({
           Clear Filters
         </button>
         <button onClick={() => table.resetSorting()}>Clear Sorting</button>
-        {onRefresh && <button onClick={onRefresh}>Refresh Data</button>}
+        {onRefresh && <button onClick={onRefresh}>Regenerate Data</button>}
       </div>
     </div>
   )

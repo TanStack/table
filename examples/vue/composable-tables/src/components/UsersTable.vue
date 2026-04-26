@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { createAppColumnHelper, useAppTable } from '../hooks/table'
-import { makeData, type Person } from '../makeData'
+import { makeData } from '../makeData'
+import type { Person } from '../makeData'
 
 const columnHelper = createAppColumnHelper<Person>()
 
-const data = ref(makeData(100))
+const data = ref(makeData(1_000))
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -46,7 +47,11 @@ const columns = columnHelper.columns([
 ])
 
 function refreshData() {
-  data.value = makeData(100)
+  data.value = makeData(1_000)
+}
+
+function stressTest() {
+  data.value = makeData(100_000)
 }
 
 const table = useAppTable({
@@ -73,6 +78,12 @@ function tableSelector(state: ReturnType<typeof table.store.get>) {
 <template>
   <component :is="table.AppTable" :selector="tableSelector" v-slot="{ state }">
     <section class="table-container">
+      <div class="flex flex-wrap gap-2" style="margin-bottom: 8px">
+        <button @click="refreshData" class="border p-2">Regenerate Data</button>
+        <button @click="stressTest" class="border p-2">
+          Stress Test (100k rows)
+        </button>
+      </div>
       <component
         :is="table.TableToolbar"
         title="Users Table"

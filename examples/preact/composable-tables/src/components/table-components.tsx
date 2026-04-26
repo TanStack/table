@@ -4,8 +4,8 @@
  * These components can be used via the pre-bound tableComponents
  * directly on the table object, e.g., <table.PaginationControls />
  */
-import type { PaginationState } from '@tanstack/preact-table'
 import { useTableContext } from '../hooks/table'
+import type { PaginationState } from '@tanstack/preact-table'
 
 /**
  * Pagination controls for the table
@@ -45,7 +45,7 @@ export function PaginationControls() {
           <span>
             Page{' '}
             <strong>
-              {pagination.pageIndex + 1} of{' '}
+              {(pagination.pageIndex + 1).toLocaleString()} of{' '}
               {table.getPageCount().toLocaleString()}
             </strong>
           </span>
@@ -102,9 +102,11 @@ export function RowCount() {
 export function TableToolbar({
   title,
   onRefresh,
+  onStressTest,
 }: {
   title: string
   onRefresh?: () => void
+  onStressTest?: () => void
 }) {
   const table = useTableContext()
 
@@ -116,7 +118,10 @@ export function TableToolbar({
           Clear Filters
         </button>
         <button onClick={() => table.resetSorting()}>Clear Sorting</button>
-        {onRefresh && <button onClick={onRefresh}>Refresh Data</button>}
+        {onRefresh && <button onClick={onRefresh}>Regenerate Data</button>}
+        {onStressTest && (
+          <button onClick={onStressTest}>Stress Test (100k rows)</button>
+        )}
       </div>
     </div>
   )

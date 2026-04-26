@@ -1,6 +1,5 @@
 import { render } from 'preact'
 import { useEffect, useMemo, useReducer, useState } from 'preact/hooks'
-import type { JSX } from 'preact'
 import './index.css'
 import {
   columnFacetingFeature,
@@ -20,6 +19,7 @@ import {
   useTable,
 } from '@tanstack/preact-table'
 import { makeData } from './makeData'
+import type { JSX } from 'preact'
 import type {
   CellData,
   Column,
@@ -89,7 +89,8 @@ function App() {
   )
 
   const [data, setData] = useState<Array<Person>>(() => makeData(5_000))
-  const refreshData = () => setData((_old) => makeData(100_000)) // stress test
+  const refreshData = () => setData((_old) => makeData(5_000))
+  const stressTest = () => setData((_old) => makeData(100_000))
   const rerender = useReducer(() => ({}), {})[1]
 
   const table = useTable({
@@ -118,6 +119,12 @@ function App() {
     >
       {(state) => (
         <div className="p-2">
+          <div>
+            <button onClick={() => refreshData()}>Regenerate Data</button>
+            <button onClick={() => stressTest()}>
+              Stress Test (100k rows)
+            </button>
+          </div>
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -203,7 +210,8 @@ function App() {
             <span className="flex items-center gap-1">
               <div>Page</div>
               <strong>
-                {state.pagination.pageIndex + 1} of {table.getPageCount()}
+                {(state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+                {table.getPageCount().toLocaleString()}
               </strong>
             </span>
             <span className="flex items-center gap-1">
@@ -233,12 +241,11 @@ function App() {
               ))}
             </select>
           </div>
-          <div>{table.getPrePaginatedRowModel().rows.length} Rows</div>
           <div>
-            <button onClick={rerender}>Force Rerender</button>
+            {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
           </div>
           <div>
-            <button onClick={refreshData}>Refresh Data</button>
+            <button onClick={rerender}>Force Rerender</button>
           </div>
           <table.Subscribe selector={(state) => state}>
             {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}

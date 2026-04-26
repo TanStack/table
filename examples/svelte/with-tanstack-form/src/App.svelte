@@ -56,7 +56,7 @@
   // Initialize form with makeData
   const form = createAppForm(() => ({
     defaultValues: {
-      data: makeData(100),
+      data: makeData(1_000),
     } as FormData,
     onSubmit: ({ value }: { value: FormData }) => {
       alert(
@@ -150,7 +150,10 @@
   )
 
   const refreshData = () => {
-    form.reset({ data: makeData(100) })
+    form.reset({ data: makeData(1_000) })
+  }
+  const stressTest = () => {
+    form.reset({ data: makeData(100_000) })
   }
 
   const addRow = () => {
@@ -217,6 +220,10 @@
 {/snippet}
 
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <form
     onsubmit={(e) => {
       e.preventDefault()
@@ -327,7 +334,7 @@
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.state.pagination.pageIndex + 1} of{' '}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>

@@ -1,4 +1,4 @@
-import { customElement, property } from 'lit/decorators.js'
+import { customElement, property, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -88,8 +88,6 @@ declare module '@tanstack/lit-table' {
   }
 }
 
-const data = makeData(50_000)
-
 @customElement('column-filter')
 class ColumnFilter extends LitElement {
   @property()
@@ -152,6 +150,9 @@ class ColumnFilter extends LitElement {
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(50_000)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
@@ -163,7 +164,7 @@ class LitTableExample extends LitElement {
           paginatedRowModel: createPaginatedRowModel(),
           sortedRowModel: createSortedRowModel(sortFns),
         },
-        data,
+        data: this._data,
         columns,
         debugTable: true,
         debugHeaders: true,
@@ -176,6 +177,22 @@ class LitTableExample extends LitElement {
     )
 
     return html`
+      <div>
+        <button
+          @click=${() => {
+            this._data = makeData(50_000)
+          }}
+        >
+          Regenerate Data
+        </button>
+        <button
+          @click=${() => {
+            this._data = makeData(100_000)
+          }}
+        >
+          Stress Test (100k rows)
+        </button>
+      </div>
       <table>
         <thead>
           ${repeat(
@@ -266,7 +283,8 @@ class LitTableExample extends LitElement {
         <span style="display: flex;gap:2px">
           <span>Page</span>
           <strong>
-            ${table.state.pagination.pageIndex + 1} of ${table.getPageCount()}
+            ${(table.state.pagination.pageIndex + 1).toLocaleString()} of
+            ${table.getPageCount().toLocaleString()}
           </strong>
         </span>
       </div>

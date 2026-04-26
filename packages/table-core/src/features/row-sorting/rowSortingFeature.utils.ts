@@ -40,9 +40,8 @@ export function column_getAutoSortFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): SortFn<TFeatures, TData> {
-  const sortFns = column.table._rowModelFns.sortFns as
-    | Record<string, SortFn<TFeatures, TData>>
-    | undefined
+  const sortFns: Record<string, SortFn<TFeatures, TData>> | undefined =
+    column.table._rowModelFns.sortFns
 
   let sortFn: SortFn<TFeatures, TData> | undefined
 
@@ -94,9 +93,8 @@ export function column_getSortFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): SortFn<TFeatures, TData> {
-  const sortFns = column.table._rowModelFns.sortFns as
-    | Record<string, SortFn<TFeatures, TData>>
-    | undefined
+  const sortFns: Record<string, SortFn<TFeatures, TData>> | undefined =
+    column.table._rowModelFns.sortFns
 
   return isFunction(column.columnDef.sortFn)
     ? column.columnDef.sortFn

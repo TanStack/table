@@ -145,7 +145,8 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(1000, 2, 2))
-  const refreshData = () => setData(() => makeData(1000, 2, 2))
+  const refreshData = () => setData(makeData(1000, 2, 2))
+  const stressTest = () => setData(makeData(10_000, 2, 2))
 
   const table = useTable(
     {
@@ -180,6 +181,20 @@ function App() {
   return (
     <div className="app">
       <div className="p-2 container">
+        <div>
+          <button
+            className="border rounded p-2 mb-2"
+            onClick={() => refreshData()}
+          >
+            Regenerate Data
+          </button>
+          <button
+            className="border rounded p-2 mb-2"
+            onClick={() => stressTest()}
+          >
+            Stress Test (10k rows)
+          </button>
+        </div>
         <div className="h-2" />
         <table>
           <thead>
@@ -264,8 +279,8 @@ function App() {
         <span className="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
@@ -339,14 +354,6 @@ function App() {
       <div>
         <button className="border rounded p-2 mb-2" onClick={() => rerender()}>
           Force Rerender
-        </button>
-      </div>
-      <div>
-        <button
-          className="border rounded p-2 mb-2"
-          onClick={() => refreshData()}
-        >
-          Refresh Data
         </button>
       </div>
       <div>{JSON.stringify(rowPinning, null, 2)}</div>

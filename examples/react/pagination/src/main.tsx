@@ -63,17 +63,19 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(1_000))
-  const refreshData = () => setData(() => makeData(100_000)) // stress test
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   return (
     <>
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <MyTable data={data} columns={columns} />
       <hr />
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
     </>
   )
@@ -192,7 +194,7 @@ function MyTable({
             <span className="flex items-center gap-1">
               <div>Page</div>
               <strong>
-                {state.pagination.pageIndex + 1} of{' '}
+                {(state.pagination.pageIndex + 1).toLocaleString()} of{' '}
                 {table.getPageCount().toLocaleString()}
               </strong>
             </span>

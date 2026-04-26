@@ -143,7 +143,7 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {pagination.pageIndex + 1} of{' '}
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>

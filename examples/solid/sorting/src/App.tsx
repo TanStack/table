@@ -1,7 +1,7 @@
 import {
+  FlexRender,
   createSortedRowModel,
   createTable,
-  FlexRender,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -15,7 +15,8 @@ const _features = tableFeatures({ rowSortingFeature })
 
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
-  const refreshData = () => setData(makeData(100_000)) // stress test
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const columns: Array<ColumnDef<typeof _features, Person>> = [
     {
@@ -83,6 +84,10 @@ function App() {
 
   return (
     <div class="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -130,10 +135,7 @@ function App() {
           </For>
         </tbody>
       </table>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
     </div>
   )

@@ -162,7 +162,7 @@ export function row_getIsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const expanded = row.table.atoms.expanded?.get() ?? ({} as ExpandedState)
+  const expanded: ExpandedState = row.table.atoms.expanded?.get() ?? {}
 
   return !!(
     row.table.options.getIsRowExpanded?.(row) ??

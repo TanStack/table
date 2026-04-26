@@ -77,9 +77,9 @@ export function column_getAutoAggregationFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  const aggregationFns = column.table._rowModelFns.aggregationFns as
+  const aggregationFns:
     | Record<string, AggregationFn<TFeatures, TData>>
-    | undefined
+    | undefined = column.table._rowModelFns.aggregationFns
 
   const firstRow = column.table.getCoreRowModel().flatRows[0]
 
@@ -99,9 +99,9 @@ export function column_getAggregationFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  const aggregationFns = column.table._rowModelFns.aggregationFns as
+  const aggregationFns:
     | Record<string, AggregationFn<TFeatures, TData>>
-    | undefined
+    | undefined = column.table._rowModelFns.aggregationFns
 
   return isFunction(column.columnDef.aggregationFn)
     ? column.columnDef.aggregationFn

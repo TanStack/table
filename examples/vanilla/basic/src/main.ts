@@ -5,42 +5,10 @@ import {
   tableFeatures,
 } from '@tanstack/table-core'
 import { FlexRender } from '@tanstack/table-core/flex-render'
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-const data: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
+let data = makeData(1_000)
 
 const _features = tableFeatures({})
 
@@ -77,6 +45,26 @@ const columns = columnHelper.columns([
 ])
 
 const renderTable = () => {
+  // Create buttons container
+  const buttonsDiv = document.createElement('div')
+
+  const regenerateBtn = document.createElement('button')
+  regenerateBtn.textContent = 'Regenerate Data'
+  regenerateBtn.addEventListener('click', () => {
+    data = makeData(1_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+  })
+
+  const stressTestBtn = document.createElement('button')
+  stressTestBtn.textContent = 'Stress Test (100k rows)'
+  stressTestBtn.addEventListener('click', () => {
+    data = makeData(100_000)
+    table.setOptions((prev) => ({ ...prev, data }))
+  })
+
+  buttonsDiv.appendChild(regenerateBtn)
+  buttonsDiv.appendChild(stressTestBtn)
+
   // Create table elements
   const tableElement = document.createElement('table')
   const theadElement = document.createElement('thead')
@@ -127,6 +115,7 @@ const renderTable = () => {
   // Clear previous content and append new content
   const wrapperElement = document.getElementById('wrapper') as HTMLDivElement
   wrapperElement.innerHTML = ''
+  wrapperElement.appendChild(buttonsDiv)
   wrapperElement.appendChild(tableElement)
 }
 
@@ -138,5 +127,7 @@ const table = constructTable({
   data,
   debugAll: true,
 })
+
+table.store.subscribe(() => renderTable())
 
 renderTable()

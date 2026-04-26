@@ -137,7 +137,7 @@ function TableComponent(props: TableProps<typeof _features, Person>) {
         </tbody>
       </table>
       <div class="h-2" />
-      <div>{table.getRowModel().rows.length} Rows</div>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
     </div>
   )
 }
@@ -153,15 +153,23 @@ const renderSubComponent = ({
 )
 
 function App() {
-  const [data] = createSignal(makeData(10))
+  const [data, setData] = createSignal(makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   return (
-    <TableComponent
-      columns={columns}
-      data={data()}
-      getRowCanExpand={() => true}
-      renderSubComponent={renderSubComponent}
-    />
+    <>
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
+      <TableComponent
+        columns={columns}
+        data={data()}
+        getRowCanExpand={() => true}
+        renderSubComponent={renderSubComponent}
+      />
+    </>
   )
 }
 

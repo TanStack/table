@@ -5,43 +5,9 @@ import {
   rowExpandingFeature,
 } from '@tanstack/vue-table'
 import { Text, h, ref } from 'vue'
+import { makeData } from './makeData'
 import type { Row } from '@tanstack/vue-table'
-
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
+import type { Person } from './makeData'
 
 const { appFeatures, createAppColumnHelper, useAppTable } = createTableHook({
   _features: { rowExpandingFeature },
@@ -99,10 +65,14 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const data = ref(defaultData)
+const data = ref(makeData(1_000))
 
-const rerender = () => {
-  data.value = defaultData
+const refreshData = () => {
+  data.value = makeData(1_000)
+}
+
+const stressTest = () => {
+  data.value = makeData(100_000)
 }
 
 const table = useAppTable(
@@ -119,6 +89,13 @@ const table = useAppTable(
 
 <template>
   <div class="p-2">
+    <div class="flex flex-wrap gap-2">
+      <button @click="refreshData" class="border p-2">Regenerate Data</button>
+      <button @click="stressTest" class="border p-2">
+        Stress Test (100k rows)
+      </button>
+    </div>
+    <div class="h-4" />
     <table>
       <thead>
         <tr
@@ -174,7 +151,6 @@ const table = useAppTable(
       </tfoot>
     </table>
     <div class="h-4" />
-    <button @click="rerender" class="border p-2">Rerender</button>
   </div>
 </template>
 

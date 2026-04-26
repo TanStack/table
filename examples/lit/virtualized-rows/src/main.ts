@@ -1,4 +1,4 @@
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -63,10 +63,11 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
     size: 250,
   },
 ]
-const data = makeData(50_000)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(50_000)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   private tableContainerRef: Ref = createRef()
@@ -75,7 +76,7 @@ class LitTableExample extends LitElement {
 
   connectedCallback() {
     this.rowVirtualizerController = new VirtualizerController(this, {
-      count: data.length,
+      count: this._data.length,
       getScrollElement: () => this.tableContainerRef.value!,
       estimateSize: () => 33,
       overscan: 5,
@@ -91,16 +92,36 @@ class LitTableExample extends LitElement {
           sortedRowModel: createSortedRowModel(sortFns),
         },
         columns,
-        data,
+        data: this._data,
       },
       () => ({}), // selector - empty since we don't need any state
     )
     const { rows } = table.getRowModel()
 
     const virtualizer = this.rowVirtualizerController.getVirtualizer()
+    virtualizer.setOptions({
+      ...virtualizer.options,
+      count: rows.length,
+    })
     return html`
       <div class="app">
-        (${data.length} rows)
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(50_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(500_000)
+            }}
+          >
+            Stress Test (500k rows)
+          </button>
+        </div>
+        (${this._data.length.toLocaleString()} rows)
         <div
           class="container"
           ${ref(this.tableContainerRef)}

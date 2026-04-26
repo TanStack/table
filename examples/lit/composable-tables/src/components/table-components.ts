@@ -48,8 +48,8 @@ export class PaginationControls extends LitElement {
         <span>
           Page
           <strong>
-            ${table.getState().pagination.pageIndex + 1} of
-            ${table.getPageCount()}
+            ${(table.getState().pagination.pageIndex + 1).toLocaleString()} of
+            ${table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span>
@@ -130,7 +130,7 @@ export class TableToolbar extends LitElement {
           </button>
           <button @click=${() => table.resetSorting()}>Clear Sorting</button>
           ${this.onRefresh
-            ? html`<button @click=${this.onRefresh}>Refresh Data</button>`
+            ? html`<button @click=${this.onRefresh}>Regenerate Data</button>`
             : nothing}
         </div>
       </div>

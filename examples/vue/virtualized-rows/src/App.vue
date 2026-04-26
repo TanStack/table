@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import './index.css'
-import { computed, ref, h, type ComponentPublicInstance } from 'vue'
+import { computed, h, ref } from 'vue'
 import {
-  type ColumnDef,
   FlexRender,
-  useTable,
   columnSizingFeature,
-  rowSortingFeature,
   createSortedRowModel,
-  tableFeatures,
+  rowSortingFeature,
   sortFns,
+  tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { makeData, type Person } from './makeData'
+import { makeData } from './makeData'
+import type { ColumnDef } from '@tanstack/vue-table'
+import type { ComponentPublicInstance } from 'vue'
+import type { Person } from './makeData'
 
 const _features = tableFeatures({
   columnSizingFeature,
@@ -21,9 +23,17 @@ const _features = tableFeatures({
 
 const search = ref('')
 
-const data = ref<Person[]>(makeData(50_000))
+const data = ref<Array<Person>>(makeData(50_000))
 
-const filteredData = computed<Person[]>(() => {
+function refreshData() {
+  data.value = makeData(50_000)
+}
+
+function stressTest() {
+  data.value = makeData(500_000)
+}
+
+const filteredData = computed<Array<Person>>(() => {
   const searchValue = search.value.toLowerCase()
 
   // If no search value is present, return all data
@@ -51,7 +61,7 @@ function handleDebounceSearch(ev: Event) {
   }, 300)
 }
 
-const columns = computed<ColumnDef<typeof _features, Person>[]>(() => [
+const columns = computed<Array<ColumnDef<typeof _features, Person>>>(() => [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -103,13 +113,13 @@ const table = useTable({
 
 const rows = computed(() => table.getRowModel().rows)
 
-//The virtualizer needs to know the scrollable container element
+// The virtualizer needs to know the scrollable container element
 const tableContainerRef = ref<HTMLDivElement | null>(null)
 
 const rowVirtualizerOptions = computed(() => {
   return {
     count: rows.value.length,
-    estimateSize: () => 33, //estimate row height for accurate scrollbar dragging
+    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
     getScrollElement: () => tableContainerRef.value,
     overscan: 5,
   }
@@ -137,6 +147,12 @@ function measureElement(el: Element | ComponentPublicInstance | null) {
       the translateY pixel count different and base it off the the index.
     </p>
     <h1 class="text-3xl font-bold text-center">Virtualized Rows</h1>
+    <div class="flex flex-wrap gap-2 justify-center" style="margin-bottom: 8px">
+      <button @click="refreshData" class="border p-2">Regenerate Data</button>
+      <button @click="stressTest" class="border p-2">
+        Stress Test (500k rows)
+      </button>
+    </div>
     <div style="margin: 0 auto; width: min-content">
       <input
         :modelValue="search"

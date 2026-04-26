@@ -122,6 +122,22 @@ class LitTableExample extends LitElement {
     )
 
     return html`
+      <div>
+        <button
+          @click=${() => {
+            this._data = makeData(1_000)
+          }}
+        >
+          Regenerate Data
+        </button>
+        <button
+          @click=${() => {
+            this._data = makeData(100_000)
+          }}
+        >
+          Stress Test (100k rows)
+        </button>
+      </div>
       <input
         type="number"
         min="1"

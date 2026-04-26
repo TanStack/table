@@ -31,9 +31,8 @@ export function table_getGlobalFilterFn<
   table: Table_Internal<TFeatures, TData>,
 ): FilterFn<TFeatures, TData> | FilterFn<TFeatures, TData> | undefined {
   const { globalFilterFn: globalFilterFn } = table.options
-  const filterFns = table._rowModelFns.filterFns as
-    | Record<string, FilterFn<TFeatures, TData>>
-    | undefined
+  const filterFns: Record<string, FilterFn<TFeatures, TData>> | undefined =
+    table._rowModelFns.filterFns
 
   return isFunction(globalFilterFn)
     ? globalFilterFn

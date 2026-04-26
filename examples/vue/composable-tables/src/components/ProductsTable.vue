@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { createAppColumnHelper, useAppTable } from '../hooks/table'
-import { makeProductData, type Product } from '../makeData'
+import { makeProductData } from '../makeData'
+import type { Product } from '../makeData'
 
 const columnHelper = createAppColumnHelper<Product>()
 
-const data = ref(makeProductData(60))
+const data = ref(makeProductData(1_000))
 
 const columns = columnHelper.columns([
   columnHelper.accessor('name', {
@@ -36,7 +37,11 @@ const columns = columnHelper.columns([
 ])
 
 function refreshData() {
-  data.value = makeProductData(60)
+  data.value = makeProductData(1_000)
+}
+
+function stressTest() {
+  data.value = makeProductData(100_000)
 }
 
 const table = useAppTable({
@@ -55,6 +60,12 @@ const table = useAppTable({
 <template>
   <component :is="table.AppTable">
     <section class="table-container">
+      <div class="flex flex-wrap gap-2" style="margin-bottom: 8px">
+        <button @click="refreshData" class="border p-2">Regenerate Data</button>
+        <button @click="stressTest" class="border p-2">
+          Stress Test (100k rows)
+        </button>
+      </div>
       <component
         :is="table.TableToolbar"
         title="Products Table"

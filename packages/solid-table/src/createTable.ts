@@ -126,11 +126,9 @@ export function createTable<
       props.source !== undefined
         ? (props.selector ?? ((x: unknown) => x))
         : props.selector
-    const selected = useSelector(
-      source as never,
-      selectFn as Parameters<typeof useSelector>[1],
-      { compare: shallow },
-    )
+    const selected = useSelector(source as never, selectFn, {
+      compare: shallow,
+    })
     return typeof props.children === 'function'
       ? props.children(selected)
       : props.children
@@ -141,5 +139,5 @@ export function createTable<
   return {
     ...table,
     state,
-  } as SolidTable<TFeatures, TData, TSelected>
+  }
 }

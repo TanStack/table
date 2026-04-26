@@ -59,7 +59,9 @@
     }),
   ])
 
-  let data = $state(makeData(200))
+  let data = $state(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
   const table = createTable(
     {
@@ -99,6 +101,10 @@
 </script>
 
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <i>
     This example has artificially slow cell renders to simulate complex usage
   </i>
@@ -107,7 +113,7 @@
     {JSON.stringify(table.store.state, null, 2)}
   </pre>
   <div class="h-4"></div>
-  ({data.length} rows)
+  ({data.length.toLocaleString()} rows)
   <div class="overflow-x-auto">
     <div
       class="divTable"

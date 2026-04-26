@@ -1,4 +1,7 @@
 <div class="p-2">
+  <button (click)="refreshData()" class="border rounded p-2 mb-2">Regenerate Data</button>
+  <button (click)="stressTest()" class="border rounded p-2 mb-2">Stress Test (100k rows)</button>
+  <div class="h-2"></div>
   <button class="border rounded px-2" (click)="toggleEnableRowSelection()">
     {{ enableRowSelection() ? 'Disable' : 'Enable' }} Row selection
   </button>
@@ -50,7 +53,9 @@
             (change)="table.toggleAllPageRowsSelected()"
           />
         </td>
-        <td [attr.colspan]="20">Page Rows ({{ table.getRowModel().rows.length }})</td>
+        <td [attr.colspan]="20">
+          Page Rows ({{ table.getRowModel().rows.length.toLocaleString() }})
+        </td>
       </tr>
     </tfoot>
   </table>
@@ -88,8 +93,8 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {{ paginationState().pageIndex + 1 }} of
-        {{ table.getPageCount() }}
+        {{ (paginationState().pageIndex + 1).toLocaleString() }} of
+        {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
     <span class="flex items-center gap-1">
@@ -110,13 +115,11 @@
   </div>
   <br />
   <div>
-    {{ rowSelectionLength() }} of {{ table.getPreFilteredRowModel().rows.length }} Total Rows
+    {{ rowSelectionLength().toLocaleString() }} of
+    {{ table.getPreFilteredRowModel().rows.length.toLocaleString() }} Total Rows
   </div>
   <hr />
   <br />
-  <div>
-    <button class="border rounded p-2 mb-2" (click)="refreshData()">Refresh Data</button>
-  </div>
   <div>
     <button class="border rounded p-2 mb-2" (click)="logSelectedFlatRows()">
       Log table.getSelectedRowModel().flatRows

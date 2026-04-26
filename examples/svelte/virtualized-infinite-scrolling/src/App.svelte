@@ -179,7 +179,7 @@
       application is built for production.
     </p>
   {/if}
-  ({totalFetched} of {totalDBRowCount} rows fetched)
+  ({totalFetched.toLocaleString()} of {totalDBRowCount.toLocaleString()} rows fetched)
   <div
     class="container"
     onscroll={(e) => fetchMoreOnBottomReached(e.currentTarget as HTMLDivElement)}

@@ -31,7 +31,7 @@ const columnHelper = createAppColumnHelper<Person>()
 export class App {
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
-  readonly data = signal(makeData(10_000))
+  readonly data = signal(makeData(1_000))
   readonly enableRowSelection = signal(true)
 
   readonly columns = columnHelper.columns([
@@ -136,9 +136,8 @@ export class App {
     )
   }
 
-  refreshData(): void {
-    this.data.set(makeData(10_000))
-  }
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 
   toggleEnableRowSelection() {
     this.enableRowSelection.update((value) => !value)

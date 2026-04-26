@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-ignore -- svelte module types
 import { mount } from 'svelte'
 import Root from './Root.svelte'
 

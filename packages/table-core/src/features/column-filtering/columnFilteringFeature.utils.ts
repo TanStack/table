@@ -17,9 +17,8 @@ export function column_getAutoFilterFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  const filterFns = column.table._rowModelFns.filterFns as
-    | Record<string, FilterFn<TFeatures, TData>>
-    | undefined
+  const filterFns: Record<string, FilterFn<TFeatures, TData>> | undefined =
+    column.table._rowModelFns.filterFns
 
   const firstRow = column.table.getCoreRowModel().flatRows[0]
 
@@ -56,9 +55,8 @@ export function column_getFilterFn<
   column: Column_Internal<TFeatures, TData, TValue>,
 ): FilterFn<TFeatures, TData> | undefined {
   let filterFn = null
-  const filterFns = column.table._rowModelFns.filterFns as
-    | Record<string, FilterFn<TFeatures, TData>>
-    | undefined
+  const filterFns: Record<string, FilterFn<TFeatures, TData>> | undefined =
+    column.table._rowModelFns.filterFns
   filterFn = isFunction(column.columnDef.filterFn)
     ? column.columnDef.filterFn
     : column.columnDef.filterFn === 'auto'
@@ -203,10 +201,7 @@ export function shouldAutoRemoveFilter<
 ) {
   return (
     (filterFn && filterFn.autoRemove
-      ? filterFn.autoRemove(
-          value,
-          column as Column_Internal<TFeatures, TData, unknown>,
-        )
+      ? filterFn.autoRemove(value, column)
       : false) ||
     typeof value === 'undefined' ||
     (typeof value === 'string' && !value)

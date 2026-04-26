@@ -801,7 +801,7 @@
         {
           "label": "angular",
           "children": [
-            { "to": "framework/angular/examples/basic", "label": "Basic" },
+            { "to": "framework/angular/examples/basic-inject-table", "label": "Basic (Inject Table)" },
             { "to": "framework/angular/examples/basic-app-table", "label": "Basic (App Table)" }
           ]
         },
@@ -823,7 +823,6 @@
             { "to": "framework/react/examples/basic-use-legacy-table", "label": "Basic (useLegacyTable)" },
             { "to": "framework/react/examples/basic-external-state", "label": "Basic (External State)" },
             { "to": "framework/react/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
-            { "to": "framework/react/examples/basic-shadcn", "label": "Shadcn Basic" },
             { "to": "framework/react/examples/column-groups", "label": "Header Groups" }
           ]
         },
@@ -861,7 +860,7 @@
         {
           "label": "preact",
           "children": [
-            { "to": "framework/preact/examples/basic", "label": "Basic (useTable)" },
+            { "to": "framework/preact/examples/basic-use-table", "label": "Basic (useTable)" },
             { "to": "framework/preact/examples/basic-use-app-table", "label": "Basic (useAppTable)" },
             { "to": "framework/preact/examples/basic-external-state", "label": "Basic (External State)" },
             { "to": "framework/preact/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
@@ -1130,13 +1129,14 @@
       ]
     },
     {
-      "label": "Kitchen Sink",
+      "label": "Component Library Examples",
       "children": [],
       "frameworks": [
         {
           "label": "react",
           "children": [
-            { "to": "framework/react/examples/kitchen-sink-shadcn", "label": "Kitchen Sink (Shadcn)" }
+            { "to": "framework/react/examples/component-lib-shadcn-radix", "label": "Basic - Shadcn (Radix)" },
+            { "to": "framework/react/examples/kitchen-sink-shadcn-radix", "label": "Kitchen Sink - Shadcn (Radix)" }
           ]
         }
       ]

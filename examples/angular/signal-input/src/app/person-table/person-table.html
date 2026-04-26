@@ -66,8 +66,8 @@
   <span class="flex items-center gap-1">
     <div>Page</div>
     <strong>
-      {{ table.store.state.pagination.pageIndex + 1 }} of
-      {{ table.getPageCount() }}
+      {{ (table.store.state.pagination.pageIndex + 1).toLocaleString() }} of
+      {{ table.getPageCount().toLocaleString() }}
     </strong>
   </span>
   <span class="flex items-center gap-1">
@@ -86,4 +86,4 @@
     }
   </select>
 </div>
-<div>{{ table.getRowModel().rows.length }} Rows</div>
+<div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>

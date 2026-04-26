@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-basic-shadcn",
-  "version": "0.0.0",
+  "name": "tanstack-react-table-example-component-lib-shadcn-radix",
   "type": "module",
   "private": true,
   "scripts": {
@@ -12,24 +11,27 @@
     "test:types": "tsc"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.4.0",
     "@radix-ui/react-slot": "^1.2.4",
-    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindcss/vite": "^4.2.4",
     "@tanstack/react-table": "^9.0.0-alpha.36",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.8.0",
+    "lucide-react": "^1.11.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "tailwind-merge": "^3.5.0",
-    "tailwindcss": "^4.2.2",
+    "tailwindcss": "^4.2.4",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.8"
+    "vite": "^8.0.10"
   }
 }

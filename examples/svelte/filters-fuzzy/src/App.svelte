@@ -79,10 +79,9 @@
     }),
   ])
 
-  let data = $state<Array<Person>>(makeData(5_000))
-  const refreshData = () => {
-    data = makeData(50_000)
-  }
+  let data = $state<Array<Person>>(makeData(1_000))
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
   const table = createTable(
     {
@@ -117,6 +116,10 @@
 </script>
 
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <div>
     <DebouncedInput
       value={(table.state.globalFilter ?? '') as string}
@@ -215,8 +218,8 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {table.state.pagination.pageIndex + 1} of{' '}
-        {table.getPageCount()}
+        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {table.getPageCount().toLocaleString()}
       </strong>
     </span>
     <span class="flex items-center gap-1">
@@ -242,9 +245,10 @@
       {/each}
     </select>
   </div>
-  <div>{table.getPrePaginatedRowModel().rows.length} Rows</div>
+  <div>{table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows</div>
   <div>
-    <button onclick={() => refreshData()}>Refresh Data</button>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
   </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

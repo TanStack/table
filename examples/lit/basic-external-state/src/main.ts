@@ -48,10 +48,11 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const data = makeData(1000)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(1_000)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   // Manage sorting state with Lit's @state() decorator
@@ -72,7 +73,7 @@ class LitTableExample extends LitElement {
           paginatedRowModel: createPaginatedRowModel(),
         },
         columns,
-        data,
+        data: this._data,
         state: {
           sorting: this.sorting, // connect our sorting state back down to the table
           pagination: this.pagination, // connect our pagination state back down to the table
@@ -96,6 +97,22 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(1_000)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
         <table>
           <thead>
             ${repeat(
@@ -178,7 +195,8 @@ class LitTableExample extends LitElement {
           <span class="flex items-center gap-1">
             <div>Page</div>
             <strong>
-              ${this.pagination.pageIndex + 1} of ${table.getPageCount()}
+              ${(this.pagination.pageIndex + 1).toLocaleString()} of
+              ${table.getPageCount().toLocaleString()}
             </strong>
           </span>
           <span class="flex items-center gap-1">

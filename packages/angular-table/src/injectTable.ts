@@ -145,7 +145,7 @@ export function injectTable<
         ...options()._features,
         angularReactivityFeature,
       },
-    } as TableOptions<TFeatures, TData>
+    }
 
     const table = constructTable(resolvedOptions) as AngularTable<
       TFeatures,

@@ -1,9 +1,9 @@
 import { keepPreviousData, useQuery } from '@tanstack/solid-query'
 import { createAtom, useSelector } from '@tanstack/solid-store'
 import {
+  FlexRender,
   createColumnHelper,
   createTable,
-  FlexRender,
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
@@ -143,7 +143,7 @@ function App() {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {pagination().pageIndex + 1} of{' '}
+            {(pagination().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>

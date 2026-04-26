@@ -55,7 +55,16 @@ const columns = columnHelper.columns([
 export default defineComponent({
   name: 'BasicExternalAtomsExample',
   setup() {
-    const data = ref(makeData(1000))
+    const data = ref(makeData(1_000))
+
+    const refreshData = () => {
+      data.value = makeData(1_000)
+    }
+
+    const stressTest = () => {
+      data.value = makeData(100_000)
+    }
+
     const sortingAtom = createAtom<SortingState>([])
     const paginationAtom = createAtom<PaginationState>({
       pageIndex: 0,
@@ -84,6 +93,15 @@ export default defineComponent({
 
     return () => (
       <div class="p-2">
+        <div class="flex flex-wrap gap-2">
+          <button class="border p-2" onClick={refreshData}>
+            Regenerate Data
+          </button>
+          <button class="border p-2" onClick={stressTest}>
+            Stress Test (100k rows)
+          </button>
+        </div>
+        <div class="h-4" />
         <table>
           <thead>
             {table
@@ -164,7 +182,8 @@ export default defineComponent({
           <span class="flex items-center gap-1">
             <div>Page</div>
             <strong>
-              {pagination.value.pageIndex + 1} of {table.getPageCount()}
+              {(pagination.value.pageIndex + 1).toLocaleString()} of{' '}
+              {table.getPageCount().toLocaleString()}
             </strong>
           </span>
           <span class="flex items-center gap-1">

@@ -26,7 +26,7 @@ export function createFilteredRowModel<
   filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>,
 ): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
-    const table = _table as Table_Internal<TFeatures, TData>
+    const table: Table_Internal<TFeatures, TData> = _table
     if (!table._rowModelFns.filterFns) table._rowModelFns.filterFns = filterFns
     return tableMemo({
       feature: 'columnFilteringFeature',

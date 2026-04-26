@@ -1,4 +1,4 @@
-import { createTable, FlexRender, tableFeatures } from '@tanstack/solid-table'
+import { FlexRender, createTable, tableFeatures } from '@tanstack/solid-table'
 import { For, createSignal } from 'solid-js'
 import type { ColumnDef } from '@tanstack/solid-table'
 

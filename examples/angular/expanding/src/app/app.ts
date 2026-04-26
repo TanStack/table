@@ -121,4 +121,7 @@ export class App {
   onPageSizeChange(event: any): void {
     this.table.setPageSize(Number(event.target.value))
   }
+
+  refreshData = () => this.data.set(makeData(100, 5, 3))
+  stressTest = () => this.data.set(makeData(1_000, 5, 3))
 }

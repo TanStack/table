@@ -78,6 +78,22 @@ export class ProductsTable extends LitElement {
 
     return html`
       <div class="table-container">
+        <div>
+          <button
+            @click=${() => {
+              this.data = makeProductData(500)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this.data = makeProductData(100_000)
+            }}
+          >
+            Stress Test (100k rows)
+          </button>
+        </div>
         <!-- Table toolbar using the same context-based custom element -->
         <table-toolbar
           .title=${'Products Table'}

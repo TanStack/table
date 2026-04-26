@@ -126,7 +126,14 @@ class LitTableExample extends LitElement {
       <div class="app">
         <div>(${columns.length.toLocaleString()} columns)</div>
         <div>(${this._data.length.toLocaleString()} rows)</div>
-        <button @click="${() => this._refreshData()}">Refresh Data</button>
+        <button @click="${() => this._refreshData()}">Regenerate Data</button>
+        <button
+          @click="${() => {
+            this._data = makeData(10_000, columns)
+          }}"
+        >
+          Stress Test (10k rows)
+        </button>
         <div
           class="container"
           ${ref(this.tableContainerRef)}

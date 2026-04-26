@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'preact/hooks'
+import { useReducer, useState } from 'preact/hooks'
 import { render } from 'preact'
 import { createTableHook } from '@tanstack/preact-table'
 import './index.css'

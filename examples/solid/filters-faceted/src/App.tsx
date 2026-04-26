@@ -1,4 +1,5 @@
 import {
+  FlexRender,
   columnFacetingFeature,
   columnFilteringFeature,
   createFacetedMinMaxValues,
@@ -7,7 +8,6 @@ import {
   createFilteredRowModel,
   createTable,
   filterFns,
-  FlexRender,
   globalFilteringFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
@@ -78,7 +78,8 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
-  const refreshData = () => setData(makeData(50_000)) // stress test
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const table = createTable({
     _features,
@@ -104,6 +105,10 @@ function App() {
 
   return (
     <div class="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <input
         class="p-2 font-lg shadow border border-block"
         value={table.store.state.globalFilter ?? ''}
@@ -126,7 +131,7 @@ function App() {
                             <div>
                               <ColumnFilter
                                 column={header.column}
-                                table={table as any}
+                                table={table}
                               />
                             </div>
                           ) : null}
@@ -155,10 +160,7 @@ function App() {
           </For>
         </tbody>
       </table>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
     </div>
   )

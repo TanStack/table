@@ -80,9 +80,8 @@
   ]
 
   let data = $state(makeData(1_000))
-  const refreshData = () => {
-    data = makeData(50_000) // stress test
-  }
+  const refreshData = () => { data = makeData(1_000) }
+  const stressTest = () => { data = makeData(100_000) }
 
   const table = createTable(
     {
@@ -107,6 +106,10 @@
 </script>
 
 <div class="p-2">
+  <div>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+  </div>
   <DebouncedInput
     value={table.state.globalFilter ?? ''}
     onchange={(value) => table.setGlobalFilter(String(value))}
@@ -145,9 +148,10 @@
       {/each}
     </tbody>
   </table>
-  <div>{table.getRowModel().rows.length} Rows</div>
+  <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
   <div>
-    <button onclick={() => refreshData()}>Refresh Data</button>
+    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
   </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

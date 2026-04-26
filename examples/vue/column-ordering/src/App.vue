@@ -20,7 +20,7 @@ const _features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 
-const data = ref(makeData(20))
+const data = ref(makeData(1_000))
 
 const columns = ref(
   columnHelper.columns([
@@ -70,7 +70,13 @@ const columns = ref(
   ]),
 )
 
-const rerender = () => (data.value = makeData(20))
+const refreshData = () => {
+  data.value = makeData(1_000)
+}
+
+const stressTest = () => {
+  data.value = makeData(100_000)
+}
 
 const table = useTable(
   {
@@ -146,7 +152,10 @@ function toggleAllColumnsVisibility() {
     </div>
     <div class="h-4" />
     <div class="flex flex-wrap gap-2">
-      <button @click="rerender" class="border p-1">Regenerate</button>
+      <button @click="refreshData" class="border p-1">Regenerate Data</button>
+      <button @click="stressTest" class="border p-1">
+        Stress Test (100k rows)
+      </button>
       <button @click="randomizeColumns" class="border p-1">
         Shuffle Columns
       </button>

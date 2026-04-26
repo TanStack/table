@@ -1,11 +1,13 @@
 <div class="p-2">
+  <button (click)="refreshData()" class="border p-2">Regenerate Data</button>
+  <button (click)="stressTest()" class="border p-2">Stress Test (100k rows)</button>
   <div class="h-4"></div>
   <pre [style.min-height]="'10rem'">
     {{ columnSizingDebugInfo() }}
   </pre>
   <div class="h-4"></div>
 
-  ({{ data().length }} rows)
+  ({{ data().length.toLocaleString() }} rows)
 
   <div class="overflow-x-auto">
     <div class="divTable" [style]="columnSizeVars()" [style.width.px]="table.getTotalSize()">

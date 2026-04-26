@@ -100,7 +100,7 @@ export function table_getAllColumns<
     })
   }
 
-  return recurseColumns(table.options.columns as any)
+  return recurseColumns(table.options.columns)
 }
 
 export function table_getAllFlatColumns<

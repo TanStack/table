@@ -10,55 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from './components/ui/table'
+import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/react-table'
+import type { Person } from './makeData'
 import './index.css'
 // This example uses the classic standalone `useTable` hook to create a table without the new `createTableHelper` util.
-
-// 1. Define what the shape of your data will be for each row
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-// 2. Create some dummy data with a stable reference (this could be an API response stored in useState or similar)
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-  {
-    firstName: 'kevin',
-    lastName: 'vandy',
-    age: 12,
-    visits: 100,
-    status: 'Single',
-    progress: 70,
-  },
-]
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
 const _features = tableFeatures({}) // util method to create sharable TFeatures object/type
@@ -100,7 +56,9 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 function App() {
   // 5. Store data with a stable reference
-  const [data, _setData] = React.useState(() => [...defaultData])
+  const [data, setData] = React.useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
   const rerender = React.useReducer(() => ({}), {})[1]
 
   // 6. Create the table instance with required _features, columns, and data
@@ -116,6 +74,14 @@ function App() {
   // 7. Render your table markup from the table instance APIs
   return (
     <div className="p-2">
+      <div className="flex gap-2 mb-4">
+        <Button variant="outline" onClick={() => refreshData()}>
+          Regenerate Data
+        </Button>
+        <Button variant="outline" onClick={() => stressTest()}>
+          Stress Test (100k rows)
+        </Button>
+      </div>
       <Table className="border">
         <TableHeader className="bg-gray-200">
           {table.getHeaderGroups().map((headerGroup) => (

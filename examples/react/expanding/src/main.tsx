@@ -112,7 +112,8 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(100, 5, 3))
-  const refreshData = () => setData(() => makeData(100, 5, 3))
+  const refreshData = () => setData(makeData(100, 5, 3))
+  const stressTest = () => setData(makeData(1_000, 5, 3))
 
   const table = useTable({
     _features,
@@ -139,6 +140,10 @@ function App() {
     >
       {(state) => (
         <div className="p-2">
+          <div>
+            <button onClick={() => refreshData()}>Regenerate Data</button>
+            <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
+          </div>
           <div className="h-2" />
           <table>
             <thead>
@@ -212,7 +217,8 @@ function App() {
             <span className="flex items-center gap-1">
               <div>Page</div>
               <strong>
-                {state.pagination.pageIndex + 1} of {table.getPageCount()}
+                {(state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+                {table.getPageCount().toLocaleString()}
               </strong>
             </span>
             <span className="flex items-center gap-1">
@@ -242,12 +248,9 @@ function App() {
               ))}
             </select>
           </div>
-          <div>{table.getRowModel().rows.length} Rows</div>
+          <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
           <div>
             <button onClick={() => rerender()}>Force Rerender</button>
-          </div>
-          <div>
-            <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
           <table.Subscribe selector={(state) => state}>
             {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}

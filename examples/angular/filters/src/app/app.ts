@@ -94,7 +94,7 @@ const columns = columnHelper.columns([
 })
 export class App {
   readonly columnFilters = signal<ColumnFiltersState>([])
-  readonly data = signal(makeData(5000))
+  readonly data = signal(makeData(1_000))
 
   table = injectAppTable(() => ({
     columns,
@@ -123,7 +123,6 @@ export class App {
     this.table.setPageSize(Number(event.target.value))
   }
 
-  refreshData(): void {
-    this.data.set(makeData(100_000)) // stress test
-  }
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

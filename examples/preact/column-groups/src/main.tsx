@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'preact/hooks'
+import { useReducer, useState } from 'preact/hooks'
 import { render } from 'preact'
 import './index.css'
 import {
@@ -6,42 +6,8 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/preact-table'
-
-type Person = {
-  firstName: string
-  lastName: string
-  age: number
-  visits: number
-  status: string
-  progress: number
-}
-
-const defaultData: Array<Person> = [
-  {
-    firstName: 'tanner',
-    lastName: 'linsley',
-    age: 24,
-    visits: 100,
-    status: 'In Relationship',
-    progress: 50,
-  },
-  {
-    firstName: 'tandy',
-    lastName: 'miller',
-    age: 40,
-    visits: 40,
-    status: 'Single',
-    progress: 80,
-  },
-  {
-    firstName: 'joe',
-    lastName: 'dirte',
-    age: 45,
-    visits: 20,
-    status: 'Complicated',
-    progress: 10,
-  },
-]
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 
 const _features = tableFeatures({})
 
@@ -95,7 +61,9 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data, _setData] = useState(() => [...defaultData])
+  const [data, setData] = useState(() => makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
   const rerender = useReducer(() => ({}), {})[1]
 
   const table = useTable({
@@ -108,6 +76,10 @@ function App() {
 
   return (
     <div className="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (

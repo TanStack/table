@@ -81,10 +81,7 @@ function renderFilter(
       <div class="flex space-x-2">
         <input
           type="number"
-          value={
-            ((columnFilterValue as [number, number] | undefined)?.[0] ??
-              '') as string
-          }
+          value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
           onInput={(event: Event) =>
             column.setFilterValue((old: [number, number] | undefined) => {
               const target = event.currentTarget as HTMLInputElement
@@ -96,10 +93,7 @@ function renderFilter(
         />
         <input
           type="number"
-          value={
-            ((columnFilterValue as [number, number] | undefined)?.[1] ??
-              '') as string
-          }
+          value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
           onInput={(event: Event) =>
             column.setFilterValue((old: [number, number] | undefined) => {
               const target = event.currentTarget as HTMLInputElement
@@ -116,7 +110,7 @@ function renderFilter(
   return (
     <input
       type="text"
-      value={(columnFilterValue ?? '') as string}
+      value={columnFilterValue ?? ''}
       onInput={(event: Event) =>
         column.setFilterValue((event.currentTarget as HTMLInputElement).value)
       }
@@ -132,6 +126,9 @@ export default defineComponent({
     const data = ref(makeData(100, 5, 3))
     const refreshData = () => {
       data.value = makeData(100, 5, 3)
+    }
+    const stressTest = () => {
+      data.value = makeData(1_000, 5, 3)
     }
 
     const columns = columnHelper.columns([
@@ -216,6 +213,14 @@ export default defineComponent({
 
     return () => (
       <div class="p-2">
+        <div class="flex flex-wrap gap-2">
+          <button class="border p-2" onClick={refreshData}>
+            Regenerate Data
+          </button>
+          <button class="border p-2" onClick={stressTest}>
+            Stress Test (1k x 5 x 3 sub-rows)
+          </button>
+        </div>
         <div class="h-2" />
         <table>
           <thead>
@@ -289,8 +294,8 @@ export default defineComponent({
           <span class="flex items-center gap-1">
             <div>Page</div>
             <strong>
-              {table.store.state.pagination.pageIndex + 1} of{' '}
-              {table.getPageCount()}
+              {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+              {table.getPageCount().toLocaleString()}
             </strong>
           </span>
           <span class="flex items-center gap-1">
@@ -322,10 +327,7 @@ export default defineComponent({
             ))}
           </select>
         </div>
-        <div>{table.getRowModel().rows.length} Rows</div>
-        <div>
-          <button onClick={refreshData}>Refresh Data</button>
-        </div>
+        <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
         <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
       </div>
     )

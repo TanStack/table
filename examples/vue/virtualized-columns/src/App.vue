@@ -26,6 +26,10 @@ function refreshData() {
   data.value = makeData(1_000, columns)
 }
 
+function stressTest() {
+  data.value = makeData(10_000, columns)
+}
+
 const table = useTable({
   _features,
   _rowModels: {
@@ -97,7 +101,10 @@ function measureRowElement(element: Element | ComponentPublicInstance | null) {
   <div class="app">
     <div>({{ columns.length.toLocaleString() }} columns)</div>
     <div>({{ data.length.toLocaleString() }} rows)</div>
-    <button @click="refreshData">Refresh Data</button>
+    <div class="flex flex-wrap gap-2">
+      <button @click="refreshData">Regenerate Data</button>
+      <button @click="stressTest">Stress Test (10k rows)</button>
+    </div>
 
     <div
       ref="tableContainerRef"

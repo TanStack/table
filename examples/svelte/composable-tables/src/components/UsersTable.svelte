@@ -11,11 +11,14 @@
   const personColumnHelper = createAppColumnHelper<Person>()
 
   // Data state
-  let data = $state(makeData(1000))
+  let data = $state(makeData(1_000))
 
   // Refresh data callback
   function refreshData() {
-    data = makeData(1000)
+    data = makeData(1_000)
+  }
+  function stressTest() {
+    data = makeData(100_000)
   }
 
   // Define columns using the column helper
@@ -85,6 +88,10 @@
 
 <table.AppTable>
   <div class="table-container">
+    <div>
+      <button onclick={() => refreshData()}>Regenerate Data</button>
+      <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+    </div>
     <!-- Table toolbar using pre-bound component -->
     <table.TableToolbar title="Users Table" onRefresh={refreshData} />
 

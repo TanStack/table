@@ -72,7 +72,9 @@ export class RowCount {
       </button>
       <span>
         Page
-        <strong> {{ pageIndex() + 1 }} of {{ pageCount() }} </strong>
+        <strong>
+          {{ (pageIndex() + 1).toLocaleString() }} of {{ pageCount() }}
+        </strong>
       </span>
       <span>
         | Go to page:

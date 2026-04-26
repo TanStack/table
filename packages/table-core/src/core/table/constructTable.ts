@@ -12,9 +12,7 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   initialState: Partial<TableState<TFeatures>> | undefined = {},
 ): TableState<TFeatures> {
   Object.values(features).forEach((feature) => {
-    initialState =
-      feature.getInitialState?.(initialState as TableState<TFeatures>) ??
-      initialState
+    initialState = feature.getInitialState?.(initialState) ?? initialState
   })
   return cloneState(initialState) as TableState<TFeatures>
 }
@@ -83,7 +81,7 @@ export function constructTable<
       snapshot[key] = table.atoms[key].get()
     }
     return snapshot
-  }) as typeof table.store
+  })
 
   if (
     process.env.NODE_ENV === 'development' &&

@@ -10,15 +10,14 @@ import type { PaginationState } from '@tanstack/angular-table'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  data = signal(makeData(10000))
+  data = signal(makeData(1_000))
   pagination = signal<PaginationState>({
     pageIndex: 0,
     pageSize: 5,
   })
 
-  refreshData() {
-    this.data.set(makeData(10000))
-  }
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 
   previousPage(): void {
     this.pagination.update((pagination) => ({

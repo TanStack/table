@@ -13,7 +13,7 @@ export function createFacetedUniqueValues<
   columnId: string,
 ) => () => Map<any, number> {
   return (_table, columnId) => {
-    const table = _table as Table_Internal<TFeatures, TData>
+    const table: Table_Internal<TFeatures, TData> = _table
     return tableMemo({
       feature: 'columnFacetingFeature',
       table,

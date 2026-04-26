@@ -1,4 +1,4 @@
-import { customElement } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
@@ -91,7 +91,7 @@ function renderFilter(
   return html`
     <input
       type="text"
-      .value="${String((columnFilterValue ?? '') as string)}"
+      .value="${String(columnFilterValue ?? '')}"
       @input="${(e: InputEvent) =>
         column.setFilterValue((e.target as HTMLInputElement).value)}"
       placeholder="Search..."
@@ -163,10 +163,11 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
-const data = makeData(100, 5, 3)
-
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
+  @state()
+  private _data: Array<Person> = makeData(100, 5, 3)
+
   private tableController = new TableController<typeof _features, Person>(this)
 
   protected render() {
@@ -180,7 +181,7 @@ class LitTableExample extends LitElement {
           sortedRowModel: createSortedRowModel(sortFns),
         },
         columns,
-        data,
+        data: this._data,
         getSubRows: (row) => row.subRows,
         debugTable: true,
       },
@@ -195,6 +196,22 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="p-2">
+        <div>
+          <button
+            @click=${() => {
+              this._data = makeData(100, 5, 3)
+            }}
+          >
+            Regenerate Data
+          </button>
+          <button
+            @click=${() => {
+              this._data = makeData(1_000, 5, 3)
+            }}
+          >
+            Stress Test (1k rows)
+          </button>
+        </div>
         <div class="h-2"></div>
         <table>
           <thead>
@@ -266,7 +283,8 @@ class LitTableExample extends LitElement {
           <span style="display:flex;align-items:center;gap:4px">
             <span>Page</span>
             <strong>
-              ${table.state.pagination.pageIndex + 1} of ${table.getPageCount()}
+              ${(table.state.pagination.pageIndex + 1).toLocaleString()} of
+              ${table.getPageCount().toLocaleString()}
             </strong>
           </span>
           <span style="display:flex;align-items:center;gap:4px">
@@ -297,15 +315,14 @@ class LitTableExample extends LitElement {
             )}
           </select>
         </div>
-        <div>${table.getRowModel().rows.length} Rows</div>
+        <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
         <div>
           <button
             @click="${() => {
-              ;(this as any)._data = makeData(100, 5, 3)
-              this.requestUpdate()
+              this._data = makeData(100, 5, 3)
             }}"
           >
-            Refresh Data
+            Regenerate Data
           </button>
         </div>
         <pre>${JSON.stringify(table.state, null, 2)}</pre>

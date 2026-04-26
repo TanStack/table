@@ -11,7 +11,7 @@ type FnBuckets = Partial<
 >
 
 function toFnBuckets(value: unknown): FnBuckets {
-  return typeof value === 'object' && value != null ? (value as FnBuckets) : {}
+  return typeof value === 'object' && value != null ? value : {}
 }
 
 const CORE_FEATURE_NAMES: Array<string> = Object.keys(coreFeatures)

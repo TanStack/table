@@ -148,8 +148,7 @@ export function table_getIsAllRowsSelected<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const preGroupedFlatRows = table.getFilteredRowModel().flatRows
-  const rowSelection =
-    table.atoms.rowSelection?.get() ?? ({} as RowSelectionState)
+  const rowSelection: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
 
   let isAllRowsSelected = Boolean(
     preGroupedFlatRows.length && Object.keys(rowSelection).length,
@@ -175,8 +174,7 @@ export function table_getIsAllPageRowsSelected<
   const paginationFlatRows = table
     .getPaginatedRowModel()
     .flatRows.filter((row) => row_getCanSelect(row))
-  const rowSelection =
-    table.atoms.rowSelection?.get() ?? ({} as RowSelectionState)
+  const rowSelection: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
 

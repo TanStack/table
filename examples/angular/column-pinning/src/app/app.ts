@@ -88,7 +88,7 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  readonly data = signal<Array<Person>>(makeData(5000))
+  readonly data = signal<Array<Person>>(makeData(1_000))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
   readonly columnPinning = signal<ColumnPinningState>({
@@ -136,7 +136,6 @@ export class App {
     )
   }
 
-  rerender() {
-    this.data.set(makeData(5000))
-  }
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

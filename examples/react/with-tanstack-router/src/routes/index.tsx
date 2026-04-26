@@ -68,7 +68,7 @@ function UsersPage() {
         }}
       />
       <div className="flex items-center gap-2">
-        {data?.rowCount} users found
+        {data?.rowCount?.toLocaleString()} users found
         <button
           className="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
           onClick={resetFilters}

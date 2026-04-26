@@ -28,12 +28,12 @@ const newPerson = (num: number): Person => ({
     'relationship',
     'complicated',
     'single',
-  ])[0]!,
+  ])[0],
 })
 
 export function makeData(...lens: Array<number>) {
   const makeDataLevel = (depth = 0): Array<Person> => {
-    const len = lens[depth]!
+    const len = lens[depth]
     return range(len).map(
       (index): Person => ({
         ...newPerson(index),

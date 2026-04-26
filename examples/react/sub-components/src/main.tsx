@@ -154,7 +154,7 @@ function Table({
             </tbody>
           </table>
           <div className="h-2" />
-          <div>{table.getRowModel().rows.length} Rows</div>
+          <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
         </div>
       )}
     </table.Subscribe>
@@ -174,15 +174,27 @@ const renderSubComponent = ({
 }
 
 function App() {
-  const [data] = React.useState(() => makeData(10))
+  const [data, setData] = React.useState(() => makeData(10))
+  const refreshData = () => setData(makeData(10))
+  const stressTest = () => setData(makeData(100_000))
 
   return (
-    <Table
-      columns={columns}
-      data={data}
-      getRowCanExpand={() => true}
-      renderSubComponent={renderSubComponent}
-    />
+    <div className="p-2">
+      <div>
+        <button onClick={() => refreshData()} className="border p-2">
+          Regenerate Data
+        </button>
+        <button onClick={() => stressTest()} className="border p-2">
+          Stress Test (100k rows)
+        </button>
+      </div>
+      <Table
+        columns={columns}
+        data={data}
+        getRowCanExpand={() => true}
+        renderSubComponent={renderSubComponent}
+      />
+    </div>
   )
 }
 

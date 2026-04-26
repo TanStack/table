@@ -214,7 +214,7 @@ export class TableController<
       get state() {
         return selector(tableInstance.store.state)
       },
-    } as LitTable<TFeatures, TData, TSelected>
+    }
   }
 
   private _setupSubscriptions() {

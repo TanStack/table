@@ -26,7 +26,7 @@ export const personColumnHelper = createAppColumnHelper<Person>()
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersTable {
-  readonly data = signal(makeData(5000))
+  readonly data = signal(makeData(1_000))
 
   readonly columns = personColumnHelper.columns([
     personColumnHelper.accessor('firstName', {
@@ -74,6 +74,9 @@ export class UsersTable {
   }))
 
   onRefresh = () => {
-    this.data.set([...makeData(5000)])
+    this.data.set([...makeData(1_000)])
   }
+
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(100_000))
 }

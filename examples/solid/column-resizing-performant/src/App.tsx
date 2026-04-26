@@ -6,8 +6,8 @@ import {
   tableFeatures,
 } from '@tanstack/solid-table'
 import { For, createMemo, createSignal } from 'solid-js'
-import type { Table as SolidTableType } from '@tanstack/solid-table'
 import { makeData } from './makeData'
+import type { Table as SolidTableType } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({ columnSizingFeature, columnResizingFeature })
@@ -56,7 +56,9 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data] = createSignal(makeData(200))
+  const [data, setData] = createSignal(makeData(1_000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const table = createTable(
     {
@@ -90,6 +92,10 @@ function App() {
 
   return (
     <div class="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <i>
         This example has artificially slow cell renders to simulate complex
         usage
@@ -98,7 +104,7 @@ function App() {
       <pre style={{ 'min-height': '10rem' }}>
         {JSON.stringify(table.store.state, null, 2)}
       </pre>
-      <div class="h-4" />({data().length} rows)
+      <div class="h-4" />({data().length.toLocaleString()} rows)
       <div class="overflow-x-auto">
         <div
           class="divTable"

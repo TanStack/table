@@ -25,7 +25,7 @@
       Clear Sorting
     </button>
     {#if onRefresh}
-      <button onclick={onRefresh}>Refresh Data</button>
+      <button onclick={onRefresh}>Regenerate Data</button>
     {/if}
   </div>
 </div>

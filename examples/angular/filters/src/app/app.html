@@ -1,4 +1,6 @@
 <div class="p-2">
+  <button class="border rounded p-2 mb-2" (click)="refreshData()">Regenerate Data</button>
+  <button class="border rounded p-2 mb-2" (click)="stressTest()">Stress Test (100k rows)</button>
   <div class="h-2"></div>
 
   <table>
@@ -83,8 +85,8 @@
     <span class="flex items-center gap-1">
       <div>Page</div>
       <strong>
-        {{ table.store.state.pagination.pageIndex + 1 }} of
-        {{ table.getPageCount() }}
+        {{ (table.store.state.pagination.pageIndex + 1).toLocaleString() }} of
+        {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
     <span class="flex items-center gap-1">
@@ -103,10 +105,7 @@
       }
     </select>
   </div>
-  <div>{{ table.getPrePaginatedRowModel().rows.length }} Rows</div>
-  <div>
-    <button class="border rounded p-2 mb-2" (click)="refreshData()">Refresh Data</button>
-  </div>
+  <div>{{ table.getPrePaginatedRowModel().rows.length.toLocaleString() }} Rows</div>
   <div>
     <pre>{{ stringifiedFilters() }}</pre>
   </div>

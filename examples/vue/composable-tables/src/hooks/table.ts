@@ -11,8 +11,6 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/vue-table'
-import type { Cell, CellData, Header, RowData } from '@tanstack/vue-table'
-import type { VueTable } from '@tanstack/vue-table'
 import {
   CategoryCell,
   NumberCell,
@@ -33,6 +31,13 @@ import {
   RowCount,
   TableToolbar,
 } from '../components/table-components'
+import type {
+  Cell,
+  CellData,
+  Header,
+  RowData,
+  VueTable,
+} from '@tanstack/vue-table'
 
 // Define features separately to extract the type for explicit annotations below.
 // This is needed to break the circular inference chain caused by the component

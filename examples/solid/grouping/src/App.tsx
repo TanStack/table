@@ -77,7 +77,8 @@ const columns = columnHelper.columns([
 
 function App() {
   const [data, setData] = createSignal(makeData(10_000))
-  const refreshData = () => setData(makeData(100_000))
+  const refreshData = () => setData(makeData(10_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const table = createAppTable(
     {
@@ -92,6 +93,10 @@ function App() {
 
   return (
     <div class="p-2">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+      </div>
       <div class="h-2" />
       <table>
         <thead>
@@ -150,7 +155,7 @@ function App() {
                           >
                             {row.getIsExpanded() ? '👇' : '👉'}{' '}
                             <table.FlexRender cell={cell} /> (
-                            {row.subRows.length})
+                            {row.subRows.length.toLocaleString()})
                           </button>
                         </>
                       ) : cell.getIsAggregated() ? (
@@ -199,8 +204,8 @@ function App() {
         <span class="flex items-center gap-1">
           <div>Page</div>
           <strong>
-            {table.store.state.pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
           </strong>
         </span>
         <span class="flex items-center gap-1">
@@ -228,10 +233,7 @@ function App() {
           </For>
         </select>
       </div>
-      <div>{table.getRowModel().rows.length} Rows</div>
-      <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
-      </div>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
     </div>
   )

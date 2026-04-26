@@ -1,4 +1,6 @@
 <div class="table-container" [tanStackTable]="table">
+  <button (click)="refreshData()" class="border rounded p-2 mb-2">Regenerate Data</button>
+  <button (click)="stressTest()" class="border rounded p-2 mb-2">Stress Test (100k rows)</button>
   <ng-container
     *ngComponentOutlet="table.TableToolbar; inputs: { title: 'Users Table', onRefresh }"
   />

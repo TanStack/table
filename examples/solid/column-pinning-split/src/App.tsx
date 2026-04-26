@@ -70,10 +70,10 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 ]
 
 function App() {
-  const [data, setData] = createSignal(makeData(5000))
+  const [data, setData] = createSignal(makeData(1_000))
   const columns = defaultColumns
-
-  const rerender = () => setData(makeData(5000))
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const table = createTable({
     _features,
@@ -154,8 +154,11 @@ function App() {
       </div>
       <div class="h-4" />
       <div class="flex flex-wrap gap-2">
-        <button onClick={() => rerender()} class="border p-1">
-          Regenerate
+        <button onClick={() => refreshData()} class="border p-1">
+          Regenerate Data
+        </button>
+        <button onClick={() => stressTest()} class="border p-1">
+          Stress Test (100k rows)
         </button>
         <button onClick={() => randomizeColumns()} class="border p-1">
           Shuffle Columns

@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-preact-with-tanstack-query",
-  "version": "0.0.0",
+  "name": "tanstack-preact-table-example-with-tanstack-query",
   "private": true,
   "type": "module",
   "scripts": {
@@ -13,7 +12,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
-    "@tanstack/preact-query": "^5.99.0",
+    "@tanstack/preact-query": "^5.100.5",
     "@tanstack/preact-store": "^0.13.0",
     "@tanstack/preact-table": "^9.0.0-alpha.36",
     "preact": "^10.29.1"
@@ -21,6 +20,6 @@
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
     "typescript": "6.0.3",
-    "vite": "^8.0.8"
+    "vite": "^8.0.10"
   }
 }

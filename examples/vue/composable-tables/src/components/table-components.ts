@@ -1,6 +1,7 @@
-import { computed, defineComponent, h, type PropType } from 'vue'
+import { computed, defineComponent, h } from 'vue'
 import { useSelector } from '@tanstack/vue-store'
 import { useTableContext } from '../hooks/table'
+import type { PropType } from 'vue'
 
 export const PaginationControls = defineComponent({
   name: 'PaginationControls',
@@ -32,7 +33,7 @@ export const PaginationControls = defineComponent({
         h(
           'span',
           { class: 'muted' },
-          `Page ${pagination.value.pageIndex + 1} of ${table.getPageCount()}`,
+          `Page ${(pagination.value.pageIndex + 1).toLocaleString()} of ${table.getPageCount().toLocaleString()}`,
         ),
       ])
   },

@@ -21,6 +21,10 @@ function UsersTable() {
     setData(makeData(1000))
   }, [])
 
+  const stressTest = useCallback(() => {
+    setData(makeData(100_000))
+  }, [])
+
   // Define columns using the column helper
   const columns = useMemo(
     () =>
@@ -90,6 +94,12 @@ function UsersTable() {
         <div className="table-container">
           {/* Table toolbar using pre-bound component */}
           <table.TableToolbar title="Users Table" onRefresh={refreshData} />
+          <div style={{ marginBottom: '8px' }}>
+            <button onClick={() => refreshData()}>Regenerate Data</button>
+            <button onClick={() => stressTest()}>
+              Stress Test (100k rows)
+            </button>
+          </div>
 
           {/* Table element */}
           <table>
@@ -219,6 +229,10 @@ function ProductsTable() {
     setData(makeProductData(500))
   }, [])
 
+  const stressTest = useCallback(() => {
+    setData(makeProductData(100_000))
+  }, [])
+
   // Define columns using the column helper - different structure than Users table
   const columns = useMemo(
     () =>
@@ -272,6 +286,12 @@ function ProductsTable() {
         <div className="table-container">
           {/* Table toolbar using the same pre-bound component */}
           <table.TableToolbar title="Products Table" onRefresh={refreshData} />
+          <div style={{ marginBottom: '8px' }}>
+            <button onClick={() => refreshData()}>Regenerate Data</button>
+            <button onClick={() => stressTest()}>
+              Stress Test (100k rows)
+            </button>
+          </div>
 
           {/* Table element */}
           <table>

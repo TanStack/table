@@ -1,6 +1,5 @@
 {
-  "name": "tanstack-table-example-svelte-virtualized-infinite-scrolling",
-  "version": "0.0.0",
+  "name": "tanstack-svelte-table-example-virtualized-infinite-scrolling",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,13 +13,13 @@
     "@faker-js/faker": "^10.4.0",
     "@rollup/plugin-replace": "^6.0.3",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
-    "@tanstack/svelte-query": "^6.1.16",
+    "@tanstack/svelte-query": "^6.1.24",
     "@tanstack/svelte-table": "^9.0.0-alpha.36",
     "@tanstack/svelte-virtual": "^3.13.24",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte": "^5.55.4",
+    "svelte": "^5.55.5",
     "svelte-check": "^4.4.6",
     "typescript": "6.0.3",
-    "vite": "^8.0.8"
+    "vite": "^8.0.10"
   }
 }

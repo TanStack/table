@@ -40,13 +40,9 @@ function App() {
     setData(makeData(1_000, columns))
   }, [columns])
 
-  // refresh data every 5 seconds
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      refreshData()
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [refreshData])
+  const stressTest = React.useCallback(() => {
+    setData(makeData(10_000, columns))
+  }, [columns])
 
   // The table does not live in the same scope as the virtualizers
   const table = useTable({
@@ -68,7 +64,10 @@ function App() {
       ) : null}
       <div>({columns.length.toLocaleString()} columns)</div>
       <div>({data.length.toLocaleString()} rows)</div>
-      <button onClick={refreshData}>Refresh Data</button>
+      <div>
+        <button onClick={refreshData}>Regenerate Data</button>
+        <button onClick={stressTest}>Stress Test (10k rows)</button>
+      </div>
       <TableContainer table={table} />
     </div>
   )

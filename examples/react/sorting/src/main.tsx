@@ -73,7 +73,8 @@ function App() {
   )
 
   const [data, setData] = React.useState(() => makeData(1_000))
-  const refreshData = () => setData(() => makeData(100_000)) // stress test with 100k rows
+  const refreshData = () => setData(makeData(1_000))
+  const stressTest = () => setData(makeData(100_000))
 
   const table = useTable(
     {
@@ -100,6 +101,12 @@ function App() {
       {/* omit selector to subscribe to the entire sorting slice */}
       {() => (
         <div className="p-2">
+          <div>
+            <button onClick={() => refreshData()}>Regenerate Data</button>
+            <button onClick={() => stressTest()}>
+              Stress Test (100k rows)
+            </button>
+          </div>
           <div className="h-2" />
           <table>
             <thead>
@@ -162,9 +169,6 @@ function App() {
           <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
           <div>
             <button onClick={() => rerender()}>Force Rerender</button>
-          </div>
-          <div>
-            <button onClick={() => refreshData()}>Refresh Data</button>
           </div>
           {/* Store mode: dump full table state for debugging — selector required */}
           <table.Subscribe selector={(state) => state}>

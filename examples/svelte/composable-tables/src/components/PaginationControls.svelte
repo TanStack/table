@@ -36,7 +36,7 @@
   <span>
     Page
     <strong>
-      {table.store.state.pagination.pageIndex + 1} of {table.getPageCount().toLocaleString()}
+      {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
     </strong>
   </span>
   <span>

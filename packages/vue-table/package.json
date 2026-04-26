@@ -60,8 +60,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.6",
-    "eslint-plugin-vue": "^10.8.0",
-    "vue": "^3.5.32"
+    "eslint-plugin-vue": "^10.9.0",
+    "vue": "^3.5.33"
   },
   "peerDependencies": {
     "vue": ">=3.2"

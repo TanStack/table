@@ -32,6 +32,7 @@ function App() {
   const [data, setData] = createSignal(makeData(1_000, columns))
 
   const refreshData = () => setData(makeData(1_000, columns))
+  const stressTest = () => setData(makeData(10_000, columns))
 
   const table = createTable({
     _features,
@@ -45,9 +46,12 @@ function App() {
 
   return (
     <div class="app">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (10k rows)</button>
+      </div>
       <div>({columns.length.toLocaleString()} columns)</div>
       <div>({data().length.toLocaleString()} rows)</div>
-      <button onClick={refreshData}>Refresh Data</button>
       <TableContainer table={table} />
     </div>
   )

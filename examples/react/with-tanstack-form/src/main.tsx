@@ -18,14 +18,20 @@ import type { Column, Table } from '@tanstack/react-table'
 import type { Person } from './makeData'
 import './index.css'
 
+/**
+ * `Person` includes optional recursive `subRows`; the form is a flat list only. Without `Omit`,
+ * TanStack Form's `DeepKeys` chases that recursion and TypeScript reports TS2589.
+ */
+type FormRow = Omit<Person, 'subRows'>
+
 // Define table features
 const _features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
 })
 
-// Create column helper with features and Person type
-const columnHelper = createColumnHelper<typeof _features, Person>()
+// Create column helper with features and row type
+const columnHelper = createColumnHelper<typeof _features, FormRow>()
 
 // Zod validation schema for a person
 const personSchema = z.object({
@@ -48,14 +54,14 @@ const formSchema = z.object({
   data: z.array(personSchema),
 })
 
-type FormData = z.infer<typeof formSchema>
-
 function App() {
-  // Initialize form with makeData
+  // Keep `data` typed as FormRow[] (not Person[]) so form field paths do not carry recursive `subRows` (TS2589).
+  const initialData: Array<FormRow> = makeData(100)
+
   const form = useAppForm({
     defaultValues: {
-      data: makeData(100),
-    } as FormData,
+      data: initialData,
+    },
     onSubmit: ({ value }) => {
       alert(
         `Submitted ${value.data.length} records!\n\nFirst record: ${JSON.stringify(value.data[0], null, 2)}`,
@@ -172,7 +178,13 @@ function App() {
   })
 
   const refreshData = () => {
-    form.reset({ data: makeData(100) })
+    const data: Array<FormRow> = makeData(100)
+    form.reset({ data })
+  }
+
+  const stressTest = () => {
+    const data: Array<FormRow> = makeData(100_000)
+    form.reset({ data })
   }
 
   const addRow = () => {
@@ -215,7 +227,14 @@ function App() {
             onClick={refreshData}
             className="border rounded px-4 py-2 bg-gray-500 text-white"
           >
-            Reset Data
+            Regenerate Data
+          </button>
+          <button
+            type="button"
+            onClick={stressTest}
+            className="border rounded px-4 py-2 bg-gray-500 text-white"
+          >
+            Stress Test (100k rows)
           </button>
         </div>
 
@@ -310,7 +329,7 @@ function App() {
                 <span className="flex items-center gap-1">
                   <div>Page</div>
                   <strong>
-                    {tableState.pagination.pageIndex + 1} of{' '}
+                    {(tableState.pagination.pageIndex + 1).toLocaleString()} of{' '}
                     {table.getPageCount().toLocaleString()}
                   </strong>
                 </span>
@@ -359,8 +378,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof _features, FormRow>
+  table: Table<typeof _features, FormRow>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
