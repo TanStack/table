@@ -1,9 +1,7 @@
-import {
-  constructReactivityFeature,
-  constructTable,
-} from '@tanstack/table-core'
-import { createComputed, createSignal, mergeProps, untrack } from 'solid-js'
+import { constructTable } from '@tanstack/table-core'
+import { createComputed, getOwner, mergeProps, untrack } from 'solid-js'
 import { shallow, useSelector } from '@tanstack/solid-store'
+import { solidReactivity } from './signals'
 import type { Atom, ReadonlyAtom } from '@tanstack/solid-store'
 import type { Accessor, JSX } from 'solid-js'
 import type {
@@ -11,6 +9,7 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
+  TableReactivityBindings,
   TableState,
 } from '@tanstack/table-core'
 
@@ -61,17 +60,10 @@ export function createTable<
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): SolidTable<TFeatures, TData, TSelected> {
-  const [notifier, setNotifier] = createSignal<void>(void 0, { equals: false })
-
-  const solidReactivityFeature = constructReactivityFeature({
-    stateNotifier: () => notifier(),
-    optionsNotifier: () => notifier(),
-  })
+  const owner = getOwner()!
 
   const mergedOptions = mergeProps(tableOptions, {
-    _features: mergeProps(tableOptions._features, {
-      solidReactivityFeature,
-    }),
+    reactivity: solidReactivity(owner),
   }) as any
 
   const resolvedOptions = mergeProps(
@@ -84,16 +76,13 @@ export function createTable<
       },
     },
     mergedOptions,
-  ) as TableOptions<TFeatures, TData>
+  ) as TableOptions<TFeatures, TData> & { reactivity: TableReactivityBindings }
 
   const table = constructTable(resolvedOptions) as SolidTable<
     TFeatures,
     TData,
     TSelected
   >
-
-  const allState = useSelector(table.store)
-  const allOptions = useSelector(table.optionsStore)
 
   createComputed(() => {
     const userState = tableOptions.state
@@ -108,12 +97,6 @@ export function createTable<
         return mergeProps(prev, mergedOptions) as TableOptions<TFeatures, TData>
       })
     })
-  })
-
-  createComputed(() => {
-    allState()
-    allOptions()
-    untrack(() => setNotifier(void 0))
   })
 
   table.Subscribe = ((props: {

@@ -5,6 +5,7 @@ export default defineConfig({
     './src/index.ts',
     './src/static-functions.ts',
     './src/flex-render.ts',
+    './src/features/table-reactivity/tanstack-signals',
   ],
   format: ['esm', 'cjs'],
   unbundle: true,

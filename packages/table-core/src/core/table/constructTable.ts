@@ -1,10 +1,7 @@
-import { createAtom } from '@tanstack/store'
 import { coreFeatures } from '../coreFeatures'
 import { cloneState } from '../../utils'
-import {
-  atomToStore,
-  readonlyAtomToStore,
-} from '../../features/table-reactivity/tableReactivityFeature'
+import { atomToStore } from '../../features/table-reactivity/table-reactivity'
+import type { TableReactivityBindings } from '../../features/table-reactivity/table-reactivity'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -21,15 +18,18 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   return cloneState(initialState) as TableState<TFeatures>
 }
 
+export type ConstructTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = TableOptions<TFeatures, TData> & {
+  reactivity: TableReactivityBindings
+}
+
 export function constructTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
-  const signals = tableOptions.reactivity ?? {
-    createWritableAtom: createAtom,
-    createReadonlyAtom: createAtom,
-    untrack: (fn) => fn(),
-  }
+>(tableOptions: ConstructTable<TFeatures, TData>): Table<TFeatures, TData> {
+  const signals = tableOptions.reactivity
 
   const table = {
     _reactivity: signals,
@@ -40,7 +40,7 @@ export function constructTable<
       return this.optionsStore.get()
     },
     set options(value) {
-      this.optionsStore.setState(() => value)
+      this.optionsStore.set(() => value)
     },
     baseAtoms: {},
     atoms: {},
@@ -52,15 +52,9 @@ export function constructTable<
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
   }, {}) as TableOptions<TFeatures, TData>
 
-  table.optionsStore = atomToStore(
-    signals.createWritableAtom(
-      {
-        ...defaultOptions,
-        ...tableOptions,
-      },
-      { debugName: 'table/optionsStore' },
-    ),
-  )
+  table.optionsStore = signals.createWritableAtom<
+    TableOptions<TFeatures, TData>
+  >({ ...defaultOptions, ...tableOptions }, { debugName: 'table/optionsStore' })
 
   table.initialState = getInitialTableState(
     table._features,
@@ -80,8 +74,8 @@ export function constructTable<
     // create readonly derived atom: on each get(), read current options (state, then external atom, then base)
     ;(table.atoms as any)[key] = signals.createReadonlyAtom(
       () => {
-        // Reading optionsStore.state keeps this reactive to setOptions
-        const opts = table.optionsStore.state
+        // Reading optionsStore.get() keeps this reactive to setOptions
+        const opts = table.optionsStore.get()
         const state = opts.state
         if (key in (state ?? {})) {
           return state![key]
@@ -96,7 +90,7 @@ export function constructTable<
     )
   }
 
-  table.store = readonlyAtomToStore(
+  table.store = atomToStore(
     signals.createReadonlyAtom(
       () => {
         const snapshot = {} as TableState<TFeatures>

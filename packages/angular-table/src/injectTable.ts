@@ -4,24 +4,20 @@ import {
   computed,
   effect,
   inject,
-  signal,
   untracked,
 } from '@angular/core'
 import { constructTable } from '@tanstack/table-core'
-import { toObservable } from '@angular/core/rxjs-interop'
-import { shallow } from '@tanstack/angular-store'
 import { lazyInit } from './lazySignalInitializer'
+import { angularReactivity } from './signals'
 import type { Atom, ReadonlyAtom } from '@tanstack/angular-store'
 import type {
   RowData,
   Table,
-  TableAtomOptions,
   TableFeatures,
   TableOptions,
-  TableReactivityBindings,
   TableState,
 } from '@tanstack/table-core'
-import type { Signal, ValueEqualityFn, WritableSignal } from '@angular/core'
+import type { Signal, ValueEqualityFn } from '@angular/core'
 
 /**
  * Store mode: pass `selector` (required) to project from full table state.
@@ -138,16 +134,10 @@ export function injectTable<
   const injector = inject(Injector)
 
   return lazyInit(() => {
-    const resolvedOptions: TableOptions<TFeatures, TData> = {
+    const table = constructTable({
       ...options(),
       reactivity: angularReactivity(injector),
-    } as TableOptions<TFeatures, TData>
-
-    const table = constructTable(resolvedOptions) as AngularTable<
-      TFeatures,
-      TData,
-      TSelected
-    >
+    }) as AngularTable<TFeatures, TData, TSelected>
 
     let isMount = true
     effect(
@@ -193,64 +183,4 @@ export function injectTable<
 
     return table
   })
-}
-
-function computedToReadonlyAtom<T>(
-  signal: () => T,
-  injector: Injector,
-): ReadonlyAtom<T> {
-  const atom: ReadonlyAtom<T> = computed(() =>
-    signal(),
-  ) as unknown as ReadonlyAtom<T>
-  atom.get = () => signal()
-  atom.subscribe = (observer) => {
-    return toObservable(computed(signal), {
-      injector: injector,
-    }).subscribe(observer)
-  }
-  return atom
-}
-
-function signalToAtom<T>(
-  signal: WritableSignal<T>,
-  injector: Injector,
-): Atom<T> {
-  const atom: Atom<T> = () => {
-    return signal()
-  }
-  atom.set = (value) =>
-    // @ts-expect-error Fix
-    typeof value === 'function' ? signal.update(value) : signal.set(value)
-  atom.get = () => signal()
-  atom.subscribe = (observer) => {
-    return toObservable(computed(signal), { injector }).subscribe(observer)
-  }
-  return atom
-}
-
-function angularReactivity(injector: Injector): TableReactivityBindings {
-  return {
-    createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
-      return computedToReadonlyAtom(
-        computed(() => fn(), {
-          equal: options?.compare,
-          debugName: options?.debugName,
-        }),
-        injector,
-      )
-    },
-    createWritableAtom: <T>(
-      value: T,
-      options?: TableAtomOptions<T>,
-    ): Atom<T> => {
-      return signalToAtom(
-        signal(value, {
-          equal: options?.compare,
-          debugName: options?.debugName,
-        }),
-        injector,
-      )
-    },
-    untrack: untracked,
-  }
 }

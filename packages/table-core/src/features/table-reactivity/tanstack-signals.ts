@@ -1,0 +1,18 @@
+import { createAtom } from '@tanstack/store'
+import type { TableReactivityBindings } from './table-reactivity'
+
+export function tanstackSignals(): TableReactivityBindings {
+  return {
+    untrack: (fn) => fn(),
+    createReadonlyAtom: (fn, options) => {
+      return createAtom(() => fn(), {
+        compare: options?.compare,
+      })
+    },
+    createWritableAtom: (value, options) => {
+      return createAtom(value, {
+        compare: options?.compare,
+      })
+    },
+  }
+}

@@ -43,5 +43,5 @@ export function table_setOptions<
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
   const mergedOptions = table_mergeOptions(table, newOptions)
-  table.optionsStore.setState(() => mergedOptions)
+  table.optionsStore.set(() => mergedOptions)
 }
