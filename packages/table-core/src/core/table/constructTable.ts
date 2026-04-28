@@ -21,7 +21,7 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
 export type ConstructTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = TableOptions<TFeatures, TData> & {
+> = Omit<TableOptions<TFeatures, TData>, 'reactivity'> & {
   reactivity: TableReactivityBindings
 }
 

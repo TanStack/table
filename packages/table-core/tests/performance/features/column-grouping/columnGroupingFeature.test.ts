@@ -8,6 +8,7 @@ import {
 } from '../../../../src'
 import { createColumnHelper } from '../../../../src/helpers/columnHelper'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
+import { tanstackSignals } from '../../../../src/features/table-reactivity/tanstack-signals'
 import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef } from '../../../../src'
 
@@ -46,6 +47,7 @@ describe('#getGroupedRowModel', () => {
       _rowModels: {
         groupedRowModel: createGroupedRowModel(aggregationFns),
       },
+      reactivity: tanstackSignals(),
       onStateChange() {},
       renderFallbackValue: '',
       data,
