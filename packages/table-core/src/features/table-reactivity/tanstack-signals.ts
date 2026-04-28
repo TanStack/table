@@ -1,8 +1,9 @@
-import { createAtom } from '@tanstack/store'
+import { batch, createAtom } from '@tanstack/store'
 import type { TableReactivityBindings } from './table-reactivity'
 
 export function tanstackSignals(): TableReactivityBindings {
   return {
+    batch: batch,
     untrack: (fn) => fn(),
     createReadonlyAtom: (fn, options) => {
       return createAtom(() => fn(), {

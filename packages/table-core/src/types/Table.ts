@@ -128,5 +128,5 @@ export type Table_Internal<
   initialState: TableState_All
   baseAtoms: BaseAtoms_All
   atoms: Atoms_All
-  store: ReadonlyAtom<TableState_All>
+  store: ReadonlyStore<TableState_All>
 }

@@ -1,4 +1,5 @@
 import {
+  batch,
   createMemo,
   createSignal,
   observable,
@@ -62,5 +63,6 @@ export function solidReactivity(owner: Owner): TableReactivityBindings {
       return signalToWritableAtom(writableSignal, owner)
     },
     untrack: untrack,
+    batch: batch,
   }
 }
