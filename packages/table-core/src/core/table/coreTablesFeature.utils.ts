@@ -1,4 +1,3 @@
-import { batch } from '@tanstack/store'
 import { cloneState, functionalUpdate } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -10,7 +9,7 @@ export function table_reset<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): void {
   const snap = cloneState(table.initialState)
-  batch(() => {
+  table._reactivity.batch(() => {
     for (const key of Object.keys(snap) as Array<keyof typeof snap>) {
       ;(table.baseAtoms as any)[key].set(snap[key] as any)
     }
@@ -43,5 +42,5 @@ export function table_setOptions<
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
   const mergedOptions = table_mergeOptions(table, newOptions)
-  table.optionsStore.setState(() => mergedOptions)
+  table.optionsStore.set(() => mergedOptions)
 }

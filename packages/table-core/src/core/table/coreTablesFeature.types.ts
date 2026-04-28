@@ -5,6 +5,7 @@ import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { CachedRowModels, CreateRowModels_All } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
+import type { TableReactivityBindings } from '../../features/table-reactivity/table-reactivity'
 import type { TableState, TableState_All } from '../../types/TableState'
 
 export interface TableMeta<
@@ -108,12 +109,20 @@ export interface TableOptions_Table<
    * Pass in individual self-managed state to the table.
    */
   state?: Partial<TableState<TFeatures>>
+  /**
+   * Table custom reactibity bindings.
+   */
+  readonly reactivity?: TableReactivityBindings
 }
 
 export interface Table_CoreProperties<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
+  /**
+   * Table custom reactivity bindings.
+   */
+  _reactivity: TableReactivityBindings
   /**
    * The features that are enabled for the table.
    */
@@ -156,7 +165,7 @@ export interface Table_CoreProperties<
   /**
    * The base store for the table options.
    */
-  optionsStore: Store<TableOptions<TFeatures, TData>>
+  optionsStore: Atom<TableOptions<TFeatures, TData>>
   /**
    * This is the resolved initial state of the table.
    */

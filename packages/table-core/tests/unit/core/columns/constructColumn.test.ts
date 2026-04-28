@@ -2,12 +2,14 @@ import { describe, expect, it } from 'vitest'
 import { coreColumnsFeature } from '../../../../src/core/columns/coreColumnsFeature'
 import { constructColumn } from '../../../../src/core/columns/constructColumn'
 import { constructTable } from '../../../../src'
+import { tanstackSignals } from '../../../../src/features/table-reactivity/tanstack-signals'
 import type { ColumnDef } from '../../../../src/types/ColumnDef'
 
 describe('constructColumn', () => {
   it('should create a column with all core column APIs and properties', () => {
     const table = constructTable({
       _features: { coreColumnsFeature },
+      reactivity: tanstackSignals(),
       columns: [] as Array<any>,
       data: [] as Array<any>,
     })

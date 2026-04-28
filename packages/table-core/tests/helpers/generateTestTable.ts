@@ -1,6 +1,7 @@
 import { constructTable, coreFeatures } from '../../src'
 import { generateTestColumnDefs } from '../fixtures/data/generateTestColumnDefs'
 import { generateTestData } from '../fixtures/data/generateTestData'
+import { tanstackSignals } from '../../src/features/table-reactivity/tanstack-signals'
 import type {
   Row,
   Table,
@@ -26,6 +27,7 @@ export function generateTestTableWithData<TFeatures extends TableFeatures>(
   return constructTable<TFeatures, Person>({
     data,
     columns,
+    reactivity: tanstackSignals(),
     getSubRows: (row: Row<TFeatures, Person>) => row.subRows,
     ...options,
     _features: {
@@ -43,6 +45,7 @@ export function generateTestTableFromData<TFeatures extends TableFeatures>(
   return constructTable({
     data,
     columns,
+    reactivity: tanstackSignals(),
     ...options,
     _features: {
       ...coreFeatures,

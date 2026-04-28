@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
+import { tanstackSignals } from '@tanstack/table-core/features/table-reactivity/tanstack-signals'
 import { shallow, useSelector } from '@tanstack/react-store'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
@@ -121,11 +122,10 @@ export function useTable<
     ({}) as TSelected,
 ): ReactTable<TFeatures, TData, TSelected> {
   const [table] = useState(() => {
-    const tableInstance = constructTable(tableOptions) as ReactTable<
-      TFeatures,
-      TData,
-      TSelected
-    >
+    const tableInstance = constructTable({
+      ...tableOptions,
+      reactivity: tableOptions.reactivity ?? tanstackSignals(),
+    }) as ReactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
       return Subscribe({

@@ -1,4 +1,4 @@
-import { untracked } from '@angular/core'
+import { effect, untracked } from '@angular/core'
 
 /**
  * Implementation from @tanstack/angular-query

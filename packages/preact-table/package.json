@@ -57,6 +57,7 @@
     "build": "tsdown"
   },
   "dependencies": {
+    "@preact/signals": "^2.5.1",
     "@tanstack/preact-store": "^0.13.0",
     "@tanstack/table-core": "workspace:*"
   },

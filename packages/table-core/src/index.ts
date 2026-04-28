@@ -72,7 +72,7 @@ export * from './fns/sortFns'
 export * from './features/stockFeatures'
 
 // tableReactivityFeature
-export * from './features/table-reactivity/tableReactivityFeature'
+export * from './features/table-reactivity/table-reactivity'
 
 // columnFacetingFeature
 export * from './features/column-faceting/columnFacetingFeature'

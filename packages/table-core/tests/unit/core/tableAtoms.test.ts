@@ -6,8 +6,12 @@ import {
   rowSelectionFeature,
   rowSortingFeature,
 } from '../../../src'
-import type { Table_Internal } from '../../../src'
-import type { PaginationState, SortingState } from '../../../src'
+import { tanstackSignals } from '../../../src/features/table-reactivity/tanstack-signals'
+import type {
+  PaginationState,
+  SortingState,
+  Table_Internal,
+} from '../../../src'
 
 const _features = {
   rowPaginationFeature,
@@ -19,6 +23,7 @@ function makeTable(options: any = {}) {
   return constructTable({
     _features,
     _rowModels: {},
+    reactivity: tanstackSignals(),
     columns: [],
     data: [],
     ...options,

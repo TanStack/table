@@ -3,6 +3,7 @@ import { constructTable } from '@tanstack/table-core'
 import { shallow, useSelector } from '@tanstack/preact-store'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
+import { preactReactivity } from './signals'
 import type {
   CellData,
   RowData,
@@ -92,11 +93,10 @@ export function useTable<
     ({}) as TSelected,
 ): PreactTable<TFeatures, TData, TSelected> {
   const [table] = useState(() => {
-    const tableInstance = constructTable(tableOptions) as PreactTable<
-      TFeatures,
-      TData,
-      TSelected
-    >
+    const tableInstance = constructTable({
+      ...tableOptions,
+      reactivity: tableOptions.reactivity ?? preactReactivity(),
+    }) as PreactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
       return Subscribe({
