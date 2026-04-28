@@ -47,7 +47,7 @@
     "clean": "rimraf ./build",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm test:lib --watch",
-    "test:types": "tsc --noEmit",
+    "test:types": "tsc --noEmit && tsc --noEmit -p tsconfig.test-d.json",
     "build": "pnpm build:rollup && pnpm build:types",
     "build:rollup": "rollup --config rollup.config.mjs",
     "build:types": "tsc --emitDeclarationOnly"
