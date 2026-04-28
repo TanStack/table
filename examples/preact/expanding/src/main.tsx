@@ -145,9 +145,7 @@ function App() {
         <div className="p-2">
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
-            <button onClick={() => stressTest()}>
-              Stress Test (10k rows)
-            </button>
+            <button onClick={() => stressTest()}>Stress Test (10k rows)</button>
           </div>
           <div className="h-2" />
           <table>
