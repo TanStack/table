@@ -141,7 +141,7 @@ export const filterFn_greaterThan: FilterFn<any, any> = <
   return stringValue > stringFilterValue
 }
 
-filterFn_greaterThan.resolveFilterValue = (val: any) => testFalsy(val)
+filterFn_greaterThan.autoRemove = (val: any) => testFalsy(val)
 
 /**
  * Filter function for checking if a number is greater than or equal to a given number.
@@ -160,7 +160,7 @@ export const filterFn_greaterThanOrEqualTo: FilterFn<any, any> = <
   )
 }
 
-filterFn_greaterThanOrEqualTo.resolveFilterValue = (val: any) => testFalsy(val)
+filterFn_greaterThanOrEqualTo.autoRemove = (val: any) => testFalsy(val)
 
 /**
  * Filter function for checking if a number is less than a given number.
@@ -176,7 +176,7 @@ export const filterFn_lessThan: FilterFn<any, any> = <
   return !filterFn_greaterThanOrEqualTo(row as any, columnId, filterValue)
 }
 
-filterFn_lessThan.resolveFilterValue = (val: any) => testFalsy(val)
+filterFn_lessThan.autoRemove = (val: any) => testFalsy(val)
 
 /**
  * Filter function for checking if a number is less than or equal to a given number.
@@ -192,7 +192,7 @@ export const filterFn_lessThanOrEqualTo: FilterFn<any, any> = <
   return !filterFn_greaterThan(row as any, columnId, filterValue)
 }
 
-filterFn_lessThanOrEqualTo.resolveFilterValue = (val: any) => testFalsy(val)
+filterFn_lessThanOrEqualTo.autoRemove = (val: any) => testFalsy(val)
 
 // Range filters
 
