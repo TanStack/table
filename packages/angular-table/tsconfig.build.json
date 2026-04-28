@@ -6,7 +6,20 @@
     "module": "ESNext",
     "moduleDetection": "force",
     "moduleResolution": "Bundler",
-    "stripInternal": true
+    "stripInternal": true,
+    "baseUrl": ".",
+    "target": "es2022",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "types",
+    "sourceMap": true,
+    "inlineSourceMap": false,
+    "inlineSources": true,
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "lib": ["dom", "es2020"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -15,5 +28,6 @@
     "strictTemplates": true,
     "compilationMode": "partial"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "**/*.shim.ts", "**/*.spec.ts"]
 }
