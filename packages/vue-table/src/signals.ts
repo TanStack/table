@@ -14,7 +14,9 @@ function observerToCallback<T>(
     : (value) => observerOrNext.next?.(value)
 }
 
-function refToReadonlyAtom<T>(source: ComputedRef<T> | ShallowRef<T>): ReadonlyAtom<T> {
+function refToReadonlyAtom<T>(
+  source: ComputedRef<T> | ShallowRef<T>,
+): ReadonlyAtom<T> {
   return Object.assign(source, {
     get: () => source.value,
     subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
