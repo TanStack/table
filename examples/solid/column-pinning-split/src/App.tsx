@@ -73,7 +73,7 @@ function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const columns = defaultColumns
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(500_000))
 
   const table = createTable({
     _features,
@@ -158,7 +158,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} class="border p-1">
-          Stress Test (100k rows)
+          Stress Test (500k rows)
         </button>
         <button onClick={() => randomizeColumns()} class="border p-1">
           Shuffle Columns

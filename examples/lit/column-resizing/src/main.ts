@@ -79,7 +79,7 @@ class LitTableExample extends LitElement {
   private tableController = new TableController<typeof _features, Person>(this)
 
   @state()
-  private _data: Array<Person> = makeData(1_000)
+  private _data: Array<Person> = makeData(10)
 
   @state()
   private columnResizeMode: ColumnResizeMode = 'onChange'
@@ -124,17 +124,17 @@ class LitTableExample extends LitElement {
         <div>
           <button
             @click=${() => {
-              this._data = makeData(1_000)
+              this._data = makeData(10)
             }}
           >
             Regenerate Data
           </button>
           <button
             @click=${() => {
-              this._data = makeData(100_000)
+              this._data = makeData(100)
             }}
           >
-            Stress Test (100k rows)
+            Stress Test (100 rows)
           </button>
         </div>
         <select

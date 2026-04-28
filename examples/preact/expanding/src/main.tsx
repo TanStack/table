@@ -136,6 +136,9 @@ function App() {
       selector={(state) => ({
         expanded: state.expanded,
         pagination: state.pagination,
+        rowSelection: state.rowSelection,
+        columnFilters: state.columnFilters,
+        sorting: state.sorting,
       })}
     >
       {(state) => (
@@ -143,7 +146,7 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
             <button onClick={() => stressTest()}>
-              Stress Test (100k rows)
+              Stress Test (10k rows)
             </button>
           </div>
           <div className="h-2" />

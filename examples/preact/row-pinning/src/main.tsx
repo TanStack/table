@@ -146,7 +146,7 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000, 2, 2))
   const refreshData = () => setData(() => makeData(1_000, 2, 2))
-  const stressTest = () => setData(() => makeData(10_000, 2, 2))
+  const stressTest = () => setData(() => makeData(100_000, 2, 2))
 
   const table = useTable(
     {

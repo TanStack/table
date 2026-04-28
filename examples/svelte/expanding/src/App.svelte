@@ -43,7 +43,7 @@
 
   let data = $state(makeData(100, 5, 3))
   const refreshData = () => { data = makeData(100, 5, 3) }
-  const stressTest = () => { data = makeData(1_000, 5, 3) }
+  const stressTest = () => { data = makeData(10_000, 5, 3) }
 
   const columns = columnHelper.columns([
     columnHelper.accessor('firstName', {
@@ -105,7 +105,7 @@
 <div class="p-2">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (1k top rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (10k rows)</button>
   </div>
   <div class="h-2"></div>
   <table>
@@ -251,7 +251,7 @@
   <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (1k top rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (10k rows)</button>
   </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

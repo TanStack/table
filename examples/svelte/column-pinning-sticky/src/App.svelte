@@ -104,9 +104,9 @@
     },
   ]
 
-  let data = $state(makeData(1_000))
-  const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(100_000) }
+  let data = $state(makeData(20))
+  const refreshData = () => { data = makeData(20) }
+  const stressTest = () => { data = makeData(1_000) }
 
   const table = createTable(
     {
@@ -134,7 +134,7 @@
 <div class="p-2">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1k rows)</button>
   </div>
   <div class="inline-block border border-black shadow rounded">
     <div class="px-1 border-b border-black">
@@ -166,7 +166,7 @@
       Regenerate Data
     </button>
     <button onclick={() => stressTest()} class="border p-1">
-      Stress Test (100k rows)
+      Stress Test (1k rows)
     </button>
     <button onclick={() => randomizeColumns()} class="border p-1">
       Shuffle Columns

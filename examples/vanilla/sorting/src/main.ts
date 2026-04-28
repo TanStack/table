@@ -78,9 +78,9 @@ const renderTable = () => {
   })
 
   const stressTestBtn = document.createElement('button')
-  stressTestBtn.textContent = 'Stress Test (100k rows)'
+  stressTestBtn.textContent = 'Stress Test (500k rows)'
   stressTestBtn.addEventListener('click', () => {
-    data = makeData(100_000)
+    data = makeData(500_000)
     table.setOptions((prev) => ({ ...prev, data }))
   })
 

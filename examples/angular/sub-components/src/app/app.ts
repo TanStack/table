@@ -98,7 +98,7 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  readonly data = signal<Array<Person>>(makeData(1_000))
+  readonly data = signal<Array<Person>>(makeData(20))
   readonly expanded = signal<ExpandedState>({})
 
   readonly table = injectTable(() => ({
@@ -119,6 +119,6 @@ export class App {
     getRowCanExpand: () => true,
   }))
 
-  refreshData = () => this.data.set(makeData(1_000))
-  stressTest = () => this.data.set(makeData(100_000))
+  refreshData = () => this.data.set(makeData(20))
+  stressTest = () => this.data.set(makeData(1_000))
 }

@@ -99,11 +99,11 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 ]
 
 function App() {
-  const [data, setData] = useState(() => makeData(30))
+  const [data, setData] = useState(() => makeData(20))
   const [columns] = useState(() => [...defaultColumns])
 
-  const refreshData = () => setData(() => makeData(30))
-  const stressTest = () => setData(() => makeData(100_000))
+  const refreshData = () => setData(() => makeData(20))
+  const stressTest = () => setData(() => makeData(1_000))
 
   const table = useTable(
     {
@@ -169,7 +169,7 @@ function App() {
               Regenerate Data
             </button>
             <button onClick={() => stressTest()} className="border p-1">
-              Stress Test (100k rows)
+              Stress Test (1k rows)
             </button>
             <button onClick={() => randomizeColumns()} className="border p-1">
               Shuffle Columns

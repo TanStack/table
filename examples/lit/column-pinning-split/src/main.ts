@@ -82,7 +82,7 @@ class LitTableExample extends LitElement {
   private tableController = new TableController<typeof _features, Person>(this)
 
   @state()
-  private _data: Array<Person> = makeData(5000)
+  private _data: Array<Person> = makeData(1_000)
 
   @state()
   private columnOrder: ColumnOrderState = []
@@ -212,7 +212,7 @@ class LitTableExample extends LitElement {
         <div class="flex flex-wrap gap-2">
           <button
             @click="${() => {
-              this._data = makeData(5_000)
+              this._data = makeData(1_000)
             }}"
             class="border p-1"
           >
@@ -220,11 +220,11 @@ class LitTableExample extends LitElement {
           </button>
           <button
             @click="${() => {
-              this._data = makeData(100_000)
+              this._data = makeData(500_000)
             }}"
             class="border p-1"
           >
-            Stress Test (100k rows)
+            Stress Test (500k rows)
           </button>
           <button @click="${randomizeColumns}" class="border p-1">
             Shuffle Columns

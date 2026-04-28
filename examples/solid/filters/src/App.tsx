@@ -82,7 +82,7 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(500_000))
 
   const table = createTable({
     _features,
@@ -110,7 +110,7 @@ function App() {
     <div class="p-2">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (500k rows)</button>
       </div>
       <input
         class="p-2 font-lg shadow border border-block"

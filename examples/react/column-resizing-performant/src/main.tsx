@@ -68,7 +68,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = React.useState(() => makeData(200))
   const refreshData = () => setData(makeData(200))
-  const stressTest = () => setData(makeData(5_000))
+  const stressTest = () => setData(makeData(2_000))
 
   const rerender = React.useReducer(() => ({}), {})[1]
 

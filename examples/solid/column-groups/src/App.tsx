@@ -59,9 +59,9 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 ]
 
 function App() {
-  const [data, setData] = createSignal(makeData(1_000))
-  const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const [data, setData] = createSignal(makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
 
   const table = createTable({
     debugTable: true,
@@ -76,7 +76,7 @@ function App() {
     <div class="p-2">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
       </div>
       <table>
         <thead>

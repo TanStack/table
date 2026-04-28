@@ -176,7 +176,7 @@ const renderSubComponent = ({
 function App() {
   const [data, setData] = React.useState(() => makeData(10))
   const refreshData = () => setData(makeData(10))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(1_000))
 
   return (
     <div className="p-2">
@@ -185,7 +185,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} className="border p-2">
-          Stress Test (100k rows)
+          Stress Test (1k rows)
         </button>
       </div>
       <Table

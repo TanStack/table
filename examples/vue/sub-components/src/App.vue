@@ -65,14 +65,14 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const data = ref(makeData(1_000))
+const data = ref(makeData(20))
 
 const refreshData = () => {
-  data.value = makeData(1_000)
+  data.value = makeData(20)
 }
 
 const stressTest = () => {
-  data.value = makeData(100_000)
+  data.value = makeData(1_000)
 }
 
 const table = useAppTable(
@@ -92,7 +92,7 @@ const table = useAppTable(
     <div class="flex flex-wrap gap-2">
       <button @click="refreshData" class="border p-2">Regenerate Data</button>
       <button @click="stressTest" class="border p-2">
-        Stress Test (100k rows)
+        Stress Test (1k rows)
       </button>
     </div>
     <div class="h-4" />

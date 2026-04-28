@@ -50,10 +50,10 @@ const columns = columnHelper.columns([
 
 export function App() {
   // 6. Store data with a stable reference
-  const [data, setData] = createSignal(makeData(1_000))
+  const [data, setData] = createSignal(makeData(20))
 
-  const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
 
   // 7. Create the table instance with the required columns and data.
   // Features and row models are already defined in the createTableHook call above
@@ -71,7 +71,7 @@ export function App() {
     <div class="p-2">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
       </div>
       <table>
         <thead>

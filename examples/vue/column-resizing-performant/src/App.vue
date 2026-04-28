@@ -110,7 +110,7 @@ function handlePageSizeChange(e: any) {
     <div class="flex flex-wrap gap-2">
       <button @click="refreshData" class="border p-2">Regenerate Data</button>
       <button @click="stressTest" class="border p-2">
-        Stress Test (100k rows)
+        Stress Test (2k rows)
       </button>
     </div>
     <div class="h-4" />

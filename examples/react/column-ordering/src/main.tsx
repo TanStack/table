@@ -70,7 +70,7 @@ function App() {
   const [columns] = React.useState(() => [...defaultColumns])
 
   const refreshData = () => setData(makeData(20))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(1_000))
 
   const table = useTable({
     _features,
@@ -130,7 +130,7 @@ function App() {
               Regenerate Data
             </button>
             <button onClick={() => stressTest()} className="border p-1">
-              Stress Test (100k rows)
+              Stress Test (1k rows)
             </button>
             <button onClick={() => randomizeColumns()} className="border p-1">
               Shuffle Columns

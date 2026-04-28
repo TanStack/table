@@ -67,14 +67,14 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 export default defineComponent({
   name: 'ColumnGroupsExample',
   setup() {
-    const data = ref(makeData(1_000))
+    const data = ref(makeData(20))
 
     const refreshData = () => {
-      data.value = makeData(1_000)
+      data.value = makeData(20)
     }
 
     const stressTest = () => {
-      data.value = makeData(100_000)
+      data.value = makeData(1_000)
     }
 
     const table = useTable({
@@ -93,7 +93,7 @@ export default defineComponent({
             Regenerate Data
           </button>
           <button class="border p-2" onClick={stressTest}>
-            Stress Test (100k rows)
+            Stress Test (1k rows)
           </button>
         </div>
         <div class="h-4" />

@@ -68,7 +68,7 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
-  private _data: Array<Person> = makeData(1_000)
+  private _data: Array<Person> = makeData(200)
 
   private tableController = new TableController<typeof _features, Person>(this)
 
@@ -108,17 +108,17 @@ class LitTableExample extends LitElement {
         <div>
           <button
             @click=${() => {
-              this._data = makeData(1_000)
+              this._data = makeData(200)
             }}
           >
             Regenerate Data
           </button>
           <button
             @click=${() => {
-              this._data = makeData(100_000)
+              this._data = makeData(2_000)
             }}
           >
-            Stress Test (100k rows)
+            Stress Test (2k rows)
           </button>
         </div>
         <i>

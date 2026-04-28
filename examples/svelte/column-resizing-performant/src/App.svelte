@@ -59,9 +59,9 @@
     }),
   ])
 
-  let data = $state(makeData(1_000))
-  const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(100_000) }
+  let data = $state(makeData(200))
+  const refreshData = () => { data = makeData(200) }
+  const stressTest = () => { data = makeData(2_000) }
 
   const table = createTable(
     {
@@ -103,7 +103,7 @@
 <div class="p-2">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (2k rows)</button>
   </div>
   <i>
     This example has artificially slow cell renders to simulate complex usage

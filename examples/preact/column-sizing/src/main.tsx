@@ -16,9 +16,9 @@ const columnHelper = createColumnHelper<typeof _features, Person>()
 
 // This is not the Column Resizing Example, this is a simplified version that just sets static column sizes
 function App() {
-  const [data, setData] = useState(() => makeData(1_000))
-  const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const [data, setData] = useState(() => makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
 
   const columns = useMemo(
     () =>
@@ -78,7 +78,7 @@ function App() {
     <div className="p-2">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
       </div>
       <div className="flex flex-wrap gap-2">
         <div className="text-xl">{'Initial Column Sizes'}</div>

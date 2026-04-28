@@ -67,9 +67,9 @@
     }),
   ])
 
-  let data = $state(makeData(1_000))
-  const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(100_000) }
+  let data = $state(makeData(10))
+  const refreshData = () => { data = makeData(10) }
+  const stressTest = () => { data = makeData(100) }
 
   let columnResizeMode = $state<ColumnResizeMode>('onChange')
   let columnResizeDirection = $state<ColumnResizeDirection>('ltr')
@@ -110,7 +110,7 @@
 <div class="p-2">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (100 rows)</button>
   </div>
   <select
     value={columnResizeMode}

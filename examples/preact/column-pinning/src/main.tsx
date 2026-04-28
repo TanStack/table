@@ -75,10 +75,10 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data, setData] = useState(() => makeData(5000))
+  const [data, setData] = useState(() => makeData(1_000))
 
-  const refreshData = () => setData(() => makeData(5_000))
-  const stressTest = () => setData(() => makeData(100_000))
+  const refreshData = () => setData(() => makeData(1_000))
+  const stressTest = () => setData(() => makeData(500_000))
 
   const table = useAppTable({
     debugTable: true,
@@ -134,7 +134,7 @@ function App() {
               Regenerate Data
             </button>
             <button onClick={() => stressTest()} className="border p-1">
-              Stress Test (100k rows)
+              Stress Test (500k rows)
             </button>
             <button onClick={() => randomizeColumns()} className="border p-1">
               Shuffle Columns

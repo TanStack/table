@@ -32,7 +32,7 @@ const columnHelper = createColumnHelper<typeof _features, Person>()
 function App() {
   const [data, setData] = createSignal(makeData(100, 5, 3))
   const refreshData = () => setData(makeData(100, 5, 3))
-  const stressTest = () => setData(makeData(1_000, 5, 3))
+  const stressTest = () => setData(makeData(10_000, 5, 3))
 
   const columns = columnHelper.columns([
     columnHelper.accessor('firstName', {
@@ -118,7 +118,7 @@ function App() {
     <div class="p-2">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (1k roots)</button>
+        <button onClick={() => stressTest()}>Stress Test (10k rows)</button>
       </div>
       <div class="h-2" />
       <table>

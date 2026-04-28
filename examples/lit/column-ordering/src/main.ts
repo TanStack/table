@@ -79,7 +79,7 @@ class LitTableExample extends LitElement {
   private tableController = new TableController<typeof _features, Person>(this)
 
   @state()
-  private _data: Array<Person> = makeData(1_000)
+  private _data: Array<Person> = makeData(20)
 
   @state()
   private columnOrder: ColumnOrderState = []
@@ -130,17 +130,17 @@ class LitTableExample extends LitElement {
         <div>
           <button
             @click=${() => {
-              this._data = makeData(1_000)
+              this._data = makeData(20)
             }}
           >
             Regenerate Data
           </button>
           <button
             @click=${() => {
-              this._data = makeData(100_000)
+              this._data = makeData(1_000)
             }}
           >
-            Stress Test (100k rows)
+            Stress Test (1k rows)
           </button>
         </div>
         <div class="h-4"></div>

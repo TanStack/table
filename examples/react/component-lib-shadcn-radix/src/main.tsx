@@ -56,9 +56,9 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 function App() {
   // 5. Store data with a stable reference
-  const [data, setData] = React.useState(() => makeData(1_000))
-  const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const [data, setData] = React.useState(() => makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
   const rerender = React.useReducer(() => ({}), {})[1]
 
   // 6. Create the table instance with required _features, columns, and data
@@ -79,7 +79,7 @@ function App() {
           Regenerate Data
         </Button>
         <Button variant="outline" onClick={() => stressTest()}>
-          Stress Test (100k rows)
+          Stress Test (1k rows)
         </Button>
       </div>
       <Table className="border">

@@ -74,7 +74,7 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(500_000))
 
   const table = useTable(
     {
@@ -104,7 +104,7 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
             <button onClick={() => stressTest()}>
-              Stress Test (100k rows)
+              Stress Test (500k rows)
             </button>
           </div>
           <div className="h-2" />

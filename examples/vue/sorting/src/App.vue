@@ -54,7 +54,7 @@ const refreshData = () => {
 }
 
 const stressTest = () => {
-  data.value = makeData(100_000)
+  data.value = makeData(500_000)
 }
 
 const table = useTable(
@@ -76,7 +76,7 @@ const table = useTable(
     <div class="flex flex-wrap gap-2">
       <button @click="refreshData" class="border p-2">Regenerate Data</button>
       <button @click="stressTest" class="border p-2">
-        Stress Test (100k rows)
+        Stress Test (500k rows)
       </button>
     </div>
     <div class="h-4" />

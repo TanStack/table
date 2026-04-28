@@ -8,7 +8,7 @@ import { FlexRender } from '@tanstack/table-core/flex-render'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-let data = makeData(1_000)
+let data = makeData(20)
 
 const _features = tableFeatures({})
 
@@ -51,14 +51,14 @@ const renderTable = () => {
   const regenerateBtn = document.createElement('button')
   regenerateBtn.textContent = 'Regenerate Data'
   regenerateBtn.addEventListener('click', () => {
-    data = makeData(1_000)
+    data = makeData(20)
     table.setOptions((prev) => ({ ...prev, data }))
   })
 
   const stressTestBtn = document.createElement('button')
-  stressTestBtn.textContent = 'Stress Test (100k rows)'
+  stressTestBtn.textContent = 'Stress Test (1k rows)'
   stressTestBtn.addEventListener('click', () => {
-    data = makeData(100_000)
+    data = makeData(1_000)
     table.setOptions((prev) => ({ ...prev, data }))
   })
 

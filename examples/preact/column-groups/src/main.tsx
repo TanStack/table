@@ -61,9 +61,9 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data, setData] = useState(() => makeData(1_000))
-  const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const [data, setData] = useState(() => makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
   const rerender = useReducer(() => ({}), {})[1]
 
   const table = useTable({
@@ -78,7 +78,7 @@ function App() {
     <div className="p-2">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
       </div>
       <table>
         <thead>

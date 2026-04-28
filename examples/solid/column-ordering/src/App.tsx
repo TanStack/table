@@ -69,9 +69,9 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 ]
 
 function App() {
-  const [data, setData] = createSignal(makeData(1_000))
-  const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const [data, setData] = createSignal(makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
 
   const table = createTable({
     debugTable: true,
@@ -122,7 +122,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} class="border p-1">
-          Stress Test (100k rows)
+          Stress Test (1k rows)
         </button>
         <button onClick={() => randomizeColumns()} class="border p-1">
           Shuffle Columns

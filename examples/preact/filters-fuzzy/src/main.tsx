@@ -147,6 +147,7 @@ function App() {
         columnFilters: state.columnFilters,
         globalFilter: state.globalFilter,
         pagination: state.pagination,
+        sorting: state.sorting,
       })}
     >
       {(state) => (

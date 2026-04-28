@@ -128,7 +128,7 @@ export default defineComponent({
       data.value = makeData(100, 5, 3)
     }
     const stressTest = () => {
-      data.value = makeData(1_000, 5, 3)
+      data.value = makeData(10_000, 5, 3)
     }
 
     const columns = columnHelper.columns([
@@ -218,7 +218,7 @@ export default defineComponent({
             Regenerate Data
           </button>
           <button class="border p-2" onClick={stressTest}>
-            Stress Test (1k x 5 x 3 sub-rows)
+            Stress Test (10k rows)
           </button>
         </div>
         <div class="h-2" />

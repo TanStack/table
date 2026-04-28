@@ -65,7 +65,7 @@ const columns = columnHelper.columns([
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
-  private data: Array<Person> = makeData(1_000)
+  private data: Array<Person> = makeData(20)
 
   // 6. Store data with a reactive reference
   // (in Lit, we use @state() for reactive properties)
@@ -90,7 +90,7 @@ class LitTableExample extends LitElement {
   })()
 
   private rerender() {
-    this.data = makeData(1_000)
+    this.data = makeData(20)
   }
 
   // 8. Render your table markup from the table instance APIs
@@ -102,17 +102,17 @@ class LitTableExample extends LitElement {
         <div>
           <button
             @click=${() => {
-              this.data = makeData(1_000)
+              this.data = makeData(20)
             }}
           >
             Regenerate Data
           </button>
           <button
             @click=${() => {
-              this.data = makeData(100_000)
+              this.data = makeData(1_000)
             }}
           >
-            Stress Test (100k rows)
+            Stress Test (1k rows)
           </button>
         </div>
         <table>

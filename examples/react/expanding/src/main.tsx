@@ -113,7 +113,7 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(100, 5, 3))
   const refreshData = () => setData(makeData(100, 5, 3))
-  const stressTest = () => setData(makeData(1_000, 5, 3))
+  const stressTest = () => setData(makeData(10_000, 5, 3))
 
   const table = useTable({
     _features,
@@ -136,13 +136,16 @@ function App() {
       selector={(state) => ({
         expanded: state.expanded,
         pagination: state.pagination,
+        rowSelection: state.rowSelection,
+        columnFilters: state.columnFilters,
+        sorting: state.sorting,
       })}
     >
       {(state) => (
         <div className="p-2">
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
-            <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
+            <button onClick={() => stressTest()}>Stress Test (10k rows)</button>
           </div>
           <div className="h-2" />
           <table>
@@ -276,25 +279,25 @@ function Filter({
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
-      <input
+      <DebouncedInput
         type="number"
-        value={(columnFilterValue as [number, number] | undefined)?.[0]}
-        onChange={(e) =>
+        value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
+        onChange={(value) =>
           column.setFilterValue((old: [number, number] | undefined) => [
-            e.target.value,
+            value,
             old?.[1],
           ])
         }
         placeholder={`Min`}
         className="w-24 border shadow rounded"
       />
-      <input
+      <DebouncedInput
         type="number"
-        value={(columnFilterValue as [number, number] | undefined)?.[1]}
-        onChange={(e) =>
+        value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
+        onChange={(value) =>
           column.setFilterValue((old: [number, number] | undefined) => [
             old?.[0],
-            e.target.value,
+            value,
           ])
         }
         placeholder={`Max`}
@@ -302,12 +305,46 @@ function Filter({
       />
     </div>
   ) : (
-    <input
+    <DebouncedInput
       type="text"
       value={(columnFilterValue ?? '') as string}
-      onChange={(e) => column.setFilterValue(e.target.value)}
+      onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
       className="w-36 border shadow rounded"
+    />
+  )
+}
+
+// A debounced input react component
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value)
+    }, debounce)
+
+    return () => clearTimeout(timeout)
+  }, [value])
+
+  return (
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
     />
   )
 }

@@ -81,7 +81,7 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(100_000) }
+  const stressTest = () => { data = makeData(500_000) }
 
   const table = createTable(
     {
@@ -108,7 +108,7 @@
 <div class="p-2">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
   </div>
   <DebouncedInput
     value={table.state.globalFilter ?? ''}
@@ -151,7 +151,7 @@
   <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
   </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

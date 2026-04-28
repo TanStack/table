@@ -16,9 +16,9 @@ const columnHelper = createColumnHelper<typeof _features, Person>()
 
 // This is not the Column Resizing Example, this is a simplified version that just sets static column sizes
 function App() {
-  const [data, setData] = React.useState(() => makeData(1_000))
-  const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const [data, setData] = React.useState(() => makeData(20))
+  const refreshData = () => setData(makeData(20))
+  const stressTest = () => setData(makeData(1_000))
 
   const columns = React.useMemo(
     () =>
@@ -81,7 +81,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} className="border p-2">
-          Stress Test (100k rows)
+          Stress Test (1k rows)
         </button>
       </div>
       <div className="h-4" />

@@ -19,9 +19,9 @@
    */
 
   // 1. Store data with a $state rune for reactivity
-  let data = $state(makeData(1_000))
-  const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(100_000) }
+  let data = $state(makeData(20))
+  const refreshData = () => { data = makeData(20) }
+  const stressTest = () => { data = makeData(1_000) }
 
   // 2. New in V9! Tell the table which features and row models we want to use.
   //    In this case, this will be a basic table with no additional features
@@ -86,7 +86,7 @@
 <div class="p-2">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1k rows)</button>
   </div>
   <table>
     <thead>

@@ -78,7 +78,7 @@ const defaultColumns = columnHelper.columns([
 })
 export class App {
   readonly columns = signal([...defaultColumns])
-  readonly data = signal<Array<Person>>(makeData(1_000))
+  readonly data = signal<Array<Person>>(makeData(20))
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
   readonly columnPinning = signal<ColumnPinningState>({
@@ -131,6 +131,6 @@ export class App {
     )
   }
 
-  refreshData = () => this.data.set(makeData(1_000))
-  stressTest = () => this.data.set(makeData(100_000))
+  refreshData = () => this.data.set(makeData(20))
+  stressTest = () => this.data.set(makeData(1_000))
 }

@@ -54,12 +54,12 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 class LitTableExample extends LitElement {
   // 5. Store data with a reactive reference
   @state()
-  private data: Array<Person> = makeData(1_000)
+  private data: Array<Person> = makeData(20)
 
   private tableController = new TableController<typeof _features, Person>(this)
 
   private rerender() {
-    this.data = makeData(1_000)
+    this.data = makeData(20)
   }
 
   protected render(): unknown {
@@ -85,17 +85,17 @@ class LitTableExample extends LitElement {
         <div>
           <button
             @click=${() => {
-              this.data = makeData(1_000)
+              this.data = makeData(20)
             }}
           >
             Regenerate Data
           </button>
           <button
             @click=${() => {
-              this.data = makeData(100_000)
+              this.data = makeData(1_000)
             }}
           >
-            Stress Test (100k rows)
+            Stress Test (1k rows)
           </button>
         </div>
         <table>

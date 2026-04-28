@@ -206,10 +206,10 @@ class LitTableExample extends LitElement {
           </button>
           <button
             @click=${() => {
-              this._data = makeData(1_000, 5, 3)
+              this._data = makeData(10_000, 5, 3)
             }}
           >
-            Stress Test (1k rows)
+            Stress Test (10k rows)
           </button>
         </div>
         <div class="h-2"></div>

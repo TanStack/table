@@ -125,7 +125,7 @@ function App() {
   )
 
   const refreshData = () => setData(makeData(20))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(1_000))
 
   const table = useAppTable(
     {
@@ -170,7 +170,7 @@ function App() {
             Regenerate Data
           </button>
           <button onClick={() => stressTest()} className="border p-1">
-            Stress Test (100k rows)
+            Stress Test (1k rows)
           </button>
         </div>
         <div className="h-4" />

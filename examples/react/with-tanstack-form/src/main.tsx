@@ -389,38 +389,66 @@ function Filter({
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
-      <input
+      <DebouncedInput
         type="number"
         value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
-        onChange={(e) =>
-          column.setFilterValue((old: [number, number]) => [
-            e.target.value,
-            old[1],
-          ])
+        onChange={(value) =>
+          column.setFilterValue((old: [number, number]) => [value, old?.[1]])
         }
         placeholder={`Min`}
         className="w-24 border shadow rounded"
       />
-      <input
+      <DebouncedInput
         type="number"
         value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
-        onChange={(e) =>
-          column.setFilterValue((old: [number, number]) => [
-            old[0],
-            e.target.value,
-          ])
+        onChange={(value) =>
+          column.setFilterValue((old: [number, number]) => [old?.[0], value])
         }
         placeholder={`Max`}
         className="w-24 border shadow rounded"
       />
     </div>
   ) : (
-    <input
+    <DebouncedInput
       type="text"
       value={(columnFilterValue ?? '') as string}
-      onChange={(e) => column.setFilterValue(e.target.value)}
+      onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
       className="w-36 border shadow rounded"
+    />
+  )
+}
+
+// A debounced input react component
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value)
+    }, debounce)
+
+    return () => clearTimeout(timeout)
+  }, [value])
+
+  return (
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
     />
   )
 }

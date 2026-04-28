@@ -56,7 +56,7 @@ const columns = columnHelper.columns([
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  readonly data = signal<Array<Person>>(makeData(1_000))
+  readonly data = signal<Array<Person>>(makeData(20))
 
   // 6. Create the table instance with the required columns and data.
   // Features and row models are already defined in the createTableHook call above
@@ -66,6 +66,6 @@ export class App {
     // add additional table options here or in the createTableHook call above
   }))
 
-  refreshData = () => this.data.set(makeData(1_000))
-  stressTest = () => this.data.set(makeData(100_000))
+  refreshData = () => this.data.set(makeData(20))
+  stressTest = () => this.data.set(makeData(1_000))
 }

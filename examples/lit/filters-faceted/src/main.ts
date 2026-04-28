@@ -183,7 +183,7 @@ class FacetedFilter extends LitElement {
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
-  private _data: Array<Person> = makeData(5_000)
+  private _data: Array<Person> = makeData(1_000)
 
   private tableController = new TableController<typeof _features, Person>(this)
 
@@ -219,17 +219,17 @@ class LitTableExample extends LitElement {
         <div>
           <button
             @click=${() => {
-              this._data = makeData(5_000)
+              this._data = makeData(1_000)
             }}
           >
             Regenerate Data
           </button>
           <button
             @click=${() => {
-              this._data = makeData(100_000)
+              this._data = makeData(500_000)
             }}
           >
-            Stress Test (100k rows)
+            Stress Test (500k rows)
           </button>
         </div>
         <input

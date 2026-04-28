@@ -154,9 +154,9 @@ function App() {
               </button>
             </div>
             <div>
-              <input
+              <DebouncedInput
                 value={state.globalFilter ?? ''}
-                onChange={(e) => table.setGlobalFilter(e.target.value)}
+                onChange={(value) => table.setGlobalFilter(value)}
                 className="p-2 font-lg shadow border border-block"
                 placeholder="Search all columns..."
               />
@@ -361,32 +361,66 @@ function Filter({
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
-      <input
+      <DebouncedInput
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
-        onChange={(e) =>
-          column.setFilterValue((old: any) => [e.target.value, old?.[1]])
+        onChange={(value) =>
+          column.setFilterValue((old: any) => [value, old?.[1]])
         }
         placeholder={`Min`}
         className="w-24 border shadow rounded"
       />
-      <input
+      <DebouncedInput
         type="number"
         value={((column.getFilterValue() as any)?.[1] ?? '') as string}
-        onChange={(e) =>
-          column.setFilterValue((old: any) => [old?.[0], e.target.value])
+        onChange={(value) =>
+          column.setFilterValue((old: any) => [old?.[0], value])
         }
         placeholder={`Max`}
         className="w-24 border shadow rounded"
       />
     </div>
   ) : (
-    <input
+    <DebouncedInput
       type="text"
       value={(column.getFilterValue() ?? '') as string}
-      onChange={(e) => column.setFilterValue(e.target.value)}
+      onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
       className="w-36 border shadow rounded"
+    />
+  )
+}
+
+// A debounced input react component
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value)
+    }, debounce)
+
+    return () => clearTimeout(timeout)
+  }, [value])
+
+  return (
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
     />
   )
 }

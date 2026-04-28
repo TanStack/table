@@ -115,6 +115,7 @@ function App() {
       selector={(state) => ({
         columnFilters: state.columnFilters,
         pagination: state.pagination,
+        sorting: state.sorting,
       })}
     >
       {(state) => (

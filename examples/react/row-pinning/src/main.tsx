@@ -144,9 +144,9 @@ function App() {
     [includeLeafRows, includeParentRows],
   )
 
-  const [data, setData] = React.useState(() => makeData(1000, 2, 2))
-  const refreshData = () => setData(makeData(1000, 2, 2))
-  const stressTest = () => setData(makeData(10_000, 2, 2))
+  const [data, setData] = React.useState(() => makeData(1_000, 2, 2))
+  const refreshData = () => setData(makeData(1_000, 2, 2))
+  const stressTest = () => setData(makeData(100_000, 2, 2))
 
   const table = useTable(
     {
@@ -192,7 +192,7 @@ function App() {
             className="border rounded p-2 mb-2"
             onClick={() => stressTest()}
           >
-            Stress Test (10k rows)
+            Stress Test (100k rows)
           </button>
         </div>
         <div className="h-2" />
@@ -409,32 +409,66 @@ function Filter({
 
   return typeof firstValue === 'number' ? (
     <div className="flex space-x-2">
-      <input
+      <DebouncedInput
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
-        onChange={(e) =>
-          column.setFilterValue((old: any) => [e.target.value, old?.[1]])
+        onChange={(value) =>
+          column.setFilterValue((old: any) => [value, old?.[1]])
         }
         placeholder={`Min`}
         className="w-24 border shadow rounded"
       />
-      <input
+      <DebouncedInput
         type="number"
         value={((column.getFilterValue() as any)?.[1] ?? '') as string}
-        onChange={(e) =>
-          column.setFilterValue((old: any) => [old?.[0], e.target.value])
+        onChange={(value) =>
+          column.setFilterValue((old: any) => [old?.[0], value])
         }
         placeholder={`Max`}
         className="w-24 border shadow rounded"
       />
     </div>
   ) : (
-    <input
+    <DebouncedInput
       type="text"
       value={(column.getFilterValue() ?? '') as string}
-      onChange={(e) => column.setFilterValue(e.target.value)}
+      onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
       className="w-36 border shadow rounded"
+    />
+  )
+}
+
+// A debounced input react component
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 500,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value)
+    }, debounce)
+
+    return () => clearTimeout(timeout)
+  }, [value])
+
+  return (
+    <input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
     />
   )
 }

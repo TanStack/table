@@ -66,9 +66,9 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const [data, setData] = useState(() => makeData(1_000))
-  const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const [data, setData] = useState(() => makeData(10))
+  const refreshData = () => setData(makeData(10))
+  const stressTest = () => setData(makeData(100))
 
   const [columnResizeMode, setColumnResizeMode] =
     useState<ColumnResizeMode>('onChange')
@@ -97,7 +97,7 @@ function App() {
     <div className="p-2">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (100 rows)</button>
       </div>
       <select
         value={columnResizeMode}
