@@ -14,7 +14,7 @@
     "@faker-js/faker": "^10.4.0",
     "@radix-ui/react-slot": "^1.2.4",
     "@tailwindcss/vite": "^4.2.4",
-    "@tanstack/react-table": "^9.0.0-alpha.38",
+    "@tanstack/react-table": "^9.0.0-alpha.39",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.11.0",

@@ -12,7 +12,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
     "@tanstack/react-form": "^1.29.1",
-    "@tanstack/react-table": "^9.0.0-alpha.38",
+    "@tanstack/react-table": "^9.0.0-alpha.39",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "zod": "^4.3.6"
