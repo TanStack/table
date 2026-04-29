@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/solid-table-devtools",
-  "version": "9.0.0-alpha.37",
+  "version": "9.0.0-alpha.38",
   "description": "Solid devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
