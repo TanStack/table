@@ -7,10 +7,18 @@ import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type {
   CellData,
+  ColumnDefTemplate,
+  AccessorColumnDef as CoreAccessorColumnDef,
+  AccessorFnColumnDef as CoreAccessorFnColumnDef,
+  AccessorKeyColumnDef as CoreAccessorKeyColumnDef,
+  CellContext as CoreCellContext,
+  DisplayColumnDef as CoreDisplayColumnDef,
+  GroupColumnDef as CoreGroupColumnDef,
+  HeaderContext as CoreHeaderContext,
+  TableOptions as CoreTableOptions,
   RowData,
   Table,
   TableFeatures,
-  TableOptions,
   TableState,
 } from '@tanstack/table-core'
 import type { Atom, ReadonlyAtom } from '@tanstack/react-store'
@@ -106,9 +114,123 @@ export type ReactTable<
    * console.log(table.state.globalFilter)
    */
   readonly state: Readonly<TSelected> & {
-    columns: TableOptions<TFeatures, TData>['columns']
-    data: TableOptions<TFeatures, TData>['data']
+    columns: TableOptions<TFeatures, TData, TSelected>['columns']
+    data: TableOptions<TFeatures, TData, TSelected>['data']
   }
+}
+
+export type CellContext<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+  TSelected = {},
+> = Omit<CoreCellContext<TFeatures, TData, TValue>, 'table'> & {
+  table: ReactTable<TFeatures, TData, TSelected>
+}
+
+export type HeaderContext<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+  TSelected = {},
+> = Omit<CoreHeaderContext<TFeatures, TData, TValue>, 'table'> & {
+  table: ReactTable<TFeatures, TData, TSelected>
+}
+
+type ColumnDefWithReactContext<
+  TColumnDef extends object,
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData,
+  TSelected,
+> = Omit<TColumnDef, 'cell' | 'footer' | 'header'> & {
+  cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue, TSelected>>
+  footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue, TSelected>>
+  header?:
+    | string
+    | ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue, TSelected>>
+}
+
+export type DisplayColumnDef<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+  TSelected = {},
+> = ColumnDefWithReactContext<
+  CoreDisplayColumnDef<TFeatures, TData, TValue>,
+  TFeatures,
+  TData,
+  TValue,
+  TSelected
+>
+
+export type GroupColumnDef<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+  TSelected = {},
+> = ColumnDefWithReactContext<
+  Omit<CoreGroupColumnDef<TFeatures, TData, TValue>, 'columns'>,
+  TFeatures,
+  TData,
+  TValue,
+  TSelected
+> & {
+  columns?: ReadonlyArray<ColumnDef<TFeatures, TData, unknown, TSelected>>
+}
+
+export type AccessorFnColumnDef<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+  TSelected = {},
+> = ColumnDefWithReactContext<
+  CoreAccessorFnColumnDef<TFeatures, TData, TValue>,
+  TFeatures,
+  TData,
+  TValue,
+  TSelected
+>
+
+export type AccessorKeyColumnDef<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+  TSelected = {},
+> = ColumnDefWithReactContext<
+  CoreAccessorKeyColumnDef<TFeatures, TData, TValue>,
+  TFeatures,
+  TData,
+  TValue,
+  TSelected
+>
+
+export type AccessorColumnDef<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+  TSelected = {},
+> =
+  | AccessorKeyColumnDef<TFeatures, TData, TValue, TSelected>
+  | AccessorFnColumnDef<TFeatures, TData, TValue, TSelected>
+
+export type ColumnDef<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+  TSelected = {},
+> =
+  | DisplayColumnDef<TFeatures, TData, TValue, TSelected>
+  | GroupColumnDef<TFeatures, TData, TValue, TSelected>
+  | AccessorColumnDef<TFeatures, TData, TValue, TSelected>
+
+export type TableOptions<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TSelected = {},
+> = Omit<CoreTableOptions<TFeatures, TData>, 'columns' | 'defaultColumn'> & {
+  columns: ReadonlyArray<ColumnDef<TFeatures, TData, any, TSelected>>
+  defaultColumn?: Partial<ColumnDef<TFeatures, TData, any, TSelected>>
 }
 
 export function useTable<
@@ -116,16 +238,14 @@ export function useTable<
   TData extends RowData,
   TSelected = {},
 >(
-  tableOptions: TableOptions<TFeatures, TData>,
+  tableOptions: TableOptions<TFeatures, TData, TSelected>,
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): ReactTable<TFeatures, TData, TSelected> {
   const [table] = useState(() => {
-    const tableInstance = constructTable(tableOptions) as ReactTable<
-      TFeatures,
-      TData,
-      TSelected
-    >
+    const tableInstance = constructTable(
+      tableOptions as CoreTableOptions<TFeatures, TData>,
+    ) as ReactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
       return Subscribe({
