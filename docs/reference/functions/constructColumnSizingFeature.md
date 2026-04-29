@@ -23,4 +23,4 @@ Defined in: [features/column-sizing/columnSizingFeature.ts:47](https://github.co
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`ColumnSizingFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`ColumnSizingFeatureConstructors`](../interfaces/ColumnSizingFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

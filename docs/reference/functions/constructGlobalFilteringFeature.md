@@ -23,4 +23,4 @@ Defined in: [features/global-filtering/globalFilteringFeature.ts:34](https://git
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`GlobalFilteringFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`GlobalFilteringFeatureConstructors`](../interfaces/GlobalFilteringFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

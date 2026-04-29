@@ -19,7 +19,7 @@ Defined in: [useLegacyTable.ts:125](https://github.com/TanStack/table/blob/main/
 
 ## Returns
 
-`FacetedMinMaxValuesFactory`\<`TData`\>
+[`FacetedMinMaxValuesFactory`](../type-aliases/FacetedMinMaxValuesFactory.md)\<`TData`\>
 
 ## Deprecated
 

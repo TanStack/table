@@ -25,7 +25,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_RowPinning,
 // } from './rowPinningFeature.types'
 
-interface RowPinningFeatureConstructors<
+export interface RowPinningFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

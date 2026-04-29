@@ -47,7 +47,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_ColumnPinning,
 // } from './columnPinningFeature.types'
 
-interface ColumnPinningFeatureConstructors<
+export interface ColumnPinningFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

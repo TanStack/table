@@ -36,7 +36,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_ColumnVisibility,
 // } from './columnVisibilityFeature.types'
 
-interface ColumnVisibilityFeatureConstructors<
+export interface ColumnVisibilityFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

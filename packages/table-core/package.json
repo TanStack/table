@@ -58,7 +58,7 @@
     "test:eslint": "eslint ./src",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm test:lib --watch",
-    "test:types": "tsc",
+    "test:types": "tsc && tsc -p tests/tsconfig.declaration-emit.json",
     "test:build": "publint --strict",
     "build": "tsdown"
   },

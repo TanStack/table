@@ -29,7 +29,7 @@ import type {
   TableState,
 } from '@tanstack/table-core'
 
-type ComponentType<T extends Record<string, any>> = (props: T) => any
+export type ComponentType<T extends Record<string, any>> = (props: T) => any
 
 // =============================================================================
 // Enhanced Context Types with Pre-bound Components
@@ -81,14 +81,14 @@ export type AppHeaderContext<
 /**
  * Template type for column definitions that can be a string or a function.
  */
-type AppColumnDefTemplate<TProps extends object> =
+export type AppColumnDefTemplate<TProps extends object> =
   | string
   | ((props: TProps) => any)
 
 /**
  * Enhanced column definition base with pre-bound components in cell/header/footer contexts.
  */
-type AppColumnDefBase<
+export type AppColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData,
@@ -112,7 +112,7 @@ type AppColumnDefBase<
 /**
  * Enhanced display column definition with pre-bound components.
  */
-type AppDisplayColumnDef<
+export type AppDisplayColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TCellComponents extends Record<string, ComponentType<any>>,
@@ -135,7 +135,7 @@ type AppDisplayColumnDef<
 /**
  * Enhanced group column definition with pre-bound components.
  */
-type AppGroupColumnDef<
+export type AppGroupColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TCellComponents extends Record<string, ComponentType<any>>,

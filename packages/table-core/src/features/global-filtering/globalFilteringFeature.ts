@@ -20,7 +20,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_GlobalFiltering,
 // } from './globalFilteringFeature.types'
 
-interface GlobalFilteringFeatureConstructors<
+export interface GlobalFilteringFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

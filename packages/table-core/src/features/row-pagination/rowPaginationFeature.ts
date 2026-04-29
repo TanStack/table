@@ -28,7 +28,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_RowPagination,
 // } from './rowPaginationFeature.types'
 
-interface RowPaginationFeatureConstructors<
+export interface RowPaginationFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

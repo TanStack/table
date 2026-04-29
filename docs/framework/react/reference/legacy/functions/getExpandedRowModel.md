@@ -19,7 +19,7 @@ Defined in: [useLegacyTable.ts:89](https://github.com/TanStack/table/blob/main/p
 
 ## Returns
 
-`RowModelFactory`\<`TData`\>
+[`RowModelFactory`](../type-aliases/RowModelFactory.md)\<`TData`\>
 
 ## Deprecated
 

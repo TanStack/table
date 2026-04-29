@@ -23,4 +23,4 @@ Defined in: [features/column-pinning/columnPinningFeature.ts:62](https://github.
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`ColumnPinningFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`ColumnPinningFeatureConstructors`](../interfaces/ColumnPinningFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

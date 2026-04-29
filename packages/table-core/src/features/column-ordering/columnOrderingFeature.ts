@@ -21,7 +21,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_ColumnOrdering,
 // } from './columnOrderingFeature.types'
 
-interface ColumnOrderingFeatureConstructors<
+export interface ColumnOrderingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

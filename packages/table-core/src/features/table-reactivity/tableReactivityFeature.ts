@@ -2,7 +2,7 @@ import type { ReadonlyStore, Store } from '@tanstack/store'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 
-interface TableReactivityFeatureConstructors<
+export interface TableReactivityFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {}

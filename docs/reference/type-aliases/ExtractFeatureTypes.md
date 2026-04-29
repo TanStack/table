@@ -15,7 +15,7 @@ Defined in: [types/TableFeatures.ts:10](https://github.com/TanStack/table/blob/m
 
 ### TKey
 
-`TKey` *extends* keyof `FeatureConstructors`
+`TKey` *extends* keyof [`FeatureConstructors`](../interfaces/FeatureConstructors.md)
 
 ### TFeatures
 

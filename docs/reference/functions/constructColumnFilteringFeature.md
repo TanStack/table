@@ -23,4 +23,4 @@ Defined in: [features/column-filtering/columnFilteringFeature.ts:47](https://git
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`ColumnFilteringFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`ColumnFilteringFeatureConstructors`](../interfaces/ColumnFilteringFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

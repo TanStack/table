@@ -23,4 +23,4 @@ Defined in: [core/headers/coreHeadersFeature.ts:31](https://github.com/TanStack/
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`CoreHeadersFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`CoreHeadersFeatureConstructors`](../interfaces/CoreHeadersFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

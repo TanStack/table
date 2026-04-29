@@ -23,4 +23,4 @@ Defined in: [features/row-pagination/rowPaginationFeature.ts:42](https://github.
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`RowPaginationFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`RowPaginationFeatureConstructors`](../interfaces/RowPaginationFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

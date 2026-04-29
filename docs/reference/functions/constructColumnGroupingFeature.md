@@ -23,4 +23,4 @@ Defined in: [features/column-grouping/columnGroupingFeature.ts:54](https://githu
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`ColumnGroupingFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`ColumnGroupingFeatureConstructors`](../interfaces/ColumnGroupingFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

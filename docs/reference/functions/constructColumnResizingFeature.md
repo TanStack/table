@@ -23,4 +23,4 @@ Defined in: [features/column-resizing/columnResizingFeature.ts:35](https://githu
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`ColumnResizingFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`ColumnResizingFeatureConstructors`](../interfaces/ColumnResizingFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

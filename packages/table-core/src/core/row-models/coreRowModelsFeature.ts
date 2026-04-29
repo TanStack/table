@@ -17,7 +17,7 @@ import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type { Table_RowModels } from './coreRowModelsFeature.types'
 
-interface CoreRowModelsFeatureConstructors<
+export interface CoreRowModelsFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

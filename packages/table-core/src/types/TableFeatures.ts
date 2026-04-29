@@ -22,7 +22,7 @@ export type ExtractFeatureTypes<
   }[keyof TFeatures]
 >
 
-interface FeatureConstructors {
+export interface FeatureConstructors {
   CachedRowModel?: any
   Cell?: any
   Column?: any

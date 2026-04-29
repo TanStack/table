@@ -26,13 +26,18 @@ title: "@tanstack/angular-table"
 - [AngularTable](type-aliases/AngularTable.md)
 - [AppAngularTable](type-aliases/AppAngularTable.md)
 - [AppCellContext](type-aliases/AppCellContext.md)
+- [AppColumnDefBase](type-aliases/AppColumnDefBase.md)
+- [AppColumnDefTemplate](type-aliases/AppColumnDefTemplate.md)
 - [AppColumnHelper](type-aliases/AppColumnHelper.md)
+- [AppDisplayColumnDef](type-aliases/AppDisplayColumnDef.md)
+- [AppGroupColumnDef](type-aliases/AppGroupColumnDef.md)
 - [AppHeaderContext](type-aliases/AppHeaderContext.md)
 - [CreateTableContextOptions](type-aliases/CreateTableContextOptions.md)
 - [CreateTableHookResult](type-aliases/CreateTableHookResult.md)
 - [FlexRenderComponentProps](type-aliases/FlexRenderComponentProps.md)
 - [FlexRenderContent](type-aliases/FlexRenderContent.md)
 - [FlexRenderInputContent](type-aliases/FlexRenderInputContent.md)
+- [RenderableComponent](type-aliases/RenderableComponent.md)
 
 ## Variables
 

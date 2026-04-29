@@ -31,7 +31,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_RowExpanding,
 // } from './rowExpandingFeature.types'
 
-interface RowExpandingFeatureConstructors<
+export interface RowExpandingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
