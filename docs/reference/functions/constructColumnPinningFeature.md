@@ -9,7 +9,7 @@ title: constructColumnPinningFeature
 function constructColumnPinningFeature<TFeatures, TData>(): TableFeature<ColumnPinningFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L62)
+Defined in: [features/column-pinning/columnPinningFeature.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L64)
 
 ## Type Parameters
 

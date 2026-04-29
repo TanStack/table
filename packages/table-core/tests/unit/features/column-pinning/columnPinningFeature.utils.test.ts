@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import { stockFeatures } from '../../../../src'
 import {
   column_getCanPin,
   column_getIsPinned,
@@ -617,6 +618,46 @@ describe('table_getPinnedVisibleLeafColumns', () => {
 
     expect(leafColumns.map((col) => col.id)).not.toContain('age')
     expect(leafColumns.length).toBe(table_getVisibleLeafColumns(table).length)
+  })
+})
+
+describe('column pinning table instance APIs', () => {
+  it('should expose pinned leaf column APIs on the table instance', () => {
+    const table = generateTestTableWithData(1, {
+      _features: stockFeatures,
+      initialState: {
+        columnPinning: {
+          left: ['firstName'],
+          right: ['lastName'],
+        },
+        columnVisibility: {
+          age: false,
+        },
+      },
+    })
+
+    expect(
+      table.getPinnedLeafColumns('left').map((col: { id: string }) => col.id),
+    ).toEqual(['firstName'])
+    expect(
+      table
+        .getPinnedVisibleLeafColumns('center')
+        .map((col: { id: string }) => col.id),
+    ).not.toContain('age')
+  })
+
+  it('should pass method arguments into memoized prototype API dependencies', () => {
+    const table = generateTestTableWithData(1, {
+      _features: stockFeatures,
+      initialState: {
+        columnPinning: {
+          left: ['firstName'],
+          right: [],
+        },
+      },
+    })
+
+    expect(table.getColumn('firstName')!.getStart('left')).toBe(0)
   })
 })
 

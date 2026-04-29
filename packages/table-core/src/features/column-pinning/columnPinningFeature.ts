@@ -27,6 +27,8 @@ import {
   table_getLeftLeafColumns,
   table_getLeftLeafHeaders,
   table_getLeftVisibleLeafColumns,
+  table_getPinnedLeafColumns,
+  table_getPinnedVisibleLeafColumns,
   table_getRightFlatHeaders,
   table_getRightFooterGroups,
   table_getRightHeaderGroups,
@@ -292,6 +294,14 @@ export function constructColumnPinningFeature<
             table.atoms.columnPinning?.get(),
           ],
         },
+        table_getPinnedLeafColumns: {
+          fn: (position) => table_getPinnedLeafColumns(table, position),
+          memoDeps: (position) => [
+            position,
+            table.options.columns,
+            table.atoms.columnPinning?.get(),
+          ],
+        },
         // visible leaf columns
         table_getLeftVisibleLeafColumns: {
           fn: () => table_getLeftVisibleLeafColumns(table),
@@ -312,6 +322,15 @@ export function constructColumnPinningFeature<
         table_getRightVisibleLeafColumns: {
           fn: () => table_getRightVisibleLeafColumns(table),
           memoDeps: () => [
+            table.options.columns,
+            table.atoms.columnPinning?.get(),
+            table.atoms.columnVisibility?.get(),
+          ],
+        },
+        table_getPinnedVisibleLeafColumns: {
+          fn: (position) => table_getPinnedVisibleLeafColumns(table, position),
+          memoDeps: (position) => [
+            position,
             table.options.columns,
             table.atoms.columnPinning?.get(),
             table.atoms.columnVisibility?.get(),
