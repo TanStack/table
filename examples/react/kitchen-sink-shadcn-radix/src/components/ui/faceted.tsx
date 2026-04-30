@@ -25,24 +25,14 @@ const FACETED_NAME = 'Faceted'
 const TRIGGER_NAME = 'FacetedTrigger'
 const BADGE_LIST_NAME = 'FacetedBadgeList'
 const CONTENT_NAME = 'FacetedContent'
-const INPUT_NAME = 'FacetedInput'
-const LIST_NAME = 'FacetedList'
-const EMPTY_NAME = 'FacetedEmpty'
-const GROUP_NAME = 'FacetedGroup'
 const ITEM_NAME = 'FacetedItem'
-const SEPARATOR_NAME = 'FacetedSeparator'
 
 const ERRORS = {
   [FACETED_NAME]: `\`${FACETED_NAME}\` must be used as root component`,
   [TRIGGER_NAME]: `\`${TRIGGER_NAME}\` must be within \`${FACETED_NAME}\``,
   [BADGE_LIST_NAME]: `\`${BADGE_LIST_NAME}\` must be within \`${FACETED_NAME}\``,
   [CONTENT_NAME]: `\`${CONTENT_NAME}\` must be within \`${FACETED_NAME}\``,
-  [INPUT_NAME]: `\`${INPUT_NAME}\` must be within \`${FACETED_NAME}\``,
-  [LIST_NAME]: `\`${LIST_NAME}\` must be within \`${FACETED_NAME}\``,
-  [EMPTY_NAME]: `\`${EMPTY_NAME}\` must be within \`${FACETED_NAME}\``,
-  [GROUP_NAME]: `\`${GROUP_NAME}\` must be within \`${FACETED_NAME}\``,
   [ITEM_NAME]: `\`${ITEM_NAME}\` must be within \`${FACETED_NAME}\``,
-  [SEPARATOR_NAME]: `\`${SEPARATOR_NAME}\` must be within \`${FACETED_NAME}\``,
 }
 
 type FacetedValue<Multiple extends boolean> = Multiple extends true
@@ -70,7 +60,7 @@ function useFacetedContext(name: keyof typeof ERRORS) {
 
 interface FacetedProps<
   Multiple extends boolean = false,
-> extends React.ComponentPropsWithoutRef<typeof Popover> {
+> extends React.ComponentProps<typeof Popover> {
   value?: FacetedValue<Multiple>
   onValueChange?: (value: FacetedValue<Multiple> | undefined) => void
   children?: React.ReactNode
@@ -127,19 +117,19 @@ function Faceted<Multiple extends boolean = false>(
     </FacetedContext.Provider>
   )
 }
-Faceted.displayName = FACETED_NAME
 
-const FacetedTrigger = React.forwardRef<
-  React.ComponentRef<typeof PopoverTrigger>,
-  React.ComponentPropsWithoutRef<typeof PopoverTrigger>
->((props, forwardedRef) => {
-  const { className, children, ...triggerProps } = props
-
+function FacetedTrigger({
+  ref,
+  className,
+  children,
+  ...triggerProps
+}: React.ComponentProps<typeof PopoverTrigger>) {
   const context = useFacetedContext(TRIGGER_NAME)
-  const composedRef = useComposedRefs(forwardedRef, context.triggerRef)
+  const composedRef = useComposedRefs(ref, context.triggerRef)
 
   return (
     <PopoverTrigger
+      data-slot="faceted-trigger"
       {...triggerProps}
       ref={composedRef}
       className={cn(
@@ -172,29 +162,24 @@ const FacetedTrigger = React.forwardRef<
       {children}
     </PopoverTrigger>
   )
-})
-FacetedTrigger.displayName = TRIGGER_NAME
+}
 
-interface FacetedBadgeListProps extends React.ComponentPropsWithoutRef<'div'> {
+interface FacetedBadgeListProps extends React.ComponentProps<'div'> {
   options?: Array<{ label: string; value: string }>
   max?: number
   badgeClassName?: string
   placeholder?: string
 }
 
-const FacetedBadgeList = React.forwardRef<
-  HTMLDivElement,
-  FacetedBadgeListProps
->((props, forwardedRef) => {
-  const {
-    options = [],
-    max = 2,
-    placeholder = 'Select options...',
-    className,
-    badgeClassName,
-    ...badgeListProps
-  } = props
-
+function FacetedBadgeList({
+  ref,
+  options = [],
+  max = 2,
+  placeholder = 'Select options...',
+  className,
+  badgeClassName,
+  ...badgeListProps
+}: FacetedBadgeListProps) {
   const context = useFacetedContext(BADGE_LIST_NAME)
   const values = Array.isArray(context.value)
     ? context.value
@@ -213,8 +198,9 @@ const FacetedBadgeList = React.forwardRef<
   if (values.length === 0) {
     return (
       <div
+        data-slot="faceted-badge-list"
         {...badgeListProps}
-        ref={forwardedRef}
+        ref={ref}
         className="flex w-full items-center gap-1 text-muted-foreground"
       >
         {placeholder}
@@ -225,8 +211,9 @@ const FacetedBadgeList = React.forwardRef<
 
   return (
     <div
+      data-slot="faceted-badge-list"
       {...badgeListProps}
-      ref={forwardedRef}
+      ref={ref}
       className={cn('flex flex-wrap items-center gap-1', className)}
     >
       {values.length > max ? (
@@ -249,21 +236,19 @@ const FacetedBadgeList = React.forwardRef<
       )}
     </div>
   )
-})
-FacetedBadgeList.displayName = BADGE_LIST_NAME
+}
 
-const FacetedContent = React.forwardRef<
-  React.ComponentRef<typeof PopoverContent>,
-  React.ComponentPropsWithoutRef<typeof PopoverContent>
->((props, forwardedRef) => {
-  const { className, children, ...contentProps } = props
-
+function FacetedContent({
+  className,
+  children,
+  ...contentProps
+}: React.ComponentProps<typeof PopoverContent>) {
   const context = useFacetedContext(CONTENT_NAME)
 
   return (
     <PopoverContent
+      data-slot="faceted-content"
       {...contentProps}
-      ref={forwardedRef}
       align="start"
       className={cn(
         'w-[200px] origin-(--radix-popover-content-transform-origin) p-0',
@@ -277,32 +262,25 @@ const FacetedContent = React.forwardRef<
       <Command>{children}</Command>
     </PopoverContent>
   )
-})
-FacetedContent.displayName = CONTENT_NAME
+}
 
 const FacetedInput = CommandInput
-FacetedInput.displayName = INPUT_NAME
-
 const FacetedList = CommandList
-FacetedList.displayName = LIST_NAME
-
 const FacetedEmpty = CommandEmpty
-FacetedEmpty.displayName = EMPTY_NAME
-
 const FacetedGroup = CommandGroup
-FacetedGroup.displayName = GROUP_NAME
+const FacetedSeparator = CommandSeparator
 
-interface FacetedItemProps extends React.ComponentPropsWithoutRef<
-  typeof CommandItem
-> {
+interface FacetedItemProps extends React.ComponentProps<typeof CommandItem> {
   value: string
 }
 
-const FacetedItem = React.forwardRef<
-  React.ComponentRef<typeof CommandItem>,
-  FacetedItemProps
->((props, ref) => {
-  const { className, children, value, onSelect, ...itemProps } = props
+function FacetedItem({
+  className,
+  children,
+  value,
+  onSelect,
+  ...itemProps
+}: FacetedItemProps) {
   const context = useFacetedContext(ITEM_NAME)
 
   const isSelected = context.multiple
@@ -322,12 +300,12 @@ const FacetedItem = React.forwardRef<
 
   return (
     <CommandItem
+      data-slot="faceted-item"
       aria-selected={isSelected}
       data-selected={isSelected}
       className={cn('gap-2', className)}
       onSelect={() => onItemSelect(value)}
       {...itemProps}
-      ref={ref}
     >
       <span
         className={cn(
@@ -342,11 +320,7 @@ const FacetedItem = React.forwardRef<
       {children}
     </CommandItem>
   )
-})
-FacetedItem.displayName = ITEM_NAME
-
-const FacetedSeparator = CommandSeparator
-FacetedSeparator.displayName = SEPARATOR_NAME
+}
 
 export {
   Faceted,

@@ -70,9 +70,38 @@ export function FlexRender<
   return (
     <Switch>
       <Match when={'cell' in props && props.cell}>
-        {(cell) =>
-          flexRender(cell().column.columnDef.cell, cell().getContext())
-        }
+        {(cell) => {
+          const c = cell()
+          const def = c.column.columnDef
+          // When the column-grouping feature is registered, a cell can be in
+          // one of three special modes that should not render `columnDef.cell`
+          // directly:
+          //   - aggregated: render `columnDef.aggregatedCell` (falling back to
+          //     `columnDef.cell` if the column did not define one)
+          //   - placeholder: a duplicate value within a group — render nothing
+          //   - grouped: the group header cell — fall through to
+          //     `columnDef.cell`; consumers that want a custom group header
+          //     typically branch on `cell.getIsGrouped()` themselves first
+          // The optional-chaining + cast keeps this safe when the grouping
+          // feature is not registered.
+          const groupingCell = c as typeof c & {
+            getIsAggregated?: () => boolean
+            getIsPlaceholder?: () => boolean
+          }
+          const groupingDef = def as typeof def & {
+            aggregatedCell?: typeof def.cell
+          }
+          if (groupingCell.getIsAggregated?.()) {
+            return flexRender(
+              groupingDef.aggregatedCell ?? def.cell,
+              c.getContext(),
+            )
+          }
+          if (groupingCell.getIsPlaceholder?.()) {
+            return null
+          }
+          return flexRender(def.cell, c.getContext())
+        }}
       </Match>
       <Match when={'header' in props && props.header}>
         {(header) =>

@@ -100,7 +100,36 @@ export function FlexRender<
   TValue extends CellData = CellData,
 >(props: FlexRenderProps<TFeatures, TData, TValue>) {
   if ('cell' in props && props.cell) {
-    return flexRender(props.cell.column.columnDef.cell, props.cell.getContext())
+    const cell = props.cell
+    const def = cell.column.columnDef
+    // When the column-grouping feature is registered, a cell can be in one of
+    // three special modes that should not render `columnDef.cell` directly:
+    //   - aggregated: render `columnDef.aggregatedCell` (falling back to
+    //     `columnDef.cell` if the column did not define one)
+    //   - placeholder: a duplicate value within a group — render nothing
+    //   - grouped: the group header cell — let the consumer render this; we
+    //     fall through to `columnDef.cell` so the existing behavior is
+    //     preserved (consumers that want a custom group header typically
+    //     branch on `cell.getIsGrouped()` themselves before calling FlexRender)
+    // The optional-chaining + cast keeps this safe when the grouping feature
+    // is not registered (the methods are absent at the type level then).
+    const groupingCell = cell as typeof cell & {
+      getIsAggregated?: () => boolean
+      getIsPlaceholder?: () => boolean
+    }
+    const groupingDef = def as typeof def & {
+      aggregatedCell?: typeof def.cell
+    }
+    if (groupingCell.getIsAggregated?.()) {
+      return flexRender(
+        groupingDef.aggregatedCell ?? def.cell,
+        cell.getContext(),
+      )
+    }
+    if (groupingCell.getIsPlaceholder?.()) {
+      return null
+    }
+    return flexRender(def.cell, cell.getContext())
   }
   if ('header' in props && props.header) {
     return flexRender(
