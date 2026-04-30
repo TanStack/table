@@ -23,4 +23,4 @@ Defined in: [features/row-pinning/rowPinningFeature.ts:38](https://github.com/Ta
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`RowPinningFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`RowPinningFeatureConstructors`](../interfaces/RowPinningFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

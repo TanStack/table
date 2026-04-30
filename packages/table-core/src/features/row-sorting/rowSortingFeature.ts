@@ -33,7 +33,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_RowSorting,
 // } from './rowSortingFeature.types'
 
-interface RowSortingFeatureConstructors<
+export interface RowSortingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

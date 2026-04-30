@@ -23,4 +23,4 @@ Defined in: [features/column-faceting/columnFacetingFeature.ts:32](https://githu
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`ColumnFacetingFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`ColumnFacetingFeatureConstructors`](../interfaces/ColumnFacetingFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

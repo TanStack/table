@@ -7,30 +7,38 @@ import '@/styles/globals.css'
 import {
   CheckCircle,
   ChevronDown,
-  ChevronUp,
+  ChevronRight,
   Clock,
   Code,
   CreditCard,
   Megaphone,
   MoreHorizontal,
+  Search,
   ShoppingCart,
   Users,
   XCircle,
 } from 'lucide-react'
 import {
+  aggregationFns,
   columnFacetingFeature,
   columnFilteringFeature,
+  columnGroupingFeature,
   columnOrderingFeature,
+  columnPinningFeature,
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   createCoreRowModel,
+  createExpandedRowModel,
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
+  createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
+  globalFilteringFeature,
+  rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
@@ -41,8 +49,12 @@ import {
 import type { Person } from '@/lib/make-data'
 import type {
   CellData,
+  Column,
   ColumnDef,
+  ColumnPinningState,
   ColumnSizingState,
+  ExpandedState,
+  GroupingState,
   RowData,
   SortingState,
   TableFeatures,
@@ -62,6 +74,7 @@ import {
 import { departments, makeData, statuses } from '@/lib/make-data'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
+import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
 
 import { Badge } from '@/components/ui/badge'
 import {
@@ -75,7 +88,10 @@ import {
 import { cn, formatDate, toSentenceCase } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
-import { dynamicFilterFn } from '@/lib/data-table'
+import { dynamicFilterFn, fuzzyFilter } from '@/lib/data-table'
+import { ThemeProvider } from '@/components/theme-provider'
+import { ModeToggle } from '@/components/mode-toggle'
+import { Input } from '@/components/ui/input'
 
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
@@ -93,13 +109,45 @@ const _features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
+  rowExpandingFeature,
   columnFilteringFeature,
   columnFacetingFeature,
   columnOrderingFeature,
   columnVisibilityFeature,
   columnSizingFeature,
   columnResizingFeature,
+  columnPinningFeature,
+  columnGroupingFeature,
+  globalFilteringFeature,
 })
+
+/**
+ * CSS for left/right pinned columns. Verbatim port of the helper from
+ * `examples/react/column-pinning-sticky/src/main.tsx` so a pinned column gets
+ * `position: sticky` plus the appropriate offset and edge shadow.
+ */
+function getCommonPinningStyles(
+  column: Column<typeof _features, Person>,
+): React.CSSProperties {
+  const isPinned = column.getIsPinned()
+  const isLastLeftPinnedColumn =
+    isPinned === 'left' && column.getIsLastColumn('left')
+  const isFirstRightPinnedColumn =
+    isPinned === 'right' && column.getIsFirstColumn('right')
+
+  return {
+    boxShadow: isLastLeftPinnedColumn
+      ? '-4px 0 4px -4px var(--border) inset'
+      : isFirstRightPinnedColumn
+        ? '4px 0 4px -4px var(--border) inset'
+        : undefined,
+    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
+    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    position: isPinned ? 'sticky' : 'relative',
+    background: isPinned ? 'var(--background)' : undefined,
+    zIndex: isPinned ? 1 : 0,
+  }
+}
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -111,6 +159,13 @@ function App() {
   >([])
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
+  const [globalFilter, setGlobalFilter] = React.useState('')
+  const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>({
+    left: ['select'],
+    right: ['actions'],
+  })
+  const [grouping, setGrouping] = React.useState<GroupingState>([])
+  const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
   const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
     () => [
@@ -137,7 +192,7 @@ function App() {
             className="translate-y-0.5"
           />
         ),
-        maxSize: 30,
+        maxSize: 40,
         enableSorting: false,
         enableHiding: false,
         enableResizing: false,
@@ -145,7 +200,9 @@ function App() {
       {
         id: 'firstName',
         accessorKey: 'firstName',
-        header: 'First Name',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="First Name" />
+        ),
         cell: (info) => String(info.getValue()),
         meta: {
           label: 'First Name',
@@ -155,7 +212,9 @@ function App() {
       {
         id: 'lastName',
         accessorFn: (row) => row.lastName,
-        header: 'Last Name',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Last Name" />
+        ),
         cell: (info) => String(info.getValue()),
         meta: {
           label: 'Last Name',
@@ -165,8 +224,16 @@ function App() {
       {
         id: 'age',
         accessorKey: 'age',
-        header: 'Age',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Age" />
+        ),
         cell: (info) => <span>{String(info.getValue())}</span>,
+        aggregationFn: 'mean',
+        aggregatedCell: ({ getValue }) => (
+          <span className="text-muted-foreground">
+            Avg: {Math.round(Number(getValue()) * 10) / 10}
+          </span>
+        ),
         meta: {
           label: 'Age',
           variant: 'number',
@@ -175,7 +242,9 @@ function App() {
       {
         id: 'email',
         accessorKey: 'email',
-        header: 'Email',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Email" />
+        ),
         cell: (info) => info.cell.getValue<string>(),
         meta: {
           label: 'Email',
@@ -185,9 +254,13 @@ function App() {
       {
         id: 'status',
         accessorKey: 'status',
-        header: 'Status',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
+        ),
         cell: (info) => {
-          const status = info.getValue<Person['status']>()
+          const status = info.getValue<Person['status'] | undefined>()
+          // Group/aggregated rows can pass undefined here — bail out cleanly.
+          if (!status) return null
           const icons: Record<Person['status'], React.ReactNode> = {
             active: <CheckCircle />,
             inactive: <XCircle />,
@@ -204,6 +277,8 @@ function App() {
             </Badge>
           )
         },
+        // Enum column has no useful aggregation; render nothing on group rows.
+        aggregatedCell: () => null,
         meta: {
           label: 'Status',
           variant: 'select',
@@ -216,9 +291,13 @@ function App() {
       {
         id: 'department',
         accessorKey: 'department',
-        header: 'Department',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Department" />
+        ),
         cell: (info) => {
-          const department = info.getValue<Person['department']>()
+          const department = info.getValue<Person['department'] | undefined>()
+          // Group/aggregated rows can pass undefined here — bail out cleanly.
+          if (!department) return null
           const icons: Record<Person['department'], React.ReactNode> = {
             engineering: <Code />,
             marketing: <Megaphone />,
@@ -237,6 +316,8 @@ function App() {
             </Badge>
           )
         },
+        // Enum column has no useful aggregation; render nothing on group rows.
+        aggregatedCell: () => null,
         meta: {
           label: 'Department',
           variant: 'multi-select',
@@ -249,8 +330,19 @@ function App() {
       {
         id: 'joinDate',
         accessorKey: 'joinDate',
-        header: 'Join Date',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Join Date" />
+        ),
         cell: (info) => formatDate(info.getValue<string>()),
+        aggregationFn: 'min',
+        aggregatedCell: ({ getValue }) => {
+          const earliest = getValue<string>()
+          return (
+            <span className="text-muted-foreground">
+              Earliest: {earliest ? formatDate(earliest) : '—'}
+            </span>
+          )
+        },
         meta: {
           label: 'Join Date',
           variant: 'date',
@@ -303,11 +395,16 @@ function App() {
       _features,
       _rowModels: {
         coreRowModel: createCoreRowModel(),
-        filteredRowModel: createFilteredRowModel(filterFns),
+        filteredRowModel: createFilteredRowModel({
+          ...filterFns,
+          fuzzy: fuzzyFilter,
+        }),
         facetedRowModel: createFacetedRowModel(),
         facetedUniqueValues: createFacetedUniqueValues(),
         paginatedRowModel: createPaginatedRowModel(),
         sortedRowModel: createSortedRowModel(sortFns),
+        groupedRowModel: createGroupedRowModel(aggregationFns),
+        expandedRowModel: createExpandedRowModel(),
       },
       columns,
       data,
@@ -316,6 +413,7 @@ function App() {
         maxSize: 800,
         filterFn: dynamicFilterFn,
       },
+      globalFilterFn: 'fuzzy',
       state: {
         rowSelection,
         sorting,
@@ -323,12 +421,20 @@ function App() {
         columnOrder,
         columnSizing,
         columnFilters,
+        globalFilter,
+        columnPinning,
+        grouping,
+        expanded,
       },
       onSortingChange: setSorting,
       onColumnVisibilityChange: setColumnVisibility,
       onColumnOrderChange: setColumnOrder,
       onColumnSizingChange: setColumnSizing,
       onColumnFiltersChange: setColumnFilters,
+      onGlobalFilterChange: setGlobalFilter,
+      onColumnPinningChange: setColumnPinning,
+      onGroupingChange: setGrouping,
+      onExpandedChange: setExpanded,
       getRowId: (row) => row.id,
       enableRowSelection: true,
       onRowSelectionChange: setRowSelection,
@@ -351,6 +457,7 @@ function App() {
   return (
     <div className="container mx-auto p-4 flex flex-col gap-4">
       <div className="flex items-center justify-end gap-2">
+        <ModeToggle />
         <Button variant="outline" size="sm" onClick={() => refreshData()}>
           Regenerate Data
         </Button>
@@ -375,6 +482,15 @@ function App() {
       </div>
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
+          <div className="relative w-full max-w-sm">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <DebouncedInput
+              value={globalFilter}
+              onChange={(value) => setGlobalFilter(String(value))}
+              placeholder="Search all columns..."
+              className="pl-8"
+            />
+          </div>
           <DataTableFilterList
             table={table}
             columnFilters={columnFilters}
@@ -408,27 +524,11 @@ function App() {
                           })}
                           style={{
                             width: `calc(var(--header-${header.id}-size) * 1px)`,
+                            ...getCommonPinningStyles(header.column),
                           }}
                         >
                           {header.isPlaceholder ? null : (
-                            <div
-                              className={cn(
-                                'flex items-center justify-between gap-2 cursor-pointer select-none',
-                                header.column.getCanSort() && 'cursor-pointer',
-                              )}
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              <table.FlexRender header={header} />
-                              {header.column.getIsSorted() && (
-                                <>
-                                  {header.column.getIsSorted() === 'asc' ? (
-                                    <ChevronUp className="size-4" />
-                                  ) : (
-                                    <ChevronDown className="size-4" />
-                                  )}
-                                </>
-                              )}
-                            </div>
+                            <table.FlexRender header={header} />
                           )}
                           {header.column.getCanResize() && (
                             <div
@@ -460,9 +560,39 @@ function App() {
                           }
                           style={{
                             width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
+                            ...getCommonPinningStyles(cell.column),
                           }}
                         >
-                          <table.FlexRender cell={cell} />
+                          {cell.getIsGrouped() ? (
+                            // Group header cell: chevron toggles row expansion,
+                            // count shows number of rows in the group.
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="-ml-2 h-7 gap-1 px-2"
+                              onClick={row.getToggleExpandedHandler()}
+                              disabled={!row.getCanExpand()}
+                              style={{
+                                paddingLeft: `calc(${row.depth} * 1.5rem + 0.5rem)`,
+                              }}
+                            >
+                              {row.getIsExpanded() ? (
+                                <ChevronDown className="size-4" />
+                              ) : (
+                                <ChevronRight className="size-4" />
+                              )}
+                              <table.FlexRender cell={cell} />
+                              <span className="text-muted-foreground">
+                                ({row.subRows.length})
+                              </span>
+                            </Button>
+                          ) : (
+                            // FlexRender now dispatches based on cell mode:
+                            // aggregated → columnDef.aggregatedCell (or
+                            // columnDef.cell), placeholder → null, otherwise
+                            // columnDef.cell. So we don't need to branch here.
+                            <table.FlexRender cell={cell} />
+                          )}
                         </TableCell>
                       )
                     })}
@@ -478,11 +608,49 @@ function App() {
   )
 }
 
+// Small debounced wrapper around the shadcn Input — adapted from
+// `examples/react/filters-fuzzy/src/main.tsx` so the global filter doesn't
+// run on every keystroke at 100k rows.
+function DebouncedInput({
+  value: initialValue,
+  onChange,
+  debounce = 300,
+  ...props
+}: {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+} & Omit<React.ComponentProps<typeof Input>, 'onChange'>) {
+  const [value, setValue] = React.useState(initialValue)
+
+  React.useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      onChange(value)
+    }, debounce)
+
+    return () => clearTimeout(timeout)
+  }, [value, debounce, onChange])
+
+  return (
+    <Input
+      {...props}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+    />
+  )
+}
+
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
 )

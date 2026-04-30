@@ -32,7 +32,7 @@ import type {
 } from '@tanstack/table-core'
 import type { Signal, Type } from '@angular/core'
 
-type RenderableComponent =
+export type RenderableComponent =
   | Type<any>
   | (<T extends NonNullable<unknown>>(props: T) => FlexRenderContent<T>)
 
@@ -82,14 +82,14 @@ export type AppHeaderContext<
 /**
  * Template type for column definitions that can be a string or a function.
  */
-type AppColumnDefTemplate<TProps extends object> =
+export type AppColumnDefTemplate<TProps extends object> =
   | string
   | ((props: TProps) => any)
 
 /**
  * Enhanced column definition base with pre-bound components in cell/header/footer contexts.
  */
-type AppColumnDefBase<
+export type AppColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData,
@@ -113,7 +113,7 @@ type AppColumnDefBase<
 /**
  * Enhanced display column definition with pre-bound components.
  */
-type AppDisplayColumnDef<
+export type AppDisplayColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TCellComponents extends Record<string, RenderableComponent>,
@@ -136,7 +136,7 @@ type AppDisplayColumnDef<
 /**
  * Enhanced group column definition with pre-bound components.
  */
-type AppGroupColumnDef<
+export type AppGroupColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TCellComponents extends Record<string, RenderableComponent>,

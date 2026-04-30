@@ -4,7 +4,7 @@ import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type { TableOptions_Table, Table_Table } from './coreTablesFeature.types'
 
-interface CoreTablesFeatureConstructors<
+export interface CoreTablesFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

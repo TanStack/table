@@ -30,7 +30,7 @@ The `header` property includes the registered headerComponents.
 
 ### THeaderComponents
 
-`THeaderComponents` *extends* `Record`\<`string`, `RenderableComponent`\>
+`THeaderComponents` *extends* `Record`\<`string`, [`RenderableComponent`](RenderableComponent.md)\>
 
 ## Properties
 

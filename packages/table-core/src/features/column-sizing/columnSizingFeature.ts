@@ -32,7 +32,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_ColumnSizing,
 // } from './columnSizingFeature.types'
 
-interface ColumnSizingFeatureConstructors<
+export interface ColumnSizingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

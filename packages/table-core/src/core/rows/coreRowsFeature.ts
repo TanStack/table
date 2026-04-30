@@ -19,7 +19,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_Rows,
 // } from './coreRowsFeature.types'
 
-interface CoreRowsFeatureConstructors<
+export interface CoreRowsFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

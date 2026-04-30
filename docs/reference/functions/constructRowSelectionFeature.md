@@ -23,4 +23,4 @@ Defined in: [features/row-selection/rowSelectionFeature.ts:50](https://github.co
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`RowSelectionFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`RowSelectionFeatureConstructors`](../interfaces/RowSelectionFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

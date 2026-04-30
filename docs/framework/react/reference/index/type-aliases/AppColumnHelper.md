@@ -63,7 +63,7 @@ The cell, header, and footer contexts include pre-bound components.
 
 ##### column
 
-`TAccessor` *extends* `AccessorFn`\<`TData`\> ? `AppColumnDefBase`\<`TFeatures`, `TData`, `TValue`, `TCellComponents`, `THeaderComponents`\> & `object` : `AppColumnDefBase`\<`TFeatures`, `TData`, `TValue`, `TCellComponents`, `THeaderComponents`\>
+`TAccessor` *extends* `AccessorFn`\<`TData`\> ? [`AppColumnDefBase`](AppColumnDefBase.md)\<`TFeatures`, `TData`, `TValue`, `TCellComponents`, `THeaderComponents`\> & `object` : [`AppColumnDefBase`](AppColumnDefBase.md)\<`TFeatures`, `TData`, `TValue`, `TCellComponents`, `THeaderComponents`\>
 
 #### Returns
 
@@ -114,7 +114,7 @@ The cell, header, and footer contexts include pre-bound components.
 
 ##### column
 
-`AppDisplayColumnDef`\<`TFeatures`, `TData`, `TCellComponents`, `THeaderComponents`\>
+[`AppDisplayColumnDef`](AppDisplayColumnDef.md)\<`TFeatures`, `TData`, `TCellComponents`, `THeaderComponents`\>
 
 #### Returns
 
@@ -137,7 +137,7 @@ The cell, header, and footer contexts include pre-bound components.
 
 ##### column
 
-`AppGroupColumnDef`\<`TFeatures`, `TData`, `TCellComponents`, `THeaderComponents`\>
+[`AppGroupColumnDef`](AppGroupColumnDef.md)\<`TFeatures`, `TData`, `TCellComponents`, `THeaderComponents`\>
 
 #### Returns
 

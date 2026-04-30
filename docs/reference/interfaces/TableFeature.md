@@ -11,7 +11,7 @@ Defined in: [types/TableFeatures.ts:116](https://github.com/TanStack/table/blob/
 
 ### TConstructors
 
-`TConstructors` *extends* `FeatureConstructors`
+`TConstructors` *extends* [`FeatureConstructors`](FeatureConstructors.md)
 
 ## Properties
 

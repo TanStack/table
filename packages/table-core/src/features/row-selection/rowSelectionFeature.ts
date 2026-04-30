@@ -37,7 +37,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_RowSelection,
 // } from './rowSelectionFeature.types'
 
-interface RowSelectionFeatureConstructors<
+export interface RowSelectionFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

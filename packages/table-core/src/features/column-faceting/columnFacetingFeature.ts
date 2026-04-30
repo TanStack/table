@@ -20,7 +20,7 @@ import type { Column_Internal } from '../../types/Column'
 //   CreateRowModel_Faceted,
 // } from './columnFacetingFeature.types'
 
-interface ColumnFacetingFeatureConstructors<
+export interface ColumnFacetingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

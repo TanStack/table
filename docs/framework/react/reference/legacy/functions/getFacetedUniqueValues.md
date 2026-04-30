@@ -19,7 +19,7 @@ Defined in: [useLegacyTable.ts:137](https://github.com/TanStack/table/blob/main/
 
 ## Returns
 
-`FacetedUniqueValuesFactory`\<`TData`\>
+[`FacetedUniqueValuesFactory`](../type-aliases/FacetedUniqueValuesFactory.md)\<`TData`\>
 
 ## Deprecated
 

@@ -21,7 +21,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_ColumnResizing,
 // } from './columnResizingFeature.types'
 
-interface ColumnResizingFeatureConstructors<
+export interface ColumnResizingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

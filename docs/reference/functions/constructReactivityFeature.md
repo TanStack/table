@@ -35,4 +35,4 @@ Defined in: [features/table-reactivity/tableReactivityFeature.ts:10](https://git
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`TableReactivityFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`TableReactivityFeatureConstructors`](../interfaces/TableReactivityFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

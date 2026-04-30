@@ -29,7 +29,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_ColumnFiltering,
 // } from './columnFilteringFeature.types'
 
-interface ColumnFilteringFeatureConstructors<
+export interface ColumnFilteringFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

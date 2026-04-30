@@ -23,4 +23,4 @@ Defined in: [features/row-sorting/rowSortingFeature.ts:50](https://github.com/Ta
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`RowSortingFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`RowSortingFeatureConstructors`](../interfaces/RowSortingFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

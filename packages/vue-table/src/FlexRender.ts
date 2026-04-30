@@ -82,10 +82,24 @@ export const FlexRender = defineComponent({
     return () => {
       // New shorthand pattern: extract render and props from cell/header/footer
       if (props.cell) {
-        return flexRender(
-          props.cell.column.columnDef.cell,
-          props.cell.getContext(),
-        )
+        const cell = props.cell
+        const def = cell.column.columnDef
+        // When the column-grouping feature is registered, a cell can be in
+        // one of three special modes that should not render `columnDef.cell`
+        // directly:
+        //   - aggregated: render `columnDef.aggregatedCell` (falling back to
+        //     `columnDef.cell` if the column did not define one)
+        //   - placeholder: a duplicate value within a group — render nothing
+        //   - grouped: fall through to `columnDef.cell`; consumers that want
+        //     a custom group header typically branch on `cell.getIsGrouped()`
+        //     themselves first
+        if (cell.getIsAggregated?.()) {
+          return flexRender(def.aggregatedCell ?? def.cell, cell.getContext())
+        }
+        if (cell.getIsPlaceholder?.()) {
+          return null
+        }
+        return flexRender(def.cell, cell.getContext())
       }
 
       if (props.header) {

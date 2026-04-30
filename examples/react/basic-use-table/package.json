@@ -10,7 +10,7 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@tanstack/react-table": "^9.0.0-alpha.37",
+    "@tanstack/react-table": "^9.0.0-alpha.40",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },

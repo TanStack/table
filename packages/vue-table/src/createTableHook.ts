@@ -29,7 +29,7 @@ import type {
   TableState,
 } from '@tanstack/table-core'
 
-type ComponentType<T extends Record<string, any>> = Component<T>
+export type ComponentType<T extends Record<string, any>> = Component<T>
 
 export type AppCellContext<
   TFeatures extends TableFeatures,
@@ -58,11 +58,11 @@ export type AppHeaderContext<
   table: Table<TFeatures, TData>
 }
 
-type AppColumnDefTemplate<TProps extends object> =
+export type AppColumnDefTemplate<TProps extends object> =
   | string
   | ((props: TProps) => any)
 
-type AppColumnDefBase<
+export type AppColumnDefBase<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData,
@@ -83,7 +83,7 @@ type AppColumnDefBase<
   >
 }
 
-type AppDisplayColumnDef<
+export type AppDisplayColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TCellComponents extends Record<string, ComponentType<any>>,
@@ -103,7 +103,7 @@ type AppDisplayColumnDef<
   >
 }
 
-type AppGroupColumnDef<
+export type AppGroupColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TCellComponents extends Record<string, ComponentType<any>>,

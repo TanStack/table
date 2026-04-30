@@ -20,7 +20,11 @@ title: index
 ## Type Aliases
 
 - [AppCellContext](type-aliases/AppCellContext.md)
+- [AppColumnDefBase](type-aliases/AppColumnDefBase.md)
+- [AppColumnDefTemplate](type-aliases/AppColumnDefTemplate.md)
 - [AppColumnHelper](type-aliases/AppColumnHelper.md)
+- [AppDisplayColumnDef](type-aliases/AppDisplayColumnDef.md)
+- [AppGroupColumnDef](type-aliases/AppGroupColumnDef.md)
 - [AppHeaderContext](type-aliases/AppHeaderContext.md)
 - [AppReactTable](type-aliases/AppReactTable.md)
 - [CreateTableHookOptions](type-aliases/CreateTableHookOptions.md)

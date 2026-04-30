@@ -23,4 +23,4 @@ Defined in: [core/cells/coreCellsFeature.ts:19](https://github.com/TanStack/tabl
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`CoreCellsFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`CoreCellsFeatureConstructors`](../interfaces/CoreCellsFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

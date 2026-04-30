@@ -159,14 +159,14 @@ export function getCoreRowModel<
 /**
  * Row model factory function type from v8 API
  */
-type RowModelFactory<TData extends RowData> = (
+export type RowModelFactory<TData extends RowData> = (
   table: Table<StockFeatures, TData>,
 ) => () => RowModel<StockFeatures, TData>
 
 /**
  * Faceted row model factory function type from v8 API
  */
-type FacetedRowModelFactory<TData extends RowData> = (
+export type FacetedRowModelFactory<TData extends RowData> = (
   table: Table<StockFeatures, TData>,
   columnId: string,
 ) => () => RowModel<StockFeatures, TData>
@@ -174,7 +174,7 @@ type FacetedRowModelFactory<TData extends RowData> = (
 /**
  * Faceted min/max values factory function type from v8 API
  */
-type FacetedMinMaxValuesFactory<TData extends RowData> = (
+export type FacetedMinMaxValuesFactory<TData extends RowData> = (
   table: Table<StockFeatures, TData>,
   columnId: string,
 ) => () => undefined | [number, number]
@@ -182,7 +182,7 @@ type FacetedMinMaxValuesFactory<TData extends RowData> = (
 /**
  * Faceted unique values factory function type from v8 API
  */
-type FacetedUniqueValuesFactory<TData extends RowData> = (
+export type FacetedUniqueValuesFactory<TData extends RowData> = (
   table: Table<StockFeatures, TData>,
   columnId: string,
 ) => () => Map<any, number>

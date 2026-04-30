@@ -19,15 +19,15 @@ Defined in: [helpers/createTableHook.ts:352](https://github.com/TanStack/table/b
 
 ### TTableComponents
 
-`TTableComponents` *extends* `Record`\<`string`, `RenderableComponent`\>
+`TTableComponents` *extends* `Record`\<`string`, [`RenderableComponent`](../type-aliases/RenderableComponent.md)\>
 
 ### TCellComponents
 
-`TCellComponents` *extends* `Record`\<`string`, `RenderableComponent`\>
+`TCellComponents` *extends* `Record`\<`string`, [`RenderableComponent`](../type-aliases/RenderableComponent.md)\>
 
 ### THeaderComponents
 
-`THeaderComponents` *extends* `Record`\<`string`, `RenderableComponent`\>
+`THeaderComponents` *extends* `Record`\<`string`, [`RenderableComponent`](../type-aliases/RenderableComponent.md)\>
 
 ## Parameters
 

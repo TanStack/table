@@ -23,4 +23,4 @@ Defined in: [features/row-expanding/rowExpandingFeature.ts:46](https://github.co
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`RowExpandingFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`RowExpandingFeatureConstructors`](../interfaces/RowExpandingFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

@@ -379,7 +379,7 @@ export function assignPrototypeAPIs<
         if (!this[memoKey]) {
           const self = this
           this[memoKey] = tableMemo({
-            memoDeps: () => memoDeps(self),
+            memoDeps: (depArgs) => memoDeps(self, depArgs),
             fn: (...deps) => fn(self, ...deps),
             fnName,
             objectId: self.id,

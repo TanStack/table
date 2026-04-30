@@ -20,7 +20,7 @@ import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type { Header_Header, Table_Headers } from './coreHeadersFeature.types'
 
-interface CoreHeadersFeatureConstructors<
+export interface CoreHeadersFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

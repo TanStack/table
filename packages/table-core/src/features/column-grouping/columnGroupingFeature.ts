@@ -35,7 +35,7 @@ import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 //   Table_ColumnGrouping,
 // } from './columnGroupingFeature.types'
 
-interface ColumnGroupingFeatureConstructors<
+export interface ColumnGroupingFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

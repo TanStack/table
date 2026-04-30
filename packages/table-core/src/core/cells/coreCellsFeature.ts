@@ -8,7 +8,7 @@ import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 // import type { Cell_Cell, TableOptions_Cell } from './coreCellsFeature.types'
 
-interface CoreCellsFeatureConstructors<
+export interface CoreCellsFeatureConstructors<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {

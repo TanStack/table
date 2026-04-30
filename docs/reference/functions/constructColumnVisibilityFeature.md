@@ -23,4 +23,4 @@ Defined in: [features/column-visibility/columnVisibilityFeature.ts:51](https://g
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`ColumnVisibilityFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`ColumnVisibilityFeatureConstructors`](../interfaces/ColumnVisibilityFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

@@ -11,6 +11,9 @@ title: legacy
 
 ## Type Aliases
 
+- [FacetedMinMaxValuesFactory](type-aliases/FacetedMinMaxValuesFactory.md)
+- [FacetedRowModelFactory](type-aliases/FacetedRowModelFactory.md)
+- [FacetedUniqueValuesFactory](type-aliases/FacetedUniqueValuesFactory.md)
 - [~~LegacyCell~~](type-aliases/LegacyCell.md)
 - [~~LegacyColumn~~](type-aliases/LegacyColumn.md)
 - [~~LegacyColumnDef~~](type-aliases/LegacyColumnDef.md)
@@ -20,6 +23,7 @@ title: legacy
 - [~~LegacyRow~~](type-aliases/LegacyRow.md)
 - [~~LegacyTable~~](type-aliases/LegacyTable.md)
 - [~~LegacyTableOptions~~](type-aliases/LegacyTableOptions.md)
+- [RowModelFactory](type-aliases/RowModelFactory.md)
 
 ## Functions
 

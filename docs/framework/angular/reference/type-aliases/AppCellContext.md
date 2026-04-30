@@ -30,7 +30,7 @@ The `cell` property includes the registered cellComponents.
 
 ### TCellComponents
 
-`TCellComponents` *extends* `Record`\<`string`, `RenderableComponent`\>
+`TCellComponents` *extends* `Record`\<`string`, [`RenderableComponent`](RenderableComponent.md)\>
 
 ## Properties
 

@@ -8,18 +8,58 @@ import {
   filterFn_lessThan,
   filterFn_lessThanOrEqualTo,
 } from '@tanstack/react-table'
+import { rankItem } from '@tanstack/match-sorter-utils'
 import type {
   ExtendedColumnFilter,
   FilterOperator,
   JoinOperator,
   TableFilterFeatures,
 } from '@/types'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type {
   FilterFn,
   Row,
   RowData,
   TableFeatures,
 } from '@tanstack/react-table'
+
+/**
+ * Fuzzy filter using @tanstack/match-sorter-utils. Used as the global filter
+ * (`globalFilterFn: 'fuzzy'`) in the kitchen-sink example so the toolbar
+ * search ranks rows by best match across all columns.
+ *
+ * Mirrors the canonical pattern from `examples/react/filters-fuzzy`. Written
+ * as a plain function (not a typed const) so it stays generic over TFeatures
+ * and TData and can be slotted into any `createFilteredRowModel({...})`
+ * registration without narrowing inference.
+ */
+export function fuzzyFilter<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  columnId: string,
+  value: string,
+  addMeta?: (meta: { itemRank: RankingInfo }) => void,
+): boolean {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
+
+  // Store the itemRank info so a fuzzy sort function (if any) could reuse it
+  addMeta?.({ itemRank })
+
+  // Return whether the item should be filtered in/out
+  return itemRank.passed
+}
+
+declare module '@tanstack/react-table' {
+  interface FilterFns {
+    fuzzy: FilterFn<TableFeatures, RowData>
+  }
+  interface FilterMeta {
+    itemRank?: RankingInfo
+  }
+}
 
 function isFalsy(val: unknown) {
   return (

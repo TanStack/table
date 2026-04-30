@@ -23,4 +23,4 @@ Defined in: [features/column-ordering/columnOrderingFeature.ts:34](https://githu
 
 ## Returns
 
-[`TableFeature`](../interfaces/TableFeature.md)\<`ColumnOrderingFeatureConstructors`\<`TFeatures`, `TData`\>\>
+[`TableFeature`](../interfaces/TableFeature.md)\<[`ColumnOrderingFeatureConstructors`](../interfaces/ColumnOrderingFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

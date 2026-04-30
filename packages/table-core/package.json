@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/table-core",
-  "version": "9.0.0-alpha.37",
+  "version": "9.0.0-alpha.39",
   "description": "Headless UI for building powerful tables & datagrids for TS/JS.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -62,7 +62,7 @@
     "test:eslint": "eslint ./src",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm test:lib --watch",
-    "test:types": "tsc",
+    "test:types": "tsc && tsc -p tests/tsconfig.declaration-emit.json",
     "test:build": "publint --strict",
     "build": "tsdown"
   },
