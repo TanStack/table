@@ -1,11 +1,14 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
 import { tanstackSignals } from '@tanstack/table-core/features/table-reactivity/tanstack-signals'
 import { shallow, useSelector } from '@tanstack/react-store'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
+import type { Atom, ReadonlyAtom } from '@tanstack/react-store'
+import type { FlexRenderProps } from './FlexRender'
+import type { SubscribePropsWithStore } from './Subscribe'
 import type {
   CellData,
   RowData,
@@ -14,10 +17,7 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { Atom, ReadonlyAtom } from '@tanstack/react-store'
 import type { FunctionComponent, ReactNode } from 'react'
-import type { FlexRenderProps } from './FlexRender'
-import type { SubscribePropsWithStore } from './Subscribe'
 
 export type ReactTable<
   TFeatures extends TableFeatures,
@@ -139,22 +139,26 @@ export function useTable<
     return tableInstance
   })
 
-  // sync table options on every render
-  table.setOptions((prev) => ({
-    ...prev,
-    ...tableOptions,
-  }))
+  useEffect(() => {
+    table.setOptions((prev) => ({
+      ...prev,
+      ...tableOptions,
+    }))
+  }, [table, tableOptions])
 
   const state = useSelector(table.store, selector, { compare: shallow })
+  const options = useSelector(table.optionsStore, (options) => options, {
+    compare: shallow,
+  })
 
   // we know this is not the most efficient way to return the table,
   // but it is required for the react compiler to work
   return useMemo(
     () => ({
       ...table,
-      options: tableOptions,
+      options,
       state,
     }),
-    [table, tableOptions, state],
+    [table, options, state],
   ) as ReactTable<TFeatures, TData, TSelected>
 }
