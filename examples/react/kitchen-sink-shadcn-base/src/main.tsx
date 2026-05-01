@@ -128,6 +128,7 @@ const _features = tableFeatures({
  */
 function getCommonPinningStyles(
   column: Column<typeof _features, Person>,
+  isSelected = false,
 ): React.CSSProperties {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
@@ -144,7 +145,11 @@ function getCommonPinningStyles(
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
     right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
     position: isPinned ? 'sticky' : 'relative',
-    background: isPinned ? 'var(--background)' : undefined,
+    background: isSelected
+      ? 'var(--muted)'
+      : isPinned
+        ? 'var(--background)'
+        : undefined,
     zIndex: isPinned ? 1 : 0,
   }
 }
@@ -551,7 +556,11 @@ function App() {
             <TableBody>
               {table.getRowModel().rows.map((row) => {
                 return (
-                  <TableRow key={row.id}>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() ? 'selected' : undefined}
+                    aria-selected={row.getIsSelected()}
+                  >
                     {row.getVisibleCells().map((cell) => {
                       return (
                         <TableCell
@@ -561,7 +570,10 @@ function App() {
                           }
                           style={{
                             width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-                            ...getCommonPinningStyles(cell.column),
+                            ...getCommonPinningStyles(
+                              cell.column,
+                              row.getIsSelected(),
+                            ),
                           }}
                         >
                           {cell.getIsGrouped() ? (
