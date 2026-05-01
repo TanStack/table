@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/table-devtools",
-  "version": "9.0.0-alpha.39",
+  "version": "9.0.0-alpha.41",
   "description": "Devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
