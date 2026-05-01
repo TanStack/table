@@ -16,69 +16,60 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
-import CheckIcon from '@mui/icons-material/Check'
-import CodeIcon from '@mui/icons-material/Code'
-import CreditCardIcon from '@mui/icons-material/CreditCard'
-import DarkModeIcon from '@mui/icons-material/DarkMode'
-import DeleteIcon from '@mui/icons-material/Delete'
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
-import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import FilterListIcon from '@mui/icons-material/FilterList'
-import GroupIcon from '@mui/icons-material/Group'
-import LightModeIcon from '@mui/icons-material/LightMode'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import PushPinIcon from '@mui/icons-material/PushPin'
-import SearchIcon from '@mui/icons-material/Search'
-import SettingsIcon from '@mui/icons-material/Settings'
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import SortIcon from '@mui/icons-material/Sort'
-import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt'
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import {
-  Autocomplete,
+  ActionIcon,
+  Badge,
   Box,
   Button,
   Checkbox,
-  Chip,
   Container,
-  CssBaseline,
-  Divider,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  LinearProgress,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
+  Group,
+  Pagination as MantinePagination,
+  MantineProvider,
+  Table as MantineTable,
   Menu,
-  MenuItem,
-  Table as MuiTable,
+  MultiSelect,
   Paper,
   Popover,
+  Progress,
   Select,
   Stack,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel,
-  TextField,
-  ThemeProvider,
-  Toolbar,
+  Text,
+  TextInput,
   Tooltip,
-  Typography,
-  createTheme,
-  useMediaQuery,
-} from '@mui/material'
+  UnstyledButton,
+  useComputedColorScheme,
+  useMantineColorScheme,
+} from '@mantine/core'
+import '@mantine/core/styles.css'
+import {
+  IconArrowDown,
+  IconArrowUp,
+  IconArrowsSort,
+  IconBriefcase,
+  IconBuildingStore,
+  IconCategory,
+  IconCheck,
+  IconChevronDown,
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+  IconCode,
+  IconCreditCard,
+  IconDeviceDesktop,
+  IconDotsVertical,
+  IconEyeOff,
+  IconFilter,
+  IconGripVertical,
+  IconMoon,
+  IconPinned,
+  IconSearch,
+  IconSettings,
+  IconSun,
+  IconTrash,
+  IconUsersGroup,
+} from '@tabler/icons-react'
 import {
   aggregationFns,
   columnFacetingFeature,
@@ -185,14 +176,11 @@ function SortableFrame({
       ref={setNodeRef}
       {...attributes}
       {...listeners}
-      sx={{
+      style={{
         opacity: isDragging ? 0.6 : 1,
         transform: CSS.Transform.toString(transform),
         transition,
         cursor: 'grab',
-        '&:active': {
-          cursor: 'grabbing',
-        },
       }}
     >
       {children}
@@ -245,17 +233,23 @@ function getCommonPinningStyles(
 
   return {
     boxShadow: isLastLeftPinnedColumn
-      ? '-4px 0 4px -4px rgba(0, 0, 0, 0.3) inset'
+      ? '-4px 0 4px -4px var(--mantine-color-default-border) inset'
       : isFirstRightPinnedColumn
-        ? '4px 0 4px -4px rgba(0, 0, 0, 0.3) inset'
+        ? '4px 0 4px -4px var(--mantine-color-default-border) inset'
         : undefined,
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
     right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
     position: isPinned ? 'sticky' : 'relative',
+    borderRight: isLastLeftPinnedColumn
+      ? '1px solid var(--mantine-color-default-border)'
+      : undefined,
+    borderLeft: isFirstRightPinnedColumn
+      ? '1px solid var(--mantine-color-default-border)'
+      : undefined,
     background: isSelected
-      ? 'rgba(var(--mui-palette-primary-mainChannel) / var(--mui-palette-action-selectedOpacity))'
+      ? 'var(--mantine-color-blue-light)'
       : isPinned
-        ? 'var(--mui-palette-background-paper)'
+        ? 'var(--mantine-color-body)'
         : undefined,
     zIndex: isPinned ? 2 : 0,
   }
@@ -263,37 +257,36 @@ function getCommonPinningStyles(
 
 function DepartmentIcon({ department }: { department: Person['department'] }) {
   const icons: Record<Person['department'], React.ReactElement> = {
-    engineering: <CodeIcon fontSize="inherit" />,
-    marketing: <SystemUpdateAltIcon fontSize="inherit" />,
-    sales: <ShoppingCartIcon fontSize="inherit" />,
-    hr: <GroupIcon fontSize="inherit" />,
-    finance: <CreditCardIcon fontSize="inherit" />,
+    engineering: <IconCode size={16} />,
+    marketing: <IconBriefcase size={16} />,
+    sales: <IconBuildingStore size={16} />,
+    hr: <IconUsersGroup size={16} />,
+    finance: <IconCreditCard size={16} />,
   }
 
   return icons[department]
 }
 
-function DepartmentChip({ department }: { department: Person['department'] }) {
+function DepartmentPill({ department }: { department: Person['department'] }) {
   return (
     <Box
       component="span"
-      sx={{
+      style={{
         display: 'inline-flex',
         maxWidth: '100%',
         height: 24,
         minWidth: 0,
         alignItems: 'center',
-        gap: 0.75,
-        px: 1,
-        borderRadius: 13,
-        border: 1,
-        borderColor: 'divider',
-        fontSize: '0.8125rem',
+        gap: 6,
+        paddingInline: 10,
+        borderRadius: 999,
+        border: '1px solid var(--mantine-color-default-border)',
+        fontSize: 'var(--mantine-font-size-sm)',
       }}
     >
       <Box
         component="span"
-        sx={{
+        style={{
           display: 'inline-flex',
           width: 16,
           height: 16,
@@ -301,15 +294,13 @@ function DepartmentChip({ department }: { department: Person['department'] }) {
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          fontSize: 16,
-          lineHeight: 1,
         }}
       >
         <DepartmentIcon department={department} />
       </Box>
       <Box
         component="span"
-        sx={{
+        style={{
           minWidth: 0,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
@@ -326,7 +317,7 @@ function EllipsisText({ children }: { children: React.ReactNode }) {
   return (
     <Box
       component="span"
-      sx={{
+      style={{
         display: 'block',
         minWidth: 0,
         overflow: 'hidden',
@@ -339,59 +330,52 @@ function EllipsisText({ children }: { children: React.ReactNode }) {
   )
 }
 
-function StatusChip({ status }: { status: Person['status'] }) {
-  const color: Record<Person['status'], 'success' | 'error' | 'warning'> = {
-    active: 'success',
-    inactive: 'error',
-    pending: 'warning',
+function StatusBadge({ status }: { status: Person['status'] }) {
+  const color: Record<Person['status'], string> = {
+    active: 'green',
+    inactive: 'red',
+    pending: 'yellow',
   }
 
   return (
-    <Chip
-      icon={<CheckIcon fontSize="small" />}
-      label={toSentenceCase(status)}
+    <Badge
       color={color[status]}
-      variant="outlined"
-      size="small"
-    />
+      variant="light"
+      leftSection={<IconCheck size={14} />}
+    >
+      {toSentenceCase(status)}
+    </Badge>
   )
 }
 
 function RowActions({ person }: { person: Person }) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
-  const open = Boolean(anchorEl)
-
   return (
-    <>
-      <IconButton
-        size="small"
-        aria-label="Open row actions"
-        aria-controls={open ? `row-actions-${person.id}` : undefined}
-        aria-haspopup="menu"
-        onClick={(event) => setAnchorEl(event.currentTarget)}
-      >
-        <MoreVertIcon fontSize="small" />
-      </IconButton>
-      <Menu
-        id={`row-actions-${person.id}`}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={() => setAnchorEl(null)}
-      >
-        <MenuItem
+    <Menu shadow="md" width={180}>
+      <Menu.Target>
+        <ActionIcon variant="subtle" aria-label="Open row actions">
+          <IconDotsVertical size={18} />
+        </ActionIcon>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Item
           onClick={() => {
             void navigator.clipboard.writeText(person.id)
-            setAnchorEl(null)
           }}
         >
-          <ListItemText>Copy ID</ListItemText>
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={() => setAnchorEl(null)}>View details</MenuItem>
-        <MenuItem onClick={() => setAnchorEl(null)}>View profile</MenuItem>
-      </Menu>
-    </>
+          Copy ID
+        </Menu.Item>
+        <Menu.Divider />
+        <Menu.Item>View details</Menu.Item>
+        <Menu.Item>View profile</Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
   )
+}
+
+function SortIcon({ direction }: { direction: 'asc' | 'desc' | undefined }) {
+  if (direction === 'asc') return <IconArrowUp size={16} />
+  if (direction === 'desc') return <IconArrowDown size={16} />
+  return <IconArrowsSort size={16} opacity={0.45} />
 }
 
 function ColumnHeaderMenu({
@@ -401,115 +385,112 @@ function ColumnHeaderMenu({
   column: AppColumn
   title: string
 }) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
   const canSort = column.getCanSort()
   const canHide = column.getCanHide()
   const canPin = column.getCanPin()
   const canGroup = column.getCanGroup()
   const sorting = React.useContext(SortingContext)
   const direction = canSort ? getSortDirection(sorting, column.id) : undefined
-  const isSorted = !!direction
   const pinned = canPin ? column.getIsPinned() : false
   const grouped = canGroup ? column.getIsGrouped() : false
 
   if (!canSort && !canHide && !canPin && !canGroup) {
-    return <Typography variant="subtitle2">{title}</Typography>
+    return <Text fw={600}>{title}</Text>
   }
 
   return (
-    <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
+    <Group gap={4} wrap="nowrap">
       {canSort ? (
-        <TableSortLabel
-          active={isSorted}
-          direction={direction}
-          IconComponent={ArrowDownwardIcon}
+        <UnstyledButton
           onClick={column.getToggleSortingHandler()}
+          style={{ minWidth: 0 }}
         >
-          {title}
-        </TableSortLabel>
+          <Group gap={4} wrap="nowrap">
+            <Text fw={600} truncate>
+              {title}
+            </Text>
+            <SortIcon direction={direction} />
+          </Group>
+        </UnstyledButton>
       ) : (
-        <Typography variant="subtitle2">{title}</Typography>
+        <Text fw={600}>{title}</Text>
       )}
-      <IconButton
-        size="small"
-        aria-label={`Open ${title} column menu`}
-        onClick={(event) => setAnchorEl(event.currentTarget)}
-      >
-        <ArrowDropDownIcon fontSize="small" />
-      </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-      >
-        {canSort && (
-          <Box>
-            <MenuItem onClick={() => column.toggleSorting(false)}>
-              <ListItemIcon>
-                <ArrowUpwardIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Asc</ListItemText>
-            </MenuItem>
-            <MenuItem onClick={() => column.toggleSorting(true)}>
-              <ListItemIcon>
-                <ArrowDownwardIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Desc</ListItemText>
-            </MenuItem>
-          </Box>
-        )}
-        {canGroup && (
-          <MenuItem onClick={column.getToggleGroupingHandler()}>
-            <ListItemIcon>
-              <GroupIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>{grouped ? 'Ungroup' : 'Group by'}</ListItemText>
-          </MenuItem>
-        )}
-        {canPin && (
-          <Box>
-            <Divider />
-            <MenuItem
-              disabled={pinned === 'left'}
-              onClick={() => column.pin('left')}
+      <Menu shadow="md" width={180}>
+        <Menu.Target>
+          <ActionIcon
+            variant="subtle"
+            size="sm"
+            aria-label={`Open ${title} column menu`}
+          >
+            <IconChevronDown size={16} />
+          </ActionIcon>
+        </Menu.Target>
+        <Menu.Dropdown>
+          {canSort ? (
+            <>
+              <Menu.Item
+                leftSection={<IconArrowUp size={16} />}
+                onClick={() => column.toggleSorting(false)}
+              >
+                Asc
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconArrowDown size={16} />}
+                onClick={() => column.toggleSorting(true)}
+              >
+                Desc
+              </Menu.Item>
+            </>
+          ) : null}
+          {canGroup ? (
+            <Menu.Item
+              leftSection={<IconCategory size={16} />}
+              onClick={column.getToggleGroupingHandler()}
             >
-              <ListItemIcon>
-                <PushPinIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Pin left</ListItemText>
-            </MenuItem>
-            <MenuItem
-              disabled={pinned === 'right'}
-              onClick={() => column.pin('right')}
-            >
-              <ListItemIcon>
-                <PushPinIcon fontSize="small" sx={{ rotate: '180deg' }} />
-              </ListItemIcon>
-              <ListItemText>Pin right</ListItemText>
-            </MenuItem>
-            {pinned ? (
-              <MenuItem onClick={() => column.pin(false)}>
-                <ListItemIcon>
-                  <PushPinIcon fontSize="small" color="disabled" />
-                </ListItemIcon>
-                <ListItemText>Unpin</ListItemText>
-              </MenuItem>
-            ) : null}
-          </Box>
-        )}
-        {canHide && (
-          <Box>
-            <Divider />
-            <MenuItem onClick={() => column.toggleVisibility(false)}>
-              <ListItemIcon>
-                <VisibilityOffIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Hide</ListItemText>
-            </MenuItem>
-          </Box>
-        )}
+              {grouped ? 'Ungroup' : 'Group by'}
+            </Menu.Item>
+          ) : null}
+          {canPin ? (
+            <>
+              <Menu.Divider />
+              <Menu.Item
+                disabled={pinned === 'left'}
+                leftSection={<IconPinned size={16} />}
+                onClick={() => column.pin('left')}
+              >
+                Pin left
+              </Menu.Item>
+              <Menu.Item
+                disabled={pinned === 'right'}
+                leftSection={<IconPinned size={16} />}
+                onClick={() => column.pin('right')}
+              >
+                Pin right
+              </Menu.Item>
+              {pinned ? (
+                <Menu.Item
+                  leftSection={<IconPinned size={16} opacity={0.45} />}
+                  onClick={() => column.pin(false)}
+                >
+                  Unpin
+                </Menu.Item>
+              ) : null}
+            </>
+          ) : null}
+          {canHide ? (
+            <>
+              <Menu.Divider />
+              <Menu.Item
+                leftSection={<IconEyeOff size={16} />}
+                onClick={() => column.toggleVisibility(false)}
+              >
+                Hide
+              </Menu.Item>
+            </>
+          ) : null}
+        </Menu.Dropdown>
       </Menu>
-    </Stack>
+    </Group>
   )
 }
 
@@ -522,7 +503,7 @@ function ViewOptionsPopover({
   columnOrder: Array<string>
   onColumnOrderChange: React.Dispatch<React.SetStateAction<Array<string>>>
 }) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  const [opened, setOpened] = React.useState(false)
   const [query, setQuery] = React.useState('')
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -551,28 +532,28 @@ function ViewOptionsPopover({
   }
 
   return (
-    <>
-      <Button
-        variant="outlined"
-        size="small"
-        startIcon={<SettingsIcon />}
-        onClick={(event) => setAnchorEl(event.currentTarget)}
-      >
-        View
-      </Button>
-      <Popover
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      >
-        <Stack spacing={1.5} sx={{ width: 300, p: 2 }}>
-          <TextField
-            size="small"
+    <Popover
+      opened={opened}
+      onChange={setOpened}
+      position="bottom-end"
+      shadow="md"
+    >
+      <Popover.Target>
+        <Button
+          variant="outline"
+          size="sm"
+          leftSection={<IconSettings size={16} />}
+          onClick={() => setOpened((value) => !value)}
+        >
+          View
+        </Button>
+      </Popover.Target>
+      <Popover.Dropdown w={320}>
+        <Stack gap="sm">
+          <TextInput
             label="Search columns"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => setQuery(event.currentTarget.value)}
           />
           <DndContext
             sensors={sensors}
@@ -583,42 +564,27 @@ function ViewOptionsPopover({
               items={columns.map((column) => column.id)}
               strategy={verticalListSortingStrategy}
             >
-              <List dense disablePadding>
+              <Stack gap={4}>
                 {columns.map((column) => (
                   <SortableFrame key={column.id} id={column.id}>
-                    <ListItem
-                      disablePadding
-                      secondaryAction={
-                        <DragIndicatorIcon color="disabled" fontSize="small" />
-                      }
-                    >
-                      <ListItemButton
-                        dense
-                        onClick={() =>
+                    <Group justify="space-between" wrap="nowrap">
+                      <Checkbox
+                        checked={column.getIsVisible()}
+                        label={column.columnDef.meta?.label ?? column.id}
+                        onChange={() =>
                           column.toggleVisibility(!column.getIsVisible())
                         }
-                      >
-                        <ListItemIcon>
-                          <Checkbox
-                            edge="start"
-                            size="small"
-                            checked={column.getIsVisible()}
-                            tabIndex={-1}
-                          />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={column.columnDef.meta?.label ?? column.id}
-                        />
-                      </ListItemButton>
-                    </ListItem>
+                      />
+                      <IconGripVertical size={16} opacity={0.45} />
+                    </Group>
                   </SortableFrame>
                 ))}
-              </List>
+              </Stack>
             </SortableContext>
           </DndContext>
         </Stack>
-      </Popover>
-    </>
+      </Popover.Dropdown>
+    </Popover>
   )
 }
 
@@ -631,13 +597,17 @@ function SortListPopover({
   sorting: SortingState
   onSortingChange: React.Dispatch<React.SetStateAction<SortingState>>
 }) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  const [opened, setOpened] = React.useState(false)
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   )
   const sortableColumns = table
     .getAllColumns()
     .filter((column) => column.getCanSort())
+  const columnOptions = sortableColumns.map((column) => ({
+    value: column.id,
+    label: column.columnDef.meta?.label ?? column.id,
+  }))
 
   const updateSort = (index: number, patch: Partial<SortingState[number]>) => {
     onSortingChange((current) =>
@@ -672,28 +642,25 @@ function SortListPopover({
   }
 
   return (
-    <>
-      <Button
-        variant="outlined"
-        size="small"
-        startIcon={<SortIcon />}
-        endIcon={
-          sorting.length ? <Chip size="small" label={sorting.length} /> : null
-        }
-        onClick={(event) => setAnchorEl(event.currentTarget)}
-      >
-        Sort
-      </Button>
-      <Popover
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-      >
-        <Stack spacing={2} sx={{ width: 480, p: 2 }}>
-          <Typography variant="subtitle1">
+    <Popover opened={opened} onChange={setOpened} width={520} shadow="md">
+      <Popover.Target>
+        <Button
+          variant="outline"
+          size="sm"
+          leftSection={<IconArrowsSort size={16} />}
+          rightSection={
+            sorting.length ? <Badge size="sm">{sorting.length}</Badge> : null
+          }
+          onClick={() => setOpened((value) => !value)}
+        >
+          Sort
+        </Button>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <Stack gap="md">
+          <Text fw={600}>
             {sorting.length ? 'Sort by' : 'No sorting applied'}
-          </Typography>
+          </Text>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -703,51 +670,36 @@ function SortListPopover({
               items={sorting.map((sort) => sort.id)}
               strategy={verticalListSortingStrategy}
             >
-              <Stack spacing={1}>
+              <Stack gap="xs">
                 {sorting.map((sort, index) => (
                   <SortableFrame key={sort.id} id={sort.id}>
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      sx={{ alignItems: 'center' }}
-                    >
-                      <DragIndicatorIcon color="disabled" />
-                      <Autocomplete
-                        size="small"
-                        fullWidth
-                        options={sortableColumns}
-                        value={
-                          sortableColumns.find(
-                            (column) => column.id === sort.id,
-                          ) ?? null
-                        }
-                        getOptionLabel={(column) =>
-                          column.columnDef.meta?.label ?? column.id
-                        }
-                        onChange={(_, column) => {
-                          if (column) updateSort(index, { id: column.id })
+                    <Group wrap="nowrap" align="flex-end">
+                      <IconGripVertical size={18} opacity={0.45} />
+                      <Select
+                        label="Column"
+                        searchable
+                        data={columnOptions}
+                        value={sort.id}
+                        onChange={(value) => {
+                          if (value) updateSort(index, { id: value })
                         }}
-                        renderInput={(params) => (
-                          <TextField {...params} label="Column" />
-                        )}
+                        style={{ flex: 1 }}
                       />
-                      <FormControl size="small" sx={{ minWidth: 110 }}>
-                        <InputLabel>Direction</InputLabel>
-                        <Select
-                          label="Direction"
-                          value={sort.desc ? 'desc' : 'asc'}
-                          onChange={(event) =>
-                            updateSort(index, {
-                              desc: event.target.value === 'desc',
-                            })
-                          }
-                        >
-                          <MenuItem value="asc">Asc</MenuItem>
-                          <MenuItem value="desc">Desc</MenuItem>
-                        </Select>
-                      </FormControl>
-                      <IconButton
-                        size="small"
+                      <Select
+                        label="Direction"
+                        data={[
+                          { value: 'asc', label: 'Asc' },
+                          { value: 'desc', label: 'Desc' },
+                        ]}
+                        value={sort.desc ? 'desc' : 'asc'}
+                        onChange={(value) =>
+                          updateSort(index, { desc: value === 'desc' })
+                        }
+                        w={110}
+                      />
+                      <ActionIcon
+                        variant="subtle"
+                        color="red"
                         aria-label="Remove sort"
                         onClick={() =>
                           onSortingChange((current) =>
@@ -757,30 +709,33 @@ function SortListPopover({
                           )
                         }
                       >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    </Stack>
+                        <IconTrash size={16} />
+                      </ActionIcon>
+                    </Group>
                   </SortableFrame>
                 ))}
               </Stack>
             </SortableContext>
           </DndContext>
-          <Stack direction="row" spacing={1}>
+          <Group>
             <Button
-              variant="contained"
-              size="small"
+              size="sm"
               onClick={addSort}
               disabled={sorting.length >= sortableColumns.length}
             >
               Add sort
             </Button>
-            <Button size="small" onClick={() => table.resetSorting()}>
+            <Button
+              size="sm"
+              variant="subtle"
+              onClick={() => table.resetSorting()}
+            >
               Reset
             </Button>
-          </Stack>
+          </Group>
         </Stack>
-      </Popover>
-    </>
+      </Popover.Dropdown>
+    </Popover>
   )
 }
 
@@ -802,34 +757,29 @@ function FilterValueInput({
   const disabled = operator === 'isEmpty' || operator === 'isNotEmpty'
 
   if (disabled) {
-    return <Typography color="text.secondary">No value required</Typography>
+    return <Text c="dimmed">No value required</Text>
   }
 
-  if (variant === 'select' || variant === 'multi-select') {
+  if (variant === 'select') {
     const options = column.columnDef.meta?.options ?? []
-    const multiple = variant === 'multi-select'
-    const value = multiple
-      ? options.filter(
-          (option) =>
-            Array.isArray(filter.value) && filter.value.includes(option.value),
-        )
-      : (options.find((option) => option.value === filter.value) ?? null)
-
     return (
-      <Autocomplete
-        size="small"
-        multiple={multiple}
-        options={options}
-        value={value}
-        getOptionLabel={(option) => option.label}
-        onChange={(_, nextValue) => {
-          onFilterUpdate(filter.filterId!, {
-            value: Array.isArray(nextValue)
-              ? nextValue.map((option) => option.value)
-              : nextValue?.value,
-          })
-        }}
-        renderInput={(params) => <TextField {...params} label="Value" />}
+      <Select
+        label="Value"
+        data={options}
+        value={typeof filter.value === 'string' ? filter.value : null}
+        onChange={(value) => onFilterUpdate(filter.filterId!, { value })}
+      />
+    )
+  }
+
+  if (variant === 'multi-select') {
+    const options = column.columnDef.meta?.options ?? []
+    return (
+      <MultiSelect
+        label="Value"
+        data={options}
+        value={Array.isArray(filter.value) ? filter.value : []}
+        onChange={(value) => onFilterUpdate(filter.filterId!, { value })}
       />
     )
   }
@@ -838,26 +788,23 @@ function FilterValueInput({
     if (operator === 'inRange') {
       const value = Array.isArray(filter.value) ? filter.value : []
       return (
-        <Stack direction="row" spacing={1}>
-          <TextField
-            size="small"
+        <Group grow>
+          <TextInput
             label="From"
             type="date"
             value={toDateInputValue(value[0])}
             onChange={(event) =>
               onFilterUpdate(filter.filterId!, {
                 value: [
-                  event.target.value
-                    ? new Date(event.target.value).toISOString()
+                  event.currentTarget.value
+                    ? new Date(event.currentTarget.value).toISOString()
                     : undefined,
                   value[1],
                 ],
               })
             }
-            slotProps={{ inputLabel: { shrink: true } }}
           />
-          <TextField
-            size="small"
+          <TextInput
             label="To"
             type="date"
             value={toDateInputValue(value[1])}
@@ -865,46 +812,49 @@ function FilterValueInput({
               onFilterUpdate(filter.filterId!, {
                 value: [
                   value[0],
-                  event.target.value
-                    ? new Date(event.target.value).toISOString()
+                  event.currentTarget.value
+                    ? new Date(event.currentTarget.value).toISOString()
                     : undefined,
                 ],
               })
             }
-            slotProps={{ inputLabel: { shrink: true } }}
           />
-        </Stack>
+        </Group>
       )
     }
 
     return (
-      <TextField
-        size="small"
+      <TextInput
         label="Value"
         type="date"
         value={toDateInputValue(filter.value)}
         onChange={(event) =>
           onFilterUpdate(filter.filterId!, {
-            value: event.target.value
-              ? new Date(event.target.value).toISOString()
+            value: event.currentTarget.value
+              ? new Date(event.currentTarget.value).toISOString()
               : undefined,
           })
         }
-        slotProps={{ inputLabel: { shrink: true } }}
       />
     )
   }
 
   if (variant === 'number') {
     return (
-      <TextField
-        size="small"
+      <TextInput
         label="Value"
         type="number"
-        value={filter.value ?? ''}
+        value={
+          typeof filter.value === 'number' || typeof filter.value === 'string'
+            ? filter.value
+            : ''
+        }
         onChange={(event) =>
           onFilterUpdate(filter.filterId!, {
-            value: event.target.value === '' ? '' : Number(event.target.value),
+            value:
+              event.currentTarget.value === ''
+                ? ''
+                : Number(event.currentTarget.value),
           })
         }
       />
@@ -912,12 +862,11 @@ function FilterValueInput({
   }
 
   return (
-    <TextField
-      size="small"
+    <TextInput
       label="Value"
-      value={filter.value ?? ''}
+      value={typeof filter.value === 'string' ? filter.value : ''}
       onChange={(event) =>
-        onFilterUpdate(filter.filterId!, { value: event.target.value })
+        onFilterUpdate(filter.filterId!, { value: event.currentTarget.value })
       }
     />
   )
@@ -934,10 +883,14 @@ function FilterListPopover({
     React.SetStateAction<Array<ExtendedColumnFilter>>
   >
 }) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+  const [opened, setOpened] = React.useState(false)
   const filterableColumns = table
     .getAllColumns()
     .filter((column) => column.getCanFilter())
+  const fieldOptions = filterableColumns.map((column) => ({
+    value: column.id,
+    label: column.columnDef.meta?.label ?? column.id,
+  }))
 
   const updateFilter = (
     filterId: string,
@@ -966,71 +919,65 @@ function FilterListPopover({
   }
 
   return (
-    <>
-      <Button
-        variant="outlined"
-        size="small"
-        startIcon={<FilterListIcon />}
-        endIcon={
-          columnFilters.length ? (
-            <Chip size="small" label={columnFilters.length} />
-          ) : null
-        }
-        onClick={(event) => setAnchorEl(event.currentTarget)}
-      >
-        Filter
-      </Button>
-      <Popover
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-      >
-        <Stack spacing={2} sx={{ width: 720, p: 2 }}>
-          <Typography variant="subtitle1">Filters</Typography>
+    <Popover opened={opened} onChange={setOpened} width={760} shadow="md">
+      <Popover.Target>
+        <Button
+          variant="outline"
+          size="sm"
+          leftSection={<IconFilter size={16} />}
+          rightSection={
+            columnFilters.length ? (
+              <Badge size="sm">{columnFilters.length}</Badge>
+            ) : null
+          }
+          onClick={() => setOpened((value) => !value)}
+        >
+          Filter
+        </Button>
+      </Popover.Target>
+      <Popover.Dropdown>
+        <Stack gap="md">
+          <Text fw={600}>Filters</Text>
           {columnFilters.map((filter, index) => {
             const column = table.getColumn(filter.id)
             if (!column || !filter.filterId) return null
             const variant = column.columnDef.meta?.variant ?? 'text'
             const operators = getFilterOperators(variant)
             return (
-              <Stack
-                key={filter.filterId}
-                direction="row"
-                spacing={1}
-                sx={{ alignItems: 'center' }}
-              >
+              <Group key={filter.filterId} align="flex-end" wrap="nowrap">
                 {index === 0 ? (
-                  <Typography sx={{ width: 70 }}>Where</Typography>
+                  <Text w={70} pb={8}>
+                    Where
+                  </Text>
                 ) : index === 1 ? (
-                  <FormControl size="small" sx={{ width: 90 }}>
-                    <Select
-                      value={filter.joinOperator ?? 'and'}
-                      onChange={(event) => {
-                        const joinOperator = event.target.value
-                        onColumnFiltersChange((current) =>
-                          current.map((item) => ({ ...item, joinOperator })),
-                        )
-                      }}
-                    >
-                      <MenuItem value="and">and</MenuItem>
-                      <MenuItem value="or">or</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <Select
+                    data={[
+                      { value: 'and', label: 'and' },
+                      { value: 'or', label: 'or' },
+                    ]}
+                    value={filter.joinOperator ?? 'and'}
+                    onChange={(joinOperator) => {
+                      if (!joinOperator) return
+                      onColumnFiltersChange((current) =>
+                        current.map((item) => ({ ...item, joinOperator })),
+                      )
+                    }}
+                    w={90}
+                  />
                 ) : (
-                  <Typography sx={{ width: 70 }}>
+                  <Text w={70} pb={8}>
                     {filter.joinOperator ?? 'and'}
-                  </Typography>
+                  </Text>
                 )}
-                <Autocomplete
-                  size="small"
-                  sx={{ width: 190 }}
-                  options={filterableColumns}
-                  value={column}
-                  getOptionLabel={(option) =>
-                    option.columnDef.meta?.label ?? option.id
-                  }
-                  onChange={(_, nextColumn) => {
+                <Select
+                  label="Field"
+                  searchable
+                  data={fieldOptions}
+                  value={column.id}
+                  onChange={(nextColumnId) => {
+                    const nextColumn = nextColumnId
+                      ? table.getColumn(nextColumnId)
+                      : undefined
                     if (nextColumn) {
                       updateFilter(filter.filterId!, {
                         id: nextColumn.id,
@@ -1041,37 +988,34 @@ function FilterListPopover({
                       })
                     }
                   }}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Field" />
-                  )}
+                  w={190}
                 />
-                <FormControl size="small" sx={{ width: 180 }}>
-                  <InputLabel>Operator</InputLabel>
-                  <Select
-                    label="Operator"
-                    value={filter.operator ?? operators[0].value}
-                    onChange={(event) =>
-                      updateFilter(filter.filterId!, {
-                        operator: event.target.value,
-                        value: '',
-                      })
-                    }
-                  >
-                    {operators.map((operator) => (
-                      <MenuItem key={operator.value} value={operator.value}>
-                        {operator.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-                <Box sx={{ flex: 1 }}>
+                <Select
+                  label="Operator"
+                  data={operators.map((operator) => ({
+                    value: operator.value,
+                    label: operator.label,
+                  }))}
+                  value={filter.operator ?? operators[0].value}
+                  onChange={(operator) => {
+                    if (!operator) return
+                    updateFilter(filter.filterId!, {
+                      operator,
+                      value: '',
+                    })
+                  }}
+                  w={180}
+                />
+                <Box style={{ flex: 1 }}>
                   <FilterValueInput
                     column={column}
                     filter={filter}
                     onFilterUpdate={updateFilter}
                   />
                 </Box>
-                <IconButton
+                <ActionIcon
+                  variant="subtle"
+                  color="red"
                   aria-label="Remove filter"
                   onClick={() =>
                     onColumnFiltersChange((current) =>
@@ -1081,96 +1025,147 @@ function FilterListPopover({
                     )
                   }
                 >
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              </Stack>
+                  <IconTrash size={16} />
+                </ActionIcon>
+              </Group>
             )
           })}
-          <Stack direction="row" spacing={1}>
-            <Button variant="contained" size="small" onClick={addFilter}>
+          <Group>
+            <Button size="sm" onClick={addFilter}>
               Add filter
             </Button>
-            <Button size="small" onClick={() => onColumnFiltersChange([])}>
+            <Button
+              size="sm"
+              variant="subtle"
+              onClick={() => onColumnFiltersChange([])}
+            >
               Reset
             </Button>
-          </Stack>
+          </Group>
         </Stack>
-      </Popover>
-    </>
+      </Popover.Dropdown>
+    </Popover>
   )
 }
 
 function Pagination({ table }: { table: AppTable }) {
+  const pageIndex = table.store.state.pagination.pageIndex
+  const pageSize = table.store.state.pagination.pageSize
+
   return (
-    <Stack
-      direction={{ xs: 'column', sm: 'row' }}
-      spacing={2}
-      sx={{ p: 1, alignItems: 'center', justifyContent: 'space-between' }}
-    >
-      <Typography variant="body2" color="text.secondary">
+    <Group justify="space-between" p="sm">
+      <Text size="sm" c="dimmed">
         {table.getFilteredSelectedRowModel().rows.length.toLocaleString()} of{' '}
         {table.getFilteredRowModel().rows.length.toLocaleString()} row(s)
         selected.
-      </Typography>
-      <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center' }}>
-        <TablePagination
-          component="div"
-          count={table.getFilteredRowModel().rows.length}
-          page={table.store.state.pagination.pageIndex}
-          rowsPerPage={table.store.state.pagination.pageSize}
-          rowsPerPageOptions={[10, 20, 30, 40, 50]}
-          showFirstButton
-          showLastButton
-          onPageChange={(_, page) => table.setPageIndex(page)}
-          onRowsPerPageChange={(event) => {
-            table.setPageSize(Number(event.target.value))
+      </Text>
+      <Group gap="xs">
+        <Text size="sm">Rows per page:</Text>
+        <Select
+          aria-label="Rows per page"
+          data={['10', '20', '30', '40', '50']}
+          value={String(pageSize)}
+          onChange={(value) => {
+            table.setPageSize(Number(value))
             table.setPageIndex(0)
           }}
+          w={90}
         />
-      </Stack>
-    </Stack>
+        <ActionIcon
+          variant="subtle"
+          aria-label="First page"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          <IconChevronsLeft size={18} />
+        </ActionIcon>
+        <ActionIcon
+          variant="subtle"
+          aria-label="Previous page"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          <IconChevronLeft size={18} />
+        </ActionIcon>
+        <MantinePagination
+          value={pageIndex + 1}
+          total={table.getPageCount()}
+          onChange={(page) => table.setPageIndex(page - 1)}
+          withEdges={false}
+          siblings={1}
+          boundaries={1}
+        />
+        <ActionIcon
+          variant="subtle"
+          aria-label="Next page"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          <IconChevronRight size={18} />
+        </ActionIcon>
+        <ActionIcon
+          variant="subtle"
+          aria-label="Last page"
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
+        >
+          <IconChevronsRight size={18} />
+        </ActionIcon>
+      </Group>
+    </Group>
   )
 }
 
-function ModeMenu({
-  mode,
-  setMode,
-}: {
-  mode: 'light' | 'dark' | 'system'
-  setMode: React.Dispatch<React.SetStateAction<'light' | 'dark' | 'system'>>
-}) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+function ModeMenu() {
+  const { colorScheme, setColorScheme } = useMantineColorScheme()
+  const computedColorScheme = useComputedColorScheme('light')
+  const icon =
+    computedColorScheme === 'dark' ? (
+      <IconMoon size={18} />
+    ) : (
+      <IconSun size={18} />
+    )
 
   return (
-    <>
-      <Tooltip title="Theme">
-        <IconButton onClick={(event) => setAnchorEl(event.currentTarget)}>
-          {mode === 'dark' ? <DarkModeIcon /> : <LightModeIcon />}
-        </IconButton>
-      </Tooltip>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-      >
-        {(['light', 'dark', 'system'] as const).map((themeMode) => (
-          <MenuItem
-            key={themeMode}
-            selected={themeMode === mode}
-            onClick={() => {
-              setMode(themeMode)
-              setAnchorEl(null)
-            }}
+    <Menu shadow="md" width={150}>
+      <Menu.Target>
+        <Tooltip label="Theme">
+          <ActionIcon variant="subtle" aria-label="Theme">
+            {icon}
+          </ActionIcon>
+        </Tooltip>
+      </Menu.Target>
+      <Menu.Dropdown>
+        {(
+          [
+            { value: 'light', label: 'Light', icon: <IconSun size={16} /> },
+            { value: 'dark', label: 'Dark', icon: <IconMoon size={16} /> },
+            {
+              value: 'auto',
+              label: 'Auto',
+              icon: <IconDeviceDesktop size={16} />,
+            },
+          ] satisfies Array<{
+            value: 'light' | 'dark' | 'auto'
+            label: string
+            icon: React.ReactNode
+          }>
+        ).map((item) => (
+          <Menu.Item
+            key={item.value}
+            leftSection={item.icon}
+            color={colorScheme === item.value ? 'blue' : undefined}
+            onClick={() => setColorScheme(item.value)}
           >
-            {toSentenceCase(themeMode)}
-          </MenuItem>
+            {item.label}
+          </Menu.Item>
         ))}
-      </Menu>
-    </>
+      </Menu.Dropdown>
+    </Menu>
   )
 }
 
-function DebouncedTextField({
+function DebouncedTextInput({
   value: initialValue,
   onChange,
   debounce = 300,
@@ -1179,7 +1174,7 @@ function DebouncedTextField({
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
-} & Omit<React.ComponentProps<typeof TextField>, 'onChange'>) {
+} & Omit<React.ComponentProps<typeof TextInput>, 'onChange'>) {
   const [value, setValue] = React.useState(initialValue)
 
   React.useEffect(() => {
@@ -1195,21 +1190,15 @@ function DebouncedTextField({
   }, [value, debounce, onChange])
 
   return (
-    <TextField
+    <TextInput
       {...props}
       value={value}
-      onChange={(event) => setValue(event.target.value)}
+      onChange={(event) => setValue(event.currentTarget.value)}
     />
   )
 }
 
-function App({
-  mode,
-  setMode,
-}: {
-  mode: 'light' | 'dark' | 'system'
-  setMode: React.Dispatch<React.SetStateAction<'light' | 'dark' | 'system'>>
-}) {
+function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
   const [rowSelection, setRowSelection] = React.useState({})
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -1238,17 +1227,19 @@ function App({
               !table.getIsAllPageRowsSelected() &&
               table.getIsSomePageRowsSelected()
             }
-            onChange={(_, checked) => table.toggleAllPageRowsSelected(checked)}
-            slotProps={{ input: { 'aria-label': 'Select all' } }}
-            size="small"
+            onChange={(event) =>
+              table.toggleAllPageRowsSelected(event.currentTarget.checked)
+            }
+            aria-label="Select all"
           />
         ),
         cell: ({ row }) => (
           <Checkbox
             checked={row.getIsSelected()}
-            onChange={(_, checked) => row.toggleSelected(checked)}
-            slotProps={{ input: { 'aria-label': 'Select row' } }}
-            size="small"
+            onChange={(event) =>
+              row.toggleSelected(event.currentTarget.checked)
+            }
+            aria-label="Select row"
           />
         ),
         maxSize: 48,
@@ -1280,14 +1271,12 @@ function App({
         header: ({ column }) => (
           <ColumnHeaderMenu column={column} title="Age" />
         ),
-        cell: (info) => (
-          <Typography variant="body2">{String(info.getValue())}</Typography>
-        ),
+        cell: (info) => <Text size="sm">{String(info.getValue())}</Text>,
         aggregationFn: 'mean',
         aggregatedCell: ({ getValue }) => (
-          <Typography variant="body2" color="text.secondary">
+          <Text size="sm" c="dimmed">
             Avg: {Math.round(Number(getValue()) * 10) / 10}
-          </Typography>
+          </Text>
         ),
         meta: { label: 'Age', variant: 'number' },
       },
@@ -1310,7 +1299,7 @@ function App({
         ),
         cell: (info) => {
           const status = info.getValue<Person['status'] | undefined>()
-          return status ? <StatusChip status={status} /> : null
+          return status ? <StatusBadge status={status} /> : null
         },
         aggregatedCell: () => null,
         meta: {
@@ -1330,7 +1319,7 @@ function App({
         ),
         cell: (info) => {
           const department = info.getValue<Person['department'] | undefined>()
-          return department ? <DepartmentChip department={department} /> : null
+          return department ? <DepartmentPill department={department} /> : null
         },
         aggregatedCell: () => null,
         meta: {
@@ -1353,9 +1342,9 @@ function App({
         aggregatedCell: ({ getValue }) => {
           const earliest = getValue<string>()
           return (
-            <Typography variant="body2" color="text.secondary">
-              Earliest: {earliest ? formatDate(earliest) : '—'}
-            </Typography>
+            <Text size="sm" c="dimmed">
+              Earliest: {earliest ? formatDate(earliest) : '-'}
+            </Text>
           )
         },
         meta: { label: 'Join Date', variant: 'date' },
@@ -1444,29 +1433,23 @@ function App({
 
   return (
     <SortingContext.Provider value={sorting}>
-      <Container maxWidth={false} sx={{ py: 3 }}>
-        <Stack spacing={2}>
-          <Paper variant="outlined">
-            <Toolbar
-              sx={{ gap: 1, justifyContent: 'flex-end', flexWrap: 'wrap' }}
-            >
-              <ModeMenu mode={mode} setMode={setMode} />
-              <Button variant="outlined" size="small" onClick={refreshData}>
+      <Container fluid py="md">
+        <Stack gap="md">
+          <Paper withBorder p="sm">
+            <Group justify="flex-end" gap="xs">
+              <ModeMenu />
+              <Button variant="outline" size="sm" onClick={refreshData}>
                 Regenerate Data
               </Button>
-              <Button variant="outlined" size="small" onClick={stressTest}>
+              <Button variant="outline" size="sm" onClick={stressTest}>
                 Stress Test (100k rows)
               </Button>
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => rerender()}
-              >
+              <Button variant="outline" size="sm" onClick={() => rerender()}>
                 Force Rerender
               </Button>
               <Button
-                variant="outlined"
-                size="small"
+                variant="outline"
+                size="sm"
                 onClick={() =>
                   console.info(
                     'table.getSelectedRowModel().flatRows',
@@ -1476,29 +1459,16 @@ function App({
               >
                 Log Selected Rows
               </Button>
-            </Toolbar>
+            </Group>
           </Paper>
 
-          <Stack
-            direction={{ xs: 'column', md: 'row' }}
-            spacing={1}
-            sx={{ alignItems: { md: 'center' } }}
-          >
-            <DebouncedTextField
+          <Group align="center" gap="xs">
+            <DebouncedTextInput
               value={globalFilter}
               onChange={(value) => setGlobalFilter(String(value))}
               placeholder="Search all columns..."
-              size="small"
-              sx={{ width: { xs: '100%', md: 360 } }}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon fontSize="small" />
-                    </InputAdornment>
-                  ),
-                },
-              }}
+              leftSection={<IconSearch size={16} />}
+              w={{ base: '100%', md: 360 }}
             />
             <FilterListPopover
               table={table}
@@ -1515,22 +1485,35 @@ function App({
               columnOrder={columnOrder}
               onColumnOrderChange={setColumnOrder}
             />
-          </Stack>
+          </Group>
 
-          <Paper variant="outlined">
-            <TableContainer sx={{ maxHeight: 680 }}>
-              <MuiTable
+          <Paper withBorder>
+            <MantineTable.ScrollContainer minWidth={1200} maxHeight={680}>
+              <MantineTable
                 stickyHeader
-                size="small"
-                sx={{
-                  width: '100%',
+                highlightOnHover
+                withColumnBorders
+                withRowBorders
+                withTableBorder
+                style={{
+                  width: `max(100%, ${table.getTotalSize()}px)`,
                   tableLayout: 'fixed',
                   ...columnSizeVars,
                 }}
               >
-                <TableHead>
+                <colgroup>
+                  {table.getVisibleLeafColumns().map((column) => (
+                    <col
+                      key={column.id}
+                      style={{
+                        width: `calc(var(--col-${column.id}-size) * 1px)`,
+                      }}
+                    />
+                  ))}
+                </colgroup>
+                <MantineTable.Thead>
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
+                    <MantineTable.Tr key={headerGroup.id}>
                       {headerGroup.headers
                         .filter((header) => header.column.getIsVisible())
                         .map((header) => (
@@ -1540,79 +1523,75 @@ function App({
                             table={table}
                           />
                         ))}
-                    </TableRow>
+                    </MantineTable.Tr>
                   ))}
-                </TableHead>
-                <TableBody>
-                  {table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      hover
-                      selected={row.getIsSelected()}
-                      aria-selected={row.getIsSelected()}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          align={
-                            cell.column.id === 'select' ? 'center' : 'left'
-                          }
-                          sx={{
-                            width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-                            overflow: 'hidden',
-                            borderRight:
-                              cell.column.id === 'actions' ? undefined : 1,
-                            borderColor: 'divider',
-                            ...getCommonPinningStyles(
-                              cell.column,
-                              row.getIsSelected(),
-                            ),
-                          }}
-                        >
-                          {cell.getIsGrouped() ? (
-                            <Button
-                              size="small"
-                              variant="text"
-                              startIcon={
-                                row.getIsExpanded() ? (
-                                  <ExpandLessIcon />
-                                ) : (
-                                  <ExpandMoreIcon />
-                                )
-                              }
-                              onClick={row.getToggleExpandedHandler()}
-                              disabled={!row.getCanExpand()}
-                              sx={{ pl: row.depth * 2 + 1 }}
-                            >
-                              <table.FlexRender cell={cell} />
-                              <Typography
-                                component="span"
-                                color="text.secondary"
-                                sx={{ ml: 1 }}
+                </MantineTable.Thead>
+                <MantineTable.Tbody>
+                  {table.getRowModel().rows.map((row) => {
+                    const selected = row.getIsSelected()
+                    return (
+                      <MantineTable.Tr
+                        key={row.id}
+                        aria-selected={selected}
+                        data-selected={selected || undefined}
+                        bg={
+                          selected
+                            ? 'var(--mantine-color-blue-light)'
+                            : undefined
+                        }
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <MantineTable.Td
+                            key={cell.id}
+                            align={
+                              cell.column.id === 'select' ? 'center' : undefined
+                            }
+                            style={{
+                              width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
+                              overflow: 'hidden',
+                              ...getCommonPinningStyles(cell.column, selected),
+                            }}
+                          >
+                            {cell.getIsGrouped() ? (
+                              <Button
+                                size="xs"
+                                variant="subtle"
+                                leftSection={
+                                  row.getIsExpanded() ? (
+                                    <IconChevronDown size={16} />
+                                  ) : (
+                                    <IconChevronRight size={16} />
+                                  )
+                                }
+                                onClick={row.getToggleExpandedHandler()}
+                                disabled={!row.getCanExpand()}
+                                style={{
+                                  paddingLeft: `calc(${row.depth} * 1.5rem + 0.5rem)`,
+                                }}
                               >
-                                ({row.subRows.length})
-                              </Typography>
-                            </Button>
-                          ) : cell.column.id === 'progress' ? (
-                            <Stack spacing={0.5}>
-                              <Typography variant="body2">
-                                {String(cell.getValue())}%
-                              </Typography>
-                              <LinearProgress
-                                variant="determinate"
-                                value={Number(cell.getValue())}
-                              />
-                            </Stack>
-                          ) : (
-                            <table.FlexRender cell={cell} />
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </MuiTable>
-            </TableContainer>
+                                <table.FlexRender cell={cell} />
+                                <Text span c="dimmed" ml={4}>
+                                  ({row.subRows.length})
+                                </Text>
+                              </Button>
+                            ) : cell.column.id === 'progress' ? (
+                              <Stack gap={4}>
+                                <Text size="sm">
+                                  {String(cell.getValue())}%
+                                </Text>
+                                <Progress value={Number(cell.getValue())} />
+                              </Stack>
+                            ) : (
+                              <table.FlexRender cell={cell} />
+                            )}
+                          </MantineTable.Td>
+                        ))}
+                      </MantineTable.Tr>
+                    )
+                  })}
+                </MantineTable.Tbody>
+              </MantineTable>
+            </MantineTable.ScrollContainer>
             <Pagination table={table} />
           </Paper>
         </Stack>
@@ -1636,22 +1615,22 @@ function ResizableHeaderCell({
   const sortDirection = getSortDirection(sorting, header.column.id)
 
   return (
-    <TableCell
+    <MantineTable.Th
       colSpan={header.colSpan}
-      align={header.column.id === 'select' ? 'center' : 'left'}
-      sortDirection={sortDirection || false}
+      align={header.column.id === 'select' ? 'center' : undefined}
       aria-sort={getAriaSort(sortDirection || false)}
       data-sort={sortDirection}
-      sx={{
+      style={{
         width: `calc(var(--header-${header.id}-size) * 1px)`,
-        borderRight: header.id === 'actions' ? undefined : 1,
-        borderColor: 'divider',
-        p: 1,
+        padding: 8,
         ...getCommonPinningStyles(header.column),
       }}
     >
       <Box
-        sx={{ position: 'relative', pr: header.column.getCanResize() ? 1 : 0 }}
+        style={{
+          position: 'relative',
+          paddingRight: header.column.getCanResize() ? 8 : 0,
+        }}
       >
         {header.isPlaceholder ? null : <table.FlexRender header={header} />}
         {header.column.getCanResize() ? (
@@ -1659,7 +1638,7 @@ function ResizableHeaderCell({
             onDoubleClick={() => header.column.resetSize()}
             onMouseDown={header.getResizeHandler()}
             onTouchStart={header.getResizeHandler()}
-            sx={{
+            style={{
               position: 'absolute',
               top: 0,
               right: -6,
@@ -1667,38 +1646,22 @@ function ResizableHeaderCell({
               height: '100%',
               cursor: 'col-resize',
               touchAction: 'none',
-              bgcolor: header.column.getIsResizing()
-                ? 'primary.main'
+              background: header.column.getIsResizing()
+                ? 'var(--mantine-primary-color-filled)'
                 : 'transparent',
-              '&:hover': { bgcolor: 'primary.main' },
             }}
           />
         ) : null}
       </Box>
-    </TableCell>
+    </MantineTable.Th>
   )
 }
 
 function Root() {
-  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')
-  const [mode, setMode] = React.useState<'light' | 'dark' | 'system'>('system')
-  const resolvedMode =
-    mode === 'system' ? (prefersDark ? 'dark' : 'light') : mode
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: resolvedMode,
-        },
-      }),
-    [resolvedMode],
-  )
-
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App mode={mode} setMode={setMode} />
-    </ThemeProvider>
+    <MantineProvider defaultColorScheme="auto">
+      <App />
+    </MantineProvider>
   )
 }
 
