@@ -32,7 +32,7 @@ export function constructTable<
   const signals = tableOptions.reactivity
 
   const table = {
-    _reactivity: signals,
+    reactivity: signals,
     _features: { ...coreFeatures, ...tableOptions._features },
     _rowModels: {},
     _rowModelFns: {},

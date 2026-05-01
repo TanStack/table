@@ -2,6 +2,7 @@ import { constructTable } from '@tanstack/table-core'
 import { createComputed, getOwner, mergeProps, untrack } from 'solid-js'
 import { shallow, useSelector } from '@tanstack/solid-store'
 import { FlexRender } from './FlexRender'
+import { solidReactivity } from './signals'
 import type { Atom, ReadonlyAtom } from '@tanstack/solid-store'
 import type { Accessor, JSX } from 'solid-js'
 import type {

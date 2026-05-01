@@ -122,7 +122,7 @@ export interface Table_CoreProperties<
   /**
    * Table custom reactivity bindings.
    */
-  _reactivity: TableReactivityBindings
+  reactivity: TableReactivityBindings
   /**
    * The features that are enabled for the table.
    */
