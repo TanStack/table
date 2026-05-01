@@ -62,7 +62,7 @@ function App() {
             )
           },
           cell: ({ row }) => (
-            <div className="px-1">
+            <div className="column-toggle-row">
               <IndeterminateCheckbox
                 checked={row.getIsSelected()}
                 disabled={!row.getCanSelect()}
@@ -142,7 +142,7 @@ function App() {
         })}
       >
         {(state) => (
-          <div className="p-2">
+          <div className="demo-root">
             <div>
               <button onClick={() => refreshData()}>Regenerate Data</button>
               <button onClick={() => stressTest()}>
@@ -155,11 +155,11 @@ function App() {
                 onChange={(e) =>
                   table.setGlobalFilter((e.target as HTMLInputElement).value)
                 }
-                className="p-2 font-lg shadow border border-block"
+                className="summary-panel"
                 placeholder="Search all columns..."
               />
             </div>
-            <div className="h-2" />
+            <div className="spacer-sm" />
             <table>
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -211,7 +211,7 @@ function App() {
               </tbody>
               <tfoot>
                 <tr>
-                  <td className="p-1">
+                  <td className="cell-padding">
                     <table.Subscribe source={table.atoms.rowSelection}>
                       {(_rowSelection) => (
                         <IndeterminateCheckbox
@@ -229,37 +229,37 @@ function App() {
                 </tr>
               </tfoot>
             </table>
-            <div className="h-2" />
-            <div className="flex items-center gap-2">
+            <div className="spacer-sm" />
+            <div className="controls">
               <button
-                className="border rounded p-1"
+                className="demo-button demo-button-sm"
                 onClick={() => table.setPageIndex(0)}
                 disabled={!table.getCanPreviousPage()}
               >
                 {'<<'}
               </button>
               <button
-                className="border rounded p-1"
+                className="demo-button demo-button-sm"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
                 {'<'}
               </button>
               <button
-                className="border rounded p-1"
+                className="demo-button demo-button-sm"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
                 {'>'}
               </button>
               <button
-                className="border rounded p-1"
+                className="demo-button demo-button-sm"
                 onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                 disabled={!table.getCanNextPage()}
               >
                 {'>>'}
               </button>
-              <span className="flex items-center gap-1">
+              <span className="inline-controls">
                 <div>Page</div>
                 <strong>
                   {(
@@ -268,7 +268,7 @@ function App() {
                   of {table.getPageCount().toLocaleString()}
                 </strong>
               </span>
-              <span className="flex items-center gap-1">
+              <span className="inline-controls">
                 | Go to page:
                 <input
                   type="number"
@@ -281,7 +281,7 @@ function App() {
                       : 0
                     table.setPageIndex(page)
                   }}
-                  className="border p-1 rounded w-16"
+                  className="page-size-input"
                 />
               </span>
               <select
@@ -315,7 +315,7 @@ function App() {
             <br />
             <div>
               <button
-                className="border rounded p-2 mb-2"
+                className="demo-button demo-button-spaced"
                 onClick={() => rerender(0)}
               >
                 Force Rerender
@@ -323,7 +323,7 @@ function App() {
             </div>
             <div>
               <button
-                className="border rounded p-2 mb-2"
+                className="demo-button demo-button-spaced"
                 onClick={() =>
                   console.info(
                     'table.getSelectedRowModel().flatRows',
@@ -359,7 +359,7 @@ function Filter({
     .flatRows[0]?.getValue(column.id)
 
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
+    <div className="filter-row">
       <input
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
@@ -370,7 +370,7 @@ function Filter({
           ])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
       <input
         type="number"
@@ -382,7 +382,7 @@ function Filter({
           ])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
     </div>
   ) : (
@@ -393,7 +393,7 @@ function Filter({
         column.setFilterValue((e.target as HTMLInputElement).value)
       }
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="filter-select"
     />
   )
 }
@@ -423,7 +423,7 @@ function IndeterminateCheckbox({
     <input
       type="checkbox"
       ref={ref}
-      className={className + ' cursor-pointer'}
+      className={className + ' sortable-header'}
       checked={checked}
       onChange={onChange}
       disabled={disabled}

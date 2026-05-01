@@ -27,14 +27,14 @@ function ColumnFilter(props: {
               500,
             )}
             placeholder={`Search...`}
-            class="w-36 border shadow rounded"
+            class="filter-select"
             list={`${props.column.id}list`}
           />
         </div>
       }
     >
       <div>
-        <div class="flex space-x-2">
+        <div class="filter-row">
           <input
             type="number"
             min={0}
@@ -53,7 +53,7 @@ function ColumnFilter(props: {
               500,
             )}
             placeholder={`Min`}
-            class="w-24 border shadow rounded"
+            class="filter-input"
           />
           <input
             type="number"
@@ -73,7 +73,7 @@ function ColumnFilter(props: {
               500,
             )}
             placeholder={`Max`}
-            class="w-24 border shadow rounded"
+            class="filter-input"
           />
         </div>
       </div>

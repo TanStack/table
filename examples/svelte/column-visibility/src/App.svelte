@@ -97,13 +97,13 @@
   })
 </script>
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
   </div>
-  <div class="inline-block border border-black shadow rounded">
-    <div class="px-1 border-b border-black">
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
       <label>
         <input
           checked={table.getIsAllColumnsVisible()}
@@ -116,7 +116,7 @@
       </label>
     </div>
     {#each table.getAllLeafColumns() as column}
-      <div class="px-1">
+      <div class="column-toggle-row">
         <label>
           <input
             checked={column.getIsVisible()}
@@ -128,10 +128,11 @@
       </div>
     {/each}
   </div>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
@@ -168,6 +169,7 @@
       {/each}
     </tfoot>
   </table>
-  <div class="h-4"></div>
-  <pre>{JSON.stringify(table.store.state.columnVisibility, null, 2)}</pre>
+  <div class="spacer-md"></div>
+  <pre>{JSON.stringify(table.store.state.columnVisibility, null, 2)
+  }</pre>
 </div>

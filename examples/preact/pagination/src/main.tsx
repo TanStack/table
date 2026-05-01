@@ -111,8 +111,8 @@ function MyTable({
       })}
     >
       {(state) => (
-        <div className="p-2">
-          <div className="h-2" />
+        <div className="demo-root">
+          <div className="spacer-sm" />
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -122,9 +122,7 @@ function MyTable({
                       <th key={header.id} colSpan={header.colSpan}>
                         <div
                           className={
-                            header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : ''
+                            header.column.getCanSort() ? 'sortable-header' : ''
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
@@ -161,44 +159,44 @@ function MyTable({
               })}
             </tbody>
           </table>
-          <div className="h-2" />
-          <div className="flex items-center gap-2">
+          <div className="spacer-sm" />
+          <div className="controls">
             <button
-              className="border rounded p-1"
+              className="demo-button demo-button-sm"
               onClick={() => table.firstPage()}
               disabled={!table.getCanPreviousPage()}
             >
               {'<<'}
             </button>
             <button
-              className="border rounded p-1"
+              className="demo-button demo-button-sm"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
               {'<'}
             </button>
             <button
-              className="border rounded p-1"
+              className="demo-button demo-button-sm"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
               {'>'}
             </button>
             <button
-              className="border rounded p-1"
+              className="demo-button demo-button-sm"
               onClick={() => table.lastPage()}
               disabled={!table.getCanNextPage()}
             >
               {'>>'}
             </button>
-            <span className="flex items-center gap-1">
+            <span className="inline-controls">
               <div>Page</div>
               <strong>
                 {(state.pagination.pageIndex + 1).toLocaleString()} of{' '}
                 {table.getPageCount().toLocaleString()}
               </strong>
             </span>
-            <span className="flex items-center gap-1">
+            <span className="inline-controls">
               | Go to page:
               <input
                 type="number"
@@ -211,7 +209,7 @@ function MyTable({
                     : 0
                   table.setPageIndex(page)
                 }}
-                className="border p-1 rounded w-16"
+                className="page-size-input"
               />
             </span>
             <select
@@ -254,7 +252,7 @@ function Filter({
   const columnFilterValue = column.getFilterValue()
 
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2" onClick={(e) => e.stopPropagation()}>
+    <div className="filter-row" onClick={(e) => e.stopPropagation()}>
       <input
         type="number"
         value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
@@ -265,7 +263,7 @@ function Filter({
           ])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
       <input
         type="number"
@@ -277,12 +275,12 @@ function Filter({
           ])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
     </div>
   ) : (
     <input
-      className="w-36 border shadow rounded"
+      className="filter-select"
       onChange={(e) =>
         column.setFilterValue((e.target as HTMLInputElement).value)
       }

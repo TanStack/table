@@ -78,19 +78,17 @@ function tableSelector(state: ReturnType<typeof table.store.get>) {
 <template>
   <component :is="table.AppTable" :selector="tableSelector" v-slot="{ state }">
     <section class="table-container">
-      <div class="flex flex-wrap gap-2" style="margin-bottom: 8px">
-        <button @click="refreshData" class="border p-2">Regenerate Data</button>
-        <button @click="stressTest" class="border p-2">
-          Stress Test (100k rows)
-        </button>
-      </div>
       <component
         :is="table.TableToolbar"
         title="Users Table"
         :onRefresh="refreshData"
       />
+      <div style="margin-bottom: 8px">
+        <button @click="refreshData">Regenerate Data</button>
+        <button @click="stressTest">Stress Test (100k rows)</button>
+      </div>
 
-      <table class="table-element">
+      <table>
         <thead>
           <tr
             v-for="headerGroup in table.getHeaderGroups()"

@@ -87,16 +87,16 @@ export default defineComponent({
     })
 
     return () => (
-      <div class="p-2">
-        <div class="flex flex-wrap gap-2">
-          <button class="border p-2" onClick={refreshData}>
+      <div class="demo-root">
+        <div class="button-row">
+          <button class="demo-button" onClick={refreshData}>
             Regenerate Data
           </button>
-          <button class="border p-2" onClick={stressTest}>
+          <button class="demo-button" onClick={stressTest}>
             Stress Test (1k rows)
           </button>
         </div>
-        <div class="h-4" />
+        <div class="spacer-md" />
         <table>
           <thead>
             {table

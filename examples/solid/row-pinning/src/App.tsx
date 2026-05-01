@@ -160,8 +160,8 @@ function App() {
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
       </div>
-      <div class="p-2 container">
-        <div class="h-2" />
+      <div class="demo-root container">
+        <div class="spacer-sm" />
         <table>
           <thead>
             <For each={table.getHeaderGroups()}>
@@ -217,44 +217,44 @@ function App() {
         </table>
       </div>
 
-      <div class="h-2" />
-      <div class="flex items-center gap-2">
+      <div class="spacer-sm" />
+      <div class="controls">
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           <div>Page</div>
           <strong>
             {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -267,7 +267,7 @@ function App() {
                 : 0
               table.setPageIndex(page)
             }}
-            class="border p-1 rounded w-16"
+            class="page-size-input"
           />
         </span>
         <select
@@ -279,17 +279,17 @@ function App() {
           </For>
         </select>
       </div>
-      <div class="h-2" />
+      <div class="spacer-sm" />
       <hr />
       <br />
-      <div class="flex flex-col gap-2 align-center vertical">
+      <div class="vertical-options">
         <div>
           <input
             type="checkbox"
             checked={keepPinnedRows()}
             onChange={() => setKeepPinnedRows(!keepPinnedRows())}
           />
-          <label class="ml-2">
+          <label class="label-offset">
             Keep/Persist Pinned Rows across Pagination and Filtering
           </label>
         </div>
@@ -299,7 +299,9 @@ function App() {
             checked={includeLeafRows()}
             onChange={() => setIncludeLeafRows(!includeLeafRows())}
           />
-          <label class="ml-2">Include Leaf Rows When Pinning Parent</label>
+          <label class="label-offset">
+            Include Leaf Rows When Pinning Parent
+          </label>
         </div>
         <div>
           <input
@@ -307,7 +309,9 @@ function App() {
             checked={includeParentRows()}
             onChange={() => setIncludeParentRows(!includeParentRows())}
           />
-          <label class="ml-2">Include Parent Rows When Pinning Child</label>
+          <label class="label-offset">
+            Include Parent Rows When Pinning Child
+          </label>
         </div>
         <div>
           <input
@@ -315,7 +319,9 @@ function App() {
             checked={copyPinnedRows()}
             onChange={() => setCopyPinnedRows(!copyPinnedRows())}
           />
-          <label class="ml-2">Duplicate/Keep Pinned Rows in main table</label>
+          <label class="label-offset">
+            Duplicate/Keep Pinned Rows in main table
+          </label>
         </div>
       </div>
       <div>{JSON.stringify(rowPinning(), null, 2)}</div>
@@ -365,7 +371,7 @@ function Filter({
     .flatRows[0]?.getValue(column.id)
 
   return typeof firstValue === 'number' ? (
-    <div class="flex space-x-2">
+    <div class="filter-row">
       <input
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
@@ -373,7 +379,7 @@ function Filter({
           column.setFilterValue((old: any) => [e.currentTarget.value, old?.[1]])
         }
         placeholder="Min"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
       <input
         type="number"
@@ -382,7 +388,7 @@ function Filter({
           column.setFilterValue((old: any) => [old?.[0], e.currentTarget.value])
         }
         placeholder="Max"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
     </div>
   ) : (
@@ -391,7 +397,7 @@ function Filter({
       value={(column.getFilterValue() ?? '') as string}
       onInput={(e) => column.setFilterValue(e.currentTarget.value)}
       placeholder="Search..."
-      class="w-36 border shadow rounded"
+      class="filter-select"
     />
   )
 }

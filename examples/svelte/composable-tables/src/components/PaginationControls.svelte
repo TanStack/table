@@ -3,14 +3,16 @@
   Uses useTableContext to access the table instance.
 -->
 <script lang="ts">
-  import { useTableContext } from '../hooks/table'
+  import { useTableContext
+  } from '../hooks/table'
 
   const table = useTableContext()
 </script>
 
 <div class="pagination">
   <button
-    onclick={() => table.firstPage()}
+    onclick={() => table.firstPage()
+    }
     disabled={!table.getCanPreviousPage()}
   >
     {'<<'}

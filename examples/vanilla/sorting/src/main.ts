@@ -92,7 +92,7 @@ const renderTable = () => {
   const theadElement = document.createElement('thead')
   const tbodyElement = document.createElement('tbody')
 
-  tableElement.classList.add('mb-2')
+  tableElement.classList.add('table-spacer')
 
   tableElement.appendChild(theadElement)
   tableElement.appendChild(tbodyElement)
@@ -107,7 +107,7 @@ const renderTable = () => {
       divElement.classList.add(
         'w-36',
         ...(header.column.getCanSort()
-          ? ['cursor-pointer', 'select-none']
+          ? ['sortable-header', 'sortable-header']
           : []),
       )
       ;((divElement.onclick = (e) =>

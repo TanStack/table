@@ -18,9 +18,10 @@
   const isNumber = $derived(typeof firstValue === 'number')
 </script>
 
-{#if isNumber}
+{#if isNumber
+}
   <div>
-    <div class="flex space-x-2">
+    <div class="filter-row">
       <DebouncedInput
         type="number"
         min={0}
@@ -34,7 +35,7 @@
         }
         debounce={500}
         placeholder="Min"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
       <DebouncedInput
         type="number"
@@ -49,7 +50,7 @@
         }
         debounce={500}
         placeholder="Max"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
     </div>
   </div>
@@ -61,7 +62,7 @@
       onchange={(value) => column.setFilterValue(value)}
       debounce={500}
       placeholder="Search..."
-      class="w-36 border shadow rounded"
+      class="filter-select"
       list="{column.id}list"
     />
   </div>

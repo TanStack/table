@@ -14,7 +14,8 @@
   import './index.css'
 
   // 1. New in V9! Tell the table which features and row models we want to use.
-  const { createAppTable, createAppColumnHelper } = createTableHook({
+  const { createAppTable, createAppColumnHelper
+  } = createTableHook({
     _features: { rowSortingFeature },
     _rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
@@ -74,21 +75,23 @@
 </script>
 
 <!-- 8. Render your table markup from the table instance APIs -->
-<div class="p-2">
+<div class="demo-root">
   <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => refreshData()
+    }>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (1k rows)</button>
   </div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th>
               {#if !header.isPlaceholder}
                 <div
                   class={header.column.getCanSort()
-                    ? 'cursor-pointer select-none'
+                    ? 'sortable-header'
                     : ''}
                   role="button"
                   tabindex="0"
@@ -137,6 +140,7 @@
       {/each}
     </tfoot>
   </table>
-  <div class="h-4"></div>
-  <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+  <div class="spacer-md"></div>
+  <pre>{JSON.stringify(table.store.state, null, 2)
+  }</pre>
 </div>

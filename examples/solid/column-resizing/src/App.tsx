@@ -105,7 +105,7 @@ function App() {
   }
 
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (100 rows)</button>
@@ -115,7 +115,7 @@ function App() {
         onChange={(e) =>
           setColumnResizeMode(e.currentTarget.value as ColumnResizeMode)
         }
-        class="border p-2 border-black rounded"
+        class="demo-button outlined-control"
       >
         <option value="onEnd">Resize: "onEnd"</option>
         <option value="onChange">Resize: "onChange"</option>
@@ -127,15 +127,15 @@ function App() {
             e.currentTarget.value as ColumnResizeDirection,
           )
         }
-        class="border p-2 border-black rounded"
+        class="demo-button outlined-control"
       >
         <option value="ltr">Resize Direction: "ltr"</option>
         <option value="rtl">Resize Direction: "rtl"</option>
       </select>
       <div style={{ direction: table.options.columnResizeDirection }}>
-        <div class="h-4" />
-        <div class="text-xl">{'<table/>'}</div>
-        <div class="overflow-x-auto">
+        <div class="spacer-md" />
+        <div class="section-title">{'<table/>'}</div>
+        <div class="scroll-container">
           <table style={{ width: `${table.getCenterTotalSize()}px` }}>
             <thead>
               <For each={table.getHeaderGroups()}>
@@ -181,9 +181,9 @@ function App() {
             </tbody>
           </table>
         </div>
-        <div class="h-4" />
-        <div class="text-xl">{'<div/> (relative)'}</div>
-        <div class="overflow-x-auto">
+        <div class="spacer-md" />
+        <div class="section-title">{'<div/> (relative)'}</div>
+        <div class="scroll-container">
           <div class="divTable" style={{ width: `${table.getTotalSize()}px` }}>
             <div class="thead">
               <For each={table.getHeaderGroups()}>
@@ -232,9 +232,9 @@ function App() {
             </div>
           </div>
         </div>
-        <div class="h-4" />
-        <div class="text-xl">{'<div/> (absolute positioning)'}</div>
-        <div class="overflow-x-auto">
+        <div class="spacer-md" />
+        <div class="section-title">{'<div/> (absolute positioning)'}</div>
+        <div class="scroll-container">
           <div class="divTable" style={{ width: `${table.getTotalSize()}px` }}>
             <div class="thead">
               <For each={table.getHeaderGroups()}>
@@ -292,7 +292,7 @@ function App() {
           </div>
         </div>
       </div>
-      <div class="h-4" />
+      <div class="spacer-md" />
       <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
     </div>
   )

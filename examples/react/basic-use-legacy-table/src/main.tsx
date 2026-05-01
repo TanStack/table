@@ -131,11 +131,11 @@ function App() {
   })
 
   return (
-    <div className="p-2">
-      <div className="mb-4 p-2 bg-yellow-100 border border-yellow-400 rounded">
+    <div className="demo-root">
+      <div className="warning-panel">
         <strong>Migration Example:</strong> This example uses the deprecated{' '}
         <code>useLegacyTable</code> hook with v8-style API. See the{' '}
-        <a href="../filters" className="text-blue-600 underline">
+        <a href="../filters" className="demo-link">
           filters example
         </a>{' '}
         for the recommended v9 approach.
@@ -152,9 +152,7 @@ function App() {
                       <>
                         <div
                           className={
-                            header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : ''
+                            header.column.getCanSort() ? 'sortable-header' : ''
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
@@ -200,44 +198,44 @@ function App() {
           })}
         </tbody>
       </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
+      <div className="spacer-sm" />
+      <div className="controls">
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           <div>Page</div>
           <strong>
             {(pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -248,7 +246,7 @@ function App() {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
-            className="border p-1 rounded w-16"
+            className="page-size-input"
           />
         </span>
         <select
@@ -273,9 +271,9 @@ function App() {
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
-      <div className="mt-4">
-        <h4 className="font-bold">Current State:</h4>
-        <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto">
+      <div className="state-section">
+        <h4 className="state-heading">Current State:</h4>
+        <pre className="code-block">
           {JSON.stringify(table.getState(), null, 2)}
         </pre>
       </div>
@@ -289,7 +287,7 @@ function Filter({ column }: { column: LegacyColumn<Person> }) {
 
   return filterVariant === 'range' ? (
     <div>
-      <div className="flex space-x-2">
+      <div className="filter-row">
         {/* See faceted column filters example for min max values functionality */}
         <DebouncedInput
           type="number"
@@ -301,7 +299,7 @@ function Filter({ column }: { column: LegacyColumn<Person> }) {
             ])
           }
           placeholder={`Min`}
-          className="w-24 border shadow rounded"
+          className="filter-input"
         />
         <DebouncedInput
           type="number"
@@ -313,10 +311,10 @@ function Filter({ column }: { column: LegacyColumn<Person> }) {
             ])
           }
           placeholder={`Max`}
-          className="w-24 border shadow rounded"
+          className="filter-input"
         />
       </div>
-      <div className="h-1" />
+      <div className="spacer-xs" />
     </div>
   ) : filterVariant === 'select' ? (
     <select
@@ -331,7 +329,7 @@ function Filter({ column }: { column: LegacyColumn<Person> }) {
     </select>
   ) : (
     <DebouncedInput
-      className="w-36 border shadow rounded"
+      className="filter-select"
       onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
       type="text"

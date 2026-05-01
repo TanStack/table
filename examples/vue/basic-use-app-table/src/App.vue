@@ -114,7 +114,7 @@ const table = useAppTable({
 
 <template>
   <!-- 8. Render your table markup from the table instance APIs -->
-  <div class="p-2">
+  <div class="demo-root">
     <table>
       <thead>
         <tr
@@ -144,8 +144,10 @@ const table = useAppTable({
         </tr>
       </tfoot>
     </table>
-    <div class="h-4" />
-    <button @click="rerender" class="border p-2">Rerender (sort by age)</button>
+    <div class="spacer-md" />
+    <button @click="rerender" class="demo-button">
+      Rerender (sort by age)
+    </button>
   </div>
 </template>
 
@@ -156,6 +158,8 @@ html {
 }
 
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 

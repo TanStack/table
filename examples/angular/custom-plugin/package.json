@@ -2,7 +2,8 @@
   "name": "tanstack-angular-table-example-custom-plugin",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 5173",
+    "dev": "ng serve --port 5173",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "lint": "eslint ./src"

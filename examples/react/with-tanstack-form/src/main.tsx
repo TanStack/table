@@ -199,7 +199,7 @@ function App() {
   }
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -208,7 +208,7 @@ function App() {
         }}
       >
         {/* Form state indicators */}
-        <div className="mb-4 flex items-center gap-4">
+        <div className="form-actions">
           <form.AppForm>
             <form.FormStateIndicator />
           </form.AppForm>
@@ -218,21 +218,21 @@ function App() {
           <button
             type="button"
             onClick={addRow}
-            className="border rounded px-4 py-2 bg-green-500 text-white"
+            className="demo-button success-action"
           >
             Add Row
           </button>
           <button
             type="button"
             onClick={refreshData}
-            className="border rounded px-4 py-2 bg-gray-500 text-white"
+            className="demo-button secondary-action"
           >
             Regenerate Data
           </button>
           <button
             type="button"
             onClick={stressTest}
-            className="border rounded px-4 py-2 bg-gray-500 text-white"
+            className="demo-button secondary-action"
           >
             Stress Test (100k rows)
           </button>
@@ -247,7 +247,7 @@ function App() {
         >
           {(tableState) => (
             <>
-              <div className="h-2" />
+              <div className="spacer-sm" />
               <table>
                 <thead>
                   {table.getHeaderGroups().map((headerGroup) => (
@@ -292,11 +292,11 @@ function App() {
               </table>
 
               {/* Pagination controls */}
-              <div className="h-2" />
-              <div className="flex items-center gap-2">
+              <div className="spacer-sm" />
+              <div className="controls">
                 <button
                   type="button"
-                  className="border rounded p-1"
+                  className="demo-button demo-button-sm"
                   onClick={() => table.firstPage()}
                   disabled={!table.getCanPreviousPage()}
                 >
@@ -304,7 +304,7 @@ function App() {
                 </button>
                 <button
                   type="button"
-                  className="border rounded p-1"
+                  className="demo-button demo-button-sm"
                   onClick={() => table.previousPage()}
                   disabled={!table.getCanPreviousPage()}
                 >
@@ -312,7 +312,7 @@ function App() {
                 </button>
                 <button
                   type="button"
-                  className="border rounded p-1"
+                  className="demo-button demo-button-sm"
                   onClick={() => table.nextPage()}
                   disabled={!table.getCanNextPage()}
                 >
@@ -320,20 +320,20 @@ function App() {
                 </button>
                 <button
                   type="button"
-                  className="border rounded p-1"
+                  className="demo-button demo-button-sm"
                   onClick={() => table.lastPage()}
                   disabled={!table.getCanNextPage()}
                 >
                   {'>>'}
                 </button>
-                <span className="flex items-center gap-1">
+                <span className="inline-controls">
                   <div>Page</div>
                   <strong>
                     {(tableState.pagination.pageIndex + 1).toLocaleString()} of{' '}
                     {table.getPageCount().toLocaleString()}
                   </strong>
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="inline-controls">
                   | Go to page:
                   <input
                     type="number"
@@ -346,7 +346,7 @@ function App() {
                         : 0
                       table.setPageIndex(page)
                     }}
-                    className="border p-1 rounded w-16"
+                    className="page-size-input"
                   />
                 </span>
                 <select
@@ -388,7 +388,7 @@ function Filter({
   const columnFilterValue = column.getFilterValue()
 
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
+    <div className="filter-row">
       <DebouncedInput
         type="number"
         value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
@@ -396,7 +396,7 @@ function Filter({
           column.setFilterValue((old: [number, number]) => [value, old?.[1]])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
       <DebouncedInput
         type="number"
@@ -405,7 +405,7 @@ function Filter({
           column.setFilterValue((old: [number, number]) => [old?.[0], value])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
     </div>
   ) : (
@@ -414,7 +414,7 @@ function Filter({
       value={(columnFilterValue ?? '') as string}
       onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="filter-select"
     />
   )
 }

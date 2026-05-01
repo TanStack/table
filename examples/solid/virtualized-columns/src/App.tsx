@@ -219,9 +219,7 @@ function TableHeadCell(props: {
       }}
     >
       <div
-        class={
-          props.header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-        }
+        class={props.header.column.getCanSort() ? 'sortable-header' : ''}
         onClick={props.header.column.getToggleSortingHandler()}
       >
         <FlexRender header={props.header} />

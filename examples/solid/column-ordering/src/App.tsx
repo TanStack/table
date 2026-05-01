@@ -89,9 +89,9 @@ function App() {
   }
 
   return (
-    <div class="p-2">
-      <div class="inline-block border border-black shadow rounded">
-        <div class="px-1 border-b border-black">
+    <div class="demo-root">
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
           <label>
             <input
               checked={table.getIsAllColumnsVisible()}
@@ -103,7 +103,7 @@ function App() {
         </div>
         <For each={table.getAllLeafColumns()}>
           {(column) => (
-            <div class="px-1">
+            <div class="column-toggle-row">
               <label>
                 <input
                   checked={column.getIsVisible()}
@@ -116,19 +116,25 @@ function App() {
           )}
         </For>
       </div>
-      <div class="h-4" />
-      <div class="flex flex-wrap gap-2">
-        <button onClick={() => refreshData()} class="border p-1">
+      <div class="spacer-md" />
+      <div class="button-row">
+        <button
+          onClick={() => refreshData()}
+          class="demo-button demo-button-sm"
+        >
           Regenerate Data
         </button>
-        <button onClick={() => stressTest()} class="border p-1">
+        <button onClick={() => stressTest()} class="demo-button demo-button-sm">
           Stress Test (1k rows)
         </button>
-        <button onClick={() => randomizeColumns()} class="border p-1">
+        <button
+          onClick={() => randomizeColumns()}
+          class="demo-button demo-button-sm"
+        >
           Shuffle Columns
         </button>
       </div>
-      <div class="h-4" />
+      <div class="spacer-md" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -180,7 +186,7 @@ function App() {
           </For>
         </tfoot>
       </table>
-      <div class="h-4" />
+      <div class="spacer-md" />
       <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
     </div>
   )

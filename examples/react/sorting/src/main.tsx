@@ -100,14 +100,14 @@ function App() {
     <table.Subscribe source={table.atoms.sorting}>
       {/* omit selector to subscribe to the entire sorting slice */}
       {() => (
-        <div className="p-2">
+        <div className="demo-root">
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
             <button onClick={() => stressTest()}>
               Stress Test (500k rows)
             </button>
           </div>
-          <div className="h-2" />
+          <div className="spacer-sm" />
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -119,7 +119,7 @@ function App() {
                           <div
                             className={
                               header.column.getCanSort()
-                                ? 'cursor-pointer select-none'
+                                ? 'sortable-header'
                                 : ''
                             }
                             onClick={header.column.getToggleSortingHandler()}

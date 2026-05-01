@@ -127,9 +127,9 @@ function toggleAllColumnsVisibility() {
 </script>
 
 <template>
-  <div class="p-2">
-    <div class="inline-block border border-black rounded shadow">
-      <div class="px-1 border-b border-black">
+  <div class="demo-root">
+    <div class="column-toggle-panel">
+      <div class="column-toggle-panel-header">
         <label>
           <input
             type="checkbox"
@@ -142,7 +142,7 @@ function toggleAllColumnsVisibility() {
       <div
         v-for="column in table.getAllLeafColumns()"
         :key="column.id"
-        class="px-1"
+        class="column-toggle-row"
       >
         <label>
           <input
@@ -154,27 +154,29 @@ function toggleAllColumnsVisibility() {
         </label>
       </div>
     </div>
-    <div class="h-4" />
-    <div class="flex flex-wrap gap-2">
-      <button @click="refreshData" class="p-1 border">Regenerate Data</button>
-      <button @click="stressTest" class="p-1 border">
+    <div class="spacer-md" />
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button demo-button-sm">
+        Regenerate Data
+      </button>
+      <button @click="stressTest" class="demo-button demo-button-sm">
         Stress Test (500k rows)
       </button>
-      <button @click="randomizeColumns" class="p-1 border">
+      <button @click="randomizeColumns" class="demo-button demo-button-sm">
         Shuffle Columns
       </button>
     </div>
-    <div class="h-4" />
+    <div class="spacer-md" />
     <div>
       <label>
         <input type="checkbox" v-model="isSplit" />
         Split Mode
       </label>
     </div>
-    <div class="h-4" />
-    <div :class="`flex ${isSplit ? 'gap-4' : ''}`">
+    <div class="spacer-md" />
+    <div :class="`table-row-group ${isSplit ? 'split-gap' : ''}`">
       <!-- left -->
-      <table v-if="isSplit" class="border-2 border-black table-left">
+      <table v-if="isSplit" class="outlined-table table-left">
         <thead>
           <tr
             v-for="headerGroup in table.getLeftHeaderGroups()"
@@ -185,31 +187,31 @@ function toggleAllColumnsVisibility() {
               :key="header.id"
               :colSpan="header.colSpan"
             >
-              <div class="whitespace-nowrap">
+              <div class="nowrap">
                 <FlexRender v-if="!header.isPlaceholder" :header="header" />
               </div>
               <div
                 v-if="!header.isPlaceholder && header.column.getCanPin()"
-                class="flex justify-center gap-1"
+                class="pin-actions"
               >
                 <button
                   v-if="header.column.getIsPinned() !== 'left'"
                   @click="header.column.pin('left')"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   {{ '<=' }}
                 </button>
                 <button
                   v-if="header.column.getIsPinned()"
                   @click="header.column.pin(false)"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   X
                 </button>
                 <button
                   v-if="header.column.getIsPinned() !== 'right'"
                   @click="header.column.pin('right')"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   {{ '=>' }}
                 </button>
@@ -229,7 +231,7 @@ function toggleAllColumnsVisibility() {
         </tbody>
       </table>
       <!-- center -->
-      <table class="border-2 border-black table-center">
+      <table class="outlined-table table-center">
         <thead>
           <tr
             v-for="headerGroup in isSplit
@@ -242,31 +244,31 @@ function toggleAllColumnsVisibility() {
               :key="header.id"
               :colSpan="header.colSpan"
             >
-              <div class="whitespace-nowrap">
+              <div class="nowrap">
                 <FlexRender v-if="!header.isPlaceholder" :header="header" />
               </div>
               <div
                 v-if="!header.isPlaceholder && header.column.getCanPin()"
-                class="flex justify-center gap-1"
+                class="pin-actions"
               >
                 <button
                   v-if="header.column.getIsPinned() !== 'left'"
                   @click="header.column.pin('left')"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   {{ '<=' }}
                 </button>
                 <button
                   v-if="header.column.getIsPinned()"
                   @click="header.column.pin(false)"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   X
                 </button>
                 <button
                   v-if="header.column.getIsPinned() !== 'right'"
                   @click="header.column.pin('right')"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   {{ '=>' }}
                 </button>
@@ -291,7 +293,7 @@ function toggleAllColumnsVisibility() {
         </tbody>
       </table>
       <!-- right -->
-      <table v-if="isSplit" class="border-2 border-black table-right">
+      <table v-if="isSplit" class="outlined-table table-right">
         <thead>
           <tr
             v-for="headerGroup in table.getRightHeaderGroups()"
@@ -302,31 +304,31 @@ function toggleAllColumnsVisibility() {
               :key="header.id"
               :colSpan="header.colSpan"
             >
-              <div class="whitespace-nowrap">
+              <div class="nowrap">
                 <FlexRender v-if="!header.isPlaceholder" :header="header" />
               </div>
               <div
                 v-if="!header.isPlaceholder && header.column.getCanPin()"
-                class="flex justify-center gap-1"
+                class="pin-actions"
               >
                 <button
                   v-if="header.column.getIsPinned() !== 'left'"
                   @click="header.column.pin('left')"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   {{ '<=' }}
                 </button>
                 <button
                   v-if="header.column.getIsPinned()"
                   @click="header.column.pin(false)"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   X
                 </button>
                 <button
                   v-if="header.column.getIsPinned() !== 'right'"
                   @click="header.column.pin('right')"
-                  class="px-2 border rounded"
+                  class="pin-button"
                 >
                   {{ '=>' }}
                 </button>
@@ -359,8 +361,9 @@ body {
 }
 
 table {
-  border: 1px solid lightgray;
+  border-spacing: 0;
   border-collapse: collapse;
+  border: 1px solid lightgray;
 }
 
 tbody {

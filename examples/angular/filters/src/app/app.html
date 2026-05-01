@@ -1,7 +1,9 @@
-<div class="p-2">
-  <button class="border rounded p-2 mb-2" (click)="refreshData()">Regenerate Data</button>
-  <button class="border rounded p-2 mb-2" (click)="stressTest()">Stress Test (100k rows)</button>
-  <div class="h-2"></div>
+<div class="demo-root">
+  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">
+    Stress Test (100k rows)
+  </button>
+  <div class="spacer-sm"></div>
 
   <table>
     <thead>
@@ -10,10 +12,7 @@
           @for (header of headerGroup.headers; track header.id) {
             <th [attr.colSpan]="header.colSpan">
               @if (!header.isPlaceholder) {
-                <div
-                  [class.cursor-pointer]="header.column.getCanSort()"
-                  [class.select-none]="header.column.getCanSort()"
-                >
+                <div [class.sortable]="header.column.getCanSort()">
                   <ng-container *flexRenderHeader="header; let headerCell">
                     {{ headerCell }}
                   </ng-container>
@@ -52,50 +51,50 @@
     </tbody>
   </table>
 
-  <div class="h-2"></div>
-  <div class="flex items-center gap-2">
+  <div class="spacer-sm"></div>
+  <div class="controls">
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       (click)="table.setPageIndex(0)"
       [disabled]="!table.getCanPreviousPage()"
     >
       <<
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       (click)="table.previousPage()"
       [disabled]="!table.getCanPreviousPage()"
     >
       <
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       (click)="table.nextPage()"
       [disabled]="!table.getCanNextPage()"
     >
       >
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       (click)="table.setPageIndex(table.getPageCount() - 1)"
       [disabled]="!table.getCanNextPage()"
     >
       >>
     </button>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       <div>Page</div>
       <strong>
         {{ (table.store.state.pagination.pageIndex + 1).toLocaleString() }} of
         {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       | Go to page:
       <input
         type="number"
         [value]="table.store.state.pagination.pageIndex + 1"
         (input)="onPageInputChange($event)"
-        class="border p-1 rounded w-16"
+        class="page-size-input"
       />
     </span>
 

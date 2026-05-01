@@ -11,7 +11,7 @@ import type { Row, RowData, Table } from '@tanstack/angular-table'
     />
   `,
   host: {
-    class: 'px-1 block',
+    class: 'selection-cell',
   },
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,7 +37,7 @@ export class TableHeadSelectionComponent<T extends RowData> {
     />
   `,
   host: {
-    class: 'px-1 block',
+    class: 'selection-cell',
   },
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

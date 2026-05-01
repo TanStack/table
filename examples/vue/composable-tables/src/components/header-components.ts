@@ -27,16 +27,24 @@ export const ColumnFilter = defineComponent({
         return null
       }
 
-      return h('input', {
-        class: 'filter-input',
-        value: value.value,
-        placeholder: `Filter ${header.column.id}...`,
-        onClick: (event: Event) => event.stopPropagation(),
-        onInput: (event: Event) =>
-          header.column.setFilterValue(
-            (event.target as HTMLInputElement).value,
-          ),
-      })
+      return h(
+        'div',
+        {
+          class: 'column-filter',
+          onClick: (event: Event) => event.stopPropagation(),
+        },
+        [
+          h('input', {
+            type: 'text',
+            value: value.value,
+            placeholder: `Filter ${header.column.id}...`,
+            onInput: (event: Event) =>
+              header.column.setFilterValue(
+                (event.target as HTMLInputElement).value,
+              ),
+          }),
+        ],
+      )
     }
   },
 })

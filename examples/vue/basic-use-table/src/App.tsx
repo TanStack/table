@@ -106,7 +106,7 @@ export default defineComponent({
     }
 
     return () => (
-      <div class="p-2">
+      <div class="demo-root">
         <table>
           <thead>
             {table
@@ -158,8 +158,8 @@ export default defineComponent({
               ))}
           </tfoot>
         </table>
-        <div class="h-4" />
-        <button onClick={rerender} class="border p-2">
+        <div class="spacer-md" />
+        <button onClick={rerender} class="demo-button">
           Rerender
         </button>
       </div>

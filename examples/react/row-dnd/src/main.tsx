@@ -163,17 +163,23 @@ function App() {
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >
-      <div className="p-2">
-        <div className="h-4" />
-        <div className="flex flex-wrap gap-2">
-          <button onClick={() => refreshData()} className="border p-1">
+      <div className="demo-root">
+        <div className="spacer-md" />
+        <div className="button-row">
+          <button
+            onClick={() => refreshData()}
+            className="demo-button demo-button-sm"
+          >
             Regenerate Data
           </button>
-          <button onClick={() => stressTest()} className="border p-1">
+          <button
+            onClick={() => stressTest()}
+            className="demo-button demo-button-sm"
+          >
             Stress Test (1k rows)
           </button>
         </div>
-        <div className="h-4" />
+        <div className="spacer-md" />
         <table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (

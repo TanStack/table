@@ -15,7 +15,7 @@ import {
     />
   `,
   host: {
-    class: 'px-1 block',
+    class: 'selection-cell',
   },
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +34,7 @@ export class TableHeaderSelection {
     />
   `,
   host: {
-    class: 'px-1 block',
+    class: 'selection-cell',
   },
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,

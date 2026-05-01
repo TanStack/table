@@ -17,13 +17,13 @@ function TextField() {
   return (
     <div>
       <input
-        class="border rounded px-1 w-full"
+        class="text-input"
         value={field().state.value}
         onInput={(e) => field().handleChange(e.currentTarget.value)}
         onBlur={() => field().handleBlur()}
       />
       <Show when={errors().length > 0}>
-        <div class="text-red-500 text-xs">{errors().join(', ')}</div>
+        <div class="error-text">{errors().join(', ')}</div>
       </Show>
     </div>
   )
@@ -38,13 +38,13 @@ function NumberField() {
     <div>
       <input
         type="number"
-        class="border rounded px-1 w-20"
+        class="number-input"
         value={field().state.value}
         onInput={(e) => field().handleChange(Number(e.currentTarget.value))}
         onBlur={() => field().handleBlur()}
       />
       <Show when={errors().length > 0}>
-        <div class="text-red-500 text-xs">{errors().join(', ')}</div>
+        <div class="error-text">{errors().join(', ')}</div>
       </Show>
     </div>
   )
@@ -60,7 +60,7 @@ function SelectField() {
   return (
     <div>
       <select
-        class="border rounded px-1"
+        class="compact-input"
         value={field().state.value}
         onChange={(e) => field().handleChange(e.currentTarget.value)}
         onBlur={() => field().handleBlur()}
@@ -70,7 +70,7 @@ function SelectField() {
         </For>
       </select>
       <Show when={errors().length > 0}>
-        <div class="text-red-500 text-xs">{errors().join(', ')}</div>
+        <div class="error-text">{errors().join(', ')}</div>
       </Show>
     </div>
   )
@@ -83,7 +83,7 @@ function SubmitButton(props: { label: string }) {
     <button
       type="submit"
       disabled={!form.state.canSubmit || form.state.isSubmitting}
-      class="border rounded px-4 py-2 bg-blue-500 text-white disabled:opacity-50"
+      class="demo-button primary-action submit-button"
     >
       {form.state.isSubmitting ? 'Submitting...' : props.label}
     </button>
@@ -94,15 +94,15 @@ function SubmitButton(props: { label: string }) {
 function FormStateIndicator() {
   const form = useFormContext()
   return (
-    <div class="flex gap-4 text-sm">
-      <span class={form.state.isDirty ? 'text-yellow-600' : 'text-gray-400'}>
+    <div class="form-status">
+      <span class={form.state.isDirty ? 'warning-text' : 'muted-text'}>
         {form.state.isDirty ? '● Modified' : '○ Pristine'}
       </span>
-      <span class={form.state.isValid ? 'text-green-600' : 'text-red-600'}>
+      <span class={form.state.isValid ? 'success-text' : 'error-text'}>
         {form.state.isValid ? '✓ Valid' : '✗ Invalid'}
       </span>
       <Show when={Object.keys(form.state.errorMap).length > 0}>
-        <span class="text-red-600">
+        <span class="error-text">
           Errors: {JSON.stringify(form.state.errorMap)}
         </span>
       </Show>

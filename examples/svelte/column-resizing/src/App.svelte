@@ -101,13 +101,14 @@
     if (columnResizeMode === 'onEnd' && header.column.getIsResizing()) {
       const delta = table.store.state.columnResizing.deltaOffset ?? 0
       const dir = table.options.columnResizeDirection === 'rtl' ? -1 : 1
-      return `translateX(${dir * delta}px)`
+      return `translateX(${dir * delta
+      }px)`
     }
     return ''
   }
 </script>
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (100 rows)</button>
@@ -117,7 +118,7 @@
     onchange={(e) => {
       columnResizeMode = (e.target as HTMLSelectElement).value as ColumnResizeMode
     }}
-    class="border p-2 border-black rounded"
+    class="demo-button outlined-control"
   >
     <option value="onEnd">Resize: "onEnd"</option>
     <option value="onChange">Resize: "onChange"</option>
@@ -128,16 +129,17 @@
       columnResizeDirection = (e.target as HTMLSelectElement)
         .value as ColumnResizeDirection
     }}
-    class="border p-2 border-black rounded"
+    class="demo-button outlined-control"
   >
     <option value="ltr">Resize Direction: "ltr"</option>
     <option value="rtl">Resize Direction: "rtl"</option>
   </select>
   <div style:direction={table.options.columnResizeDirection}>
-    <div class="h-4"></div>
-    <div class="text-xl">{'<table/>'}</div>
-    <div class="overflow-x-auto">
-      <table style="width: {table.getCenterTotalSize()}px">
+    <div class="spacer-md"></div>
+    <div class="section-title">{'<table/>'}</div>
+    <div class="scroll-container">
+      <table style="width: {table.getCenterTotalSize()
+      }px">
         <thead>
           {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
             <tr>
@@ -178,9 +180,10 @@
         </tbody>
       </table>
     </div>
-    <div class="h-4"></div>
-    <div class="text-xl">{'<div/> (relative)'}</div>
-    <div class="overflow-x-auto">
+    <div class="spacer-md"></div>
+    <div class="section-title">{'<div/> (relative)'
+    }</div>
+    <div class="scroll-container">
       <div class="divTable" style="width: {table.getTotalSize()}px">
         <div class="thead">
           {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
@@ -219,9 +222,9 @@
         </div>
       </div>
     </div>
-    <div class="h-4"></div>
-    <div class="text-xl">{'<div/> (absolute positioning)'}</div>
-    <div class="overflow-x-auto">
+    <div class="spacer-md"></div>
+    <div class="section-title">{'<div/> (absolute positioning)'}</div>
+    <div class="scroll-container">
       <div class="divTable" style="width: {table.getTotalSize()}px">
         <div class="thead">
           {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
@@ -267,6 +270,6 @@
       </div>
     </div>
   </div>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
 </div>

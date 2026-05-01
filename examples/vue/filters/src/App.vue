@@ -82,23 +82,23 @@ const table = useAppTable(
 </script>
 
 <template>
-  <div class="p-2">
-    <div class="flex flex-wrap gap-2">
-      <button @click="refreshData" class="border p-2">Regenerate Data</button>
-      <button @click="stressTest" class="border p-2">
+  <div class="demo-root">
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
         Stress Test (5k rows)
       </button>
     </div>
-    <div class="h-4" />
+    <div class="spacer-md" />
     <div>
       <DebouncedInput
         :modelValue="table.state.globalFilter ?? ''"
         @update:modelValue="(value) => table.setGlobalFilter(String(value))"
-        className="p-2 font-lg shadow border border-block"
+        className="summary-panel"
         placeholder="Search all columns..."
       />
     </div>
-    <div className="h-2" />
+    <div className="spacer-sm" />
     <table>
       <thead>
         <tr
@@ -149,7 +149,7 @@ const table = useAppTable(
         </tr>
       </tfoot>
     </table>
-    <div class="h-4" />
+    <div class="spacer-md" />
   </div>
 </template>
 <style>
@@ -159,6 +159,8 @@ html {
 }
 
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 

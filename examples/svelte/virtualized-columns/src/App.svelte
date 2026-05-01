@@ -129,7 +129,8 @@
     <!-- Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights -->
     <table style="display: grid;">
       <thead style="display: grid; position: sticky; top: 0px; z-index: 1;">
-        {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+        {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+        }
           <tr style="display: flex; width: 100%;">
             {#if virtualPaddingLeft}
               <!-- fake empty column to the left for virtualization scroll padding -->
@@ -140,7 +141,7 @@
               <th style="display: flex; width: {header.getSize()}px;">
                 <div
                   class={header.column.getCanSort()
-                    ? 'cursor-pointer select-none'
+                    ? 'sortable-header'
                     : ''}
                   role="button"
                   tabindex="0"

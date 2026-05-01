@@ -85,7 +85,8 @@
 
   function getColumnSizeVars() {
     const headers = table.getFlatHeaders()
-    const colSizes: Record<string, number> = {}
+    const colSizes: Record<string, number> = {
+    }
     for (const header of headers) {
       colSizes[`--header-${header.id}-size`] = header.getSize()
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
@@ -100,7 +101,7 @@
   }
 </script>
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (2k rows)</button>
@@ -108,13 +109,13 @@
   <i>
     This example has artificially slow cell renders to simulate complex usage
   </i>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   <pre style="min-height: 10rem">
     {JSON.stringify(table.store.state, null, 2)}
   </pre>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   ({data.length.toLocaleString()} rows)
-  <div class="overflow-x-auto">
+  <div class="scroll-container">
     <div
       class="divTable"
       style="{colSizeVarsToStyle(getColumnSizeVars())}; width: {table.getTotalSize()}px"

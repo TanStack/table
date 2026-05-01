@@ -1,4 +1,4 @@
-import { computed, defineComponent, h } from 'vue'
+import { defineComponent, h } from 'vue'
 import { useSelector } from '@tanstack/vue-store'
 import { useTableContext } from '../hooks/table'
 import type { PropType } from 'vue'
@@ -13,14 +13,22 @@ export const PaginationControls = defineComponent({
     )
 
     return () =>
-      h('div', { class: 'pager' }, [
+      h('div', { class: 'pagination' }, [
+        h(
+          'button',
+          {
+            onClick: () => table.firstPage(),
+            disabled: !table.getCanPreviousPage(),
+          },
+          '<<',
+        ),
         h(
           'button',
           {
             disabled: !table.getCanPreviousPage(),
             onClick: () => table.previousPage(),
           },
-          'Previous',
+          '<',
         ),
         h(
           'button',
@@ -28,12 +36,50 @@ export const PaginationControls = defineComponent({
             disabled: !table.getCanNextPage(),
             onClick: () => table.nextPage(),
           },
-          'Next',
+          '>',
         ),
         h(
-          'span',
-          { class: 'muted' },
-          `Page ${(pagination.value.pageIndex + 1).toLocaleString()} of ${table.getPageCount().toLocaleString()}`,
+          'button',
+          {
+            onClick: () => table.lastPage(),
+            disabled: !table.getCanNextPage(),
+          },
+          '>>',
+        ),
+        h('span', [
+          'Page ',
+          h(
+            'strong',
+            `${(pagination.value.pageIndex + 1).toLocaleString()} of ${table.getPageCount().toLocaleString()}`,
+          ),
+        ]),
+        h('span', [
+          '| Go to page:',
+          h('input', {
+            type: 'number',
+            min: 1,
+            max: table.getPageCount(),
+            value: pagination.value.pageIndex + 1,
+            onChange: (event: Event) => {
+              const value = (event.target as HTMLInputElement).value
+              const page = value ? Number(value) - 1 : 0
+              table.setPageIndex(page)
+            },
+          }),
+        ]),
+        h(
+          'select',
+          {
+            value: pagination.value.pageSize,
+            onChange: (event: Event) => {
+              table.setPageSize(
+                Number((event.target as HTMLSelectElement).value),
+              )
+            },
+          },
+          [10, 20, 30, 40, 50].map((pageSize) =>
+            h('option', { key: pageSize, value: pageSize }, `Show ${pageSize}`),
+          ),
         ),
       ])
   },
@@ -58,8 +104,8 @@ export const RowCount = defineComponent({
 
       return h(
         'div',
-        { class: 'muted' },
-        `${table.getFilteredRowModel().rows.length.toLocaleString()} rows`,
+        { class: 'row-count' },
+        `Showing ${table.getRowModel().rows.length.toLocaleString()} of ${table.getRowCount().toLocaleString()} rows`,
       )
     }
   },
@@ -79,27 +125,22 @@ export const TableToolbar = defineComponent({
   },
   setup(props) {
     const table = useTableContext()
-    const globalFilterState = useSelector(
-      table.store,
-      (state: ReturnType<typeof table.store.get>) => state.globalFilter,
-    )
-    const globalFilter = computed(
-      () => (globalFilterState.value as string | undefined) ?? '',
-    )
-
     return () =>
-      h('div', { class: 'toolbar' }, [
-        h('strong', props.title),
-        h('div', { class: 'toolbar-actions' }, [
-          h('input', {
-            class: 'toolbar-input',
-            value: globalFilter.value,
-            placeholder: 'Search all columns...',
-            onInput: (event: Event) =>
-              table.setGlobalFilter((event.target as HTMLInputElement).value),
-          }),
+      h('div', { class: 'table-toolbar' }, [
+        h('h2', props.title),
+        h('div', [
+          h(
+            'button',
+            { onClick: () => table.resetColumnFilters() },
+            'Clear Filters',
+          ),
+          h('button', { onClick: () => table.resetSorting() }, 'Clear Sorting'),
           props.onRefresh
-            ? h('button', { onClick: () => props.onRefresh?.() }, 'Refresh')
+            ? h(
+                'button',
+                { onClick: () => props.onRefresh?.() },
+                'Regenerate Data',
+              )
             : null,
         ]),
       ])

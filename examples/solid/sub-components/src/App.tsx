@@ -89,8 +89,8 @@ function TableComponent(props: TableProps<typeof _features, Person>) {
   })
 
   return (
-    <div class="p-2">
-      <div class="h-2" />
+    <div class="demo-root">
+      <div class="spacer-sm" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -136,7 +136,7 @@ function TableComponent(props: TableProps<typeof _features, Person>) {
           </For>
         </tbody>
       </table>
-      <div class="h-2" />
+      <div class="spacer-sm" />
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
     </div>
   )

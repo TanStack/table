@@ -22,7 +22,7 @@ watchEffect(() => {
   <input
     type="checkbox"
     ref="inputRef"
-    :class="`${props.className ?? ''} cursor-pointer`"
+    :class="`${props.className ?? ''} sortable-header`"
     :checked="props.checked"
     :disabled="props.disabled"
     @change="props.onChange"

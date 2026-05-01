@@ -106,14 +106,14 @@ function handlePageSizeChange(e: any) {
 </script>
 
 <template>
-  <div class="p-2">
-    <div class="flex flex-wrap gap-2">
-      <button @click="refreshData" class="border p-2">Regenerate Data</button>
-      <button @click="stressTest" class="border p-2">
+  <div class="demo-root">
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
         Stress Test (100k rows)
       </button>
     </div>
-    <div class="h-4" />
+    <div class="spacer-md" />
     <table>
       <thead>
         <tr
@@ -152,49 +152,49 @@ function handlePageSizeChange(e: any) {
       </tfoot>
     </table>
     <div>
-      <div class="flex items-center gap-2">
+      <div class="controls">
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           @click="() => table.setPageIndex(0)"
           :disabled="!table.getCanPreviousPage()"
         >
           «
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           @click="() => table.previousPage()"
           :disabled="!table.getCanPreviousPage()"
         >
           ‹
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           @click="() => table.nextPage()"
           :disabled="!table.getCanNextPage()"
         >
           ›
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           @click="() => table.setPageIndex(table.getPageCount() - 1)"
           :disabled="!table.getCanNextPage()"
         >
           »
         </button>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           <div>Page</div>
           <strong>
             {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
             {{ table.getPageCount().toLocaleString() }}
           </strong>
         </span>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           | Go to page:
           <input
             type="number"
             :value="goToPageNumber"
             @change="handleGoToPage"
-            class="border p-1 rounded w-16"
+            class="page-size-input"
           />
         </span>
         <select
@@ -213,7 +213,7 @@ function handlePageSizeChange(e: any) {
       <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
       <pre>{{ JSON.stringify(table.state.pagination, null, 2) }}</pre>
     </div>
-    <div class="h-2" />
+    <div class="spacer-sm" />
   </div>
 </template>
 
@@ -224,6 +224,8 @@ html {
 }
 
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 

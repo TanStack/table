@@ -185,7 +185,7 @@ function App() {
   }
 
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
@@ -198,7 +198,7 @@ function App() {
         }}
       >
         {/* Form state indicators */}
-        <div class="mb-4 flex items-center gap-4">
+        <div class="form-actions">
           <form.AppForm>
             <form.FormStateIndicator />
           </form.AppForm>
@@ -208,14 +208,14 @@ function App() {
           <button
             type="button"
             onClick={addRow}
-            class="border rounded px-4 py-2 bg-green-500 text-white"
+            class="demo-button success-action"
           >
             Add Row
           </button>
           <button
             type="button"
             onClick={refreshData}
-            class="border rounded px-4 py-2 bg-gray-500 text-white"
+            class="demo-button secondary-action"
           >
             Reset Data
           </button>
@@ -223,7 +223,7 @@ function App() {
 
         {/* Table */}
         <div>
-          <div class="h-2" />
+          <div class="spacer-sm" />
           <table>
             <thead>
               <For each={table.getHeaderGroups()}>
@@ -270,11 +270,11 @@ function App() {
           </table>
 
           {/* Pagination controls */}
-          <div class="h-2" />
-          <div class="flex items-center gap-2">
+          <div class="spacer-sm" />
+          <div class="controls">
             <button
               type="button"
-              class="border rounded p-1"
+              class="demo-button demo-button-sm"
               onClick={() => table.firstPage()}
               disabled={!table.getCanPreviousPage()}
             >
@@ -282,7 +282,7 @@ function App() {
             </button>
             <button
               type="button"
-              class="border rounded p-1"
+              class="demo-button demo-button-sm"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
@@ -290,7 +290,7 @@ function App() {
             </button>
             <button
               type="button"
-              class="border rounded p-1"
+              class="demo-button demo-button-sm"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
@@ -298,20 +298,20 @@ function App() {
             </button>
             <button
               type="button"
-              class="border rounded p-1"
+              class="demo-button demo-button-sm"
               onClick={() => table.lastPage()}
               disabled={!table.getCanNextPage()}
             >
               {'>>'}
             </button>
-            <span class="flex items-center gap-1">
+            <span class="inline-controls">
               <div>Page</div>
               <strong>
                 {(table.store.state.pagination.pageIndex + 1).toLocaleString()}{' '}
                 of {table.getPageCount().toLocaleString()}
               </strong>
             </span>
-            <span class="flex items-center gap-1">
+            <span class="inline-controls">
               | Go to page:
               <input
                 type="number"
@@ -324,7 +324,7 @@ function App() {
                     : 0
                   table.setPageIndex(page)
                 }}
-                class="border p-1 rounded w-16"
+                class="page-size-input"
               />
             </span>
             <select
@@ -368,11 +368,11 @@ function Filter(props: {
           value={(columnFilterValue() ?? '') as string}
           onInput={(e) => props.column.setFilterValue(e.currentTarget.value)}
           placeholder="Search..."
-          class="w-36 border shadow rounded"
+          class="filter-select"
         />
       }
     >
-      <div class="flex space-x-2">
+      <div class="filter-row">
         <input
           type="number"
           value={
@@ -385,7 +385,7 @@ function Filter(props: {
             ])
           }
           placeholder="Min"
-          class="w-24 border shadow rounded"
+          class="filter-input"
         />
         <input
           type="number"
@@ -399,7 +399,7 @@ function Filter(props: {
             ])
           }
           placeholder="Max"
-          class="w-24 border shadow rounded"
+          class="filter-input"
         />
       </div>
     </Show>

@@ -68,7 +68,7 @@ export function App() {
 
   // 8. Render your table markup from the table instance APIs
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (1k rows)</button>

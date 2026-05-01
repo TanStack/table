@@ -33,10 +33,8 @@ function UsersPage() {
   const columns = useMemo(() => USER_COLUMNS, [])
 
   return (
-    <div className="flex flex-col gap-2 p-2">
-      <h1 className="text-2xl font-semibold mb-1">
-        TanStack Table + Query + Router
-      </h1>
+    <div className="router-root">
+      <h1 className="page-title">TanStack Table + Query + Router</h1>
       <Table
         data={data?.result ?? []}
         columns={columns}
@@ -67,10 +65,10 @@ function UsersPage() {
           })
         }}
       />
-      <div className="flex items-center gap-2">
+      <div className="controls">
         {data?.rowCount?.toLocaleString()} users found
         <button
-          className="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
+          className="demo-button demo-button-sm disabled-button"
           onClick={resetFilters}
           disabled={Object.keys(filters).length === 0}
         >

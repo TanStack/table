@@ -93,18 +93,18 @@ export default defineComponent({
     })
 
     return () => (
-      <div class="p-2">
-        <div class="flex flex-wrap gap-2">
-          <button class="border p-2" onClick={refreshData}>
+      <div class="demo-root">
+        <div class="button-row">
+          <button class="demo-button" onClick={refreshData}>
             Regenerate Data
           </button>
-          <button class="border p-2" onClick={stressTest}>
+          <button class="demo-button" onClick={stressTest}>
             Stress Test (1k rows)
           </button>
         </div>
-        <div class="h-4" />
-        <div class="inline-block border border-black shadow rounded">
-          <div class="px-1 border-b border-black">
+        <div class="spacer-md" />
+        <div class="column-toggle-panel">
+          <div class="column-toggle-panel-header">
             <label>
               <input
                 checked={table.getIsAllColumnsVisible()}
@@ -117,7 +117,7 @@ export default defineComponent({
           {table
             .getAllLeafColumns()
             .map((column: Column<typeof _features, Person>) => (
-              <div class="px-1" key={column.id}>
+              <div class="column-toggle-row" key={column.id}>
                 <label>
                   <input
                     checked={column.getIsVisible()}
@@ -129,7 +129,7 @@ export default defineComponent({
               </div>
             ))}
         </div>
-        <div class="h-4" />
+        <div class="spacer-md" />
         <table>
           <thead>
             {table
@@ -181,7 +181,7 @@ export default defineComponent({
               ))}
           </tfoot>
         </table>
-        <div class="h-4" />
+        <div class="spacer-md" />
         <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
       </div>
     )

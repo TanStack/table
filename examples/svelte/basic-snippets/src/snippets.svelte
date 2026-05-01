@@ -40,12 +40,12 @@
 </script>
 
 {#snippet capitalized(value: string)}
-  <p class="text-capitalize">{value}</p>
+  <p class="capitalized-text">{value}</p>
 {/snippet}
 
 {#snippet spectrum({ value, min, max }: SpectrumParams)}
   <div
-    class="text-center font-semibold"
+    class="centered-strong-text"
     style="background-color: {getColor(value, min, max)}"
   >
     {value}

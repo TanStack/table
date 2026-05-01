@@ -112,7 +112,7 @@ function App() {
 
   // 8. Render your table markup from the table instance APIs
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -152,8 +152,8 @@ function App() {
           ))}
         </tfoot>
       </table>
-      <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
+      <div className="spacer-md" />
+      <button onClick={() => rerender()} className="demo-button">
         Rerender
       </button>
     </div>

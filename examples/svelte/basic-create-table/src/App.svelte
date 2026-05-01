@@ -1,13 +1,15 @@
 <script lang="ts">
   // This example uses the standalone `createTable` function to create a table without the `createTableHook` util.
 
-  import { createTable, FlexRender, tableFeatures } from '@tanstack/svelte-table'
+  import { createTable, FlexRender, tableFeatures
+  } from '@tanstack/svelte-table'
   import type { ColumnDef } from '@tanstack/svelte-table'
   import { makeData, type Person } from './makeData'
   import './index.css'
 
   // 1. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
-  const _features = tableFeatures({}) // util method to create sharable TFeatures object/type
+  const _features = tableFeatures({
+  }) // util method to create sharable TFeatures object/type
 
   // 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns.
   //    Alternatively, check out the createTableHook/createAppColumnHelper util for an even more type-safe way to define columns.
@@ -52,7 +54,8 @@
   const table = createTable({
     debugTable: true,
     _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
-    _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
+    _rowModels: {
+    }, // `Core` row model is now included by default, but you can still override it here
     columns,
     get data() {
       return data
@@ -62,14 +65,16 @@
 </script>
 
 <!-- 7. Render your table markup from the table instance APIs -->
-<div class="p-2">
+<div class="demo-root">
   <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => refreshData()
+    }>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (1k rows)</button>
   </div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th>
@@ -106,5 +111,5 @@
       {/each}
     </tfoot>
   </table>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
 </div>

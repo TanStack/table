@@ -91,7 +91,7 @@ function App() {
   })
 
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (2k rows)</button>
@@ -100,12 +100,12 @@ function App() {
         This example has artificially slow cell renders to simulate complex
         usage
       </i>
-      <div class="h-4" />
+      <div class="spacer-md" />
       <pre style={{ 'min-height': '10rem' }}>
         {JSON.stringify(table.store.state, null, 2)}
       </pre>
-      <div class="h-4" />({data().length.toLocaleString()} rows)
-      <div class="overflow-x-auto">
+      <div class="spacer-md" />({data().length.toLocaleString()} rows)
+      <div class="scroll-container">
         <div
           class="divTable"
           style={{

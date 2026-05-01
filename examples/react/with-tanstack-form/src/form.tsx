@@ -16,13 +16,13 @@ function TextField() {
   return (
     <div>
       <input
-        className="border rounded px-1 w-full"
+        className="text-input"
         value={field.state.value}
         onChange={(e) => field.handleChange(e.target.value)}
         onBlur={field.handleBlur}
       />
       {errors.length > 0 && (
-        <div className="text-red-500 text-xs">{errors.join(', ')}</div>
+        <div className="error-text">{errors.join(', ')}</div>
       )}
     </div>
   )
@@ -37,13 +37,13 @@ function NumberField() {
     <div>
       <input
         type="number"
-        className="border rounded px-1 w-20"
+        className="number-input"
         value={field.state.value}
         onChange={(e) => field.handleChange(Number(e.target.value))}
         onBlur={field.handleBlur}
       />
       {errors.length > 0 && (
-        <div className="text-red-500 text-xs">{errors.join(', ')}</div>
+        <div className="error-text">{errors.join(', ')}</div>
       )}
     </div>
   )
@@ -59,7 +59,7 @@ function SelectField() {
   return (
     <div>
       <select
-        className="border rounded px-1"
+        className="compact-input"
         value={field.state.value}
         onChange={(e) => field.handleChange(e.target.value)}
         onBlur={field.handleBlur}
@@ -71,7 +71,7 @@ function SelectField() {
         ))}
       </select>
       {errors.length > 0 && (
-        <div className="text-red-500 text-xs">{errors.join(', ')}</div>
+        <div className="error-text">{errors.join(', ')}</div>
       )}
     </div>
   )
@@ -86,7 +86,7 @@ function SubmitButton({ label }: { label: string }) {
         <button
           type="submit"
           disabled={!canSubmit || isSubmitting}
-          className="border rounded px-4 py-2 bg-blue-500 text-white disabled:opacity-50"
+          className="demo-button primary-action submit-button"
         >
           {isSubmitting ? 'Submitting...' : label}
         </button>
@@ -107,15 +107,15 @@ function FormStateIndicator() {
       })}
     >
       {({ isDirty, isValid, errorMap }) => (
-        <div className="flex gap-4 text-sm">
-          <span className={isDirty ? 'text-yellow-600' : 'text-gray-400'}>
+        <div className="form-status">
+          <span className={isDirty ? 'warning-text' : 'muted-text'}>
             {isDirty ? '● Modified' : '○ Pristine'}
           </span>
-          <span className={isValid ? 'text-green-600' : 'text-red-600'}>
+          <span className={isValid ? 'success-text' : 'error-text'}>
             {isValid ? '✓ Valid' : '✗ Invalid'}
           </span>
           {Object.keys(errorMap).length > 0 && (
-            <span className="text-red-600">
+            <span className="error-text">
               Errors: {JSON.stringify(errorMap)}
             </span>
           )}

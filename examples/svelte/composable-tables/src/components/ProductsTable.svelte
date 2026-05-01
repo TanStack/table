@@ -65,12 +65,11 @@
   let sorting = $derived(table.store.state.sorting)
   let columnFilters = $derived(table.store.state.columnFilters)
 
-  // IMPORTANT: Derive rows from table.store.state so Svelte tracks the
-  // dependency. Without this, {#each table.getRowModel().rows} won't
-  // re-evaluate because Svelte can't trace $state reads through
-  // table-core's internal memoization.
+  // IMPORTANT: Derive rows from table state so Svelte tracks the dependency.
+  // We must read a $state value that changes on every table update.
+  // JSON.stringify forces a deep read, ensuring Svelte sees the dependency.
   const rows = $derived.by(() => {
-    void table.store.state
+    JSON.stringify(table.store.state)
     return table.getRowModel().rows
   })
 </script>
@@ -78,19 +77,23 @@
 <table.AppTable>
   <div class="table-container">
     <div>
-      <button onclick={() => refreshData()}>Regenerate Data</button>
+      <button onclick={() => refreshData()
+      }>Regenerate Data</button>
       <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
     </div>
     <!-- Table toolbar using the same pre-bound component -->
-    <table.TableToolbar title="Products Table" onRefresh={refreshData} />
+    <table.TableToolbar title="Products Table" onRefresh={refreshData
+    } />
 
     <!-- Table element -->
     <table>
       <thead>
-        {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+        {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+        }
           <tr>
             {#each headerGroup.headers as h (h.id)}
-              <table.AppHeader header={h}>
+              <table.AppHeader header={h
+              }>
                 {#snippet children(header)}
                   <th
                     colSpan={header.colSpan}
@@ -113,7 +116,8 @@
                   </th>
                 {/snippet}
               </table.AppHeader>
-            {/each}
+            {/each
+            }
           </tr>
         {/each}
       </thead>
@@ -121,14 +125,16 @@
         {#each rows as row (row.id)}
           <tr>
             {#each row.getAllCells() as c (c.id)}
-              <table.AppCell cell={c}>
+              <table.AppCell cell={c
+              }>
                 {#snippet children(cell)}
                   <td>
                     <FlexRender cell={cell} />
                   </td>
                 {/snippet}
               </table.AppCell>
-            {/each}
+            {/each
+            }
           </tr>
         {/each}
       </tbody>
@@ -136,7 +142,8 @@
         {#each table.getFooterGroups() as footerGroup (footerGroup.id)}
           <tr>
             {#each footerGroup.headers as f (f.id)}
-              <table.AppFooter header={f}>
+              <table.AppFooter header={f
+              }>
                 {#snippet children(footer)}
                   <td colSpan={footer.colSpan}>
                     {#if !footer.isPlaceholder}
@@ -155,7 +162,8 @@
                   </td>
                 {/snippet}
               </table.AppFooter>
-            {/each}
+            {/each
+            }
           </tr>
         {/each}
       </tfoot>

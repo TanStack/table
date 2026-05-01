@@ -176,26 +176,27 @@ function App() {
   // console.log(table.getBottomRows)
   // React.useEffect(() => {
   //   console.log(table.getBottomRows())
+  //
   // }, [table.getBottomRows()])
 
   return (
     <div className="app">
-      <div className="p-2 container">
+      <div className="demo-root container">
         <div>
           <button
-            className="border rounded p-2 mb-2"
+            className="demo-button demo-button-spaced"
             onClick={() => refreshData()}
           >
             Regenerate Data
           </button>
           <button
-            className="border rounded p-2 mb-2"
+            className="demo-button demo-button-spaced"
             onClick={() => stressTest()}
           >
             Stress Test (100k rows)
           </button>
         </div>
-        <div className="h-2" />
+        <div className="spacer-sm" />
         <table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -246,44 +247,44 @@ function App() {
         </table>
       </div>
 
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
+      <div className="spacer-sm" />
+      <div className="controls">
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           <div>Page</div>
           <strong>
             {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -294,7 +295,7 @@ function App() {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
-            className="border p-1 rounded w-16"
+            className="page-size-input"
           />
         </span>
         <select
@@ -310,17 +311,17 @@ function App() {
           ))}
         </select>
       </div>
-      <div className="h-2" />
+      <div className="spacer-sm" />
       <hr />
       <br />
-      <div className="flex flex-col gap-2 align-center vertical">
+      <div className="vertical-options">
         <div>
           <input
             type="checkbox"
             checked={keepPinnedRows}
             onChange={() => setKeepPinnedRows(!keepPinnedRows)}
           />
-          <label className="ml-2">
+          <label className="label-offset">
             Keep/Persist Pinned Rows across Pagination and Filtering
           </label>
         </div>
@@ -330,7 +331,9 @@ function App() {
             checked={includeLeafRows}
             onChange={() => setIncludeLeafRows(!includeLeafRows)}
           />
-          <label className="ml-2">Include Leaf Rows When Pinning Parent</label>
+          <label className="label-offset">
+            Include Leaf Rows When Pinning Parent
+          </label>
         </div>
         <div>
           <input
@@ -338,7 +341,9 @@ function App() {
             checked={includeParentRows}
             onChange={() => setIncludeParentRows(!includeParentRows)}
           />
-          <label className="ml-2">Include Parent Rows When Pinning Child</label>
+          <label className="label-offset">
+            Include Parent Rows When Pinning Child
+          </label>
         </div>
         <div>
           <input
@@ -346,13 +351,16 @@ function App() {
             checked={copyPinnedRows}
             onChange={() => setCopyPinnedRows(!copyPinnedRows)}
           />
-          <label className="ml-2">
+          <label className="label-offset">
             Duplicate/Keep Pinned Rows in main table
           </label>
         </div>
       </div>
       <div>
-        <button className="border rounded p-2 mb-2" onClick={() => rerender()}>
+        <button
+          className="demo-button demo-button-spaced"
+          onClick={() => rerender()}
+        >
           Force Rerender
         </button>
       </div>
@@ -408,7 +416,7 @@ function Filter({
     .flatRows[0]?.getValue(column.id)
 
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
+    <div className="filter-row">
       <DebouncedInput
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
@@ -416,7 +424,7 @@ function Filter({
           column.setFilterValue((old: any) => [value, old?.[1]])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
       <DebouncedInput
         type="number"
@@ -425,7 +433,7 @@ function Filter({
           column.setFilterValue((old: any) => [old?.[0], value])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
     </div>
   ) : (
@@ -434,7 +442,7 @@ function Filter({
       value={(column.getFilterValue() ?? '') as string}
       onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="filter-select"
     />
   )
 }

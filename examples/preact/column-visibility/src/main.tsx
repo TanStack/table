@@ -83,14 +83,14 @@ function App() {
       })}
     >
       {(_state) => (
-        <div className="p-2">
+        <div className="demo-root">
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
             <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
           </div>
-          <div className="h-4" />
-          <div className="inline-block border border-black shadow rounded">
-            <div className="px-1 border-b border-black">
+          <div className="spacer-md" />
+          <div className="column-toggle-panel">
+            <div className="column-toggle-panel-header">
               <label>
                 <input
                   type="checkbox"
@@ -102,7 +102,7 @@ function App() {
             </div>
             {table.getAllLeafColumns().map((column) => {
               return (
-                <div key={column.id} className="px-1">
+                <div key={column.id} className="column-toggle-row">
                   <label>
                     <input
                       type="checkbox"
@@ -115,7 +115,7 @@ function App() {
               )
             })}
           </div>
-          <div className="h-4" />
+          <div className="spacer-md" />
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -155,11 +155,11 @@ function App() {
               ))}
             </tfoot>
           </table>
-          <div className="h-4" />
-          <button onClick={() => rerender(0)} className="border p-2">
+          <div className="spacer-md" />
+          <button onClick={() => rerender(0)} className="demo-button">
             Rerender
           </button>
-          <div className="h-4" />
+          <div className="spacer-md" />
           <table.Subscribe selector={(state) => state}>
             {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
           </table.Subscribe>

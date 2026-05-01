@@ -97,9 +97,9 @@ function App() {
       })}
     >
       {(_state) => (
-        <div className="p-2">
-          <div className="inline-block border border-black shadow rounded">
-            <div className="px-1 border-b border-black">
+        <div className="demo-root">
+          <div className="column-toggle-panel">
+            <div className="column-toggle-panel-header">
               <label>
                 <input
                   type="checkbox"
@@ -111,7 +111,7 @@ function App() {
             </div>
             {table.getAllLeafColumns().map((column) => {
               return (
-                <div key={column.id} className="px-1">
+                <div key={column.id} className="column-toggle-row">
                   <label>
                     <input
                       type="checkbox"
@@ -124,19 +124,28 @@ function App() {
               )
             })}
           </div>
-          <div className="h-4" />
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => refreshData()} className="border p-1">
+          <div className="spacer-md" />
+          <div className="button-row">
+            <button
+              onClick={() => refreshData()}
+              className="demo-button demo-button-sm"
+            >
               Regenerate Data
             </button>
-            <button onClick={() => stressTest()} className="border p-1">
+            <button
+              onClick={() => stressTest()}
+              className="demo-button demo-button-sm"
+            >
               Stress Test (1k rows)
             </button>
-            <button onClick={() => randomizeColumns()} className="border p-1">
+            <button
+              onClick={() => randomizeColumns()}
+              className="demo-button demo-button-sm"
+            >
               Shuffle Columns
             </button>
           </div>
-          <div className="h-4" />
+          <div className="spacer-md" />
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (

@@ -96,28 +96,19 @@ function App() {
   const PinButtons = (props: {
     column: ReturnType<typeof table.getAllLeafColumns>[0]
   }) => (
-    <div class="flex gap-1 justify-center">
+    <div class="pin-actions">
       {props.column.getIsPinned() !== 'left' ? (
-        <button
-          class="border rounded px-2"
-          onClick={() => props.column.pin('left')}
-        >
+        <button class="pin-button" onClick={() => props.column.pin('left')}>
           {'<='}
         </button>
       ) : null}
       {props.column.getIsPinned() ? (
-        <button
-          class="border rounded px-2"
-          onClick={() => props.column.pin(false)}
-        >
+        <button class="pin-button" onClick={() => props.column.pin(false)}>
           X
         </button>
       ) : null}
       {props.column.getIsPinned() !== 'right' ? (
-        <button
-          class="border rounded px-2"
-          onClick={() => props.column.pin('right')}
-        >
+        <button class="pin-button" onClick={() => props.column.pin('right')}>
           {'=>'}
         </button>
       ) : null}
@@ -125,9 +116,9 @@ function App() {
   )
 
   return (
-    <div class="p-2">
-      <div class="inline-block border border-black shadow rounded">
-        <div class="px-1 border-b border-black">
+    <div class="demo-root">
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
           <label>
             <input
               type="checkbox"
@@ -139,7 +130,7 @@ function App() {
         </div>
         <For each={table.getAllLeafColumns()}>
           {(column) => (
-            <div class="px-1">
+            <div class="column-toggle-row">
               <label>
                 <input
                   type="checkbox"
@@ -152,25 +143,31 @@ function App() {
           )}
         </For>
       </div>
-      <div class="h-4" />
-      <div class="flex flex-wrap gap-2">
-        <button onClick={() => refreshData()} class="border p-1">
+      <div class="spacer-md" />
+      <div class="button-row">
+        <button
+          onClick={() => refreshData()}
+          class="demo-button demo-button-sm"
+        >
           Regenerate Data
         </button>
-        <button onClick={() => stressTest()} class="border p-1">
+        <button onClick={() => stressTest()} class="demo-button demo-button-sm">
           Stress Test (500k rows)
         </button>
-        <button onClick={() => randomizeColumns()} class="border p-1">
+        <button
+          onClick={() => randomizeColumns()}
+          class="demo-button demo-button-sm"
+        >
           Shuffle Columns
         </button>
       </div>
-      <div class="h-4" />
-      <p class="text-sm mb-2">
+      <div class="spacer-md" />
+      <p class="demo-note">
         This example takes advantage of the "splitting" APIs. (APIs that have
         "left", "center", and "right" modifiers)
       </p>
-      <div class="flex gap-4">
-        <table class="border-2 border-black">
+      <div class="split-tables">
+        <table class="outlined-table">
           <thead>
             <For each={table.getLeftHeaderGroups()}>
               {(headerGroup) => (
@@ -178,7 +175,7 @@ function App() {
                   <For each={headerGroup.headers}>
                     {(header) => (
                       <th colSpan={header.colSpan}>
-                        <div class="whitespace-nowrap">
+                        <div class="nowrap">
                           {header.isPlaceholder ? null : (
                             <table.FlexRender header={header} />
                           )}
@@ -209,7 +206,7 @@ function App() {
             </For>
           </tbody>
         </table>
-        <table class="border-2 border-black">
+        <table class="outlined-table">
           <thead>
             <For each={table.getCenterHeaderGroups()}>
               {(headerGroup) => (
@@ -217,7 +214,7 @@ function App() {
                   <For each={headerGroup.headers}>
                     {(header) => (
                       <th colSpan={header.colSpan}>
-                        <div class="whitespace-nowrap">
+                        <div class="nowrap">
                           {header.isPlaceholder ? null : (
                             <table.FlexRender header={header} />
                           )}
@@ -248,7 +245,7 @@ function App() {
             </For>
           </tbody>
         </table>
-        <table class="border-2 border-black">
+        <table class="outlined-table">
           <thead>
             <For each={table.getRightHeaderGroups()}>
               {(headerGroup) => (
@@ -256,7 +253,7 @@ function App() {
                   <For each={headerGroup.headers}>
                     {(header) => (
                       <th colSpan={header.colSpan}>
-                        <div class="whitespace-nowrap">
+                        <div class="nowrap">
                           {header.isPlaceholder ? null : (
                             <table.FlexRender header={header} />
                           )}

@@ -1,9 +1,9 @@
-<div class="p-2">
-  <button (click)="refreshData()" class="border p-2">Regenerate Data</button>
-  <button (click)="stressTest()" class="border p-2">Stress Test (1k rows)</button>
-  <div class="h-4"></div>
-  <div class="inline-block border border-black shadow rounded">
-    <div class="px-1 border-b border-black">
+<div class="demo-root">
+  <button (click)="refreshData()" class="demo-button">Regenerate Data</button>
+  <button (click)="stressTest()" class="demo-button">Stress Test (1k rows)</button>
+  <div class="spacer-md"></div>
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
       <label>
         <input
           type="checkbox"
@@ -15,7 +15,7 @@
     </div>
 
     @for (column of table.getAllLeafColumns(); track column.id) {
-      <div class="px-1">
+      <div class="column-toggle-row">
         <label>
           <input
             type="checkbox"
@@ -28,7 +28,7 @@
     }
   </div>
 
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
 
   <table>
     <thead>
@@ -76,6 +76,6 @@
     </tfoot>
   </table>
 
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   <pre>{{ stringifiedColumnVisibility() }}</pre>
 </div>

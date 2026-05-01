@@ -94,7 +94,7 @@ function App() {
   )
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (100 rows)</button>
@@ -106,7 +106,7 @@ function App() {
             (e.target as HTMLSelectElement).value as ColumnResizeMode,
           )
         }
-        className="border p-2 border-black rounded"
+        className="demo-button outlined-control"
       >
         <option value="onEnd">Resize: "onEnd"</option>
         <option value="onChange">Resize: "onChange"</option>
@@ -118,15 +118,15 @@ function App() {
             (e.target as HTMLSelectElement).value as ColumnResizeDirection,
           )
         }
-        className="border p-2 border-black rounded"
+        className="demo-button outlined-control"
       >
         <option value="ltr">Resize Direction: "ltr"</option>
         <option value="rtl">Resize Direction: "rtl"</option>
       </select>
       <div style={{ direction: table.options.columnResizeDirection }}>
-        <div className="h-4" />
-        <div className="text-xl">{'<table/>'}</div>
-        <div className="overflow-x-auto">
+        <div className="spacer-md" />
+        <div className="section-title">{'<table/>'}</div>
+        <div className="scroll-container">
           <table style={{ width: table.getCenterTotalSize() }}>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -186,9 +186,9 @@ function App() {
             </tbody>
           </table>
         </div>
-        <div className="h-4" />
-        <div className="text-xl">{'<div/> (relative)'}</div>
-        <div className="overflow-x-auto">
+        <div className="spacer-md" />
+        <div className="section-title">{'<div/> (relative)'}</div>
+        <div className="scroll-container">
           <div className="divTable" style={{ width: table.getTotalSize() }}>
             <div className="thead">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -249,9 +249,9 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="h-4" />
-        <div className="text-xl">{'<div/> (absolute positioning)'}</div>
-        <div className="overflow-x-auto">
+        <div className="spacer-md" />
+        <div className="section-title">{'<div/> (absolute positioning)'}</div>
+        <div className="scroll-container">
           <div
             className="divTable"
             style={{
@@ -334,8 +334,8 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="h-4" />
-      <button onClick={() => rerender(0)} className="border p-2">
+      <div className="spacer-md" />
+      <button onClick={() => rerender(0)} className="demo-button">
         Rerender
       </button>
       <table.Subscribe selector={(state) => state}>

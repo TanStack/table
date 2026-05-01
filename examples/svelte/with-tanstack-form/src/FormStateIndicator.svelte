@@ -12,15 +12,15 @@
   })}
 >
   {#snippet children({ isDirty, isValid, errorMap })}
-    <div class="flex gap-4 text-sm">
-      <span class={isDirty ? 'text-yellow-600' : 'text-gray-400'}>
+    <div class="form-status">
+      <span class={isDirty ? 'warning-text' : 'muted-text'}>
         {isDirty ? '● Modified' : '○ Pristine'}
       </span>
-      <span class={isValid ? 'text-green-600' : 'text-red-600'}>
+      <span class={isValid ? 'success-text' : 'error-text'}>
         {isValid ? '✓ Valid' : '✗ Invalid'}
       </span>
       {#if Object.keys(errorMap).length > 0}
-        <span class="text-red-600">
+        <span class="error-text">
           Errors: {JSON.stringify(errorMap)}
         </span>
       {/if}

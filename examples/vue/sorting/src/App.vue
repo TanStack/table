@@ -72,14 +72,14 @@ const table = useTable(
 </script>
 
 <template>
-  <div class="p-2">
-    <div class="flex flex-wrap gap-2">
-      <button @click="refreshData" class="border p-2">Regenerate Data</button>
-      <button @click="stressTest" class="border p-2">
+  <div class="demo-root">
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
         Stress Test (500k rows)
       </button>
     </div>
-    <div class="h-4" />
+    <div class="spacer-md" />
     <table>
       <thead>
         <tr
@@ -90,9 +90,7 @@ const table = useTable(
             v-for="header in headerGroup.headers"
             :key="header.id"
             :colSpan="header.colSpan"
-            :class="
-              header.column.getCanSort() ? 'cursor-pointer select-none' : ''
-            "
+            :class="header.column.getCanSort() ? 'sortable-header' : ''"
             @click="header.column.getToggleSortingHandler()?.($event)"
           >
             <template v-if="!header.isPlaceholder">
@@ -132,7 +130,7 @@ const table = useTable(
       </tfoot>
     </table>
 
-    <div class="h-4"></div>
+    <div class="spacer-md"></div>
 
     <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
 
@@ -147,6 +145,8 @@ html {
 }
 
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 

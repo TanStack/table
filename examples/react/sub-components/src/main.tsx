@@ -106,8 +106,8 @@ function Table({
   return (
     <table.Subscribe selector={(state) => state}>
       {() => (
-        <div className="p-2">
-          <div className="h-2" />
+        <div className="demo-root">
+          <div className="spacer-sm" />
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -153,7 +153,7 @@ function Table({
               })}
             </tbody>
           </table>
-          <div className="h-2" />
+          <div className="spacer-sm" />
           <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
         </div>
       )}
@@ -179,12 +179,12 @@ function App() {
   const stressTest = () => setData(makeData(1_000))
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
-        <button onClick={() => refreshData()} className="border p-2">
+        <button onClick={() => refreshData()} className="demo-button">
           Regenerate Data
         </button>
-        <button onClick={() => stressTest()} className="border p-2">
+        <button onClick={() => stressTest()} className="demo-button">
           Stress Test (1k rows)
         </button>
       </div>
