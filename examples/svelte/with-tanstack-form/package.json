@@ -15,7 +15,7 @@
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@tsconfig/svelte": "^5.0.8",
     "svelte": "^5.55.5",
-    "svelte-check": "^4.4.6",
+    "svelte-check": "^4.4.7",
     "typescript": "6.0.3",
     "vite": "^8.0.10"
   },
@@ -23,6 +23,6 @@
     "@tanstack/form-core": "^1.29.1",
     "@tanstack/svelte-form": "^1.29.1",
     "@tanstack/svelte-table": "^9.0.0-alpha.39",
-    "zod": "^4.3.6"
+    "zod": "^4.4.1"
   }
 }

@@ -19,6 +19,6 @@
     "@tanstack/solid-form": "^1.29.1",
     "@tanstack/solid-table": "^9.0.0-alpha.40",
     "solid-js": "^1.9.12",
-    "zod": "^4.3.6"
+    "zod": "^4.4.1"
   }
 }

@@ -11,20 +11,20 @@
   "private": true,
   "packageManager": "pnpm@10.33.2",
   "dependencies": {
-    "@angular/common": "^21.2.10",
-    "@angular/compiler": "^21.2.10",
-    "@angular/core": "^21.2.10",
-    "@angular/forms": "^21.2.10",
-    "@angular/platform-browser": "^21.2.10",
+    "@angular/common": "^21.2.11",
+    "@angular/compiler": "^21.2.11",
+    "@angular/core": "^21.2.11",
+    "@angular/forms": "^21.2.11",
+    "@angular/platform-browser": "^21.2.11",
     "@faker-js/faker": "^10.4.0",
     "@tanstack/angular-table": "^9.0.0-alpha.39",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.8",
-    "@angular/cli": "^21.2.8",
-    "@angular/compiler-cli": "^21.2.10",
+    "@angular/build": "^21.2.9",
+    "@angular/cli": "^21.2.9",
+    "@angular/compiler-cli": "^21.2.11",
     "typescript": "6.0.3"
   }
 }
