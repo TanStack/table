@@ -90,7 +90,7 @@ function App() {
   })
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
@@ -104,9 +104,7 @@ function App() {
                   {header.isPlaceholder ? null : (
                     <div
                       className={
-                        header.column.getCanSort()
-                          ? 'cursor-pointer select-none'
-                          : ''
+                        header.column.getCanSort() ? 'sortable-header' : ''
                       }
                       onClick={header.column.getToggleSortingHandler()}
                     >
@@ -134,44 +132,44 @@ function App() {
           ))}
         </tbody>
       </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
+      <div className="spacer-sm" />
+      <div className="controls">
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           <div>Page</div>
           <strong>
             {(pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -184,7 +182,7 @@ function App() {
                 : 0
               table.setPageIndex(page)
             }}
-            className="border p-1 rounded w-16"
+            className="page-size-input"
           />
         </span>
         <select
@@ -200,8 +198,8 @@ function App() {
           ))}
         </select>
       </div>
-      <div className="h-4" />
-      <button onClick={() => rerender(0)} className="border p-2">
+      <div className="spacer-md" />
+      <button onClick={() => rerender(0)} className="demo-button">
         Rerender
       </button>
       <pre>{JSON.stringify({ sorting, pagination }, null, 2)}</pre>

@@ -78,14 +78,14 @@ function App() {
   })
 
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
       </div>
-      <div class="h-4" />
-      <div class="inline-block border border-black shadow rounded">
-        <div class="px-1 border-b border-black">
+      <div class="spacer-md" />
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
           <label>
             <input
               checked={table.getIsAllColumnsVisible()}
@@ -97,7 +97,7 @@ function App() {
         </div>
         <For each={table.getAllLeafColumns()}>
           {(column) => (
-            <div class="px-1">
+            <div class="column-toggle-row">
               <label>
                 <input
                   checked={column.getIsVisible()}
@@ -110,7 +110,7 @@ function App() {
           )}
         </For>
       </div>
-      <div class="h-4" />
+      <div class="spacer-md" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -162,7 +162,7 @@ function App() {
           </For>
         </tfoot>
       </table>
-      <div class="h-4" />
+      <div class="spacer-md" />
       <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
     </div>
   )

@@ -108,13 +108,13 @@
   })
 </script>
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
   </div>
-  <div class="inline-block border border-black shadow rounded">
-    <div class="px-1 border-b border-black">
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
       <label>
         <input
           checked={table.getIsAllColumnsVisible()}
@@ -127,7 +127,7 @@
       </label>
     </div>
     {#each table.getAllLeafColumns() as column}
-      <div class="px-1">
+      <div class="column-toggle-row">
         <label>
           <input
             checked={column.getIsVisible()}
@@ -139,22 +139,23 @@
       </div>
     {/each}
   </div>
-  <div class="h-4"></div>
-  <div class="flex flex-wrap gap-2">
-    <button onclick={() => refreshData()} class="border p-1">
+  <div class="spacer-md"></div>
+  <div class="button-row">
+    <button onclick={() => refreshData()} class="demo-button demo-button-sm">
       Regenerate Data
     </button>
-    <button onclick={() => stressTest()} class="border p-1">
+    <button onclick={() => stressTest()} class="demo-button demo-button-sm">
       Stress Test (500k rows)
     </button>
-    <button onclick={() => randomizeColumns()} class="border p-1">
+    <button onclick={() => randomizeColumns()} class="demo-button demo-button-sm">
       Shuffle Columns
     </button>
   </div>
-  <div class="h-4"></div>
-  <table class="border-2 border-black">
+  <div class="spacer-md"></div>
+  <table class="outlined-table">
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
@@ -178,5 +179,6 @@
       {/each}
     </tbody>
   </table>
-  <pre>{JSON.stringify(table.store.state.columnOrder, null, 2)}</pre>
+  <pre>{JSON.stringify(table.store.state.columnOrder, null, 2)
+  }</pre>
 </div>

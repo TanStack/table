@@ -49,7 +49,7 @@ function App() {
       ),
       cell: ({ row }) => {
         return (
-          <div class="px-1">
+          <div class="column-toggle-row">
             <IndeterminateCheckbox
               checked={row.getIsSelected()}
               disabled={!row.getCanSelect()}
@@ -131,7 +131,7 @@ function App() {
   useTanStackTableDevtools(table, 'Row Selection Example')
 
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
@@ -140,11 +140,11 @@ function App() {
         <input
           value={table.store.state.globalFilter ?? ''}
           onInput={(e) => table.setGlobalFilter(e.target.value)}
-          class="p-2 font-lg shadow border border-block"
+          class="summary-panel"
           placeholder="Search all columns..."
         />
       </div>
-      <div class="h-2" />
+      <div class="spacer-sm" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -187,7 +187,7 @@ function App() {
         </tbody>
         <tfoot>
           <tr>
-            <td class="p-1">
+            <td class="cell-padding">
               <IndeterminateCheckbox
                 checked={table.getIsAllPageRowsSelected()}
                 indeterminate={table.getIsSomePageRowsSelected()}
@@ -200,44 +200,44 @@ function App() {
           </tr>
         </tfoot>
       </table>
-      <div class="h-2" />
-      <div class="flex items-center gap-2">
+      <div class="spacer-sm" />
+      <div class="controls">
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           <div>Page</div>
           <strong>
             {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -248,7 +248,7 @@ function App() {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
-            class="border p-1 rounded w-16"
+            class="page-size-input"
           />
         </span>
         <select
@@ -272,7 +272,7 @@ function App() {
       <br />
       <div>
         <button
-          class="border rounded p-2 mb-2"
+          class="demo-button demo-button-spaced"
           onClick={() =>
             console.info(
               'table.getSelectedRowModel().flatRows',
@@ -283,7 +283,7 @@ function App() {
           Log table.getSelectedRowModel().flatRows
         </button>
         <button
-          class="border rounded p-2 mb-2"
+          class="demo-button demo-button-spaced"
           onClick={() => setEnableRowSelection((prev) => !prev)}
         >
           {enableRowSelection() ? 'Disable' : 'Enable'} Row Selection
@@ -306,7 +306,7 @@ function Filter(props: {
     .flatRows[0]?.getValue(props.column.id)
 
   return typeof firstValue === 'number' ? (
-    <div class="flex space-x-2">
+    <div class="filter-row">
       <input
         type="number"
         value={((props.column.getFilterValue() as any)?.[0] ?? '') as string}
@@ -314,7 +314,7 @@ function Filter(props: {
           props.column.setFilterValue((old: any) => [e.target.value, old?.[1]])
         }
         placeholder={`Min`}
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
       <input
         type="number"
@@ -323,7 +323,7 @@ function Filter(props: {
           props.column.setFilterValue((old: any) => [old?.[0], e.target.value])
         }
         placeholder={`Max`}
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
     </div>
   ) : (
@@ -332,7 +332,7 @@ function Filter(props: {
       value={(props.column.getFilterValue() ?? '') as string}
       onInput={(e) => props.column.setFilterValue(e.target.value)}
       placeholder={`Search...`}
-      class="w-36 border shadow rounded"
+      class="filter-select"
     />
   )
 }
@@ -356,7 +356,7 @@ function IndeterminateCheckbox(props: {
     <input
       type="checkbox"
       ref={ref}
-      class={(props.class ?? '') + ' cursor-pointer'}
+      class={(props.class ?? '') + ' sortable-header'}
       checked={props.checked}
       disabled={props.disabled}
       onChange={props.onChange}

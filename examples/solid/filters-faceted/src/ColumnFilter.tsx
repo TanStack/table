@@ -38,14 +38,14 @@ function ColumnFilter(props: {
               500,
             )}
             placeholder={`Search... (${props.column.getFacetedUniqueValues().size})`}
-            class="w-36 border shadow rounded"
+            class="filter-select"
             list={`${props.column.id}list`}
           />
         </div>
       }
     >
       <div>
-        <div class="flex space-x-2">
+        <div class="filter-row">
           <input
             type="number"
             min={Number(props.column.getFacetedMinMaxValues()?.[0] ?? '')}
@@ -66,7 +66,7 @@ function ColumnFilter(props: {
                 ? `(${props.column.getFacetedMinMaxValues()?.[0]})`
                 : ''
             }`}
-            class="w-24 border shadow rounded"
+            class="filter-input"
           />
           <input
             type="number"
@@ -88,7 +88,7 @@ function ColumnFilter(props: {
                 ? `(${props.column.getFacetedMinMaxValues()?.[1]})`
                 : ''
             }`}
-            class="w-24 border shadow rounded"
+            class="filter-input"
           />
         </div>
       </div>

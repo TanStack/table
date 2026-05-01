@@ -1136,7 +1136,11 @@
           "label": "react",
           "children": [
             { "to": "framework/react/examples/lib-shadcn-radix", "label": "Basic - Shadcn (Radix)" },
-            { "to": "framework/react/examples/kitchen-sink-shadcn-radix", "label": "Kitchen Sink - Shadcn (Radix)" }
+            { "to": "framework/react/examples/lib-shadcn-base", "label": "Basic - Shadcn (Base UI)" },
+            { "to": "framework/react/examples/lib-material-ui", "label": "Basic - Material UI" },
+            { "to": "framework/react/examples/kitchen-sink-shadcn-radix", "label": "Kitchen Sink - Shadcn (Radix)" },
+            { "to": "framework/react/examples/kitchen-sink-shadcn-base", "label": "Kitchen Sink - Shadcn (Base UI)" },
+            { "to": "framework/react/examples/kitchen-sink-material-ui", "label": "Kitchen Sink - Material UI" }
           ]
         }
       ]

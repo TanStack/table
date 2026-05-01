@@ -114,17 +114,17 @@ function App() {
   const [enableMemo, setEnableMemo] = useState(true)
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (2k rows)</button>
       </div>
-      <div className="h-4" />
+      <div className="spacer-md" />
       <i>
         This example has artificially slow cell renders to simulate complex
         usage
       </i>
-      <div className="h-4" />
+      <div className="spacer-md" />
       <label>
         Memoize Table Body:{' '}
         <input
@@ -133,8 +133,8 @@ function App() {
           onChange={() => setEnableMemo(!enableMemo)}
         />
       </label>
-      <div className="h-4" />
-      <button onClick={() => rerender(0)} className="border p-2">
+      <div className="spacer-md" />
+      <button onClick={() => rerender(0)} className="demo-button">
         Rerender
       </button>
       <table.Subscribe selector={(state) => state}>
@@ -144,8 +144,8 @@ function App() {
           </pre>
         )}
       </table.Subscribe>
-      <div className="h-4" />({data.length.toLocaleString()} rows)
-      <div className="overflow-x-auto">
+      <div className="spacer-md" />({data.length.toLocaleString()} rows)
+      <div className="scroll-container">
         {/* Here in the <table> equivalent element (surrounds all table head and data cells), we will define our CSS variables for column sizes */}
         <div
           className="divTable"

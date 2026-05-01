@@ -88,14 +88,14 @@ const table = useAppTable(
 </script>
 
 <template>
-  <div class="p-2">
-    <div class="flex flex-wrap gap-2">
-      <button @click="refreshData" class="border p-2">Regenerate Data</button>
-      <button @click="stressTest" class="border p-2">
+  <div class="demo-root">
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
         Stress Test (1k rows)
       </button>
     </div>
-    <div class="h-4" />
+    <div class="spacer-md" />
     <table>
       <thead>
         <tr
@@ -150,7 +150,7 @@ const table = useAppTable(
         </tr>
       </tfoot>
     </table>
-    <div class="h-4" />
+    <div class="spacer-md" />
   </div>
 </template>
 
@@ -160,6 +160,8 @@ html {
   font-size: 14px;
 }
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 tbody {

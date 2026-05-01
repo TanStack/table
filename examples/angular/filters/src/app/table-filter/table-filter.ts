@@ -27,12 +27,12 @@ declare module '@tanstack/angular-table' {
     @switch (filterVariant()) {
       @case ('range') {
         <div>
-          <div class="flex space-x-2">
+          <div class="filter-row">
             <input
               debouncedInput
               [debounce]="500"
               type="number"
-              class="w-24 border shadow rounded"
+              class="filter-input"
               [min]="column().getFacetedMinMaxValues()?.[0] ?? ''"
               [max]="column().getFacetedMinMaxValues()?.[1] ?? ''"
               [value]="columnFilterValue()?.[0] ?? ''"
@@ -44,7 +44,7 @@ declare module '@tanstack/angular-table' {
               debouncedInput
               [debounce]="500"
               type="number"
-              class="w-24 border shadow rounded"
+              class="filter-input"
               [min]="column().getFacetedMinMaxValues()?.[0] ?? ''"
               [max]="column().getFacetedMinMaxValues()?.[1] ?? ''"
               [value]="columnFilterValue()?.[1] ?? ''"
@@ -52,7 +52,7 @@ declare module '@tanstack/angular-table' {
               (changeEvent)="changeMaxRangeValue($event)"
             />
           </div>
-          <div class="h-1"></div>
+          <div class="spacer-xs"></div>
         </div>
       }
       @case ('select') {
@@ -78,7 +78,7 @@ declare module '@tanstack/angular-table' {
         </datalist>
         <input
           type="text"
-          class="w-36 border shadow rounded"
+          class="filter-select"
           debouncedInput
           [debounce]="500"
           [attr.placeholder]="
@@ -88,7 +88,7 @@ declare module '@tanstack/angular-table' {
           [value]="columnFilterValue() ?? ''"
           (changeEvent)="column().setFilterValue($any($event).target.value)"
         />
-        <div class="h-1"></div>
+        <div class="spacer-xs"></div>
       }
     }
   `,

@@ -120,7 +120,7 @@
   )
 </script>
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
@@ -129,14 +129,15 @@
     <input
       value={table.state.globalFilter ?? ''}
       oninput={(e) => table.setGlobalFilter((e.target as HTMLInputElement).value)}
-      class="p-2 font-lg shadow border border-block"
+      class="summary-panel"
       placeholder="Search all columns..."
     />
   </div>
-  <div class="h-2"></div>
+  <div class="spacer-sm"></div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
@@ -147,7 +148,7 @@
                     checked={table.getIsAllRowsSelected()}
                     use:setIndeterminate={!table.getIsAllRowsSelected() && table.getIsSomeRowsSelected()}
                     onchange={table.getToggleAllRowsSelectedHandler()}
-                    class="cursor-pointer"
+                    class="sortable-header"
                   />
                 {:else}
                   <FlexRender header={header} />
@@ -175,7 +176,7 @@
                   disabled={!row.getCanSelect()}
                   use:setIndeterminate={!row.getIsSelected() && row.getIsSomeSelected()}
                   onchange={row.getToggleSelectedHandler()}
-                  class="cursor-pointer"
+                  class="sortable-header"
                 />
               {:else}
                 <FlexRender cell={cell} />
@@ -187,56 +188,57 @@
     </tbody>
     <tfoot>
       <tr>
-        <td class="p-1">
+        <td class="cell-padding">
           <input
             type="checkbox"
             checked={table.getIsAllPageRowsSelected()}
             use:setIndeterminate={!table.getIsAllPageRowsSelected() && table.getIsSomePageRowsSelected()}
             onchange={table.getToggleAllPageRowsSelectedHandler()}
-            class="cursor-pointer"
+            class="sortable-header"
           />
         </td>
         <td colSpan={20}>Page Rows ({table.getRowModel().rows.length.toLocaleString()})</td>
       </tr>
     </tfoot>
   </table>
-  <div class="h-2"></div>
-  <div class="flex items-center gap-2">
+  <div class="spacer-sm"></div>
+  <div class="controls">
     <button
-      class="border rounded p-1"
-      onclick={() => table.setPageIndex(0)}
+      class="demo-button demo-button-sm"
+      onclick={() => table.setPageIndex(0)
+      }
       disabled={!table.getCanPreviousPage()}
     >
       {'<<'}
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       onclick={() => table.previousPage()}
       disabled={!table.getCanPreviousPage()}
     >
       {'<'}
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       onclick={() => table.nextPage()}
       disabled={!table.getCanNextPage()}
     >
       {'>'}
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       onclick={() => table.setPageIndex(table.getPageCount() - 1)}
       disabled={!table.getCanNextPage()}
     >
       {'>>'}
     </button>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       <div>Page</div>
       <strong>
         {(table.state.pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
       </strong>
     </span>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       | Go to page:
       <input
         type="number"
@@ -247,7 +249,7 @@
           const page = (e.target as HTMLInputElement).value ? Number((e.target as HTMLInputElement).value) - 1 : 0
           table.setPageIndex(page)
         }}
-        class="border p-1 rounded w-16"
+        class="page-size-input"
       />
     </span>
     <select
@@ -269,16 +271,16 @@
   <hr />
   <br />
   <div>
-    <button class="border rounded p-2 mb-2" onclick={() => refreshData()}>
+    <button class="demo-button demo-button-spaced" onclick={() => refreshData()}>
       Regenerate Data
     </button>
-    <button class="border rounded p-2 mb-2" onclick={() => stressTest()}>
+    <button class="demo-button demo-button-spaced" onclick={() => stressTest()}>
       Stress Test (100k rows)
     </button>
   </div>
   <div>
     <button
-      class="border rounded p-2 mb-2"
+      class="demo-button demo-button-spaced"
       onclick={() =>
         console.info(
           'table.getSelectedRowModel().flatRows',
@@ -291,7 +293,8 @@
   </div>
   <div>
     <strong>Row Selection State:</strong>
-    <pre>{JSON.stringify(table.state, null, 2)}</pre>
+    <pre>{JSON.stringify(table.state, null, 2)
+    }</pre>
   </div>
 </div>
 
@@ -301,7 +304,7 @@
     .flatRows[0]?.getValue(column.id)}
 
   {#if typeof firstValue === 'number'}
-    <div class="flex space-x-2">
+    <div class="filter-row">
       <input
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
@@ -309,7 +312,7 @@
           column.setFilterValue((old: any) => [(e.target as HTMLInputElement).value, old?.[1]])
         }
         placeholder={`Min`}
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
       <input
         type="number"
@@ -318,7 +321,7 @@
           column.setFilterValue((old: any) => [old?.[0], (e.target as HTMLInputElement).value])
         }
         placeholder={`Max`}
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
     </div>
   {:else}
@@ -327,7 +330,7 @@
       value={(column.getFilterValue() ?? '') as string}
       oninput={(e) => column.setFilterValue((e.target as HTMLInputElement).value)}
       placeholder={`Search...`}
-      class="w-36 border shadow rounded"
+      class="filter-select"
     />
   {/if}
 {/snippet}

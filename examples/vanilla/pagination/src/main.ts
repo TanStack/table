@@ -80,7 +80,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   const theadElement = document.createElement('thead')
   const tbodyElement = document.createElement('tbody')
 
-  tableElement.classList.add('mb-2')
+  tableElement.classList.add('table-spacer')
 
   tableElement.appendChild(theadElement)
   tableElement.appendChild(tbodyElement)
@@ -95,7 +95,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
       divElement.classList.add(
         'w-36',
         ...(header.column.getCanSort()
-          ? ['cursor-pointer', 'select-none']
+          ? ['sortable-header', 'sortable-header']
           : []),
       )
       ;((divElement.onclick = (e) =>
@@ -127,11 +127,11 @@ const renderTable = (table: Table<typeof _features, Person>) => {
 
   // Render pagination
   const paginationElement = document.createElement('div')
-  paginationElement.classList.add('flex', 'items-center', 'gap-2')
+  paginationElement.classList.add('table-row-group', 'controls', 'controls')
 
   // Render pagination first page button
   const firstPageButton = document.createElement('button')
-  firstPageButton.classList.add('border', 'rounded', 'p-1')
+  firstPageButton.classList.add('demo-button', 'demo-button', 'cell-padding')
   firstPageButton.disabled = !table.getCanPreviousPage()
   firstPageButton.innerHTML = '<<'
   firstPageButton.onclick = () => table.firstPage()
@@ -139,7 +139,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
 
   // Render pagination previous page button
   const prevPageButton = document.createElement('button')
-  prevPageButton.classList.add('border', 'rounded', 'p-1')
+  prevPageButton.classList.add('demo-button', 'demo-button', 'cell-padding')
   prevPageButton.disabled = !table.getCanPreviousPage()
   prevPageButton.innerHTML = '<'
   prevPageButton.onclick = () => table.previousPage()
@@ -147,7 +147,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
 
   // Render pagination next page button
   const nextPageButton = document.createElement('button')
-  nextPageButton.classList.add('border', 'rounded', 'p-1')
+  nextPageButton.classList.add('demo-button', 'demo-button', 'cell-padding')
   nextPageButton.disabled = !table.getCanNextPage()
   nextPageButton.innerHTML = '>'
   nextPageButton.onclick = () => table.nextPage()
@@ -155,7 +155,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
 
   // Render pagination last page button
   const lastPageButton = document.createElement('button')
-  lastPageButton.classList.add('border', 'rounded', 'p-1')
+  lastPageButton.classList.add('demo-button', 'demo-button', 'cell-padding')
   lastPageButton.disabled = !table.getCanNextPage()
   lastPageButton.innerHTML = '>>'
   lastPageButton.onclick = () => table.lastPage()
@@ -163,13 +163,23 @@ const renderTable = (table: Table<typeof _features, Person>) => {
 
   // Render pagination info
   const paginationInfoElement = document.createElement('span')
-  paginationInfoElement.classList.add('flex', 'items-center', 'gap-1')
-  paginationInfoElement.innerHTML = `<div>Page</div><strong>${(table.store.state.pagination.pageIndex + 1).toLocaleString()} of ${table.getPageCount().toLocaleString()}</strong>`
+  paginationInfoElement.classList.add(
+    'table-row-group',
+    'controls',
+    'inline-controls',
+  )
+  paginationInfoElement.innerHTML = `<div>Page</div><strong>${(
+    table.store.state.pagination.pageIndex + 1
+  ).toLocaleString()} of ${table.getPageCount().toLocaleString()}</strong>`
   paginationElement.appendChild(paginationInfoElement)
 
   // Render pagination set page
   const paginationPageElement = document.createElement('span')
-  paginationPageElement.classList.add('flex', 'items-center', 'gap-1')
+  paginationPageElement.classList.add(
+    'table-row-group',
+    'controls',
+    'inline-controls',
+  )
   paginationPageElement.textContent = '| Go to page:'
   const paginationPageInput = document.createElement('input')
   paginationPageInput.type = 'number'
@@ -178,7 +188,12 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   paginationPageInput.defaultValue = String(
     table.store.state.pagination.pageIndex + 1,
   )
-  paginationPageInput.classList.add('border', 'p-1', 'rounded', 'w-16')
+  paginationPageInput.classList.add(
+    'demo-button',
+    'cell-padding',
+    'demo-button',
+    'page-size-input',
+  )
   paginationPageInput.oninput = (e) => {
     const target = e.target as HTMLInputElement
     const page = target.value ? Number(target.value) - 1 : 0

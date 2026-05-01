@@ -8,7 +8,7 @@
 
 <div>
   <select
-    class="border rounded px-1"
+    class="compact-input"
     value={field.state.value}
     onchange={(e: Event) =>
       field.handleChange((e.target as HTMLSelectElement).value)}
@@ -19,6 +19,6 @@
     {/each}
   </select>
   {#if field.state.meta.errors.length > 0}
-    <div class="text-red-500 text-xs">{field.state.meta.errors.join(', ')}</div>
+    <div class="error-text">{field.state.meta.errors.join(', ')}</div>
   {/if}
 </div>

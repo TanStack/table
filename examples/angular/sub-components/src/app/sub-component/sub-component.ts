@@ -5,7 +5,7 @@ import type { Row } from '@tanstack/angular-table'
 @Component({
   selector: 'app-sub',
   template: `
-    <pre [style.font-size.px]="10" class="bg-gray-100">
+    <pre [style.font-size.px]="10" class="code-block">
     <code>
       {{ row().original | json }}
     </code>

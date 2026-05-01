@@ -117,7 +117,7 @@ function App() {
   useTanStackTableDevtools(table, 'Sorting Example')
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (500k rows)</button>
@@ -125,7 +125,7 @@ function App() {
       <table.Subscribe source={table.atoms.sorting}>
         {(_state) => (
           <>
-            <div className="h-2" />
+            <div className="spacer-sm" />
             <table>
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -137,7 +137,7 @@ function App() {
                             <div
                               className={
                                 header.column.getCanSort()
-                                  ? 'cursor-pointer select-none'
+                                  ? 'sortable-header'
                                   : ''
                               }
                               onClick={header.column.getToggleSortingHandler()}

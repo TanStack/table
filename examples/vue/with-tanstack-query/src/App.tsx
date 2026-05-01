@@ -85,8 +85,8 @@ export default defineComponent({
     })
 
     return () => (
-      <div class="p-2">
-        <div class="h-2" />
+      <div class="demo-root">
+        <div class="spacer-sm" />
         <table>
           <thead>
             {table
@@ -121,44 +121,44 @@ export default defineComponent({
               ))}
           </tbody>
         </table>
-        <div class="h-2" />
-        <div class="flex items-center gap-2">
+        <div class="spacer-sm" />
+        <div class="controls">
           <button
-            class="border rounded p-1"
+            class="demo-button demo-button-sm"
             onClick={() => table.firstPage()}
             disabled={!table.getCanPreviousPage()}
           >
             {'<<'}
           </button>
           <button
-            class="border rounded p-1"
+            class="demo-button demo-button-sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             {'<'}
           </button>
           <button
-            class="border rounded p-1"
+            class="demo-button demo-button-sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
             {'>'}
           </button>
           <button
-            class="border rounded p-1"
+            class="demo-button demo-button-sm"
             onClick={() => table.lastPage()}
             disabled={!table.getCanNextPage()}
           >
             {'>>'}
           </button>
-          <span class="flex items-center gap-1">
+          <span class="inline-controls">
             <div>Page</div>
             <strong>
               {(pagination.value.pageIndex + 1).toLocaleString()} of{' '}
               {table.getPageCount().toLocaleString()}
             </strong>
           </span>
-          <span class="flex items-center gap-1">
+          <span class="inline-controls">
             | Go to page:
             <input
               type="number"
@@ -170,7 +170,7 @@ export default defineComponent({
                 const page = target.value ? Number(target.value) - 1 : 0
                 table.setPageIndex(page)
               }}
-              class="border p-1 rounded w-16"
+              class="page-size-input"
             />
           </span>
           <select

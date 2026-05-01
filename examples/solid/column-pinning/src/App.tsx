@@ -89,9 +89,9 @@ function App() {
   }
 
   return (
-    <div class="p-2">
-      <div class="inline-block border border-black shadow rounded">
-        <div class="px-1 border-b border-black">
+    <div class="demo-root">
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
           <label>
             <input
               type="checkbox"
@@ -103,7 +103,7 @@ function App() {
         </div>
         <For each={table.getAllLeafColumns()}>
           {(column) => (
-            <div class="px-1">
+            <div class="column-toggle-row">
               <label>
                 <input
                   type="checkbox"
@@ -116,25 +116,31 @@ function App() {
           )}
         </For>
       </div>
-      <div class="h-4" />
-      <div class="flex flex-wrap gap-2">
-        <button onClick={() => refreshData()} class="border p-1">
+      <div class="spacer-md" />
+      <div class="button-row">
+        <button
+          onClick={() => refreshData()}
+          class="demo-button demo-button-sm"
+        >
           Regenerate Data
         </button>
-        <button onClick={() => stressTest()} class="border p-1">
+        <button onClick={() => stressTest()} class="demo-button demo-button-sm">
           Stress Test (500k rows)
         </button>
-        <button onClick={() => randomizeColumns()} class="border p-1">
+        <button
+          onClick={() => randomizeColumns()}
+          class="demo-button demo-button-sm"
+        >
           Shuffle Columns
         </button>
       </div>
-      <div class="h-4" />
-      <p class="text-sm mb-2">
+      <div class="spacer-md" />
+      <p class="demo-note">
         This example using the non-split APIs. Columns are just reordered within
         1 table instead of being split into 3 different tables.
       </p>
-      <div class="flex">
-        <table class="border-2 border-black">
+      <div class="table-row-group">
+        <table class="outlined-table">
           <thead>
             <For each={table.getHeaderGroups()}>
               {(headerGroup) => (
@@ -142,16 +148,16 @@ function App() {
                   <For each={headerGroup.headers}>
                     {(header) => (
                       <th colSpan={header.colSpan}>
-                        <div class="whitespace-nowrap">
+                        <div class="nowrap">
                           {header.isPlaceholder ? null : (
                             <table.FlexRender header={header} />
                           )}
                         </div>
                         {!header.isPlaceholder && header.column.getCanPin() && (
-                          <div class="flex gap-1 justify-center">
+                          <div class="pin-actions">
                             {header.column.getIsPinned() !== 'left' ? (
                               <button
-                                class="border rounded px-2"
+                                class="pin-button"
                                 onClick={() => header.column.pin('left')}
                               >
                                 {'<='}
@@ -159,7 +165,7 @@ function App() {
                             ) : null}
                             {header.column.getIsPinned() ? (
                               <button
-                                class="border rounded px-2"
+                                class="pin-button"
                                 onClick={() => header.column.pin(false)}
                               >
                                 X
@@ -167,7 +173,7 @@ function App() {
                             ) : null}
                             {header.column.getIsPinned() !== 'right' ? (
                               <button
-                                class="border rounded px-2"
+                                class="pin-button"
                                 onClick={() => header.column.pin('right')}
                               >
                                 {'=>'}

@@ -75,13 +75,13 @@ function App() {
   )
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
       </div>
-      <div className="flex flex-wrap gap-2">
-        <div className="text-xl">{'Initial Column Sizes'}</div>
+      <div className="button-row">
+        <div className="section-title">{'Initial Column Sizes'}</div>
         <br />
         {table.getAllColumns().map((column) => (
           <div key={column.id}>
@@ -98,16 +98,16 @@ function App() {
                     [column.id]: Number((e.target as HTMLInputElement).value),
                   })
                 }}
-                className="border rounded p-1 w-24 ml-2"
+                className="column-size-input"
               />
             </label>
           </div>
         ))}
       </div>
-      <div className="flex gap-2"></div>
-      <div className="h-4" />
-      <div className="text-xl">{'<table/>'}</div>
-      <div className="overflow-x-auto">
+      <div className="controls"></div>
+      <div className="spacer-md" />
+      <div className="section-title">{'<table/>'}</div>
+      <div className="scroll-container">
         <table
           style={{
             width: table.getCenterTotalSize(),
@@ -151,9 +151,9 @@ function App() {
           </tbody>
         </table>
       </div>
-      <div className="h-4" />
-      <div className="text-xl">{'<div/> (relative)'}</div>
-      <div className="overflow-x-auto">
+      <div className="spacer-md" />
+      <div className="section-title">{'<div/> (relative)'}</div>
+      <div className="scroll-container">
         <div
           className="divTable"
           style={{
@@ -199,9 +199,9 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="h-4" />
-      <div className="text-xl">{'<div/> (absolute positioning)'}</div>
-      <div className="overflow-x-auto">
+      <div className="spacer-md" />
+      <div className="section-title">{'<div/> (absolute positioning)'}</div>
+      <div className="scroll-container">
         <div
           className="divTable"
           style={{
@@ -263,8 +263,8 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="h-4" />
-      <button onClick={() => rerender(0)} className="border p-2">
+      <div className="spacer-md" />
+      <button onClick={() => rerender(0)} className="demo-button">
         Rerender
       </button>
       <table.Subscribe selector={(state) => state}>

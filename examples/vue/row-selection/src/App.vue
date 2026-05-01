@@ -32,7 +32,7 @@ const columns = columnHelper.columns([
     cell: ({ row }) => {
       return (
         // @ts-ignore
-        <div className="px-1">
+        <div className="column-toggle-row">
           <IndeterminateCheckbox
             checked={row.getIsSelected()}
             disabled={!row.getCanSelect()}
@@ -124,14 +124,14 @@ useTanStackTableDevtools(table, 'Row Selection Example')
 </script>
 
 <template>
-  <div class="p-2">
-    <div class="flex flex-wrap gap-2">
-      <button @click="refreshData" class="border p-2">Regenerate Data</button>
-      <button @click="stressTest" class="border p-2">
+  <div class="demo-root">
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
         Stress Test (1k rows)
       </button>
     </div>
-    <div class="h-4" />
+    <div class="spacer-md" />
     <table>
       <thead>
         <tr
@@ -156,7 +156,7 @@ useTanStackTableDevtools(table, 'Row Selection Example')
       </tbody>
       <tfoot>
         <tr>
-          <td className="p-1">
+          <td className="cell-padding">
             <IndeterminateCheckbox
               :checked="table.getIsAllPageRowsSelected()"
               :indeterminate="table.getIsSomePageRowsSelected()"
@@ -169,8 +169,8 @@ useTanStackTableDevtools(table, 'Row Selection Example')
         </tr>
       </tfoot>
     </table>
-    <div class="h-4" />
-    <button @click="toggleRowSelection" class="border p-2">
+    <div class="spacer-md" />
+    <button @click="toggleRowSelection" class="demo-button">
       {{ enableRowSelection ? 'Disable' : 'Enable' }} Row Selection
     </button>
   </div>
@@ -183,6 +183,8 @@ html {
 }
 
 table {
+  border-spacing: 0;
+  border-collapse: collapse;
   border: 1px solid lightgray;
 }
 

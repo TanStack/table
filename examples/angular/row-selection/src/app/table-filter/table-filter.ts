@@ -8,11 +8,11 @@ import type { Column } from '@tanstack/angular-table'
     @let columnType = this.columnType();
 
     @if (columnType == 'number') {
-      <div class="flex space-x-2">
+      <div class="filter-row">
         <input
           #min
           type="number"
-          class="w-24 border shadow rounded"
+          class="filter-input"
           placeholder="Min"
           [value]="getMinValue()"
           (input)="updateMinFilterValue(min.value)"
@@ -20,7 +20,7 @@ import type { Column } from '@tanstack/angular-table'
         <input
           #max
           type="number"
-          class="w-36 border shadow rounded"
+          class="filter-select"
           placeholder="max"
           [value]="getMaxValue()"
           (input)="updateMaxFilterValue(max.value)"
@@ -30,7 +30,7 @@ import type { Column } from '@tanstack/angular-table'
       <input
         #search
         type="text"
-        class="w-36 border shadow rounded"
+        class="filter-select"
         placeholder="Search..."
         [value]="column().getFilterValue() ?? ''"
         (input)="column().setFilterValue(search.value)"

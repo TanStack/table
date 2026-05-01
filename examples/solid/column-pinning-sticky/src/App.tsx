@@ -121,9 +121,9 @@ function App() {
   }
 
   return (
-    <div class="p-2">
-      <div class="inline-block border border-black shadow rounded">
-        <div class="px-1 border-b border-black">
+    <div class="demo-root">
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
           <label>
             <input
               type="checkbox"
@@ -135,7 +135,7 @@ function App() {
         </div>
         <For each={table.getAllLeafColumns()}>
           {(column) => (
-            <div class="px-1">
+            <div class="column-toggle-row">
               <label>
                 <input
                   type="checkbox"
@@ -148,19 +148,25 @@ function App() {
           )}
         </For>
       </div>
-      <div class="h-4" />
-      <div class="flex flex-wrap gap-2">
-        <button onClick={() => refreshData()} class="border p-1">
+      <div class="spacer-md" />
+      <div class="button-row">
+        <button
+          onClick={() => refreshData()}
+          class="demo-button demo-button-sm"
+        >
           Regenerate Data
         </button>
-        <button onClick={() => stressTest()} class="border p-1">
+        <button onClick={() => stressTest()} class="demo-button demo-button-sm">
           Stress Test (1k rows)
         </button>
-        <button onClick={() => randomizeColumns()} class="border p-1">
+        <button
+          onClick={() => randomizeColumns()}
+          class="demo-button demo-button-sm"
+        >
           Shuffle Columns
         </button>
       </div>
-      <div class="h-4" />
+      <div class="spacer-md" />
       <div class="table-container">
         <table style={{ width: `${table.getTotalSize()}px` }}>
           <thead>
@@ -175,7 +181,7 @@ function App() {
                           colSpan={header.colSpan}
                           style={{ ...getCommonPinningStyles(column) }}
                         >
-                          <div class="whitespace-nowrap">
+                          <div class="nowrap">
                             {header.isPlaceholder ? null : (
                               <>
                                 <table.FlexRender header={header} />{' '}
@@ -185,10 +191,10 @@ function App() {
                           </div>
                           {!header.isPlaceholder &&
                             header.column.getCanPin() && (
-                              <div class="flex gap-1 justify-center">
+                              <div class="pin-actions">
                                 {header.column.getIsPinned() !== 'left' ? (
                                   <button
-                                    class="border rounded px-2"
+                                    class="pin-button"
                                     onClick={() => header.column.pin('left')}
                                   >
                                     {'<='}
@@ -196,7 +202,7 @@ function App() {
                                 ) : null}
                                 {header.column.getIsPinned() ? (
                                   <button
-                                    class="border rounded px-2"
+                                    class="pin-button"
                                     onClick={() => header.column.pin(false)}
                                   >
                                     X
@@ -204,7 +210,7 @@ function App() {
                                 ) : null}
                                 {header.column.getIsPinned() !== 'right' ? (
                                   <button
-                                    class="border rounded px-2"
+                                    class="pin-button"
                                     onClick={() => header.column.pin('right')}
                                   >
                                     {'=>'}

@@ -96,16 +96,16 @@ function App() {
   )
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
-        <button onClick={() => refreshData()} className="border p-2">
+        <button onClick={() => refreshData()} className="demo-button">
           Regenerate Data
         </button>
-        <button onClick={() => stressTest()} className="border p-2">
+        <button onClick={() => stressTest()} className="demo-button">
           Stress Test (100k rows)
         </button>
       </div>
-      <div className="h-4" />
+      <div className="spacer-md" />
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -115,9 +115,7 @@ function App() {
                   {header.isPlaceholder ? null : (
                     <div
                       className={
-                        header.column.getCanSort()
-                          ? 'cursor-pointer select-none'
-                          : ''
+                        header.column.getCanSort() ? 'sortable-header' : ''
                       }
                       onClick={header.column.getToggleSortingHandler()}
                     >
@@ -145,44 +143,44 @@ function App() {
           ))}
         </tbody>
       </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
+      <div className="spacer-sm" />
+      <div className="controls">
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           <div>Page</div>
           <strong>
             {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -193,7 +191,7 @@ function App() {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
             }}
-            className="border p-1 rounded w-16"
+            className="page-size-input"
           />
         </span>
         <select
@@ -209,8 +207,8 @@ function App() {
           ))}
         </select>
       </div>
-      <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
+      <div className="spacer-md" />
+      <button onClick={() => rerender()} className="demo-button">
         Rerender
       </button>
       <pre>

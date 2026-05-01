@@ -26,7 +26,7 @@ const _features = tableFeatures({
 
 // These are the important styles to make sticky column pinning work!
 // Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
-// View the index.css file for more needed styles such as border-collapse: separate
+// View the index.css file for more needed styles such as border-collapse: collapse
 const getCommonPinningStyles = (
   column: Column<typeof _features, Person>,
 ): CSSProperties => {
@@ -136,9 +136,9 @@ function App() {
       })}
     >
       {(_topLevelState) => (
-        <div className="p-2">
-          <div className="inline-block border border-black shadow rounded">
-            <div className="px-1 border-b border-black">
+        <div className="demo-root">
+          <div className="column-toggle-panel">
+            <div className="column-toggle-panel-header">
               <label>
                 <input
                   type="checkbox"
@@ -150,7 +150,7 @@ function App() {
             </div>
             {table.getAllLeafColumns().map((column) => {
               return (
-                <div key={column.id} className="px-1">
+                <div key={column.id} className="column-toggle-row">
                   <label>
                     <input
                       type="checkbox"
@@ -163,19 +163,28 @@ function App() {
               )
             })}
           </div>
-          <div className="h-4" />
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => refreshData()} className="border p-1">
+          <div className="spacer-md" />
+          <div className="button-row">
+            <button
+              onClick={() => refreshData()}
+              className="demo-button demo-button-sm"
+            >
               Regenerate Data
             </button>
-            <button onClick={() => stressTest()} className="border p-1">
+            <button
+              onClick={() => stressTest()}
+              className="demo-button demo-button-sm"
+            >
               Stress Test (1k rows)
             </button>
-            <button onClick={() => randomizeColumns()} className="border p-1">
+            <button
+              onClick={() => randomizeColumns()}
+              className="demo-button demo-button-sm"
+            >
               Shuffle Columns
             </button>
           </div>
-          <div className="h-4" />
+          <div className="spacer-md" />
           <div className="table-container">
             <table
               style={{
@@ -205,7 +214,7 @@ function App() {
                               // IMPORTANT: This is where the magic happens!
                               style={{ ...getCommonPinningStyles(column) }}
                             >
-                              <div className="whitespace-nowrap">
+                              <div className="nowrap">
                                 {header.isPlaceholder ? null : (
                                   <>
                                     <table.FlexRender header={header} />{' '}
@@ -218,10 +227,10 @@ function App() {
                               </div>
                               {!header.isPlaceholder &&
                                 header.column.getCanPin() && (
-                                  <div className="flex gap-1 justify-center">
+                                  <div className="pin-actions">
                                     {header.column.getIsPinned() !== 'left' ? (
                                       <button
-                                        className="border rounded px-2"
+                                        className="pin-button"
                                         onClick={() => {
                                           header.column.pin('left')
                                         }}
@@ -231,7 +240,7 @@ function App() {
                                     ) : null}
                                     {header.column.getIsPinned() ? (
                                       <button
-                                        className="border rounded px-2"
+                                        className="pin-button"
                                         onClick={() => {
                                           header.column.pin(false)
                                         }}
@@ -241,7 +250,7 @@ function App() {
                                     ) : null}
                                     {header.column.getIsPinned() !== 'right' ? (
                                       <button
-                                        className="border rounded px-2"
+                                        className="pin-button"
                                         onClick={() => {
                                           header.column.pin('right')
                                         }}

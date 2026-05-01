@@ -104,7 +104,7 @@ function App() {
 
   // 7. Render your table markup from the table instance APIs
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -156,8 +156,8 @@ function App() {
           </For>
         </tfoot>
       </table>
-      <div class="h-4" />
-      <button onClick={rerender} class="border p-2">
+      <div class="spacer-md" />
+      <button onClick={rerender} class="demo-button">
         Rerender
       </button>
     </div>

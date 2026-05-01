@@ -2,7 +2,8 @@
   "name": "tanstack-angular-table-example-column-resizing-performant",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --port 5173",
+    "dev": "ng serve --port 5173",
     "build": "ng build",
     "lint": "eslint ./src",
     "watch": "ng build --watch --configuration development"

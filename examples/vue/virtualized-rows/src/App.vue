@@ -141,15 +141,15 @@ function measureElement(el: Element | ComponentPublicInstance | null) {
 
 <template>
   <div>
-    <p class="text-center">
+    <p class="centered-text">
       For tables, the basis for the offset of the translate css function is from
       the row's initial position itself. Because of this, we need to calculate
       the translateY pixel count different and base it off the the index.
     </p>
-    <h1 class="text-3xl font-bold text-center">Virtualized Rows</h1>
-    <div class="flex flex-wrap gap-2 justify-center" style="margin-bottom: 8px">
-      <button @click="refreshData" class="border p-2">Regenerate Data</button>
-      <button @click="stressTest" class="border p-2">
+    <h1 class="virtualized-title">Virtualized Rows</h1>
+    <div class="centered-button-row" style="margin-bottom: 8px">
+      <button @click="refreshData" class="demo-button">Regenerate Data</button>
+      <button @click="stressTest" class="demo-button">
         Stress Test (500k rows)
       </button>
     </div>
@@ -158,7 +158,7 @@ function measureElement(el: Element | ComponentPublicInstance | null) {
         :modelValue="search"
         @input="handleDebounceSearch"
         placeholder="Search"
-        class="p-2"
+        class="demo-root"
       />
       {{ rows.length.toLocaleString() }} results
     </div>
@@ -197,7 +197,7 @@ function measureElement(el: Element | ComponentPublicInstance | null) {
               <div
                 v-if="!header.isPlaceholder"
                 :class="{
-                  'cursor-pointer select-none': header.column.getCanSort(),
+                  'sortable-header': header.column.getCanSort(),
                 }"
                 @click="(e) => header.column.getToggleSortingHandler()?.(e)"
               >

@@ -97,7 +97,7 @@ export default function Table<T extends Record<string, string | number>>(
                             <div
                               class={
                                 header.column.getCanSort()
-                                  ? 'cursor-pointer select-none'
+                                  ? 'sortable-header'
                                   : ''
                               }
                               onClick={header.column.getToggleSortingHandler()}
@@ -118,7 +118,7 @@ export default function Table<T extends Record<string, string | number>>(
                               }
                             >
                               <DebouncedInput
-                                class="w-36 border shadow rounded"
+                                class="filter-select"
                                 onChange={(value) => {
                                   props.onFilterChange({
                                     [fieldMeta!.filterKey as keyof T]: value,
@@ -163,43 +163,43 @@ export default function Table<T extends Record<string, string | number>>(
           </For>
         </tbody>
       </table>
-      <div class="flex items-center gap-2 my-2">
+      <div class="controls pagination-controls">
         <button
-          class="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
+          class="demo-button demo-button-sm disabled-button"
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          class="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
+          class="demo-button demo-button-sm disabled-button"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          class="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
+          class="demo-button demo-button-sm disabled-button"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          class="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
+          class="demo-button demo-button-sm disabled-button"
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           <div>Page</div>
           <strong>
             {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -210,7 +210,7 @@ export default function Table<T extends Record<string, string | number>>(
                 : 0
               table.setPageIndex(page)
             }}
-            class="border p-1 rounded w-16"
+            class="page-size-input"
           />
         </span>
         <select

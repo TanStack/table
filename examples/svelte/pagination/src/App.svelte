@@ -92,7 +92,7 @@
   {@const firstValue = getFirstValue(table, column.id)}
   {@const filterValue = getFilterValue(column)}
   {#if typeof firstValue === 'number'}
-    <div class="flex space-x-2">
+    <div class="filter-row">
       <input
         type="number"
         value={((filterValue as [number, number] | undefined)?.[0] ?? '') as any}
@@ -102,7 +102,7 @@
             old?.[1],
           ])}
         placeholder="Min"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
       <input
         type="number"
@@ -113,12 +113,12 @@
             (e.target as HTMLInputElement).value,
           ])}
         placeholder="Max"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
     </div>
   {:else}
     <input
-      class="w-36 border shadow rounded"
+      class="filter-select"
       oninput={(e: Event) =>
         column.setFilterValue((e.target as HTMLInputElement).value)}
       onclick={(e: MouseEvent) => e.stopPropagation()}
@@ -129,21 +129,22 @@
   {/if}
 {/snippet}
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
   </div>
-  <div class="h-2"></div>
+  <div class="spacer-sm"></div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
               <div
                 class={header.column.getCanSort()
-                  ? 'cursor-pointer select-none'
+                  ? 'sortable-header'
                   : ''}
                 role="button"
                 tabindex="0"
@@ -185,44 +186,45 @@
       {/each}
     </tbody>
   </table>
-  <div class="h-2"></div>
-  <div class="flex items-center gap-2">
+  <div class="spacer-sm"></div>
+  <div class="controls">
     <button
-      class="border rounded p-1"
-      onclick={() => table.firstPage()}
+      class="demo-button demo-button-sm"
+      onclick={() => table.firstPage()
+      }
       disabled={!table.getCanPreviousPage()}
     >
       {'<<'}
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       onclick={() => table.previousPage()}
       disabled={!table.getCanPreviousPage()}
     >
       {'<'}
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       onclick={() => table.nextPage()}
       disabled={!table.getCanNextPage()}
     >
       {'>'}
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       onclick={() => table.lastPage()}
       disabled={!table.getCanNextPage()}
     >
       {'>>'}
     </button>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       <div>Page</div>
       <strong>
         {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       | Go to page:
       <input
         type="number"
@@ -235,7 +237,7 @@
             : 0
           table.setPageIndex(page)
         }}
-        class="border p-1 rounded w-16"
+        class="page-size-input"
       />
     </span>
     <select

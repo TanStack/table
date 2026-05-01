@@ -131,13 +131,13 @@
   }
 </script>
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (1k rows)</button>
   </div>
-  <div class="inline-block border border-black shadow rounded">
-    <div class="px-1 border-b border-black">
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
       <label>
         <input
           type="checkbox"
@@ -148,7 +148,7 @@
       </label>
     </div>
     {#each table.getAllLeafColumns() as column}
-      <div class="px-1">
+      <div class="column-toggle-row">
         <label>
           <input
             type="checkbox"
@@ -160,21 +160,22 @@
       </div>
     {/each}
   </div>
-  <div class="h-4"></div>
-  <div class="flex flex-wrap gap-2">
-    <button onclick={() => refreshData()} class="border p-1">
+  <div class="spacer-md"></div>
+  <div class="button-row">
+    <button onclick={() => refreshData()} class="demo-button demo-button-sm">
       Regenerate Data
     </button>
-    <button onclick={() => stressTest()} class="border p-1">
+    <button onclick={() => stressTest()} class="demo-button demo-button-sm">
       Stress Test (1k rows)
     </button>
-    <button onclick={() => randomizeColumns()} class="border p-1">
+    <button onclick={() => randomizeColumns()} class="demo-button demo-button-sm">
       Shuffle Columns
     </button>
   </div>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   <div class="table-container">
-    <table style="width: {table.getTotalSize()}px">
+    <table style="width: {table.getTotalSize()
+    }px">
       <thead>
         {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
           <tr>
@@ -184,7 +185,7 @@
                 colSpan={header.colSpan}
                 style="box-shadow: {styles.boxShadow ?? 'none'}; left: {styles.left ?? 'auto'}; right: {styles.right ?? 'auto'}; opacity: {styles.opacity}; position: {styles.position}; width: {styles.width}; z-index: {styles.zIndex}"
               >
-                <div class="whitespace-nowrap">
+                <div class="nowrap">
                   {#if !header.isPlaceholder}
                     <FlexRender header={header} />
                     {' '}
@@ -192,10 +193,10 @@
                   {header.column.getIndex(header.column.getIsPinned() || 'center')}
                 </div>
                 {#if !header.isPlaceholder && header.column.getCanPin()}
-                  <div class="flex gap-1 justify-center">
+                  <div class="pin-actions">
                     {#if header.column.getIsPinned() !== 'left'}
                       <button
-                        class="border rounded px-2"
+                        class="pin-button"
                         onclick={() => header.column.pin('left')}
                       >
                         {'<='}
@@ -203,7 +204,7 @@
                     {/if}
                     {#if header.column.getIsPinned()}
                       <button
-                        class="border rounded px-2"
+                        class="pin-button"
                         onclick={() => header.column.pin(false)}
                       >
                         X
@@ -211,7 +212,7 @@
                     {/if}
                     {#if header.column.getIsPinned() !== 'right'}
                       <button
-                        class="border rounded px-2"
+                        class="pin-button"
                         onclick={() => header.column.pin('right')}
                       >
                         {'=>'}
@@ -247,5 +248,6 @@
       </tbody>
     </table>
   </div>
-  <pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <pre>{JSON.stringify(table.state, null, 2)
+  }</pre>
 </div>

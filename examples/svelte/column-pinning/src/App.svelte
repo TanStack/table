@@ -128,16 +128,16 @@
 
 {#snippet headerCell(header: Header<typeof _features, Person, unknown>)}
   <th colSpan={header.colSpan}>
-    <div class="whitespace-nowrap">
+    <div class="nowrap">
       {#if !header.isPlaceholder}
         <FlexRender header={header} />
       {/if}
     </div>
     {#if !header.isPlaceholder && header.column.getCanPin()}
-      <div class="flex gap-1 justify-center">
+      <div class="pin-actions">
         {#if header.column.getIsPinned() !== 'left'}
           <button
-            class="border rounded px-2"
+            class="pin-button"
             onclick={() => {
               header.column.pin('left')
             }}
@@ -147,7 +147,7 @@
         {/if}
         {#if header.column.getIsPinned()}
           <button
-            class="border rounded px-2"
+            class="pin-button"
             onclick={() => {
               header.column.pin(false)
             }}
@@ -157,7 +157,7 @@
         {/if}
         {#if header.column.getIsPinned() !== 'right'}
           <button
-            class="border rounded px-2"
+            class="pin-button"
             onclick={() => {
               header.column.pin('right')
             }}
@@ -170,13 +170,13 @@
   </th>
 {/snippet}
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
   </div>
-  <div class="inline-block border border-black shadow rounded">
-    <div class="px-1 border-b border-black">
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
       <label>
         <input
           checked={table.getIsAllColumnsVisible()}
@@ -189,7 +189,7 @@
       </label>
     </div>
     {#each table.getAllLeafColumns() as column}
-      <div class="px-1">
+      <div class="column-toggle-row">
         <label>
           <input
             checked={column.getIsVisible()}
@@ -201,19 +201,19 @@
       </div>
     {/each}
   </div>
-  <div class="h-4"></div>
-  <div class="flex flex-wrap gap-2">
-    <button onclick={() => refreshData()} class="border p-1">
+  <div class="spacer-md"></div>
+  <div class="button-row">
+    <button onclick={() => refreshData()} class="demo-button demo-button-sm">
       Regenerate Data
     </button>
-    <button onclick={() => stressTest()} class="border p-1">
+    <button onclick={() => stressTest()} class="demo-button demo-button-sm">
       Stress Test (500k rows)
     </button>
-    <button onclick={() => randomizeColumns()} class="border p-1">
+    <button onclick={() => randomizeColumns()} class="demo-button demo-button-sm">
       Shuffle Columns
     </button>
   </div>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   <div>
     <label>
       <input
@@ -224,11 +224,12 @@
       Split Mode
     </label>
   </div>
-  <div class={`flex ${isSplit ? 'gap-4' : ''}`}>
+  <div class={`table-row-group ${isSplit ? 'split-gap' : ''}`}>
     {#if isSplit}
-      <table class="border-2 border-black">
+      <table class="outlined-table">
         <thead>
-          {#each table.getLeftHeaderGroups() as headerGroup (headerGroup.id)}
+          {#each table.getLeftHeaderGroups() as headerGroup (headerGroup.id)
+          }
             <tr>
               {#each headerGroup.headers as header (header.id)}
                 {@render headerCell(header)}
@@ -248,10 +249,12 @@
           {/each}
         </tbody>
       </table>
-    {/if}
-    <table class="border-2 border-black">
+    {/if
+    }
+    <table class="outlined-table">
       <thead>
-        {#each isSplit ? table.getCenterHeaderGroups() : table.getHeaderGroups() as headerGroup (headerGroup.id)}
+        {#each isSplit ? table.getCenterHeaderGroups() : table.getHeaderGroups() as headerGroup (headerGroup.id)
+        }
           <tr>
             {#each headerGroup.headers as header (header.id)}
               {@render headerCell(header)}
@@ -271,10 +274,12 @@
         {/each}
       </tbody>
     </table>
-    {#if isSplit}
-      <table class="border-2 border-black">
+    {#if isSplit
+    }
+      <table class="outlined-table">
         <thead>
-          {#each table.getRightHeaderGroups() as headerGroup (headerGroup.id)}
+          {#each table.getRightHeaderGroups() as headerGroup (headerGroup.id)
+          }
             <tr>
               {#each headerGroup.headers as header (header.id)}
                 {@render headerCell(header)}
@@ -294,7 +299,8 @@
           {/each}
         </tbody>
       </table>
-    {/if}
+    {/if
+    }
   </div>
   <br />
   <pre>{JSON.stringify(table.store.state.columnPinning, null, 2)}</pre>

@@ -1,7 +1,7 @@
 import { constructTable } from '@tanstack/table-core'
 import { createComputed, getOwner, mergeProps, untrack } from 'solid-js'
 import { shallow, useSelector } from '@tanstack/solid-store'
-import { solidReactivity } from './signals'
+import { FlexRender } from './FlexRender'
 import type { Atom, ReadonlyAtom } from '@tanstack/solid-store'
 import type { Accessor, JSX } from 'solid-js'
 import type {
@@ -49,6 +49,17 @@ export type SolidTable<
    * console.log(table.state().globalFilter)
    */
   readonly state: Accessor<Readonly<TSelected>>
+  /**
+   * Convenience FlexRender component attached to the table instance for
+   * rendering headers, cells, or footers with custom markup. Mirrors the
+   * `table.FlexRender` API exposed by `createTableHook`'s `createAppTable`.
+   *
+   * @example
+   * <table.FlexRender header={header} />
+   * <table.FlexRender cell={cell} />
+   * <table.FlexRender footer={footer} />
+   */
+  FlexRender: typeof FlexRender
 }
 
 export function createTable<
@@ -118,6 +129,8 @@ export function createTable<
   }) as SolidTable<TFeatures, TData, TSelected>['Subscribe']
 
   const state = useSelector(table.store, selector)
+
+  table.FlexRender = FlexRender
 
   return {
     ...table,

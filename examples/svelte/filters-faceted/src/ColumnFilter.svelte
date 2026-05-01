@@ -25,7 +25,7 @@
 
 {#if isNumber}
   <div>
-    <div class="flex space-x-2">
+    <div class="filter-row">
       <DebouncedInput
         type="number"
         min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
@@ -39,7 +39,7 @@
         }
         debounce={500}
         placeholder={`Min ${column.getFacetedMinMaxValues()?.[0] ? `(${column.getFacetedMinMaxValues()?.[0]})` : ''}`}
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
       <DebouncedInput
         type="number"
@@ -54,7 +54,7 @@
         }
         debounce={500}
         placeholder={`Max ${column.getFacetedMinMaxValues()?.[1] ? `(${column.getFacetedMinMaxValues()?.[1]})` : ''}`}
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
     </div>
   </div>
@@ -71,7 +71,7 @@
       onchange={(value) => column.setFilterValue(value)}
       debounce={500}
       placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-      class="w-36 border shadow rounded"
+      class="filter-select"
       list="{column.id}list"
     />
   </div>

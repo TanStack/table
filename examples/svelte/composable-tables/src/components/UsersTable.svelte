@@ -89,19 +89,23 @@
 <table.AppTable>
   <div class="table-container">
     <div>
-      <button onclick={() => refreshData()}>Regenerate Data</button>
+      <button onclick={() => refreshData()
+      }>Regenerate Data</button>
       <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
     </div>
     <!-- Table toolbar using pre-bound component -->
-    <table.TableToolbar title="Users Table" onRefresh={refreshData} />
+    <table.TableToolbar title="Users Table" onRefresh={refreshData
+    } />
 
     <!-- Table element -->
     <table>
       <thead>
-        {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+        {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+        }
           <tr>
             {#each headerGroup.headers as h (h.id)}
-              <table.AppHeader header={h}>
+              <table.AppHeader header={h
+              }>
                 {#snippet children(header)}
                   <th
                     colSpan={header.colSpan}
@@ -124,7 +128,8 @@
                   </th>
                 {/snippet}
               </table.AppHeader>
-            {/each}
+            {/each
+            }
           </tr>
         {/each}
       </thead>
@@ -132,14 +137,16 @@
         {#each rows as row (row.id)}
           <tr>
             {#each row.getAllCells() as c (c.id)}
-              <table.AppCell cell={c}>
+              <table.AppCell cell={c
+              }>
                 {#snippet children(cell)}
                   <td>
                     <FlexRender cell={cell} />
                   </td>
                 {/snippet}
               </table.AppCell>
-            {/each}
+            {/each
+            }
           </tr>
         {/each}
       </tbody>
@@ -147,7 +154,8 @@
         {#each table.getFooterGroups() as footerGroup (footerGroup.id)}
           <tr>
             {#each footerGroup.headers as f (f.id)}
-              <table.AppFooter header={f}>
+              <table.AppFooter header={f
+              }>
                 {#snippet children(footer)}
                   <td colSpan={footer.colSpan}>
                     {#if !footer.isPlaceholder}
@@ -168,7 +176,8 @@
                   </td>
                 {/snippet}
               </table.AppFooter>
-            {/each}
+            {/each
+            }
           </tr>
         {/each}
       </tfoot>

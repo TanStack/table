@@ -1,8 +1,10 @@
-<div class="p-2">
-  <button (click)="refreshData()" class="border rounded p-2 mb-2">Regenerate Data</button>
-  <button (click)="stressTest()" class="border rounded p-2 mb-2">Stress Test (1k rows)</button>
-  <div class="h-2"></div>
-  <div class="overflow-x-auto">
+<div class="demo-root">
+  <button (click)="refreshData()" class="demo-button demo-button-spaced">Regenerate Data</button>
+  <button (click)="stressTest()" class="demo-button demo-button-spaced">
+    Stress Test (1k rows)
+  </button>
+  <div class="spacer-sm"></div>
+  <div class="scroll-container">
     <table>
       <thead>
         @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
@@ -47,7 +49,7 @@
 </div>
 
 <ng-template #subComponentTemplate let-row>
-  <pre [style.font-size.px]="10" class="bg-gray-100">
+  <pre [style.font-size.px]="10" class="code-block">
     <code>
       {{ row.original | json }}
     </code>

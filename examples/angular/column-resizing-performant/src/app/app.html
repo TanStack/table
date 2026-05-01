@@ -1,15 +1,15 @@
-<div class="p-2">
-  <button (click)="refreshData()" class="border p-2">Regenerate Data</button>
-  <button (click)="stressTest()" class="border p-2">Stress Test (2k rows)</button>
-  <div class="h-4"></div>
+<div class="demo-root">
+  <button (click)="refreshData()" class="demo-button">Regenerate Data</button>
+  <button (click)="stressTest()" class="demo-button">Stress Test (2k rows)</button>
+  <div class="spacer-md"></div>
   <pre [style.min-height]="'10rem'">
     {{ columnSizingDebugInfo() }}
   </pre>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
 
   ({{ data().length.toLocaleString() }} rows)
 
-  <div class="overflow-x-auto">
+  <div class="scroll-container">
     <div class="divTable" [style]="columnSizeVars()" [style.width.px]="table.getTotalSize()">
       <div class="thead">
         @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {

@@ -32,10 +32,8 @@ function UsersPage() {
   const sortingState = () => sortByToState(filters().sortBy)
 
   return (
-    <div class="flex flex-col gap-2 p-2">
-      <h1 class="text-2xl font-semibold mb-1">
-        TanStack Table + Query + Router
-      </h1>
+    <div class="router-root">
+      <h1 class="page-title">TanStack Table + Query + Router</h1>
       <Table
         data={dataQuery.data?.result ?? []}
         columns={USER_COLUMNS}
@@ -66,10 +64,10 @@ function UsersPage() {
           })
         }}
       />
-      <div class="flex items-center gap-2">
+      <div class="controls">
         {dataQuery.data?.rowCount?.toLocaleString()} users found
         <button
-          class="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
+          class="demo-button demo-button-sm disabled-button"
           onClick={resetFilters}
           disabled={Object.keys(filters()).length === 0}
         >

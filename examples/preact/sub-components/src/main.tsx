@@ -105,8 +105,8 @@ function Table({
   return (
     <table.Subscribe selector={(state) => state}>
       {() => (
-        <div className="p-2">
-          <div className="h-2" />
+        <div className="demo-root">
+          <div className="spacer-sm" />
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -152,7 +152,7 @@ function Table({
               })}
             </tbody>
           </table>
-          <div className="h-2" />
+          <div className="spacer-sm" />
           <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
         </div>
       )}

@@ -96,15 +96,16 @@
   </pre>
 {/snippet}
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (1k rows)</button>
   </div>
-  <div class="h-2"></div>
+  <div class="spacer-sm"></div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
@@ -145,6 +146,7 @@
       {/each}
     </tbody>
   </table>
-  <div class="h-2"></div>
-  <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+  <div class="spacer-sm"></div>
+  <div>{table.getRowModel().rows.length.toLocaleString()
+  } Rows</div>
 </div>

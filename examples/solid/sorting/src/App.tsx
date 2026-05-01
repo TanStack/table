@@ -83,7 +83,7 @@ function App() {
   })
 
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (500k rows)</button>
@@ -100,7 +100,7 @@ function App() {
                         <div
                           class={
                             header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
+                              ? 'sortable-header'
                               : undefined
                           }
                           onClick={header.column.getToggleSortingHandler()}

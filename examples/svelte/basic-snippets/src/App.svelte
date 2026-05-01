@@ -20,12 +20,14 @@
 
   // 1. Store data with a $state rune for reactivity
   let data = $state(makeData(20))
-  const refreshData = () => { data = makeData(20) }
+  const refreshData = () => { data = makeData(20)
+  }
   const stressTest = () => { data = makeData(1_000) }
 
   // 2. New in V9! Tell the table which features and row models we want to use.
   //    In this case, this will be a basic table with no additional features
-  const { createAppTable, createAppColumnHelper } = createTableHook({
+  const { createAppTable, createAppColumnHelper
+  } = createTableHook({
     _features: {},
     // 3a. `_rowModels` defines client-side row models. `Core` row model is now
     //     included by default, but you can still override it here.
@@ -83,14 +85,16 @@
 </script>
 
 <!-- 7. Render the table in markup using the Instance APIs. -->
-<div class="p-2">
+<div class="demo-root">
   <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
+    <button onclick={() => refreshData()
+    }>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (1k rows)</button>
   </div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th>

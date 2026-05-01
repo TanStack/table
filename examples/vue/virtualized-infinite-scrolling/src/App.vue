@@ -199,7 +199,7 @@ function measureRowElement(element: Element | ComponentPublicInstance | null) {
             >
               <div
                 :class="{
-                  'cursor-pointer select-none': header.column.getCanSort(),
+                  'sortable-header': header.column.getCanSort(),
                 }"
                 @click="header.column.getToggleSortingHandler()?.($event)"
               >

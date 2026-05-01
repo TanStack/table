@@ -12,8 +12,7 @@
 
 {#if header && header.column}
   <button
-    class:cursor-pointer={header.column.getCanSort()}
-    class:select-none={header.column.getCanSort()}
+    class:sortable={header.column.getCanSort()}
     onclick={header.column.getToggleSortingHandler()}
   >
     {label ?? header.column.id}

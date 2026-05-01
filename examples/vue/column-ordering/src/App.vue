@@ -122,9 +122,9 @@ function toggleAllColumnsVisibility() {
 </script>
 
 <template>
-  <div class="p-2">
-    <div class="inline-block border border-black shadow rounded">
-      <div class="px-1 border-b border-black">
+  <div class="demo-root">
+    <div class="column-toggle-panel">
+      <div class="column-toggle-panel-header">
         <label>
           <input
             type="checkbox"
@@ -137,7 +137,7 @@ function toggleAllColumnsVisibility() {
       <div
         v-for="column in table.getAllLeafColumns()"
         :key="column.id"
-        class="px-1"
+        class="column-toggle-row"
       >
         <label>
           <input
@@ -150,17 +150,19 @@ function toggleAllColumnsVisibility() {
         </label>
       </div>
     </div>
-    <div class="h-4" />
-    <div class="flex flex-wrap gap-2">
-      <button @click="refreshData" class="border p-1">Regenerate Data</button>
-      <button @click="stressTest" class="border p-1">
+    <div class="spacer-md" />
+    <div class="button-row">
+      <button @click="refreshData" class="demo-button demo-button-sm">
+        Regenerate Data
+      </button>
+      <button @click="stressTest" class="demo-button demo-button-sm">
         Stress Test (1k rows)
       </button>
-      <button @click="randomizeColumns" class="border p-1">
+      <button @click="randomizeColumns" class="demo-button demo-button-sm">
         Shuffle Columns
       </button>
     </div>
-    <div class="h-4" />
+    <div class="spacer-md" />
 
     <table>
       <thead>
@@ -213,8 +215,9 @@ body {
 }
 
 table {
-  border: 1px solid lightgray;
+  border-spacing: 0;
   border-collapse: collapse;
+  border: 1px solid lightgray;
 }
 
 tbody {

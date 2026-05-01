@@ -103,9 +103,9 @@ function App() {
       })}
     >
       {(_state) => (
-        <div className="p-2">
-          <div className="inline-block border border-black shadow rounded">
-            <div className="px-1 border-b border-black">
+        <div className="demo-root">
+          <div className="column-toggle-panel">
+            <div className="column-toggle-panel-header">
               <label>
                 <input
                   type="checkbox"
@@ -117,7 +117,7 @@ function App() {
             </div>
             {table.getAllLeafColumns().map((column) => {
               return (
-                <div key={column.id} className="px-1">
+                <div key={column.id} className="column-toggle-row">
                   <label>
                     <input
                       type="checkbox"
@@ -130,40 +130,49 @@ function App() {
               )
             })}
           </div>
-          <div className="h-4" />
-          <div className="flex flex-wrap gap-2">
-            <button onClick={() => refreshData()} className="border p-1">
+          <div className="spacer-md" />
+          <div className="button-row">
+            <button
+              onClick={() => refreshData()}
+              className="demo-button demo-button-sm"
+            >
               Regenerate Data
             </button>
-            <button onClick={() => stressTest()} className="border p-1">
+            <button
+              onClick={() => stressTest()}
+              className="demo-button demo-button-sm"
+            >
               Stress Test (500k rows)
             </button>
-            <button onClick={() => randomizeColumns()} className="border p-1">
+            <button
+              onClick={() => randomizeColumns()}
+              className="demo-button demo-button-sm"
+            >
               Shuffle Columns
             </button>
           </div>
-          <div className="h-4" />
-          <p className="text-sm mb-2">
+          <div className="spacer-md" />
+          <p className="demo-note">
             This example takes advantage of the "splitting" APIs. (APIs that
             have "left, "center", and "right" modifiers)
           </p>
-          <div className="flex gap-4">
-            <table className="border-2 border-black">
+          <div className="split-tables">
+            <table className="outlined-table">
               <thead>
                 {table.getLeftHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th key={header.id} colSpan={header.colSpan}>
-                        <div className="whitespace-nowrap">
+                        <div className="nowrap">
                           {header.isPlaceholder ? null : (
                             <table.FlexRender header={header} />
                           )}
                         </div>
                         {!header.isPlaceholder && header.column.getCanPin() && (
-                          <div className="flex gap-1 justify-center">
+                          <div className="pin-actions">
                             {header.column.getIsPinned() !== 'left' ? (
                               <button
-                                className="border rounded px-2"
+                                className="pin-button"
                                 onClick={() => {
                                   header.column.pin('left')
                                 }}
@@ -173,7 +182,7 @@ function App() {
                             ) : null}
                             {header.column.getIsPinned() ? (
                               <button
-                                className="border rounded px-2"
+                                className="pin-button"
                                 onClick={() => {
                                   header.column.pin(false)
                                 }}
@@ -183,7 +192,7 @@ function App() {
                             ) : null}
                             {header.column.getIsPinned() !== 'right' ? (
                               <button
-                                className="border rounded px-2"
+                                className="pin-button"
                                 onClick={() => {
                                   header.column.pin('right')
                                 }}
@@ -217,22 +226,22 @@ function App() {
                   })}
               </tbody>
             </table>
-            <table className="border-2 border-black">
+            <table className="outlined-table">
               <thead>
                 {table.getCenterHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th key={header.id} colSpan={header.colSpan}>
-                        <div className="whitespace-nowrap">
+                        <div className="nowrap">
                           {header.isPlaceholder ? null : (
                             <table.FlexRender header={header} />
                           )}
                         </div>
                         {!header.isPlaceholder && header.column.getCanPin() && (
-                          <div className="flex gap-1 justify-center">
+                          <div className="pin-actions">
                             {header.column.getIsPinned() !== 'left' ? (
                               <button
-                                className="border rounded px-2"
+                                className="pin-button"
                                 onClick={() => {
                                   header.column.pin('left')
                                 }}
@@ -242,7 +251,7 @@ function App() {
                             ) : null}
                             {header.column.getIsPinned() ? (
                               <button
-                                className="border rounded px-2"
+                                className="pin-button"
                                 onClick={() => {
                                   header.column.pin(false)
                                 }}
@@ -252,7 +261,7 @@ function App() {
                             ) : null}
                             {header.column.getIsPinned() !== 'right' ? (
                               <button
-                                className="border rounded px-2"
+                                className="pin-button"
                                 onClick={() => {
                                   header.column.pin('right')
                                 }}
@@ -286,22 +295,22 @@ function App() {
                   })}
               </tbody>
             </table>
-            <table className="border-2 border-black">
+            <table className="outlined-table">
               <thead>
                 {table.getRightHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <th key={header.id} colSpan={header.colSpan}>
-                        <div className="whitespace-nowrap">
+                        <div className="nowrap">
                           {header.isPlaceholder ? null : (
                             <table.FlexRender header={header} />
                           )}
                         </div>
                         {!header.isPlaceholder && header.column.getCanPin() && (
-                          <div className="flex gap-1 justify-center">
+                          <div className="pin-actions">
                             {header.column.getIsPinned() !== 'left' ? (
                               <button
-                                className="border rounded px-2"
+                                className="pin-button"
                                 onClick={() => {
                                   header.column.pin('left')
                                 }}
@@ -311,7 +320,7 @@ function App() {
                             ) : null}
                             {header.column.getIsPinned() ? (
                               <button
-                                className="border rounded px-2"
+                                className="pin-button"
                                 onClick={() => {
                                   header.column.pin(false)
                                 }}
@@ -321,7 +330,7 @@ function App() {
                             ) : null}
                             {header.column.getIsPinned() !== 'right' ? (
                               <button
-                                className="border rounded px-2"
+                                className="pin-button"
                                 onClick={() => {
                                   header.column.pin('right')
                                 }}

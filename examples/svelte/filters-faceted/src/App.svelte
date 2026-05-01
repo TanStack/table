@@ -102,7 +102,7 @@
   )
 </script>
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
@@ -110,13 +110,14 @@
   <DebouncedInput
     value={table.state.globalFilter ?? ''}
     onchange={(value) => table.setGlobalFilter(String(value))}
-    class="p-2 font-lg shadow border border-block"
+    class="summary-panel"
     placeholder="Search all columns..."
   />
-  <div class="h-2"></div>
+  <div class="spacer-sm"></div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
@@ -145,7 +146,8 @@
       {/each}
     </tbody>
   </table>
-  <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+  <div>{table.getRowModel().rows.length.toLocaleString()
+  } Rows</div>
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (500k rows)</button>

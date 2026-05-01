@@ -224,9 +224,7 @@ function TableHeadCell({ header, table }: TableHeadCellProps) {
     >
       <div
         {...{
-          className: header.column.getCanSort()
-            ? 'cursor-pointer select-none'
-            : '',
+          className: header.column.getCanSort() ? 'sortable-header' : '',
           onClick: header.column.getToggleSortingHandler(),
         }}
       >

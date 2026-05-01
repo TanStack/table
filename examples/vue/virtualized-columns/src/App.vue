@@ -101,7 +101,7 @@ function measureRowElement(element: Element | ComponentPublicInstance | null) {
   <div class="app">
     <div>({{ columns.length.toLocaleString() }} columns)</div>
     <div>({{ data.length.toLocaleString() }} rows)</div>
-    <div class="flex flex-wrap gap-2">
+    <div class="button-row">
       <button @click="refreshData">Regenerate Data</button>
       <button @click="stressTest">Stress Test (10k rows)</button>
     </div>
@@ -145,7 +145,7 @@ function measureRowElement(element: Element | ComponentPublicInstance | null) {
                 <div
                   v-if="!headerGroup.headers[virtualColumn.index].isPlaceholder"
                   :class="{
-                    'cursor-pointer select-none':
+                    'sortable-header':
                       headerGroup.headers[
                         virtualColumn.index
                       ].column.getCanSort(),

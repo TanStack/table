@@ -109,13 +109,14 @@
   $effect(() => {
     if (table.store.state.columnFilters[0]?.id === 'fullName') {
       if (table.store.state.sorting[0]?.id !== 'fullName') {
-        table.setSorting([{ id: 'fullName', desc: false }])
+        table.setSorting([{ id: 'fullName', desc: false
+        }])
       }
     }
   })
 </script>
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
@@ -124,21 +125,22 @@
     <DebouncedInput
       value={(table.state.globalFilter ?? '') as string}
       onchange={(value) => table.setGlobalFilter(String(value))}
-      class="p-2 font-lg shadow border border-block"
+      class="summary-panel"
       placeholder="Search all columns..."
     />
   </div>
-  <div class="h-2"></div>
+  <div class="spacer-sm"></div>
   <table>
     <thead>
-      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
+      {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
+      }
         <tr>
           {#each headerGroup.headers as header (header.id)}
             <th colSpan={header.colSpan}>
               {#if !header.isPlaceholder}
                 <div
                   class={header.column.getCanSort()
-                    ? 'cursor-pointer select-none'
+                    ? 'sortable-header'
                     : ''}
                   role="button"
                   tabindex="0"
@@ -163,7 +165,7 @@
                       value={(header.column.getFilterValue() ?? '') as string}
                       onchange={(value) => header.column.setFilterValue(value)}
                       placeholder="Search..."
-                      class="w-36 border shadow rounded"
+                      class="filter-select"
                     />
                   </div>
                 {/if}
@@ -185,44 +187,45 @@
       {/each}
     </tbody>
   </table>
-  <div class="h-2"></div>
-  <div class="flex items-center gap-2">
+  <div class="spacer-sm"></div>
+  <div class="controls">
     <button
-      class="border rounded p-1"
-      onclick={() => table.setPageIndex(0)}
+      class="demo-button demo-button-sm"
+      onclick={() => table.setPageIndex(0)
+      }
       disabled={!table.getCanPreviousPage()}
     >
       {'<<'}
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       onclick={() => table.previousPage()}
       disabled={!table.getCanPreviousPage()}
     >
       {'<'}
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       onclick={() => table.nextPage()}
       disabled={!table.getCanNextPage()}
     >
       {'>'}
     </button>
     <button
-      class="border rounded p-1"
+      class="demo-button demo-button-sm"
       onclick={() => table.setPageIndex(table.getPageCount() - 1)}
       disabled={!table.getCanNextPage()}
     >
       {'>>'}
     </button>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       <div>Page</div>
       <strong>
         {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
-    <span class="flex items-center gap-1">
+    <span class="inline-controls">
       | Go to page:
       <input
         type="number"
@@ -233,7 +236,7 @@
             : 0
           table.setPageIndex(page)
         }}
-        class="border p-1 rounded w-16"
+        class="page-size-input"
       />
     </span>
     <select

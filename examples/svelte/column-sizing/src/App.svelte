@@ -68,13 +68,13 @@
   )
 </script>
 
-<div class="p-2">
+<div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
     <button onclick={() => stressTest()}>Stress Test (1k rows)</button>
   </div>
-  <div class="flex flex-wrap gap-2">
-    <div class="text-xl">Initial Column Sizes</div>
+  <div class="button-row">
+    <div class="section-title">Initial Column Sizes</div>
     <br />
     {#each table.getAllColumns() as column}
       <div>
@@ -89,17 +89,18 @@
                 [column.id]: Number((e.target as HTMLInputElement).value),
               })
             }}
-            class="border rounded p-1 w-24 ml-2"
+            class="column-size-input"
           />
         </label>
       </div>
     {/each}
   </div>
-  <div class="flex gap-2"></div>
-  <div class="h-4"></div>
-  <div class="text-xl">{'<table/>'}</div>
-  <div class="overflow-x-auto">
-    <table style="width: {table.getCenterTotalSize()}px">
+  <div class="controls"></div>
+  <div class="spacer-md"></div>
+  <div class="section-title">{'<table/>'}</div>
+  <div class="scroll-container">
+    <table style="width: {table.getCenterTotalSize()
+    }px">
       <thead>
         {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
           <tr>
@@ -130,9 +131,10 @@
       </tbody>
     </table>
   </div>
-  <div class="h-4"></div>
-  <div class="text-xl">{'<div/> (relative)'}</div>
-  <div class="overflow-x-auto">
+  <div class="spacer-md"></div>
+  <div class="section-title">{'<div/> (relative)'
+  }</div>
+  <div class="scroll-container">
     <div class="divTable" style="width: {table.getTotalSize()}px">
       <div class="thead">
         {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
@@ -161,9 +163,9 @@
       </div>
     </div>
   </div>
-  <div class="h-4"></div>
-  <div class="text-xl">{'<div/> (absolute positioning)'}</div>
-  <div class="overflow-x-auto">
+  <div class="spacer-md"></div>
+  <div class="section-title">{'<div/> (absolute positioning)'}</div>
+  <div class="scroll-container">
     <div class="divTable" style="width: {table.getTotalSize()}px">
       <div class="thead">
         {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
@@ -198,6 +200,6 @@
       </div>
     </div>
   </div>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
 </div>

@@ -16,7 +16,7 @@
     <button
       type="submit"
       disabled={!canSubmit || isSubmitting}
-      class="border rounded px-4 py-2 bg-blue-500 text-white disabled:opacity-50"
+      class="demo-button primary-action submit-button"
     >
       {isSubmitting ? 'Submitting...' : label}
     </button>

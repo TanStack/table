@@ -137,7 +137,7 @@ function App() {
                           <div
                             className={
                               header.column.getCanSort()
-                                ? 'cursor-pointer select-none'
+                                ? 'sortable-header'
                                 : ''
                             }
                             onClick={header.column.getToggleSortingHandler()}

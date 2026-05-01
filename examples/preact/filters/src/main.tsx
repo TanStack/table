@@ -116,7 +116,7 @@ function App() {
       })}
     >
       {(state) => (
-        <div className="p-2">
+        <div className="demo-root">
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
             <button onClick={() => stressTest()}>
@@ -135,7 +135,7 @@ function App() {
                             <div
                               className={
                                 header.column.getCanSort()
-                                  ? 'cursor-pointer select-none'
+                                  ? 'sortable-header'
                                   : ''
                               }
                               onClick={header.column.getToggleSortingHandler()}
@@ -175,44 +175,44 @@ function App() {
               })}
             </tbody>
           </table>
-          <div className="h-2" />
-          <div className="flex items-center gap-2">
+          <div className="spacer-sm" />
+          <div className="controls">
             <button
-              className="border rounded p-1"
+              className="demo-button demo-button-sm"
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
             >
               {'<<'}
             </button>
             <button
-              className="border rounded p-1"
+              className="demo-button demo-button-sm"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
               {'<'}
             </button>
             <button
-              className="border rounded p-1"
+              className="demo-button demo-button-sm"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
               {'>'}
             </button>
             <button
-              className="border rounded p-1"
+              className="demo-button demo-button-sm"
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
             >
               {'>>'}
             </button>
-            <span className="flex items-center gap-1">
+            <span className="inline-controls">
               <div>Page</div>
               <strong>
                 {(state.pagination.pageIndex + 1).toLocaleString()} of{' '}
                 {table.getPageCount().toLocaleString()}
               </strong>
             </span>
-            <span className="flex items-center gap-1">
+            <span className="inline-controls">
               | Go to page:
               <input
                 type="number"
@@ -225,7 +225,7 @@ function App() {
                     : 0
                   table.setPageIndex(page)
                 }}
-                className="border p-1 rounded w-16"
+                className="page-size-input"
               />
             </span>
             <select
@@ -266,7 +266,7 @@ function Filter({
 
   return filterVariant === 'range' ? (
     <div>
-      <div className="flex space-x-2">
+      <div className="filter-row">
         {/* See faceted column filters example for min max values functionality */}
         <DebouncedInput
           type="number"
@@ -278,7 +278,7 @@ function Filter({
             ])
           }
           placeholder={`Min`}
-          className="w-24 border shadow rounded"
+          className="filter-input"
         />
         <DebouncedInput
           type="number"
@@ -290,10 +290,10 @@ function Filter({
             ])
           }
           placeholder={`Max`}
-          className="w-24 border shadow rounded"
+          className="filter-input"
         />
       </div>
-      <div className="h-1" />
+      <div className="spacer-xs" />
     </div>
   ) : filterVariant === 'select' ? (
     <select
@@ -310,7 +310,7 @@ function Filter({
     </select>
   ) : (
     <DebouncedInput
-      className="w-36 border shadow rounded"
+      className="filter-select"
       onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
       type="text"

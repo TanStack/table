@@ -75,16 +75,16 @@ function App() {
   })
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
-        <button onClick={() => refreshData()} className="border p-2">
+        <button onClick={() => refreshData()} className="demo-button">
           Regenerate Data
         </button>
-        <button onClick={() => stressTest()} className="border p-2">
+        <button onClick={() => stressTest()} className="demo-button">
           Stress Test (1k rows)
         </button>
       </div>
-      <div className="h-4" />
+      <div className="spacer-md" />
       <table>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -124,8 +124,8 @@ function App() {
           ))}
         </tfoot>
       </table>
-      <div className="h-4" />
-      <button onClick={() => rerender()} className="border p-2">
+      <div className="spacer-md" />
+      <button onClick={() => rerender()} className="demo-button">
         Rerender
       </button>
     </div>

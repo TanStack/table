@@ -144,9 +144,9 @@ class LitTableExample extends LitElement {
     }
 
     return html`
-      <div class="p-2">
-        <div class="inline-block border border-black shadow rounded">
-          <div class="px-1 border-b border-black">
+      <div class="demo-root">
+        <div class="column-toggle-panel">
+          <div class="column-toggle-panel-header">
             <label>
               <input
                 type="checkbox"
@@ -158,7 +158,7 @@ class LitTableExample extends LitElement {
           </div>
           ${table.getAllLeafColumns().map(
             (column) => html`
-              <div class="px-1">
+              <div class="column-toggle-row">
                 <label>
                   <input
                     type="checkbox"
@@ -171,13 +171,13 @@ class LitTableExample extends LitElement {
             `,
           )}
         </div>
-        <div class="h-4"></div>
-        <div class="flex flex-wrap gap-2">
+        <div class="spacer-md"></div>
+        <div class="button-row">
           <button
             @click="${() => {
               this._data = makeData(1_000)
             }}"
-            class="border p-1"
+            class="demo-button demo-button-sm"
           >
             Regenerate Data
           </button>
@@ -185,21 +185,24 @@ class LitTableExample extends LitElement {
             @click="${() => {
               this._data = makeData(500_000)
             }}"
-            class="border p-1"
+            class="demo-button demo-button-sm"
           >
             Stress Test (500k rows)
           </button>
-          <button @click="${randomizeColumns}" class="border p-1">
+          <button
+            @click="${randomizeColumns}"
+            class="demo-button demo-button-sm"
+          >
             Shuffle Columns
           </button>
         </div>
-        <div class="h-4"></div>
-        <p class="text-sm mb-2">
+        <div class="spacer-md"></div>
+        <p class="demo-note">
           This example uses the non-split APIs. Columns are just reordered
           within 1 table instead of being split into 3 different tables.
         </p>
-        <div class="flex">
-          <table class="border-2 border-black">
+        <div class="table-row-group">
+          <table class="outlined-table">
             <thead>
               ${repeat(
                 table.getHeaderGroups(),
@@ -211,18 +214,18 @@ class LitTableExample extends LitElement {
                       (header) => header.id,
                       (header) => html`
                         <th colspan="${header.colSpan}">
-                          <div class="whitespace-nowrap">
+                          <div class="nowrap">
                             ${header.isPlaceholder
                               ? null
                               : FlexRender({ header })}
                           </div>
                           ${!header.isPlaceholder && header.column.getCanPin()
                             ? html`
-                                <div class="flex gap-1 justify-center">
+                                <div class="pin-actions">
                                   ${header.column.getIsPinned() !== 'left'
                                     ? html`
                                         <button
-                                          class="border rounded px-2"
+                                          class="pin-button"
                                           @click="${() =>
                                             header.column.pin('left')}"
                                         >
@@ -233,7 +236,7 @@ class LitTableExample extends LitElement {
                                   ${header.column.getIsPinned()
                                     ? html`
                                         <button
-                                          class="border rounded px-2"
+                                          class="pin-button"
                                           @click="${() =>
                                             header.column.pin(false)}"
                                         >
@@ -244,7 +247,7 @@ class LitTableExample extends LitElement {
                                   ${header.column.getIsPinned() !== 'right'
                                     ? html`
                                         <button
-                                          class="border rounded px-2"
+                                          class="pin-button"
                                           @click="${() =>
                                             header.column.pin('right')}"
                                         >
@@ -279,7 +282,7 @@ class LitTableExample extends LitElement {
             </tbody>
           </table>
         </div>
-        <div class="h-4"></div>
+        <div class="spacer-md"></div>
         <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
@@ -291,7 +294,6 @@ class LitTableExample extends LitElement {
 
         table {
           border: 1px solid lightgray;
-          border-collapse: collapse;
         }
 
         tbody {
@@ -310,6 +312,210 @@ class LitTableExample extends LitElement {
 
         tfoot th {
           font-weight: normal;
+        }
+
+        /* Demo layout helpers for the plain example UI. */
+        .demo-root {
+          padding: 0.5rem;
+        }
+        .spacer-xs {
+          height: 0.25rem;
+        }
+        .spacer-sm {
+          height: 0.5rem;
+        }
+        .spacer-md {
+          height: 1rem;
+        }
+        .controls,
+        .button-row,
+        .inline-controls,
+        .pin-actions,
+        .filter-row,
+        .form-actions {
+          display: flex;
+          align-items: center;
+        }
+        .button-row {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+        .controls {
+          gap: 0.5rem;
+        }
+        .inline-controls,
+        .pin-actions {
+          gap: 0.25rem;
+        }
+        .pin-actions {
+          justify-content: center;
+        }
+        .filter-row {
+          gap: 0.5rem;
+        }
+        .form-actions {
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+        .split-tables {
+          display: flex;
+          gap: 1rem;
+        }
+        .table-row-group {
+          display: flex;
+        }
+        .split-gap {
+          gap: 1rem;
+        }
+        .vertical-options {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: center;
+        }
+        .column-toggle-panel {
+          display: inline-block;
+          border: 1px solid #000;
+          border-radius: 0.25rem;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+        }
+        .column-toggle-panel-header {
+          border-bottom: 1px solid #000;
+          padding: 0 0.25rem;
+        }
+        .column-toggle-row,
+        .selection-cell {
+          padding: 0 0.25rem;
+        }
+        .selection-cell {
+          display: block;
+        }
+        .demo-button,
+        .pin-button,
+        .compact-input,
+        .filter-input,
+        .filter-select,
+        .page-size-input,
+        .text-input,
+        .number-input,
+        .wide-action-button,
+        .primary-action,
+        .secondary-action,
+        .success-action {
+          border: 1px solid currentColor;
+          border-radius: 0.25rem;
+        }
+        .demo-button {
+          padding: 0.5rem;
+        }
+        .demo-button-sm {
+          padding: 0.25rem;
+        }
+        .demo-button-spaced {
+          margin-bottom: 0.5rem;
+        }
+        .pin-button {
+          padding: 0 0.5rem;
+        }
+        .outlined-table {
+          border: 2px solid #000;
+        }
+        .outlined-control {
+          border-color: #000;
+        }
+        .nowrap {
+          white-space: nowrap;
+        }
+        .demo-note {
+          margin-bottom: 0.5rem;
+          font-size: 0.875rem;
+        }
+        .section-title {
+          font-size: 1.25rem;
+        }
+        .scroll-container {
+          overflow-x: auto;
+        }
+        .page-size-input {
+          width: 4rem;
+          padding: 0.25rem;
+        }
+        .number-input {
+          width: 5rem;
+          padding: 0 0.25rem;
+        }
+        .filter-input,
+        .filter-select {
+          width: 6rem;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+        }
+        .filter-select {
+          width: 9rem;
+        }
+        .text-input {
+          width: 100%;
+          padding: 0 0.25rem;
+        }
+        .compact-input {
+          padding: 0 0.25rem;
+        }
+        .wide-action-button {
+          width: 16rem;
+        }
+        .summary-panel {
+          border: 1px solid currentColor;
+          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+          padding: 0.5rem;
+        }
+        .sortable-header,
+        .sortable {
+          cursor: pointer;
+          user-select: none;
+        }
+        .primary-action,
+        .success-action,
+        .secondary-action {
+          color: #fff;
+        }
+        .primary-action {
+          background: #3b82f6;
+        }
+        .success-action {
+          background: #22c55e;
+        }
+        .secondary-action {
+          background: #6b7280;
+        }
+        .submit-button:disabled {
+          opacity: 0.5;
+        }
+        .error-text {
+          color: #ef4444;
+          font-size: 0.75rem;
+        }
+        .success-text {
+          color: #16a34a;
+        }
+        .warning-text {
+          color: #ca8a04;
+        }
+        .muted-text {
+          color: #9ca3af;
+        }
+        .label-offset {
+          margin-left: 0.5rem;
+        }
+        .cell-padding {
+          padding: 0.25rem;
+        }
+        .table-spacer {
+          margin-bottom: 0.5rem;
+        }
+        .centered-button-row {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 0.5rem;
         }
       </style>
     `

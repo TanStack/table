@@ -115,12 +115,12 @@ function App() {
   })
 
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (10k rows)</button>
       </div>
-      <div class="h-2" />
+      <div class="spacer-sm" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -162,44 +162,44 @@ function App() {
           </For>
         </tbody>
       </table>
-      <div class="h-2" />
-      <div class="flex items-center gap-2">
+      <div class="spacer-sm" />
+      <div class="controls">
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.setPageIndex(table.getPageCount() - 1)}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           <div>Page</div>
           <strong>
             {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -212,7 +212,7 @@ function App() {
                 : 0
               table.setPageIndex(page)
             }}
-            class="border p-1 rounded w-16"
+            class="page-size-input"
           />
         </span>
         <select
@@ -246,7 +246,7 @@ function Filter({
   const columnFilterValue = () => column.getFilterValue()
 
   return typeof firstValue === 'number' ? (
-    <div class="flex space-x-2">
+    <div class="filter-row">
       <input
         type="number"
         value={(columnFilterValue() as [number, number] | undefined)?.[0] ?? ''}
@@ -257,7 +257,7 @@ function Filter({
           ])
         }
         placeholder="Min"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
       <input
         type="number"
@@ -269,7 +269,7 @@ function Filter({
           ])
         }
         placeholder="Max"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
     </div>
   ) : (
@@ -278,7 +278,7 @@ function Filter({
       value={(columnFilterValue() ?? '') as string}
       onInput={(e) => column.setFilterValue(e.currentTarget.value)}
       placeholder="Search..."
-      class="w-36 border shadow rounded"
+      class="filter-select"
     />
   )
 }
@@ -301,7 +301,7 @@ function IndeterminateCheckbox(props: {
     <input
       type="checkbox"
       ref={ref}
-      class={`${props.className ?? ''} cursor-pointer`}
+      class={`${props.className ?? ''} sortable-header`}
       checked={props.checked}
       onChange={props.onChange}
     />

@@ -30,7 +30,7 @@ const sortedUniqueValues = computed(() =>
 
 <template>
   <div v-if="typeof firstValue === 'number'">
-    <div class="flex space-x-2">
+    <div class="filter-row">
       <DebouncedInput
         type="number"
         :min="Number(column.getFacetedMinMaxValues()?.[0] ?? '')"
@@ -45,7 +45,7 @@ const sortedUniqueValues = computed(() =>
             ? `(${column.getFacetedMinMaxValues()?.[0]})`
             : ''
         }`"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
       <DebouncedInput
         type="number"
@@ -61,10 +61,10 @@ const sortedUniqueValues = computed(() =>
             ? `(${column.getFacetedMinMaxValues()?.[1]})`
             : ''
         }`"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
     </div>
-    <div class="h-1" />
+    <div class="spacer-xs" />
   </div>
   <div v-else>
     <datalist :id="column.id + 'list'">
@@ -83,9 +83,9 @@ const sortedUniqueValues = computed(() =>
           ? column.getFacetedUniqueValues().size
           : 0
       })`"
-      class="w-36 border shadow rounded"
+      class="filter-select"
       :list="column.id + 'list'"
     />
-    <div class="h-1" />
+    <div class="spacer-xs" />
   </div>
 </template>

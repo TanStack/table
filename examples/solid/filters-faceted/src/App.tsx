@@ -104,18 +104,18 @@ function App() {
   }, 500)
 
   return (
-    <div class="p-2">
+    <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (500k rows)</button>
       </div>
       <input
-        class="p-2 font-lg shadow border border-block"
+        class="summary-panel"
         value={table.store.state.globalFilter ?? ''}
         onInput={(e) => debounceSetGlobalFilter(e.currentTarget.value)}
         placeholder="Search all columns..."
       />
-      <div class="h-2" />
+      <div class="spacer-sm" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>

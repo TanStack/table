@@ -88,8 +88,8 @@ function MyTable(props: {
   })
 
   return (
-    <div class="p-2">
-      <div class="h-2" />
+    <div class="demo-root">
+      <div class="spacer-sm" />
       <table>
         <thead>
           <For each={table.getHeaderGroups()}>
@@ -100,9 +100,7 @@ function MyTable(props: {
                     <th colSpan={header.colSpan}>
                       <div
                         class={
-                          header.column.getCanSort()
-                            ? 'cursor-pointer select-none'
-                            : ''
+                          header.column.getCanSort() ? 'sortable-header' : ''
                         }
                         onClick={header.column.getToggleSortingHandler()}
                       >
@@ -142,44 +140,44 @@ function MyTable(props: {
           </For>
         </tbody>
       </table>
-      <div class="h-2" />
-      <div class="flex items-center gap-2">
+      <div class="spacer-sm" />
+      <div class="controls">
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          class="border rounded p-1"
+          class="demo-button demo-button-sm"
           onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           <div>Page</div>
           <strong>
             {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span class="flex items-center gap-1">
+        <span class="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -192,7 +190,7 @@ function MyTable(props: {
                 : 0
               table.setPageIndex(page)
             }}
-            class="border p-1 rounded w-16"
+            class="page-size-input"
           />
         </span>
         <select
@@ -229,7 +227,7 @@ function Filter({
   const columnFilterValue = () => column.getFilterValue()
 
   return typeof firstValue === 'number' ? (
-    <div class="flex space-x-2" onClick={(e) => e.stopPropagation()}>
+    <div class="filter-row" onClick={(e) => e.stopPropagation()}>
       <input
         type="number"
         value={(columnFilterValue() as [number, number] | undefined)?.[0] ?? ''}
@@ -240,7 +238,7 @@ function Filter({
           ])
         }
         placeholder="Min"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
       <input
         type="number"
@@ -252,12 +250,12 @@ function Filter({
           ])
         }
         placeholder="Max"
-        class="w-24 border shadow rounded"
+        class="filter-input"
       />
     </div>
   ) : (
     <input
-      class="w-36 border shadow rounded"
+      class="filter-select"
       onInput={(e) => column.setFilterValue(e.currentTarget.value)}
       onClick={(e) => e.stopPropagation()}
       placeholder="Search..."

@@ -75,7 +75,7 @@ function App() {
   })
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
@@ -119,8 +119,8 @@ function App() {
           ))}
         </tfoot>
       </table>
-      <div className="h-4" />
-      <button onClick={() => rerender(0)} className="border p-2">
+      <div className="spacer-md" />
+      <button onClick={() => rerender(0)} className="demo-button">
         Rerender
       </button>
     </div>

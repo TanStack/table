@@ -3,7 +3,8 @@
   Uses useTableContext to access the table instance.
 -->
 <script lang="ts">
-  import { useTableContext } from '../hooks/table'
+  import { useTableContext
+  } from '../hooks/table'
 
   interface Props {
     title: string
@@ -16,7 +17,8 @@
 </script>
 
 <div class="table-toolbar">
-  <h2>{title}</h2>
+  <h2>{title
+  }</h2>
   <div>
     <button onclick={() => table.resetColumnFilters()}>
       Clear Filters

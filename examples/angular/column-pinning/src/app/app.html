@@ -1,6 +1,6 @@
-<div class="p-2">
-  <div class="inline-block border border-black shadow rounded">
-    <div class="px-1 border-b border-black">
+<div class="demo-root">
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
       <label>
         <input
           type="checkbox"
@@ -12,7 +12,7 @@
     </div>
 
     @for (column of table.getAllLeafColumns(); track column.id) {
-      <div class="px-1">
+      <div class="column-toggle-row">
         <label>
           <input
             type="checkbox"
@@ -25,14 +25,14 @@
     }
   </div>
 
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
 
-  <div class="flex flex-wrap gap-2">
-    <button (click)="refreshData()" class="border p-1">Regenerate Data</button>
-    <button (click)="stressTest()" class="border p-1">Stress Test (1k rows)</button>
-    <button (click)="randomizeColumns()" class="border p-1">Shuffle Columns</button>
+  <div class="button-row">
+    <button (click)="refreshData()" class="demo-button demo-button-sm">Regenerate Data</button>
+    <button (click)="stressTest()" class="demo-button demo-button-sm">Stress Test (1k rows)</button>
+    <button (click)="randomizeColumns()" class="demo-button demo-button-sm">Shuffle Columns</button>
   </div>
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   <div>
     <label>
       <input type="checkbox" #input [checked]="split()" (change)="split.set(input.checked)" />
@@ -40,16 +40,16 @@
     </label>
   </div>
 
-  <div class="flex" [class.gap-4]="split()">
+  <div class="table-row-group" [class.split-gap]="split()">
     <!-- Left Side -->
     @if (split()) {
-      <table class="border-2 border-black">
+      <table class="outlined-table">
         <thead>
           @for (headerGroup of table.getLeftHeaderGroups(); track headerGroup.id) {
             <tr>
               @for (header of headerGroup.headers; track header.id) {
                 <th [attr.colSpan]="header.colSpan">
-                  <div class="whitespace-nowrap">
+                  <div class="nowrap">
                     @if (!header.isPlaceholder) {
                       <ng-container
                         *flexRender="
@@ -95,14 +95,14 @@
     }
 
     <!-- Center Side -->
-    <table class="border-2 border-black">
+    <table class="outlined-table">
       <thead>
         @if (split() ? table.getCenterHeaderGroups() : table.getHeaderGroups(); as headerGroups) {
           @for (headerGroup of headerGroups; track headerGroup.id) {
             <tr>
               @for (header of headerGroup.headers; track header.id) {
                 <th [attr.colSpan]="header.colSpan">
-                  <div class="whitespace-nowrap">
+                  <div class="nowrap">
                     @if (!header.isPlaceholder) {
                       <ng-container
                         *flexRender="
@@ -150,13 +150,13 @@
 
     <!-- Right side -->
     @if (split()) {
-      <table class="border-2 border-black">
+      <table class="outlined-table">
         <thead>
           @for (headerGroup of table.getRightHeaderGroups(); track headerGroup.id) {
             <tr>
               @for (header of headerGroup.headers; track header.id) {
                 <th [attr.colSpan]="header.colSpan">
-                  <div class="whitespace-nowrap">
+                  <div class="nowrap">
                     @if (!header.isPlaceholder) {
                       <ng-container
                         *flexRender="
@@ -202,23 +202,23 @@
     }
   </div>
 
-  <div class="h-4"></div>
+  <div class="spacer-md"></div>
   <pre>{{ stringifiedColumnPinning() }}</pre>
 </div>
 
 <ng-template #headerContentTpl let-header>
   @if (!header.isPlaceholder && header.column.getCanPin()) {
-    <div class="flex gap-1 justify-center">
+    <div class="pin-actions">
       @if (header.column.getIsPinned() !== 'left') {
-        <button class="border rounded px-2" (click)="header.column.pin('left')"><=</button>
+        <button class="pin-button" (click)="header.column.pin('left')"><=</button>
       }
 
       @if (header.column.getIsPinned()) {
-        <button class="border rounded px-2" (click)="header.column.pin(false)">X</button>
+        <button class="pin-button" (click)="header.column.pin(false)">X</button>
       }
 
       @if (header.column.getIsPinned() !== 'right') {
-        <button class="border rounded px-2" (click)="header.column.pin('right')">=></button>
+        <button class="pin-button" (click)="header.column.pin('right')">=></button>
       }
     </div>
   }

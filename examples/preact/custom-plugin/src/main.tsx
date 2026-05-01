@@ -169,15 +169,15 @@ function App() {
   })
 
   return (
-    <div className="p-2">
+    <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
       </div>
-      <div className="h-2" />
+      <div className="spacer-sm" />
       <button
         onClick={() => table.toggleDensity()}
-        className="border rounded p-1 bg-blue-500 text-white mb-2 w-64"
+        className="demo-button demo-button-sm primary-action wide-action-button demo-button-spaced"
       >
         Toggle Density
       </button>
@@ -203,9 +203,7 @@ function App() {
                   >
                     <div
                       className={
-                        header.column.getCanSort()
-                          ? 'cursor-pointer select-none'
-                          : ''
+                        header.column.getCanSort() ? 'sortable-header' : ''
                       }
                       onClick={header.column.getToggleSortingHandler()}
                     >
@@ -254,44 +252,44 @@ function App() {
           })}
         </tbody>
       </table>
-      <div className="h-2" />
-      <div className="flex items-center gap-2">
+      <div className="spacer-sm" />
+      <div className="controls">
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>'}
         </button>
         <button
-          className="border rounded p-1"
+          className="demo-button demo-button-sm"
           onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
         </button>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           <div>Page</div>
           <strong>
             {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
-        <span className="flex items-center gap-1">
+        <span className="inline-controls">
           | Go to page:
           <input
             type="number"
@@ -302,7 +300,7 @@ function App() {
                 : 0
               table.setPageIndex(page)
             }}
-            className="border p-1 rounded w-16"
+            className="page-size-input"
           />
         </span>
         <select
@@ -343,7 +341,7 @@ function Filter({
   const columnFilterValue = column.getFilterValue()
 
   return typeof firstValue === 'number' ? (
-    <div className="flex space-x-2">
+    <div className="filter-row">
       <input
         type="number"
         value={(columnFilterValue as [number, number] | undefined)?.[0]}
@@ -354,7 +352,7 @@ function Filter({
           ])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
       <input
         type="number"
@@ -366,7 +364,7 @@ function Filter({
           ])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="filter-input"
       />
     </div>
   ) : (
@@ -377,7 +375,7 @@ function Filter({
         column.setFilterValue((e.target as HTMLInputElement).value)
       }
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="filter-select"
     />
   )
 }
