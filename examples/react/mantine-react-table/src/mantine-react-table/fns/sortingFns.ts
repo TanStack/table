@@ -1,9 +1,9 @@
-import {  compareItems } from '@tanstack/match-sorter-utils'
-import {   sortFns } from '@tanstack/react-table'
-import type {RankingInfo} from '@tanstack/match-sorter-utils';
-import type {Row, StockFeatures} from '@tanstack/react-table';
+import { compareItems } from '@tanstack/match-sorter-utils'
+import { sortFns } from '@tanstack/react-table'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
+import type { Row, StockFeatures } from '@tanstack/react-table'
 
-import type {MRT_Row, MRT_RowData} from '../types';
+import type { MRT_Row, MRT_RowData } from '../types'
 
 const fuzzy = <TData extends MRT_RowData>(
   rowA: Row<StockFeatures, TData>,

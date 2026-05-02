@@ -1,14 +1,19 @@
 import clsx from 'clsx'
 
-
-import { Box, TableTr  } from '@mantine/core'
-
+import { Box, TableTr } from '@mantine/core'
 
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_TableFooterCell } from './MRT_TableFooterCell'
 import classes from './MRT_TableFooterRow.module.css'
-import type {MRT_ColumnVirtualizer, MRT_Header, MRT_HeaderGroup, MRT_RowData, MRT_TableInstance, MRT_VirtualItem} from '../../types';
-import type {TableTrProps} from '@mantine/core';
+import type {
+  MRT_ColumnVirtualizer,
+  MRT_Header,
+  MRT_HeaderGroup,
+  MRT_RowData,
+  MRT_TableInstance,
+  MRT_VirtualItem,
+} from '../../types'
+import type { TableTrProps } from '@mantine/core'
 
 interface Props<TData extends MRT_RowData> extends TableTrProps {
   columnVirtualizer?: MRT_ColumnVirtualizer

@@ -1,6 +1,14 @@
-import type {Row, StockFeatures} from '@tanstack/react-table';
+import type { Row, StockFeatures } from '@tanstack/react-table'
 
-import type {MRT_Column, MRT_ColumnDef, MRT_ColumnOrderState, MRT_DefinedColumnDef, MRT_DefinedTableOptions, MRT_FilterOption, MRT_RowData} from '../types';
+import type {
+  MRT_Column,
+  MRT_ColumnDef,
+  MRT_ColumnOrderState,
+  MRT_DefinedColumnDef,
+  MRT_DefinedTableOptions,
+  MRT_FilterOption,
+  MRT_RowData,
+} from '../types'
 
 export const getColumnId = <TData extends MRT_RowData>(
   columnDef: MRT_ColumnDef<TData>,

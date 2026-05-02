@@ -19,7 +19,11 @@ import { MRT_FilterFns } from '../fns/filterFns'
 import { MRT_SortFns } from '../fns/sortingFns'
 import { MRT_Default_Icons } from '../icons'
 import { MRT_Localization_EN } from '../locales/en'
-import type {MRT_DefinedTableOptions, MRT_RowData, MRT_TableOptions} from '../types';
+import type {
+  MRT_DefinedTableOptions,
+  MRT_RowData,
+  MRT_TableOptions,
+} from '../types'
 
 export const MRT_DefaultColumn = {
   filterVariant: 'text',
@@ -128,10 +132,7 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     () => ({ ...MRT_FilterFns, ...filterFns }) as typeof filterFns,
     [],
   )
-  sortFns = useMemo(
-    () => ({ ...MRT_SortFns, ...sortFns }),
-    [],
-  )
+  sortFns = useMemo(() => ({ ...MRT_SortFns, ...sortFns }), [])
   defaultColumn = useMemo(
     () => ({ ...MRT_DefaultColumn, ...defaultColumn }),
     [defaultColumn],

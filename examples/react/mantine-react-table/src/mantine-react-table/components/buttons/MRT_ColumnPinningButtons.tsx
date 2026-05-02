@@ -1,10 +1,9 @@
 import clsx from 'clsx'
 
-
 import { ActionIcon, Flex, Tooltip } from '@mantine/core'
 
 import classes from './MRT_ColumnPinningButtons.module.css'
-import type {MRT_Column, MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_Column, MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> {
   column: MRT_Column<TData>

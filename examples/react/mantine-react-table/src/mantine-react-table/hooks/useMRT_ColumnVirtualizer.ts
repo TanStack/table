@@ -1,11 +1,15 @@
 import { useCallback, useMemo } from 'react'
 
-import {  useVirtualizer } from '@tanstack/react-virtual'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { parseFromValuesOrFunc } from '../utils/utils'
 import { extraIndexRangeExtractor } from '../utils/virtualization.utils'
-import type {Range} from '@tanstack/react-virtual';
+import type { Range } from '@tanstack/react-virtual'
 
-import type {MRT_ColumnVirtualizer, MRT_RowData, MRT_TableInstance} from '../types';
+import type {
+  MRT_ColumnVirtualizer,
+  MRT_RowData,
+  MRT_TableInstance,
+} from '../types'
 
 export const useMRT_ColumnVirtualizer = <
   TData extends MRT_RowData,

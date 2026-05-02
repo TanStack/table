@@ -1,15 +1,8 @@
 import clsx from 'clsx'
 
-
 import { useMemo } from 'react'
 
-import {
-  Table,
-  
-  darken,
-  lighten,
-  useMantineColorScheme
-} from '@mantine/core'
+import { Table, darken, lighten, useMantineColorScheme } from '@mantine/core'
 
 import { useMRT_ColumnVirtualizer } from '../../hooks/useMRT_ColumnVirtualizer'
 import { parseCSSVarId } from '../../utils/style.utils'
@@ -18,8 +11,8 @@ import { MRT_TableBody, Memo_MRT_TableBody } from '../body/MRT_TableBody'
 import { MRT_TableFooter } from '../footer/MRT_TableFooter'
 import { MRT_TableHead } from '../head/MRT_TableHead'
 import classes from './MRT_Table.module.css'
-import type {TableProps} from '@mantine/core';
-import type {MRT_RowData, MRT_TableInstance} from '../../types';
+import type { TableProps } from '@mantine/core'
+import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> extends TableProps {
   table: MRT_TableInstance<TData>

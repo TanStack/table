@@ -1,12 +1,11 @@
 import clsx from 'clsx'
 
-
-import { Collapse, Progress  } from '@mantine/core'
+import { Collapse, Progress } from '@mantine/core'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import classes from './MRT_ProgressBar.module.css'
-import type {ProgressProps} from '@mantine/core';
+import type { ProgressProps } from '@mantine/core'
 
-import type {MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> extends Partial<ProgressProps> {
   isTopToolbar: boolean

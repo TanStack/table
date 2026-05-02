@@ -1,10 +1,9 @@
-
-import { ActionIcon, Menu,  Tooltip } from '@mantine/core'
+import { ActionIcon, Menu, Tooltip } from '@mantine/core'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import classes from './MRT_ColumnActionMenu.module.css'
-import type {MenuProps} from '@mantine/core';
+import type { MenuProps } from '@mantine/core'
 
-import type {MRT_Header, MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> extends MenuProps {
   header: MRT_Header<TData>

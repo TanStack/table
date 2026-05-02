@@ -1,10 +1,10 @@
-import { Flex, Modal,  Stack } from '@mantine/core'
+import { Flex, Modal, Stack } from '@mantine/core'
 
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_EditActionButtons } from '../buttons/MRT_EditActionButtons'
 import { MRT_EditCellTextInput } from '../inputs/MRT_EditCellTextInput'
-import type {MRT_Row, MRT_RowData, MRT_TableInstance} from '../../types';
-import type {ModalProps} from '@mantine/core';
+import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { ModalProps } from '@mantine/core'
 
 interface Props<TData extends MRT_RowData> extends Partial<ModalProps> {
   open: boolean

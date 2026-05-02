@@ -1,10 +1,10 @@
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_GrabHandleButton } from '../buttons/MRT_GrabHandleButton'
-import type {DragEvent, RefObject} from 'react';
+import type { DragEvent, RefObject } from 'react'
 
-import type {ActionIconProps} from '@mantine/core';
+import type { ActionIconProps } from '@mantine/core'
 
-import type {MRT_Row, MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> extends ActionIconProps {
   row: MRT_Row<TData>

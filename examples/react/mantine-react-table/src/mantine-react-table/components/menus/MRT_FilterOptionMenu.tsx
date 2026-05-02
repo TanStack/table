@@ -1,10 +1,16 @@
-
 import { Fragment, useMemo } from 'react'
 
 import { Menu } from '@mantine/core'
 
 import classes from './MRT_FilterOptionMenu.module.css'
-import type {MRT_FilterOption, MRT_Header, MRT_InternalFilterOption, MRT_Localization, MRT_RowData, MRT_TableInstance} from '../../types';
+import type {
+  MRT_FilterOption,
+  MRT_Header,
+  MRT_InternalFilterOption,
+  MRT_Localization,
+  MRT_RowData,
+  MRT_TableInstance,
+} from '../../types'
 
 export const mrtFilterOptions = (
   localization: MRT_Localization,
@@ -197,7 +203,7 @@ export const MRT_FilterOptionMenu = <TData extends MRT_RowData>({
         // will now be range filter mode
         if (
           !Array.isArray(currentFilterValue) ||
-          (!(currentFilterValue)?.every((v) => v === '') &&
+          (!currentFilterValue?.every((v) => v === '') &&
             !rangeModes.includes(prevFilterMode))
         ) {
           column.setFilterValue(['', ''])
@@ -250,9 +256,7 @@ export const MRT_FilterOptionMenu = <TData extends MRT_RowData>({
               <Menu.Item
                 color={option === filterOption ? 'blue' : undefined}
                 leftSection={<span className={classes.symbol}>{symbol}</span>}
-                onClick={() =>
-                  handleSelectFilterMode(option)
-                }
+                onClick={() => handleSelectFilterMode(option)}
                 value={option}
               >
                 {label}

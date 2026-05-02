@@ -1,19 +1,18 @@
 import clsx from 'clsx'
 
-import { Box  } from '@mantine/core'
+import { Box } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import commonClasses from './common.styles.module.css'
 import classes from './MRT_BottomToolbar.module.css'
 
-
 import { MRT_ProgressBar } from './MRT_ProgressBar'
 import { MRT_TablePagination } from './MRT_TablePagination'
 import { MRT_ToolbarAlertBanner } from './MRT_ToolbarAlertBanner'
 import { MRT_ToolbarDropZone } from './MRT_ToolbarDropZone'
-import type {BoxProps} from '@mantine/core';
+import type { BoxProps } from '@mantine/core'
 
-import type {MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> extends BoxProps {
   table: MRT_TableInstance<TData>

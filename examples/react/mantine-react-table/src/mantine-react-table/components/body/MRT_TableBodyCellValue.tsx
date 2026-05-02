@@ -1,8 +1,13 @@
-import { Highlight  } from '@mantine/core'
+import { Highlight } from '@mantine/core'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type {HighlightProps} from '@mantine/core';
+import type { HighlightProps } from '@mantine/core'
 
-import type {MRT_Cell, MRT_CellValue, MRT_RowData, MRT_TableInstance} from '../../types';
+import type {
+  MRT_Cell,
+  MRT_CellValue,
+  MRT_RowData,
+  MRT_TableInstance,
+} from '../../types'
 
 const allowedTypes = ['string', 'number']
 const allowedFilterVariants = ['text', 'autocomplete']

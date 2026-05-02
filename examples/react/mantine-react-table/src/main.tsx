@@ -19,8 +19,8 @@ import {
   createMRTColumnHelper,
   useMantineReactTable,
 } from './mantine-react-table'
-import {  makeData } from './makeData'
-import type {Person} from './makeData';
+import { makeData } from './makeData'
+import type { Person } from './makeData'
 import './index.css'
 
 const columnHelper = createMRTColumnHelper<Person>()

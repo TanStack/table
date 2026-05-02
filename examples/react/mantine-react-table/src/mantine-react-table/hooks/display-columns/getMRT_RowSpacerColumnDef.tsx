@@ -1,7 +1,11 @@
 import { MRT_DefaultDisplayColumn } from '../useMRT_TableOptions'
 
 import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
-import type {MRT_ColumnDef, MRT_RowData, MRT_StatefulTableOptions} from '../../types';
+import type {
+  MRT_ColumnDef,
+  MRT_RowData,
+  MRT_StatefulTableOptions,
+} from '../../types'
 
 const blankColProps = {
   children: null,

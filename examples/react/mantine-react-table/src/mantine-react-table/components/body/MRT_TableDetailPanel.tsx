@@ -1,15 +1,19 @@
 import clsx from 'clsx'
 
-
-
-import { Collapse, TableTd,  TableTr } from '@mantine/core'
+import { Collapse, TableTd, TableTr } from '@mantine/core'
 
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_EditCellTextInput } from '../inputs/MRT_EditCellTextInput'
 import classes from './MRT_TableDetailPanel.module.css'
-import type {MRT_Row, MRT_RowData, MRT_RowVirtualizer, MRT_TableInstance, MRT_VirtualItem} from '../../types';
-import type {TableTdProps} from '@mantine/core';
-import type {RefObject} from 'react';
+import type {
+  MRT_Row,
+  MRT_RowData,
+  MRT_RowVirtualizer,
+  MRT_TableInstance,
+  MRT_VirtualItem,
+} from '../../types'
+import type { TableTdProps } from '@mantine/core'
+import type { RefObject } from 'react'
 
 interface Props<TData extends MRT_RowData> extends TableTdProps {
   parentRowRef: RefObject<HTMLTableRowElement | null>

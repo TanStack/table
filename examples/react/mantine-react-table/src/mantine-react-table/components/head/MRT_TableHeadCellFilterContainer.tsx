@@ -1,13 +1,4 @@
-
-import {
-  ActionIcon,
-  Collapse,
-  Flex,
-  
-  Menu,
-  Text,
-  Tooltip
-} from '@mantine/core'
+import { ActionIcon, Collapse, Flex, Menu, Text, Tooltip } from '@mantine/core'
 
 import { localizedFilterOption } from '../../fns/filterFns'
 import { MRT_FilterCheckbox } from '../inputs/MRT_FilterCheckbox'
@@ -16,8 +7,8 @@ import { MRT_FilterRangeSlider } from '../inputs/MRT_FilterRangeSlider'
 import { MRT_FilterTextInput } from '../inputs/MRT_FilterTextInput'
 import { MRT_FilterOptionMenu } from '../menus/MRT_FilterOptionMenu'
 import classes from './MRT_TableHeadCellFilterContainer.module.css'
-import type {MRT_Header, MRT_RowData, MRT_TableInstance} from '../../types';
-import type {FlexProps} from '@mantine/core';
+import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { FlexProps } from '@mantine/core'
 
 interface Props<TData extends MRT_RowData> extends FlexProps {
   header: MRT_Header<TData>

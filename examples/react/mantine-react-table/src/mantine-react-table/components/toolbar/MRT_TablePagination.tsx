@@ -1,20 +1,11 @@
 import clsx from 'clsx'
 
-
-import {
-  ActionIcon,
-  Box,
-  Group,
-  Pagination,
-  
-  Select,
-  Text
-} from '@mantine/core'
+import { ActionIcon, Box, Group, Pagination, Select, Text } from '@mantine/core'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import classes from './MRT_TablePagination.module.css'
-import type {PaginationProps} from '@mantine/core';
+import type { PaginationProps } from '@mantine/core'
 
-import type {MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100].map((x) =>
   x.toString(),

@@ -1,20 +1,13 @@
 import clsx from 'clsx'
 
-
-
-import {
-  ActionIcon,
-  
-  Tooltip,
-  useDirection
-} from '@mantine/core'
+import { ActionIcon, Tooltip, useDirection } from '@mantine/core'
 
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_EditCellTextInput } from '../inputs/MRT_EditCellTextInput'
 import classes from './MRT_ExpandButton.module.css'
-import type {MRT_Row, MRT_RowData, MRT_TableInstance} from '../../types';
-import type {ActionIconProps} from '@mantine/core';
-import type {MouseEvent} from 'react';
+import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { ActionIconProps } from '@mantine/core'
+import type { MouseEvent } from 'react'
 
 interface Props<TData extends MRT_RowData> extends ActionIconProps {
   row: MRT_Row<TData>

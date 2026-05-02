@@ -1,11 +1,10 @@
 import clsx from 'clsx'
 
-
-import { ActionIcon, Box,  Button, Tooltip } from '@mantine/core'
+import { ActionIcon, Box, Button, Tooltip } from '@mantine/core'
 import classes from './MRT_EditActionButtons.module.css'
-import type {BoxProps} from '@mantine/core';
+import type { BoxProps } from '@mantine/core'
 
-import type {MRT_Row, MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> extends BoxProps {
   row: MRT_Row<TData>

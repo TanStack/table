@@ -1,11 +1,14 @@
-
 import { Flex, Tooltip } from '@mantine/core'
 
 import { MRT_ExpandAllButton } from '../../components/buttons/MRT_ExpandAllButton'
 import { MRT_ExpandButton } from '../../components/buttons/MRT_ExpandButton'
 import { defaultDisplayColumnProps } from '../../utils/displayColumn.utils'
-import type {MRT_ColumnDef, MRT_RowData, MRT_StatefulTableOptions} from '../../types';
-import type {ReactNode} from 'react';
+import type {
+  MRT_ColumnDef,
+  MRT_RowData,
+  MRT_StatefulTableOptions,
+} from '../../types'
+import type { ReactNode } from 'react'
 
 export const getMRT_RowExpandColumnDef = <TData extends MRT_RowData>(
   tableOptions: MRT_StatefulTableOptions<TData>,

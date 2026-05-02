@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 
 import { getMRT_Rows } from '../utils/row.utils'
-import type {MRT_Row, MRT_RowData, MRT_TableInstance} from '../types';
+import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../types'
 
 export const useMRT_Rows = <TData extends MRT_RowData>(
   table: MRT_TableInstance<TData>,

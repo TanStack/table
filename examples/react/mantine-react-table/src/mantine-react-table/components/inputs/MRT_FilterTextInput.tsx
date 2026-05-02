@@ -1,7 +1,6 @@
 import clsx from 'clsx'
 
-
-import {  useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   ActionIcon,
@@ -10,8 +9,7 @@ import {
   Box,
   MultiSelect,
   Select,
-  TextInput
-  
+  TextInput,
 } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useDebouncedValue } from '@mantine/hooks'
@@ -19,9 +17,9 @@ import { useDebouncedValue } from '@mantine/hooks'
 import { localizedFilterOption } from '../../fns/filterFns'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import classes from './MRT_FilterTextInput.module.css'
-import type {MRT_Header, MRT_RowData, MRT_TableInstance} from '../../types';
-import type {TextInputProps} from '@mantine/core';
-import type {MouseEvent} from 'react';
+import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { TextInputProps } from '@mantine/core'
+import type { MouseEvent } from 'react'
 
 interface Props<TData extends MRT_RowData> extends TextInputProps {
   header: MRT_Header<TData>
@@ -404,9 +402,7 @@ export const MRT_FilterTextInput = <TData extends MRT_RowData>({
           filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
             node
           if (textInputProps.ref && typeof textInputProps.ref === 'object') {
-            ;(
-              textInputProps.ref
-            ).current = node
+            textInputProps.ref.current = node
           }
         }
       }}

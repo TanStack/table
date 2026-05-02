@@ -1,4 +1,4 @@
-import type {MRT_Localization} from '..';
+import type { MRT_Localization } from '..'
 
 export const MRT_Localization_NP: MRT_Localization = {
   actions: 'कार्यहरू',

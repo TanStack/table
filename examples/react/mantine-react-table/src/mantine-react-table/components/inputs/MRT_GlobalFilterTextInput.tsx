@@ -1,23 +1,15 @@
 import clsx from 'clsx'
 
-
 import { useEffect, useRef, useState } from 'react'
 
-import {
-  ActionIcon,
-  Collapse,
-  Menu,
-  TextInput,
-  
-  Tooltip
-} from '@mantine/core'
+import { ActionIcon, Collapse, Menu, TextInput, Tooltip } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_FilterOptionMenu } from '../menus/MRT_FilterOptionMenu'
 import classes from './MRT_GlobalFilterTextInput.module.css'
-import type {MRT_RowData, MRT_TableInstance} from '../../types';
-import type {TextInputProps} from '@mantine/core';
+import type { MRT_RowData, MRT_TableInstance } from '../../types'
+import type { TextInputProps } from '@mantine/core'
 
 interface Props<TData extends MRT_RowData> extends TextInputProps {
   table: MRT_TableInstance<TData>

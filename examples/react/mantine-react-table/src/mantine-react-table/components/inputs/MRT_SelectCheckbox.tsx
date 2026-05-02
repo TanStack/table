@@ -1,23 +1,15 @@
-import {
-  Checkbox,
-  
-  Radio,
-  
-  Switch,
-  
-  Tooltip
-} from '@mantine/core'
+import { Checkbox, Radio, Switch, Tooltip } from '@mantine/core'
 import {
   getIsRowSelected,
   getMRT_RowSelectionHandler,
   getMRT_SelectAllHandler,
 } from '../../utils/row.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type {MouseEvent} from 'react';
+import type { MouseEvent } from 'react'
 
-import type {CheckboxProps, RadioProps, SwitchProps} from '@mantine/core';
+import type { CheckboxProps, RadioProps, SwitchProps } from '@mantine/core'
 
-import type {MRT_Row, MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> extends CheckboxProps {
   renderedRowIndex?: number

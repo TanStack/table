@@ -1,15 +1,13 @@
 import clsx from 'clsx'
 
-
 import { useMemo, useState } from 'react'
 
 import { Button, Flex, Menu } from '@mantine/core'
 
-
 import { getDefaultColumnOrderIds } from '../../utils/displayColumn.utils'
 import { MRT_ShowHideColumnsMenuItems } from './MRT_ShowHideColumnsMenuItems'
 import classes from './MRT_ShowHideColumnsMenu.module.css'
-import type {MRT_Column, MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_Column, MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> {
   table: MRT_TableInstance<TData>

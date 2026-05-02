@@ -1,12 +1,11 @@
 import clsx from 'clsx'
 
-
-import { ActionIcon,  Tooltip } from '@mantine/core'
+import { ActionIcon, Tooltip } from '@mantine/core'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import classes from './MRT_ExpandAllButton.module.css'
-import type {ActionIconProps} from '@mantine/core';
+import type { ActionIconProps } from '@mantine/core'
 
-import type {MRT_RowData, MRT_TableInstance} from '../../types';
+import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData> extends ActionIconProps {
   table: MRT_TableInstance<TData>

@@ -1,14 +1,16 @@
 import clsx from 'clsx'
 
-
-import { TableTfoot  } from '@mantine/core'
-
+import { TableTfoot } from '@mantine/core'
 
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_TableFooterRow } from './MRT_TableFooterRow'
 import classes from './MRT_TableFooter.module.css'
-import type {MRT_ColumnVirtualizer, MRT_RowData, MRT_TableInstance} from '../../types';
-import type {TableTfootProps} from '@mantine/core';
+import type {
+  MRT_ColumnVirtualizer,
+  MRT_RowData,
+  MRT_TableInstance,
+} from '../../types'
+import type { TableTfootProps } from '@mantine/core'
 
 interface Props<TData extends MRT_RowData> extends TableTfootProps {
   columnVirtualizer?: MRT_ColumnVirtualizer

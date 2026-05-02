@@ -1,15 +1,9 @@
 import clsx from 'clsx'
 
-import {
-  ActionIcon,
-  
-  Indicator,
-  Tooltip
-} from '@mantine/core'
+import { ActionIcon, Indicator, Tooltip } from '@mantine/core'
 import { dataVariable } from '../../utils/style.utils'
 import classes from './MRT_TableHeadCellSortLabel.module.css'
-import type {ActionIconProps} from '@mantine/core';
-
+import type { ActionIconProps } from '@mantine/core'
 
 import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
 

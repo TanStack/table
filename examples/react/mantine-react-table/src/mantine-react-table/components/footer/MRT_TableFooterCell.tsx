@@ -1,15 +1,13 @@
 import clsx from 'clsx'
 
-
-
-import { TableTh,  useDirection } from '@mantine/core'
+import { TableTh, useDirection } from '@mantine/core'
 
 import { parseCSSVarId } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import classes from './MRT_TableFooterCell.module.css'
-import type {MRT_Header, MRT_RowData, MRT_TableInstance} from '../../types';
-import type {TableThProps} from '@mantine/core';
-import type {CSSProperties} from 'react';
+import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { TableThProps } from '@mantine/core'
+import type { CSSProperties } from 'react'
 
 interface Props<TData extends MRT_RowData> extends TableThProps {
   footer: MRT_Header<TData>

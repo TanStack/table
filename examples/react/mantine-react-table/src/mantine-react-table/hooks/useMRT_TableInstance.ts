@@ -28,7 +28,25 @@ import { getMRT_RowPinningColumnDef } from './display-columns/getMRT_RowPinningC
 import { getMRT_RowSelectColumnDef } from './display-columns/getMRT_RowSelectColumnDef'
 import { getMRT_RowSpacerColumnDef } from './display-columns/getMRT_RowSpacerColumnDef'
 import { useMRT_Effects } from './useMRT_Effects'
-import type {MRT_Cell, MRT_Column, MRT_ColumnDef, MRT_ColumnFilterFnsState, MRT_ColumnOrderState, MRT_ColumnResizingState, MRT_DefinedTableOptions, MRT_DensityState, MRT_FilterOption, MRT_GroupingState, MRT_PaginationState, MRT_Row, MRT_RowData, MRT_StatefulTableOptions, MRT_TableInstance, MRT_TableState, MRT_Updater} from '../types';
+import type {
+  MRT_Cell,
+  MRT_Column,
+  MRT_ColumnDef,
+  MRT_ColumnFilterFnsState,
+  MRT_ColumnOrderState,
+  MRT_ColumnResizingState,
+  MRT_DefinedTableOptions,
+  MRT_DensityState,
+  MRT_FilterOption,
+  MRT_GroupingState,
+  MRT_PaginationState,
+  MRT_Row,
+  MRT_RowData,
+  MRT_StatefulTableOptions,
+  MRT_TableInstance,
+  MRT_TableState,
+  MRT_Updater,
+} from '../types'
 
 /**
  * The MRT hook that wraps the TanStack `useTable` hook and adds MRT-specific

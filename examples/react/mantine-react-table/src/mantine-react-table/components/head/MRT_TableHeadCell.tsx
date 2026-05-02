@@ -1,15 +1,8 @@
 import clsx from 'clsx'
 
+import { useMemo, useState } from 'react'
 
-import {
-  
-  
-  
-  useMemo,
-  useState
-} from 'react'
-
-import { Flex, TableTh,  useDirection } from '@mantine/core'
+import { Flex, TableTh, useDirection } from '@mantine/core'
 import { useHover } from '@mantine/hooks'
 
 import { parseCSSVarId } from '../../utils/style.utils'
@@ -22,9 +15,14 @@ import { MRT_TableHeadCellResizeHandle } from './MRT_TableHeadCellResizeHandle'
 import { MRT_TableHeadCellSortLabel } from './MRT_TableHeadCellSortLabel'
 
 import classes from './MRT_TableHeadCell.module.css'
-import type {MRT_ColumnVirtualizer, MRT_Header, MRT_RowData, MRT_TableInstance} from '../../types';
-import type {TableThProps} from '@mantine/core';
-import type {CSSProperties, DragEventHandler, ReactNode} from 'react';
+import type {
+  MRT_ColumnVirtualizer,
+  MRT_Header,
+  MRT_RowData,
+  MRT_TableInstance,
+} from '../../types'
+import type { TableThProps } from '@mantine/core'
+import type { CSSProperties, DragEventHandler, ReactNode } from 'react'
 
 interface Props<TData extends MRT_RowData> extends TableThProps {
   columnVirtualizer?: MRT_ColumnVirtualizer

@@ -1,4 +1,4 @@
-import type {MRT_Localization} from '..';
+import type { MRT_Localization } from '..'
 
 export const MRT_Localization_HU: MRT_Localization = {
   actions: 'Műveletek',

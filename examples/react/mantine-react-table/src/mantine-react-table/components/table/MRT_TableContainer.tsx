@@ -1,17 +1,15 @@
 import clsx from 'clsx'
 
-
 import { useEffect, useLayoutEffect, useState } from 'react'
 
-import { Box,  LoadingOverlay } from '@mantine/core'
-
+import { Box, LoadingOverlay } from '@mantine/core'
 
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_EditRowModal } from '../modals/MRT_EditRowModal'
 import { MRT_Table } from './MRT_Table'
 import classes from './MRT_TableContainer.module.css'
-import type {MRT_RowData, MRT_TableInstance} from '../../types';
-import type {BoxProps} from '@mantine/core';
+import type { MRT_RowData, MRT_TableInstance } from '../../types'
+import type { BoxProps } from '@mantine/core'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect

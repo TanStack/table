@@ -1,7 +1,7 @@
-import { ActionIcon,  Tooltip } from '@mantine/core'
-import type {ActionIconProps} from '@mantine/core';
+import { ActionIcon, Tooltip } from '@mantine/core'
+import type { ActionIconProps } from '@mantine/core'
 
-import type {HTMLPropsRef, MRT_RowData, MRT_TableInstance} from '../../types';
+import type { HTMLPropsRef, MRT_RowData, MRT_TableInstance } from '../../types'
 
 interface Props<TData extends MRT_RowData>
   extends ActionIconProps, HTMLPropsRef<HTMLButtonElement> {

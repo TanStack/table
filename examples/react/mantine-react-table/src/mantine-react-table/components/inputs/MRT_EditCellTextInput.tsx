@@ -1,18 +1,21 @@
-import {   useState } from 'react'
-import {
-  MultiSelect,
-  
-  Select,
-  
-  TextInput
-  
-} from '@mantine/core'
+import { useState } from 'react'
+import { MultiSelect, Select, TextInput } from '@mantine/core'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type {FocusEvent, KeyboardEvent} from 'react';
+import type { FocusEvent, KeyboardEvent } from 'react'
 
-import type {MultiSelectProps, SelectProps, TextInputProps} from '@mantine/core';
+import type {
+  MultiSelectProps,
+  SelectProps,
+  TextInputProps,
+} from '@mantine/core'
 
-import type {HTMLPropsRef, MRT_Cell, MRT_CellValue, MRT_RowData, MRT_TableInstance} from '../../types';
+import type {
+  HTMLPropsRef,
+  MRT_Cell,
+  MRT_CellValue,
+  MRT_RowData,
+  MRT_TableInstance,
+} from '../../types'
 
 interface PropsTextInput<
   TData extends MRT_RowData,
@@ -152,9 +155,7 @@ export const MRT_EditCellTextInput = <TData extends MRT_RowData>({
           if (node) {
             editInputRefs.current[cell.id] = node
             if (selectProps.ref && typeof selectProps.ref === 'object') {
-              ;(
-                selectProps.ref
-              ).current = node
+              selectProps.ref.current = node
             }
           }
         }}
@@ -185,9 +186,7 @@ export const MRT_EditCellTextInput = <TData extends MRT_RowData>({
           if (node) {
             editInputRefs.current[cell.id] = node
             if (selectProps.ref && typeof selectProps.ref === 'object') {
-              ;(
-                selectProps.ref
-              ).current = node
+              selectProps.ref.current = node
             }
           }
         }}

@@ -1,25 +1,23 @@
 import clsx from 'clsx'
 
-
 import { Fragment, useMemo } from 'react'
 
 import {
   ActionIcon,
   Alert,
-  
   Badge,
   Button,
   Collapse,
   Flex,
-  Stack
+  Stack,
 } from '@mantine/core'
 
 import { getMRT_SelectAllHandler } from '../../utils/row.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_SelectCheckbox } from '../inputs/MRT_SelectCheckbox'
 import classes from './MRT_ToolbarAlertBanner.module.css'
-import type {MRT_RowData, MRT_TableInstance} from '../../types';
-import type {AlertProps} from '@mantine/core';
+import type { MRT_RowData, MRT_TableInstance } from '../../types'
+import type { AlertProps } from '@mantine/core'
 
 interface Props<TData extends MRT_RowData> extends Partial<AlertProps> {
   stackAlertBanner?: boolean

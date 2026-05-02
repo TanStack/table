@@ -1,24 +1,8 @@
 import clsx from 'clsx'
 
+import { memo, useEffect, useRef, useState } from 'react'
 
-import {
-  
-  
-  
-  
-  memo,
-  useEffect,
-  useRef,
-  useState
-} from 'react'
-
-import {
-  Skeleton,
-  TableTd,
-  
-  useDirection
-} from '@mantine/core'
-
+import { Skeleton, TableTd, useDirection } from '@mantine/core'
 
 import { parseCSSVarId } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
@@ -26,9 +10,15 @@ import { MRT_CopyButton } from '../buttons/MRT_CopyButton'
 import { MRT_EditCellTextInput } from '../inputs/MRT_EditCellTextInput'
 import { MRT_TableBodyCellValue } from './MRT_TableBodyCellValue'
 import classes from './MRT_TableBodyCell.module.css'
-import type {MRT_Cell, MRT_CellValue, MRT_RowData, MRT_TableInstance, MRT_VirtualItem} from '../../types';
-import type {CSSProperties, DragEvent, MouseEvent, RefObject} from 'react';
-import type {TableTdProps} from '@mantine/core';
+import type {
+  MRT_Cell,
+  MRT_CellValue,
+  MRT_RowData,
+  MRT_TableInstance,
+  MRT_VirtualItem,
+} from '../../types'
+import type { CSSProperties, DragEvent, MouseEvent, RefObject } from 'react'
+import type { TableTdProps } from '@mantine/core'
 
 interface Props<
   TData extends MRT_RowData,

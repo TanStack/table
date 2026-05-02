@@ -1,20 +1,17 @@
 import clsx from 'clsx'
 
-
-import {
-  TableTh,
-  TableThead,
-  
-  TableTr
-} from '@mantine/core'
-
+import { TableTh, TableThead, TableTr } from '@mantine/core'
 
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_ToolbarAlertBanner } from '../toolbar/MRT_ToolbarAlertBanner'
 import { MRT_TableHeadRow } from './MRT_TableHeadRow'
 import classes from './MRT_TableHead.module.css'
-import type {MRT_ColumnVirtualizer, MRT_RowData, MRT_TableInstance} from '../../types';
-import type {TableTheadProps} from '@mantine/core';
+import type {
+  MRT_ColumnVirtualizer,
+  MRT_RowData,
+  MRT_TableInstance,
+} from '../../types'
+import type { TableTheadProps } from '@mantine/core'
 
 interface Props<TData extends MRT_RowData> extends TableTheadProps {
   columnVirtualizer?: MRT_ColumnVirtualizer

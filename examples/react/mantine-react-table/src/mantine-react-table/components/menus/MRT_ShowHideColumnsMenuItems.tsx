@@ -1,11 +1,4 @@
-
-import {
-  
-  
-  
-  useRef,
-  useState
-} from 'react'
+import { useRef, useState } from 'react'
 
 import {
   Box,
@@ -21,8 +14,13 @@ import { dataVariable, getPrimaryColor } from '../../utils/style.utils'
 import { MRT_ColumnPinningButtons } from '../buttons/MRT_ColumnPinningButtons'
 import { MRT_GrabHandleButton } from '../buttons/MRT_GrabHandleButton'
 import classes from './MRT_ShowHideColumnsMenuItems.module.css'
-import type {MRT_CellValue, MRT_Column, MRT_RowData, MRT_TableInstance} from '../../types';
-import type {Dispatch, DragEvent, SetStateAction} from 'react';
+import type {
+  MRT_CellValue,
+  MRT_Column,
+  MRT_RowData,
+  MRT_TableInstance,
+} from '../../types'
+import type { Dispatch, DragEvent, SetStateAction } from 'react'
 
 interface Props<TData extends MRT_RowData, TValue = MRT_CellValue> {
   allColumns: Array<MRT_Column<TData>>

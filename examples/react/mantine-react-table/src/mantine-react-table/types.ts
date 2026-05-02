@@ -1,15 +1,84 @@
-import type {Dispatch, HTMLProps, MutableRefObject, ReactNode, RefObject, SetStateAction} from 'react';
+import type {
+  Dispatch,
+  HTMLProps,
+  MutableRefObject,
+  ReactNode,
+  RefObject,
+  SetStateAction,
+} from 'react'
 
-import type {AccessorFn, AggregationFn, Cell, Column, ColumnDef, ColumnFiltersState, ColumnOrderState, ColumnPinningState, columnResizingState as ColumnResizingState, ColumnSizingState, ColumnVisibilityState, DeepKeys, DeepValue, ExpandedState, FilterFn, GroupingState, Header, HeaderGroup, OnChangeFn, PaginationState, Row, RowSelectionState, SortFn, SortingState, StockFeatures, Table, TableOptions, TableState, Updater} from '@tanstack/react-table';
-import type {VirtualItem, Virtualizer, VirtualizerOptions} from '@tanstack/react-virtual';
+import type {
+  AccessorFn,
+  AggregationFn,
+  Cell,
+  Column,
+  ColumnDef,
+  ColumnFiltersState,
+  ColumnOrderState,
+  ColumnPinningState,
+  columnResizingState as ColumnResizingState,
+  ColumnSizingState,
+  ColumnVisibilityState,
+  DeepKeys,
+  DeepValue,
+  ExpandedState,
+  FilterFn,
+  GroupingState,
+  Header,
+  HeaderGroup,
+  OnChangeFn,
+  PaginationState,
+  Row,
+  RowSelectionState,
+  SortFn,
+  SortingState,
+  StockFeatures,
+  Table,
+  TableOptions,
+  TableState,
+  Updater,
+} from '@tanstack/react-table'
+import type {
+  VirtualItem,
+  Virtualizer,
+  VirtualizerOptions,
+} from '@tanstack/react-virtual'
 
-import type {ActionIconProps, AlertProps, AutocompleteProps, BadgeProps, BoxProps, CheckboxProps, HighlightProps, LoadingOverlayProps, ModalProps, MultiSelectProps, PaginationProps, PaperProps, ProgressProps, RadioProps, RangeSliderProps, SelectProps, SkeletonProps, SwitchProps, TableProps, TableTbodyProps, TableTdProps, TableTfootProps, TableThProps, TableTheadProps, TableTrProps, TextInputProps, UnstyledButtonProps} from '@mantine/core';
-import type {DateInputProps} from '@mantine/dates';
+import type {
+  ActionIconProps,
+  AlertProps,
+  AutocompleteProps,
+  BadgeProps,
+  BoxProps,
+  CheckboxProps,
+  HighlightProps,
+  LoadingOverlayProps,
+  ModalProps,
+  MultiSelectProps,
+  PaginationProps,
+  PaperProps,
+  ProgressProps,
+  RadioProps,
+  RangeSliderProps,
+  SelectProps,
+  SkeletonProps,
+  SwitchProps,
+  TableProps,
+  TableTbodyProps,
+  TableTdProps,
+  TableTfootProps,
+  TableThProps,
+  TableTheadProps,
+  TableTrProps,
+  TextInputProps,
+  UnstyledButtonProps,
+} from '@mantine/core'
+import type { DateInputProps } from '@mantine/dates'
 
-import type {MRT_AggregationFns} from './fns/aggregationFns';
-import type {MRT_FilterFns} from './fns/filterFns';
-import type {MRT_SortFns} from './fns/sortingFns';
-import type {MRT_Icons} from './icons';
+import type { MRT_AggregationFns } from './fns/aggregationFns'
+import type { MRT_FilterFns } from './fns/filterFns'
+import type { MRT_SortFns } from './fns/sortingFns'
+import type { MRT_Icons } from './icons'
 
 export type { MRT_Icons }
 

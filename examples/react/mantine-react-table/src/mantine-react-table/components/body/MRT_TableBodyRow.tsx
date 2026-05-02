@@ -1,19 +1,26 @@
 import clsx from 'clsx'
 
+import { memo, useMemo, useRef } from 'react'
 
-import {  memo, useMemo, useRef } from 'react'
-
-import { Box,  TableTr  } from '@mantine/core'
-
+import { Box, TableTr } from '@mantine/core'
 
 import { getIsRowSelected } from '../../utils/row.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_TableDetailPanel } from './MRT_TableDetailPanel'
 import { MRT_TableBodyCell, Memo_MRT_TableBodyCell } from './MRT_TableBodyCell'
 import classes from './MRT_TableBodyRow.module.css'
-import type {MRT_Cell, MRT_ColumnVirtualizer, MRT_DensityState, MRT_Row, MRT_RowData, MRT_RowVirtualizer, MRT_TableInstance, MRT_VirtualItem} from '../../types';
-import type {TableProps, TableTrProps} from '@mantine/core';
-import type {DragEvent} from 'react';
+import type {
+  MRT_Cell,
+  MRT_ColumnVirtualizer,
+  MRT_DensityState,
+  MRT_Row,
+  MRT_RowData,
+  MRT_RowVirtualizer,
+  MRT_TableInstance,
+  MRT_VirtualItem,
+} from '../../types'
+import type { TableProps, TableTrProps } from '@mantine/core'
+import type { DragEvent } from 'react'
 
 interface Props<TData extends MRT_RowData> extends TableTrProps {
   columnVirtualizer?: MRT_ColumnVirtualizer
