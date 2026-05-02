@@ -15,7 +15,7 @@
     "@tanstack/react-table": "^9.0.0-alpha.41",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "zod": "^4.4.1"
+    "zod": "^4.4.2"
   },
   "devDependencies": {
     "@rolldown/plugin-babel": "^0.2.3",

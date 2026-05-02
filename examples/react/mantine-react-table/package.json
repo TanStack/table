@@ -20,7 +20,7 @@
     "@tanstack/react-table": "^9.0.0-alpha.41",
     "@tanstack/react-virtual": "^3.13.24",
     "clsx": "^2.1.1",
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.20",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },

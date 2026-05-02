@@ -23,6 +23,6 @@
     "@tanstack/form-core": "^1.29.1",
     "@tanstack/svelte-form": "^1.29.1",
     "@tanstack/svelte-table": "^9.0.0-alpha.41",
-    "zod": "^4.4.1"
+    "zod": "^4.4.2"
   }
 }
