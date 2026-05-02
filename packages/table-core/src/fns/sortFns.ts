@@ -47,10 +47,10 @@ export const sortFn_alphanumericIgnoreDiacritics: SortFn<any, any> = <
   )
 }
 
-export const sortFn_alphanumericIgnoreDiacriticsCaseSensitive: SortFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
+export const sortFn_alphanumericIgnoreDiacriticsCaseSensitive: SortFn<
+  any,
+  any
+> = <TFeatures extends TableFeatures, TData extends RowData>(
   rowA: Row<any, any>,
   rowB: Row<any, any>,
   columnId: string,
@@ -229,7 +229,8 @@ export const sortFns = {
   alphanumeric: sortFn_alphanumeric,
   alphanumericCaseSensitive: sortFn_alphanumericCaseSensitive,
   alphanumericIgnoreDiacritics: sortFn_alphanumericIgnoreDiacritics,
-  alphanumericIgnoreDiacriticsCaseSensitive: sortFn_alphanumericIgnoreDiacriticsCaseSensitive,
+  alphanumericIgnoreDiacriticsCaseSensitive:
+    sortFn_alphanumericIgnoreDiacriticsCaseSensitive,
   basic: sortFn_basic,
   datetime: sortFn_datetime,
   text: sortFn_text,
