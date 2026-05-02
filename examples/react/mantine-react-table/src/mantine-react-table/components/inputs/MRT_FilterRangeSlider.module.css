@@ -1,0 +1,6 @@
+.root {
+  margin: auto;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  width: calc(100% - 8px);
+}

@@ -1,0 +1,10 @@
+.root {
+  max-height: calc(80vh - 100px);
+  overflow-y: auto;
+  .content {
+    padding-top: rem(4px);
+    padding-bottom: rem(4px);
+    gap: rem(8px);
+    justify-content: space-between;
+  }
+}

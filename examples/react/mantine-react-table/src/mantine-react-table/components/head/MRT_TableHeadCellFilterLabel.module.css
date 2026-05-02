@@ -1,0 +1,14 @@
+.root {
+  transition: all 150ms ease;
+  --ai-size: var(--ai-size-sm);
+  --ai-bg: transparent;
+  --ai-hover: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-6)
+  );
+  --ai-hover-color: var(--mantine-color-bright);
+  color: var(--mantine-color-bright);
+  &[data-active] {
+    color: var(--mantine-primary-color-filled);
+  }
+}

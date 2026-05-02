@@ -1,0 +1,26 @@
+.root {
+  margin-left: 6px;
+  opacity: 0.8;
+  &:disabled {
+    background-color: transparent;
+    border: none;
+  }
+  &:hover {
+    opacity: 1;
+  }
+  &:global(.xl) {
+    margin-left: -6px;
+  }
+  &:global(.md) {
+    margin-left: 0;
+  }
+  .chevron {
+    transition: transform 150ms;
+    &.up {
+      transform: rotate(-180deg);
+    }
+    &.right {
+      transform: rotate(-90deg);
+    }
+  }
+}

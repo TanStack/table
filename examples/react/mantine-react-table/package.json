@@ -1,0 +1,40 @@
+{
+  "name": "tanstack-react-table-example-mantine-react-table",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:types": "tsc"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "@mantine/core": "^9.1.1",
+    "@mantine/dates": "^9.1.1",
+    "@mantine/hooks": "^9.1.1",
+    "@tabler/icons-react": "^3.41.1",
+    "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
+    "@tanstack/react-store": "^0.11.0",
+    "@tanstack/react-table": "^9.0.0-alpha.41",
+    "@tanstack/react-virtual": "^3.13.24",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.3",
+    "@rollup/plugin-replace": "^6.0.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "postcss": "^8.5.13",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
+    "typescript": "6.0.3",
+    "vite": "^8.0.10"
+  }
+}

@@ -1,0 +1,27 @@
+.root {
+  font-weight: normal;
+  border-bottom: 2px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-gray-7));
+  min-width: auto;
+  &.date-filter {
+    min-width: rem(125px);
+  }
+  &.range-filter {
+    min-width: rem(80px);
+  }
+  &.not-filter-chip {
+    min-width: rem(100px);
+  }
+  width: 100%;
+  & :global(.mantine-TextInput-input) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  & :global(.mantine-DateInput-input) {
+    height: 2.1rem;
+  }
+}
+
+.filter-chip-badge {
+  margin: 5px;
+}

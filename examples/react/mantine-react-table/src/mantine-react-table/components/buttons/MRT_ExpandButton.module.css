@@ -1,0 +1,37 @@
+.root {
+  opacity: 0.8;
+  &:disabled {
+    background-color: transparent;
+    border: none;
+    opacity: 0.3;
+  }
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.root-ltr {
+  margin-left: calc(calc(var(--mrt-row-depth, 0)) * 16px);
+  .chevron {
+    transition: transform 200ms;
+    &.right {
+      transform: rotate(270deg);
+    }
+    &.up {
+      transform: rotate(-180deg);
+    }
+  }
+}
+
+.root-rtl {
+  margin-right: calc(calc(var(--mrt-row-depth, 0)) * 16px);
+  .chevron {
+    transition: transform 200ms;
+    &.right {
+      transform: rotate(-270deg);
+    }
+    &.up {
+      transform: rotate(180deg);
+    }
+  }
+}
