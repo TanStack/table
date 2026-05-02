@@ -527,6 +527,8 @@ function App() {
                           colSpan={header.colSpan}
                           className={cn('relative', {
                             'border-r': header.id !== 'actions',
+                            'text-center [&>[role=checkbox]]:mx-auto':
+                              header.column.id === 'select',
                           })}
                           style={{
                             width: `calc(var(--header-${header.id}-size) * 1px)`,
@@ -565,9 +567,11 @@ function App() {
                       return (
                         <TableCell
                           key={cell.id}
-                          className={
-                            cell.column.id === 'actions' ? '' : 'border-r'
-                          }
+                          className={cn(
+                            cell.column.id === 'actions' ? '' : 'border-r',
+                            cell.column.id === 'select' &&
+                              'text-center [&>[role=checkbox]]:mx-auto',
+                          )}
                           style={{
                             width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                             ...getCommonPinningStyles(

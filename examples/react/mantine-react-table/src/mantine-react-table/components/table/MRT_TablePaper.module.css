@@ -1,0 +1,88 @@
+:root {
+  /* default background color for everything */
+  --mrt-base-background-color: var(--mantine-color-body);
+
+  @mixin light-root {
+    --mrt-striped-row-background-color: darken(
+      var(--mrt-base-background-color),
+      0.05
+    );
+  }
+  @mixin dark-root {
+    --mrt-striped-row-background-color: lighten(
+      var(--mrt-base-background-color),
+      0.04
+    );
+  }
+
+  /* row hover */
+  @mixin light-root {
+    --mrt-row-hover-background-color: darken(
+      var(--mrt-base-background-color),
+      0.08
+    );
+    --mrt-striped-row-hover-background-color: darken(
+      var(--mrt-striped-row-background-color),
+      0.12
+    );
+  }
+  @mixin dark-root {
+    --mrt-row-hover-background-color: lighten(
+      var(--mrt-base-background-color),
+      0.08
+    );
+    --mrt-striped-row-hover-background-color: lighten(
+      var(--mrt-striped-row-background-color),
+      0.08
+    );
+  }
+
+  /* row selection */
+  --mrt-selected-row-background-color: alpha(
+    var(--mantine-primary-color-light),
+    0.8
+  );
+  @mixin light-root {
+    --mrt-selected-row-hover-background-color: darken(
+      var(--mantine-primary-color-light-hover),
+      0.05
+    );
+  }
+  @mixin dark-root {
+    --mrt-selected-row-hover-background-color: lighten(
+      var(--mantine-primary-color-light-hover),
+      0.05
+    );
+  }
+
+  /* row pinning */
+  --mrt-pinned-row-background-color: var(--mrt-selected-row-background-color);
+  --mrt-pinned-row-hover-background-color: var(
+    --mrt-selected-row-hover-background-color
+  );
+
+  /* column pinning */
+  @mixin light-root {
+    --mrt-pinned-column-background-color: darken(
+      var(--mrt-base-background-color),
+      0.01
+    );
+  }
+  @mixin dark-root {
+    --mrt-pinned-column-background-color: darken(
+      var(--mrt-base-background-color),
+      0.05
+    );
+  }
+
+  /* cell borders */
+  --mrt-dragging-hovered-border-color: var(--mantine-primary-color-filled);
+  --mrt-dragging-drag-border-color: var(--mantine-color-gray-7);
+  --mrt-resize-column-border-color: var(--mantine-primary-color-filled);
+}
+
+.root {
+  background-color: var(--mrt-base-background-color);
+  overflow: hidden;
+  transition: all 150ms ease-in-out;
+}

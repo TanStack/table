@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/angular-table",
-  "version": "9.0.0-alpha.39",
+  "version": "9.0.0-alpha.41",
   "description": "Headless UI for building powerful tables & datagrids for Angular.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -64,10 +64,10 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "^2.4.10",
-    "@analogjs/vitest-angular": "^2.4.10",
-    "@angular/core": "^21.2.10",
-    "@angular/platform-browser": "^21.2.10",
+    "@analogjs/vite-plugin-angular": "^2.5.0",
+    "@analogjs/vitest-angular": "^2.5.0",
+    "@angular/core": "^21.2.11",
+    "@angular/platform-browser": "^21.2.11",
     "ng-packagr": "^21.2.3",
     "typescript": "6.0.3"
   },

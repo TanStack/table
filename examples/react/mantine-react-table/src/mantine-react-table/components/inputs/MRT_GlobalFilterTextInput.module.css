@@ -1,0 +1,11 @@
+.root {
+  z-index: 2;
+  position: relative;
+}
+
+.collapse {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+}

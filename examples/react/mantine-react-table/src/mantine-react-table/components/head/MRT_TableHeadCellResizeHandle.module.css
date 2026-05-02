@@ -1,0 +1,44 @@
+.root {
+  --resize-handle-thickness: 4px;
+  background: var(--mantine-color-placeholder);
+  border-radius: 2px;
+  cursor: col-resize;
+  height: 24px;
+  position: absolute;
+  width: var(--resize-handle-thickness);
+  &:hover {
+    background: var(--mantine-primary-color-filled-hover);
+  }
+  &:active {
+    background: var(--mantine-primary-color-filled);
+  }
+  transform: var(--mrt-transform);
+}
+
+.root-ltr {
+  right: 0px;
+  margin-right: -10px;
+  &:global(.md) {
+    margin-right: -16px;
+  }
+  &:global(.xl) {
+    margin-right: -22px;
+  }
+}
+
+.root-rtl {
+  left: 0px;
+  margin-left: -10px;
+  &:global(.md) {
+    margin-left: -16px;
+  }
+  &:global(.xl) {
+    margin-left: -22px;
+  }
+}
+
+.root-hide {
+  &:active {
+    opacity: 0;
+  }
+}

@@ -28,13 +28,9 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import FilterListIcon from '@mui/icons-material/FilterList'
-import FirstPageIcon from '@mui/icons-material/FirstPage'
 import GroupIcon from '@mui/icons-material/Group'
-import LastPageIcon from '@mui/icons-material/LastPage'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PushPinIcon from '@mui/icons-material/PushPin'
 import SearchIcon from '@mui/icons-material/Search'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -1123,40 +1119,14 @@ function Pagination({ table }: { table: AppTable }) {
           page={table.store.state.pagination.pageIndex}
           rowsPerPage={table.store.state.pagination.pageSize}
           rowsPerPageOptions={[10, 20, 30, 40, 50]}
+          showFirstButton
+          showLastButton
           onPageChange={(_, page) => table.setPageIndex(page)}
           onRowsPerPageChange={(event) => {
             table.setPageSize(Number(event.target.value))
             table.setPageIndex(0)
           }}
         />
-        <IconButton
-          aria-label="First page"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <FirstPageIcon />
-        </IconButton>
-        <IconButton
-          aria-label="Previous page"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <NavigateBeforeIcon />
-        </IconButton>
-        <IconButton
-          aria-label="Next page"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <NavigateNextIcon />
-        </IconButton>
-        <IconButton
-          aria-label="Last page"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          <LastPageIcon />
-        </IconButton>
       </Stack>
     </Stack>
   )
@@ -1584,6 +1554,9 @@ function App({
                       {row.getVisibleCells().map((cell) => (
                         <TableCell
                           key={cell.id}
+                          align={
+                            cell.column.id === 'select' ? 'center' : 'left'
+                          }
                           sx={{
                             width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
                             overflow: 'hidden',
@@ -1665,6 +1638,7 @@ function ResizableHeaderCell({
   return (
     <TableCell
       colSpan={header.colSpan}
+      align={header.column.id === 'select' ? 'center' : 'left'}
       sortDirection={sortDirection || false}
       aria-sort={getAriaSort(sortDirection || false)}
       data-sort={sortDirection}

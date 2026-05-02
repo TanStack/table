@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/react-table",
-  "version": "9.0.0-alpha.40",
+  "version": "9.0.0-alpha.41",
   "description": "Headless UI for building powerful tables & datagrids for React.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -65,7 +65,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^4.2.3",
+    "@eslint-react/eslint-plugin": "^5.6.6",
     "@types/react": "^19.2.14",
     "@vitejs/plugin-react": "^6.0.1",
     "eslint-plugin-react-compiler": "19.1.0-rc.2",

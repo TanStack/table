@@ -1,0 +1,27 @@
+.root {
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  color: inherit;
+  cursor: copy;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  justify-content: inherit;
+  letter-spacing: inherit;
+  margin: -4px;
+  min-width: unset;
+  padding: 4px;
+  text-align: inherit;
+  text-transform: inherit;
+  &:active {
+    transform: translateY(1px);
+  }
+  &:hover {
+    background-color: color-mix(
+      in srgb,
+      var(--mantine-primary-color-filled-hover) 10%,
+      transparent
+    );
+  }
+}

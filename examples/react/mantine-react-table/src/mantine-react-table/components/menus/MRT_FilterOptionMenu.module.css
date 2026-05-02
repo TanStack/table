@@ -1,0 +1,6 @@
+.symbol {
+  font-size: var(--mantine-font-size-xl);
+  text-align: center;
+  width: 2ch;
+  transform: translateY(-0.1em);
+}
