@@ -33,6 +33,34 @@ export const sortFn_alphanumericCaseSensitive: SortFn<any, any> = <
   )
 }
 
+export const sortFn_alphanumericIgnoreDiacritics: SortFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
+  columnId: string,
+) => {
+  return compareAlphanumeric(
+    normalizeText(toString(rowA.getValue(columnId)).toLowerCase()),
+    normalizeText(toString(rowB.getValue(columnId)).toLowerCase()),
+  )
+}
+
+export const sortFn_alphanumericIgnoreDiacriticsCaseSensitive: SortFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
+  columnId: string,
+) => {
+  return compareAlphanumeric(
+    normalizeText(toString(rowA.getValue(columnId))),
+    normalizeText(toString(rowB.getValue(columnId))),
+  )
+}
+
 // The text filter is more basic (less numeric support)
 // but is much faster
 export const sortFn_text: SortFn<any, any> = <
@@ -62,6 +90,38 @@ export const sortFn_textCaseSensitive: SortFn<any, any> = <
   return compareBasic(
     toString(rowA.getValue(columnId)),
     toString(rowB.getValue(columnId)),
+  )
+}
+
+// The text filter is more basic (less numeric support)
+// but is much faster
+export const sortFn_textIgnoreDiacritics: SortFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
+  columnId: string,
+) => {
+  return compareBasic(
+    normalizeText(toString(rowA.getValue(columnId)).toLowerCase()),
+    normalizeText(toString(rowB.getValue(columnId)).toLowerCase()),
+  )
+}
+
+// The text filter is more basic (less numeric support)
+// but is much faster
+export const sortFn_textIgnoreDiacriticsCaseSensitive: SortFn<any, any> = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rowA: Row<any, any>,
+  rowB: Row<any, any>,
+  columnId: string,
+) => {
+  return compareBasic(
+    normalizeText(toString(rowA.getValue(columnId))),
+    normalizeText(toString(rowB.getValue(columnId))),
   )
 }
 
@@ -110,6 +170,10 @@ function toString(a: any) {
     return a
   }
   return ''
+}
+
+function normalizeText(str: string): string {
+  return str.normalize('NFD').replace(/\p{Diacritic}/gu, '')
 }
 
 // Mixed sorting is slow, but very inclusive of many edge cases.
@@ -164,10 +228,14 @@ function compareAlphanumeric(aStr: string, bStr: string) {
 export const sortFns = {
   alphanumeric: sortFn_alphanumeric,
   alphanumericCaseSensitive: sortFn_alphanumericCaseSensitive,
+  alphanumericIgnoreDiacritics: sortFn_alphanumericIgnoreDiacritics,
+  alphanumericIgnoreDiacriticsCaseSensitive: sortFn_alphanumericIgnoreDiacriticsCaseSensitive,
   basic: sortFn_basic,
   datetime: sortFn_datetime,
   text: sortFn_text,
   textCaseSensitive: sortFn_textCaseSensitive,
+  textIgnoreDiacritics: sortFn_textIgnoreDiacritics,
+  textIgnoreDiacriticsCaseSensitive: sortFn_textIgnoreDiacriticsCaseSensitive,
 }
 
 export type BuiltInSortFn = keyof typeof sortFns
