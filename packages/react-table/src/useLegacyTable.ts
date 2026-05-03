@@ -15,7 +15,7 @@ import {
   sortFns,
   stockFeatures,
 } from '@tanstack/table-core'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTable } from './useTable'
 import type {
   AggregationFns,
@@ -402,52 +402,55 @@ export function useLegacyTable<TData extends RowData>(
     ...restOptions
   } = options
 
-  // Build the _rowModels object based on which legacy options were provided
-  const _rowModels: CreateRowModels_All<StockFeatures, TData> = {}
+  const [_rowModels] = useState(() => {
+    const rowModels: CreateRowModels_All<StockFeatures, TData> = {}
 
-  // Map v8 row model factories to v9 _rowModels
-  // Note: getCoreRowModel is handled automatically in v9, so we ignore it
+    // Legacy row model options are setup-only. Capture the first render's
+    // marker options to match the table instance lifecycle.
 
-  if (getFilteredRowModel) {
-    _rowModels.filteredRowModel = createFilteredRowModel({
-      ...filterFns,
-      ...options.filterFns,
-    })
-  }
+    if (getFilteredRowModel) {
+      rowModels.filteredRowModel = createFilteredRowModel({
+        ...filterFns,
+        ...options.filterFns,
+      })
+    }
 
-  if (getSortedRowModel) {
-    _rowModels.sortedRowModel = createSortedRowModel({
-      ...sortFns,
-      ...options.sortFns,
-    })
-  }
+    if (getSortedRowModel) {
+      rowModels.sortedRowModel = createSortedRowModel({
+        ...sortFns,
+        ...options.sortFns,
+      })
+    }
 
-  if (getPaginationRowModel) {
-    _rowModels.paginatedRowModel = createPaginatedRowModel()
-  }
+    if (getPaginationRowModel) {
+      rowModels.paginatedRowModel = createPaginatedRowModel()
+    }
 
-  if (getExpandedRowModel) {
-    _rowModels.expandedRowModel = createExpandedRowModel()
-  }
+    if (getExpandedRowModel) {
+      rowModels.expandedRowModel = createExpandedRowModel()
+    }
 
-  if (getGroupedRowModel) {
-    _rowModels.groupedRowModel = createGroupedRowModel({
-      ...aggregationFns,
-      ...options.aggregationFns,
-    })
-  }
+    if (getGroupedRowModel) {
+      rowModels.groupedRowModel = createGroupedRowModel({
+        ...aggregationFns,
+        ...options.aggregationFns,
+      })
+    }
 
-  if (getFacetedRowModel) {
-    _rowModels.facetedRowModel = createFacetedRowModel()
-  }
+    if (getFacetedRowModel) {
+      rowModels.facetedRowModel = createFacetedRowModel()
+    }
 
-  if (getFacetedMinMaxValues) {
-    _rowModels.facetedMinMaxValues = createFacetedMinMaxValues()
-  }
+    if (getFacetedMinMaxValues) {
+      rowModels.facetedMinMaxValues = createFacetedMinMaxValues()
+    }
 
-  if (getFacetedUniqueValues) {
-    _rowModels.facetedUniqueValues = createFacetedUniqueValues()
-  }
+    if (getFacetedUniqueValues) {
+      rowModels.facetedUniqueValues = createFacetedUniqueValues()
+    }
+
+    return rowModels
+  })
 
   // Call useTable with the v9 API, subscribing to all state changes
   const table = useTable<StockFeatures, TData, TableState<StockFeatures>>(
