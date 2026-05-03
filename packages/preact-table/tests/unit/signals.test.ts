@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { preactReactivity } from '../../src/signals'
+import { preactReactivity } from '../../src/reactivity'
 
 describe('preactReactivity', () => {
   test('creates writable and readonly atoms from Preact signals', () => {

@@ -2,7 +2,7 @@ import { unref, watch } from 'vue'
 import { constructTable } from '@tanstack/table-core'
 import { shallow, useSelector } from '@tanstack/vue-store'
 import { mergeProxy } from './merge-proxy'
-import { vueReactivity } from './signals'
+import { vueReactivity } from './reactivity'
 import type { Atom, ReadonlyAtom } from '@tanstack/vue-store'
 import type {
   NoInfer,
@@ -10,7 +10,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableReactivityBindings,
   TableState,
 } from '@tanstack/table-core'
 import type { MaybeRef, VNode } from 'vue'
@@ -117,7 +116,10 @@ export function useTable<
 
   const mergedOptions = {
     ...tableOptions,
-    reactivity: tableOptions.reactivity ?? vueReactivity(),
+    _features: {
+      coreReativityFeature: vueReactivity(),
+      ...tableOptions._features,
+    },
   }
 
   const resolvedOptions = mergeProxy(
@@ -133,7 +135,7 @@ export function useTable<
         return mergeProxy(defaultOptions, newOptions)
       },
     },
-  ) as TableOptions<TFeatures, TData> & { reactivity: TableReactivityBindings }
+  ) as TableOptions<TFeatures, TData>
 
   const table = constructTable(resolvedOptions) as VueTable<
     TFeatures,

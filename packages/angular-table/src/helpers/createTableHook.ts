@@ -446,8 +446,11 @@ export function createTableHook<
       const options = {
         ...defaultTableOptions,
         ...tableOptions(),
+        _features: {
+          ...defaultTableOptions._features,
+          appTableFeatures,
+        },
       } as TableOptions<TFeatures, TData>
-      options._features = { ...options._features, appTableFeatures }
       return options
     }, selector) as AngularTable<any, any>
   }

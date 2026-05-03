@@ -34,13 +34,13 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./features/table-reactivity/tanstack-signals": {
-      "import": "./dist/features/table-reactivity/tanstack-signals.js",
-      "require": "./dist/features/table-reactivity/tanstack-signals.cjs"
-    },
     "./flex-render": {
       "import": "./dist/flex-render.js",
       "require": "./dist/flex-render.cjs"
+    },
+    "./reactivity": {
+      "import": "./dist/reactivity.js",
+      "require": "./dist/reactivity.cjs"
     },
     "./static-functions": {
       "import": "./dist/static-functions.js",

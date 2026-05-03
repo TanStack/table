@@ -7,7 +7,7 @@ import {
   rowPinningFeature,
 } from '../../src'
 import { generateTestData } from '../fixtures/data/generateTestData'
-import { tanstackSignals } from '../../src/features/table-reactivity/tanstack-signals'
+import { defaultReactivityBindings } from '../../src/core/reactivity/defaultReactivityBindings'
 import { generateTestTableWithData } from './generateTestTable'
 import type { ColumnDef, RowPinningState, TableOptions } from '../../src'
 import type { Person } from '../fixtures/data/types'
@@ -78,7 +78,7 @@ export function createRowPinningTable(
   const table = constructTable<typeof _features, Person>({
     _features,
     _rowModels: {},
-    reactivity: tanstackSignals(),
+    reactivity: defaultReactivityBindings(),
     data,
     columns,
     getSubRows: (row: any) => row.subRows,

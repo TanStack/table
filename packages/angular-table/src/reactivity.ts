@@ -1,11 +1,10 @@
 import { computed, signal, untracked } from '@angular/core'
 import { toObservable } from '@angular/core/rxjs-interop'
-import { batch } from '@tanstack/angular-store'
 import type { Atom, Observer, ReadonlyAtom } from '@tanstack/angular-store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
-} from '@tanstack/table-core'
+} from '@tanstack/table-core/reactivity'
 import type { Injector, Signal, WritableSignal } from '@angular/core'
 
 function signalToReadonlyAtom<T>(

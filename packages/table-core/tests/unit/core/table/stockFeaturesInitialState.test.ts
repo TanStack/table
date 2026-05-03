@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { constructTable, stockFeatures } from '../../../../src'
-import { tanstackSignals } from '../../../../src/features/table-reactivity/tanstack-signals'
+import { defaultReactivityBindings } from '../../../../src/core/reactivity/defaultReactivityBindings'
 
 describe('constructTable with stockFeatures', () => {
   it('should include all feature states in initial state', () => {
     const table = constructTable({
       _features: stockFeatures,
-      reactivity: tanstackSignals(),
+      reactivity: defaultReactivityBindings(),
       columns: [],
       data: [],
     })

@@ -1,10 +1,10 @@
-import { computed, shallowRef, watch } from 'vue'
+// TOTO - re-explore preact signals for reactivity
+import { batch, computed, signal, untracked } from '@preact/signals'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
-} from '@tanstack/table-core'
-import type { Atom, Observer, ReadonlyAtom } from '@tanstack/vue-store'
-import type { ComputedRef, ShallowRef } from 'vue'
+} from '@tanstack/table-core/reactivity'
+import type { Atom, Observer, ReadonlyAtom } from '@tanstack/preact-store'
 
 function observerToCallback<T>(
   observerOrNext: Observer<T> | ((value: T) => void),
@@ -14,21 +14,23 @@ function observerToCallback<T>(
     : (value) => observerOrNext.next?.(value)
 }
 
-function refToReadonlyAtom<T>(
-  source: ComputedRef<T> | ShallowRef<T>,
-): ReadonlyAtom<T> {
+function signalToReadonlyAtom<T>(source: {
+  value: T
+  subscribe: (observer: (value: T) => void) => () => void
+}): ReadonlyAtom<T> {
   return Object.assign(source, {
     get: () => source.value,
     subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
-      const stop = watch(source, observerToCallback(observerOrNext), {
-        flush: 'sync',
-      })
-      return { unsubscribe: stop }
+      const unsubscribe = source.subscribe(observerToCallback(observerOrNext))
+      return { unsubscribe }
     }) as ReadonlyAtom<T>['subscribe'],
   })
 }
 
-function refToWritableAtom<T>(source: ShallowRef<T>): Atom<T> {
+function signalToWritableAtom<T>(source: {
+  value: T
+  subscribe: (observer: (value: T) => void) => () => void
+}): Atom<T> {
   return Object.assign(source, {
     set: (updater: T | ((prevVal: T) => T)) => {
       source.value =
@@ -38,26 +40,24 @@ function refToWritableAtom<T>(source: ShallowRef<T>): Atom<T> {
     },
     get: () => source.value,
     subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
-      const stop = watch(source, observerToCallback(observerOrNext), {
-        flush: 'sync',
-      })
-      return { unsubscribe: stop }
+      const unsubscribe = source.subscribe(observerToCallback(observerOrNext))
+      return { unsubscribe }
     }) as Atom<T>['subscribe'],
   })
 }
 
-export function vueReactivity(): TableReactivityBindings {
+export function preactReactivity(): TableReactivityBindings {
   return {
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
-      return refToReadonlyAtom(computed(fn))
+      return signalToReadonlyAtom(computed(fn))
     },
     createWritableAtom: <T>(
       value: T,
       _options?: TableAtomOptions<T>,
     ): Atom<T> => {
-      return refToWritableAtom(shallowRef(value) as ShallowRef<T>)
+      return signalToWritableAtom(signal(value))
     },
-    untrack: (fn) => fn(),
-    batch: (fn) => fn(),
+    untrack: untracked,
+    batch: batch,
   }
 }

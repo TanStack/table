@@ -12,7 +12,7 @@ import {
   createTableWithMockOnPinningChange,
 } from '../../../helpers/rowPinningHelpers'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
-import { tanstackSignals } from '../../../../src/features/table-reactivity/tanstack-signals'
+import { defaultReactivityBindings } from '../../../../src/core/reactivity/defaultReactivityBindings'
 import type { ColumnDef, Row } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
@@ -177,7 +177,7 @@ describe('table methods', () => {
         _rowModels: {
           paginatedRowModel: createPaginatedRowModel(),
         },
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         data,
         columns,
         getSubRows: (row) => row.subRows,
@@ -217,7 +217,7 @@ describe('table methods', () => {
       _rowModels: {
         paginatedRowModel: createPaginatedRowModel(),
       },
-      reactivity: tanstackSignals(),
+      reactivity: defaultReactivityBindings(),
       data,
       columns,
       getSubRows: (row) => row.subRows,

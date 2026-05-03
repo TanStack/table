@@ -2,7 +2,7 @@ import { constructTable } from '@tanstack/table-core'
 import { createComputed, getOwner, mergeProps, untrack } from 'solid-js'
 import { shallow, useSelector } from '@tanstack/solid-store'
 import { FlexRender } from './FlexRender'
-import { solidReactivity } from './signals'
+import { solidReactivity } from './reactivity'
 import type { Atom, ReadonlyAtom } from '@tanstack/solid-store'
 import type { Accessor, JSX } from 'solid-js'
 import type {
@@ -10,7 +10,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableReactivityBindings,
   TableState,
 } from '@tanstack/table-core'
 
@@ -75,7 +74,10 @@ export function createTable<
   const owner = getOwner()!
 
   const mergedOptions = mergeProps(tableOptions, {
-    reactivity: solidReactivity(owner),
+    _features: {
+      coreReativityFeature: solidReactivity(owner),
+      ...tableOptions._features,
+    },
   }) as any
 
   const resolvedOptions = mergeProps(
@@ -88,7 +90,7 @@ export function createTable<
       },
     },
     mergedOptions,
-  ) as TableOptions<TFeatures, TData> & { reactivity: TableReactivityBindings }
+  ) as TableOptions<TFeatures, TData>
 
   const table = constructTable(resolvedOptions) as SolidTable<
     TFeatures,

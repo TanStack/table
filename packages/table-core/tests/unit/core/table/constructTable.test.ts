@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { constructTable, coreFeatures } from '../../../../src'
-import { tanstackSignals } from '../../../../src/features/table-reactivity/tanstack-signals'
+import { defaultReactivityBindings } from '../../../../src/core/reactivity/defaultReactivityBindings'
 
 describe('constructTable', () => {
   it('should create a table with all core table APIs and properties', () => {
@@ -8,7 +8,7 @@ describe('constructTable', () => {
       _features: {
         ...coreFeatures,
       },
-      reactivity: tanstackSignals(),
+      reactivity: defaultReactivityBindings(),
       columns: [],
       data: [],
     })

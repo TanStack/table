@@ -2,13 +2,12 @@ import { constructTable } from '@tanstack/table-core'
 import { useSelector } from '@tanstack/svelte-store'
 import { untrack } from 'svelte'
 import { mergeObjects } from './merge-objects'
-import { svelteReactivity } from './signals.svelte'
+import { svelteReactivity } from './reactivity.svelte'
 import type {
   RowData,
   Table,
   TableFeatures,
   TableOptions,
-  TableReactivityBindings,
   TableState,
 } from '@tanstack/table-core'
 
@@ -39,8 +38,11 @@ export function createTable<
 ): SvelteTable<TFeatures, TData, TSelected> {
   // 1. Merge reactivity into options using mergeObjects (preserves getters)
   const mergedOptions = mergeObjects(tableOptions, {
-    reactivity: tableOptions.reactivity ?? svelteReactivity(),
-  }) as TableOptions<TFeatures, TData> & { reactivity: TableReactivityBindings }
+    _features: {
+      coreReativityFeature: svelteReactivity(),
+      ...tableOptions._features,
+    },
+  }) as TableOptions<TFeatures, TData>
 
   // 2. Set up resolved options with mergeOptions handler
   const resolvedOptions = mergeObjects(
@@ -53,7 +55,7 @@ export function createTable<
       },
     },
     mergedOptions,
-  ) as TableOptions<TFeatures, TData> & { reactivity: TableReactivityBindings }
+  ) as TableOptions<TFeatures, TData>
 
   // 3. Construct table
   const table = constructTable(resolvedOptions) as SvelteTable<

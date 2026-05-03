@@ -2,7 +2,7 @@ import { flushSync, untrack } from 'svelte'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
-} from '@tanstack/table-core'
+} from '@tanstack/table-core/reactivity'
 import type { Atom, Observer, ReadonlyAtom } from '@tanstack/svelte-store'
 
 function observerToCallback<T>(

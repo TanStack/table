@@ -6,7 +6,7 @@ import {
   rowSelectionFeature,
   rowSortingFeature,
 } from '../../../src'
-import { tanstackSignals } from '../../../src/features/table-reactivity/tanstack-signals'
+import { defaultReactivityBindings } from '../../../src/core/reactivity/defaultReactivityBindings'
 import type {
   PaginationState,
   SortingState,
@@ -23,7 +23,7 @@ function makeTable(options: any = {}) {
   return constructTable({
     _features,
     _rowModels: {},
-    reactivity: tanstackSignals(),
+    reactivity: defaultReactivityBindings(),
     columns: [],
     data: [],
     ...options,

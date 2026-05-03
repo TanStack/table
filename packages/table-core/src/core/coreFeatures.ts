@@ -4,8 +4,10 @@ import { coreHeadersFeature } from './headers/coreHeadersFeature'
 import { coreRowModelsFeature } from './row-models/coreRowModelsFeature'
 import { coreRowsFeature } from './rows/coreRowsFeature'
 import { coreTablesFeature } from './table/coreTablesFeature'
+import type { TableReactivityBindings } from '../reactivity'
 
 export interface CoreFeatures {
+  coreReativityFeature?: TableReactivityBindings
   coreCellsFeature: typeof coreCellsFeature
   coreColumnsFeature: typeof coreColumnsFeature
   coreHeadersFeature: typeof coreHeadersFeature

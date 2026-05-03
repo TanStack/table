@@ -1,5 +1,5 @@
 import { constructTable } from '@tanstack/table-core'
-import { tanstackSignals } from '@tanstack/table-core/features/table-reactivity/tanstack-signals'
+import { constructReactivityBindings } from '@tanstack/table-core/reactivity'
 import { FlexRender } from './flexRender'
 import type { Atom, ReadonlyAtom } from '@tanstack/store'
 import type {
@@ -8,7 +8,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableReactivityBindings,
   TableState,
 } from '@tanstack/table-core'
 import type {
@@ -145,11 +144,12 @@ export class TableController<
       ({}) as TSelected,
   ): LitTable<TFeatures, TData, TSelected> {
     if (!this._table) {
-      const mergedOptions: TableOptions<TFeatures, TData> & {
-        reactivity: TableReactivityBindings
-      } = {
+      const mergedOptions: TableOptions<TFeatures, TData> = {
         ...tableOptions,
-        reactivity: tableOptions.reactivity ?? tanstackSignals(),
+        _features: {
+          coreReativityFeature: constructReactivityBindings(),
+          ...tableOptions._features,
+        },
         mergeOptions: (
           defaultOptions: TableOptions<TFeatures, TData>,
           newOptions: Partial<TableOptions<TFeatures, TData>>,

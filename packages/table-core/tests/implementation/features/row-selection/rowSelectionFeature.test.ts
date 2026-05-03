@@ -6,7 +6,7 @@ import {
 } from '../../../../src'
 import * as RowSelectionUtils from '../../../../src/features/row-selection/rowSelectionFeature.utils'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
-import { tanstackSignals } from '../../../../src/features/table-reactivity/tanstack-signals'
+import { defaultReactivityBindings } from '../../../../src/core/reactivity/defaultReactivityBindings'
 import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef } from '../../../../src'
 
@@ -42,7 +42,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -72,7 +72,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -102,7 +102,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -129,7 +129,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -155,7 +155,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -181,7 +181,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -207,7 +207,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -229,7 +229,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -251,7 +251,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -276,7 +276,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -303,7 +303,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -330,7 +330,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: (row) => row.index === 0, // only first row is selectable (of 2 sub-rows)
         renderFallbackValue: '',
         data,
@@ -356,7 +356,7 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        reactivity: tanstackSignals(),
+        reactivity: defaultReactivityBindings(),
         enableRowSelection: true,
         renderFallbackValue: '',
         data,

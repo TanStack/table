@@ -10,7 +10,7 @@ import type { Accessor, Owner, Setter } from 'solid-js'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
-} from '@tanstack/table-core'
+} from '@tanstack/table-core/reactivity'
 import type { Atom, Observer, ReadonlyAtom } from '@tanstack/solid-store'
 
 function signalToReadonlyAtom<T>(

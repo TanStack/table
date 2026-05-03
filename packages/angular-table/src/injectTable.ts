@@ -8,7 +8,7 @@ import {
 } from '@angular/core'
 import { constructTable } from '@tanstack/table-core'
 import { lazyInit } from './lazySignalInitializer'
-import { angularReactivity } from './signals'
+import { angularReactivity } from './reactivity'
 import type { Atom, ReadonlyAtom } from '@tanstack/angular-store'
 import type {
   RowData,
@@ -136,7 +136,10 @@ export function injectTable<
   return lazyInit(() => {
     const table = constructTable({
       ...options(),
-      reactivity: angularReactivity(injector),
+      _features: {
+        coreReativityFeature: angularReactivity(injector),
+        ...options()._features,
+      },
     }) as AngularTable<TFeatures, TData, TSelected>
 
     let isMount = true
