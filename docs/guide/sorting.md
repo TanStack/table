@@ -161,7 +161,7 @@ By default, there are 6 built-in sorting functions to choose from:
 - `text` - Sorts by text/string values without case-sensitivity. Faster, but less accurate if your strings contain numbers that need to be naturally sorted.
 - `textCaseSensitive` - Sorts by text/string values with case-sensitivity. Faster, but less accurate if your strings contain numbers that need to be naturally sorted.
 - `textIgnoreDiacritics` - Sorts by text/string values without case-sensitivity and ignoring diacritics/accent marks. Faster, but less accurate if your strings contain numbers that need to be naturally sorted.
-- `textCaseIgnoreDiacriticsSensitive` - Sorts by text/string values with case-sensitivity and ignoring diacritics/accent marks. Faster, but less accurate if your strings contain numbers that need to be naturally sorted.
+- `textIgnoreDiacriticsCaseSensitive` - Sorts by text/string values with case-sensitivity and ignoring diacritics/accent marks. Faster, but less accurate if your strings contain numbers that need to be naturally sorted.
 - `datetime` - Sorts by time, use this if your values are `Date` objects.
 - `basic` - Sorts using a basic/standard `a > b ? 1 : a < b ? -1 : 0` comparison. This is the fastest sorting function, but may not be the most accurate.
 
