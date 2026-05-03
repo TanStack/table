@@ -35,7 +35,7 @@ export function ColumnFilter() {
       <input
         type="text"
         value={(columnFilterValue ?? '') as string}
-        onChange={(e) =>
+        onInput={(e) =>
           header.column.setFilterValue((e.target as HTMLInputElement).value)
         }
         placeholder={`Filter ${header.column.id}...`}
