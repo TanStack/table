@@ -16,7 +16,7 @@ describe('TableController', () => {
       data: [],
     })
 
-    expect(table.reactivity).toBeDefined()
+    expect(table._reactivity).toBeDefined()
     expect(table.store.get()).toEqual({})
   })
 })

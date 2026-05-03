@@ -12,7 +12,7 @@ import {
   createTableWithMockOnPinningChange,
 } from '../../../helpers/rowPinningHelpers'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
-import { defaultReactivityBindings } from '../../../../src/core/reactivity/defaultReactivityBindings'
+import { constructReactivityBindings } from '../../../../src/core/reactivity/constructReactivityBindings'
 import type { ColumnDef, Row } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
@@ -20,6 +20,7 @@ import type { Person } from '../../../fixtures/data/types'
 const _features = {
   ...coreFeatures,
   rowPinningFeature,
+  coreReativityFeature: constructReactivityBindings(),
 }
 
 type personKeys = keyof Person
@@ -170,6 +171,7 @@ describe('table methods', () => {
         ...coreFeatures,
         rowPinningFeature,
         rowPaginationFeature,
+        coreReativityFeature: constructReactivityBindings(),
       }
 
       const table = constructTable<typeof _featuresWithPagination, Person>({
@@ -177,10 +179,9 @@ describe('table methods', () => {
         _rowModels: {
           paginatedRowModel: createPaginatedRowModel(),
         },
-        reactivity: defaultReactivityBindings(),
         data,
         columns,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
         enableRowPinning: true,
         renderFallbackValue: '',
         initialState: {
@@ -210,6 +211,7 @@ describe('table methods', () => {
       ...coreFeatures,
       rowPinningFeature,
       rowPaginationFeature,
+      coreReativityFeature: constructReactivityBindings(),
     }
 
     const table = constructTable<typeof _featuresWithPagination, Person>({
@@ -217,10 +219,9 @@ describe('table methods', () => {
       _rowModels: {
         paginatedRowModel: createPaginatedRowModel(),
       },
-      reactivity: defaultReactivityBindings(),
       data,
       columns,
-      getSubRows: (row) => row.subRows,
+      getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
       enableRowPinning: true,
       renderFallbackValue: '',
       initialState: {

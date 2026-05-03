@@ -2,11 +2,12 @@ import { describe, expect, it, vi } from 'vitest'
 import { createAtom } from '@tanstack/store'
 import {
   constructTable,
+  coreFeatures,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
 } from '../../../src'
-import { defaultReactivityBindings } from '../../../src/core/reactivity/defaultReactivityBindings'
+import { constructReactivityBindings } from '../../../src/core/reactivity/constructReactivityBindings'
 import type {
   PaginationState,
   SortingState,
@@ -21,9 +22,12 @@ const _features = {
 
 function makeTable(options: any = {}) {
   return constructTable({
-    _features,
+    _features: {
+      ...coreFeatures,
+      ..._features,
+      coreReativityFeature: constructReactivityBindings(),
+    },
     _rowModels: {},
-    reactivity: defaultReactivityBindings(),
     columns: [],
     data: [],
     ...options,

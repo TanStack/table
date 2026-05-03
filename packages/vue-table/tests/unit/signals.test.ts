@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { nextTick } from 'vue'
-import { vueReactivity } from '../../src/signals'
+import { vueReactivity } from '../../src/reactivity'
 
 describe('vueReactivity', () => {
   test('creates writable and readonly atoms from Vue refs', async () => {

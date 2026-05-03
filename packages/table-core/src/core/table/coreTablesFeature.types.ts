@@ -122,11 +122,11 @@ export interface Table_CoreProperties<
   /**
    * Prototype cache for Cell objects - shared by all cells in this table
    */
-  readonly _cellPrototype?: object
+  _cellPrototype?: object
   /**
    * Prototype cache for Column objects - shared by all columns in this table
    */
-  readonly _columnPrototype?: object
+  _columnPrototype?: object
   /**
    * The features that are enabled for the table.
    */
@@ -134,7 +134,7 @@ export interface Table_CoreProperties<
   /**
    * Prototype cache for Header objects - shared by all headers in this table
    */
-  readonly _headerPrototype?: object
+  _headerPrototype?: object
   /**
    * The row model processing functions that are used to process the data by features.
    */
@@ -146,7 +146,7 @@ export interface Table_CoreProperties<
   /**
    * Prototype cache for Row objects - shared by all rows in this table
    */
-  readonly _rowPrototype?: object
+  _rowPrototype?: object
   /**
    * The readonly derived atoms for each `TableState` slice. Each derives from
    * its corresponding `baseAtom` plus, optionally, a per-slice external atom or

@@ -8,7 +8,7 @@ import {
 } from '../../../../src'
 import { createColumnHelper } from '../../../../src/helpers/columnHelper'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
-import { defaultReactivityBindings } from '../../../../src/core/reactivity/defaultReactivityBindings'
+import { constructReactivityBindings } from '../../../../src/core/reactivity/constructReactivityBindings'
 import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef } from '../../../../src'
 
@@ -43,11 +43,14 @@ describe('#getGroupedRowModel', () => {
     data.forEach((p) => (p.age = 123))
 
     const table = constructTable<any, Person>({
-      _features: { columnGroupingFeature, ...coreFeatures },
+      _features: {
+        columnGroupingFeature,
+        ...coreFeatures,
+        coreReativityFeature: constructReactivityBindings(),
+      },
       _rowModels: {
         groupedRowModel: createGroupedRowModel(aggregationFns),
       },
-      reactivity: defaultReactivityBindings(),
       onStateChange() {},
       renderFallbackValue: '',
       data,

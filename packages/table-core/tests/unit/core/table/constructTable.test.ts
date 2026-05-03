@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { constructTable, coreFeatures } from '../../../../src'
-import { defaultReactivityBindings } from '../../../../src/core/reactivity/defaultReactivityBindings'
+import { constructReactivityBindings } from '../../../../src/core/reactivity/constructReactivityBindings'
 
 describe('constructTable', () => {
   it('should create a table with all core table APIs and properties', () => {
     const table = constructTable({
       _features: {
         ...coreFeatures,
+        coreReativityFeature: constructReactivityBindings(),
       },
-      reactivity: defaultReactivityBindings(),
       columns: [],
       data: [],
     })
