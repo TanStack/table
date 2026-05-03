@@ -461,11 +461,7 @@ export function useLegacyTable<TData extends RowData>(
 
   const getState = useCallback(() => {
     // all state except for columns and data
-    return {
-      ...table.state,
-      columns: undefined,
-      data: undefined,
-    }
+    return table.state
   }, [table])
 
   const setState = useCallback(
