@@ -51,7 +51,7 @@ function refreshData() {
 }
 
 function stressTest() {
-  data.value = makeData(100_000)
+  data.value = makeData(200_000)
 }
 
 const table = useAppTable({
@@ -85,7 +85,7 @@ function tableSelector(state: ReturnType<typeof table.store.get>) {
       />
       <div style="margin-bottom: 8px">
         <button @click="refreshData">Regenerate Data</button>
-        <button @click="stressTest">Stress Test (100k rows)</button>
+        <button @click="stressTest">Stress Test (200k rows)</button>
       </div>
 
       <table>

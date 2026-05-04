@@ -5,9 +5,11 @@ import {
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
+  createPaginatedRowModel,
   createTableHook,
   filterFns,
   globalFilteringFeature,
+  rowPaginationFeature,
 } from '@tanstack/vue-table'
 
 export type Person = {
@@ -25,9 +27,11 @@ export const { appFeatures, createAppColumnHelper, useAppTable } =
       columnFilteringFeature,
       globalFilteringFeature,
       columnFacetingFeature,
+      rowPaginationFeature,
     },
     _rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
+      paginatedRowModel: createPaginatedRowModel(),
       facetedRowModel: createFacetedRowModel(),
       facetedMinMaxValues: createFacetedMinMaxValues(),
       facetedUniqueValues: createFacetedUniqueValues(),

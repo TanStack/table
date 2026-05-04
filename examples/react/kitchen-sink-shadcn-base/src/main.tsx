@@ -394,7 +394,7 @@ function App() {
   )
 
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(200_000))
 
   const table = useTable(
     {
@@ -468,7 +468,7 @@ function App() {
           Regenerate Data
         </Button>
         <Button variant="outline" size="sm" onClick={() => stressTest()}>
-          Stress Test (100k rows)
+          Stress Test (200k rows)
         </Button>
         <Button variant="outline" size="sm" onClick={() => rerender()}>
           Force Rerender
@@ -627,7 +627,7 @@ function App() {
 
 // Small debounced wrapper around the shadcn Input — adapted from
 // `examples/react/filters-fuzzy/src/main.tsx` so the global filter doesn't
-// run on every keystroke at 100k rows.
+// run on every keystroke at 200k rows.
 function DebouncedInput({
   value: initialValue,
   onChange,

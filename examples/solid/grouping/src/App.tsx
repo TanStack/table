@@ -78,7 +78,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = createSignal(makeData(10_000))
   const refreshData = () => setData(makeData(10_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(200_000))
 
   const table = createAppTable(
     {
@@ -95,7 +95,7 @@ function App() {
     <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
       </div>
       <div class="spacer-sm" />
       <table>

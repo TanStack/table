@@ -67,5 +67,5 @@ export class ProductsTable {
   }
 
   refreshData = () => this.data.set(makeProductData(1_000))
-  stressTest = () => this.data.set(makeProductData(100_000))
+  stressTest = () => this.data.set(makeProductData(200_000))
 }

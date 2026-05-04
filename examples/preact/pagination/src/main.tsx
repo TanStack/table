@@ -2,26 +2,17 @@ import { render } from 'preact'
 import { useMemo, useReducer, useState } from 'preact/hooks'
 import './index.css'
 import {
-  columnFilteringFeature,
   createColumnHelper,
-  createFilteredRowModel,
   createPaginatedRowModel,
-  createSortedRowModel,
-  filterFns,
   rowPaginationFeature,
-  rowSortingFeature,
-  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/preact-table'
 import { makeData } from './makeData'
-import type { Column, PreactTable } from '@tanstack/preact-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
-  columnFilteringFeature,
   rowPaginationFeature,
-  rowSortingFeature,
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
@@ -64,13 +55,13 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(1_000))
-  const stressTest = () => setData(() => makeData(100_000))
+  const stressTest = () => setData(() => makeData(200_000))
 
   return (
     <>
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
       </div>
       <MyTable data={data} columns={columns} />
       <hr />
@@ -91,23 +82,18 @@ function MyTable({
   const table = useTable({
     _features,
     _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,
     data,
     debugTable: true,
     // no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
-    // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
   })
 
   return (
     <table.Subscribe
       selector={(state) => ({
         pagination: state.pagination,
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
       })}
     >
       {(state) => (
@@ -120,22 +106,8 @@ function MyTable({
                   {headerGroup.headers.map((header) => {
                     return (
                       <th key={header.id} colSpan={header.colSpan}>
-                        <div
-                          className={
-                            header.column.getCanSort() ? 'sortable-header' : ''
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
+                        <div>
                           <table.FlexRender header={header} />
-                          {{
-                            asc: ' 🔼',
-                            desc: ' 🔽',
-                          }[header.column.getIsSorted() as string] ?? null}
-                          {header.column.getCanFilter() ? (
-                            <div>
-                              <Filter column={header.column} table={table} />
-                            </div>
-                          ) : null}
                         </div>
                       </th>
                     )
@@ -235,60 +207,6 @@ function MyTable({
         </div>
       )}
     </table.Subscribe>
-  )
-}
-
-function Filter({
-  column,
-  table,
-}: {
-  column: Column<typeof _features, Person>
-  table: PreactTable<typeof _features, Person>
-}) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
-
-  const columnFilterValue = column.getFilterValue()
-
-  return typeof firstValue === 'number' ? (
-    <div className="filter-row" onClick={(e) => e.stopPropagation()}>
-      <input
-        type="number"
-        value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
-        onInput={(e) =>
-          column.setFilterValue((old: [number, number]) => [
-            (e.target as HTMLInputElement).value,
-            old[1],
-          ])
-        }
-        placeholder={`Min`}
-        className="filter-input"
-      />
-      <input
-        type="number"
-        value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
-        onInput={(e) =>
-          column.setFilterValue((old: [number, number]) => [
-            old[0],
-            (e.target as HTMLInputElement).value,
-          ])
-        }
-        placeholder={`Max`}
-        className="filter-input"
-      />
-    </div>
-  ) : (
-    <input
-      className="filter-select"
-      onInput={(e) =>
-        column.setFilterValue((e.target as HTMLInputElement).value)
-      }
-      onClick={(e) => e.stopPropagation()}
-      placeholder={`Search...`}
-      type="text"
-      value={(columnFilterValue ?? '') as string}
-    />
   )
 }
 

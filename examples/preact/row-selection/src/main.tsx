@@ -105,7 +105,7 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(1_000))
-  const stressTest = () => setData(() => makeData(100_000))
+  const stressTest = () => setData(() => makeData(200_000))
 
   const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
 
@@ -146,7 +146,7 @@ function App() {
             <div>
               <button onClick={() => refreshData()}>Regenerate Data</button>
               <button onClick={() => stressTest()}>
-                Stress Test (100k rows)
+                Stress Test (200k rows)
               </button>
             </div>
             <div>

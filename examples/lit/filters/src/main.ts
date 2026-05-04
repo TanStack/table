@@ -7,11 +7,8 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
-  createSortedRowModel,
   filterFns,
   rowPaginationFeature,
-  rowSortingFeature,
-  sortFns,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
@@ -27,7 +24,6 @@ import type { Person } from './makeData'
 const _features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
-  rowSortingFeature,
 })
 
 const columns: Array<ColumnDef<typeof _features, Person>> = [
@@ -162,7 +158,6 @@ class LitTableExample extends LitElement {
         _rowModels: {
           filteredRowModel: createFilteredRowModel(filterFns),
           paginatedRowModel: createPaginatedRowModel(),
-          sortedRowModel: createSortedRowModel(sortFns),
         },
         data: this._data,
         columns,
@@ -187,10 +182,10 @@ class LitTableExample extends LitElement {
         </button>
         <button
           @click=${() => {
-            this._data = makeData(100_000)
+            this._data = makeData(200_000)
           }}
         >
-          Stress Test (100k rows)
+          Stress Test (200k rows)
         </button>
       </div>
       <table>
@@ -207,25 +202,7 @@ class LitTableExample extends LitElement {
                     <th colspan="${header.colSpan}">
                       ${header.isPlaceholder
                         ? null
-                        : html`<div
-                              title=${header.column.getCanSort()
-                                ? header.column.getNextSortingOrder() === 'asc'
-                                  ? 'Sort ascending'
-                                  : header.column.getNextSortingOrder() ===
-                                      'desc'
-                                    ? 'Sort descending'
-                                    : 'Clear sort'
-                                : undefined}
-                              @click="${header.column.getToggleSortingHandler()}"
-                              style="cursor: ${header.column.getCanSort()
-                                ? 'pointer'
-                                : 'not-allowed'}"
-                            >
-                              ${FlexRender({ header })}
-                              ${{ asc: ' 🔼', desc: ' 🔽' }[
-                                header.column.getIsSorted() as string
-                              ] ?? null}
-                            </div>
+                        : html`<div>${FlexRender({ header })}</div>
                             ${header.column.getCanFilter()
                               ? html` <div>
                                   <column-filter
@@ -241,18 +218,15 @@ class LitTableExample extends LitElement {
           )}
         </thead>
         <tbody>
-          ${table
-            .getRowModel()
-            .rows.slice(0, 10)
-            .map(
-              (row) => html`
-                <tr>
-                  ${row
-                    .getAllCells()
-                    .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
-                </tr>
-              `,
-            )}
+          ${table.getRowModel().rows.map(
+            (row) => html`
+              <tr>
+                ${row
+                  .getAllCells()
+                  .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
+              </tr>
+            `,
+          )}
         </tbody>
       </table>
       <div class="page-controls">

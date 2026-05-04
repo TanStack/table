@@ -6,11 +6,8 @@ import {
   createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
-  createSortedRowModel,
   filterFns,
   rowPaginationFeature,
-  rowSortingFeature,
-  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/preact-table'
@@ -37,7 +34,6 @@ declare module '@tanstack/preact-table' {
 
 const _features = tableFeatures({
   columnFilteringFeature,
-  rowSortingFeature,
   rowPaginationFeature,
 })
 
@@ -92,13 +88,12 @@ function App() {
 
   const [data, setData] = useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData((_old) => makeData(5_000))
-  const stressTest = () => setData((_old) => makeData(100_000))
+  const stressTest = () => setData((_old) => makeData(200_000))
 
   const table = useTable({
     _features,
     _rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns), // client side filtering
-      sortedRowModel: createSortedRowModel(sortFns), // client side sorting
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,
@@ -112,7 +107,6 @@ function App() {
       selector={(state) => ({
         columnFilters: state.columnFilters,
         pagination: state.pagination,
-        sorting: state.sorting,
       })}
     >
       {(state) => (
@@ -120,7 +114,7 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
             <button onClick={() => stressTest()}>
-              Stress Test (100k rows)
+              Stress Test (200k rows)
             </button>
           </div>
           <table>
@@ -132,19 +126,8 @@ function App() {
                       <th key={header.id} colSpan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <>
-                            <div
-                              className={
-                                header.column.getCanSort()
-                                  ? 'sortable-header'
-                                  : ''
-                              }
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
+                            <div>
                               <table.FlexRender header={header} />
-                              {{
-                                asc: ' 🔼',
-                                desc: ' 🔽',
-                              }[header.column.getIsSorted() as string] ?? null}
                             </div>
                             {header.column.getCanFilter() ? (
                               <div>

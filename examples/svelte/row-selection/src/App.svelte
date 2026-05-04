@@ -29,7 +29,7 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(100_000) }
+  const stressTest = () => { data = makeData(200_000) }
 
   // Svelte action to set indeterminate property on checkbox inputs
   function setIndeterminate(node: HTMLInputElement, value: boolean) {
@@ -123,7 +123,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
   </div>
   <div>
     <input
@@ -275,7 +275,7 @@
       Regenerate Data
     </button>
     <button class="demo-button demo-button-spaced" onclick={() => stressTest()}>
-      Stress Test (100k rows)
+      Stress Test (200k rows)
     </button>
   </div>
   <div>

@@ -13,13 +13,10 @@ import {
   createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
-  createSortedRowModel,
   createTableHook,
   filterFns,
   isFunction,
   rowPaginationFeature,
-  rowSortingFeature,
-  sortFns,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { makeData } from './makeData'
@@ -31,7 +28,6 @@ export const _features = tableFeatures({
   columnFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
-  rowSortingFeature,
 })
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({
@@ -42,7 +38,6 @@ const { injectAppTable, createAppColumnHelper } = createTableHook({
     facetedUniqueValues: createFacetedUniqueValues(),
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
   },
   debugTable: true,
   debugHeaders: true,
@@ -124,5 +119,5 @@ export class App {
   }
 
   refreshData = () => this.data.set(makeData(1_000))
-  stressTest = () => this.data.set(makeData(100_000))
+  stressTest = () => this.data.set(makeData(200_000))
 }

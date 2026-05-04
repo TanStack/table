@@ -10,11 +10,8 @@ import {
   createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
-  createSortedRowModel,
   filterFns,
   rowPaginationFeature,
-  rowSortingFeature,
-  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -31,7 +28,6 @@ const _features = tableFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
-  rowSortingFeature,
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
@@ -89,7 +85,7 @@ function App() {
 
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData(makeData(5_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(200_000))
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable({
@@ -97,7 +93,6 @@ function App() {
     _rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns), // client-side filtering
       paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
       facetedRowModel: createFacetedRowModel(), // client-side faceting
       facetedMinMaxValues: createFacetedMinMaxValues(), // generate min/max values for range filter
       facetedUniqueValues: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete
@@ -114,7 +109,6 @@ function App() {
       selector={(state) => ({
         columnFilters: state.columnFilters,
         pagination: state.pagination,
-        sorting: state.sorting,
       })}
     >
       {(state) => (
@@ -122,7 +116,7 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
             <button onClick={() => stressTest()}>
-              Stress Test (100k rows)
+              Stress Test (200k rows)
             </button>
           </div>
           <table>
@@ -134,19 +128,8 @@ function App() {
                       <th key={header.id} colSpan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <>
-                            <div
-                              className={
-                                header.column.getCanSort()
-                                  ? 'sortable-header'
-                                  : ''
-                              }
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
+                            <div>
                               <table.FlexRender header={header} />
-                              {{
-                                asc: ' 🔼',
-                                desc: ' 🔽',
-                              }[header.column.getIsSorted() as string] ?? null}
                             </div>
                             {header.column.getCanFilter() ? (
                               <div>

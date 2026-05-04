@@ -10,11 +10,10 @@ import {
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
-  createSortedRowModel,
+  createPaginatedRowModel,
   filterFns,
   globalFilteringFeature,
-  rowSortingFeature,
-  sortFns,
+  rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
@@ -32,7 +31,7 @@ const _features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   columnFacetingFeature,
-  rowSortingFeature,
+  rowPaginationFeature,
 })
 
 const columns: Array<ColumnDef<typeof _features, Person>> = [
@@ -199,7 +198,7 @@ class LitTableExample extends LitElement {
           facetedMinMaxValues: createFacetedMinMaxValues(),
           facetedUniqueValues: createFacetedUniqueValues(),
           filteredRowModel: createFilteredRowModel(filterFns),
-          sortedRowModel: createSortedRowModel(sortFns),
+          paginatedRowModel: createPaginatedRowModel(),
         },
         data: this._data,
         columns,
@@ -211,6 +210,7 @@ class LitTableExample extends LitElement {
       (state) => ({
         columnFilters: state.columnFilters,
         globalFilter: state.globalFilter,
+        pagination: state.pagination,
       }),
     )
 
@@ -226,10 +226,10 @@ class LitTableExample extends LitElement {
           </button>
           <button
             @click=${() => {
-              this._data = makeData(500_000)
+              this._data = makeData(200_000)
             }}
           >
-            Stress Test (500k rows)
+            Stress Test (200k rows)
           </button>
         </div>
         <input
@@ -276,21 +276,85 @@ class LitTableExample extends LitElement {
             )}
           </thead>
           <tbody>
-            ${table
-              .getRowModel()
-              .rows.slice(0, 10)
-              .map(
-                (row) => html`
-                  <tr>
-                    ${row
-                      .getAllCells()
-                      .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
-                  </tr>
-                `,
-              )}
+            ${table.getRowModel().rows.map(
+              (row) => html`
+                <tr>
+                  ${row
+                    .getAllCells()
+                    .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
+                </tr>
+              `,
+            )}
           </tbody>
         </table>
-        <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
+        <div class="controls">
+          <button
+            class="demo-button demo-button-sm"
+            @click="${() => table.firstPage()}"
+            ?disabled="${!table.getCanPreviousPage()}"
+          >
+            &lt;&lt;
+          </button>
+          <button
+            class="demo-button demo-button-sm"
+            @click="${() => table.previousPage()}"
+            ?disabled="${!table.getCanPreviousPage()}"
+          >
+            &lt;
+          </button>
+          <button
+            class="demo-button demo-button-sm"
+            @click="${() => table.nextPage()}"
+            ?disabled="${!table.getCanNextPage()}"
+          >
+            &gt;
+          </button>
+          <button
+            class="demo-button demo-button-sm"
+            @click="${() => table.lastPage()}"
+            ?disabled="${!table.getCanNextPage()}"
+          >
+            &gt;&gt;
+          </button>
+          <span class="inline-controls">
+            <div>Page</div>
+            <strong>
+              ${(table.state.pagination.pageIndex + 1).toLocaleString()} of
+              ${table.getPageCount().toLocaleString()}
+            </strong>
+          </span>
+          <span class="inline-controls">
+            | Go to page:
+            <input
+              type="number"
+              min="1"
+              max="${table.getPageCount()}"
+              .value="${String(table.state.pagination.pageIndex + 1)}"
+              @input="${(e: InputEvent) => {
+                const target = e.target as HTMLInputElement
+                const page = target.value ? Number(target.value) - 1 : 0
+                table.setPageIndex(page)
+              }}"
+              class="page-size-input"
+            />
+          </span>
+          <select
+            .value="${String(table.state.pagination.pageSize)}"
+            @change="${(e: Event) => {
+              const target = e.target as HTMLSelectElement
+              table.setPageSize(Number(target.value))
+            }}"
+          >
+            ${[10, 20, 30, 40, 50].map(
+              (pageSize) =>
+                html`<option value="${pageSize}">Show ${pageSize}</option>`,
+            )}
+          </select>
+        </div>
+        <div>
+          Showing ${table.getRowModel().rows.length.toLocaleString()} of
+          ${table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
+        </div>
         <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>

@@ -1,7 +1,7 @@
 <div class="demo-root">
   <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
   <button class="demo-button demo-button-spaced" (click)="stressTest()">
-    Stress Test (100k rows)
+    Stress Test (200k rows)
   </button>
   <div class="spacer-sm"></div>
 
@@ -12,17 +12,10 @@
           @for (header of headerGroup.headers; track header.id) {
             <th [attr.colSpan]="header.colSpan">
               @if (!header.isPlaceholder) {
-                <div [class.sortable]="header.column.getCanSort()">
+                <div>
                   <ng-container *flexRenderHeader="header; let headerCell">
                     {{ headerCell }}
                   </ng-container>
-
-                  @if (header.column.getIsSorted() === 'asc') {
-                    <span> 🔼</span>
-                  }
-                  @if (header.column.getIsSorted() === 'desc') {
-                    <span> 🔽</span>
-                  }
                 </div>
 
                 @if (header.column.getCanFilter()) {

@@ -2,26 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  columnFilteringFeature,
   createColumnHelper,
-  createFilteredRowModel,
   createPaginatedRowModel,
-  createSortedRowModel,
-  filterFns,
   rowPaginationFeature,
-  rowSortingFeature,
-  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { Column, ReactTable } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
-  columnFilteringFeature,
   rowPaginationFeature,
-  rowSortingFeature,
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
@@ -64,13 +55,13 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(200_000))
 
   return (
     <>
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
       </div>
       <MyTable data={data} columns={columns} />
       <hr />
@@ -91,23 +82,18 @@ function MyTable({
   const table = useTable({
     _features,
     _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,
     data,
     debugTable: true,
     // no need to pass pageCount or rowCount with client-side pagination as it is calculated automatically
-    // autoResetPageIndex: false, // turn off page index reset when sorting or filtering
   })
 
   return (
     <table.Subscribe
       selector={(state) => ({
         pagination: state.pagination,
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
       })}
     >
       {(state) => (
@@ -120,22 +106,8 @@ function MyTable({
                   {headerGroup.headers.map((header) => {
                     return (
                       <th key={header.id} colSpan={header.colSpan}>
-                        <div
-                          className={
-                            header.column.getCanSort() ? 'sortable-header' : ''
-                          }
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
+                        <div>
                           <table.FlexRender header={header} />
-                          {{
-                            asc: ' 🔼',
-                            desc: ' 🔽',
-                          }[header.column.getIsSorted() as string] ?? null}
-                          {header.column.getCanFilter() ? (
-                            <div>
-                              <Filter column={header.column} table={table} />
-                            </div>
-                          ) : null}
                         </div>
                       </th>
                     )
@@ -233,86 +205,6 @@ function MyTable({
         </div>
       )}
     </table.Subscribe>
-  )
-}
-
-function Filter({
-  column,
-  table,
-}: {
-  column: Column<typeof _features, Person>
-  table: ReactTable<typeof _features, Person>
-}) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
-
-  const columnFilterValue = column.getFilterValue()
-
-  return typeof firstValue === 'number' ? (
-    <div className="filter-row" onClick={(e) => e.stopPropagation()}>
-      <DebouncedInput
-        type="number"
-        value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
-        onChange={(value) =>
-          column.setFilterValue((old: [number, number]) => [value, old?.[1]])
-        }
-        placeholder={`Min`}
-        className="filter-input"
-      />
-      <DebouncedInput
-        type="number"
-        value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
-        onChange={(value) =>
-          column.setFilterValue((old: [number, number]) => [old?.[0], value])
-        }
-        placeholder={`Max`}
-        className="filter-input"
-      />
-    </div>
-  ) : (
-    <DebouncedInput
-      className="filter-select"
-      onChange={(value) => column.setFilterValue(value)}
-      onClick={(e) => e.stopPropagation()}
-      placeholder={`Search...`}
-      type="text"
-      value={(columnFilterValue ?? '') as string}
-    />
-  )
-}
-
-// A debounced input react component
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 500,
-  ...props
-}: {
-  value: string | number
-  onChange: (value: string | number) => void
-  debounce?: number
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
-  const [value, setValue] = React.useState(initialValue)
-
-  React.useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
-
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value])
-
-  return (
-    <input
-      {...props}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
   )
 }
 

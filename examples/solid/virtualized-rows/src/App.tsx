@@ -62,9 +62,9 @@ function App() {
     },
   ]
 
-  const [data, setData] = createSignal(makeData(100_000))
+  const [data, setData] = createSignal(makeData(200_000))
 
-  const refreshData = () => setData(makeData(100_000))
+  const refreshData = () => setData(makeData(200_000))
   const stressTest = () => setData(makeData(1_000_000))
 
   const table = createTable({

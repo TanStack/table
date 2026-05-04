@@ -1429,7 +1429,7 @@ function App() {
   }, [table.store.state.columnSizing])
 
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(200_000))
 
   return (
     <SortingContext.Provider value={sorting}>
@@ -1442,7 +1442,7 @@ function App() {
                 Regenerate Data
               </Button>
               <Button variant="outline" size="sm" onClick={stressTest}>
-                Stress Test (100k rows)
+                Stress Test (200k rows)
               </Button>
               <Button variant="outline" size="sm" onClick={() => rerender()}>
                 Force Rerender

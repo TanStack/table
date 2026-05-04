@@ -91,7 +91,7 @@ const refreshData = () => {
 }
 
 const stressTest = () => {
-  data.value = makeData(100_000)
+  data.value = makeData(200_000)
 }
 
 function handleGoToPage(e: any) {

@@ -21,7 +21,7 @@ function UsersTable() {
   }, [])
 
   const stressTest = useCallback(() => {
-    setData(makeData(100_000))
+    setData(makeData(200_000))
   }, [])
 
   // Define columns using the column helper
@@ -227,7 +227,7 @@ function ProductsTable() {
   }, [])
 
   const stressTest = useCallback(() => {
-    setData(makeProductData(100_000))
+    setData(makeProductData(200_000))
   }, [])
 
   // Define columns using the column helper - different structure than Users table

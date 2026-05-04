@@ -8,9 +8,11 @@
     createFacetedRowModel,
     createFacetedUniqueValues,
     createFilteredRowModel,
+    createPaginatedRowModel,
     createTable,
     filterFns,
     globalFilteringFeature,
+    rowPaginationFeature,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import DebouncedInput from './DebouncedInput.svelte'
@@ -22,6 +24,7 @@
     columnFilteringFeature,
     globalFilteringFeature,
     columnFacetingFeature,
+    rowPaginationFeature,
   })
 
   const columns: Array<ColumnDef<typeof _features, Person>> = [
@@ -78,7 +81,7 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(500_000) }
+  const stressTest = () => { data = makeData(200_000) }
 
   const table = createTable(
     {
@@ -88,6 +91,7 @@
         facetedMinMaxValues: createFacetedMinMaxValues(),
         facetedUniqueValues: createFacetedUniqueValues(),
         filteredRowModel: createFilteredRowModel(filterFns),
+        paginatedRowModel: createPaginatedRowModel(),
       },
       get data() {
         return data
@@ -105,7 +109,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
   </div>
   <DebouncedInput
     value={table.state.globalFilter ?? ''}
@@ -135,7 +139,7 @@
       {/each}
     </thead>
     <tbody>
-      {#each table.getRowModel().rows.slice(0, 10) as row (row.id)}
+      {#each table.getRowModel().rows as row (row.id)}
         <tr>
           {#each row.getAllCells() as cell (cell.id)}
             <td>
@@ -146,11 +150,74 @@
       {/each}
     </tbody>
   </table>
-  <div>{table.getRowModel().rows.length.toLocaleString()
-  } Rows</div>
+  <div class="spacer-sm"></div>
+  <div class="controls">
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.firstPage()
+      }
+      disabled={!table.getCanPreviousPage()}
+    >
+      {'<<'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.previousPage()}
+      disabled={!table.getCanPreviousPage()}
+    >
+      {'<'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.nextPage()}
+      disabled={!table.getCanNextPage()}
+    >
+      {'>'}
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      onclick={() => table.lastPage()}
+      disabled={!table.getCanNextPage()}
+    >
+      {'>>'}
+    </button>
+    <span class="inline-controls">
+      <div>Page</div>
+      <strong>
+        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {table.getPageCount().toLocaleString()}
+      </strong>
+    </span>
+    <span class="inline-controls">
+      | Go to page:
+      <input
+        type="number"
+        min="1"
+        max={table.getPageCount()}
+        value={table.state.pagination.pageIndex + 1}
+        oninput={(e: Event) => {
+          const page = (e.target as HTMLInputElement).value
+            ? Number((e.target as HTMLInputElement).value) - 1
+            : 0
+          table.setPageIndex(page)
+        }}
+        class="page-size-input"
+      />
+    </span>
+    <select
+      value={table.state.pagination.pageSize}
+      onchange={(e: Event) => {
+        table.setPageSize(Number((e.target as HTMLSelectElement).value))
+      }}
+    >
+      {#each [10, 20, 30, 40, 50] as pageSize}
+        <option value={pageSize}>Show {pageSize}</option>
+      {/each}
+    </select>
+  </div>
   <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
+    Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
+    {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
   </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

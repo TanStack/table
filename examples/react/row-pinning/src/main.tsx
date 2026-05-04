@@ -146,7 +146,7 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(1_000, 2, 2))
   const refreshData = () => setData(makeData(1_000, 2, 2))
-  const stressTest = () => setData(makeData(100_000, 2, 2))
+  const stressTest = () => setData(makeData(200_000, 2, 2))
 
   const table = useTable(
     {
@@ -193,7 +193,7 @@ function App() {
             className="demo-button demo-button-spaced"
             onClick={() => stressTest()}
           >
-            Stress Test (100k rows)
+            Stress Test (200k rows)
           </button>
         </div>
         <div className="spacer-sm" />

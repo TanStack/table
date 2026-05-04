@@ -146,7 +146,7 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000, 2, 2))
   const refreshData = () => setData(() => makeData(1_000, 2, 2))
-  const stressTest = () => setData(() => makeData(100_000, 2, 2))
+  const stressTest = () => setData(() => makeData(200_000, 2, 2))
 
   const table = useTable(
     {
@@ -177,7 +177,7 @@ function App() {
     <div className="app">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
       </div>
       <div className="demo-root container">
         <div className="spacer-sm" />

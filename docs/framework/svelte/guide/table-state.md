@@ -91,7 +91,7 @@ function setPagination(updater: Updater<PaginationState>) {
   } else pagination = updater
 }
 
-let data = $state(makeData(100_000))
+let data = $state(makeData(200_000))
 
 const options = {
   columns,

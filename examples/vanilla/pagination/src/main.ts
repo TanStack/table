@@ -4,10 +4,7 @@ import {
   constructTable,
   createColumnHelper,
   createPaginatedRowModel,
-  createSortedRowModel,
   rowPaginationFeature,
-  rowSortingFeature,
-  sortFns,
   tableFeatures,
 } from '@tanstack/table-core'
 import { FlexRender } from '@tanstack/table-core/flex-render'
@@ -15,11 +12,10 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { Table } from '@tanstack/table-core'
 
-let data = makeData(100_000)
+let data = makeData(200_000)
 
 const _features = tableFeatures({
   rowPaginationFeature,
-  rowSortingFeature,
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
@@ -66,9 +62,9 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   })
 
   const stressTestBtn = document.createElement('button')
-  stressTestBtn.textContent = 'Stress Test (100k rows)'
+  stressTestBtn.textContent = 'Stress Test (200k rows)'
   stressTestBtn.addEventListener('click', () => {
-    data = makeData(100_000)
+    data = makeData(200_000)
     table.setOptions((prev) => ({ ...prev, data }))
   })
 
@@ -92,22 +88,10 @@ const renderTable = (table: Table<typeof _features, Person>) => {
       const thElement = document.createElement('th')
       thElement.colSpan = header.colSpan
       const divElement = document.createElement('div')
-      divElement.classList.add(
-        'w-36',
-        ...(header.column.getCanSort()
-          ? ['sortable-header', 'sortable-header']
-          : []),
-      )
-      ;((divElement.onclick = (e) =>
-        header.column.getToggleSortingHandler()?.(e)),
-        (divElement.innerHTML = header.isPlaceholder
-          ? ''
-          : String(FlexRender({ header }) ?? '')))
-      divElement.innerHTML +=
-        {
-          asc: ' 🔼',
-          desc: ' 🔽',
-        }[header.column.getIsSorted() as string] ?? ''
+      divElement.classList.add('w-36')
+      divElement.innerHTML = header.isPlaceholder
+        ? ''
+        : String(FlexRender({ header }) ?? '')
       thElement.appendChild(divElement)
       trElement.appendChild(thElement)
     })
@@ -223,7 +207,6 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   stateInfoElement.textContent = JSON.stringify(
     {
       pagination: table.store.state.pagination,
-      sorting: table.store.state.sorting,
     },
     null,
     2,
@@ -242,7 +225,6 @@ const table = constructTable({
   _features,
   _rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
   },
   data,
   columns,
@@ -251,12 +233,6 @@ const table = constructTable({
       pageIndex: 0,
       pageSize: 10,
     },
-    sorting: [
-      {
-        id: 'lastName',
-        desc: false,
-      },
-    ],
   },
   debugTable: true,
 })

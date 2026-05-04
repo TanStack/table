@@ -101,7 +101,7 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(200_000))
 
   const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
 
@@ -150,7 +150,7 @@ function App() {
                 className="demo-button demo-button-spaced"
                 onClick={() => stressTest()}
               >
-                Stress Test (100k rows)
+                Stress Test (200k rows)
               </button>
             </div>
             <div>

@@ -91,7 +91,7 @@ const refreshData = () => {
 }
 
 const stressTest = () => {
-  data.value = makeData(100_000)
+  data.value = makeData(200_000)
 }
 
 function handleGoToPage(e: any) {
@@ -110,7 +110,7 @@ function handlePageSizeChange(e: any) {
     <div class="button-row">
       <button @click="refreshData" class="demo-button">Regenerate Data</button>
       <button @click="stressTest" class="demo-button">
-        Stress Test (100k rows)
+        Stress Test (200k rows)
       </button>
     </div>
     <div class="spacer-md" />

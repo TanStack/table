@@ -57,7 +57,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(200_000))
 
   const rerender = React.useReducer(() => ({}), {})[1]
 
@@ -102,7 +102,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} className="demo-button">
-          Stress Test (100k rows)
+          Stress Test (200k rows)
         </button>
       </div>
       <div className="spacer-md" />

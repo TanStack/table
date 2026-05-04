@@ -18,7 +18,7 @@ function UsersTable() {
     setData(() => makeData(1_000))
   }
   const stressTest = () => {
-    setData(() => makeData(100_000))
+    setData(() => makeData(200_000))
   }
 
   // Define columns using the column helper
@@ -92,7 +92,7 @@ function UsersTable() {
             <div>
               <button onClick={() => refreshData()}>Regenerate Data</button>
               <button onClick={() => stressTest()}>
-                Stress Test (100k rows)
+                Stress Test (200k rows)
               </button>
             </div>
 
@@ -238,7 +238,7 @@ function ProductsTable() {
     setData(makeProductData(500))
   }
   const stressTest = () => {
-    setData(makeProductData(100_000))
+    setData(makeProductData(200_000))
   }
 
   // Define columns using the column helper - different structure than Users table
@@ -301,7 +301,7 @@ function ProductsTable() {
             <div>
               <button onClick={() => refreshData()}>Regenerate Data</button>
               <button onClick={() => stressTest()}>
-                Stress Test (100k rows)
+                Stress Test (200k rows)
               </button>
             </div>
 

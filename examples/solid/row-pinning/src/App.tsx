@@ -42,7 +42,7 @@ function App() {
 
   const [data, setData] = createSignal(makeData(1_000, 2, 2))
   const refreshData = () => setData(makeData(1_000, 2, 2))
-  const stressTest = () => setData(makeData(100_000, 2, 2))
+  const stressTest = () => setData(makeData(200_000, 2, 2))
 
   const columns = createMemo(() => [
     {
@@ -158,7 +158,7 @@ function App() {
     <div class="app">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (100k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
       </div>
       <div class="demo-root container">
         <div class="spacer-sm" />

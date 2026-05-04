@@ -88,10 +88,10 @@ export class ProductsTable extends LitElement {
           </button>
           <button
             @click=${() => {
-              this.data = makeProductData(100_000)
+              this.data = makeProductData(200_000)
             }}
           >
-            Stress Test (100k rows)
+            Stress Test (200k rows)
           </button>
         </div>
         <!-- Table toolbar using the same context-based custom element -->

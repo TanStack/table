@@ -6,10 +6,7 @@ import {
   TableController,
   createColumnHelper,
   createPaginatedRowModel,
-  createSortedRowModel,
   rowPaginationFeature,
-  rowSortingFeature,
-  sortFns,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
@@ -17,7 +14,6 @@ import type { Person } from './makeData'
 
 const _features = tableFeatures({
   rowPaginationFeature,
-  rowSortingFeature,
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
@@ -63,14 +59,13 @@ class LitTableExample extends LitElement {
       {
         _features,
         _rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns),
           paginatedRowModel: createPaginatedRowModel(),
         },
         columns,
         data: this._data,
         debugTable: true,
       },
-      (state) => ({ pagination: state.pagination, sorting: state.sorting }),
+      (state) => ({ pagination: state.pagination }),
     )
 
     return html`
@@ -85,10 +80,10 @@ class LitTableExample extends LitElement {
           </button>
           <button
             @click=${() => {
-              this._data = makeData(100_000)
+              this._data = makeData(200_000)
             }}
           >
-            Stress Test (100k rows)
+            Stress Test (200k rows)
           </button>
         </div>
         <div class="spacer-sm"></div>
@@ -104,19 +99,7 @@ class LitTableExample extends LitElement {
                       <th colspan="${header.colSpan}">
                         ${header.isPlaceholder
                           ? null
-                          : html`<div
-                              style="cursor: ${header.column.getCanSort()
-                                ? 'pointer'
-                                : 'default'}; user-select: ${header.column.getCanSort()
-                                ? 'none'
-                                : 'auto'}"
-                              @click="${header.column.getToggleSortingHandler()}"
-                            >
-                              ${FlexRender({ header })}
-                              ${{ asc: ' \u{1F53C}', desc: ' \u{1F53D}' }[
-                                header.column.getIsSorted() as string
-                              ] ?? null}
-                            </div>`}
+                          : html`<div>${FlexRender({ header })}</div>`}
                       </th>
                     `,
                   )}

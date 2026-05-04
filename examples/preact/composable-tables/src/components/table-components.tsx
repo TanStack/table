@@ -120,7 +120,7 @@ export function TableToolbar({
         <button onClick={() => table.resetSorting()}>Clear Sorting</button>
         {onRefresh && <button onClick={onRefresh}>Regenerate Data</button>}
         {onStressTest && (
-          <button onClick={onStressTest}>Stress Test (100k rows)</button>
+          <button onClick={onStressTest}>Stress Test (200k rows)</button>
         )}
       </div>
     </div>

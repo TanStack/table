@@ -111,7 +111,7 @@ function App() {
 
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData(makeData(5_000))
-  const stressTest = () => setData(makeData(100_000))
+  const stressTest = () => setData(makeData(200_000))
 
   const table = useTable<typeof _features, Person>({
     _features,
@@ -154,7 +154,7 @@ function App() {
           <div>
             <button onClick={() => refreshData()}>Regenerate Data</button>
             <button onClick={() => stressTest()}>
-              Stress Test (100k rows)
+              Stress Test (200k rows)
             </button>
           </div>
           <div>

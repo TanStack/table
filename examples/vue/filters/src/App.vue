@@ -56,14 +56,18 @@ const columns = ref(
   ]),
 )
 
-const data = ref(makeData(100))
+const INITIAL_PAGE_INDEX = 0
+
+const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
+const pageSizes = [10, 20, 30, 40, 50]
+const data = ref(makeData(1_000))
 
 const refreshData = () => {
-  data.value = makeData(100)
+  data.value = makeData(1_000)
 }
 
 const stressTest = () => {
-  data.value = makeData(5_000)
+  data.value = makeData(200_000)
 }
 
 const table = useAppTable(
@@ -77,8 +81,19 @@ const table = useAppTable(
   (state) => ({
     columnFilters: state.columnFilters,
     globalFilter: state.globalFilter,
+    pagination: state.pagination,
   }),
 )
+
+function handleGoToPage(e: any) {
+  const page = e.target.value ? Number(e.target.value) - 1 : 0
+  goToPageNumber.value = page + 1
+  table.setPageIndex(page)
+}
+
+function handlePageSizeChange(e: any) {
+  table.setPageSize(Number(e.target.value))
+}
 </script>
 
 <template>
@@ -86,7 +101,7 @@ const table = useAppTable(
     <div class="button-row">
       <button @click="refreshData" class="demo-button">Regenerate Data</button>
       <button @click="stressTest" class="demo-button">
-        Stress Test (5k rows)
+        Stress Test (200k rows)
       </button>
     </div>
     <div class="spacer-md" />
@@ -149,6 +164,65 @@ const table = useAppTable(
         </tr>
       </tfoot>
     </table>
+    <div class="spacer-md" />
+    <div class="controls">
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.setPageIndex(0)"
+        :disabled="!table.getCanPreviousPage()"
+      >
+        «
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.previousPage()"
+        :disabled="!table.getCanPreviousPage()"
+      >
+        ‹
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.nextPage()"
+        :disabled="!table.getCanNextPage()"
+      >
+        ›
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.setPageIndex(table.getPageCount() - 1)"
+        :disabled="!table.getCanNextPage()"
+      >
+        »
+      </button>
+      <span class="inline-controls">
+        <div>Page</div>
+        <strong>
+          {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
+          {{ table.getPageCount().toLocaleString() }}
+        </strong>
+      </span>
+      <span class="inline-controls">
+        | Go to page:
+        <input
+          type="number"
+          :value="goToPageNumber"
+          @change="handleGoToPage"
+          class="page-size-input"
+        />
+      </span>
+      <select
+        :value="table.state.pagination.pageSize"
+        @change="handlePageSizeChange"
+      >
+        <option :key="pageSize" :value="pageSize" v-for="pageSize in pageSizes">
+          Show {{ pageSize }}
+        </option>
+      </select>
+    </div>
+    <div>
+      {{ table.getPrePaginatedRowModel().rows.length.toLocaleString() }} Rows
+    </div>
+    <pre>{{ JSON.stringify(table.state, null, 2) }}</pre>
     <div class="spacer-md" />
   </div>
 </template>

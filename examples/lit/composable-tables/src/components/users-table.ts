@@ -102,10 +102,10 @@ export class UsersTable extends LitElement {
           </button>
           <button
             @click=${() => {
-              this.data = makeData(100_000)
+              this.data = makeData(200_000)
             }}
           >
-            Stress Test (100k rows)
+            Stress Test (200k rows)
           </button>
         </div>
         <!-- Table toolbar using context-based custom element -->

@@ -73,10 +73,10 @@ function App() {
   // The virtualizer will need a reference to the scrollable container element
   const tableContainerRef = React.useRef<HTMLDivElement>(null)
 
-  const [data, setData] = React.useState(() => makeData(100_000))
+  const [data, setData] = React.useState(() => makeData(200_000))
 
   const refreshData = React.useCallback(() => {
-    setData(makeData(100_000))
+    setData(makeData(200_000))
   }, [])
 
   const stressTest = React.useCallback(() => {

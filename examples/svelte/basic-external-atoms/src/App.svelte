@@ -53,7 +53,7 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(100_000) }
+  const stressTest = () => { data = makeData(200_000) }
 
   // Create stable external atoms for the individual state slices you want to
   // own. The table still creates internal base atoms for everything else.
@@ -88,7 +88,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (100k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
   </div>
   <table>
     <thead>
