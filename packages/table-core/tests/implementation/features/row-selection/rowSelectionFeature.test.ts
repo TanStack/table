@@ -1,18 +1,22 @@
 import { describe, expect, it } from 'vitest'
 import {
   constructTable,
+  coreFeatures,
   createColumnHelper,
   rowSelectionFeature,
 } from '../../../../src'
 import * as RowSelectionUtils from '../../../../src/features/row-selection/rowSelectionFeature.utils'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
+import { constructReactivityBindings } from '../../../../src/core/reactivity/constructReactivityBindings'
 import type { Person } from '../../../fixtures/data/types'
-import type { ColumnDef } from '../../../../src'
+import type { ColumnDef, Row } from '../../../../src'
 
 // TODO: bring up to new test structure
 
 const _features = {
+  ...coreFeatures,
   rowSelectionFeature,
+  coreReativityFeature: constructReactivityBindings(),
 }
 
 type personKeys = keyof Person
@@ -44,7 +48,7 @@ describe('rowSelectionFeature', () => {
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
         initialState: {
           rowSelection: {
             '0': true,
@@ -73,7 +77,7 @@ describe('rowSelectionFeature', () => {
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
         initialState: {
           rowSelection: {
             '0': true,
@@ -102,7 +106,7 @@ describe('rowSelectionFeature', () => {
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
         initialState: {
           rowSelection: {},
         },
@@ -245,7 +249,7 @@ describe('rowSelectionFeature', () => {
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
         initialState: {
           rowSelection: {},
         },
@@ -269,7 +273,7 @@ describe('rowSelectionFeature', () => {
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
         initialState: {
           rowSelection: {
             '0.0': true,
@@ -295,7 +299,7 @@ describe('rowSelectionFeature', () => {
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
         initialState: {
           rowSelection: {
             '0.0': true,
@@ -318,10 +322,11 @@ describe('rowSelectionFeature', () => {
       const table = constructTable<typeof _features, Person>({
         _features,
         _rowModels: {},
-        enableRowSelection: (row) => row.index === 0, // only first row is selectable (of 2 sub-rows)
+        enableRowSelection: (row: Row<typeof _features, Person>) =>
+          row.index === 0, // only first row is selectable (of 2 sub-rows)
         renderFallbackValue: '',
         data,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
         initialState: {
           rowSelection: {
             '0.0': true, // first sub-row
@@ -346,7 +351,7 @@ describe('rowSelectionFeature', () => {
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
         initialState: {
           rowSelection: {
             '0.0.0': true, // first nested sub-row

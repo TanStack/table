@@ -1,8 +1,10 @@
-import { useMemo, useState } from 'preact/hooks'
+import { useEffect, useMemo, useState } from 'preact/hooks'
 import { constructTable } from '@tanstack/table-core'
 import { shallow, useSelector } from '@tanstack/preact-store'
+import { constructReactivityBindings } from '@tanstack/table-core/reactivity'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
+// import { preactReactivity } from './reactivity'
 import type {
   CellData,
   RowData,
@@ -92,11 +94,13 @@ export function useTable<
     ({}) as TSelected,
 ): PreactTable<TFeatures, TData, TSelected> {
   const [table] = useState(() => {
-    const tableInstance = constructTable(tableOptions) as PreactTable<
-      TFeatures,
-      TData,
-      TSelected
-    >
+    const tableInstance = constructTable({
+      ...tableOptions,
+      _features: {
+        coreReativityFeature: constructReactivityBindings(), // preactReactivity() currently causes infinite re-renders
+        ...tableOptions._features,
+      },
+    }) as PreactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
       return Subscribe({
@@ -110,27 +114,24 @@ export function useTable<
     return tableInstance
   })
 
-  // sync table options on every render
-  table.setOptions((prev) => ({
-    ...prev,
-    ...tableOptions,
-  }))
+  useEffect(() => {
+    table.setOptions((prev) => ({
+      ...prev,
+      ...tableOptions,
+    }))
+  }, [table, tableOptions])
 
-  const selectorWithDataAndColumns = (state: TableState<TFeatures>) => ({
-    columns: tableOptions.columns,
-    data: tableOptions.data,
-    ...selector(state),
-  })
-
-  const state = useSelector(table.store, selectorWithDataAndColumns, {
+  const state = useSelector(table.store, selector, { compare: shallow })
+  const options = useSelector(table.optionsStore, (options) => options, {
     compare: shallow,
   })
 
   return useMemo(
     () => ({
       ...table,
+      options,
       state,
     }),
-    [state, table],
+    [table, options, state],
   ) as PreactTable<TFeatures, TData, TSelected>
 }

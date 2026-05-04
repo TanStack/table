@@ -2,11 +2,12 @@ import { vi } from 'vitest'
 import { getDefaultRowPinningState } from '../../src/features/row-pinning/rowPinningFeature.utils'
 import {
   constructTable,
-  createColumnHelper,
   coreFeatures,
+  createColumnHelper,
   rowPinningFeature,
 } from '../../src'
 import { generateTestData } from '../fixtures/data/generateTestData'
+import { constructReactivityBindings } from '../../src/core/reactivity/constructReactivityBindings'
 import { generateTestTableWithData } from './generateTestTable'
 import type { ColumnDef, RowPinningState, TableOptions } from '../../src'
 import type { Person } from '../fixtures/data/types'
@@ -15,6 +16,7 @@ import type { Person } from '../fixtures/data/types'
 const _features = {
   ...coreFeatures,
   rowPinningFeature,
+  coreReativityFeature: constructReactivityBindings(),
 } as any
 
 type personKeys = keyof Person

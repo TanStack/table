@@ -12,13 +12,13 @@ export type ExtractFeatureTypes<
   TFeatures extends TableFeatures,
 > = UnionToIntersection<
   {
-    [K in keyof TFeatures]: TFeatures[K] extends TableFeature<
-      infer FeatureConstructorOptions
-    >
-      ? TKey extends keyof FeatureConstructorOptions
-        ? FeatureConstructorOptions[TKey]
-        : never
-      : any
+    [K in keyof TFeatures]: K extends 'coreReativityFeature'
+      ? never
+      : TFeatures[K] extends TableFeature<infer FeatureConstructorOptions>
+        ? TKey extends keyof FeatureConstructorOptions
+          ? FeatureConstructorOptions[TKey]
+          : never
+        : any
   }[keyof TFeatures]
 >
 

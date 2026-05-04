@@ -1,10 +1,8 @@
-import { isRef, ref, unref, watch, watchEffect } from 'vue'
-import {
-  constructReactivityFeature,
-  constructTable,
-} from '@tanstack/table-core'
+import { unref, watch } from 'vue'
+import { constructTable } from '@tanstack/table-core'
 import { shallow, useSelector } from '@tanstack/vue-store'
 import { mergeProxy } from './merge-proxy'
+import { vueReactivity } from './reactivity'
 import type { Atom, ReadonlyAtom } from '@tanstack/vue-store'
 import type {
   NoInfer,
@@ -106,8 +104,6 @@ export function useTable<
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): VueTable<TFeatures, TData, TSelected> {
-  const notifier = ref<number>(0)
-
   const syncTableOptions = (
     table: Table<TFeatures, TData>,
     options: TableOptionsWithReactiveData<TFeatures, TData>,
@@ -118,16 +114,11 @@ export function useTable<
     )
   }
 
-  const vueReactivityFeature = constructReactivityFeature({
-    stateNotifier: () => notifier.value,
-    optionsNotifier: () => notifier.value,
-  })
-
   const mergedOptions = {
     ...tableOptions,
     _features: {
+      coreReativityFeature: vueReactivity(),
       ...tableOptions._features,
-      vueReactivityFeature,
     },
   }
 
@@ -151,15 +142,6 @@ export function useTable<
     TData,
     TSelected
   >
-
-  const allState = useSelector(table.store, (state) => state)
-  const allOptions = useSelector(table.optionsStore, (state) => state)
-
-  watchEffect(() => {
-    allState.value
-    allOptions.value
-    notifier.value++
-  })
 
   watch(
     () =>

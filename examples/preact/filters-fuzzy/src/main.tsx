@@ -341,7 +341,7 @@ function DebouncedInput({
     <input
       {...props}
       value={value}
-      onChange={(e) => setValue((e.target as HTMLInputElement).value)}
+      onInput={(e) => setValue((e.target as HTMLInputElement).value)}
     />
   )
 }

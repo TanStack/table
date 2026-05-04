@@ -535,9 +535,6 @@ export function createTestTable(
       return {
         ...(optionsFn?.() ?? {}),
         _features: stockFeatures,
-        _rowModels: {
-          coreRowModel: createCoreRowModel(),
-        },
         columns: this.columns(),
         data: this.data(),
       } as TableOptions<typeof stockFeatures, TestData>

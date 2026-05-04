@@ -1,10 +1,8 @@
-import {
-  constructReactivityFeature,
-  constructTable,
-} from '@tanstack/table-core'
-import { shallow, useSelector } from '@tanstack/svelte-store'
+import { constructTable } from '@tanstack/table-core'
+import { useSelector } from '@tanstack/svelte-store'
 import { untrack } from 'svelte'
 import { mergeObjects } from './merge-objects'
+import { svelteReactivity } from './reactivity.svelte'
 import type {
   RowData,
   Table,
@@ -38,23 +36,15 @@ export function createTable<
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): SvelteTable<TFeatures, TData, TSelected> {
-  // 1. Create $state-based notifier for reactivity feature
-  let notifierValue = $state(0)
-
-  // 2. Construct reactivity feature (same pattern as solid/vue/angular)
-  const svelteReactivityFeature = constructReactivityFeature<TFeatures, TData>({
-    stateNotifier: () => notifierValue,
-    optionsNotifier: () => notifierValue,
-  })
-
-  // 3. Merge reactivity feature into options using mergeObjects (preserves getters)
+  // 1. Merge reactivity into options using mergeObjects (preserves getters)
   const mergedOptions = mergeObjects(tableOptions, {
-    _features: mergeObjects(tableOptions._features, {
-      svelteReactivityFeature,
-    }),
-  }) as any
+    _features: {
+      coreReativityFeature: svelteReactivity(),
+      ...tableOptions._features,
+    },
+  }) as TableOptions<TFeatures, TData>
 
-  // 4. Set up resolved options with mergeOptions handler
+  // 2. Set up resolved options with mergeOptions handler
   const resolvedOptions = mergeObjects(
     {
       mergeOptions: (
@@ -67,40 +57,23 @@ export function createTable<
     mergedOptions,
   ) as TableOptions<TFeatures, TData>
 
-  // 5. Construct table
+  // 3. Construct table
   const table = constructTable(resolvedOptions) as SvelteTable<
     TFeatures,
     TData,
     TSelected
   >
 
-  // 6. Subscribe to all state and options via useSelector
-  const allState = useSelector(table.store, (state) => state)
-  const allOptions = useSelector(table.optionsStore, (options) => options)
-
-  // 7. Sync store changes -> notifier.
-  // Use $effect.pre so this runs before DOM updates (like Solid's createComputed).
-  // Use untrack for the write so the effect only depends on allState/allOptions,
-  // not on notifierValue itself (which would cause an infinite loop).
-  $effect.pre(() => {
-    allState.current
-    allOptions.current
-    untrack(() => {
-      notifierValue++
-    })
-  })
-
-  // 8. Sync options reactively. When controlled state changes (e.g., $state
+  // 4. Sync options reactively. When controlled state changes (e.g., $state
   // inside createTableState), the effect re-runs and calls setOptions.
   // Use $effect.pre so the table sees updated options BEFORE the DOM renders,
   // ensuring getRowModel() returns current data (not stale, one-frame-behind data).
   // The reactive reads (state getters, data getter) happen OUTSIDE untrack
-  // so they become dependencies. The setOptions call is INSIDE untrack to
-  // prevent tracking notifierValue (read via store.state's stateNotifier
-  // interceptor inside setOptions), which would cause an infinite loop.
+  // so they become dependencies. The setOptions call is INSIDE untrack so
+  // option writes do not subscribe this effect to table internals.
   $effect.pre(() => {
     // Read reactive getters to create $effect dependencies on external state
-    const state = mergedOptions.state
+    const state: Record<string, unknown> | undefined = mergedOptions.state
     if (state) {
       for (const key in state) {
         void state[key]
@@ -110,15 +83,12 @@ export function createTable<
 
     untrack(() => {
       table.setOptions((prev) => {
-        return mergeObjects(prev, mergedOptions) as TableOptions<
-          TFeatures,
-          TData
-        >
+        return mergeObjects(prev, mergedOptions)
       })
     })
   })
 
-  // 9. State selector
+  // 5. State selector
   const stateStore = useSelector(table.store, selector)
 
   Object.defineProperty(table, 'state', {

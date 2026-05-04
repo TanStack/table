@@ -152,7 +152,7 @@ function App() {
             <div>
               <input
                 value={state.globalFilter ?? ''}
-                onChange={(e) =>
+                onInput={(e) =>
                   table.setGlobalFilter((e.target as HTMLInputElement).value)
                 }
                 className="summary-panel"
@@ -363,7 +363,7 @@ function Filter({
       <input
         type="number"
         value={((column.getFilterValue() as any)?.[0] ?? '') as string}
-        onChange={(e) =>
+        onInput={(e) =>
           column.setFilterValue((old: any) => [
             (e.target as HTMLInputElement).value,
             old?.[1],
@@ -375,7 +375,7 @@ function Filter({
       <input
         type="number"
         value={((column.getFilterValue() as any)?.[1] ?? '') as string}
-        onChange={(e) =>
+        onInput={(e) =>
           column.setFilterValue((old: any) => [
             old?.[0],
             (e.target as HTMLInputElement).value,
@@ -389,7 +389,7 @@ function Filter({
     <input
       type="text"
       value={(column.getFilterValue() ?? '') as string}
-      onChange={(e) =>
+      onInput={(e) =>
         column.setFilterValue((e.target as HTMLInputElement).value)
       }
       placeholder={`Search...`}

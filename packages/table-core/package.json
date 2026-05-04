@@ -38,6 +38,10 @@
       "import": "./dist/flex-render.js",
       "require": "./dist/flex-render.cjs"
     },
+    "./reactivity": {
+      "import": "./dist/reactivity.js",
+      "require": "./dist/reactivity.cjs"
+    },
     "./static-functions": {
       "import": "./dist/static-functions.js",
       "require": "./dist/static-functions.cjs"

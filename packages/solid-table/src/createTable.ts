@@ -1,10 +1,8 @@
-import {
-  constructReactivityFeature,
-  constructTable,
-} from '@tanstack/table-core'
-import { createComputed, createSignal, mergeProps, untrack } from 'solid-js'
+import { constructTable } from '@tanstack/table-core'
+import { createComputed, getOwner, mergeProps, untrack } from 'solid-js'
 import { shallow, useSelector } from '@tanstack/solid-store'
 import { FlexRender } from './FlexRender'
+import { solidReactivity } from './reactivity'
 import type { Atom, ReadonlyAtom } from '@tanstack/solid-store'
 import type { Accessor, JSX } from 'solid-js'
 import type {
@@ -73,17 +71,13 @@ export function createTable<
   selector: (state: TableState<TFeatures>) => TSelected = () =>
     ({}) as TSelected,
 ): SolidTable<TFeatures, TData, TSelected> {
-  const [notifier, setNotifier] = createSignal<void>(void 0, { equals: false })
-
-  const solidReactivityFeature = constructReactivityFeature({
-    stateNotifier: () => notifier(),
-    optionsNotifier: () => notifier(),
-  })
+  const owner = getOwner()!
 
   const mergedOptions = mergeProps(tableOptions, {
-    _features: mergeProps(tableOptions._features, {
-      solidReactivityFeature,
-    }),
+    _features: {
+      coreReativityFeature: solidReactivity(owner),
+      ...tableOptions._features,
+    },
   }) as any
 
   const resolvedOptions = mergeProps(
@@ -104,9 +98,6 @@ export function createTable<
     TSelected
   >
 
-  const allState = useSelector(table.store)
-  const allOptions = useSelector(table.optionsStore)
-
   createComputed(() => {
     const userState = tableOptions.state
     if (userState) {
@@ -120,12 +111,6 @@ export function createTable<
         return mergeProps(prev, mergedOptions) as TableOptions<TFeatures, TData>
       })
     })
-  })
-
-  createComputed(() => {
-    allState()
-    allOptions()
-    untrack(() => setNotifier(void 0))
   })
 
   table.Subscribe = ((props: {

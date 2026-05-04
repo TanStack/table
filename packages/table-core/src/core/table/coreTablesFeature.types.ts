@@ -1,4 +1,5 @@
-import type { Atom, ReadonlyAtom, ReadonlyStore, Store } from '@tanstack/store'
+import type { TableReactivityBindings } from '../reactivity/coreReactivityFeature.types'
+import type { Atom, ReadonlyAtom, ReadonlyStore } from '@tanstack/store'
 import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
@@ -67,11 +68,11 @@ export interface TableOptions_Table<
   /**
    * The features that you want to enable for the table.
    */
-  _features: TFeatures
+  readonly _features: TFeatures
   /**
    * The row model options that you want to enable for the table.
    */
-  _rowModels?: CreateRowModels_All<TFeatures, TData>
+  readonly _rowModels?: CreateRowModels_All<TFeatures, TData>
   /**
    * Optionally, provide your own external writable atoms for individual state slices.
    * When an atom is provided for a given slice, it takes precedence over `options.state[key]`
@@ -79,35 +80,35 @@ export interface TableOptions_Table<
    * still routed through the internal base atom; consumers are responsible for
    * mirroring changes back to their external atom via the corresponding `onXChange` callback.
    */
-  atoms?: ExternalAtoms<TFeatures>
+  readonly atoms?: ExternalAtoms<TFeatures>
   /**
    * Set this option to override any of the `autoReset...` feature options.
    */
-  autoResetAll?: boolean
+  readonly autoResetAll?: boolean
   /**
    * The data for the table to display. When the `data` option changes reference, the table will reprocess the data.
    */
-  data: ReadonlyArray<TData>
+  readonly data: ReadonlyArray<TData>
   /**
    * Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPageIndex`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
    * Table state will not be reset when this object changes, which also means that the initial state object does not need to be stable.
    */
-  initialState?: Partial<TableState<TFeatures>>
+  readonly initialState?: Partial<TableState<TFeatures>>
   /**
    * This option is used to optionally implement the merging of table options.
    */
-  mergeOptions?: (
+  readonly mergeOptions?: (
     defaultOptions: TableOptions<TFeatures, TData>,
     options: Partial<TableOptions<TFeatures, TData>>,
   ) => TableOptions<TFeatures, TData>
   /**
    * You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
    */
-  meta?: TableMeta<TFeatures, TData>
+  readonly meta?: TableMeta<TFeatures, TData>
   /**
    * Pass in individual self-managed state to the table.
    */
-  state?: Partial<TableState<TFeatures>>
+  readonly state?: Partial<TableState<TFeatures>>
 }
 
 export interface Table_CoreProperties<
@@ -115,9 +116,9 @@ export interface Table_CoreProperties<
   TData extends RowData,
 > {
   /**
-   * The features that are enabled for the table.
+   * Table reactivity bindings for interacting with TanStack Store.
    */
-  _features: Partial<CoreFeatures> & TFeatures
+  readonly _reactivity: TableReactivityBindings
   /**
    * Prototype cache for Cell objects - shared by all cells in this table
    */
@@ -127,49 +128,53 @@ export interface Table_CoreProperties<
    */
   _columnPrototype?: object
   /**
+   * The features that are enabled for the table.
+   */
+  readonly _features: Partial<CoreFeatures> & TFeatures
+  /**
    * Prototype cache for Header objects - shared by all headers in this table
    */
   _headerPrototype?: object
   /**
    * The row model processing functions that are used to process the data by features.
    */
-  _rowModelFns: RowModelFns<TFeatures, TData>
+  readonly _rowModelFns: RowModelFns<TFeatures, TData>
   /**
    * The row models that are enabled for the table.
    */
-  _rowModels: CachedRowModels<TFeatures, TData>
+  readonly _rowModels: CachedRowModels<TFeatures, TData>
   /**
    * Prototype cache for Row objects - shared by all rows in this table
    */
   _rowPrototype?: object
   /**
-   * The internal writable atoms for each `TableState` slice. This is the library's
-   * single write surface — all state mutations from features land here.
-   */
-  baseAtoms: BaseAtoms<TFeatures>
-  /**
    * The readonly derived atoms for each `TableState` slice. Each derives from
    * its corresponding `baseAtom` plus, optionally, a per-slice external atom or
    * external state value (precedence: external atom > external state > base atom).
    */
-  atoms: Atoms<TFeatures>
+  readonly atoms: Atoms<TFeatures>
   /**
-   * The base store for the table options.
+   * The internal writable atoms for each `TableState` slice. This is the library's
+   * single write surface — all state mutations from features land here.
    */
-  optionsStore: Store<TableOptions<TFeatures, TData>>
+  readonly baseAtoms: BaseAtoms<TFeatures>
   /**
    * This is the resolved initial state of the table.
    */
-  initialState: TableState<TFeatures>
+  readonly initialState: TableState<TFeatures>
   /**
    * A read-only reference to the table's current options.
    */
   readonly options: TableOptions<TFeatures, TData>
   /**
+   * The base store for the table options.
+   */
+  readonly optionsStore: Atom<TableOptions<TFeatures, TData>>
+  /**
    * The readonly flat store for the table state. Derives from `table.atoms`
    * only; never reads external state directly.
    */
-  store: ReadonlyStore<TableState<TFeatures>>
+  readonly store: ReadonlyStore<TableState<TFeatures>>
 }
 
 export interface Table_Table<

@@ -71,9 +71,6 @@ export * from './fns/sortFns'
 
 export * from './features/stockFeatures'
 
-// tableReactivityFeature
-export * from './features/table-reactivity/tableReactivityFeature'
-
 // columnFacetingFeature
 export * from './features/column-faceting/columnFacetingFeature'
 export * from './features/column-faceting/columnFacetingFeature.types'
