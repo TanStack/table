@@ -17,7 +17,7 @@
     "@tabler/icons-react": "^3.41.1",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/react-store": "^0.11.0",
-    "@tanstack/react-table": "^9.0.0-alpha.41",
+    "@tanstack/react-table": "^9.0.0-alpha.42",
     "@tanstack/react-virtual": "^3.13.24",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.20",

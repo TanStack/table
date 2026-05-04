@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
-    "@tanstack/lit-table": "^9.0.0-alpha.41",
+    "@tanstack/lit-table": "^9.0.0-alpha.42",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "lit": "^3.3.2"
   },

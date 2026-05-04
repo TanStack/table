@@ -20,7 +20,7 @@
     "@mui/icons-material": "^9.0.0",
     "@mui/material": "^9.0.0",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
-    "@tanstack/react-table": "^9.0.0-alpha.41",
+    "@tanstack/react-table": "^9.0.0-alpha.42",
     "date-fns": "^4.1.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"

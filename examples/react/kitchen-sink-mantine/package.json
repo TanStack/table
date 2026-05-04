@@ -19,7 +19,7 @@
     "@mantine/hooks": "^9.1.1",
     "@tabler/icons-react": "^3.41.1",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
-    "@tanstack/react-table": "^9.0.0-alpha.41",
+    "@tanstack/react-table": "^9.0.0-alpha.42",
     "date-fns": "^4.1.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
