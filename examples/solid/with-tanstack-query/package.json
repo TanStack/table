@@ -13,12 +13,13 @@
     "@faker-js/faker": "^10.4.0",
     "typescript": "6.0.3",
     "vite": "^8.0.10",
-    "vite-plugin-solid": "^2.11.12"
+    "vite-plugin-solid": "^3.0.0-next.5"
   },
   "dependencies": {
-    "@tanstack/solid-query": "^5.100.7",
-    "@tanstack/solid-store": "^0.11.0",
+    "@tanstack/solid-query": "^6.0.0-beta.4",
     "@tanstack/solid-table": "^9.0.0-alpha.42",
-    "solid-js": "^1.9.12"
+    "solid-js": "2.0.0-beta.10",
+    "@solidjs/web": "2.0.0-beta.10",
+    "@tanstack/store": "^0.11.0"
   }
 }

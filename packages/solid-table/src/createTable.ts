@@ -1,10 +1,12 @@
 import { constructTable } from '@tanstack/table-core'
-import { createComputed, getOwner, mergeProps, untrack } from 'solid-js'
-import { shallow, useSelector } from '@tanstack/solid-store'
+import { createEffect, getOwner, merge, untrack } from 'solid-js'
+import { shallow } from '@tanstack/store'
 import { FlexRender } from './FlexRender'
 import { solidReactivity } from './reactivity'
-import type { Atom, ReadonlyAtom } from '@tanstack/solid-store'
-import type { Accessor, JSX } from 'solid-js'
+import { useSelector } from './useSelector'
+import type { Atom, ReadonlyAtom } from '@tanstack/store'
+import type { Accessor } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 import type {
   RowData,
   Table,
@@ -73,20 +75,20 @@ export function createTable<
 ): SolidTable<TFeatures, TData, TSelected> {
   const owner = getOwner()!
 
-  const mergedOptions = mergeProps(tableOptions, {
+  const mergedOptions = merge(tableOptions, {
     _features: {
       coreReativityFeature: solidReactivity(owner),
       ...tableOptions._features,
     },
   }) as any
 
-  const resolvedOptions = mergeProps(
+  const resolvedOptions = merge(
     {
       mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
         options: TableOptions<TFeatures, TData>,
       ) => {
-        return mergeProps(defaultOptions, options)
+        return merge(defaultOptions, options)
       },
     },
     mergedOptions,
@@ -98,20 +100,23 @@ export function createTable<
     TSelected
   >
 
-  createComputed(() => {
-    const userState = tableOptions.state
-    if (userState) {
-      for (const key in userState) {
-        void (userState as Record<string, unknown>)[key]
+  createEffect(
+    () => {
+      const userState = tableOptions.state
+      if (userState) {
+        for (const key in userState) {
+          void (userState as Record<string, unknown>)[key]
+        }
       }
-    }
-
-    untrack(() => {
-      table.setOptions((prev) => {
-        return mergeProps(prev, mergedOptions) as TableOptions<TFeatures, TData>
+    },
+    () => {
+      untrack(() => {
+        table.setOptions((prev) => {
+          return merge(prev, mergedOptions) as TableOptions<TFeatures, TData>
+        })
       })
-    })
-  })
+    },
+  )
 
   table.Subscribe = ((props: {
     source?: Atom<unknown> | ReadonlyAtom<unknown>

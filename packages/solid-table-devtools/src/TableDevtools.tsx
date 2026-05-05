@@ -1,7 +1,7 @@
 import { createSolidPanel } from '@tanstack/devtools-utils/solid'
 import { TableDevtoolsCore } from '@tanstack/table-devtools'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/solid'
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 
 export interface TableDevtoolsSolidInit extends Partial<DevtoolsPanelProps> {}
 

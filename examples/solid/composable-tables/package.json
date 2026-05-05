@@ -12,10 +12,11 @@
   "devDependencies": {
     "typescript": "6.0.3",
     "vite": "^8.0.10",
-    "vite-plugin-solid": "^2.11.12"
+    "vite-plugin-solid": "^3.0.0-next.5"
   },
   "dependencies": {
     "@tanstack/solid-table": "^9.0.0-alpha.42",
-    "solid-js": "^1.9.12"
+    "solid-js": "2.0.0-beta.10",
+    "@solidjs/web": "2.0.0-beta.10"
   }
 }

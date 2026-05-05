@@ -9,7 +9,8 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { createAtom, useSelector } from '@tanstack/solid-store'
+import { createAtom } from '@tanstack/store'
+import { useSelector } from './useSelector'
 import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type { Person } from './makeData'

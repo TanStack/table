@@ -78,10 +78,10 @@ export function App() {
           <For each={table.getHeaderGroups()}>
             {(headerGroup) => (
               <tr>
-                <For each={headerGroup.headers}>
+                <For each={headerGroup().headers}>
                   {(header) => (
                     <th>
-                      <table.FlexRender header={header} />
+                      <table.FlexRender header={header()} />
                     </th>
                   )}
                 </For>
@@ -93,10 +93,10 @@ export function App() {
           <For each={table.getRowModel().rows}>
             {(row) => (
               <tr>
-                <For each={row.getAllCells()}>
+                <For each={row().getAllCells()}>
                   {(cell) => (
                     <td>
-                      <table.FlexRender cell={cell} />
+                      <table.FlexRender cell={cell()} />
                     </td>
                   )}
                 </For>
@@ -108,10 +108,10 @@ export function App() {
           <For each={table.getFooterGroups()}>
             {(footerGroup) => (
               <tr>
-                <For each={footerGroup.headers}>
+                <For each={footerGroup().headers}>
                   {(header) => (
                     <th>
-                      <table.FlexRender footer={header} />
+                      <table.FlexRender footer={header()} />
                     </th>
                   )}
                 </For>

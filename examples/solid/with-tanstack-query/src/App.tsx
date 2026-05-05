@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/solid-query'
-import { createAtom, useSelector } from '@tanstack/solid-store'
+import { createAtom } from '@tanstack/store'
+import { useSelector } from './useSelector'
 import {
   FlexRender,
   createColumnHelper,
