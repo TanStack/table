@@ -52,12 +52,14 @@
     "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {
+    "@solidjs/web": "2.0.0-beta.10",
     "@tanstack/table-core": "workspace:*",
-    "solid-js": "^1.9.12",
-    "vite-plugin-solid": "^2.11.12"
+    "solid-js": "2.0.0-beta.10",
+    "vite-plugin-solid": "^3.0.0-next.5"
   },
   "peerDependencies": {
+    "@solidjs/web": "^2.0.0-beta.10",
     "@tanstack/table-core": "workspace:*",
-    "solid-js": ">=1.9.7"
+    "solid-js": "^2.0.0-beta.10"
   }
 }

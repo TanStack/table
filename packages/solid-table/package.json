@@ -57,15 +57,17 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "@tanstack/solid-store": "^0.11.0",
+    "@tanstack/store": "^0.11.0",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "solid-js": "^1.9.12",
-    "vite-plugin-solid": "^2.11.12"
+    "@solidjs/web": "2.0.0-beta.10",
+    "solid-js": "2.0.0-beta.10",
+    "vite-plugin-solid": "^3.0.0-next.5"
   },
   "peerDependencies": {
-    "solid-js": ">=1.3"
+    "@solidjs/web": "^2.0.0-beta.10",
+    "solid-js": "^2.0.0-beta.10"
   },
   "main": "./dist/index.cjs"
 }

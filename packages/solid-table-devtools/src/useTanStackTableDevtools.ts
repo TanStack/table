@@ -26,22 +26,28 @@ export function useTanStackTableDevtools<
 ): void {
   const registrationId = `solid-table-devtools-${++nextRegistrationId}`
 
-  createRenderEffect(() => {
-    if (!(options?.enabled ?? true) || !table) {
-      removeTableDevtoolsTarget(registrationId)
-      return
-    }
+  createRenderEffect(
+    () => {
+      const enabled = options?.enabled ?? true
+      return enabled && table ? table : undefined
+    },
+    (currentTable) => {
+      if (!currentTable) {
+        removeTableDevtoolsTarget(registrationId)
+        return
+      }
 
-    upsertTableDevtoolsTarget({
-      id: registrationId,
-      table,
-      name: normalizeName(name),
-    })
+      upsertTableDevtoolsTarget({
+        id: registrationId,
+        table: currentTable,
+        name: normalizeName(name),
+      })
 
-    onCleanup(() => {
-      removeTableDevtoolsTarget(registrationId)
-    })
-  })
+      onCleanup(() => {
+        removeTableDevtoolsTarget(registrationId)
+      })
+    },
+  )
 }
 
 export function useTanStackTableDevtoolsNoOp<

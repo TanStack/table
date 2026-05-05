@@ -1,4 +1,4 @@
-import { render } from 'solid-js/web'
+import { render } from '@solidjs/web'
 import { QueryClient, QueryClientProvider } from '@tanstack/solid-query'
 import './index.css'
 import App from './App'

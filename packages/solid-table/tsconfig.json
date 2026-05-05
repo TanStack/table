@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "jsx": "preserve",
-    "jsxImportSource": "solid-js"
+    "jsxImportSource": "@solidjs/web"
   },
   "include": ["src", "eslint.config.js", "vite.config.ts"]
 }

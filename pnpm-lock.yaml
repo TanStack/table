@@ -2129,7 +2129,7 @@ importers:
         version: 2.10.5(@babel/core@7.29.0)(preact@10.29.1)(rollup@4.60.2)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/preact-devtools':
         specifier: ^0.10.2
-        version: 0.10.2(preact@10.29.1)(solid-js@1.9.12)
+        version: 0.10.2(preact@10.29.1)(solid-js@2.0.0-beta.10)
       '@tanstack/preact-table-devtools':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/preact-table-devtools
@@ -2157,7 +2157,7 @@ importers:
         version: 2.10.5(@babel/core@7.29.0)(preact@10.29.1)(rollup@4.60.2)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/preact-devtools':
         specifier: ^0.10.2
-        version: 0.10.2(preact@10.29.1)(solid-js@1.9.12)
+        version: 0.10.2(preact@10.29.1)(solid-js@2.0.0-beta.10)
       '@tanstack/preact-table-devtools':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/preact-table-devtools
@@ -3986,7 +3986,7 @@ importers:
         version: 6.0.3(rollup@4.60.2)
       '@tanstack/react-devtools':
         specifier: ^0.10.2
-        version: 0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(solid-js@1.9.12)
+        version: 0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(solid-js@2.0.0-beta.10)
       '@tanstack/react-table-devtools':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/react-table-devtools
@@ -4428,7 +4428,7 @@ importers:
         version: 6.0.3(rollup@4.60.2)
       '@tanstack/router-vite-plugin':
         specifier: ^1.166.47
-        version: 1.166.47(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))
+        version: 1.166.47(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -4453,12 +4453,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       typescript:
         specifier: 6.0.3
@@ -4467,20 +4470,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/basic-external-atoms:
     dependencies:
-      '@tanstack/solid-store':
-        specifier: ^0.11.0
-        version: 0.11.0(solid-js@1.9.12)
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
+      '@tanstack/store':
+        specifier: ^0.11.0
+        version: 0.11.0
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4492,17 +4498,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/basic-external-state:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4514,17 +4523,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/basic-use-table:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       typescript:
         specifier: 6.0.3
@@ -4533,20 +4545,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/column-groups:
     dependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       typescript:
         specifier: 6.0.3
@@ -4555,17 +4570,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/column-ordering:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4577,17 +4595,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/column-pinning:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4599,17 +4620,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/column-pinning-split:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4621,17 +4645,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/column-pinning-sticky:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4643,20 +4670,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/column-resizing:
     dependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       typescript:
         specifier: 6.0.3
@@ -4665,17 +4695,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/column-resizing-performant:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4687,20 +4720,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/column-sizing:
     dependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       typescript:
         specifier: 6.0.3
@@ -4709,20 +4745,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/column-visibility:
     dependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       typescript:
         specifier: 6.0.3
@@ -4731,17 +4770,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/composable-tables:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       typescript:
         specifier: 6.0.3
@@ -4750,17 +4792,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/expanding:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4772,20 +4817,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/filters:
     dependencies:
       '@solid-primitives/scheduled':
         specifier: ^1.5.3
-        version: 1.5.3(solid-js@1.9.12)
+        version: 1.5.3(solid-js@2.0.0-beta.10)
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4797,20 +4845,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/filters-faceted:
     dependencies:
       '@solid-primitives/scheduled':
         specifier: ^1.5.3
-        version: 1.5.3(solid-js@1.9.12)
+        version: 1.5.3(solid-js@2.0.0-beta.10)
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4822,11 +4873,14 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/filters-fuzzy:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
@@ -4834,8 +4888,8 @@ importers:
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4847,17 +4901,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/grouping:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4869,17 +4926,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/pagination:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4891,17 +4951,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/row-pinning:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4913,14 +4976,17 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/row-selection:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-devtools':
         specifier: ^0.8.2
-        version: 0.8.2(solid-js@1.9.12)
+        version: 0.8.2(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
@@ -4928,8 +4994,8 @@ importers:
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table-devtools
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4941,17 +5007,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/sorting:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4963,17 +5032,20 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/sub-components:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -4985,20 +5057,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/virtualized-columns:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       '@tanstack/solid-virtual':
         specifier: ^3.13.24
-        version: 3.13.24(solid-js@1.9.12)
+        version: 3.13.24(solid-js@2.0.0-beta.10)
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -5010,26 +5085,29 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/virtualized-infinite-scrolling:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-query':
-        specifier: ^5.100.7
-        version: 5.100.7(solid-js@1.9.12)
-      '@tanstack/solid-store':
-        specifier: ^0.11.0
-        version: 0.11.0(solid-js@1.9.12)
+        specifier: ^6.0.0-beta.4
+        version: 6.0.0-beta.4(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       '@tanstack/solid-virtual':
         specifier: ^3.13.24
-        version: 3.13.24(solid-js@1.9.12)
+        version: 3.13.24(solid-js@2.0.0-beta.10)
+      '@tanstack/store':
+        specifier: ^0.11.0
+        version: 0.11.0
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -5041,20 +5119,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/virtualized-rows:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       '@tanstack/solid-virtual':
         specifier: ^3.13.24
-        version: 3.13.24(solid-js@1.9.12)
+        version: 3.13.24(solid-js@2.0.0-beta.10)
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -5066,20 +5147,23 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/with-tanstack-form:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-form':
         specifier: ^1.29.1
-        version: 1.29.1(solid-js@1.9.12)
+        version: 1.29.1(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
       zod:
         specifier: ^4.4.2
         version: 4.4.2
@@ -5094,23 +5178,26 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/with-tanstack-query:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-query':
-        specifier: ^5.100.7
-        version: 5.100.7(solid-js@1.9.12)
-      '@tanstack/solid-store':
-        specifier: ^0.11.0
-        version: 0.11.0(solid-js@1.9.12)
+        specifier: ^6.0.0-beta.4
+        version: 6.0.0-beta.4(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
+      '@tanstack/store':
+        specifier: ^0.11.0
+        version: 0.11.0
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
@@ -5122,30 +5209,33 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/solid/with-tanstack-router:
     dependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/solid-query':
-        specifier: ^5.100.7
-        version: 5.100.7(solid-js@1.9.12)
+        specifier: ^6.0.0-beta.4
+        version: 6.0.0-beta.4(solid-js@2.0.0-beta.10)
       '@tanstack/solid-router':
-        specifier: ^1.169.1
-        version: 1.169.1(solid-js@1.9.12)
+        specifier: ^2.0.0-beta.17
+        version: 2.0.0-beta.17(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(solid-js@2.0.0-beta.10)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/solid-table
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
     devDependencies:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/router-vite-plugin':
         specifier: ^1.166.47
-        version: 1.166.47(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))
+        version: 1.166.47(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -5153,8 +5243,8 @@ importers:
         specifier: ^8.0.10
         version: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   examples/svelte/basic-app-table:
     devDependencies:
@@ -6810,7 +6900,7 @@ importers:
         version: 10.4.0
       '@tanstack/vue-devtools':
         specifier: ^0.2.16
-        version: 0.2.16(solid-js@1.9.12)
+        version: 0.2.16(solid-js@2.0.0-beta.10)
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.42
         version: link:../../../packages/vue-table
@@ -7207,10 +7297,10 @@ importers:
     dependencies:
       '@tanstack/devtools-utils':
         specifier: ^0.4.0
-        version: 0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.5)(solid-js@1.9.12)(vue@3.5.33(typescript@6.0.3))
+        version: 0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.5)(solid-js@2.0.0-beta.10)(vue@3.5.33(typescript@6.0.3))
       '@tanstack/react-devtools':
         specifier: '>=0.10.0'
-        version: 0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(solid-js@1.9.12)
+        version: 0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(solid-js@2.0.0-beta.10)
       '@tanstack/table-devtools':
         specifier: workspace:*
         version: link:../table-devtools
@@ -7245,41 +7335,47 @@ importers:
 
   packages/solid-table:
     dependencies:
-      '@tanstack/solid-store':
+      '@tanstack/store':
         specifier: ^0.11.0
-        version: 0.11.0(solid-js@1.9.12)
+        version: 0.11.0
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
     devDependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   packages/solid-table-devtools:
     dependencies:
       '@tanstack/devtools':
         specifier: ^0.11.2
-        version: 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
+        version: 0.11.2(csstype@3.2.3)(solid-js@2.0.0-beta.10)
       '@tanstack/devtools-utils':
         specifier: ^0.4.0
-        version: 0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.5)(solid-js@1.9.12)(vue@3.5.33(typescript@6.0.3))
+        version: 0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.5)(solid-js@2.0.0-beta.10)(vue@3.5.33(typescript@6.0.3))
       '@tanstack/table-devtools':
         specifier: workspace:*
         version: link:../table-devtools
     devDependencies:
+      '@solidjs/web':
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
       solid-js:
-        specifier: ^1.9.12
-        version: 1.9.12
+        specifier: 2.0.0-beta.10
+        version: 2.0.0-beta.10
       vite-plugin-solid:
-        specifier: ^2.11.12
-        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+        specifier: ^3.0.0-next.5
+        version: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
 
   packages/svelte-table:
     dependencies:
@@ -7330,7 +7426,7 @@ importers:
         specifier: ^2.1.18
         version: 2.1.18(csstype@3.2.3)
       solid-js:
-        specifier: ^1.9.12
+        specifier: ^1.9.7
         version: 1.9.12
     devDependencies:
       vite-plugin-solid:
@@ -11649,6 +11745,14 @@ packages:
     peerDependencies:
       solid-js: '>=1.8.4'
 
+  '@solidjs/signals@2.0.0-beta.10':
+    resolution: {integrity: sha512-McdmbLNiSlz616zcykS8Rb1t9QTOTKdNAoaWd4/OjXEbcAUrPqRX1CWgR+caiWUk4qn0a+LesTTV4jZhFFPaSg==}
+
+  '@solidjs/web@2.0.0-beta.10':
+    resolution: {integrity: sha512-Ox7MBv19kuxHoHhWoLCCcc6aykSgaqzWvWT7RB66VqlFnQ8Lid2ncd30g5L4XC0GB+MN/WZVb68tiYrAFUDIAg==}
+    peerDependencies:
+      solid-js: ^2.0.0-beta.10
+
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
@@ -11886,6 +11990,9 @@ packages:
   '@tanstack/query-core@5.100.7':
     resolution: {integrity: sha512-5R7i6ENJLhVeeJrrUz7jKBXUXv/BJrxf9FQJSkR13bPrb3zOcE8A0Z0PxYCcsKPOsiIlTibrBL/zZbtUO1TFyQ==}
 
+  '@tanstack/query-core@5.91.2':
+    resolution: {integrity: sha512-Uz2pTgPC1mhqrrSGg18RKCWT/pkduAYtxbcyIyKBhw7dTWjXZIzqmpzO2lBkyWr4hlImQgpu1m1pei3UnkFRWw==}
+
   '@tanstack/react-devtools@0.10.2':
     resolution: {integrity: sha512-1BmZyxOrI5SqmRJ5MgkYZNNdnlLsJxQRI2YgorrAvcF2MxK6x5RcuStvD8+YlXoMw3JtNukPxoITirKAnKYDQA==}
     engines: {node: '>=18'}
@@ -11933,6 +12040,11 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@tanstack/router-core@1.168.9':
+    resolution: {integrity: sha512-18oeEwEDyXOIuO1VBP9ACaK7tYHZUjynGDCoUh/5c/BNhia9vCJCp9O0LfhZXOorDc/PmLSgvmweFhVmIxF10g==}
+    engines: {node: '>=20.19'}
+    hasBin: true
 
   '@tanstack/router-core@1.169.1':
     resolution: {integrity: sha512-x+2gIGKTTE1qAn7tLieGfrB5ciOviDmmi2ox9fAWUubRV+yTU5ruGFXocoCIWF+lB+SOtnHjo2E9BLSWyYoEmA==}
@@ -11984,17 +12096,18 @@ packages:
     peerDependencies:
       solid-js: '>=1.9.9'
 
-  '@tanstack/solid-query@5.100.7':
-    resolution: {integrity: sha512-xoUwMH21RZvB3MbAIXEkn1lzxjTyMXx3XQhpVdGlOfjkS7YLjXrPNx1uKLG3yE9lu2ZxWiLK/a3muD1vEokwUQ==}
+  '@tanstack/solid-query@6.0.0-beta.4':
+    resolution: {integrity: sha512-g8o4Fqo1i/V14V4DXMhtu5vk6Ix1ShliBl9Y+3XsV5aB/ja2swAOksblJo2hFcXJdkKTlLru+xTHnEkL57/CeA==}
     peerDependencies:
-      solid-js: ^1.6.0
+      solid-js: '>=2.0.0-beta.0 <3.0.0'
 
-  '@tanstack/solid-router@1.169.1':
-    resolution: {integrity: sha512-Ij0kD/nh8h7JupF6obPZvmYFLPF74tlPDuwIGdWWS3vJWYx8SXuDrI11rMTJPmftnkgYDfhrwvhYQzz4K3/+cQ==}
+  '@tanstack/solid-router@2.0.0-beta.17':
+    resolution: {integrity: sha512-NJyYMv/NNnsm4N93wi1E7WMHtf+194fpQAQzFlguyK66fHQQ9gbif0stFh2WK9tOAtD5uZjRUGTlRPrnTLzd1w==}
     engines: {node: '>=20.19'}
     hasBin: true
     peerDependencies:
-      solid-js: ^1.9.10
+      '@solidjs/web': '>=2.0.0-0 <3.0.0'
+      solid-js: '>=2.0.0-0 <3.0.0'
 
   '@tanstack/solid-store@0.11.0':
     resolution: {integrity: sha512-2isL0ZnnyI1iN0V+QPrxE3OcPndohBgVlBcHZYoAOIAiU1WoWjVy0q5gb0suPu1Id0h5cKC23JnwzQTxWDZD0w==}
@@ -12810,6 +12923,11 @@ packages:
     peerDependencies:
       '@babel/core': ^7.20.12
 
+  babel-plugin-jsx-dom-expressions@0.50.0-next.6:
+    resolution: {integrity: sha512-D7SSrMu1EupiCFT3hBhWJj0EWzaI27HV1ysbLSKFcH1ROZe61DmnNVchrnr5QeAw5O8bqSdlMDLdEqMYzi4tTA==}
+    peerDependencies:
+      '@babel/core': ^7.20.12
+
   babel-plugin-macros@3.1.0:
     resolution: {integrity: sha512-Cg7TFGpIr01vOQNODXOOaGz2NpCU5gl8x1qJFbb6hbZxR7XrcE2vtbAsTAbJ7/xwJtUuJEw8K8Zr/AE0LHlesg==}
     engines: {node: '>=10', npm: '>=6'}
@@ -12847,6 +12965,15 @@ packages:
     peerDependencies:
       '@babel/core': ^7.0.0
       solid-js: ^1.9.12
+    peerDependenciesMeta:
+      solid-js:
+        optional: true
+
+  babel-preset-solid@2.0.0-beta.10:
+    resolution: {integrity: sha512-lzGgPsh1fVtBJDl+UWLTCgimzPMda7X2Xzq7asCCOq/zHRwiF5vF3Eb3xj65dGyi7YpgVROTwJEpj+XiroKaww==}
+    peerDependencies:
+      '@babel/core': ^7.0.0
+      solid-js: ^2.0.0-beta.10
     peerDependenciesMeta:
       solid-js:
         optional: true
@@ -13149,6 +13276,9 @@ packages:
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
+
+  cookie-es@2.0.1:
+    resolution: {integrity: sha512-aVf4A4hI2w70LnF7GG+7xDQUkliwiXWXFvTjkip4+b64ygDQ2sJPRSKFDHbxn8o0xu9QzPkMuuiWIXyFSE2slA==}
 
   cookie-es@3.1.1:
     resolution: {integrity: sha512-UaXxwISYJPTr9hwQxMFYZ7kNhSXboMXP+Z3TRX6f1/NyaGPfuNUZOWP1pUEb75B2HjfklIYLVRfWiFZJyC6Npg==}
@@ -15834,10 +15964,18 @@ packages:
   solid-js@1.9.12:
     resolution: {integrity: sha512-QzKaSJq2/iDrWR1As6MHZQ8fQkdOBf8GReYb7L5iKwMGceg7HxDcaOHk0at66tNgn9U2U7dXo8ZZpLIAmGMzgw==}
 
+  solid-js@2.0.0-beta.10:
+    resolution: {integrity: sha512-EAfV6b1SC4c3wEBAoX4dMy063uTb4nfL5uXnN8yse4InH7RTw1LoB0I9HAy+pj3/GHqQE2tYZurlZtqU4pGyog==}
+
   solid-refresh@0.6.3:
     resolution: {integrity: sha512-F3aPsX6hVw9ttm5LYlth8Q15x6MlI/J3Dn+o3EQyRTtTxidepSTwAYdozt01/YA+7ObcciagGEyXIopGZzQtbA==}
     peerDependencies:
       solid-js: ^1.3
+
+  solid-refresh@0.8.0-next.7:
+    resolution: {integrity: sha512-fqkPRAeiE0tqfo2ZljeQBIXwfYssU2w1FmaWFrXmnV33B/CfGfez7BjtOF0Y1/orUNRXI/DZcJlJThHllcCMsA==}
+    peerDependencies:
+      solid-js: '>=2.0.0-beta.7 <2.0.0-experimental.0'
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -16340,6 +16478,9 @@ packages:
     deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
+  validate-html-nesting@1.2.4:
+    resolution: {integrity: sha512-doQi7e8EJ2OWneSG1aZpJluS6A49aZM0+EICXWKm1i6WvqTLmq0tpUcImc4KTWG50mORO0C4YDBtOCSYvElftw==}
+
   validate-npm-package-name@7.0.2:
     resolution: {integrity: sha512-hVDIBwsRruT73PbK7uP5ebUt+ezEtCmzZz3F59BSr2F6OVFnJ/6h8liuvdLrQ88Xmnk6/+xGGuq+pG9WwTuy3A==}
     engines: {node: ^20.17.0 || >=22.9.0}
@@ -16353,6 +16494,17 @@ packages:
     peerDependencies:
       '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
       solid-js: ^1.7.2
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
+    peerDependenciesMeta:
+      '@testing-library/jest-dom':
+        optional: true
+
+  vite-plugin-solid@3.0.0-next.5:
+    resolution: {integrity: sha512-hcn3mzevQDv6Oyo/Zv5LXdOrlWwKGeGVxNhc9fUq3AcN9aO6KABy52yq5cvnPDo3qaxmvOJVbNS1H4V5rx7AQg==}
+    peerDependencies:
+      '@solidjs/web': '>=2.0.0-beta.0 <2.0.0-experimental.0'
+      '@testing-library/jest-dom': ^5.16.6 || ^5.17.0 || ^6.*
+      solid-js: '>=2.0.0-beta.0 <2.0.0-experimental.0'
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       '@testing-library/jest-dom':
@@ -21066,108 +21218,116 @@ snapshots:
       '@size-limit/file': 12.1.0(size-limit@12.1.0(jiti@2.6.1))
       size-limit: 12.1.0(jiti@2.6.1)
 
-  '@solid-devtools/debugger@0.28.1(solid-js@1.9.12)':
+  '@solid-devtools/debugger@0.28.1(solid-js@2.0.0-beta.10)':
     dependencies:
       '@nothing-but/utils': 0.17.0
-      '@solid-devtools/shared': 0.20.0(solid-js@1.9.12)
-      '@solid-primitives/bounds': 0.1.5(solid-js@1.9.12)
-      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
-      '@solid-primitives/keyboard': 1.3.5(solid-js@1.9.12)
-      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
-      '@solid-primitives/scheduled': 1.5.3(solid-js@1.9.12)
-      '@solid-primitives/static-store': 0.1.3(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-devtools/shared': 0.20.0(solid-js@2.0.0-beta.10)
+      '@solid-primitives/bounds': 0.1.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/event-listener': 2.4.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/keyboard': 1.3.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/rootless': 1.5.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/scheduled': 1.5.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/static-store': 0.1.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-devtools/logger@0.9.11(solid-js@1.9.12)':
+  '@solid-devtools/logger@0.9.11(solid-js@2.0.0-beta.10)':
     dependencies:
       '@nothing-but/utils': 0.17.0
-      '@solid-devtools/debugger': 0.28.1(solid-js@1.9.12)
-      '@solid-devtools/shared': 0.20.0(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-devtools/debugger': 0.28.1(solid-js@2.0.0-beta.10)
+      '@solid-devtools/shared': 0.20.0(solid-js@2.0.0-beta.10)
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-devtools/shared@0.20.0(solid-js@1.9.12)':
+  '@solid-devtools/shared@0.20.0(solid-js@2.0.0-beta.10)':
     dependencies:
       '@nothing-but/utils': 0.17.0
-      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
-      '@solid-primitives/media': 2.3.5(solid-js@1.9.12)
-      '@solid-primitives/refs': 1.1.3(solid-js@1.9.12)
-      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
-      '@solid-primitives/scheduled': 1.5.3(solid-js@1.9.12)
-      '@solid-primitives/static-store': 0.1.3(solid-js@1.9.12)
-      '@solid-primitives/styles': 0.1.3(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/event-listener': 2.4.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/media': 2.3.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/refs': 1.1.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/rootless': 1.5.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/scheduled': 1.5.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/static-store': 0.1.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/styles': 0.1.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/bounds@0.1.5(solid-js@1.9.12)':
+  '@solid-primitives/bounds@0.1.5(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
-      '@solid-primitives/resize-observer': 2.1.5(solid-js@1.9.12)
-      '@solid-primitives/static-store': 0.1.3(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/event-listener': 2.4.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/resize-observer': 2.1.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/static-store': 0.1.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/event-listener@2.4.5(solid-js@1.9.12)':
+  '@solid-primitives/event-listener@2.4.5(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/keyboard@1.3.5(solid-js@1.9.12)':
+  '@solid-primitives/keyboard@1.3.5(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
-      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/event-listener': 2.4.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/rootless': 1.5.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/media@2.3.5(solid-js@1.9.12)':
+  '@solid-primitives/media@2.3.5(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
-      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
-      '@solid-primitives/static-store': 0.1.3(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/event-listener': 2.4.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/rootless': 1.5.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/static-store': 0.1.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/refs@1.1.3(solid-js@1.9.12)':
+  '@solid-primitives/refs@1.1.3(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/resize-observer@2.1.5(solid-js@1.9.12)':
+  '@solid-primitives/resize-observer@2.1.5(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
-      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
-      '@solid-primitives/static-store': 0.1.3(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/event-listener': 2.4.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/rootless': 1.5.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/static-store': 0.1.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/rootless@1.5.3(solid-js@1.9.12)':
+  '@solid-primitives/rootless@1.5.3(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/scheduled@1.5.3(solid-js@1.9.12)':
+  '@solid-primitives/scheduled@1.5.3(solid-js@2.0.0-beta.10)':
     dependencies:
-      solid-js: 1.9.12
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/static-store@0.1.3(solid-js@1.9.12)':
+  '@solid-primitives/static-store@0.1.3(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/styles@0.1.3(solid-js@1.9.12)':
+  '@solid-primitives/styles@0.1.3(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/rootless': 1.5.3(solid-js@1.9.12)
-      '@solid-primitives/utils': 6.4.0(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@solid-primitives/rootless': 1.5.3(solid-js@2.0.0-beta.10)
+      '@solid-primitives/utils': 6.4.0(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@solid-primitives/utils@6.4.0(solid-js@1.9.12)':
+  '@solid-primitives/utils@6.4.0(solid-js@2.0.0-beta.10)':
     dependencies:
-      solid-js: 1.9.12
+      solid-js: 2.0.0-beta.10
 
-  '@solidjs/meta@0.29.4(solid-js@1.9.12)':
+  '@solidjs/meta@0.29.4(solid-js@2.0.0-beta.10)':
     dependencies:
-      solid-js: 1.9.12
+      solid-js: 2.0.0-beta.10
+
+  '@solidjs/signals@2.0.0-beta.10': {}
+
+  '@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10)':
+    dependencies:
+      seroval: 1.5.2
+      seroval-plugins: 1.5.2(seroval@1.5.2)
+      solid-js: 2.0.0-beta.10
 
   '@standard-schema/spec@1.1.0': {}
 
@@ -21310,6 +21470,15 @@ snapshots:
     transitivePeerDependencies:
       - csstype
 
+  '@tanstack/devtools-ui@0.5.1(csstype@3.2.3)(solid-js@2.0.0-beta.10)':
+    dependencies:
+      clsx: 2.1.1
+      dayjs: 1.11.20
+      goober: 2.1.18(csstype@3.2.3)
+      solid-js: 2.0.0-beta.10
+    transitivePeerDependencies:
+      - csstype
+
   '@tanstack/devtools-utils@0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.5)(solid-js@1.9.12)(vue@3.5.33(typescript@6.0.3))':
     optionalDependencies:
       '@types/react': 19.2.14
@@ -21318,17 +21487,25 @@ snapshots:
       solid-js: 1.9.12
       vue: 3.5.33(typescript@6.0.3)
 
-  '@tanstack/devtools@0.11.2(csstype@3.2.3)(solid-js@1.9.12)':
+  '@tanstack/devtools-utils@0.4.0(@types/react@19.2.14)(preact@10.29.1)(react@19.2.5)(solid-js@2.0.0-beta.10)(vue@3.5.33(typescript@6.0.3))':
+    optionalDependencies:
+      '@types/react': 19.2.14
+      preact: 10.29.1
+      react: 19.2.5
+      solid-js: 2.0.0-beta.10
+      vue: 3.5.33(typescript@6.0.3)
+
+  '@tanstack/devtools@0.11.2(csstype@3.2.3)(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
-      '@solid-primitives/keyboard': 1.3.5(solid-js@1.9.12)
-      '@solid-primitives/resize-observer': 2.1.5(solid-js@1.9.12)
+      '@solid-primitives/event-listener': 2.4.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/keyboard': 1.3.5(solid-js@2.0.0-beta.10)
+      '@solid-primitives/resize-observer': 2.1.5(solid-js@2.0.0-beta.10)
       '@tanstack/devtools-client': 0.0.6
       '@tanstack/devtools-event-bus': 0.4.1
-      '@tanstack/devtools-ui': 0.5.1(csstype@3.2.3)(solid-js@1.9.12)
+      '@tanstack/devtools-ui': 0.5.1(csstype@3.2.3)(solid-js@2.0.0-beta.10)
       clsx: 2.1.1
       goober: 2.1.18(csstype@3.2.3)
-      solid-js: 1.9.12
+      solid-js: 2.0.0-beta.10
     transitivePeerDependencies:
       - bufferutil
       - csstype
@@ -21369,9 +21546,9 @@ snapshots:
 
   '@tanstack/pacer-lite@0.1.1': {}
 
-  '@tanstack/preact-devtools@0.10.2(preact@10.29.1)(solid-js@1.9.12)':
+  '@tanstack/preact-devtools@0.10.2(preact@10.29.1)(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
+      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@2.0.0-beta.10)
       preact: 10.29.1
     transitivePeerDependencies:
       - bufferutil
@@ -21400,9 +21577,11 @@ snapshots:
 
   '@tanstack/query-core@5.100.7': {}
 
-  '@tanstack/react-devtools@0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(solid-js@1.9.12)':
+  '@tanstack/query-core@5.91.2': {}
+
+  '@tanstack/react-devtools@0.10.2(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
+      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@2.0.0-beta.10)
       '@types/react': 19.2.14
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
       react: 19.2.5
@@ -21455,6 +21634,13 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
+  '@tanstack/router-core@1.168.9':
+    dependencies:
+      '@tanstack/history': 1.161.6
+      cookie-es: 2.0.1
+      seroval: 1.5.2
+      seroval-plugins: 1.5.2(seroval@1.5.2)
+
   '@tanstack/router-core@1.169.1':
     dependencies:
       '@tanstack/history': 1.161.6
@@ -21475,7 +21661,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@tanstack/router-plugin@1.167.32(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))':
+  '@tanstack/router-plugin@1.167.32(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-syntax-jsx': 7.28.6(@babel/core@7.29.0)
@@ -21493,7 +21679,7 @@ snapshots:
     optionalDependencies:
       '@tanstack/react-router': 1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       vite: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
-      vite-plugin-solid: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+      vite-plugin-solid: 3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       webpack: 5.105.2(esbuild@0.28.0)
     transitivePeerDependencies:
       - supports-color
@@ -21512,9 +21698,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@tanstack/router-vite-plugin@1.166.47(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))':
+  '@tanstack/router-vite-plugin@1.166.47(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))':
     dependencies:
-      '@tanstack/router-plugin': 1.167.32(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))
+      '@tanstack/router-plugin': 1.167.32(@tanstack/react-router@1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(vite-plugin-solid@3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))(webpack@5.105.2(esbuild@0.28.0))
     transitivePeerDependencies:
       - '@rsbuild/core'
       - '@tanstack/react-router'
@@ -21523,50 +21709,50 @@ snapshots:
       - vite-plugin-solid
       - webpack
 
-  '@tanstack/solid-devtools@0.8.2(solid-js@1.9.12)':
+  '@tanstack/solid-devtools@0.8.2(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
     transitivePeerDependencies:
       - bufferutil
       - csstype
       - utf-8-validate
 
-  '@tanstack/solid-form@1.29.1(solid-js@1.9.12)':
+  '@tanstack/solid-form@1.29.1(solid-js@2.0.0-beta.10)':
     dependencies:
       '@tanstack/form-core': 1.29.1
-      '@tanstack/solid-store': 0.9.3(solid-js@1.9.12)
-      solid-js: 1.9.12
+      '@tanstack/solid-store': 0.9.3(solid-js@2.0.0-beta.10)
+      solid-js: 2.0.0-beta.10
 
-  '@tanstack/solid-query@5.100.7(solid-js@1.9.12)':
+  '@tanstack/solid-query@6.0.0-beta.4(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@tanstack/query-core': 5.100.7
-      solid-js: 1.9.12
+      '@tanstack/query-core': 5.91.2
+      solid-js: 2.0.0-beta.10
 
-  '@tanstack/solid-router@1.169.1(solid-js@1.9.12)':
+  '@tanstack/solid-router@2.0.0-beta.17(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@solid-devtools/logger': 0.9.11(solid-js@1.9.12)
-      '@solid-primitives/refs': 1.1.3(solid-js@1.9.12)
-      '@solidjs/meta': 0.29.4(solid-js@1.9.12)
+      '@solid-devtools/logger': 0.9.11(solid-js@2.0.0-beta.10)
+      '@solidjs/meta': 0.29.4(solid-js@2.0.0-beta.10)
+      '@solidjs/web': 2.0.0-beta.10(solid-js@2.0.0-beta.10)
       '@tanstack/history': 1.161.6
-      '@tanstack/router-core': 1.169.1
+      '@tanstack/router-core': 1.168.9
       isbot: 5.1.39
-      solid-js: 1.9.12
+      solid-js: 2.0.0-beta.10
 
   '@tanstack/solid-store@0.11.0(solid-js@1.9.12)':
     dependencies:
       '@tanstack/store': 0.11.0
       solid-js: 1.9.12
 
-  '@tanstack/solid-store@0.9.3(solid-js@1.9.12)':
+  '@tanstack/solid-store@0.9.3(solid-js@2.0.0-beta.10)':
     dependencies:
       '@tanstack/store': 0.9.3
-      solid-js: 1.9.12
+      solid-js: 2.0.0-beta.10
 
-  '@tanstack/solid-virtual@3.13.24(solid-js@1.9.12)':
+  '@tanstack/solid-virtual@3.13.24(solid-js@2.0.0-beta.10)':
     dependencies:
       '@tanstack/virtual-core': 3.14.0
-      solid-js: 1.9.12
+      solid-js: 2.0.0-beta.10
 
   '@tanstack/store@0.11.0': {}
 
@@ -21610,9 +21796,9 @@ snapshots:
 
   '@tanstack/virtual-file-routes@1.161.7': {}
 
-  '@tanstack/vue-devtools@0.2.16(solid-js@1.9.12)':
+  '@tanstack/vue-devtools@0.2.16(solid-js@2.0.0-beta.10)':
     dependencies:
-      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
+      '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@2.0.0-beta.10)
     transitivePeerDependencies:
       - bufferutil
       - csstype
@@ -22539,6 +22725,16 @@ snapshots:
       html-entities: 2.3.3
       parse5: 7.3.0
 
+  babel-plugin-jsx-dom-expressions@0.50.0-next.6(@babel/core@7.29.0):
+    dependencies:
+      '@babel/core': 7.29.0
+      '@babel/helper-module-imports': 7.18.6
+      '@babel/plugin-syntax-jsx': 7.28.6(@babel/core@7.29.0)
+      '@babel/types': 7.29.0
+      html-entities: 2.3.3
+      parse5: 7.3.0
+      validate-html-nesting: 1.2.4
+
   babel-plugin-macros@3.1.0:
     dependencies:
       '@babel/runtime': 7.29.2
@@ -22591,6 +22787,13 @@ snapshots:
       babel-plugin-jsx-dom-expressions: 0.40.6(@babel/core@7.29.0)
     optionalDependencies:
       solid-js: 1.9.12
+
+  babel-preset-solid@2.0.0-beta.10(@babel/core@7.29.0)(solid-js@2.0.0-beta.10):
+    dependencies:
+      '@babel/core': 7.29.0
+      babel-plugin-jsx-dom-expressions: 0.50.0-next.6(@babel/core@7.29.0)
+    optionalDependencies:
+      solid-js: 2.0.0-beta.10
 
   balanced-match@1.0.2: {}
 
@@ -22926,6 +23129,8 @@ snapshots:
   convert-source-map@1.9.0: {}
 
   convert-source-map@2.0.0: {}
+
+  cookie-es@2.0.1: {}
 
   cookie-es@3.1.1: {}
 
@@ -26107,6 +26312,13 @@ snapshots:
       seroval: 1.5.2
       seroval-plugins: 1.5.2(seroval@1.5.2)
 
+  solid-js@2.0.0-beta.10:
+    dependencies:
+      '@solidjs/signals': 2.0.0-beta.10
+      csstype: 3.2.3
+      seroval: 1.5.2
+      seroval-plugins: 1.5.2(seroval@1.5.2)
+
   solid-refresh@0.6.3(solid-js@1.9.12):
     dependencies:
       '@babel/generator': 7.29.1
@@ -26115,6 +26327,12 @@ snapshots:
       solid-js: 1.9.12
     transitivePeerDependencies:
       - supports-color
+
+  solid-refresh@0.8.0-next.7(solid-js@2.0.0-beta.10):
+    dependencies:
+      '@babel/generator': 7.29.1
+      '@babel/types': 7.29.0
+      solid-js: 2.0.0-beta.10
 
   source-map-js@1.2.1: {}
 
@@ -26615,6 +26833,8 @@ snapshots:
 
   uuid@8.3.2: {}
 
+  validate-html-nesting@1.2.4: {}
+
   validate-npm-package-name@7.0.2: {}
 
   vary@1.1.2: {}
@@ -26627,6 +26847,22 @@ snapshots:
       merge-anything: 5.1.7
       solid-js: 1.9.12
       solid-refresh: 0.6.3(solid-js@1.9.12)
+      vite: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
+      vitefu: 1.1.3(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
+    optionalDependencies:
+      '@testing-library/jest-dom': 6.9.1
+    transitivePeerDependencies:
+      - supports-color
+
+  vite-plugin-solid@3.0.0-next.5(@solidjs/web@2.0.0-beta.10(solid-js@2.0.0-beta.10))(@testing-library/jest-dom@6.9.1)(solid-js@2.0.0-beta.10)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)):
+    dependencies:
+      '@babel/core': 7.29.0
+      '@solidjs/web': 2.0.0-beta.10(solid-js@2.0.0-beta.10)
+      '@types/babel__core': 7.20.5
+      babel-preset-solid: 2.0.0-beta.10(@babel/core@7.29.0)(solid-js@2.0.0-beta.10)
+      merge-anything: 5.1.7
+      solid-js: 2.0.0-beta.10
+      solid-refresh: 0.8.0-next.7(solid-js@2.0.0-beta.10)
       vite: 8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3)
       vitefu: 1.1.3(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
     optionalDependencies:

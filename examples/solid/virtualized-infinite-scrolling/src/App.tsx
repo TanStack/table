@@ -9,7 +9,8 @@ import {
   tableFeatures,
 } from '@tanstack/solid-table'
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/solid-query'
-import { createAtom, useSelector } from '@tanstack/solid-store'
+import { createAtom } from '@tanstack/store'
+import { useSelector } from './useSelector'
 import { createVirtualizer } from '@tanstack/solid-virtual'
 import { For, Show, createMemo, onMount } from 'solid-js'
 import { fetchData } from './makeData'

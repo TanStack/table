@@ -1,5 +1,5 @@
 /* @refresh reload */
-import { render } from 'solid-js/web'
+import { render } from '@solidjs/web'
 import { TanStackDevtools } from '@tanstack/solid-devtools'
 import { tableDevtoolsPlugin } from '@tanstack/solid-table-devtools'
 import './index.css'

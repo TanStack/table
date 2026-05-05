@@ -2,7 +2,7 @@ import { createSolidPanel } from '@tanstack/devtools-utils/solid'
 import { TableDevtoolsCore } from '@tanstack/table-devtools/production'
 
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/solid'
-import type { JSX } from 'solid-js'
+import type { JSX } from '@solidjs/web'
 
 const [TableDevtoolsPanelBase] = createSolidPanel(TableDevtoolsCore)
 
