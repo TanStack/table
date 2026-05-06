@@ -46,6 +46,10 @@
       "import": "./dist/static-functions.js",
       "require": "./dist/static-functions.cjs"
     },
+    "./store-reactivity-bindings": {
+      "import": "./dist/store-reactivity-bindings.js",
+      "require": "./dist/store-reactivity-bindings.cjs"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,

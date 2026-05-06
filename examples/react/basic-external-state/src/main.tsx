@@ -69,8 +69,8 @@ function App() {
     pageSize: 10,
   })
 
-  console.log('sorting', sorting)
-  console.log('pagination', pagination)
+  // console.log('sorting', sorting)
+  // console.log('pagination', pagination)
 
   // Create the table and pass state + onChange handlers
   const table = useTable({

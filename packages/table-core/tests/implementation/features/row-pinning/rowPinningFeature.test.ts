@@ -12,7 +12,7 @@ import {
   createTableWithMockOnPinningChange,
 } from '../../../helpers/rowPinningHelpers'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
-import { constructReactivityBindings } from '../../../../src/core/reactivity/constructReactivityBindings'
+import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import type { ColumnDef, Row } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
@@ -20,7 +20,7 @@ import type { Person } from '../../../fixtures/data/types'
 const _features = {
   ...coreFeatures,
   rowPinningFeature,
-  coreReativityFeature: constructReactivityBindings(),
+  coreReativityFeature: storeReactivityBindings(),
 }
 
 type personKeys = keyof Person
@@ -171,7 +171,7 @@ describe('table methods', () => {
         ...coreFeatures,
         rowPinningFeature,
         rowPaginationFeature,
-        coreReativityFeature: constructReactivityBindings(),
+        coreReativityFeature: storeReactivityBindings(),
       }
 
       const table = constructTable<typeof _featuresWithPagination, Person>({
@@ -211,7 +211,7 @@ describe('table methods', () => {
       ...coreFeatures,
       rowPinningFeature,
       rowPaginationFeature,
-      coreReativityFeature: constructReactivityBindings(),
+      coreReativityFeature: storeReactivityBindings(),
     }
 
     const table = constructTable<typeof _featuresWithPagination, Person>({

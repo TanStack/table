@@ -8,6 +8,7 @@ import {
   tableFeatures,
 } from '@tanstack/table-core'
 import { FlexRender } from '@tanstack/table-core/flex-render'
+import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { Table } from '@tanstack/table-core'
@@ -16,6 +17,7 @@ let data = makeData(200_000)
 
 const _features = tableFeatures({
   rowPaginationFeature,
+  coreReativityFeature: storeReactivityBindings(),
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()

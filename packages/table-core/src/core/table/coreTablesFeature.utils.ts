@@ -1,8 +1,11 @@
 import { cloneState, functionalUpdate } from '../../utils'
+import type { Atom } from '@tanstack/store'
+import type { BaseAtoms } from './coreTablesFeature.types'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
+import type { TableState } from '../../types/TableState'
 
 export function table_reset<
   TFeatures extends TableFeatures,
@@ -42,5 +45,22 @@ export function table_setOptions<
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
   const mergedOptions = table_mergeOptions(table, newOptions)
-  table.optionsStore.set(() => mergedOptions)
+  if (table.optionsStore) {
+    table.optionsStore.set(() => mergedOptions)
+  } else {
+    table.options = mergedOptions
+  }
+
+  // set external state to internal base atoms
+  for (const key of Object.keys(newOptions.state ?? {}) as Array<
+    keyof typeof newOptions.state
+  >) {
+    const baseAtom: Atom<TableState<any>> =
+      table.baseAtoms[key as keyof BaseAtoms<TFeatures>]
+    const externalState = newOptions.state?.[key]
+    const internalState = baseAtom.get()
+    if (externalState !== internalState) {
+      baseAtom.set(() => externalState)
+    }
+  }
 }

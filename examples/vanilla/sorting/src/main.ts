@@ -8,6 +8,7 @@ import {
   tableFeatures,
 } from '@tanstack/table-core'
 import { FlexRender } from '@tanstack/table-core/flex-render'
+import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
 import { makeData } from './makeData'
 import type { SortFn } from '@tanstack/table-core'
 import type { Person } from './makeData'
@@ -16,6 +17,7 @@ let data = makeData(1_000)
 
 const _features = tableFeatures({
   rowSortingFeature,
+  coreReativityFeature: storeReactivityBindings(),
 })
 
 // Custom sorting logic for one of our enum columns

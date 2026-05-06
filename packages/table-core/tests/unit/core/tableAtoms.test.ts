@@ -7,7 +7,7 @@ import {
   rowSelectionFeature,
   rowSortingFeature,
 } from '../../../src'
-import { constructReactivityBindings } from '../../../src/core/reactivity/constructReactivityBindings'
+import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import type {
   PaginationState,
   SortingState,
@@ -25,7 +25,7 @@ function makeTable(options: any = {}) {
     _features: {
       ...coreFeatures,
       ..._features,
-      coreReativityFeature: constructReactivityBindings(),
+      coreReativityFeature: storeReactivityBindings(),
     },
     _rowModels: {},
     columns: [],

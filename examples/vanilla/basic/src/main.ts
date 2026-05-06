@@ -5,12 +5,15 @@ import {
   tableFeatures,
 } from '@tanstack/table-core'
 import { FlexRender } from '@tanstack/table-core/flex-render'
+import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
 let data = makeData(20)
 
-const _features = tableFeatures({})
+const _features = tableFeatures({
+  coreReativityFeature: storeReactivityBindings(),
+})
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
 

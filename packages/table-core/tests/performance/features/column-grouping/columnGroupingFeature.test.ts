@@ -8,7 +8,7 @@ import {
 } from '../../../../src'
 import { createColumnHelper } from '../../../../src/helpers/columnHelper'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
-import { constructReactivityBindings } from '../../../../src/core/reactivity/constructReactivityBindings'
+import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef } from '../../../../src'
 
@@ -46,7 +46,7 @@ describe('#getGroupedRowModel', () => {
       _features: {
         columnGroupingFeature,
         ...coreFeatures,
-        coreReativityFeature: constructReactivityBindings(),
+        coreReativityFeature: storeReactivityBindings(),
       },
       _rowModels: {
         groupedRowModel: createGroupedRowModel(aggregationFns),

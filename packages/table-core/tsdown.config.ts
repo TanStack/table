@@ -6,6 +6,7 @@ export default defineConfig({
     './src/static-functions.ts',
     './src/flex-render.ts',
     './src/reactivity.ts',
+    './src/store-reactivity-bindings.ts',
   ],
   format: ['esm', 'cjs'],
   unbundle: true,

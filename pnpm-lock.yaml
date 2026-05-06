@@ -7139,12 +7139,12 @@ importers:
 
   packages/preact-table:
     dependencies:
-      '@preact/signals':
-        specifier: ^2.9.0
-        version: 2.9.0(preact@10.29.1)
       '@tanstack/preact-store':
         specifier: ^0.13.0
         version: 0.13.0(preact@10.29.1)
+      '@tanstack/store':
+        specifier: ^0.11.0
+        version: 0.11.0
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -7180,6 +7180,9 @@ importers:
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      '@tanstack/store':
+        specifier: ^0.11.0
+        version: 0.11.0
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -10380,14 +10383,6 @@ packages:
     peerDependencies:
       '@babel/core': 7.x
       vite: 2.x || 3.x || 4.x || 5.x || 6.x || 7.x || 8.x
-
-  '@preact/signals-core@1.14.1':
-    resolution: {integrity: sha512-vxPpfXqrwUe9lpjqfYNjAF/0RF/eFGeLgdJzdmIIZjpOnTmGmAB4BjWone562mJGMRP4frU6iZ6ei3PDsu52Ng==}
-
-  '@preact/signals@2.9.0':
-    resolution: {integrity: sha512-hYrY0KyUqkDgOl1qba/JGn6y81pXnurn21PMaxfcMwdncdZ3M/oVdmpTvEnsGjh48dIwDVc7bjWHqIsngSjYug==}
-    peerDependencies:
-      preact: '>= 10.25.0 || >=11.0.0-0'
 
   '@prefresh/babel-plugin@0.5.3':
     resolution: {integrity: sha512-57LX2SHs4BX2s1IwCjNzTE2OJeEepRCNf1VTEpbNcUyHfMO68eeOWGDIt4ob9aYlW6PEWZ1SuwNikuoIXANDtQ==}
@@ -19967,13 +19962,6 @@ snapshots:
       - preact
       - rollup
       - supports-color
-
-  '@preact/signals-core@1.14.1': {}
-
-  '@preact/signals@2.9.0(preact@10.29.1)':
-    dependencies:
-      '@preact/signals-core': 1.14.1
-      preact: 10.29.1
 
   '@prefresh/babel-plugin@0.5.3': {}
 

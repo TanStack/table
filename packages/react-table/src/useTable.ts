@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
 import { shallow, useSelector } from '@tanstack/react-store'
-import { constructReactivityBindings } from '@tanstack/table-core/reactivity'
+import { reactReactivity } from './reactivity'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type { Atom, ReadonlyAtom } from '@tanstack/react-store'
@@ -106,10 +106,7 @@ export type ReactTable<
    *
    * console.log(table.state.globalFilter)
    */
-  readonly state: Readonly<TSelected> & {
-    columns: TableOptions<TFeatures, TData>['columns']
-    data: TableOptions<TFeatures, TData>['data']
-  }
+  readonly state: Readonly<TSelected>
 }
 
 export function useTable<
@@ -125,7 +122,7 @@ export function useTable<
     const tableInstance = constructTable({
       ...tableOptions,
       _features: {
-        coreReativityFeature: constructReactivityBindings(),
+        coreReativityFeature: reactReactivity(),
         ...tableOptions._features,
       },
     }) as ReactTable<TFeatures, TData, TSelected>
@@ -142,26 +139,22 @@ export function useTable<
     return tableInstance
   })
 
-  useEffect(() => {
-    table.setOptions((prev) => ({
-      ...prev,
-      ...tableOptions,
-    }))
-  }, [table, tableOptions])
+  // sync options on every render
+  table.setOptions((prev) => ({
+    ...prev,
+    ...tableOptions,
+  }))
 
   const state = useSelector(table.store, selector, { compare: shallow })
-  const options = useSelector(table.optionsStore, (options) => options, {
-    compare: shallow,
-  })
 
   // we know this is not the most efficient way to return the table,
   // but it is required for the react compiler to work
   return useMemo(
     () => ({
       ...table,
-      options,
+      options: tableOptions,
       state,
     }),
-    [table, options, state],
-  ) as ReactTable<TFeatures, TData, TSelected>
+    [table, tableOptions, state],
+  )
 }
