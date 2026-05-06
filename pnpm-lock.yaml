@@ -7142,9 +7142,6 @@ importers:
       '@tanstack/preact-store':
         specifier: ^0.13.0
         version: 0.13.0(preact@10.29.1)
-      '@tanstack/store':
-        specifier: ^0.11.0
-        version: 0.11.0
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -7180,9 +7177,6 @@ importers:
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
-      '@tanstack/store':
-        specifier: ^0.11.0
-        version: 0.11.0
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -7326,9 +7320,6 @@ importers:
       '@tanstack/solid-store':
         specifier: ^0.11.0
         version: 0.11.0(solid-js@1.9.12)
-      '@tanstack/table-core':
-        specifier: workspace:*
-        version: link:../table-core
       goober:
         specifier: ^2.1.18
         version: 2.1.18(csstype@3.2.3)
@@ -7336,6 +7327,9 @@ importers:
         specifier: ^1.9.12
         version: 1.9.12
     devDependencies:
+      '@tanstack/table-core':
+        specifier: workspace:*
+        version: link:../table-core
       vite-plugin-solid:
         specifier: ^2.11.12
         version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
