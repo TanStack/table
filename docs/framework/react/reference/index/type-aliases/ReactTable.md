@@ -9,7 +9,7 @@ title: ReactTable
 type ReactTable<TFeatures, TData, TSelected> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [useTable.ts:21](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L21)
+Defined in: [useTable.ts:22](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L22)
 
 ## Type Declaration
 
@@ -56,24 +56,10 @@ flexRender(footer.column.columnDef.footer, footer.getContext())
 ### state
 
 ```ts
-readonly state: Readonly<TSelected> & object;
+readonly state: Readonly<TSelected>;
 ```
 
 The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
-
-#### Type Declaration
-
-##### columns
-
-```ts
-columns: TableOptions<TFeatures, TData>["columns"];
-```
-
-##### data
-
-```ts
-data: TableOptions<TFeatures, TData>["data"];
-```
 
 #### Example
 

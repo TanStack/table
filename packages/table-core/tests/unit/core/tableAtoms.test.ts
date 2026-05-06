@@ -7,7 +7,7 @@ import {
   rowSelectionFeature,
   rowSortingFeature,
 } from '../../../src'
-import { constructReactivityBindings } from '../../../src/core/reactivity/constructReactivityBindings'
+import { storeReactivityBindings } from '../../../src/store-reactivity-bindings'
 import type {
   PaginationState,
   SortingState,
@@ -25,7 +25,7 @@ function makeTable(options: any = {}) {
     _features: {
       ...coreFeatures,
       ..._features,
-      coreReativityFeature: constructReactivityBindings(),
+      coreReativityFeature: storeReactivityBindings(),
     },
     _rowModels: {},
     columns: [],
@@ -61,17 +61,15 @@ describe('three-layer atom architecture', () => {
       expect(table.atoms.sorting.get()).toEqual([{ id: 'age', desc: true }])
     })
 
-    it('options.state[key] takes precedence over baseAtoms', () => {
+    it('options.state[key] syncs into baseAtoms', () => {
       const external: SortingState = [{ id: 'external', desc: false }]
       const table = makeTable({ state: { sorting: external } })
-      // baseAtoms still holds the default
-      expect(table.baseAtoms.sorting.get()).toEqual([])
-      // but atoms (and downstream store) see the external value
+      expect(table.baseAtoms.sorting.get()).toEqual(external)
       expect(table.atoms.sorting.get()).toEqual(external)
       expect(table.store.state.sorting).toEqual(external)
     })
 
-    it('options.state[key] takes precedence over options.atoms[key] when the key is present', () => {
+    it('options.atoms[key] takes precedence over options.state[key] when both are present', () => {
       const externalAtom = createAtom<SortingState>([
         { id: 'fromAtom', desc: true },
       ])
@@ -79,12 +77,11 @@ describe('three-layer atom architecture', () => {
         state: { sorting: [{ id: 'fromState', desc: false }] },
         atoms: { sorting: externalAtom },
       })
-      // key is in `state` → that slice wins, even if an external atom is also set
       expect(table.atoms.sorting.get()).toEqual([
-        { id: 'fromState', desc: false },
+        { id: 'fromAtom', desc: true },
       ])
       expect(table.store.state.sorting).toEqual([
-        { id: 'fromState', desc: false },
+        { id: 'fromAtom', desc: true },
       ])
     })
 

@@ -7,7 +7,7 @@ import {
   rowPinningFeature,
 } from '../../src'
 import { generateTestData } from '../fixtures/data/generateTestData'
-import { constructReactivityBindings } from '../../src/core/reactivity/constructReactivityBindings'
+import { storeReactivityBindings } from '../../src/store-reactivity-bindings'
 import { generateTestTableWithData } from './generateTestTable'
 import type { ColumnDef, RowPinningState, TableOptions } from '../../src'
 import type { Person } from '../fixtures/data/types'
@@ -16,7 +16,7 @@ import type { Person } from '../fixtures/data/types'
 const _features = {
   ...coreFeatures,
   rowPinningFeature,
-  coreReativityFeature: constructReactivityBindings(),
+  coreReativityFeature: storeReactivityBindings(),
 } as any
 
 type personKeys = keyof Person

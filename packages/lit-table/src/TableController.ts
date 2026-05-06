@@ -1,5 +1,5 @@
 import { constructTable } from '@tanstack/table-core'
-import { constructReactivityBindings } from '@tanstack/table-core/reactivity'
+import { litReactivity } from './reactivity'
 import { FlexRender } from './flexRender'
 import type { Atom, ReadonlyAtom } from '@tanstack/store'
 import type {
@@ -147,7 +147,7 @@ export class TableController<
       const mergedOptions: TableOptions<TFeatures, TData> = {
         ...tableOptions,
         _features: {
-          coreReativityFeature: constructReactivityBindings(),
+          coreReativityFeature: litReactivity(),
           ...tableOptions._features,
         },
         mergeOptions: (
@@ -215,7 +215,8 @@ export class TableController<
         this.host.requestUpdate()
       })
 
-      this._optionsSubscription = this._table.optionsStore.subscribe(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      this._optionsSubscription = this._table.optionsStore!.subscribe(() => {
         this._notifier++
         this.host.requestUpdate()
       })

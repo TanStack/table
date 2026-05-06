@@ -1,6 +1,6 @@
 import { For, createSignal } from 'solid-js'
 import { JsonTree } from '@tanstack/devtools-ui'
-import { batch } from '@tanstack/solid-store'
+import { batch, useSelector } from '@tanstack/solid-store'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
@@ -29,10 +29,11 @@ export function StatePanel() {
     tableInstance ? tableInstance.store : undefined,
     (state) => state,
   )
-  const tableOptions = useTableStore(
-    tableInstance ? tableInstance.optionsStore : undefined,
-    (opts) => opts,
-  )
+  const tableOptions = tableInstance
+    ? tableInstance.optionsStore
+      ? useSelector(tableInstance.optionsStore, (opts) => opts)
+      : useTableStore(tableInstance.store, () => tableInstance.options)
+    : undefined
 
   if (!tableInstance) {
     return <NoTableConnected title="State" />

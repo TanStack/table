@@ -1,6 +1,7 @@
 import { coreFeatures } from '../coreFeatures'
 import { cloneState } from '../../utils'
 import { atomToStore } from '../reactivity/coreReactivityFeature.utils'
+import { table_syncExternalStateToBaseAtoms } from './coreTablesFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -28,12 +29,6 @@ export function constructTable<
     _features: { ...coreFeatures, ...tableOptions._features },
     _rowModels: {},
     _rowModelFns: {},
-    get options() {
-      return this.optionsStore.get()
-    },
-    set options(value) {
-      this.optionsStore.set(() => value)
-    },
     baseAtoms: {},
     atoms: {},
   } as Table_Internal<TFeatures, TData>
@@ -44,10 +39,26 @@ export function constructTable<
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
   }, {}) as TableOptions<TFeatures, TData>
 
-  // @ts-ignore - direct set
-  table.optionsStore = _reactivity.createWritableAtom<
-    TableOptions<TFeatures, TData>
-  >({ ...defaultOptions, ...tableOptions }, { debugName: 'table/optionsStore' })
+  const mergedOptions = { ...defaultOptions, ...tableOptions }
+
+  if (_reactivity.createOptionsStore) {
+    // @ts-ignore - direct set
+    table.optionsStore = _reactivity.createWritableAtom<
+      TableOptions<TFeatures, TData>
+    >(mergedOptions, { debugName: 'table/optionsStore' })
+    Object.defineProperty(table, 'options', {
+      configurable: true,
+      enumerable: true,
+      get() {
+        return table.optionsStore!.get()
+      },
+      set(value) {
+        table.optionsStore!.set(() => value) // or your real update shape
+      },
+    })
+  } else {
+    table.options = mergedOptions
+  }
 
   table.initialState = getInitialTableState(
     table._features,
@@ -67,16 +78,10 @@ export function constructTable<
       },
     ) as any
 
-    // create readonly derived atom: on each get(), read current options (state, then external atom, then base)
+    // create readonly derived atom: on each get(), read either external atom or base atom
     ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
       () => {
-        // Reading optionsStore.get() keeps this reactive to setOptions
-        const opts = table.optionsStore.get()
-        const state = opts.state
-        if (key in (state ?? {})) {
-          return state![key]
-        }
-        const externalAtom = opts.atoms?.[key]
+        const externalAtom = table.options.atoms?.[key]
         if (externalAtom) {
           return externalAtom.get()
         }
@@ -85,6 +90,8 @@ export function constructTable<
       { debugName: `table/atoms/${key}` },
     )
   }
+
+  table_syncExternalStateToBaseAtoms(table)
 
   table.store = atomToStore(
     _reactivity.createReadonlyAtom(
@@ -114,7 +121,8 @@ export function constructTable<
 
   Row Models: ${rowModels.length ? rowModels.join('\n              ') : '(none)'}
 
-  States:     ${states.join('\n              ')}`,
+  States:     ${states.join('\n              ')}\n`,
+      { table },
     )
   }
 

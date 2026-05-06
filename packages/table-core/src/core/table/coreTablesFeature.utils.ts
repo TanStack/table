@@ -4,6 +4,30 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 
+export function table_syncExternalStateToBaseAtoms<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): void {
+  const state = table.options.state
+  if (!state) {
+    return
+  }
+
+  table._reactivity.batch(() => {
+    for (const key in state) {
+      const baseAtom = (table.baseAtoms as Record<string, any>)[key]
+      if (!baseAtom) {
+        continue
+      }
+
+      const externalState = state[key as keyof typeof state]
+      if (externalState !== baseAtom.get()) {
+        baseAtom.set(() => externalState)
+      }
+    }
+  })
+}
+
 export function table_reset<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -42,5 +66,10 @@ export function table_setOptions<
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
   const mergedOptions = table_mergeOptions(table, newOptions)
-  table.optionsStore.set(() => mergedOptions)
+  if (table.optionsStore) {
+    table.optionsStore.set(() => mergedOptions)
+  } else {
+    table.options = mergedOptions
+  }
+  table_syncExternalStateToBaseAtoms(table)
 }

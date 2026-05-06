@@ -5,7 +5,7 @@ title: AngularTableComputed
 
 # Interface: AngularTableComputed()\<TFeatures\>
 
-Defined in: [injectTable.ts:32](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L32)
+Defined in: [injectTable.ts:28](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L28)
 
 Store mode: pass `selector` (required) to project from full table state.
 Source mode: pass `source` (atom or store); omit `selector` for the whole value
@@ -24,7 +24,7 @@ inference.
 AngularTableComputed<TSourceValue>(props): Signal<Readonly<TSourceValue>>;
 ```
 
-Defined in: [injectTable.ts:33](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L33)
+Defined in: [injectTable.ts:29](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L29)
 
 Store mode: pass `selector` (required) to project from full table state.
 Source mode: pass `source` (atom or store); omit `selector` for the whole value
@@ -63,7 +63,7 @@ inference.
 AngularTableComputed<TSourceValue, TSubSelected>(props): Signal<Readonly<TSubSelected>>;
 ```
 
-Defined in: [injectTable.ts:38](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L38)
+Defined in: [injectTable.ts:34](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L34)
 
 Store mode: pass `selector` (required) to project from full table state.
 Source mode: pass `source` (atom or store); omit `selector` for the whole value
@@ -106,7 +106,7 @@ inference.
 AngularTableComputed<TSubSelected>(props): Signal<Readonly<TSubSelected>>;
 ```
 
-Defined in: [injectTable.ts:43](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L43)
+Defined in: [injectTable.ts:39](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L39)
 
 Store mode: pass `selector` (required) to project from full table state.
 Source mode: pass `source` (atom or store); omit `selector` for the whole value

@@ -42,6 +42,7 @@ function signalToWritableAtom<T>(
 
 export function angularReactivity(injector: Injector): TableReactivityBindings {
   return {
+    createOptionsStore: true,
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
       const signal = computed(() => fn(), {
         equal: options?.compare,
