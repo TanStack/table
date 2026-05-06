@@ -50,7 +50,6 @@ export function table_setOptions<
   } else {
     table.options = mergedOptions
   }
-
   // set external state to internal base atoms
   for (const key of Object.keys(newOptions.state ?? {}) as Array<
     keyof typeof newOptions.state

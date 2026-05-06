@@ -20,7 +20,8 @@ function subscribeToRune<T>(
   const callback = observerToCallback(observerOrNext)
   const unsubscribe = $effect.root(() => {
     $effect(() => {
-      callback(getValue())
+      const value = getValue()
+      untrack(() => callback(value))
     })
   })
 
