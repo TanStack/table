@@ -1,6 +1,7 @@
 import { coreFeatures } from '../coreFeatures'
 import { cloneState } from '../../utils'
 import { atomToStore } from '../reactivity/coreReactivityFeature.utils'
+import { table_syncExternalStateToBaseAtoms } from './coreTablesFeature.utils'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -89,6 +90,8 @@ export function constructTable<
       { debugName: `table/atoms/${key}` },
     )
   }
+
+  table_syncExternalStateToBaseAtoms(table)
 
   table.store = atomToStore(
     _reactivity.createReadonlyAtom(

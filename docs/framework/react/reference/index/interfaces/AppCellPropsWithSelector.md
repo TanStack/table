@@ -55,7 +55,7 @@ Defined in: [createTableHook.tsx:321](https://github.com/TanStack/table/blob/mai
 
 ##### cell
 
-`Cell_Cell`\<`TFeatures`, `TData`, `TValue`\> & `UnionToIntersection`\<`"columnGroupingFeature"` *extends* keyof `TFeatures` ? `Cell_ColumnGrouping` : `never`\> & `UnionToIntersection`\<\{ \[K in string \| number \| symbol\]: TFeatures\[K\] extends TableFeature\<FeatureConstructorOptions\> ? "Cell" extends keyof FeatureConstructorOptions ? FeatureConstructorOptions\[keyof FeatureConstructorOptions & "Cell"\] : never : any \}\[keyof `TFeatures`\]\> & `Cell_Plugins`\<`TFeatures`, `TData`, `TValue`\> & `TCellComponents` & `object`
+`Cell_Cell`\<`TFeatures`, `TData`, `TValue`\> & `UnionToIntersection`\<`"columnGroupingFeature"` *extends* keyof `TFeatures` ? `Cell_ColumnGrouping` : `never`\> & `UnionToIntersection`\<\{ \[K in string \| number \| symbol\]: K extends "coreReativityFeature" ? never : TFeatures\[K\] extends TableFeature\<FeatureConstructorOptions\> ? "Cell" extends keyof FeatureConstructorOptions ? FeatureConstructorOptions\[keyof (...) & "Cell"\] : never : any \}\[keyof `TFeatures`\]\> & `Cell_Plugins`\<`TFeatures`, `TData`, `TValue`\> & `TCellComponents` & `object`
 
 ##### state
 

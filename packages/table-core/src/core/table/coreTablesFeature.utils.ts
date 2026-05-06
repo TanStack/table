@@ -1,11 +1,32 @@
 import { cloneState, functionalUpdate } from '../../utils'
-import type { Atom } from '@tanstack/store'
-import type { BaseAtoms } from './coreTablesFeature.types'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
-import type { TableState } from '../../types/TableState'
+
+export function table_syncExternalStateToBaseAtoms<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): void {
+  const state = table.options.state
+  if (!state) {
+    return
+  }
+
+  table._reactivity.batch(() => {
+    for (const key in state) {
+      const baseAtom = (table.baseAtoms as Record<string, any>)[key]
+      if (!baseAtom) {
+        continue
+      }
+
+      const externalState = state[key as keyof typeof state]
+      if (externalState !== baseAtom.get()) {
+        baseAtom.set(() => externalState)
+      }
+    }
+  })
+}
 
 export function table_reset<
   TFeatures extends TableFeatures,
@@ -50,16 +71,5 @@ export function table_setOptions<
   } else {
     table.options = mergedOptions
   }
-  // set external state to internal base atoms
-  for (const key of Object.keys(newOptions.state ?? {}) as Array<
-    keyof typeof newOptions.state
-  >) {
-    const baseAtom: Atom<TableState<any>> =
-      table.baseAtoms[key as keyof BaseAtoms<TFeatures>]
-    const externalState = newOptions.state?.[key]
-    const internalState = baseAtom.get()
-    if (externalState !== internalState) {
-      baseAtom.set(() => externalState)
-    }
-  }
+  table_syncExternalStateToBaseAtoms(table)
 }
