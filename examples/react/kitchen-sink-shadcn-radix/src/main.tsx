@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
-import '@/styles/globals.css'
+import './index.css'
 
 import {
   CheckCircle,
