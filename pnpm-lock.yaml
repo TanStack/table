@@ -3324,6 +3324,9 @@ importers:
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0
+      tailwindcss:
+        specifier: ^4.2.4
+        version: 4.2.4
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -3346,9 +3349,6 @@ importers:
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
-      tailwindcss:
-        specifier: ^4.2.4
-        version: 4.2.4
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -3412,6 +3412,9 @@ importers:
       tailwind-merge:
         specifier: ^3.5.0
         version: 3.5.0
+      tailwindcss:
+        specifier: ^4.2.4
+        version: 4.2.4
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -3434,9 +3437,6 @@ importers:
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
-      tailwindcss:
-        specifier: ^4.2.4
-        version: 4.2.4
       typescript:
         specifier: 6.0.3
         version: 6.0.3
