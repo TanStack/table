@@ -215,6 +215,16 @@ export const RowPagination: TableFeature = {
     let registered = false
     let queued = false
 
+    const getSafePageIndex = (pageIndex: number) => {
+      const maxPageIndex =
+        typeof table.options.pageCount === 'undefined' ||
+        table.options.pageCount === -1
+          ? Number.MAX_SAFE_INTEGER
+          : table.options.pageCount - 1
+
+      return Math.max(0, Math.min(pageIndex, maxPageIndex))
+    }
+
     table._autoResetPageIndex = () => {
       if (!registered) {
         table._queue(() => {
@@ -254,15 +264,13 @@ export const RowPagination: TableFeature = {
     }
     table.setPageIndex = (updater) => {
       table.setPagination((old) => {
-        let pageIndex = functionalUpdate(updater, old.pageIndex)
+        const pageIndex = getSafePageIndex(
+          functionalUpdate(updater, old.pageIndex),
+        )
 
-        const maxPageIndex =
-          typeof table.options.pageCount === 'undefined' ||
-          table.options.pageCount === -1
-            ? Number.MAX_SAFE_INTEGER
-            : table.options.pageCount - 1
-
-        pageIndex = Math.max(0, Math.min(pageIndex, maxPageIndex))
+        if (old.pageIndex === pageIndex) {
+          return old
+        }
 
         return {
           ...old,
