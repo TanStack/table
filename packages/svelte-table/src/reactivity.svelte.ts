@@ -20,7 +20,8 @@ function subscribeToRune<T>(
   const callback = observerToCallback(observerOrNext)
   const unsubscribe = $effect.root(() => {
     $effect(() => {
-      callback(getValue())
+      const value = getValue()
+      untrack(() => callback(value))
     })
   })
 
@@ -29,6 +30,7 @@ function subscribeToRune<T>(
 
 export function svelteReactivity(): TableReactivityBindings {
   return {
+    createOptionsStore: true,
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
       const value = $derived.by(fn)
 

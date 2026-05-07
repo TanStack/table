@@ -1,4 +1,4 @@
-import type { ReadonlyAtom, ReadonlyStore } from '@tanstack/store'
+import type { ReadonlyStore } from '@tanstack/store'
 import type { Table_ColumnFaceting } from '../features/column-faceting/columnFacetingFeature.types'
 import type { Table_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 import type { Table_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'

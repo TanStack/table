@@ -48,6 +48,7 @@ function refToWritableAtom<T>(source: ShallowRef<T>): Atom<T> {
 
 export function vueReactivity(): TableReactivityBindings {
   return {
+    createOptionsStore: true,
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
       return refToReadonlyAtom(computed(fn))
     },

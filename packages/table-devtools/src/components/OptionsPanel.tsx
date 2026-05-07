@@ -1,9 +1,21 @@
 import { JsonTree } from '@tanstack/devtools-ui'
 import { useSelector } from '@tanstack/solid-store'
 import { useTableDevtoolsContext } from '../TableContextProvider'
+import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
 import { NoTableConnected } from './NoTableConnected'
 import { ResizableSplit } from './ResizableSplit'
+
+function projectOptionsForTree(full: unknown) {
+  const {
+    state: _s,
+    data: _d,
+    _features: _f,
+    _rowModels: _r,
+    ...options
+  } = full as Record<string, unknown>
+  return options
+}
 
 export function OptionsPanel() {
   const styles = useStyles()
@@ -11,16 +23,13 @@ export function OptionsPanel() {
 
   const tableInstance = table()
   const tableState = tableInstance
-    ? useSelector(tableInstance.optionsStore, (state: unknown) => {
-        const {
-          state: _s,
-          data: _d,
-          _features: _f,
-          _rowModels: _r,
-          ...options
-        } = state as Record<string, unknown>
-        return options
-      })
+    ? tableInstance.optionsStore
+      ? useSelector(tableInstance.optionsStore, (state: unknown) =>
+          projectOptionsForTree(state),
+        )
+      : useTableStore(tableInstance.store, () =>
+          projectOptionsForTree(tableInstance.options as unknown),
+        )
     : undefined
 
   if (!tableInstance) {

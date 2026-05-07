@@ -43,7 +43,7 @@ Defined in: [createTableHook.tsx:339](https://github.com/TanStack/table/blob/mai
 
 `Header_Core`\<`TFeatures`, `TData`, `TValue`\> & `UnionToIntersection`\<
   \| `"columnSizingFeature"` *extends* keyof `TFeatures` ? `Header_ColumnSizing` : `never`
-  \| `"columnResizingFeature"` *extends* keyof `TFeatures` ? `Header_ColumnResizing` : `never`\> & `UnionToIntersection`\<\{ \[K in string \| number \| symbol\]: TFeatures\[K\] extends TableFeature\<FeatureConstructorOptions\> ? "Header" extends keyof FeatureConstructorOptions ? FeatureConstructorOptions\[keyof FeatureConstructorOptions & "Header"\] : never : any \}\[keyof `TFeatures`\]\> & `Header_Plugins`\<`TFeatures`, `TData`, `TValue`\> & `THeaderComponents` & `object`
+  \| `"columnResizingFeature"` *extends* keyof `TFeatures` ? `Header_ColumnResizing` : `never`\> & `UnionToIntersection`\<\{ \[K in string \| number \| symbol\]: K extends "coreReativityFeature" ? never : TFeatures\[K\] extends TableFeature\<FeatureConstructorOptions\> ? "Header" extends keyof FeatureConstructorOptions ? FeatureConstructorOptions\[keyof (...) & "Header"\] : never : any \}\[keyof `TFeatures`\]\> & `Header_Plugins`\<`TFeatures`, `TData`, `TValue`\> & `THeaderComponents` & `object`
 
 #### Returns
 

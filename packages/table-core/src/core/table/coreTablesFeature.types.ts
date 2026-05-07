@@ -167,9 +167,12 @@ export interface Table_CoreProperties<
    */
   readonly options: TableOptions<TFeatures, TData>
   /**
-   * The base store for the table options.
+   * Writable atom for table options. Only created when `createOptionsStore` is true
+   * on `coreReativityFeature` (e.g. Lit, Vue, Solid). React/Preact use `createOptionsStore: false`:
+   * options are held as plain data with a lightweight revision + subscribe source; there is
+   * no writable atom backing the full options object. Use {@link getTableOptionsStore} to subscribe.
    */
-  readonly optionsStore: Atom<TableOptions<TFeatures, TData>>
+  readonly optionsStore?: Atom<TableOptions<TFeatures, TData>> | undefined
   /**
    * The readonly flat store for the table state. Derives from `table.atoms`
    * only; never reads external state directly.

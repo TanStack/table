@@ -177,7 +177,7 @@ export function injectTable<
       value: computed(
         () => {
           table.store.get()
-          table.optionsStore.get()
+          table.optionsStore!.get()
           return table
         },
         { equal: () => false },

@@ -64,38 +64,10 @@ Defined in: [helpers/tableOptions.ts:16](https://github.com/TanStack/table/blob/
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features">;
-```
-
-Defined in: [helpers/tableOptions.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L27)
-
-### Type Parameters
-
-#### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-#### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md) = `any`
-
-### Parameters
-
-#### options
-
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"_features"`\>
-
-### Returns
-
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"_features"`\>
-
-## Call Signature
-
-```ts
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "data" | "columns"> & object;
 ```
 
-Defined in: [helpers/tableOptions.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L34)
+Defined in: [helpers/tableOptions.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L27)
 
 ### Type Parameters
 
@@ -120,10 +92,66 @@ Defined in: [helpers/tableOptions.ts:34](https://github.com/TanStack/table/blob/
 ## Call Signature
 
 ```ts
+function tableOptions<TFeatures, TData>(options): TableOptions<TFeatures, TData>;
+```
+
+Defined in: [helpers/tableOptions.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L38)
+
+### Type Parameters
+
+#### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
+
+#### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md) = `any`
+
+### Parameters
+
+#### options
+
+[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>
+
+### Returns
+
+[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>
+
+## Call Signature
+
+```ts
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features">;
+```
+
+Defined in: [helpers/tableOptions.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L43)
+
+### Type Parameters
+
+#### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
+
+#### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md) = `any`
+
+### Parameters
+
+#### options
+
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"_features"`\>
+
+### Returns
+
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"_features"`\>
+
+## Call Signature
+
+```ts
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "_features">;
 ```
 
-Defined in: [helpers/tableOptions.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L45)
+Defined in: [helpers/tableOptions.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L50)
 
 ### Type Parameters
 
@@ -151,7 +179,7 @@ Defined in: [helpers/tableOptions.ts:45](https://github.com/TanStack/table/blob/
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "columns" | "_features">;
 ```
 
-Defined in: [helpers/tableOptions.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L52)
+Defined in: [helpers/tableOptions.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L57)
 
 ### Type Parameters
 
@@ -179,7 +207,7 @@ Defined in: [helpers/tableOptions.ts:52](https://github.com/TanStack/table/blob/
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "columns" | "_features">;
 ```
 
-Defined in: [helpers/tableOptions.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L59)
+Defined in: [helpers/tableOptions.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L64)
 
 ### Type Parameters
 
@@ -200,31 +228,3 @@ Defined in: [helpers/tableOptions.ts:59](https://github.com/TanStack/table/blob/
 ### Returns
 
 `Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"columns"` \| `"_features"`\>
-
-## Call Signature
-
-```ts
-function tableOptions<TFeatures, TData>(options): TableOptions<TFeatures, TData>;
-```
-
-Defined in: [helpers/tableOptions.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L69)
-
-### Type Parameters
-
-#### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-#### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md) = `any`
-
-### Parameters
-
-#### options
-
-[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>
-
-### Returns
-
-[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>

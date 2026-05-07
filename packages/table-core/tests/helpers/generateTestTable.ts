@@ -1,7 +1,7 @@
 import { constructTable, coreFeatures } from '../../src'
 import { generateTestColumnDefs } from '../fixtures/data/generateTestColumnDefs'
 import { generateTestData } from '../fixtures/data/generateTestData'
-import { constructReactivityBindings } from '../../src/core/reactivity/constructReactivityBindings'
+import { storeReactivityBindings } from '../../src/store-reactivity-bindings'
 import type {
   Row,
   Table,
@@ -32,7 +32,7 @@ export function generateTestTableWithData<TFeatures extends TableFeatures>(
     _features: {
       ...coreFeatures,
       ...options?._features,
-      coreReativityFeature: constructReactivityBindings(),
+      coreReativityFeature: storeReactivityBindings(),
     },
   } as any)
 }
@@ -49,7 +49,7 @@ export function generateTestTableFromData<TFeatures extends TableFeatures>(
     _features: {
       ...coreFeatures,
       ...options?._features,
-      coreReativityFeature: constructReactivityBindings(),
+      coreReativityFeature: storeReactivityBindings(),
     },
   } as any)
 }

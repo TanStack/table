@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import { constructTable } from '@tanstack/table-core'
 import { shallow, useSelector } from '@tanstack/preact-store'
-import { constructReactivityBindings } from '@tanstack/table-core/reactivity'
+import { preactReactivity } from './reactivity'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
-// import { preactReactivity } from './reactivity'
 import type {
   CellData,
   RowData,
@@ -78,10 +77,7 @@ export type PreactTable<
   /**
    * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
    */
-  readonly state: Readonly<TSelected> & {
-    columns: TableOptions<TFeatures, TData>['columns']
-    data: TableOptions<TFeatures, TData>['data']
-  }
+  readonly state: Readonly<TSelected>
 }
 
 export function useTable<
@@ -97,7 +93,7 @@ export function useTable<
     const tableInstance = constructTable({
       ...tableOptions,
       _features: {
-        coreReativityFeature: constructReactivityBindings(), // preactReactivity() currently causes infinite re-renders
+        coreReativityFeature: preactReactivity(),
         ...tableOptions._features,
       },
     }) as PreactTable<TFeatures, TData, TSelected>
@@ -114,24 +110,20 @@ export function useTable<
     return tableInstance
   })
 
-  useEffect(() => {
-    table.setOptions((prev) => ({
-      ...prev,
-      ...tableOptions,
-    }))
-  }, [table, tableOptions])
+  // sync options on every render
+  table.setOptions((prev) => ({
+    ...prev,
+    ...tableOptions,
+  }))
 
   const state = useSelector(table.store, selector, { compare: shallow })
-  const options = useSelector(table.optionsStore, (options) => options, {
-    compare: shallow,
-  })
 
   return useMemo(
     () => ({
       ...table,
-      options,
+      options: tableOptions,
       state,
     }),
-    [table, options, state],
-  ) as PreactTable<TFeatures, TData, TSelected>
+    [table, tableOptions, state],
+  )
 }

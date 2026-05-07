@@ -15,6 +15,7 @@ export interface TableAtomOptions<T> extends AtomOptions<T> {
  * scheduling primitives.
  */
 export interface TableReactivityBindings {
+  createOptionsStore: boolean
   /**
    * Creates a writable atom with an initial value.
    */

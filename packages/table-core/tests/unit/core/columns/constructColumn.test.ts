@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { coreColumnsFeature } from '../../../../src/core/columns/coreColumnsFeature'
 import { constructColumn } from '../../../../src/core/columns/constructColumn'
 import { constructTable } from '../../../../src'
-import { constructReactivityBindings } from '../../../../src/core/reactivity/constructReactivityBindings'
+import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import type { ColumnDef } from '../../../../src/types/ColumnDef'
 
 describe('constructColumn', () => {
@@ -10,7 +10,7 @@ describe('constructColumn', () => {
     const table = constructTable({
       _features: {
         coreColumnsFeature,
-        coreReativityFeature: constructReactivityBindings(),
+        coreReativityFeature: storeReactivityBindings(),
       },
       columns: [] as Array<any>,
       data: [] as Array<any>,

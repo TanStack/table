@@ -45,6 +45,7 @@ function signalToWritableAtom<T>(
 
 export function solidReactivity(owner: Owner): TableReactivityBindings {
   return {
+    createOptionsStore: true,
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
       const signal = createMemo(() => fn(), {
         equals: options?.compare,

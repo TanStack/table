@@ -7,7 +7,7 @@ import {
 } from '../../../../src'
 import * as RowSelectionUtils from '../../../../src/features/row-selection/rowSelectionFeature.utils'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
-import { constructReactivityBindings } from '../../../../src/core/reactivity/constructReactivityBindings'
+import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef, Row } from '../../../../src'
 
@@ -16,7 +16,7 @@ import type { ColumnDef, Row } from '../../../../src'
 const _features = {
   ...coreFeatures,
   rowSelectionFeature,
-  coreReativityFeature: constructReactivityBindings(),
+  coreReativityFeature: storeReactivityBindings(),
 }
 
 type personKeys = keyof Person

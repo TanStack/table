@@ -131,7 +131,7 @@ Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blo
 optional coreCellsFeature: TableFeature<CoreCellsFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [core/coreFeatures.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L9)
+Defined in: [core/coreFeatures.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L11)
 
 #### Inherited from
 
@@ -145,7 +145,7 @@ Defined in: [core/coreFeatures.ts:9](https://github.com/TanStack/table/blob/main
 optional coreColumnsFeature: TableFeature<CoreColumnsFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L10)
+Defined in: [core/coreFeatures.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L12)
 
 #### Inherited from
 
@@ -159,11 +159,25 @@ Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/mai
 optional coreHeadersFeature: TableFeature<CoreHeadersFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [core/coreFeatures.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L11)
+Defined in: [core/coreFeatures.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L13)
 
 #### Inherited from
 
 [`CoreFeatures`](CoreFeatures.md).[`coreHeadersFeature`](CoreFeatures.md#coreheadersfeature)
+
+***
+
+### coreReativityFeature?
+
+```ts
+optional coreReativityFeature: TableReactivityBindings;
+```
+
+Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L10)
+
+#### Inherited from
+
+[`CoreFeatures`](CoreFeatures.md).[`coreReativityFeature`](CoreFeatures.md#corereativityfeature)
 
 ***
 
@@ -173,7 +187,7 @@ Defined in: [core/coreFeatures.ts:11](https://github.com/TanStack/table/blob/mai
 optional coreRowModelsFeature: TableFeature<CoreRowModelsFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [core/coreFeatures.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L12)
+Defined in: [core/coreFeatures.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L14)
 
 #### Inherited from
 
@@ -187,7 +201,7 @@ Defined in: [core/coreFeatures.ts:12](https://github.com/TanStack/table/blob/mai
 optional coreRowsFeature: TableFeature<CoreRowsFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [core/coreFeatures.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L13)
+Defined in: [core/coreFeatures.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L15)
 
 #### Inherited from
 
@@ -201,7 +215,7 @@ Defined in: [core/coreFeatures.ts:13](https://github.com/TanStack/table/blob/mai
 optional coreTablesFeature: TableFeature<CoreTablesFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [core/coreFeatures.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L14)
+Defined in: [core/coreFeatures.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L16)
 
 #### Inherited from
 
