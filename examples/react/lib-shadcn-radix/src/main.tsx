@@ -136,39 +136,39 @@ function App() {
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      const sorted = header.column.getIsSorted()
-                      const Icon =
-                        sorted === 'asc'
-                          ? ArrowUp
-                          : sorted === 'desc'
-                            ? ArrowDown
-                            : ArrowUpDown
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  const sorted = header.column.getIsSorted()
+                  const Icon =
+                    sorted === 'asc'
+                      ? ArrowUp
+                      : sorted === 'desc'
+                        ? ArrowDown
+                        : ArrowUpDown
 
-                      return (
-                        <TableHead key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder ? null : header.column.getCanSort() ? (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="-ml-3 h-8 data-[state=open]:bg-accent"
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              <table.FlexRender header={header} />
-                              <Icon className="ml-2" />
-                            </Button>
-                          ) : (
-                            <span className="text-sm font-medium">
-                              <table.FlexRender header={header} />
-                            </span>
-                          )}
-                        </TableHead>
-                      )
-                    })}
-                  </TableRow>
-                ))}
+                  return (
+                    <TableHead key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="-ml-3 h-8 data-[state=open]:bg-accent"
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          <table.FlexRender header={header} />
+                          <Icon className="ml-2" />
+                        </Button>
+                      ) : (
+                        <span className="text-sm font-medium">
+                          <table.FlexRender header={header} />
+                        </span>
+                      )}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.length === 0 ? (
