@@ -1,14 +1,20 @@
 'use client'
 
 import { shallow, useSelector } from '@tanstack/react-store'
-import type { Atom, ReadonlyAtom } from '@tanstack/react-store'
 import type {
-  RowData,
-  Table,
-  TableFeatures,
-  TableState,
-} from '@tanstack/table-core'
+  Atom,
+  ReadonlyAtom,
+  ReadonlyStore,
+  Store,
+} from '@tanstack/react-store'
+import type { TableFeatures, TableState } from '@tanstack/table-core'
 import type { FunctionComponent, ReactNode } from 'react'
+
+export type SubscribeSource<TValue> =
+  | Atom<TValue>
+  | ReadonlyAtom<TValue>
+  | Store<TValue>
+  | ReadonlyStore<TValue>
 
 /**
  * Subscribe to `table.store` (full table state). The selector receives the full
@@ -16,10 +22,9 @@ import type { FunctionComponent, ReactNode } from 'react'
  */
 export type SubscribePropsWithStore<
   TFeatures extends TableFeatures,
-  TData extends RowData,
   TSelected,
 > = {
-  table: Table<TFeatures, TData>
+  source: SubscribeSource<TableState<TFeatures>>
   /**
    * Select from full table state. Re-renders when the selected value changes
    * (shallow compare).
@@ -36,13 +41,8 @@ export type SubscribePropsWithStore<
  * `table.optionsStore`). Omitting `selector` is equivalent to the identity
  * selector — children receive `TSourceValue`.
  */
-export type SubscribePropsWithSourceIdentity<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TSourceValue,
-> = {
-  table: Table<TFeatures, TData>
-  source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+export type SubscribePropsWithSourceIdentity<TSourceValue> = {
+  source: SubscribeSource<TSourceValue>
   selector?: undefined
   children: ((state: TSourceValue) => ReactNode) | ReactNode
 }
@@ -51,14 +51,8 @@ export type SubscribePropsWithSourceIdentity<
  * Subscribe to a projected value from a source (atom or store). The selector
  * receives the source value; children receive the projected `TSelected`.
  */
-export type SubscribePropsWithSourceWithSelector<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TSourceValue,
-  TSelected,
-> = {
-  table: Table<TFeatures, TData>
-  source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+export type SubscribePropsWithSourceWithSelector<TSourceValue, TSelected> = {
+  source: SubscribeSource<TSourceValue>
   selector: (state: TSourceValue) => TSelected
   children: ((state: TSelected) => ReactNode) | ReactNode
 }
@@ -68,34 +62,18 @@ export type SubscribePropsWithSourceWithSelector<
  * {@link SubscribePropsWithSourceIdentity} or {@link SubscribePropsWithSourceWithSelector}
  * for clearer inference when `selector` is omitted.
  */
-export type SubscribePropsWithSource<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TSourceValue,
-  TSelected = TSourceValue,
-> =
-  | SubscribePropsWithSourceIdentity<TFeatures, TData, TSourceValue>
-  | SubscribePropsWithSourceWithSelector<
-      TFeatures,
-      TData,
-      TSourceValue,
-      TSelected
-    >
+export type SubscribePropsWithSource<TSourceValue, TSelected = TSourceValue> =
+  | SubscribePropsWithSourceIdentity<TSourceValue>
+  | SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>
 
 export type SubscribeProps<
   TFeatures extends TableFeatures,
-  TData extends RowData,
   TSelected = unknown,
   TSourceValue = unknown,
 > =
-  | SubscribePropsWithStore<TFeatures, TData, TSelected>
-  | SubscribePropsWithSourceIdentity<TFeatures, TData, TSourceValue>
-  | SubscribePropsWithSourceWithSelector<
-      TFeatures,
-      TData,
-      TSourceValue,
-      TSelected
-    >
+  | SubscribePropsWithStore<TFeatures, TSelected>
+  | SubscribePropsWithSourceIdentity<TSourceValue>
+  | SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>
 
 /**
  * A React component that allows you to subscribe to the table state.
@@ -108,7 +86,7 @@ export type SubscribeProps<
  * @example
  * ```tsx
  * // As a standalone component — full store
- * <Subscribe table={table} selector={(state) => ({ rowSelection: state.rowSelection })}>
+ * <Subscribe source={table.store} selector={(state) => ({ rowSelection: state.rowSelection })}>
  *   {({ rowSelection }) => (
  *     <div>Selected rows: {Object.keys(rowSelection).length}</div>
  *   )}
@@ -118,7 +96,7 @@ export type SubscribeProps<
  * @example
  * ```tsx
  * // Entire source (atom or store) — no selector
- * <Subscribe table={table} source={table.atoms.rowSelection}>
+ * <Subscribe source={table.atoms.rowSelection}>
  *   {(rowSelection) => <div>...</div>}
  * </Subscribe>
  * ```
@@ -127,7 +105,6 @@ export type SubscribeProps<
  * ```tsx
  * // Project source value (e.g. one row’s selection)
  * <Subscribe
- *   table={table}
  *   source={table.atoms.rowSelection}
  *   selector={(rowSelection) => rowSelection?.[row.id]}
  * >
@@ -145,48 +122,27 @@ export type SubscribeProps<
  * </table.Subscribe>
  * ```
  */
-export function Subscribe<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TSourceValue,
->(
-  props: SubscribePropsWithSourceIdentity<TFeatures, TData, TSourceValue>,
+export function Subscribe<TSourceValue>(
+  props: SubscribePropsWithSourceIdentity<TSourceValue>,
+): ReturnType<FunctionComponent>
+export function Subscribe<TSourceValue, TSelected>(
+  props: SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>,
+): ReturnType<FunctionComponent>
+export function Subscribe<TFeatures extends TableFeatures, TSelected>(
+  props: SubscribePropsWithStore<TFeatures, TSelected>,
 ): ReturnType<FunctionComponent>
 export function Subscribe<
   TFeatures extends TableFeatures,
-  TData extends RowData,
-  TSourceValue,
-  TSelected,
->(
-  props: SubscribePropsWithSourceWithSelector<
-    TFeatures,
-    TData,
-    TSourceValue,
-    TSelected
-  >,
-): ReturnType<FunctionComponent>
-export function Subscribe<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TSelected,
->(
-  props: SubscribePropsWithStore<TFeatures, TData, TSelected>,
-): ReturnType<FunctionComponent>
-export function Subscribe<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
   TSelected,
   TSourceValue,
 >(
-  props: SubscribeProps<TFeatures, TData, TSelected, TSourceValue>,
+  props: SubscribeProps<TFeatures, TSelected, TSourceValue>,
 ): ReturnType<FunctionComponent> {
-  const source = 'source' in props ? props.source : props.table.store
-  const selectFn =
-    'source' in props ? (props.selector ?? ((x: unknown) => x)) : props.selector
+  const selectFn = props.selector ?? ((x: unknown) => x)
 
   const selected = useSelector(
     // Atom and store share the same selection protocol; union args need a widen for TS.
-    source,
+    props.source,
     selectFn as Parameters<typeof useSelector>[1],
     {
       compare: shallow,

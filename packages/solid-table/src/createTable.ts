@@ -3,7 +3,12 @@ import { createComputed, getOwner, mergeProps, untrack } from 'solid-js'
 import { shallow, useSelector } from '@tanstack/solid-store'
 import { FlexRender } from './FlexRender'
 import { solidReactivity } from './reactivity'
-import type { Atom, ReadonlyAtom } from '@tanstack/solid-store'
+import type {
+  Atom,
+  ReadonlyAtom,
+  ReadonlyStore,
+  Store,
+} from '@tanstack/solid-store'
 import type { Accessor, JSX } from 'solid-js'
 import type {
   RowData,
@@ -12,6 +17,12 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
+
+export type SubscribeSource<TValue> =
+  | Atom<TValue>
+  | ReadonlyAtom<TValue>
+  | Store<TValue>
+  | ReadonlyStore<TValue>
 
 export type SolidTable<
   TFeatures extends TableFeatures,
@@ -26,12 +37,12 @@ export type SolidTable<
    */
   Subscribe: {
     <TSourceValue>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector?: undefined
       children: ((state: Accessor<TSourceValue>) => JSX.Element) | JSX.Element
     }): JSX.Element
     <TSourceValue, TSubSelected>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector: (state: TSourceValue) => TSubSelected
       children: ((state: Accessor<TSubSelected>) => JSX.Element) | JSX.Element
     }): JSX.Element
@@ -114,15 +125,12 @@ export function createTable<
   })
 
   table.Subscribe = ((props: {
-    source?: Atom<unknown> | ReadonlyAtom<unknown>
+    source?: SubscribeSource<unknown>
     selector?: ((state: unknown) => unknown) | undefined
     children: ((state: Accessor<unknown>) => JSX.Element) | JSX.Element
   }) => {
-    const source = props.source !== undefined ? props.source : table.store
-    const selectFn =
-      props.source !== undefined
-        ? (props.selector ?? ((x: unknown) => x))
-        : props.selector
+    const source = props.source ?? table.store
+    const selectFn = props.selector ?? ((x: unknown) => x)
     const selected = useSelector(source as never, selectFn, {
       compare: shallow,
     })

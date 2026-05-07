@@ -6,9 +6,8 @@ import { shallow, useSelector } from '@tanstack/react-store'
 import { reactReactivity } from './reactivity'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
-import type { Atom, ReadonlyAtom } from '@tanstack/react-store'
 import type { FlexRenderProps } from './FlexRender'
-import type { SubscribePropsWithStore } from './Subscribe'
+import type { SubscribePropsWithStore, SubscribeSource } from './Subscribe'
 import type {
   CellData,
   RowData,
@@ -61,20 +60,17 @@ export type ReactTable<
    */
   Subscribe: {
     <TSourceValue>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector?: undefined
       children: ((state: TSourceValue) => ReactNode) | ReactNode
     }): ReturnType<FunctionComponent>
     <TSourceValue, TSubSelected>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector: (state: TSourceValue) => TSubSelected
       children: ((state: TSubSelected) => ReactNode) | ReactNode
     }): ReturnType<FunctionComponent>
     <TSubSelected>(
-      props: Omit<
-        SubscribePropsWithStore<TFeatures, TData, TSubSelected>,
-        'table'
-      >,
+      props: Omit<SubscribePropsWithStore<TFeatures, TSubSelected>, 'source'>,
     ): ReturnType<FunctionComponent>
   }
   /**
@@ -128,9 +124,11 @@ export function useTable<
     }) as ReactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
+      const source = props.source ?? tableInstance.store
+
       return Subscribe({
         ...props,
-        table: tableInstance,
+        source,
       })
     }) as ReactTable<TFeatures, TData, TSelected>['Subscribe']
 

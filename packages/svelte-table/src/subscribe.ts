@@ -1,23 +1,31 @@
 import { shallow, useSelector } from '@tanstack/svelte-store'
 import type {
-  RowData,
-  Table,
-  TableFeatures,
-  TableState,
-} from '@tanstack/table-core'
+  Atom,
+  ReadonlyAtom,
+  ReadonlyStore,
+  Store,
+} from '@tanstack/svelte-store'
+
+export type SubscribeSource<TValue> =
+  | Atom<TValue>
+  | ReadonlyAtom<TValue>
+  | Store<TValue>
+  | ReadonlyStore<TValue>
 
 /**
- * Fine-grained subscription to `table.store` using `useSelector` with shallow
- * comparison. Call from `<script>` so the selector is contextually typed
- * (same inference model as React’s `Subscribe` / `table.Subscribe`).
+ * Fine-grained subscription to a source using `useSelector` with shallow
+ * comparison. Omit `selector` to subscribe to the source value directly.
  */
-export function subscribeTable<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TSelected,
->(
-  table: Table<TFeatures, TData>,
-  selector: (state: TableState<TFeatures>) => TSelected,
+export function subscribeTable<TSourceValue>(
+  source: SubscribeSource<TSourceValue>,
+): ReturnType<typeof useSelector<TSourceValue>>
+export function subscribeTable<TSourceValue, TSelected>(
+  source: SubscribeSource<TSourceValue>,
+  selector: (state: TSourceValue) => TSelected,
+): ReturnType<typeof useSelector<TSourceValue, TSelected>>
+export function subscribeTable<TSourceValue, TSelected>(
+  source: SubscribeSource<TSourceValue>,
+  selector?: (state: TSourceValue) => TSelected,
 ) {
-  return useSelector(table.store, selector, { compare: shallow })
+  return useSelector(source, selector, { compare: shallow })
 }

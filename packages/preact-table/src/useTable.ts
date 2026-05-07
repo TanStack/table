@@ -12,10 +12,9 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { Atom, ReadonlyAtom } from '@tanstack/preact-store'
 import type { ComponentChildren } from 'preact'
 import type { FlexRenderProps } from './FlexRender'
-import type { SubscribePropsWithStore } from './Subscribe'
+import type { SubscribePropsWithStore, SubscribeSource } from './Subscribe'
 
 export type PreactTable<
   TFeatures extends TableFeatures,
@@ -51,20 +50,17 @@ export type PreactTable<
    */
   Subscribe: {
     <TSourceValue>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector?: undefined
       children: ((state: TSourceValue) => ComponentChildren) | ComponentChildren
     }): ComponentChildren
     <TSourceValue, TSubSelected>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector: (state: TSourceValue) => TSubSelected
       children: ((state: TSubSelected) => ComponentChildren) | ComponentChildren
     }): ComponentChildren
     <TSubSelected>(
-      props: Omit<
-        SubscribePropsWithStore<TFeatures, TData, TSubSelected>,
-        'table'
-      >,
+      props: Omit<SubscribePropsWithStore<TFeatures, TSubSelected>, 'source'>,
     ): ComponentChildren
   }
   /**
@@ -99,9 +95,11 @@ export function useTable<
     }) as PreactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
+      const source = props.source ?? tableInstance.store
+
       return Subscribe({
         ...props,
-        table: tableInstance,
+        source,
       })
     }) as PreactTable<TFeatures, TData, TSelected>['Subscribe']
 

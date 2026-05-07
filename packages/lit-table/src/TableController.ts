@@ -1,7 +1,7 @@
 import { constructTable } from '@tanstack/table-core'
 import { litReactivity } from './reactivity'
 import { FlexRender } from './flexRender'
-import type { Atom, ReadonlyAtom } from '@tanstack/store'
+import type { Atom, ReadonlyAtom, ReadonlyStore, Store } from '@tanstack/store'
 import type {
   NoInfer,
   RowData,
@@ -15,6 +15,12 @@ import type {
   ReactiveControllerHost,
   TemplateResult,
 } from 'lit'
+
+export type SubscribeSource<TValue> =
+  | Atom<TValue>
+  | ReadonlyAtom<TValue>
+  | Store<TValue>
+  | ReadonlyStore<TValue>
 
 /**
  * The extended table type returned by the Lit adapter.
@@ -43,7 +49,7 @@ export type LitTable<
    */
   Subscribe: {
     <TSourceValue>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector?: undefined
       children:
         | ((state: Readonly<TSourceValue>) => TemplateResult | string)
@@ -51,7 +57,7 @@ export type LitTable<
         | string
     }): TemplateResult | string
     <TSourceValue, TSubscribeSelected>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector: (state: TSourceValue) => TSubscribeSelected
       children:
         | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
@@ -178,20 +184,17 @@ export class TableController<
 
     // Attach Subscribe function
     const Subscribe = function Subscribe(props: {
-      source?: Atom<unknown> | ReadonlyAtom<unknown>
+      source?: SubscribeSource<unknown>
       selector?: (state: unknown) => unknown
       children:
         | ((state: Readonly<unknown>) => TemplateResult | string)
         | TemplateResult
         | string
     }): TemplateResult | string {
-      let selectedState: unknown
-      if (props.source !== undefined) {
-        const v = props.source.get()
-        selectedState = props.selector !== undefined ? props.selector(v) : v
-      } else {
-        selectedState = props.selector!(tableInstance.store.state)
-      }
+      const source = props.source ?? tableInstance.store
+      const value = source.get()
+      const selectedState =
+        props.selector !== undefined ? props.selector(value) : value
       if (typeof props.children === 'function') {
         return props.children(selectedState as Readonly<unknown>)
       }
@@ -215,7 +218,6 @@ export class TableController<
         this.host.requestUpdate()
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       this._optionsSubscription = this._table.optionsStore!.subscribe(() => {
         this._notifier++
         this.host.requestUpdate()

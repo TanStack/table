@@ -17,5 +17,5 @@ export type {
 } from './createTableHook.svelte'
 export { createTableState } from './createTableState.svelte'
 export { default as FlexRender } from './FlexRender.svelte'
-export { subscribeTable } from './subscribe'
+export { subscribeTable, type SubscribeSource } from './subscribe'
 export { renderComponent, renderSnippet } from './render-component'

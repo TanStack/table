@@ -3,7 +3,12 @@ import { constructTable } from '@tanstack/table-core'
 import { shallow, useSelector } from '@tanstack/vue-store'
 import { mergeProxy } from './merge-proxy'
 import { vueReactivity } from './reactivity'
-import type { Atom, ReadonlyAtom } from '@tanstack/vue-store'
+import type {
+  Atom,
+  ReadonlyAtom,
+  ReadonlyStore,
+  Store,
+} from '@tanstack/vue-store'
 import type {
   NoInfer,
   RowData,
@@ -13,6 +18,12 @@ import type {
   TableState,
 } from '@tanstack/table-core'
 import type { MaybeRef, VNode } from 'vue'
+
+export type SubscribeSource<TValue> =
+  | Atom<TValue>
+  | ReadonlyAtom<TValue>
+  | Store<TValue>
+  | ReadonlyStore<TValue>
 
 export type TableOptionsWithReactiveData<
   TFeatures extends TableFeatures,
@@ -59,7 +70,7 @@ export type VueTable<
    */
   Subscribe: {
     <TSourceValue>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector?: undefined
       children:
         | ((state: Readonly<TSourceValue>) => VNode | Array<VNode>)
@@ -67,7 +78,7 @@ export type VueTable<
         | Array<VNode>
     }): VNode | Array<VNode>
     <TSourceValue, TSubSelected>(props: {
-      source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>
+      source: SubscribeSource<TSourceValue>
       selector: (state: TSourceValue) => TSubSelected
       children:
         | ((state: Readonly<TSubSelected>) => VNode | Array<VNode>)
@@ -190,18 +201,15 @@ export function useTable<
   )
 
   table.Subscribe = ((props: {
-    source?: Atom<unknown> | ReadonlyAtom<unknown>
+    source?: SubscribeSource<unknown>
     selector?: ((state: unknown) => unknown) | undefined
     children:
       | ((state: Readonly<unknown>) => VNode | Array<VNode>)
       | VNode
       | Array<VNode>
   }) => {
-    const source = props.source !== undefined ? props.source : table.store
-    const selectFn =
-      props.source !== undefined
-        ? (props.selector ?? ((x: unknown) => x))
-        : props.selector
+    const source = props.source ?? table.store
+    const selectFn = props.selector ?? ((x: unknown) => x)
     const selected = useSelector(source as never, selectFn as never, {
       compare: shallow,
     })
