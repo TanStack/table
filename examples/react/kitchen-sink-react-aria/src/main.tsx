@@ -17,59 +17,31 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {
-  ActionIcon,
-  Badge,
-  Box,
+  Column as AriaColumn,
+  Table as AriaTable,
   Button,
+  Cell,
   Checkbox,
-  Container,
-  Group,
-  Pagination as MantinePagination,
-  MantineProvider,
-  Table as MantineTable,
+  Dialog,
+  DialogTrigger,
+  Input,
+  Label,
+  ListBox,
+  ListBoxItem,
   Menu,
-  MultiSelect,
-  Paper,
+  MenuItem,
+  MenuTrigger,
   Popover,
-  Progress,
+  ProgressBar,
+  Row,
   Select,
-  Stack,
-  Text,
-  TextInput,
+  SelectValue,
+  Switch,
+  TableBody,
+  TableHeader,
   Tooltip,
-  UnstyledButton,
-  useComputedColorScheme,
-  useMantineColorScheme,
-} from '@mantine/core'
-import '@mantine/core/styles.css'
-import {
-  IconArrowDown,
-  IconArrowUp,
-  IconArrowsSort,
-  IconBriefcase,
-  IconBuildingStore,
-  IconCategory,
-  IconCheck,
-  IconChevronDown,
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
-  IconCode,
-  IconCreditCard,
-  IconDeviceDesktop,
-  IconDotsVertical,
-  IconEyeOff,
-  IconFilter,
-  IconGripVertical,
-  IconMoon,
-  IconPinned,
-  IconSearch,
-  IconSettings,
-  IconSun,
-  IconTrash,
-  IconUsersGroup,
-} from '@tabler/icons-react'
+  TooltipTrigger,
+} from 'react-aria-components'
 import {
   aggregationFns,
   columnFacetingFeature,
@@ -98,8 +70,9 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import type { Person } from '@/lib/make-data'
 import type { DragEndEvent } from '@dnd-kit/core'
+import type { Key } from 'react-aria-components'
+import type { Person } from '@/lib/make-data'
 import type {
   CellData,
   Column,
@@ -110,6 +83,7 @@ import type {
   GroupingState,
   Header,
   RowData,
+  RowSelectionState,
   SortingState,
   Table,
   TableFeatures,
@@ -155,6 +129,33 @@ const _features = tableFeatures({
 type AppTable = Table<typeof _features, Person>
 type AppColumn = Column<typeof _features, Person>
 
+function cx(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(' ')
+}
+
+function getPageItems(pageIndex: number, pageCount: number) {
+  const currentPage = pageIndex + 1
+  const pages = new Set<number>([
+    1,
+    pageCount,
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+  ])
+
+  return Array.from(pages)
+    .filter((page) => page >= 1 && page <= pageCount)
+    .sort((a, b) => a - b)
+    .reduce<Array<number | 'ellipsis'>>((items, page) => {
+      const previous = items[items.length - 1]
+      if (typeof previous === 'number' && page - previous > 1) {
+        items.push('ellipsis')
+      }
+      items.push(page)
+      return items
+    }, [])
+}
+
 function SortableFrame({
   id,
   children,
@@ -172,19 +173,19 @@ function SortableFrame({
   } = useSortable({ id })
 
   return (
-    <Box
+    <div
       ref={setNodeRef}
       {...attributes}
       {...listeners}
+      className="cursor-grab"
       style={{
         opacity: isDragging ? 0.6 : 1,
         transform: CSS.Transform.toString(transform),
         transition,
-        cursor: 'grab',
       }}
     >
       {children}
-    </Box>
+    </div>
   )
 }
 
@@ -194,12 +195,12 @@ function toSentenceCase(value: string) {
     .replace(/\w\S*/g, (word) => word[0].toUpperCase() + word.slice(1))
 }
 
-function formatDate(value: string) {
+function formatDate(value: unknown) {
   return new Intl.DateTimeFormat('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-  }).format(new Date(value))
+  }).format(new Date(String(value)))
 }
 
 function toDateInputValue(value: unknown) {
@@ -217,7 +218,7 @@ function getAriaSort(sortDirection: false | 'asc' | 'desc') {
 const SortingContext = React.createContext<SortingState>([])
 
 function getSortDirection(sorting: SortingState, columnId: string) {
-  const sort = sorting.find((sort) => sort.id === columnId)
+  const sort = sorting.find((item) => item.id === columnId)
   return sort ? (sort.desc ? 'desc' : 'asc') : undefined
 }
 
@@ -233,149 +234,116 @@ function getCommonPinningStyles(
 
   return {
     boxShadow: isLastLeftPinnedColumn
-      ? '-4px 0 4px -4px var(--mantine-color-default-border) inset'
+      ? '-4px 0 4px -4px var(--border) inset'
       : isFirstRightPinnedColumn
-        ? '4px 0 4px -4px var(--mantine-color-default-border) inset'
+        ? '4px 0 4px -4px var(--border) inset'
         : undefined,
     left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
     right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
     position: isPinned ? 'sticky' : 'relative',
-    borderRight: isLastLeftPinnedColumn
-      ? '1px solid var(--mantine-color-default-border)'
-      : undefined,
+    borderRight: isLastLeftPinnedColumn ? '1px solid var(--border)' : undefined,
     borderLeft: isFirstRightPinnedColumn
-      ? '1px solid var(--mantine-color-default-border)'
+      ? '1px solid var(--border)'
       : undefined,
     background: isSelected
-      ? 'var(--mantine-color-blue-light)'
+      ? 'color-mix(in srgb, var(--primary) 12%, var(--surface))'
       : isPinned
-        ? 'var(--mantine-color-body)'
+        ? 'var(--surface)'
         : undefined,
     zIndex: isPinned ? 2 : 0,
   }
 }
 
-function DepartmentIcon({ department }: { department: Person['department'] }) {
-  const icons: Record<Person['department'], React.ReactElement> = {
-    engineering: <IconCode size={16} />,
-    marketing: <IconBriefcase size={16} />,
-    sales: <IconBuildingStore size={16} />,
-    hr: <IconUsersGroup size={16} />,
-    finance: <IconCreditCard size={16} />,
-  }
-
-  return icons[department]
-}
-
 function DepartmentPill({ department }: { department: Person['department'] }) {
   return (
-    <Box
-      component="span"
-      style={{
-        display: 'inline-flex',
-        maxWidth: '100%',
-        height: 24,
-        minWidth: 0,
-        alignItems: 'center',
-        gap: 6,
-        paddingInline: 10,
-        borderRadius: 999,
-        border: '1px solid var(--mantine-color-default-border)',
-        fontSize: 'var(--mantine-font-size-sm)',
-      }}
-    >
-      <Box
-        component="span"
-        style={{
-          display: 'inline-flex',
-          width: 16,
-          height: 16,
-          flex: '0 0 16px',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-        }}
-      >
-        <DepartmentIcon department={department} />
-      </Box>
-      <Box
-        component="span"
-        style={{
-          minWidth: 0,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {toSentenceCase(department)}
-      </Box>
-    </Box>
+    <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-border px-2.5 py-1 text-sm">
+      <span className="font-mono text-xs text-muted">
+        {department.slice(0, 2).toUpperCase()}
+      </span>
+      <span className="truncate">{toSentenceCase(department)}</span>
+    </span>
   )
 }
 
 function EllipsisText({ children }: { children: React.ReactNode }) {
-  return (
-    <Box
-      component="span"
-      style={{
-        display: 'block',
-        minWidth: 0,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-      }}
-    >
-      {children}
-    </Box>
-  )
+  return <span className="block min-w-0 truncate">{children}</span>
 }
 
 function StatusBadge({ status }: { status: Person['status'] }) {
-  const color: Record<Person['status'], string> = {
-    active: 'green',
-    inactive: 'red',
-    pending: 'yellow',
+  const className: Record<Person['status'], string> = {
+    active: 'status-badge status-active',
+    inactive: 'status-badge status-inactive',
+    pending: 'status-badge status-pending',
   }
 
+  return <span className={className[status]}>{toSentenceCase(status)}</span>
+}
+
+function SelectionCheckbox({
+  ariaLabel,
+  isSelected,
+  isIndeterminate,
+  onChange,
+}: {
+  ariaLabel: string
+  isSelected: boolean
+  isIndeterminate?: boolean
+  onChange: (selected: boolean) => void
+}) {
+  const ref = React.useRef<HTMLInputElement>(null)
+
+  React.useEffect(() => {
+    if (ref.current) ref.current.indeterminate = !!isIndeterminate
+  }, [isIndeterminate])
+
   return (
-    <Badge
-      color={color[status]}
-      variant="light"
-      leftSection={<IconCheck size={14} />}
-    >
-      {toSentenceCase(status)}
-    </Badge>
+    <input
+      ref={ref}
+      aria-label={ariaLabel}
+      aria-checked={isIndeterminate ? 'mixed' : isSelected}
+      checked={isSelected}
+      className="native-checkbox"
+      type="checkbox"
+      onChange={(event) => onChange(event.currentTarget.checked)}
+    />
   )
 }
 
 function RowActions({ person }: { person: Person }) {
   return (
-    <Menu shadow="md" width={180}>
-      <Menu.Target>
-        <ActionIcon variant="subtle" aria-label="Open row actions">
-          <IconDotsVertical size={18} />
-        </ActionIcon>
-      </Menu.Target>
-      <Menu.Dropdown>
-        <Menu.Item
-          onClick={() => {
-            void navigator.clipboard.writeText(person.id)
-          }}
-        >
-          Copy ID
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item>View details</Menu.Item>
-        <Menu.Item>View profile</Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+    <MenuTrigger>
+      <Button
+        aria-label="Open row actions"
+        className="react-aria-Button icon-button"
+      >
+        •••
+      </Button>
+      <Popover>
+        <Menu>
+          <MenuItem
+            id="copy"
+            onAction={() => {
+              void navigator.clipboard.writeText(person.id)
+            }}
+          >
+            Copy ID
+          </MenuItem>
+          <MenuItem id="details">View details</MenuItem>
+          <MenuItem id="profile">View profile</MenuItem>
+        </Menu>
+      </Popover>
+    </MenuTrigger>
   )
 }
 
 function SortIcon({ direction }: { direction: 'asc' | 'desc' | undefined }) {
-  if (direction === 'asc') return <IconArrowUp size={16} />
-  if (direction === 'desc') return <IconArrowDown size={16} />
-  return <IconArrowsSort className="sort-icon-unsorted" size={16} />
+  if (direction === 'asc') return <span aria-hidden="true">↑</span>
+  if (direction === 'desc') return <span aria-hidden="true">↓</span>
+  return (
+    <span aria-hidden="true" className="sort-icon-unsorted text-muted">
+      ↕
+    </span>
+  )
 }
 
 function ColumnHeaderMenu({
@@ -395,103 +363,127 @@ function ColumnHeaderMenu({
   const grouped = canGroup ? column.getIsGrouped() : false
 
   if (!canSort && !canHide && !canPin && !canGroup) {
-    return <Text fw={600}>{title}</Text>
+    return <span className="font-semibold">{title}</span>
   }
 
   return (
-    <Group gap={4} wrap="nowrap">
+    <div className="flex min-w-0 items-center gap-1">
       {canSort ? (
-        <UnstyledButton
-          onClick={column.getToggleSortingHandler()}
-          className="sort-trigger"
-          style={{ minWidth: 0 }}
+        <Button
+          className="header-sort-button"
+          onPress={() => column.toggleSorting()}
         >
-          <Group gap={4} wrap="nowrap">
-            <Text fw={600} truncate>
-              {title}
-            </Text>
-            <SortIcon direction={direction} />
-          </Group>
-        </UnstyledButton>
+          <span className="truncate font-semibold">{title}</span>
+          <SortIcon direction={direction} />
+        </Button>
       ) : (
-        <Text fw={600}>{title}</Text>
+        <span className="font-semibold">{title}</span>
       )}
-      <Menu shadow="md" width={180}>
-        <Menu.Target>
-          <ActionIcon
-            variant="subtle"
-            size="sm"
-            aria-label={`Open ${title} column menu`}
-          >
-            <IconChevronDown size={16} />
-          </ActionIcon>
-        </Menu.Target>
-        <Menu.Dropdown>
-          {canSort ? (
-            <>
-              <Menu.Item
-                leftSection={<IconArrowUp size={16} />}
-                onClick={() => column.toggleSorting(false)}
-              >
-                Asc
-              </Menu.Item>
-              <Menu.Item
-                leftSection={<IconArrowDown size={16} />}
-                onClick={() => column.toggleSorting(true)}
-              >
-                Desc
-              </Menu.Item>
-            </>
-          ) : null}
-          {canGroup ? (
-            <Menu.Item
-              leftSection={<IconCategory size={16} />}
-              onClick={column.getToggleGroupingHandler()}
-            >
-              {grouped ? 'Ungroup' : 'Group by'}
-            </Menu.Item>
-          ) : null}
-          {canPin ? (
-            <>
-              <Menu.Divider />
-              <Menu.Item
-                disabled={pinned === 'left'}
-                leftSection={<IconPinned size={16} />}
-                onClick={() => column.pin('left')}
-              >
-                Pin left
-              </Menu.Item>
-              <Menu.Item
-                disabled={pinned === 'right'}
-                leftSection={<IconPinned size={16} />}
-                onClick={() => column.pin('right')}
-              >
-                Pin right
-              </Menu.Item>
-              {pinned ? (
-                <Menu.Item
-                  leftSection={<IconPinned size={16} opacity={0.45} />}
-                  onClick={() => column.pin(false)}
+      <MenuTrigger>
+        <Button
+          className="react-aria-Button icon-button"
+          aria-label={`Open ${title} column menu`}
+        >
+          ▾
+        </Button>
+        <Popover>
+          <Menu>
+            {canSort ? (
+              <>
+                <MenuItem id="asc" onAction={() => column.toggleSorting(false)}>
+                  Asc
+                </MenuItem>
+                <MenuItem id="desc" onAction={() => column.toggleSorting(true)}>
+                  Desc
+                </MenuItem>
+              </>
+            ) : null}
+            {canGroup ? (
+              <MenuItem id="group" onAction={column.getToggleGroupingHandler()}>
+                {grouped ? 'Ungroup' : 'Group by'}
+              </MenuItem>
+            ) : null}
+            {canPin ? (
+              <>
+                <MenuItem
+                  id="pin-left"
+                  isDisabled={pinned === 'left'}
+                  onAction={() => column.pin('left')}
                 >
-                  Unpin
-                </Menu.Item>
-              ) : null}
-            </>
-          ) : null}
-          {canHide ? (
-            <>
-              <Menu.Divider />
-              <Menu.Item
-                leftSection={<IconEyeOff size={16} />}
-                onClick={() => column.toggleVisibility(false)}
+                  Pin left
+                </MenuItem>
+                <MenuItem
+                  id="pin-right"
+                  isDisabled={pinned === 'right'}
+                  onAction={() => column.pin('right')}
+                >
+                  Pin right
+                </MenuItem>
+                {pinned ? (
+                  <MenuItem id="unpin" onAction={() => column.pin(false)}>
+                    Unpin
+                  </MenuItem>
+                ) : null}
+              </>
+            ) : null}
+            {canHide ? (
+              <MenuItem
+                id="hide"
+                onAction={() => column.toggleVisibility(false)}
               >
                 Hide
-              </Menu.Item>
-            </>
-          ) : null}
-        </Menu.Dropdown>
-      </Menu>
-    </Group>
+              </MenuItem>
+            ) : null}
+          </Menu>
+        </Popover>
+      </MenuTrigger>
+    </div>
+  )
+}
+
+function AriaSelect({
+  label,
+  value,
+  options,
+  className,
+  showLabel = true,
+  onChange,
+}: {
+  label: string
+  value: string | null
+  options: Array<{ value: string; label: string }>
+  className?: string
+  showLabel?: boolean
+  onChange: (value: string) => void
+}) {
+  return (
+    <Select
+      aria-label={label}
+      className={cx('react-aria-select', className)}
+      selectedKey={value}
+      onSelectionChange={(key: Key | null) => {
+        if (key != null) onChange(String(key))
+      }}
+    >
+      {showLabel ? <Label>{label}</Label> : null}
+      <Button>
+        <SelectValue />
+        <span aria-hidden="true">⌄</span>
+      </Button>
+      <Popover>
+        <ListBox>
+          {options.map((option) => (
+            <ListBoxItem
+              key={option.value}
+              id={option.value}
+              textValue={option.label}
+            >
+              {option.label}
+            </ListBoxItem>
+          ))}
+        </ListBox>
+      </Popover>
+    </Select>
   )
 }
 
@@ -504,7 +496,6 @@ function ViewOptionsPopover({
   columnOrder: Array<string>
   onColumnOrderChange: React.Dispatch<React.SetStateAction<Array<string>>>
 }) {
-  const [opened, setOpened] = React.useState(false)
   const [query, setQuery] = React.useState('')
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -533,26 +524,13 @@ function ViewOptionsPopover({
   }
 
   return (
-    <Popover
-      opened={opened}
-      onChange={setOpened}
-      position="bottom-end"
-      shadow="md"
-    >
-      <Popover.Target>
-        <Button
-          variant="outline"
-          size="sm"
-          leftSection={<IconSettings size={16} />}
-          onClick={() => setOpened((value) => !value)}
-        >
-          View
-        </Button>
-      </Popover.Target>
-      <Popover.Dropdown w={320}>
-        <Stack gap="sm">
-          <TextInput
-            label="Search columns"
+    <DialogTrigger>
+      <Button>View</Button>
+      <Popover className="react-aria-Popover w-80">
+        <Dialog className="space-y-3 p-3">
+          <Input
+            aria-label="Search columns"
+            placeholder="Search columns"
             value={query}
             onChange={(event) => setQuery(event.currentTarget.value)}
           />
@@ -565,27 +543,28 @@ function ViewOptionsPopover({
               items={columns.map((column) => column.id)}
               strategy={verticalListSortingStrategy}
             >
-              <Stack gap={4}>
+              <div className="space-y-1">
                 {columns.map((column) => (
                   <SortableFrame key={column.id} id={column.id}>
-                    <Group justify="space-between" wrap="nowrap">
+                    <div className="flex items-center justify-between rounded-md px-2 py-1 hover:bg-muted/40">
                       <Checkbox
-                        checked={column.getIsVisible()}
-                        label={column.columnDef.meta?.label ?? column.id}
-                        onChange={() =>
-                          column.toggleVisibility(!column.getIsVisible())
+                        isSelected={column.getIsVisible()}
+                        onChange={(selected) =>
+                          column.toggleVisibility(selected)
                         }
-                      />
-                      <IconGripVertical size={16} opacity={0.45} />
-                    </Group>
+                      >
+                        {column.columnDef.meta?.label ?? column.id}
+                      </Checkbox>
+                      <span className="text-muted">≡</span>
+                    </div>
                   </SortableFrame>
                 ))}
-              </Stack>
+              </div>
             </SortableContext>
           </DndContext>
-        </Stack>
-      </Popover.Dropdown>
-    </Popover>
+        </Dialog>
+      </Popover>
+    </DialogTrigger>
   )
 }
 
@@ -598,7 +577,6 @@ function SortListPopover({
   sorting: SortingState
   onSortingChange: React.Dispatch<React.SetStateAction<SortingState>>
 }) {
-  const [opened, setOpened] = React.useState(false)
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   )
@@ -622,11 +600,12 @@ function SortListPopover({
     const nextColumn = sortableColumns.find(
       (column) => !sorting.some((sort) => sort.id === column.id),
     )
-    if (nextColumn)
+    if (nextColumn) {
       onSortingChange((current) => [
         ...current,
         { id: nextColumn.id, desc: false },
       ])
+    }
   }
 
   const onDragEnd = (event: DragEndEvent) => {
@@ -643,25 +622,13 @@ function SortListPopover({
   }
 
   return (
-    <Popover opened={opened} onChange={setOpened} width={520} shadow="md">
-      <Popover.Target>
-        <Button
-          variant="outline"
-          size="sm"
-          leftSection={<IconArrowsSort size={16} />}
-          rightSection={
-            sorting.length ? <Badge size="sm">{sorting.length}</Badge> : null
-          }
-          onClick={() => setOpened((value) => !value)}
-        >
-          Sort
-        </Button>
-      </Popover.Target>
-      <Popover.Dropdown>
-        <Stack gap="md">
-          <Text fw={600}>
+    <DialogTrigger>
+      <Button>Sort{sorting.length ? ` (${sorting.length})` : ''}</Button>
+      <Popover className="react-aria-Popover w-[520px]">
+        <Dialog className="space-y-4 p-3">
+          <div className="font-semibold">
             {sorting.length ? 'Sort by' : 'No sorting applied'}
-          </Text>
+          </div>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -671,38 +638,30 @@ function SortListPopover({
               items={sorting.map((sort) => sort.id)}
               strategy={verticalListSortingStrategy}
             >
-              <Stack gap="xs">
+              <div className="space-y-2">
                 {sorting.map((sort, index) => (
                   <SortableFrame key={sort.id} id={sort.id}>
-                    <Group wrap="nowrap" align="flex-end">
-                      <IconGripVertical size={18} opacity={0.45} />
-                      <Select
+                    <div className="grid grid-cols-[auto_1fr_7rem_auto] items-end gap-2">
+                      <span className="pb-2 text-muted">≡</span>
+                      <AriaSelect
                         label="Column"
-                        searchable
-                        data={columnOptions}
                         value={sort.id}
-                        onChange={(value) => {
-                          if (value) updateSort(index, { id: value })
-                        }}
-                        style={{ flex: 1 }}
+                        options={columnOptions}
+                        onChange={(value) => updateSort(index, { id: value })}
                       />
-                      <Select
+                      <AriaSelect
                         label="Direction"
-                        data={[
+                        value={sort.desc ? 'desc' : 'asc'}
+                        options={[
                           { value: 'asc', label: 'Asc' },
                           { value: 'desc', label: 'Desc' },
                         ]}
-                        value={sort.desc ? 'desc' : 'asc'}
                         onChange={(value) =>
                           updateSort(index, { desc: value === 'desc' })
                         }
-                        w={110}
                       />
-                      <ActionIcon
-                        variant="subtle"
-                        color="red"
-                        aria-label="Remove sort"
-                        onClick={() =>
+                      <Button
+                        onPress={() =>
                           onSortingChange((current) =>
                             current.filter(
                               (_, sortIndex) => sortIndex !== index,
@@ -710,33 +669,26 @@ function SortListPopover({
                           )
                         }
                       >
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    </Group>
+                        Remove
+                      </Button>
+                    </div>
                   </SortableFrame>
                 ))}
-              </Stack>
+              </div>
             </SortableContext>
           </DndContext>
-          <Group>
+          <div className="flex gap-2">
             <Button
-              size="sm"
-              onClick={addSort}
-              disabled={sorting.length >= sortableColumns.length}
+              onPress={addSort}
+              isDisabled={sorting.length >= sortableColumns.length}
             >
               Add sort
             </Button>
-            <Button
-              size="sm"
-              variant="subtle"
-              onClick={() => table.resetSorting()}
-            >
-              Reset
-            </Button>
-          </Group>
-        </Stack>
-      </Popover.Dropdown>
-    </Popover>
+            <Button onPress={() => table.resetSorting()}>Reset</Button>
+          </div>
+        </Dialog>
+      </Popover>
+    </DialogTrigger>
   )
 }
 
@@ -757,17 +709,16 @@ function FilterValueInput({
   const operator = filter.operator ?? 'includesString'
   const disabled = operator === 'isEmpty' || operator === 'isNotEmpty'
 
-  if (disabled) {
-    return <Text c="dimmed">No value required</Text>
-  }
+  if (disabled)
+    return <div className="pb-2 text-sm text-muted">No value required</div>
 
   if (variant === 'select') {
     const options = column.columnDef.meta?.options ?? []
     return (
-      <Select
+      <AriaSelect
         label="Value"
-        data={options}
         value={typeof filter.value === 'string' ? filter.value : null}
+        options={options}
         onChange={(value) => onFilterUpdate(filter.filterId!, { value })}
       />
     )
@@ -775,13 +726,33 @@ function FilterValueInput({
 
   if (variant === 'multi-select') {
     const options = column.columnDef.meta?.options ?? []
+    const values = Array.isArray(filter.value)
+      ? filter.value.map(String)
+      : typeof filter.value === 'string' && filter.value
+        ? [filter.value]
+        : []
     return (
-      <MultiSelect
-        label="Value"
-        data={options}
-        value={Array.isArray(filter.value) ? filter.value : []}
-        onChange={(value) => onFilterUpdate(filter.filterId!, { value })}
-      />
+      <label className="grid gap-1 text-sm">
+        <span className="font-medium">Value</span>
+        <select
+          multiple
+          className="min-h-24 rounded-md border border-border bg-background p-2"
+          value={values}
+          onChange={(event) =>
+            onFilterUpdate(filter.filterId!, {
+              value: Array.from(event.currentTarget.selectedOptions).map(
+                (option) => option.value,
+              ),
+            })
+          }
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </label>
     )
   }
 
@@ -789,9 +760,9 @@ function FilterValueInput({
     if (operator === 'inRange') {
       const value = Array.isArray(filter.value) ? filter.value : []
       return (
-        <Group grow>
-          <TextInput
-            label="From"
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            aria-label="From"
             type="date"
             value={toDateInputValue(value[0])}
             onChange={(event) =>
@@ -805,8 +776,8 @@ function FilterValueInput({
               })
             }
           />
-          <TextInput
-            label="To"
+          <Input
+            aria-label="To"
             type="date"
             value={toDateInputValue(value[1])}
             onChange={(event) =>
@@ -820,13 +791,13 @@ function FilterValueInput({
               })
             }
           />
-        </Group>
+        </div>
       )
     }
 
     return (
-      <TextInput
-        label="Value"
+      <Input
+        aria-label="Value"
         type="date"
         value={toDateInputValue(filter.value)}
         onChange={(event) =>
@@ -842,12 +813,12 @@ function FilterValueInput({
 
   if (variant === 'number') {
     return (
-      <TextInput
-        label="Value"
+      <Input
+        aria-label="Value"
         type="number"
         value={
           typeof filter.value === 'number' || typeof filter.value === 'string'
-            ? filter.value
+            ? String(filter.value)
             : ''
         }
         onChange={(event) =>
@@ -863,8 +834,8 @@ function FilterValueInput({
   }
 
   return (
-    <TextInput
-      label="Value"
+    <Input
+      aria-label="Value"
       value={typeof filter.value === 'string' ? filter.value : ''}
       onChange={(event) =>
         onFilterUpdate(filter.filterId!, { value: event.currentTarget.value })
@@ -884,7 +855,6 @@ function FilterListPopover({
     React.SetStateAction<Array<ExtendedColumnFilter>>
   >
 }) {
-  const [opened, setOpened] = React.useState(false)
   const filterableColumns = table
     .getAllColumns()
     .filter((column) => column.getCanFilter())
@@ -905,8 +875,8 @@ function FilterListPopover({
   }
 
   const addFilter = () => {
-    if (filterableColumns.length === 0) return
     const [column] = filterableColumns
+    if (!column) return
     onColumnFiltersChange((current) => [
       ...current,
       {
@@ -920,65 +890,53 @@ function FilterListPopover({
   }
 
   return (
-    <Popover opened={opened} onChange={setOpened} width={760} shadow="md">
-      <Popover.Target>
-        <Button
-          variant="outline"
-          size="sm"
-          leftSection={<IconFilter size={16} />}
-          rightSection={
-            columnFilters.length ? (
-              <Badge size="sm">{columnFilters.length}</Badge>
-            ) : null
-          }
-          onClick={() => setOpened((value) => !value)}
-        >
-          Filter
-        </Button>
-      </Popover.Target>
-      <Popover.Dropdown>
-        <Stack gap="md">
-          <Text fw={600}>Filters</Text>
+    <DialogTrigger>
+      <Button>
+        Filter{columnFilters.length ? ` (${columnFilters.length})` : ''}
+      </Button>
+      <Popover className="react-aria-Popover w-[760px]">
+        <Dialog className="space-y-4 p-3">
+          <div className="font-semibold">Filters</div>
           {columnFilters.map((filter, index) => {
             const column = table.getColumn(filter.id)
             if (!column || !filter.filterId) return null
             const variant = column.columnDef.meta?.variant ?? 'text'
             const operators = getFilterOperators(variant)
             return (
-              <Group key={filter.filterId} align="flex-end" wrap="nowrap">
+              <div
+                key={filter.filterId}
+                className="grid grid-cols-[4.5rem_11rem_11rem_1fr_auto] items-end gap-2"
+              >
                 {index === 0 ? (
-                  <Text w={70} pb={8}>
-                    Where
-                  </Text>
+                  <div className="pb-2 text-sm">Where</div>
                 ) : index === 1 ? (
-                  <Select
-                    data={[
+                  <AriaSelect
+                    label="Join"
+                    value={filter.joinOperator ?? 'and'}
+                    options={[
                       { value: 'and', label: 'and' },
                       { value: 'or', label: 'or' },
                     ]}
-                    value={filter.joinOperator ?? 'and'}
-                    onChange={(joinOperator) => {
-                      if (!joinOperator) return
+                    onChange={(joinOperator) =>
                       onColumnFiltersChange((current) =>
-                        current.map((item) => ({ ...item, joinOperator })),
+                        current.map((item) => ({
+                          ...item,
+                          joinOperator: joinOperator as 'and' | 'or',
+                        })),
                       )
-                    }}
-                    w={90}
+                    }
                   />
                 ) : (
-                  <Text w={70} pb={8}>
+                  <div className="pb-2 text-sm">
                     {filter.joinOperator ?? 'and'}
-                  </Text>
+                  </div>
                 )}
-                <Select
+                <AriaSelect
                   label="Field"
-                  searchable
-                  data={fieldOptions}
                   value={column.id}
+                  options={fieldOptions}
                   onChange={(nextColumnId) => {
-                    const nextColumn = nextColumnId
-                      ? table.getColumn(nextColumnId)
-                      : undefined
+                    const nextColumn = table.getColumn(nextColumnId)
                     if (nextColumn) {
                       updateFilter(filter.filterId!, {
                         id: nextColumn.id,
@@ -989,36 +947,28 @@ function FilterListPopover({
                       })
                     }
                   }}
-                  w={190}
                 />
-                <Select
+                <AriaSelect
                   label="Operator"
-                  data={operators.map((operator) => ({
+                  value={filter.operator ?? operators[0].value}
+                  options={operators.map((operator) => ({
                     value: operator.value,
                     label: operator.label,
                   }))}
-                  value={filter.operator ?? operators[0].value}
-                  onChange={(operator) => {
-                    if (!operator) return
+                  onChange={(operator) =>
                     updateFilter(filter.filterId!, {
-                      operator,
+                      operator: operator as ExtendedColumnFilter['operator'],
                       value: '',
                     })
-                  }}
-                  w={180}
+                  }
                 />
-                <Box style={{ flex: 1 }}>
-                  <FilterValueInput
-                    column={column}
-                    filter={filter}
-                    onFilterUpdate={updateFilter}
-                  />
-                </Box>
-                <ActionIcon
-                  variant="subtle"
-                  color="red"
-                  aria-label="Remove filter"
-                  onClick={() =>
+                <FilterValueInput
+                  column={column}
+                  filter={filter}
+                  onFilterUpdate={updateFilter}
+                />
+                <Button
+                  onPress={() =>
                     onColumnFiltersChange((current) =>
                       current.filter(
                         (item) => item.filterId !== filter.filterId,
@@ -1026,143 +976,116 @@ function FilterListPopover({
                     )
                   }
                 >
-                  <IconTrash size={16} />
-                </ActionIcon>
-              </Group>
+                  Remove
+                </Button>
+              </div>
             )
           })}
-          <Group>
-            <Button size="sm" onClick={addFilter}>
-              Add filter
-            </Button>
-            <Button
-              size="sm"
-              variant="subtle"
-              onClick={() => onColumnFiltersChange([])}
-            >
-              Reset
-            </Button>
-          </Group>
-        </Stack>
-      </Popover.Dropdown>
-    </Popover>
+          <div className="flex gap-2">
+            <Button onPress={addFilter}>Add filter</Button>
+            <Button onPress={() => onColumnFiltersChange([])}>Reset</Button>
+          </div>
+        </Dialog>
+      </Popover>
+    </DialogTrigger>
   )
 }
 
 function Pagination({ table }: { table: AppTable }) {
   const pageIndex = table.store.state.pagination.pageIndex
   const pageSize = table.store.state.pagination.pageSize
+  const pageItems = getPageItems(pageIndex, table.getPageCount())
 
   return (
-    <Group justify="space-between" p="sm">
-      <Text size="sm" c="dimmed">
+    <div className="table-pagination">
+      <div className="table-pagination-summary">
         {table.getFilteredSelectedRowModel().rows.length.toLocaleString()} of{' '}
         {table.getFilteredRowModel().rows.length.toLocaleString()} row(s)
         selected.
-      </Text>
-      <Group gap="xs">
-        <Text size="sm">Rows per page:</Text>
-        <Select
-          aria-label="Rows per page"
-          data={['10', '20', '30', '40', '50']}
+      </div>
+      <div className="table-pagination-controls">
+        <span className="whitespace-nowrap text-sm">Rows per page:</span>
+        <AriaSelect
+          label="Rows per page"
+          className="w-24"
+          showLabel={false}
           value={String(pageSize)}
+          options={['10', '20', '30', '40', '50'].map((value) => ({
+            value,
+            label: value,
+          }))}
           onChange={(value) => {
             table.setPageSize(Number(value))
             table.setPageIndex(0)
           }}
-          w={90}
         />
-        <ActionIcon
-          variant="subtle"
-          aria-label="First page"
-          onClick={() => table.setPageIndex(0)}
-          disabled={!table.getCanPreviousPage()}
+        <Button
+          onPress={() => table.setPageIndex(0)}
+          isDisabled={!table.getCanPreviousPage()}
         >
-          <IconChevronsLeft size={18} />
-        </ActionIcon>
-        <ActionIcon
-          variant="subtle"
-          aria-label="Previous page"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          «
+        </Button>
+        <nav aria-label="Pagination" className="pagination">
+          <Button
+            isDisabled={!table.getCanPreviousPage()}
+            onPress={() => table.previousPage()}
+          >
+            ‹ Prev
+          </Button>
+          {pageItems.map((page, index) =>
+            page === 'ellipsis' ? (
+              <span key={`ellipsis-${index}`} className="page-ellipsis">
+                …
+              </span>
+            ) : (
+              <Button
+                key={page}
+                className={cx(
+                  'react-aria-Button',
+                  page === pageIndex + 1 && 'is-active',
+                )}
+                onPress={() => table.setPageIndex(page - 1)}
+              >
+                {page}
+              </Button>
+            ),
+          )}
+          <Button
+            isDisabled={!table.getCanNextPage()}
+            onPress={() => table.nextPage()}
+          >
+            Next ›
+          </Button>
+        </nav>
+        <Button
+          onPress={() => table.setPageIndex(table.getPageCount() - 1)}
+          isDisabled={!table.getCanNextPage()}
         >
-          <IconChevronLeft size={18} />
-        </ActionIcon>
-        <MantinePagination
-          value={pageIndex + 1}
-          total={table.getPageCount()}
-          onChange={(page) => table.setPageIndex(page - 1)}
-          withEdges={false}
-          siblings={1}
-          boundaries={1}
-        />
-        <ActionIcon
-          variant="subtle"
-          aria-label="Next page"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <IconChevronRight size={18} />
-        </ActionIcon>
-        <ActionIcon
-          variant="subtle"
-          aria-label="Last page"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          <IconChevronsRight size={18} />
-        </ActionIcon>
-      </Group>
-    </Group>
+          »
+        </Button>
+      </div>
+    </div>
   )
 }
 
-function ModeMenu() {
-  const { colorScheme, setColorScheme } = useMantineColorScheme()
-  const computedColorScheme = useComputedColorScheme('light')
-  const icon =
-    computedColorScheme === 'dark' ? (
-      <IconMoon size={18} />
-    ) : (
-      <IconSun size={18} />
-    )
+function ModeSwitch() {
+  const [isDark, setIsDark] = React.useState(() =>
+    document.documentElement.classList.contains('dark'),
+  )
+
+  React.useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark)
+  }, [isDark])
 
   return (
-    <Menu shadow="md" width={150}>
-      <Menu.Target>
-        <Tooltip label="Theme">
-          <ActionIcon variant="subtle" aria-label="Theme">
-            {icon}
-          </ActionIcon>
-        </Tooltip>
-      </Menu.Target>
-      <Menu.Dropdown>
-        {(
-          [
-            { value: 'light', label: 'Light', icon: <IconSun size={16} /> },
-            { value: 'dark', label: 'Dark', icon: <IconMoon size={16} /> },
-            {
-              value: 'auto',
-              label: 'Auto',
-              icon: <IconDeviceDesktop size={16} />,
-            },
-          ] satisfies Array<{
-            value: 'light' | 'dark' | 'auto'
-            label: string
-            icon: React.ReactNode
-          }>
-        ).map((item) => (
-          <Menu.Item
-            key={item.value}
-            leftSection={item.icon}
-            color={colorScheme === item.value ? 'blue' : undefined}
-            onClick={() => setColorScheme(item.value)}
-          >
-            {item.label}
-          </Menu.Item>
-        ))}
-      </Menu.Dropdown>
-    </Menu>
+    <TooltipTrigger>
+      <Switch aria-label="Theme" isSelected={isDark} onChange={setIsDark}>
+        <span className="switch-track">
+          <span className="switch-thumb" />
+        </span>
+      </Switch>
+      <Tooltip>Theme</Tooltip>
+    </TooltipTrigger>
   )
 }
 
@@ -1175,7 +1098,7 @@ function DebouncedTextInput({
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
-} & Omit<React.ComponentProps<typeof TextInput>, 'onChange'>) {
+} & Omit<React.ComponentProps<typeof Input>, 'onChange'>) {
   const [value, setValue] = React.useState(initialValue)
 
   React.useEffect(() => {
@@ -1191,9 +1114,13 @@ function DebouncedTextInput({
   }, [value, debounce, onChange])
 
   return (
-    <TextInput
+    <Input
       {...props}
-      value={value}
+      className={cx(
+        'react-aria-Input',
+        typeof props.className === 'string' ? props.className : undefined,
+      )}
+      value={String(value)}
       onChange={(event) => setValue(event.currentTarget.value)}
     />
   )
@@ -1201,7 +1128,7 @@ function DebouncedTextInput({
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<
     Array<ExtendedColumnFilter>
@@ -1222,28 +1149,26 @@ function App() {
       {
         id: 'select',
         header: ({ table }) => (
-          <Checkbox
-            checked={table.getIsAllPageRowsSelected()}
-            indeterminate={
+          <SelectionCheckbox
+            ariaLabel="Select all"
+            isSelected={table.getIsAllPageRowsSelected()}
+            isIndeterminate={
               !table.getIsAllPageRowsSelected() &&
               table.getIsSomePageRowsSelected()
             }
-            onChange={(event) =>
-              table.toggleAllPageRowsSelected(event.currentTarget.checked)
-            }
-            aria-label="Select all"
+            onChange={(selected) => table.toggleAllPageRowsSelected(selected)}
           />
         ),
         cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onChange={(event) =>
-              row.toggleSelected(event.currentTarget.checked)
-            }
-            aria-label="Select row"
+          <SelectionCheckbox
+            ariaLabel="Select row"
+            isSelected={row.getIsSelected()}
+            onChange={(selected) => row.toggleSelected(selected)}
           />
         ),
-        maxSize: 48,
+        size: 64,
+        minSize: 64,
+        maxSize: 64,
         enableSorting: false,
         enableHiding: false,
         enableResizing: false,
@@ -1272,12 +1197,14 @@ function App() {
         header: ({ column }) => (
           <ColumnHeaderMenu column={column} title="Age" />
         ),
-        cell: (info) => <Text size="sm">{String(info.getValue())}</Text>,
+        cell: (info) => (
+          <span className="text-sm">{String(info.getValue())}</span>
+        ),
         aggregationFn: 'mean',
         aggregatedCell: ({ getValue }) => (
-          <Text size="sm" c="dimmed">
+          <span className="text-sm text-muted">
             Avg: {Math.round(Number(getValue()) * 10) / 10}
-          </Text>
+          </span>
         ),
         meta: { label: 'Age', variant: 'number' },
       },
@@ -1338,23 +1265,48 @@ function App() {
         header: ({ column }) => (
           <ColumnHeaderMenu column={column} title="Join Date" />
         ),
-        cell: (info) => formatDate(info.getValue<string>()),
+        cell: (info) => formatDate(info.getValue()),
         aggregationFn: 'min',
         aggregatedCell: ({ getValue }) => {
-          const earliest = getValue<string>()
+          const earliest = getValue<Date | undefined>()
           return (
-            <Text size="sm" c="dimmed">
+            <span className="text-sm text-muted">
               Earliest: {earliest ? formatDate(earliest) : '-'}
-            </Text>
+            </span>
           )
         },
         meta: { label: 'Join Date', variant: 'date' },
       },
       {
+        id: 'progress',
+        accessorFn: (row) => row.age,
+        header: ({ column }) => (
+          <ColumnHeaderMenu column={column} title="Profile Progress" />
+        ),
+        cell: (info) => {
+          const value = Math.min(100, Math.max(0, Number(info.getValue())))
+          return (
+            <ProgressBar value={value} aria-label="Profile progress">
+              {({ percentage }) => (
+                <div className="progress-track">
+                  <div
+                    className="progress-fill"
+                    style={{ width: `${percentage ?? 0}%` }}
+                  />
+                </div>
+              )}
+            </ProgressBar>
+          )
+        },
+        meta: { label: 'Profile Progress', variant: 'number' },
+      },
+      {
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) => <RowActions person={row.original} />,
-        maxSize: 44,
+        size: 72,
+        minSize: 72,
+        maxSize: 72,
         enableResizing: false,
       },
     ],
@@ -1434,24 +1386,16 @@ function App() {
 
   return (
     <SortingContext.Provider value={sorting}>
-      <Container fluid py="md">
-        <Stack gap="md">
-          <Paper withBorder p="sm">
-            <Group justify="flex-end" gap="xs">
-              <ModeMenu />
-              <Button variant="outline" size="sm" onClick={refreshData}>
-                Regenerate Data
-              </Button>
-              <Button variant="outline" size="sm" onClick={stressTest}>
-                Stress Test (200k rows)
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => rerender()}>
-                Force Rerender
-              </Button>
+      <main className="app-shell">
+        <div className="flex flex-col gap-4">
+          <div className="control-panel">
+            <div className="control-panel-actions">
+              <ModeSwitch />
+              <Button onPress={refreshData}>Regenerate Data</Button>
+              <Button onPress={stressTest}>Stress Test (200k rows)</Button>
+              <Button onPress={() => rerender()}>Force Rerender</Button>
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() =>
+                onPress={() =>
                   console.info(
                     'table.getSelectedRowModel().flatRows',
                     table.getSelectedRowModel().flatRows,
@@ -1460,143 +1404,113 @@ function App() {
               >
                 Log Selected Rows
               </Button>
-            </Group>
-          </Paper>
+            </div>
+          </div>
 
-          <Group align="center" gap="xs">
-            <DebouncedTextInput
-              value={globalFilter}
-              onChange={(value) => setGlobalFilter(String(value))}
-              placeholder="Search all columns..."
-              leftSection={<IconSearch size={16} />}
-              w={{ base: '100%', md: 360 }}
-            />
-            <FilterListPopover
-              table={table}
-              columnFilters={columnFilters}
-              onColumnFiltersChange={setColumnFilters}
-            />
-            <SortListPopover
-              table={table}
-              sorting={sorting}
-              onSortingChange={setSorting}
-            />
-            <ViewOptionsPopover
-              table={table}
-              columnOrder={columnOrder}
-              onColumnOrderChange={setColumnOrder}
-            />
-          </Group>
+          <div className="table-toolbar">
+            <div className="table-toolbar-search">
+              <DebouncedTextInput
+                aria-label="Search all columns"
+                value={globalFilter}
+                onChange={(value) => setGlobalFilter(String(value))}
+                placeholder="Search all columns..."
+              />
+            </div>
+            <div className="table-toolbar-actions">
+              <FilterListPopover
+                table={table}
+                columnFilters={columnFilters}
+                onColumnFiltersChange={setColumnFilters}
+              />
+              <SortListPopover
+                table={table}
+                sorting={sorting}
+                onSortingChange={setSorting}
+              />
+              <ViewOptionsPopover
+                table={table}
+                columnOrder={columnOrder}
+                onColumnOrderChange={setColumnOrder}
+              />
+            </div>
+          </div>
 
-          <Paper withBorder>
-            <MantineTable.ScrollContainer minWidth={1200} maxHeight={680}>
-              <MantineTable
-                stickyHeader
-                highlightOnHover
-                withColumnBorders
-                withRowBorders
-                withTableBorder
+          <div className="table-shell">
+            <div className="table-scroll max-h-[680px]">
+              <AriaTable
+                aria-label="React Aria TanStack Table kitchen sink"
+                className="data-table min-w-[1200px]"
                 style={{
                   width: `max(100%, ${table.getTotalSize()}px)`,
                   tableLayout: 'fixed',
                   ...columnSizeVars,
                 }}
               >
-                <colgroup>
-                  {table.getVisibleLeafColumns().map((column) => (
-                    <col
-                      key={column.id}
-                      style={{
-                        width: `calc(var(--col-${column.id}-size) * 1px)`,
-                      }}
-                    />
-                  ))}
-                </colgroup>
-                <MantineTable.Thead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <MantineTable.Tr key={headerGroup.id}>
-                      {headerGroup.headers
-                        .filter((header) => header.column.getIsVisible())
-                        .map((header) => (
-                          <ResizableHeaderCell
-                            key={header.id}
-                            header={header}
-                            table={table}
-                          />
-                        ))}
-                    </MantineTable.Tr>
-                  ))}
-                </MantineTable.Thead>
-                <MantineTable.Tbody>
+                <TableHeader>
+                  {table
+                    .getHeaderGroups()[0]
+                    ?.headers.filter((header) => header.column.getIsVisible())
+                    .map((header) => (
+                      <ResizableHeaderCell
+                        key={header.id}
+                        header={header}
+                        table={table}
+                      />
+                    ))}
+                </TableHeader>
+                <TableBody>
                   {table.getRowModel().rows.map((row) => {
                     const selected = row.getIsSelected()
                     return (
-                      <MantineTable.Tr
+                      <Row
                         key={row.id}
+                        id={row.id}
                         aria-selected={selected}
-                        data-selected={selected || undefined}
-                        bg={
-                          selected
-                            ? 'var(--mantine-color-blue-light)'
-                            : undefined
-                        }
+                        className={cx(selected && 'bg-primary/10')}
                       >
                         {row.getVisibleCells().map((cell) => (
-                          <MantineTable.Td
+                          <Cell
                             key={cell.id}
-                            align={
-                              cell.column.id === 'select' ? 'center' : undefined
-                            }
+                            className={cx(
+                              'overflow-hidden',
+                              cell.column.id === 'select' && 'select-cell',
+                              cell.column.id === 'actions' && 'action-cell',
+                            )}
                             style={{
                               width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-                              overflow: 'hidden',
                               ...getCommonPinningStyles(cell.column, selected),
                             }}
                           >
                             {cell.getIsGrouped() ? (
                               <Button
-                                size="xs"
-                                variant="subtle"
-                                leftSection={
-                                  row.getIsExpanded() ? (
-                                    <IconChevronDown size={16} />
-                                  ) : (
-                                    <IconChevronRight size={16} />
-                                  )
-                                }
-                                onClick={row.getToggleExpandedHandler()}
-                                disabled={!row.getCanExpand()}
+                                className="group-toggle-button"
+                                onPress={row.getToggleExpandedHandler()}
+                                isDisabled={!row.getCanExpand()}
                                 style={{
                                   paddingLeft: `calc(${row.depth} * 1.5rem + 0.5rem)`,
                                 }}
                               >
+                                {row.getIsExpanded() ? '▾' : '▸'}
                                 <table.FlexRender cell={cell} />
-                                <Text span c="dimmed" ml={4}>
+                                <span className="text-muted">
                                   ({row.subRows.length})
-                                </Text>
+                                </span>
                               </Button>
-                            ) : cell.column.id === 'progress' ? (
-                              <Stack gap={4}>
-                                <Text size="sm">
-                                  {String(cell.getValue())}%
-                                </Text>
-                                <Progress value={Number(cell.getValue())} />
-                              </Stack>
                             ) : (
                               <table.FlexRender cell={cell} />
                             )}
-                          </MantineTable.Td>
+                          </Cell>
                         ))}
-                      </MantineTable.Tr>
+                      </Row>
                     )
                   })}
-                </MantineTable.Tbody>
-              </MantineTable>
-            </MantineTable.ScrollContainer>
+                </TableBody>
+              </AriaTable>
+            </div>
             <Pagination table={table} />
-          </Paper>
-        </Stack>
-      </Container>
+          </div>
+        </div>
+      </main>
     </SortingContext.Provider>
   )
 }
@@ -1616,53 +1530,36 @@ function ResizableHeaderCell({
   const sortDirection = getSortDirection(sorting, header.column.id)
 
   return (
-    <MantineTable.Th
-      colSpan={header.colSpan}
-      align={header.column.id === 'select' ? 'center' : undefined}
+    <AriaColumn
+      id={header.id}
+      allowsSorting={header.column.getCanSort()}
+      isRowHeader={header.column.id === 'firstName'}
       aria-sort={getAriaSort(sortDirection || false)}
-      data-sort={sortDirection}
+      className={cx(
+        'header-cell',
+        header.column.id === 'select' && 'select-cell',
+        header.column.id === 'actions' && 'action-cell',
+      )}
       style={{
         width: `calc(var(--header-${header.id}-size) * 1px)`,
-        padding: 8,
         ...getCommonPinningStyles(header.column),
       }}
     >
-      <Box
-        style={{
-          position: 'relative',
-          paddingRight: header.column.getCanResize() ? 8 : 0,
-        }}
-      >
+      <div className="header-cell-content">
         {header.isPlaceholder ? null : <table.FlexRender header={header} />}
         {header.column.getCanResize() ? (
-          <Box
+          <div
             onDoubleClick={() => header.column.resetSize()}
             onMouseDown={header.getResizeHandler()}
             onTouchStart={header.getResizeHandler()}
-            style={{
-              position: 'absolute',
-              top: 0,
-              right: -6,
-              width: 6,
-              height: '100%',
-              cursor: 'col-resize',
-              touchAction: 'none',
-              background: header.column.getIsResizing()
-                ? 'var(--mantine-primary-color-filled)'
-                : 'transparent',
-            }}
+            className={cx(
+              'column-resizer',
+              header.column.getIsResizing() && 'bg-primary',
+            )}
           />
         ) : null}
-      </Box>
-    </MantineTable.Th>
-  )
-}
-
-function Root() {
-  return (
-    <MantineProvider defaultColorScheme="auto">
-      <App />
-    </MantineProvider>
+      </div>
+    </AriaColumn>
   )
 }
 
@@ -1671,6 +1568,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <Root />
+    <App />
   </React.StrictMode>,
 )

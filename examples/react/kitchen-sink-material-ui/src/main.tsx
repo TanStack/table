@@ -424,6 +424,16 @@ function ColumnHeaderMenu({
           direction={direction}
           IconComponent={ArrowDownwardIcon}
           onClick={column.getToggleSortingHandler()}
+          sx={{
+            '& .MuiTableSortLabel-icon': {
+              opacity: isSorted ? 1 : 0,
+              transition: 'opacity 120ms ease',
+            },
+            '&:hover .MuiTableSortLabel-icon, &:focus-visible .MuiTableSortLabel-icon':
+              {
+                opacity: 1,
+              },
+          }}
         >
           {title}
         </TableSortLabel>

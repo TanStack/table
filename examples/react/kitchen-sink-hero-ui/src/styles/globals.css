@@ -1,0 +1,6 @@
+@import 'tailwindcss' source('../../');
+@import '@heroui/styles';
+
+body {
+  margin: 0;
+}

@@ -77,7 +77,7 @@ export function DataTableColumnHeader<
             <Button
               variant="ghost"
               size="sm"
-              className="-ml-3 h-8 data-[state=open]:bg-accent"
+              className="group -ml-3 h-8 data-[state=open]:bg-accent"
             />
           }
         >
@@ -87,7 +87,7 @@ export function DataTableColumnHeader<
           ) : sorted === 'asc' ? (
             <ArrowUp className="ml-2 size-4" />
           ) : canSort ? (
-            <ChevronsUpDown className="ml-2 size-4" />
+            <ChevronsUpDown className="ml-2 size-4 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 group-data-[state=open]:opacity-100" />
           ) : null}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">

@@ -5,3 +5,13 @@ html {
 body {
   margin: 0;
 }
+
+.sort-icon-unsorted {
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.sort-trigger:hover .sort-icon-unsorted,
+.sort-trigger:focus-visible .sort-icon-unsorted {
+  opacity: 1;
+}

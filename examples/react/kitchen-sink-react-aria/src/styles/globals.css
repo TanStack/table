@@ -1,0 +1,592 @@
+@import 'tailwindcss' source('../../');
+
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #18181b;
+  --muted: #71717a;
+  --border: #e4e4e7;
+  --surface: #ffffff;
+  --surface-subtle: #f4f4f5;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #111113;
+  --foreground: #f4f4f5;
+  --muted: #a1a1aa;
+  --border: #27272a;
+  --surface: #18181b;
+  --surface-subtle: #242428;
+  --primary: #1493ff;
+  --primary-foreground: #ffffff;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+.control-panel {
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  background: var(--surface);
+  padding: 1rem;
+}
+
+.control-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.625rem;
+}
+
+.table-toolbar {
+  display: grid;
+  grid-template-columns: minmax(18rem, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.table-toolbar-search {
+  min-width: 0;
+}
+
+.table-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.border-border {
+  border-color: var(--border);
+}
+
+.bg-background {
+  background: var(--background);
+}
+
+.bg-primary {
+  background: var(--primary);
+}
+
+.bg-primary\/10 {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.hover\:bg-muted\/40:hover {
+  background: color-mix(in srgb, var(--muted) 12%, transparent);
+}
+
+.table-shell {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 0.625rem;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04);
+}
+
+.table-scroll {
+  overflow: auto;
+}
+
+.react-aria-Table,
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+.react-aria-Column,
+.react-aria-Cell,
+.data-table th,
+.data-table td {
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  padding: 0.875rem 1rem;
+  text-align: left;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.react-aria-Column,
+.data-table th {
+  position: relative;
+  background: var(--surface-subtle);
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.header-cell {
+  height: 3.5rem;
+}
+
+.header-cell-content {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  padding-right: 0.75rem;
+}
+
+.header-cell.select-cell .header-cell-content,
+.header-cell.action-cell .header-cell-content {
+  justify-content: center;
+  padding-right: 0;
+}
+
+.data-table tbody tr {
+  height: 3.25rem;
+}
+
+.react-aria-Row:last-child .react-aria-Cell,
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.select-cell {
+  width: 4rem;
+  min-width: 4rem;
+  padding-inline: 0.5rem;
+  text-align: center;
+}
+
+.action-cell {
+  width: 4.5rem;
+  min-width: 4.5rem;
+  padding-inline: 0.75rem;
+  text-align: center;
+}
+
+.react-aria-Cell.select-cell,
+.data-table td.select-cell {
+  padding-inline: 0.5rem;
+}
+
+.react-aria-Column[data-focused] {
+  outline: 2px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  outline-offset: -2px;
+}
+
+.react-aria-Row[data-hovered] {
+  background: color-mix(in srgb, var(--muted) 8%, transparent);
+}
+
+.react-aria-Row[data-selected] {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.react-aria-Button {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: var(--surface);
+  padding: 0.375rem 0.75rem;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  font-weight: 500;
+  outline: none;
+  transition:
+    border-color 120ms ease,
+    background 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.react-aria-Button[data-hovered] {
+  background: var(--surface-subtle);
+}
+
+.react-aria-Button[data-pressed],
+.react-aria-Button.is-active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.react-aria-Button[data-disabled] {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.react-aria-Button[data-focused] {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 30%, transparent);
+}
+
+.icon-button {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.header-sort-button,
+.group-toggle-button {
+  min-height: 1.75rem;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.sort-icon-unsorted {
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.header-sort-button:hover .sort-icon-unsorted,
+.header-sort-button[data-hovered] .sort-icon-unsorted,
+.header-sort-button:focus-visible .sort-icon-unsorted,
+.header-sort-button[data-focused] .sort-icon-unsorted {
+  opacity: 1;
+}
+
+.group-toggle-button {
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.column-resizer {
+  position: absolute;
+  top: -0.8rem;
+  right: -0.45rem;
+  width: 0.55rem;
+  height: calc(100% + 1.6rem);
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.column-resizer::after {
+  content: '';
+  position: absolute;
+  top: 0.7rem;
+  right: 0.25rem;
+  bottom: 0.7rem;
+  width: 1px;
+  background: transparent;
+}
+
+.column-resizer:hover::after,
+.column-resizer.bg-primary::after {
+  background: var(--primary);
+}
+
+.react-aria-Input,
+.react-aria-Select .react-aria-Button {
+  width: 100%;
+}
+
+.react-aria-Input {
+  min-height: 2.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: var(--surface);
+  padding: 0.375rem 0.75rem;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.react-aria-Input[data-focused],
+.react-aria-Input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+.react-aria-Select {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.react-aria-Select .react-aria-Label,
+label > span {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.react-aria-Popover {
+  min-width: var(--trigger-width);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--foreground);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.18);
+}
+
+.react-aria-Dialog {
+  outline: none;
+}
+
+.react-aria-Menu,
+.react-aria-ListBox {
+  display: grid;
+  gap: 0.125rem;
+  padding: 0.25rem;
+  outline: none;
+}
+
+.react-aria-MenuItem,
+.react-aria-ListBoxItem {
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.625rem;
+  color: var(--foreground);
+  outline: none;
+}
+
+.react-aria-MenuItem[data-hovered],
+.react-aria-MenuItem[data-focused],
+.react-aria-ListBoxItem[data-hovered],
+.react-aria-ListBoxItem[data-focused] {
+  background: var(--surface-subtle);
+}
+
+.react-aria-MenuItem[data-disabled] {
+  color: var(--muted);
+  opacity: 0.55;
+}
+
+.react-aria-ListBoxItem[data-selected] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.react-aria-Checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--foreground);
+  outline: none;
+}
+
+.react-aria-Checkbox::before {
+  content: '';
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  background: var(--surface);
+}
+
+.react-aria-Checkbox[data-selected]::before {
+  border-color: var(--primary);
+  background:
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(45deg, transparent 42%, white 42% 58%, transparent 58%),
+    linear-gradient(-45deg, transparent 50%, white 50% 64%, transparent 64%);
+}
+
+.react-aria-Checkbox[data-indeterminate]::before {
+  border-color: var(--primary);
+  background:
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(white, white);
+  background-size:
+    100% 100%,
+    60% 2px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.react-aria-Checkbox[data-focused]::before {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+.native-checkbox {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  margin-inline: auto;
+  accent-color: var(--primary);
+}
+
+.native-checkbox:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.react-aria-Switch {
+  display: inline-flex;
+  align-items: center;
+  outline: none;
+}
+
+.switch-track {
+  position: relative;
+  display: inline-flex;
+  width: 2.4rem;
+  height: 1.35rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-subtle);
+  transition: background 120ms ease;
+}
+
+.react-aria-Switch[data-selected] .switch-track {
+  background: var(--primary);
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  background: white;
+  transition: transform 120ms ease;
+}
+
+.react-aria-Switch[data-selected] .switch-thumb {
+  transform: translateX(1.05rem);
+}
+
+.react-aria-Tooltip {
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  background: var(--foreground);
+  padding: 0.25rem 0.5rem;
+  color: var(--background);
+  font-size: 0.75rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.status-active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.dark .status-active {
+  background: #052e16;
+  color: #4ade80;
+}
+
+.dark .status-inactive {
+  background: #450a0a;
+  color: #fca5a5;
+}
+
+.dark .status-pending {
+  background: #422006;
+  color: #fbbf24;
+}
+
+.progress-track {
+  height: 0.45rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surface-subtle);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.page-ellipsis {
+  color: var(--muted);
+  padding-inline: 0.25rem;
+}
+
+.table-pagination {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  border-top: 1px solid var(--border);
+  padding: 1rem;
+}
+
+.table-pagination-summary {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.table-pagination-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+@media (min-width: 1024px) {
+  .table-pagination {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .table-pagination-controls {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    padding: 1rem;
+  }
+
+  .table-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .control-panel-actions,
+  .table-toolbar-actions {
+    justify-content: flex-start;
+  }
+}
