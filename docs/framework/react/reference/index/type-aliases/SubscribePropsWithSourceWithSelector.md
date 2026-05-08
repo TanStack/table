@@ -3,10 +3,10 @@ id: SubscribePropsWithSourceWithSelector
 title: SubscribePropsWithSourceWithSelector
 ---
 
-# Type Alias: SubscribePropsWithSourceWithSelector\<TFeatures, TData, TSourceValue, TSelected\>
+# Type Alias: SubscribePropsWithSourceWithSelector\<TSourceValue, TSelected\>
 
 ```ts
-type SubscribePropsWithSourceWithSelector<TFeatures, TData, TSourceValue, TSelected> = object;
+type SubscribePropsWithSourceWithSelector<TSourceValue, TSelected> = object;
 ```
 
 Defined in: [Subscribe.ts:54](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L54)
@@ -15,14 +15,6 @@ Subscribe to a projected value from a source (atom or store). The selector
 receives the source value; children receive the projected `TSelected`.
 
 ## Type Parameters
-
-### TFeatures
-
-`TFeatures` *extends* `TableFeatures`
-
-### TData
-
-`TData` *extends* `RowData`
 
 ### TSourceValue
 
@@ -40,7 +32,7 @@ receives the source value; children receive the projected `TSelected`.
 children: (state) => ReactNode | ReactNode;
 ```
 
-Defined in: [Subscribe.ts:63](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L63)
+Defined in: [Subscribe.ts:57](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L57)
 
 ***
 
@@ -50,7 +42,7 @@ Defined in: [Subscribe.ts:63](https://github.com/TanStack/table/blob/main/packag
 selector: (state) => TSelected;
 ```
 
-Defined in: [Subscribe.ts:62](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L62)
+Defined in: [Subscribe.ts:56](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L56)
 
 #### Parameters
 
@@ -67,17 +59,7 @@ Defined in: [Subscribe.ts:62](https://github.com/TanStack/table/blob/main/packag
 ### source
 
 ```ts
-source: Atom<TSourceValue> | ReadonlyAtom<TSourceValue>;
+source: SubscribeSource<TSourceValue>;
 ```
 
-Defined in: [Subscribe.ts:61](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L61)
-
-***
-
-### table
-
-```ts
-table: Table<TFeatures, TData>;
-```
-
-Defined in: [Subscribe.ts:60](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L60)
+Defined in: [Subscribe.ts:55](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L55)

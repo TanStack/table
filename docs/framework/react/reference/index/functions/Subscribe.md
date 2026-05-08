@@ -8,10 +8,10 @@ title: Subscribe
 ## Call Signature
 
 ```ts
-function Subscribe<TFeatures, TData, TSourceValue>(props): ReactNode | Promise<ReactNode>;
+function Subscribe<TSourceValue>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [Subscribe.ts:148](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L148)
+Defined in: [Subscribe.ts:125](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L125)
 
 A React component that allows you to subscribe to the table state.
 
@@ -22,14 +22,6 @@ contextual typing works. This standalone component uses a union `props` type.
 
 ### Type Parameters
 
-#### TFeatures
-
-`TFeatures` *extends* `TableFeatures`
-
-#### TData
-
-`TData` *extends* `RowData`
-
 #### TSourceValue
 
 `TSourceValue`
@@ -38,7 +30,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 #### props
 
-[`SubscribePropsWithSourceIdentity`](../type-aliases/SubscribePropsWithSourceIdentity.md)\<`TFeatures`, `TData`, `TSourceValue`\>
+[`SubscribePropsWithSourceIdentity`](../type-aliases/SubscribePropsWithSourceIdentity.md)\<`TSourceValue`\>
 
 ### Returns
 
@@ -48,7 +40,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 ```tsx
 // As a standalone component — full store
-<Subscribe table={table} selector={(state) => ({ rowSelection: state.rowSelection })}>
+<Subscribe source={table.store} selector={(state) => ({ rowSelection: state.rowSelection })}>
   {({ rowSelection }) => (
     <div>Selected rows: {Object.keys(rowSelection).length}</div>
   )}
@@ -57,7 +49,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 ```tsx
 // Entire source (atom or store) — no selector
-<Subscribe table={table} source={table.atoms.rowSelection}>
+<Subscribe source={table.atoms.rowSelection}>
   {(rowSelection) => <div>...</div>}
 </Subscribe>
 ```
@@ -65,7 +57,6 @@ contextual typing works. This standalone component uses a union `props` type.
 ```tsx
 // Project source value (e.g. one row’s selection)
 <Subscribe
-  table={table}
   source={table.atoms.rowSelection}
   selector={(rowSelection) => rowSelection?.[row.id]}
 >
@@ -85,10 +76,10 @@ contextual typing works. This standalone component uses a union `props` type.
 ## Call Signature
 
 ```ts
-function Subscribe<TFeatures, TData, TSourceValue, TSelected>(props): ReactNode | Promise<ReactNode>;
+function Subscribe<TSourceValue, TSelected>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [Subscribe.ts:155](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L155)
+Defined in: [Subscribe.ts:128](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L128)
 
 A React component that allows you to subscribe to the table state.
 
@@ -98,14 +89,6 @@ For `table.Subscribe` from `useTable`, prefer that API — it uses overloads so 
 contextual typing works. This standalone component uses a union `props` type.
 
 ### Type Parameters
-
-#### TFeatures
-
-`TFeatures` *extends* `TableFeatures`
-
-#### TData
-
-`TData` *extends* `RowData`
 
 #### TSourceValue
 
@@ -119,7 +102,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 #### props
 
-[`SubscribePropsWithSourceWithSelector`](../type-aliases/SubscribePropsWithSourceWithSelector.md)\<`TFeatures`, `TData`, `TSourceValue`, `TSelected`\>
+[`SubscribePropsWithSourceWithSelector`](../type-aliases/SubscribePropsWithSourceWithSelector.md)\<`TSourceValue`, `TSelected`\>
 
 ### Returns
 
@@ -129,7 +112,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 ```tsx
 // As a standalone component — full store
-<Subscribe table={table} selector={(state) => ({ rowSelection: state.rowSelection })}>
+<Subscribe source={table.store} selector={(state) => ({ rowSelection: state.rowSelection })}>
   {({ rowSelection }) => (
     <div>Selected rows: {Object.keys(rowSelection).length}</div>
   )}
@@ -138,7 +121,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 ```tsx
 // Entire source (atom or store) — no selector
-<Subscribe table={table} source={table.atoms.rowSelection}>
+<Subscribe source={table.atoms.rowSelection}>
   {(rowSelection) => <div>...</div>}
 </Subscribe>
 ```
@@ -146,7 +129,6 @@ contextual typing works. This standalone component uses a union `props` type.
 ```tsx
 // Project source value (e.g. one row’s selection)
 <Subscribe
-  table={table}
   source={table.atoms.rowSelection}
   selector={(rowSelection) => rowSelection?.[row.id]}
 >
@@ -166,10 +148,10 @@ contextual typing works. This standalone component uses a union `props` type.
 ## Call Signature
 
 ```ts
-function Subscribe<TFeatures, TData, TSelected>(props): ReactNode | Promise<ReactNode>;
+function Subscribe<TFeatures, TSelected>(props): ReactNode | Promise<ReactNode>;
 ```
 
-Defined in: [Subscribe.ts:168](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L168)
+Defined in: [Subscribe.ts:131](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L131)
 
 A React component that allows you to subscribe to the table state.
 
@@ -184,10 +166,6 @@ contextual typing works. This standalone component uses a union `props` type.
 
 `TFeatures` *extends* `TableFeatures`
 
-#### TData
-
-`TData` *extends* `RowData`
-
 #### TSelected
 
 `TSelected`
@@ -196,7 +174,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 #### props
 
-[`SubscribePropsWithStore`](../type-aliases/SubscribePropsWithStore.md)\<`TFeatures`, `TData`, `TSelected`\>
+[`SubscribePropsWithStore`](../type-aliases/SubscribePropsWithStore.md)\<`TFeatures`, `TSelected`\>
 
 ### Returns
 
@@ -206,7 +184,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 ```tsx
 // As a standalone component — full store
-<Subscribe table={table} selector={(state) => ({ rowSelection: state.rowSelection })}>
+<Subscribe source={table.store} selector={(state) => ({ rowSelection: state.rowSelection })}>
   {({ rowSelection }) => (
     <div>Selected rows: {Object.keys(rowSelection).length}</div>
   )}
@@ -215,7 +193,7 @@ contextual typing works. This standalone component uses a union `props` type.
 
 ```tsx
 // Entire source (atom or store) — no selector
-<Subscribe table={table} source={table.atoms.rowSelection}>
+<Subscribe source={table.atoms.rowSelection}>
   {(rowSelection) => <div>...</div>}
 </Subscribe>
 ```
@@ -223,7 +201,6 @@ contextual typing works. This standalone component uses a union `props` type.
 ```tsx
 // Project source value (e.g. one row’s selection)
 <Subscribe
-  table={table}
   source={table.atoms.rowSelection}
   selector={(rowSelection) => rowSelection?.[row.id]}
 >

@@ -9,41 +9,18 @@ title: AngularTable
 type AngularTable<TFeatures, TData, TSelected> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [injectTable.ts:45](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L45)
+Defined in: [injectTable.ts:57](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L57)
 
 ## Type Declaration
 
-### computed()
+### computed
 
 ```ts
-computed: <TSubSelected>(props) => Signal<Readonly<TSubSelected>>;
+computed: AngularTableComputed<TFeatures>;
 ```
 
 Creates a computed that subscribe to changes in the table store with a custom selector.
 Default equality function is "shallow".
-
-#### Type Parameters
-
-##### TSubSelected
-
-`TSubSelected` = \{
-\}
-
-#### Parameters
-
-##### props
-
-###### equal?
-
-`ValueEqualityFn`\<`TSubSelected`\>
-
-###### selector
-
-(`state`) => `TSubSelected`
-
-#### Returns
-
-`Signal`\<`Readonly`\<`TSubSelected`\>\>
 
 ### state
 

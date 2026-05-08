@@ -9,7 +9,7 @@ title: ReactTable
 type ReactTable<TFeatures, TData, TSelected> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [useTable.ts:22](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L22)
+Defined in: [useTable.ts:21](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L21)
 
 ## Type Declaration
 
@@ -114,7 +114,7 @@ The **source** overloads are listed first so `TSourceValue` is inferred from `so
 
 ###### source
 
-`Atom`\<`TSourceValue`\> \| `ReadonlyAtom`\<`TSourceValue`\>
+[`SubscribeSource`](SubscribeSource.md)\<`TSourceValue`\>
 
 ##### Returns
 
@@ -150,7 +150,7 @@ The **source** overloads are listed first so `TSourceValue` is inferred from `so
 
 ###### source
 
-`Atom`\<`TSourceValue`\> \| `ReadonlyAtom`\<`TSourceValue`\>
+[`SubscribeSource`](SubscribeSource.md)\<`TSourceValue`\>
 
 ##### Returns
 
@@ -172,7 +172,7 @@ The **source** overloads are listed first so `TSourceValue` is inferred from `so
 
 ###### props
 
-`Omit`\<[`SubscribePropsWithStore`](SubscribePropsWithStore.md)\<`TFeatures`, `TData`, `TSubSelected`\>, `"table"`\>
+`Omit`\<[`SubscribePropsWithStore`](SubscribePropsWithStore.md)\<`TFeatures`, `TSubSelected`\>, `"source"`\>
 
 ##### Returns
 
@@ -190,5 +190,4 @@ The **source** overloads are listed first so `TSourceValue` is inferred from `so
 
 ### TSelected
 
-`TSelected` = \{
-\}
+`TSelected` = `TableState`\<`TFeatures`\>

@@ -3,13 +3,13 @@ id: SubscribePropsWithStore
 title: SubscribePropsWithStore
 ---
 
-# Type Alias: SubscribePropsWithStore\<TFeatures, TData, TSelected\>
+# Type Alias: SubscribePropsWithStore\<TFeatures, TSelected\>
 
 ```ts
-type SubscribePropsWithStore<TFeatures, TData, TSelected> = object;
+type SubscribePropsWithStore<TFeatures, TSelected> = object;
 ```
 
-Defined in: [Subscribe.ts:17](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L17)
+Defined in: [Subscribe.ts:23](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L23)
 
 Subscribe to `table.store` (full table state). The selector receives the full
 TableState.
@@ -19,10 +19,6 @@ TableState.
 ### TFeatures
 
 `TFeatures` *extends* `TableFeatures`
-
-### TData
-
-`TData` *extends* `RowData`
 
 ### TSelected
 
@@ -36,7 +32,7 @@ TableState.
 children: (state) => ReactNode | ReactNode;
 ```
 
-Defined in: [Subscribe.ts:31](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L31)
+Defined in: [Subscribe.ts:36](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L36)
 
 ***
 
@@ -46,7 +42,7 @@ Defined in: [Subscribe.ts:31](https://github.com/TanStack/table/blob/main/packag
 selector: (state) => TSelected;
 ```
 
-Defined in: [Subscribe.ts:30](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L30)
+Defined in: [Subscribe.ts:35](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L35)
 
 Select from full table state. Re-renders when the selected value changes
 (shallow compare).
@@ -66,10 +62,10 @@ store without an explicit projection.
 
 ***
 
-### table
+### source
 
 ```ts
-table: Table<TFeatures, TData>;
+source: SubscribeSource<TableState<TFeatures>>;
 ```
 
-Defined in: [Subscribe.ts:22](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L22)
+Defined in: [Subscribe.ts:27](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L27)

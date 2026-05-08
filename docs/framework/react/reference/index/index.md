@@ -36,6 +36,7 @@ title: index
 - [SubscribePropsWithSourceIdentity](type-aliases/SubscribePropsWithSourceIdentity.md)
 - [SubscribePropsWithSourceWithSelector](type-aliases/SubscribePropsWithSourceWithSelector.md)
 - [SubscribePropsWithStore](type-aliases/SubscribePropsWithStore.md)
+- [SubscribeSource](type-aliases/SubscribeSource.md)
 
 ## Functions
 

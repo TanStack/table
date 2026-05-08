@@ -110,8 +110,7 @@ TFeatures is already known from the createTableHook call; TData is inferred from
 
 ##### TSelected
 
-`TSelected` = \{
-\}
+`TSelected` = `TableState`\<`TFeatures`\>
 
 #### Parameters
 
