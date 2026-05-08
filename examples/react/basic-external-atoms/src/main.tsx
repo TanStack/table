@@ -92,7 +92,7 @@ function App() {
       },
       debugTable: true,
     },
-    (state) => state, // subscribe to all state changes for re-rendering
+    (state) => state, // default selector
   )
 
   return (

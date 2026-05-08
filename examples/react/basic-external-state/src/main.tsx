@@ -73,22 +73,25 @@ function App() {
   // console.log('pagination', pagination)
 
   // Create the table and pass state + onChange handlers
-  const table = useTable({
-    debugTable: true,
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
+  const table = useTable(
+    {
+      debugTable: true,
+      _features,
+      _rowModels: {
+        sortedRowModel: createSortedRowModel(sortFns),
+        paginatedRowModel: createPaginatedRowModel(),
+      },
+      columns,
+      data,
+      state: {
+        sorting, // connect our sorting state back down to the table
+        pagination, // connect our pagination state back down to the table
+      },
+      onSortingChange: setSorting, // raise sorting state changes to our own state management
+      onPaginationChange: setPagination, // raise pagination state changes to our own state management
     },
-    columns,
-    data,
-    state: {
-      sorting, // connect our sorting state back down to the table
-      pagination, // connect our pagination state back down to the table
-    },
-    onSortingChange: setSorting, // raise sorting state changes to our own state management
-    onPaginationChange: setPagination, // raise pagination state changes to our own state management
-  })
+    (state) => state, // default selector
+  )
 
   return (
     <div className="demo-root">

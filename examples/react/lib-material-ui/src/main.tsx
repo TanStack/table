@@ -108,7 +108,7 @@ function App() {
       data,
       globalFilterFn: 'includesString',
     },
-    (state) => state,
+    (state) => state, // default selector
   )
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>

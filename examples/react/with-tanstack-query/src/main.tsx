@@ -69,18 +69,21 @@ function App() {
 
   const defaultData = React.useMemo(() => [], [])
 
-  const table = useTable({
-    _features,
-    _rowModels: {},
-    columns,
-    data: dataQuery.data?.rows ?? defaultData,
-    rowCount: dataQuery.data?.rowCount,
-    atoms: {
-      pagination: paginationAtom,
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {},
+      columns,
+      data: dataQuery.data?.rows ?? defaultData,
+      rowCount: dataQuery.data?.rowCount,
+      atoms: {
+        pagination: paginationAtom,
+      },
+      manualPagination: true, // we're doing manual "server-side" pagination
+      debugTable: true,
     },
-    manualPagination: true, // we're doing manual "server-side" pagination
-    debugTable: true,
-  })
+    (state) => state, // default selector
+  )
 
   return (
     <div className="demo-root">

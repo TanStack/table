@@ -66,106 +66,99 @@ function App() {
   const stressTest = () => setData(makeData(1_000))
   const rerender = useReducer(() => ({}), {})[1]
 
-  const table = useTable({
-    _features,
-    _rowModels: {},
-    columns,
-    data,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-  })
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {},
+      columns,
+      data,
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
+    },
+    (state) => state, // default selector
+  )
 
   return (
-    <table.Subscribe
-      selector={(state) => ({
-        columnVisibility: state.columnVisibility,
-      })}
-    >
-      {(_state) => (
-        <div className="demo-root">
-          <div>
-            <button onClick={() => refreshData()}>Regenerate Data</button>
-            <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
-          </div>
-          <div className="spacer-md" />
-          <div className="column-toggle-panel">
-            <div className="column-toggle-panel-header">
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (1k rows)</button>
+      </div>
+      <div className="spacer-md" />
+      <div className="column-toggle-panel">
+        <div className="column-toggle-panel-header">
+          <label>
+            <input
+              type="checkbox"
+              checked={table.getIsAllColumnsVisible()}
+              onChange={table.getToggleAllColumnsVisibilityHandler()}
+            />{' '}
+            Toggle All
+          </label>
+        </div>
+        {table.getAllLeafColumns().map((column) => {
+          return (
+            <div key={column.id} className="column-toggle-row">
               <label>
                 <input
                   type="checkbox"
-                  checked={table.getIsAllColumnsVisible()}
-                  onChange={table.getToggleAllColumnsVisibilityHandler()}
+                  checked={column.getIsVisible()}
+                  onChange={column.getToggleVisibilityHandler()}
                 />{' '}
-                Toggle All
+                {column.id}
               </label>
             </div>
-            {table.getAllLeafColumns().map((column) => {
-              return (
-                <div key={column.id} className="column-toggle-row">
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={column.getIsVisible()}
-                      onChange={column.getToggleVisibilityHandler()}
-                    />{' '}
-                    {column.id}
-                  </label>
-                </div>
-              )
-            })}
-          </div>
-          <div className="spacer-md" />
-          <table>
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : (
-                        <table.FlexRender header={header} />
-                      )}
-                    </th>
-                  ))}
-                </tr>
+          )
+        })}
+      </div>
+      <div className="spacer-md" />
+      <table>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th key={header.id} colSpan={header.colSpan}>
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender header={header} />
+                  )}
+                </th>
               ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
-                      <table.FlexRender cell={cell} />
-                    </td>
-                  ))}
-                </tr>
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <td key={cell.id}>
+                  <table.FlexRender cell={cell} />
+                </td>
               ))}
-            </tbody>
-            <tfoot>
-              {table.getFooterGroups().map((footerGroup) => (
-                <tr key={footerGroup.id}>
-                  {footerGroup.headers.map((header) => (
-                    <th key={header.id} colSpan={header.colSpan}>
-                      {header.isPlaceholder ? null : (
-                        <table.FlexRender footer={header} />
-                      )}
-                    </th>
-                  ))}
-                </tr>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          {table.getFooterGroups().map((footerGroup) => (
+            <tr key={footerGroup.id}>
+              {footerGroup.headers.map((header) => (
+                <th key={header.id} colSpan={header.colSpan}>
+                  {header.isPlaceholder ? null : (
+                    <table.FlexRender footer={header} />
+                  )}
+                </th>
               ))}
-            </tfoot>
-          </table>
-          <div className="spacer-md" />
-          <button onClick={() => rerender(0)} className="demo-button">
-            Rerender
-          </button>
-          <div className="spacer-md" />
-          <table.Subscribe selector={(state) => state}>
-            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-          </table.Subscribe>
-        </div>
-      )}
-    </table.Subscribe>
+            </tr>
+          ))}
+        </tfoot>
+      </table>
+      <div className="spacer-md" />
+      <button onClick={() => rerender(0)} className="demo-button">
+        Rerender
+      </button>
+      <div className="spacer-md" />
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+    </div>
   )
 }
 

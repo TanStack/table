@@ -11,12 +11,16 @@ import { injectTableContext } from '../table'
   template: `
     <div class="table-toolbar">
       <h2>{{ title() }}</h2>
-      <button (click)="table().resetColumnFilters()">Clear filters</button>
-      <button (click)="table().resetSorting()">Clear sorting</button>
-
-      @if (onRefresh(); as onRefresh) {
-        <button (click)="onRefresh()">Refresh data</button>
-      }
+      <div class="table-toolbar-actions">
+        @if (onRefresh(); as onRefresh) {
+          <button (click)="onRefresh()">Regenerate Data</button>
+        }
+        @if (onStressTest(); as onStressTest) {
+          <button (click)="onStressTest()">Stress Test (200k rows)</button>
+        }
+        <button (click)="table().resetColumnFilters()">Clear Filters</button>
+        <button (click)="table().resetSorting()">Clear Sorting</button>
+      </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,6 +28,7 @@ import { injectTableContext } from '../table'
 export class TableToolbar {
   readonly title = input.required<string>()
   readonly onRefresh = input<() => void>()
+  readonly onStressTest = input<() => void>()
 
   readonly table = injectTableContext()
 

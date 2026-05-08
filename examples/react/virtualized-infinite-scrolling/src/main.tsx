@@ -123,17 +123,20 @@ function App() {
     fetchMoreOnBottomReached(tableContainerRef.current)
   }, [fetchMoreOnBottomReached])
 
-  const table = useTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-    data: flatData,
-    columns,
-    state: {
-      sorting,
+  const table = useTable(
+    {
+      _features,
+      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      data: flatData,
+      columns,
+      state: {
+        sorting,
+      },
+      manualSorting: true,
+      debugTable: true,
     },
-    manualSorting: true,
-    debugTable: true,
-  })
+    (state) => state, // default selector
+  )
 
   // scroll to top of table when sorting changes
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {

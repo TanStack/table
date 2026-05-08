@@ -820,7 +820,10 @@ export function createTableHook<
    *
    * TFeatures is already known from the createTableHook call; TData is inferred from the data prop.
    */
-  function createAppTable<TData extends RowData, TSelected = {}>(
+  function createAppTable<
+    TData extends RowData,
+    TSelected = TableState<TFeatures>,
+  >(
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'

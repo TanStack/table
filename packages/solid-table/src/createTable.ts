@@ -27,7 +27,7 @@ export type SubscribeSource<TValue> =
 export type SolidTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
   /**
    * Subscribe to the store (selector required) or a single source (atom or store).
@@ -76,11 +76,10 @@ export type SolidTable<
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 >(
   tableOptions: TableOptions<TFeatures, TData>,
-  selector: (state: TableState<TFeatures>) => TSelected = () =>
-    ({}) as TSelected,
+  selector?: (state: TableState<TFeatures>) => TSelected,
 ): SolidTable<TFeatures, TData, TSelected> {
   const owner = getOwner()!
 
@@ -130,8 +129,7 @@ export function createTable<
     children: ((state: Accessor<unknown>) => JSX.Element) | JSX.Element
   }) => {
     const source = props.source ?? table.store
-    const selectFn = props.selector ?? ((x: unknown) => x)
-    const selected = useSelector(source as never, selectFn, {
+    const selected = useSelector(source as never, props.selector as never, {
       compare: shallow,
     })
     return typeof props.children === 'function'

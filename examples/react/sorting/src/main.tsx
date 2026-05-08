@@ -93,90 +93,78 @@ function App() {
       // isMultiSortEvent: (e) => true, //Make all clicks multi-sort - default requires `shift` key
       // maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once - default is Infinity
     },
-    // (state) => state, // uncomment to subscribe to the entire table state (this is how v8 used to work by default)
+    (state) => state, // default selector
   )
 
   return (
-    <table.Subscribe source={table.atoms.sorting}>
-      {/* omit selector to subscribe to the entire sorting slice */}
-      {() => (
-        <div className="demo-root">
-          <div>
-            <button onClick={() => refreshData()}>Regenerate Data</button>
-            <button onClick={() => stressTest()}>
-              Stress Test (500k rows)
-            </button>
-          </div>
-          <div className="spacer-sm" />
-          <table>
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (500k rows)</button>
+      </div>
+      <div className="spacer-sm" />
+      <table>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <div
+                        className={
+                          header.column.getCanSort() ? 'sortable-header' : ''
+                        }
+                        onClick={header.column.getToggleSortingHandler()}
+                        title={
+                          header.column.getCanSort()
+                            ? header.column.getNextSortingOrder() === 'asc'
+                              ? 'Sort ascending'
+                              : header.column.getNextSortingOrder() === 'desc'
+                                ? 'Sort descending'
+                                : 'Clear sort'
+                            : undefined
+                        }
+                      >
+                        <table.FlexRender header={header} />
+                        {{
+                          asc: ' 🔼',
+                          desc: ' 🔽',
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </div>
+                    )}
+                  </th>
+                )
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table
+            .getRowModel()
+            .rows.slice(0, 10)
+            .map((row) => {
+              return (
+                <tr key={row.id}>
+                  {row.getAllCells().map((cell) => {
                     return (
-                      <th key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <div
-                            className={
-                              header.column.getCanSort()
-                                ? 'sortable-header'
-                                : ''
-                            }
-                            onClick={header.column.getToggleSortingHandler()}
-                            title={
-                              header.column.getCanSort()
-                                ? header.column.getNextSortingOrder() === 'asc'
-                                  ? 'Sort ascending'
-                                  : header.column.getNextSortingOrder() ===
-                                      'desc'
-                                    ? 'Sort descending'
-                                    : 'Clear sort'
-                                : undefined
-                            }
-                          >
-                            <table.FlexRender header={header} />
-                            {{
-                              asc: ' 🔼',
-                              desc: ' 🔽',
-                            }[header.column.getIsSorted() as string] ?? null}
-                          </div>
-                        )}
-                      </th>
+                      <td key={cell.id}>
+                        <table.FlexRender cell={cell} />
+                      </td>
                     )
                   })}
                 </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table
-                .getRowModel()
-                .rows.slice(0, 10)
-                .map((row) => {
-                  return (
-                    <tr key={row.id}>
-                      {row.getAllCells().map((cell) => {
-                        return (
-                          <td key={cell.id}>
-                            <table.FlexRender cell={cell} />
-                          </td>
-                        )
-                      })}
-                    </tr>
-                  )
-                })}
-            </tbody>
-          </table>
-          <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-          <div>
-            <button onClick={() => rerender()}>Force Rerender</button>
-          </div>
-          {/* Store mode: dump full table state for debugging — selector required */}
-          <table.Subscribe selector={(state) => state}>
-            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-          </table.Subscribe>
-        </div>
-      )}
-    </table.Subscribe>
+              )
+            })}
+        </tbody>
+      </table>
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+      <div>
+        <button onClick={() => rerender()}>Force Rerender</button>
+      </div>
+      {/* Store mode: dump full table state for debugging */}
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+    </div>
   )
 }
 

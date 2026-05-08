@@ -61,7 +61,7 @@ function getReactiveOptionDeps<
 export type VueTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
   /**
    * Store mode: `selector` required. Source mode: pass `source` (atom or store); omit
@@ -107,13 +107,12 @@ export type VueTable<
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 >(
   tableOptions:
     | TableOptions<TFeatures, TData>
     | TableOptionsWithReactiveData<TFeatures, TData>,
-  selector: (state: TableState<TFeatures>) => TSelected = () =>
-    ({}) as TSelected,
+  selector?: (state: TableState<TFeatures>) => TSelected,
 ): VueTable<TFeatures, TData, TSelected> {
   const syncTableOptions = (
     table: Table<TFeatures, TData>,
@@ -209,8 +208,7 @@ export function useTable<
       | Array<VNode>
   }) => {
     const source = props.source ?? table.store
-    const selectFn = props.selector ?? ((x: unknown) => x)
-    const selected = useSelector(source as never, selectFn as never, {
+    const selected = useSelector(source as never, props.selector as never, {
       compare: shallow,
     })
     if (typeof props.children === 'function') {

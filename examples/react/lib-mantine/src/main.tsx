@@ -105,7 +105,7 @@ function App() {
       data,
       globalFilterFn: 'includesString',
     },
-    (state) => state,
+    (state) => state, // default selector
   )
   return (
     <Container size="lg" py="xl">

@@ -92,11 +92,9 @@ export function Subscribe<
 >(
   props: SubscribeProps<TFeatures, TSelected, TSourceValue>,
 ): ComponentChildren {
-  const selectFn = props.selector ?? ((x: unknown) => x)
-
   const selected = useSelector(
     props.source as never,
-    selectFn as Parameters<typeof useSelector>[1],
+    props.selector as Parameters<typeof useSelector>[1],
     {
       compare: shallow,
     },

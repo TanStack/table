@@ -298,7 +298,10 @@
   </div>
 </div>
 
-{#snippet Filter(column: Column<typeof _features, Person>, table: SvelteTable<typeof _features, Person>)}
+{#snippet Filter(
+  column: Column<typeof _features, Person>,
+  table: SvelteTable<typeof _features, Person, any>,
+)}
   {@const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)}

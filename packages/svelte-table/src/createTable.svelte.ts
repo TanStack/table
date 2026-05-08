@@ -14,7 +14,7 @@ import type {
 export type SvelteTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
   /**
    * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `createTable`.
@@ -30,11 +30,10 @@ export type SvelteTable<
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 >(
   tableOptions: TableOptions<TFeatures, TData>,
-  selector: (state: TableState<TFeatures>) => TSelected = () =>
-    ({}) as TSelected,
+  selector?: (state: TableState<TFeatures>) => TSelected,
 ): SvelteTable<TFeatures, TData, TSelected> {
   // 1. Merge reactivity into options using mergeObjects (preserves getters)
   const mergedOptions = mergeObjects(tableOptions, {

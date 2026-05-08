@@ -137,13 +137,9 @@ function App() {
       <button onClick={() => rerender(0)} className="demo-button">
         Rerender
       </button>
-      <table.Subscribe selector={(state) => state}>
-        {(state) => (
-          <pre style={{ minHeight: '10rem' }}>
-            {JSON.stringify(state, null, 2)}
-          </pre>
-        )}
-      </table.Subscribe>
+      <pre style={{ minHeight: '10rem' }}>
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
       <div className="spacer-md" />({data.length.toLocaleString()} rows)
       <div className="scroll-container">
         {/* Here in the <table> equivalent element (surrounds all table head and data cells), we will define our CSS variables for column sizes */}

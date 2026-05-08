@@ -108,7 +108,7 @@ function App() {
       data,
       globalFilterFn: 'includesString',
     },
-    (state) => state,
+    (state) => state, // default selector
   )
   // 7. Render your table markup from the table instance APIs.
   return (

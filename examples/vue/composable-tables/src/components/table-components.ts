@@ -122,19 +122,17 @@ export const TableToolbar = defineComponent({
       type: Function as PropType<() => void>,
       default: undefined,
     },
+    onStressTest: {
+      type: Function as PropType<() => void>,
+      default: undefined,
+    },
   },
   setup(props) {
     const table = useTableContext()
     return () =>
       h('div', { class: 'table-toolbar' }, [
         h('h2', props.title),
-        h('div', [
-          h(
-            'button',
-            { onClick: () => table.resetColumnFilters() },
-            'Clear Filters',
-          ),
-          h('button', { onClick: () => table.resetSorting() }, 'Clear Sorting'),
+        h('div', { class: 'table-toolbar-actions' }, [
           props.onRefresh
             ? h(
                 'button',
@@ -142,6 +140,19 @@ export const TableToolbar = defineComponent({
                 'Regenerate Data',
               )
             : null,
+          props.onStressTest
+            ? h(
+                'button',
+                { onClick: () => props.onStressTest?.() },
+                'Stress Test (200k rows)',
+              )
+            : null,
+          h(
+            'button',
+            { onClick: () => table.resetColumnFilters() },
+            'Clear Filters',
+          ),
+          h('button', { onClick: () => table.resetSorting() }, 'Clear Sorting'),
         ]),
       ])
   },

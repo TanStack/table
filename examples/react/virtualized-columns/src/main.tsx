@@ -44,13 +44,16 @@ function App() {
     setData(makeData(10_000, columns))
   }, [columns])
 
-  const table = useTable({
-    _features: features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-    columns,
-    data,
-    debugTable: true,
-  })
+  const table = useTable(
+    {
+      _features: features,
+      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      columns,
+      data,
+      debugTable: true,
+    },
+    (state) => state, // default selector
+  )
 
   // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
   return (

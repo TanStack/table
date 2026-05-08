@@ -48,17 +48,11 @@ function App() {
           id: 'select',
           header: () => {
             return (
-              <table.Subscribe
-                source={table.atoms.rowSelection} // slice atom only — not the full derived store
-              >
-                {() => (
-                  <IndeterminateCheckbox
-                    checked={table.getIsAllRowsSelected()}
-                    indeterminate={table.getIsSomeRowsSelected()}
-                    onChange={table.getToggleAllRowsSelectedHandler()}
-                  />
-                )}
-              </table.Subscribe>
+              <IndeterminateCheckbox
+                checked={table.getIsAllRowsSelected()}
+                indeterminate={table.getIsSomeRowsSelected()}
+                onChange={table.getToggleAllRowsSelectedHandler()}
+              />
             )
           },
           cell: ({ row }) => (
@@ -126,223 +120,185 @@ function App() {
       // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
       debugTable: true,
     },
-    // (state) => state, // uncomment to subscribe to the entire table state (this is how v8 used to work by default)
+    (state) => state, // default selector
   )
 
   useTanStackTableDevtools(table, 'Row Selection Example')
 
   return (
     <>
-      <table.Subscribe
-        selector={(state) => ({
-          // Store mode: multiple slices — must use table.store + explicit selector
-          columnFilters: state.columnFilters,
-          globalFilter: state.globalFilter,
-          pagination: state.pagination,
-        })}
-      >
-        {(state) => (
-          <div className="demo-root">
-            <div>
-              <button onClick={() => refreshData()}>Regenerate Data</button>
-              <button onClick={() => stressTest()}>
-                Stress Test (200k rows)
-              </button>
-            </div>
-            <div>
-              <input
-                value={state.globalFilter ?? ''}
-                onInput={(e) =>
-                  table.setGlobalFilter((e.target as HTMLInputElement).value)
-                }
-                className="summary-panel"
-                placeholder="Search all columns..."
-              />
-            </div>
-            <div className="spacer-sm" />
-            <table>
-              <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <th key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder ? null : (
-                            <>
-                              <table.FlexRender header={header} />
-                              {header.column.getCanFilter() ? (
-                                <div>
-                                  <Filter
-                                    column={header.column}
-                                    table={table}
-                                  />
-                                </div>
-                              ) : null}
-                            </>
-                          )}
-                        </th>
-                      )
-                    })}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map((row) => {
+      <div className="demo-root">
+        <div>
+          <button onClick={() => refreshData()}>Regenerate Data</button>
+          <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        </div>
+        <div>
+          <input
+            value={table.state.globalFilter ?? ''}
+            onInput={(e) =>
+              table.setGlobalFilter((e.target as HTMLInputElement).value)
+            }
+            className="summary-panel"
+            placeholder="Search all columns..."
+          />
+        </div>
+        <div className="spacer-sm" />
+        <table>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
                   return (
-                    <table.Subscribe
-                      key={row.id}
-                      source={rowSelectionAtom}
-                      selector={(rowSelection) => rowSelection?.[row.id]} // optional: narrow to this row id
-                    >
-                      {(_isRowSelected) => (
-                        <tr key={row.id}>
-                          {row.getAllCells().map((cell) => {
-                            return (
-                              <td key={cell.id}>
-                                <table.FlexRender cell={cell} />
-                              </td>
-                            )
-                          })}
-                        </tr>
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <>
+                          <table.FlexRender header={header} />
+                          {header.column.getCanFilter() ? (
+                            <div>
+                              <Filter column={header.column} table={table} />
+                            </div>
+                          ) : null}
+                        </>
                       )}
-                    </table.Subscribe>
+                    </th>
                   )
                 })}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td className="cell-padding">
-                    <table.Subscribe source={table.atoms.rowSelection}>
-                      {(_rowSelection) => (
-                        <IndeterminateCheckbox
-                          checked={table.getIsAllPageRowsSelected()}
-                          indeterminate={table.getIsSomePageRowsSelected()}
-                          onChange={table.getToggleAllPageRowsSelectedHandler()}
-                        />
-                      )}
-                    </table.Subscribe>
-                  </td>
-                  <td colSpan={20}>
-                    Page Rows (
-                    {table.getRowModel().rows.length.toLocaleString()})
-                  </td>
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <tr key={row.id}>
+                  {row.getAllCells().map((cell) => {
+                    return (
+                      <td key={cell.id}>
+                        <table.FlexRender cell={cell} />
+                      </td>
+                    )
+                  })}
                 </tr>
-              </tfoot>
-            </table>
-            <div className="spacer-sm" />
-            <div className="controls">
-              <button
-                className="demo-button demo-button-sm"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                {'<<'}
-              </button>
-              <button
-                className="demo-button demo-button-sm"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                {'<'}
-              </button>
-              <button
-                className="demo-button demo-button-sm"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                {'>'}
-              </button>
-              <button
-                className="demo-button demo-button-sm"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
-              >
-                {'>>'}
-              </button>
-              <span className="inline-controls">
-                <div>Page</div>
-                <strong>
-                  {(
-                    table.store.state.pagination.pageIndex + 1
-                  ).toLocaleString()}{' '}
-                  of {table.getPageCount().toLocaleString()}
-                </strong>
-              </span>
-              <span className="inline-controls">
-                | Go to page:
-                <input
-                  type="number"
-                  min="1"
-                  max={table.getPageCount()}
-                  defaultValue={table.store.state.pagination.pageIndex + 1}
-                  onChange={(e) => {
-                    const page = (e.target as HTMLInputElement).value
-                      ? Number((e.target as HTMLInputElement).value) - 1
-                      : 0
-                    table.setPageIndex(page)
-                  }}
-                  className="page-size-input"
+              )
+            })}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td className="cell-padding">
+                <IndeterminateCheckbox
+                  checked={table.getIsAllPageRowsSelected()}
+                  indeterminate={table.getIsSomePageRowsSelected()}
+                  onChange={table.getToggleAllPageRowsSelectedHandler()}
                 />
-              </span>
-              <select
-                value={table.store.state.pagination.pageSize}
-                onChange={(e) => {
-                  table.setPageSize(
-                    Number((e.target as HTMLInputElement).value),
-                  )
-                }}
-              >
-                {[10, 20, 30, 40, 50].map((pageSize) => (
-                  <option key={pageSize} value={pageSize}>
-                    Show {pageSize}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <br />
-            <div>
-              <table.Subscribe
-                selector={(state) => ({
-                  numSelected: Object.keys(state.rowSelection).length,
-                })}
-              >
-                {({ numSelected }) => <>{numSelected.toLocaleString()} of </>}
-              </table.Subscribe>
-              {table.getPreFilteredRowModel().rows.length.toLocaleString()}{' '}
-              Total Rows Selected
-            </div>
-            <hr />
-            <br />
-            <div>
-              <button
-                className="demo-button demo-button-spaced"
-                onClick={() => rerender(0)}
-              >
-                Force Rerender
-              </button>
-            </div>
-            <div>
-              <button
-                className="demo-button demo-button-spaced"
-                onClick={() =>
-                  console.info(
-                    'table.getSelectedRowModel().flatRows',
-                    table.getSelectedRowModel().flatRows,
-                  )
-                }
-              >
-                Log table.getSelectedRowModel().flatRows
-              </button>
-            </div>
-            <div>
-              <label>Row Selection State:</label>
-              <table.Subscribe selector={(state) => state}>
-                {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-              </table.Subscribe>
-            </div>
-          </div>
-        )}
-      </table.Subscribe>
+              </td>
+              <td colSpan={20}>
+                Page Rows ({table.getRowModel().rows.length.toLocaleString()})
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+        <div className="spacer-sm" />
+        <div className="controls">
+          <button
+            className="demo-button demo-button-sm"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<<'}
+          </button>
+          <button
+            className="demo-button demo-button-sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            {'<'}
+          </button>
+          <button
+            className="demo-button demo-button-sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            {'>'}
+          </button>
+          <button
+            className="demo-button demo-button-sm"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+          >
+            {'>>'}
+          </button>
+          <span className="inline-controls">
+            <div>Page</div>
+            <strong>
+              {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+              {table.getPageCount().toLocaleString()}
+            </strong>
+          </span>
+          <span className="inline-controls">
+            | Go to page:
+            <input
+              type="number"
+              min="1"
+              max={table.getPageCount()}
+              defaultValue={table.state.pagination.pageIndex + 1}
+              onChange={(e) => {
+                const page = (e.target as HTMLInputElement).value
+                  ? Number((e.target as HTMLInputElement).value) - 1
+                  : 0
+                table.setPageIndex(page)
+              }}
+              className="page-size-input"
+            />
+          </span>
+          <select
+            value={table.state.pagination.pageSize}
+            onChange={(e) => {
+              table.setPageSize(Number((e.target as HTMLInputElement).value))
+            }}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                Show {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+        <br />
+        <div>
+          <>
+            {Object.keys(table.state.rowSelection).length.toLocaleString()}{' '}
+            of{' '}
+          </>
+          {table.getPreFilteredRowModel().rows.length.toLocaleString()} Total
+          Rows Selected
+        </div>
+        <hr />
+        <br />
+        <div>
+          <button
+            className="demo-button demo-button-spaced"
+            onClick={() => rerender(0)}
+          >
+            Force Rerender
+          </button>
+        </div>
+        <div>
+          <button
+            className="demo-button demo-button-spaced"
+            onClick={() =>
+              console.info(
+                'table.getSelectedRowModel().flatRows',
+                table.getSelectedRowModel().flatRows,
+              )
+            }
+          >
+            Log table.getSelectedRowModel().flatRows
+          </button>
+        </div>
+        <div>
+          <label>Row Selection State:</label>
+          <pre>{JSON.stringify(table.state, null, 2)}</pre>
+        </div>
+      </div>
     </>
   )
 }

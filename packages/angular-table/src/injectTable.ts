@@ -136,8 +136,7 @@ export function injectTable<
   TSelected = TableState<TFeatures>,
 >(
   options: () => TableOptions<TFeatures, TData>,
-  selector: (state: TableState<TFeatures>) => TSelected = (state) =>
-    state as TSelected,
+  selector?: (state: TableState<TFeatures>) => TSelected,
 ): AngularTable<TFeatures, TData, TSelected> {
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
@@ -175,18 +174,14 @@ export function injectTable<
       equal?: ValueEqualityFn<unknown>
     }) {
       const source = props.source ?? table.store
-      return injectSelector(
-        source,
-        props.selector ?? ((state: unknown) => state),
-        {
-          compare: props.equal ?? shallow,
-          injector,
-        },
-      )
+      return injectSelector(source, props.selector as never, {
+        compare: props.equal ?? shallow,
+        injector,
+      })
     } as AngularTableComputed<TFeatures>
 
     Object.defineProperty(table, 'state', {
-      value: computed(() => selector(table.store.get())),
+      value: computed(() => selector?.(table.store.get()) ?? table.store.get()),
     })
 
     Object.defineProperty(table, 'value', {

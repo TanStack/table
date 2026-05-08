@@ -19,7 +19,7 @@ import type { SubscribePropsWithStore, SubscribeSource } from './Subscribe'
 export type PreactTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
   /**
    * A Preact HOC (Higher Order Component) that allows you to subscribe to the table state.
@@ -79,11 +79,10 @@ export type PreactTable<
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 >(
   tableOptions: TableOptions<TFeatures, TData>,
-  selector: (state: TableState<TFeatures>) => TSelected = () =>
-    ({}) as TSelected,
+  selector?: (state: TableState<TFeatures>) => TSelected,
 ): PreactTable<TFeatures, TData, TSelected> {
   const [table] = useState(() => {
     const tableInstance = constructTable({

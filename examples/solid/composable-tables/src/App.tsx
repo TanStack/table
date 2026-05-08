@@ -88,13 +88,11 @@ function UsersTable() {
         return (
           <div class="table-container">
             {/* Table toolbar using pre-bound component */}
-            <table.TableToolbar title="Users Table" onRefresh={refreshData} />
-            <div>
-              <button onClick={() => refreshData()}>Regenerate Data</button>
-              <button onClick={() => stressTest()}>
-                Stress Test (200k rows)
-              </button>
-            </div>
+            <table.TableToolbar
+              title="Users Table"
+              onRefresh={refreshData}
+              onStressTest={stressTest}
+            />
 
             {/* Table element */}
             <table>
@@ -297,13 +295,8 @@ function ProductsTable() {
             <table.TableToolbar
               title="Products Table"
               onRefresh={refreshData}
+              onStressTest={stressTest}
             />
-            <div>
-              <button onClick={() => refreshData()}>Regenerate Data</button>
-              <button onClick={() => stressTest()}>
-                Stress Test (200k rows)
-              </button>
-            </div>
 
             {/* Table element */}
             <table>

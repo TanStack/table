@@ -314,7 +314,7 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
         pagination: paginationAtom,
       },
     },
-    (state) => state,
+    (state) => state, // default selector
   ) as unknown as MRT_TableInstance<TData>
 
   // v9 spells the resize setter `setcolumnResizing` (lowercase 'c') because

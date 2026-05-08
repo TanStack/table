@@ -64,7 +64,7 @@ export default function Table<T extends Record<string, string | number>>({
       onSortingChange,
       ...paginationOptions,
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   // Sync controlled state with per-slice base atoms

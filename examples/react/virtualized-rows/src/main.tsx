@@ -83,13 +83,16 @@ function App() {
     setData(makeData(1_000_000))
   }, [])
 
-  const table = useTable({
-    _features: features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-    columns,
-    data,
-    debugTable: true,
-  })
+  const table = useTable(
+    {
+      _features: features,
+      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      columns,
+      data,
+      debugTable: true,
+    },
+    (state) => state, // default selector
+  )
 
   // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
   return (
@@ -116,65 +119,58 @@ function App() {
             height: '800px', // should be a fixed height
           }}
         >
-          <table.Subscribe selector={(state) => state}>
-            {() => (
-              // Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights
-              <table style={{ display: 'grid' }}>
-                <thead
-                  style={{
-                    display: 'grid',
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 1,
-                  }}
+          {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
+          <table style={{ display: 'grid' }}>
+            <thead
+              style={{
+                display: 'grid',
+                height: '34px',
+                position: 'sticky',
+                top: 0,
+                zIndex: 1,
+              }}
+            >
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr
+                  key={headerGroup.id}
+                  style={{ display: 'flex', height: '34px', width: '100%' }}
                 >
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr
-                      key={headerGroup.id}
-                      style={{ display: 'flex', width: '100%' }}
-                    >
-                      {headerGroup.headers.map((header) => {
-                        return (
-                          <th
-                            key={header.id}
-                            style={{
-                              display: 'flex',
-                              width: header.getSize(),
-                            }}
-                          >
-                            <div
-                              {...{
-                                className: header.column.getCanSort()
-                                  ? 'sortable-header'
-                                  : '',
-                                onClick:
-                                  header.column.getToggleSortingHandler(),
-                              }}
-                            >
-                              <table.FlexRender header={header} />
-                              {{
-                                asc: ' 🔼',
-                                desc: ' 🔽',
-                              }[header.column.getIsSorted() as string] ?? null}
-                            </div>
-                          </th>
-                        )
-                      })}
-                    </tr>
-                  ))}
-                </thead>
-                <TableBody
-                  table={table}
-                  tableContainerRef={tableContainerRef}
-                />
-              </table>
-            )}
-          </table.Subscribe>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <th
+                        key={header.id}
+                        style={{
+                          alignItems: 'center',
+                          display: 'flex',
+                          height: '34px',
+                          width: header.getSize(),
+                        }}
+                      >
+                        <div
+                          {...{
+                            className: header.column.getCanSort()
+                              ? 'sortable-header'
+                              : '',
+                            onClick: header.column.getToggleSortingHandler(),
+                          }}
+                        >
+                          <table.FlexRender header={header} />
+                          {{
+                            asc: ' 🔼',
+                            desc: ' 🔽',
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      </th>
+                    )
+                  })}
+                </tr>
+              ))}
+            </thead>
+            <TableBody table={table} tableContainerRef={tableContainerRef} />
+          </table>
         </div>
       </div>
-      <table.Subscribe selector={(state) => state}>
-        {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-      </table.Subscribe>
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </>
   )
 }

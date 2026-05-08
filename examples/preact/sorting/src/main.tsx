@@ -111,7 +111,7 @@ function App() {
       // isMultiSortEvent: (e) => true, //Make all clicks multi-sort - default requires `shift` key
       // maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once - default is Infinity
     },
-    // (state) => ({ state }), // uncomment to subscribe to the entire table state (this is how it worked in v8 by default)
+    (state) => state, // default selector
   )
 
   useTanStackTableDevtools(table, 'Sorting Example')
@@ -122,80 +122,70 @@ function App() {
         <button onClick={() => refreshData()}>Regenerate Data</button>
         <button onClick={() => stressTest()}>Stress Test (500k rows)</button>
       </div>
-      <table.Subscribe source={table.atoms.sorting}>
-        {(_state) => (
-          <>
-            <div className="spacer-sm" />
-            <table>
-              <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
+      <>
+        <div className="spacer-sm" />
+        <table>
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <th key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder ? null : (
+                        <div
+                          className={
+                            header.column.getCanSort() ? 'sortable-header' : ''
+                          }
+                          onClick={header.column.getToggleSortingHandler()}
+                          title={
+                            header.column.getCanSort()
+                              ? header.column.getNextSortingOrder() === 'asc'
+                                ? 'Sort ascending'
+                                : header.column.getNextSortingOrder() === 'desc'
+                                  ? 'Sort descending'
+                                  : 'Clear sort'
+                              : undefined
+                          }
+                        >
+                          <table.FlexRender header={header} />
+                          {{
+                            asc: ' 🔼',
+                            desc: ' 🔽',
+                          }[header.column.getIsSorted() as string] ?? null}
+                        </div>
+                      )}
+                    </th>
+                  )
+                })}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table
+              .getRowModel()
+              .rows.slice(0, 10)
+              .map((row) => {
+                return (
+                  <tr key={row.id}>
+                    {row.getAllCells().map((cell) => {
                       return (
-                        <th key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder ? null : (
-                            <div
-                              className={
-                                header.column.getCanSort()
-                                  ? 'sortable-header'
-                                  : ''
-                              }
-                              onClick={header.column.getToggleSortingHandler()}
-                              title={
-                                header.column.getCanSort()
-                                  ? header.column.getNextSortingOrder() ===
-                                    'asc'
-                                    ? 'Sort ascending'
-                                    : header.column.getNextSortingOrder() ===
-                                        'desc'
-                                      ? 'Sort descending'
-                                      : 'Clear sort'
-                                  : undefined
-                              }
-                            >
-                              <table.FlexRender header={header} />
-                              {{
-                                asc: ' 🔼',
-                                desc: ' 🔽',
-                              }[header.column.getIsSorted() as string] ?? null}
-                            </div>
-                          )}
-                        </th>
+                        <td key={cell.id}>
+                          <table.FlexRender cell={cell} />
+                        </td>
                       )
                     })}
                   </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table
-                  .getRowModel()
-                  .rows.slice(0, 10)
-                  .map((row) => {
-                    return (
-                      <tr key={row.id}>
-                        {row.getAllCells().map((cell) => {
-                          return (
-                            <td key={cell.id}>
-                              <table.FlexRender cell={cell} />
-                            </td>
-                          )
-                        })}
-                      </tr>
-                    )
-                  })}
-              </tbody>
-            </table>
-            <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-            <div>
-              <button onClick={() => rerender(0)}>Force Rerender</button>
-            </div>
-            {/* Store mode: full state for debugging */}
-            <table.Subscribe selector={(state) => state}>
-              {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-            </table.Subscribe>
-          </>
-        )}
-      </table.Subscribe>
+                )
+              })}
+          </tbody>
+        </table>
+        <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+        <div>
+          <button onClick={() => rerender(0)}>Force Rerender</button>
+        </div>
+        {/* Store mode: full state for debugging */}
+        <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      </>
     </div>
   )
 }

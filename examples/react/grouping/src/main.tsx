@@ -96,7 +96,7 @@ function App() {
       data,
       debugTable: true,
     },
-    (state) => state, // subscribe to all state changes
+    (state) => state, // default selector
   )
 
   return (
@@ -251,9 +251,7 @@ function App() {
       <div>
         <button onClick={() => rerender()}>Force Rerender</button>
       </div>
-      <table.Subscribe selector={(state) => state}>
-        {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-      </table.Subscribe>
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
 }

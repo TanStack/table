@@ -152,21 +152,24 @@ function App() {
   const stressTest = () => setData(makeData(200_000))
   const [density, setDensity] = React.useState<DensityState>('md')
 
-  const table = useTable({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {
+        filteredRowModel: createFilteredRowModel(filterFns),
+        paginatedRowModel: createPaginatedRowModel(),
+        sortedRowModel: createSortedRowModel(sortFns),
+      },
+      columns,
+      data,
+      debugTable: true,
+      state: {
+        density, // passing the density state to the table, TS is still happy :)
+      },
+      onDensityChange: setDensity, // using the new onDensityChange option, TS is still happy :)
     },
-    columns,
-    data,
-    debugTable: true,
-    state: {
-      density, // passing the density state to the table, TS is still happy :)
-    },
-    onDensityChange: setDensity, // using the new onDensityChange option, TS is still happy :)
-  })
+    (state) => state, // default selector
+  )
 
   return (
     <div className="demo-root">
@@ -322,9 +325,7 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getRowCount().toLocaleString()} Rows
       </div>
-      <table.Subscribe selector={(state) => state}>
-        {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-      </table.Subscribe>
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
 }
