@@ -66,13 +66,16 @@ function App() {
   const stressTest = () => setData(makeData(1_000))
   const rerender = useReducer(() => ({}), {})[1]
 
-  const table = useTable({
-    debugTable: true,
-    _features,
-    _rowModels: {},
-    columns,
-    data,
-  })
+  const table = useTable(
+    {
+      debugTable: true,
+      _features,
+      _rowModels: {},
+      columns,
+      data,
+    },
+    (state) => state, // default selector
+  )
 
   return (
     <div className="demo-root">

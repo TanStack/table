@@ -170,7 +170,7 @@ function App() {
       keepPinnedRows,
       debugAll: true,
     },
-    (state) => state, // subscribe to all re-renders
+    (state) => state, // default selector
   )
 
   // console.log(table.getBottomRows)

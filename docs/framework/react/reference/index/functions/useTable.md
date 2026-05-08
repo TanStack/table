@@ -6,10 +6,10 @@ title: useTable
 # Function: useTable()
 
 ```ts
-function useTable<TFeatures, TData, TSelected>(tableOptions, selector): ReactTable<TFeatures, TData, TSelected>;
+function useTable<TFeatures, TData, TSelected>(tableOptions, selector?): ReactTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [useTable.ts:112](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L112)
+Defined in: [useTable.ts:108](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L108)
 
 ## Type Parameters
 
@@ -23,8 +23,7 @@ Defined in: [useTable.ts:112](https://github.com/TanStack/table/blob/main/packag
 
 ### TSelected
 
-`TSelected` = \{
-\}
+`TSelected` = `TableState`\<`TFeatures`\>
 
 ## Parameters
 
@@ -32,7 +31,7 @@ Defined in: [useTable.ts:112](https://github.com/TanStack/table/blob/main/packag
 
 `TableOptions`\<`TFeatures`, `TData`\>
 
-### selector
+### selector?
 
 (`state`) => `TSelected`
 

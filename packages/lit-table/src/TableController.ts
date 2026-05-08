@@ -30,7 +30,7 @@ export type SubscribeSource<TValue> =
 export type LitTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
   /**
    * Subscribe to a selected slice of table state, or to a single source (atom or store).
@@ -144,10 +144,9 @@ export class TableController<
     ;(this.host = host).addController(this)
   }
 
-  public table<TSelected = {}>(
+  public table<TSelected = TableState<TFeatures>>(
     tableOptions: TableOptions<TFeatures, TData>,
-    selector: (state: TableState<TFeatures>) => TSelected = () =>
-      ({}) as TSelected,
+    selector?: (state: TableState<TFeatures>) => TSelected,
   ): LitTable<TFeatures, TData, TSelected> {
     if (!this._table) {
       const mergedOptions: TableOptions<TFeatures, TData> = {
@@ -206,7 +205,8 @@ export class TableController<
       Subscribe,
       FlexRender,
       get state() {
-        return selector(tableInstance.store.state)
+        return (selector?.(tableInstance.store.state) ??
+          tableInstance.store.state) as TSelected
       },
     }
   }

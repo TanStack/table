@@ -13,7 +13,7 @@ import { makeData } from './makeData'
 import type {
   ColumnDef,
   ColumnOrderState,
-  VisibilityState,
+  ColumnVisibilityState,
 } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
@@ -85,7 +85,7 @@ class LitTableExample extends LitElement {
   private columnOrder: ColumnOrderState = []
 
   @state()
-  private columnVisibility: VisibilityState = {}
+  private columnVisibility: ColumnVisibilityState = {}
 
   protected render() {
     const table = this.tableController.table(

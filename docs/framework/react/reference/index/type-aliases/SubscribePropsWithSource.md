@@ -3,29 +3,21 @@ id: SubscribePropsWithSource
 title: SubscribePropsWithSource
 ---
 
-# Type Alias: SubscribePropsWithSource\<TFeatures, TData, TSourceValue, TSelected\>
+# Type Alias: SubscribePropsWithSource\<TSourceValue, TSelected\>
 
 ```ts
-type SubscribePropsWithSource<TFeatures, TData, TSourceValue, TSelected> = 
-  | SubscribePropsWithSourceIdentity<TFeatures, TData, TSourceValue>
-| SubscribePropsWithSourceWithSelector<TFeatures, TData, TSourceValue, TSelected>;
+type SubscribePropsWithSource<TSourceValue, TSelected> = 
+  | SubscribePropsWithSourceIdentity<TSourceValue>
+| SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>;
 ```
 
-Defined in: [Subscribe.ts:71](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L71)
+Defined in: [Subscribe.ts:65](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L65)
 
 Subscribe to a single source — atom or store (identity or projected). Prefer
 [SubscribePropsWithSourceIdentity](SubscribePropsWithSourceIdentity.md) or [SubscribePropsWithSourceWithSelector](SubscribePropsWithSourceWithSelector.md)
 for clearer inference when `selector` is omitted.
 
 ## Type Parameters
-
-### TFeatures
-
-`TFeatures` *extends* `TableFeatures`
-
-### TData
-
-`TData` *extends* `RowData`
 
 ### TSourceValue
 

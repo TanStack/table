@@ -3,26 +3,22 @@ id: SubscribeProps
 title: SubscribeProps
 ---
 
-# Type Alias: SubscribeProps\<TFeatures, TData, TSelected, TSourceValue\>
+# Type Alias: SubscribeProps\<TFeatures, TSelected, TSourceValue\>
 
 ```ts
-type SubscribeProps<TFeatures, TData, TSelected, TSourceValue> = 
-  | SubscribePropsWithStore<TFeatures, TData, TSelected>
-  | SubscribePropsWithSourceIdentity<TFeatures, TData, TSourceValue>
-| SubscribePropsWithSourceWithSelector<TFeatures, TData, TSourceValue, TSelected>;
+type SubscribeProps<TFeatures, TSelected, TSourceValue> = 
+  | SubscribePropsWithStore<TFeatures, TSelected>
+  | SubscribePropsWithSourceIdentity<TSourceValue>
+| SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>;
 ```
 
-Defined in: [Subscribe.ts:85](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L85)
+Defined in: [Subscribe.ts:69](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L69)
 
 ## Type Parameters
 
 ### TFeatures
 
 `TFeatures` *extends* `TableFeatures`
-
-### TData
-
-`TData` *extends* `RowData`
 
 ### TSelected
 

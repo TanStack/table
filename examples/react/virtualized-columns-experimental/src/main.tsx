@@ -45,13 +45,16 @@ function App() {
   }, [columns])
 
   // The table does not live in the same scope as the virtualizers
-  const table = useTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-    columns,
-    data,
-    debugTable: true,
-  })
+  const table = useTable(
+    {
+      _features,
+      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      columns,
+      data,
+      debugTable: true,
+    },
+    (state) => state, // default selector
+  )
 
   return (
     <div className="app">
@@ -124,19 +127,15 @@ function TableContainer({ table }: TableContainerProps) {
         height: '800px', // should be a fixed height
       }}
     >
-      <table.Subscribe source={table.atoms.sorting}>
-        {() => (
-          // Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights
-          <table style={{ display: 'grid' }}>
-            <TableHead table={table} columnVirtualizer={columnVirtualizer} />
-            <TableBody
-              columnVirtualizer={columnVirtualizer}
-              table={table}
-              tableContainerRef={tableContainerRef}
-            />
-          </table>
-        )}
-      </table.Subscribe>
+      {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
+      <table style={{ display: 'grid' }}>
+        <TableHead table={table} columnVirtualizer={columnVirtualizer} />
+        <TableBody
+          columnVirtualizer={columnVirtualizer}
+          table={table}
+          tableContainerRef={tableContainerRef}
+        />
+      </table>
     </div>
   )
 }
@@ -151,6 +150,7 @@ function TableHead({ table, columnVirtualizer }: TableHeadProps) {
     <thead
       style={{
         display: 'grid',
+        height: '34px',
         position: 'sticky',
         top: 0,
         zIndex: 1,
@@ -176,7 +176,10 @@ function TableHeadRow({ columnVirtualizer, headerGroup }: TableHeadRowProps) {
   const virtualColumnIndexes = columnVirtualizer.getVirtualIndexes()
 
   return (
-    <tr key={headerGroup.id} style={{ display: 'flex', width: '100%' }}>
+    <tr
+      key={headerGroup.id}
+      style={{ display: 'flex', height: '34px', width: '100%' }}
+    >
       {/* fake empty column to the left for virtualization scroll padding */}
       <th className="left-column-spacer" />
       {virtualColumnIndexes.map((virtualColumnIndex) => {
@@ -208,7 +211,9 @@ function TableHeadCell({
     <th
       key={header.id}
       style={{
+        alignItems: 'center',
         display: 'flex',
+        height: '34px',
         width: header.getSize(),
       }}
     >

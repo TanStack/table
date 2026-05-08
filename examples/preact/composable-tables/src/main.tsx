@@ -76,7 +76,7 @@ function UsersTable() {
       debugTable: true,
       // more table options
     },
-    // (state) => state, // alternatively, subscribe to the entire state instead of using table.Subscribe or selectors down below
+    (state) => state, // default selector
   )
 
   return (
@@ -264,12 +264,15 @@ function ProductsTable() {
   )
 
   // Create the table using the same useAppTable hook
-  const table = useAppTable({
-    debugTable: true,
-    columns,
-    data,
-    getRowId: (row) => row.id,
-  })
+  const table = useAppTable(
+    {
+      debugTable: true,
+      columns,
+      data,
+      getRowId: (row) => row.id,
+    },
+    (state) => state, // default selector
+  )
 
   return (
     <table.AppTable

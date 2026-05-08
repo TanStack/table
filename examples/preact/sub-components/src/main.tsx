@@ -91,72 +91,71 @@ function Table({
   getRowCanExpand,
   renderSubComponent,
 }: TableProps<typeof _features, Person>): JSX.Element {
-  const table = useTable({
-    debugTable: true,
-    _features,
-    _rowModels: {
-      expandedRowModel: createExpandedRowModel(),
+  const table = useTable(
+    {
+      debugTable: true,
+      _features,
+      _rowModels: {
+        expandedRowModel: createExpandedRowModel(),
+      },
+      columns,
+      data,
+      getRowCanExpand,
     },
-    columns,
-    data,
-    getRowCanExpand,
-  })
+    (state) => state, // default selector
+  )
 
   return (
-    <table.Subscribe selector={(state) => state}>
-      {() => (
-        <div className="demo-root">
-          <div className="spacer-sm" />
-          <table>
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
+    <div className="demo-root">
+      <div className="spacer-sm" />
+      <table>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <div>
+                        <table.FlexRender header={header} />
+                      </div>
+                    )}
+                  </th>
+                )
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <Fragment key={row.id}>
+                <tr>
+                  {/* first row is a normal row */}
+                  {row.getAllCells().map((cell) => {
                     return (
-                      <th key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <div>
-                            <table.FlexRender header={header} />
-                          </div>
-                        )}
-                      </th>
+                      <td key={cell.id}>
+                        <table.FlexRender cell={cell} />
+                      </td>
                     )
                   })}
                 </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => {
-                return (
-                  <Fragment key={row.id}>
-                    <tr>
-                      {/* first row is a normal row */}
-                      {row.getAllCells().map((cell) => {
-                        return (
-                          <td key={cell.id}>
-                            <table.FlexRender cell={cell} />
-                          </td>
-                        )
-                      })}
-                    </tr>
-                    {row.getIsExpanded() && (
-                      <tr>
-                        {/* 2nd row is a custom 1 cell row */}
-                        <td colSpan={row.getAllCells().length}>
-                          {renderSubComponent({ row })}
-                        </td>
-                      </tr>
-                    )}
-                  </Fragment>
-                )
-              })}
-            </tbody>
-          </table>
-          <div className="spacer-sm" />
-          <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-        </div>
-      )}
-    </table.Subscribe>
+                {row.getIsExpanded() && (
+                  <tr>
+                    {/* 2nd row is a custom 1 cell row */}
+                    <td colSpan={row.getAllCells().length}>
+                      {renderSubComponent({ row })}
+                    </td>
+                  </tr>
+                )}
+              </Fragment>
+            )
+          })}
+        </tbody>
+      </table>
+      <div className="spacer-sm" />
+      <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
+    </div>
   )
 }
 

@@ -76,14 +76,12 @@
 
 <table.AppTable>
   <div class="table-container">
-    <div>
-      <button onclick={() => refreshData()
-      }>Regenerate Data</button>
-      <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
-    </div>
     <!-- Table toolbar using the same pre-bound component -->
-    <table.TableToolbar title="Products Table" onRefresh={refreshData
-    } />
+    <table.TableToolbar
+      title="Products Table"
+      onRefresh={refreshData}
+      onStressTest={stressTest}
+    />
 
     <!-- Table element -->
     <table>

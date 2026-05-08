@@ -5,7 +5,7 @@ title: AngularTableComputed
 
 # Interface: AngularTableComputed()\<TFeatures\>
 
-Defined in: [injectTable.ts:28](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L28)
+Defined in: [injectTable.ts:40](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L40)
 
 Store mode: pass `selector` (required) to project from full table state.
 Source mode: pass `source` (atom or store); omit `selector` for the whole value
@@ -24,7 +24,7 @@ inference.
 AngularTableComputed<TSourceValue>(props): Signal<Readonly<TSourceValue>>;
 ```
 
-Defined in: [injectTable.ts:29](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L29)
+Defined in: [injectTable.ts:41](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L41)
 
 Store mode: pass `selector` (required) to project from full table state.
 Source mode: pass `source` (atom or store); omit `selector` for the whole value
@@ -51,7 +51,7 @@ inference.
 
 ##### source
 
-`Atom`\<`TSourceValue`\> \| `ReadonlyAtom`\<`TSourceValue`\>
+[`SubscribeSource`](../type-aliases/SubscribeSource.md)\<`TSourceValue`\>
 
 ### Returns
 
@@ -63,7 +63,7 @@ inference.
 AngularTableComputed<TSourceValue, TSubSelected>(props): Signal<Readonly<TSubSelected>>;
 ```
 
-Defined in: [injectTable.ts:34](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L34)
+Defined in: [injectTable.ts:46](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L46)
 
 Store mode: pass `selector` (required) to project from full table state.
 Source mode: pass `source` (atom or store); omit `selector` for the whole value
@@ -94,7 +94,7 @@ inference.
 
 ##### source
 
-`Atom`\<`TSourceValue`\> \| `ReadonlyAtom`\<`TSourceValue`\>
+[`SubscribeSource`](../type-aliases/SubscribeSource.md)\<`TSourceValue`\>
 
 ### Returns
 
@@ -106,7 +106,7 @@ inference.
 AngularTableComputed<TSubSelected>(props): Signal<Readonly<TSubSelected>>;
 ```
 
-Defined in: [injectTable.ts:39](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L39)
+Defined in: [injectTable.ts:51](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L51)
 
 Store mode: pass `selector` (required) to project from full table state.
 Source mode: pass `source` (atom or store); omit `selector` for the whole value

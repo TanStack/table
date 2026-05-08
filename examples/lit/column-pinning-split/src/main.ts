@@ -15,7 +15,7 @@ import type {
   ColumnDef,
   ColumnOrderState,
   ColumnPinningState,
-  VisibilityState,
+  ColumnVisibilityState,
 } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
@@ -88,7 +88,7 @@ class LitTableExample extends LitElement {
   private columnOrder: ColumnOrderState = []
 
   @state()
-  private columnVisibility: VisibilityState = {}
+  private columnVisibility: ColumnVisibilityState = {}
 
   @state()
   private columnPinning: ColumnPinningState = { left: [], right: [] }

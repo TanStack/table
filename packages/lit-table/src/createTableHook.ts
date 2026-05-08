@@ -612,7 +612,10 @@ export function createTableHook<
    * }
    * ```
    */
-  function useAppTable<TData extends RowData, TSelected = {}>(
+  function useAppTable<
+    TData extends RowData,
+    TSelected = TableState<TFeatures>,
+  >(
     host: ReactiveControllerHost & HTMLElement,
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,

@@ -127,7 +127,7 @@ function App() {
       data,
       globalFilterFn: 'includesString',
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   const pageIndex = table.state.pagination.pageIndex

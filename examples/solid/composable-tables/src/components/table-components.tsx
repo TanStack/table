@@ -95,21 +95,26 @@ export function RowCount() {
 export function TableToolbar({
   title,
   onRefresh,
+  onStressTest,
 }: {
   title: string
   onRefresh?: () => void
+  onStressTest?: () => void
 }) {
   const table = useTableContext()
 
   return (
     <div class="table-toolbar">
       <h2>{title}</h2>
-      <div>
+      <div class="table-toolbar-actions">
+        {onRefresh && <button onClick={onRefresh}>Regenerate Data</button>}
+        {onStressTest && (
+          <button onClick={onStressTest}>Stress Test (200k rows)</button>
+        )}
         <button onClick={() => table.resetColumnFilters()}>
           Clear Filters
         </button>
         <button onClick={() => table.resetSorting()}>Clear Sorting</button>
-        {onRefresh && <button onClick={onRefresh}>Regenerate Data</button>}
       </div>
     </div>
   )

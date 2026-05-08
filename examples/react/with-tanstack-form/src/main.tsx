@@ -166,16 +166,19 @@ function App() {
 
   // Create table using form state as data source
   // The table gets fresh data on each render, cells handle their own field state
-  const table = useTable({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {
+        filteredRowModel: createFilteredRowModel(filterFns),
+        paginatedRowModel: createPaginatedRowModel(),
+      },
+      columns,
+      data: form.state.values.data,
+      debugTable: true,
     },
-    columns,
-    data: form.state.values.data,
-    debugTable: true,
-  })
+    (state) => state, // default selector
+  )
 
   const refreshData = () => {
     const data: Array<FormRow> = makeData(100)
@@ -239,136 +242,122 @@ function App() {
         </div>
 
         {/* Table */}
-        <table.Subscribe
-          selector={(state) => ({
-            pagination: state.pagination,
-            columnFilters: state.columnFilters,
-          })}
-        >
-          {(tableState) => (
-            <>
-              <div className="spacer-sm" />
-              <table>
-                <thead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => {
-                        return (
-                          <th key={header.id} colSpan={header.colSpan}>
-                            {header.isPlaceholder ? null : (
-                              <div>
-                                <table.FlexRender header={header} />
-                                {header.column.getCanFilter() ? (
-                                  <div>
-                                    <Filter
-                                      column={header.column}
-                                      table={table}
-                                    />
-                                  </div>
-                                ) : null}
-                              </div>
-                            )}
-                          </th>
-                        )
-                      })}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody>
-                  {table.getRowModel().rows.map((row) => {
+        <>
+          <div className="spacer-sm" />
+          <table>
+            <thead>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
                     return (
-                      <tr key={row.id}>
-                        {row.getAllCells().map((cell) => {
-                          return (
-                            <td key={cell.id}>
-                              <table.FlexRender cell={cell} />
-                            </td>
-                          )
-                        })}
-                      </tr>
+                      <th key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder ? null : (
+                          <div>
+                            <table.FlexRender header={header} />
+                            {header.column.getCanFilter() ? (
+                              <div>
+                                <Filter column={header.column} table={table} />
+                              </div>
+                            ) : null}
+                          </div>
+                        )}
+                      </th>
                     )
                   })}
-                </tbody>
-              </table>
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map((row) => {
+                return (
+                  <tr key={row.id}>
+                    {row.getAllCells().map((cell) => {
+                      return (
+                        <td key={cell.id}>
+                          <table.FlexRender cell={cell} />
+                        </td>
+                      )
+                    })}
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
 
-              {/* Pagination controls */}
-              <div className="spacer-sm" />
-              <div className="controls">
-                <button
-                  type="button"
-                  className="demo-button demo-button-sm"
-                  onClick={() => table.firstPage()}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  {'<<'}
-                </button>
-                <button
-                  type="button"
-                  className="demo-button demo-button-sm"
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
-                >
-                  {'<'}
-                </button>
-                <button
-                  type="button"
-                  className="demo-button demo-button-sm"
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
-                >
-                  {'>'}
-                </button>
-                <button
-                  type="button"
-                  className="demo-button demo-button-sm"
-                  onClick={() => table.lastPage()}
-                  disabled={!table.getCanNextPage()}
-                >
-                  {'>>'}
-                </button>
-                <span className="inline-controls">
-                  <div>Page</div>
-                  <strong>
-                    {(tableState.pagination.pageIndex + 1).toLocaleString()} of{' '}
-                    {table.getPageCount().toLocaleString()}
-                  </strong>
-                </span>
-                <span className="inline-controls">
-                  | Go to page:
-                  <input
-                    type="number"
-                    min="1"
-                    max={table.getPageCount()}
-                    defaultValue={tableState.pagination.pageIndex + 1}
-                    onChange={(e) => {
-                      const page = e.target.value
-                        ? Number(e.target.value) - 1
-                        : 0
-                      table.setPageIndex(page)
-                    }}
-                    className="page-size-input"
-                  />
-                </span>
-                <select
-                  value={tableState.pagination.pageSize}
-                  onChange={(e) => {
-                    table.setPageSize(Number(e.target.value))
-                  }}
-                >
-                  {[10, 20, 30, 40, 50].map((pageSize) => (
-                    <option key={pageSize} value={pageSize}>
-                      Show {pageSize}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
-                {table.getRowCount().toLocaleString()} Rows
-              </div>
-            </>
-          )}
-        </table.Subscribe>
+          {/* Pagination controls */}
+          <div className="spacer-sm" />
+          <div className="controls">
+            <button
+              type="button"
+              className="demo-button demo-button-sm"
+              onClick={() => table.firstPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {'<<'}
+            </button>
+            <button
+              type="button"
+              className="demo-button demo-button-sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {'<'}
+            </button>
+            <button
+              type="button"
+              className="demo-button demo-button-sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {'>'}
+            </button>
+            <button
+              type="button"
+              className="demo-button demo-button-sm"
+              onClick={() => table.lastPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {'>>'}
+            </button>
+            <span className="inline-controls">
+              <div>Page</div>
+              <strong>
+                {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+                {table.getPageCount().toLocaleString()}
+              </strong>
+            </span>
+            <span className="inline-controls">
+              | Go to page:
+              <input
+                type="number"
+                min="1"
+                max={table.getPageCount()}
+                defaultValue={table.state.pagination.pageIndex + 1}
+                onChange={(e) => {
+                  const page = e.target.value ? Number(e.target.value) - 1 : 0
+                  table.setPageIndex(page)
+                }}
+                className="page-size-input"
+              />
+            </span>
+            <select
+              value={table.state.pagination.pageSize}
+              onChange={(e) => {
+                table.setPageSize(Number(e.target.value))
+              }}
+            >
+              {[10, 20, 30, 40, 50].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
+            {table.getRowCount().toLocaleString()} Rows
+          </div>
+        </>
       </form>
     </div>
   )

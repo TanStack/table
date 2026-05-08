@@ -64,11 +64,8 @@ const table = useAppTable({
         :is="table.TableToolbar"
         title="Products Table"
         :onRefresh="refreshData"
+        :onStressTest="stressTest"
       />
-      <div style="margin-bottom: 8px">
-        <button @click="refreshData">Regenerate Data</button>
-        <button @click="stressTest">Stress Test (200k rows)</button>
-      </div>
 
       <table>
         <thead>

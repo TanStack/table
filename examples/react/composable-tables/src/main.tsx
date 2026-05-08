@@ -77,7 +77,7 @@ function UsersTable() {
       debugTable: true,
       // more table options
     },
-    // (state) => state, // alternatively, subscribe to the entire state instead of using table.Subscribe or selectors down below
+    (state) => state, // default selector
   )
 
   return (
@@ -93,13 +93,11 @@ function UsersTable() {
       {({ sorting, columnFilters }) => (
         <div className="table-container">
           {/* Table toolbar using pre-bound component */}
-          <table.TableToolbar title="Users Table" onRefresh={refreshData} />
-          <div style={{ marginBottom: '8px' }}>
-            <button onClick={() => refreshData()}>Regenerate Data</button>
-            <button onClick={() => stressTest()}>
-              Stress Test (200k rows)
-            </button>
-          </div>
+          <table.TableToolbar
+            title="Users Table"
+            onRefresh={refreshData}
+            onStressTest={stressTest}
+          />
 
           {/* Table element */}
           <table>
@@ -267,12 +265,15 @@ function ProductsTable() {
   )
 
   // Create the table using the same useAppTable hook
-  const table = useAppTable({
-    debugTable: true,
-    columns,
-    data,
-    getRowId: (row) => row.id,
-  })
+  const table = useAppTable(
+    {
+      debugTable: true,
+      columns,
+      data,
+      getRowId: (row) => row.id,
+    },
+    (state) => state, // default selector
+  )
 
   return (
     <table.AppTable
@@ -285,13 +286,11 @@ function ProductsTable() {
       {({ sorting, columnFilters }) => (
         <div className="table-container">
           {/* Table toolbar using the same pre-bound component */}
-          <table.TableToolbar title="Products Table" onRefresh={refreshData} />
-          <div style={{ marginBottom: '8px' }}>
-            <button onClick={() => refreshData()}>Regenerate Data</button>
-            <button onClick={() => stressTest()}>
-              Stress Test (200k rows)
-            </button>
-          </div>
+          <table.TableToolbar
+            title="Products Table"
+            onRefresh={refreshData}
+            onStressTest={stressTest}
+          />
 
           {/* Table element */}
           <table>

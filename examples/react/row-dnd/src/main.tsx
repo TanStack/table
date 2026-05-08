@@ -134,7 +134,7 @@ function App() {
       data,
       getRowId: (row) => row.userId, // required because row indexes will change
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   // reorder rows after drag & drop
@@ -205,9 +205,7 @@ function App() {
             </SortableContext>
           </tbody>
         </table>
-        <table.Subscribe selector={(state) => state}>
-          {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-        </table.Subscribe>
+        <pre>{JSON.stringify(table.state, null, 2)}</pre>
       </div>
     </DndContext>
   )

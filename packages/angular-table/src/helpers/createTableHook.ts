@@ -404,7 +404,10 @@ export function createTableHook<
     return injectFlexRenderContext<CellContext<TFeatures, TData, TValue>>()
   }
 
-  function injectAppTable<TData extends RowData, TSelected = {}>(
+  function injectAppTable<
+    TData extends RowData,
+    TSelected = TableState<TFeatures>,
+  >(
     tableOptions: () => Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'

@@ -1436,7 +1436,7 @@ function App({
       columnResizeMode: 'onChange',
       debugTable: true,
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   const columnSizeVars = React.useMemo(() => {

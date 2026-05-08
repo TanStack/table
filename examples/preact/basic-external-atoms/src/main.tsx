@@ -74,20 +74,23 @@ function App() {
   const pagination = useSelector(paginationAtom, (s) => s)
 
   // Create the table and pass your per-slice external atoms.
-  const table = useTable({
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {
+        sortedRowModel: createSortedRowModel(sortFns),
+        paginatedRowModel: createPaginatedRowModel(),
+      },
+      columns,
+      data,
+      atoms: {
+        sorting: sortingAtom,
+        pagination: paginationAtom,
+      },
+      debugTable: pagination.pageIndex > 2,
     },
-    columns,
-    data,
-    atoms: {
-      sorting: sortingAtom,
-      pagination: paginationAtom,
-    },
-    debugTable: pagination.pageIndex > 2,
-  })
+    (state) => state, // default selector
+  )
 
   return (
     <div className="demo-root">

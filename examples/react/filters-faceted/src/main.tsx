@@ -88,152 +88,142 @@ function App() {
   const stressTest = () => setData(makeData(200_000))
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  const table = useTable({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns), // client-side filtering
-      paginatedRowModel: createPaginatedRowModel(),
-      facetedRowModel: createFacetedRowModel(), // client-side faceting
-      facetedMinMaxValues: createFacetedMinMaxValues(), // generate min/max values for range filter
-      facetedUniqueValues: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete
+  const table = useTable(
+    {
+      _features,
+      _rowModels: {
+        filteredRowModel: createFilteredRowModel(filterFns), // client-side filtering
+        paginatedRowModel: createPaginatedRowModel(),
+        facetedRowModel: createFacetedRowModel(), // client-side faceting
+        facetedMinMaxValues: createFacetedMinMaxValues(), // generate min/max values for range filter
+        facetedUniqueValues: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete
+      },
+      columns,
+      data,
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: false,
     },
-    columns,
-    data,
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: false,
-  })
+    (state) => state, // default selector
+  )
 
   return (
-    <table.Subscribe
-      selector={(state) => ({
-        columnFilters: state.columnFilters,
-        pagination: state.pagination,
-      })}
-    >
-      {(state) => (
-        <div className="demo-root">
-          <div>
-            <button onClick={() => refreshData()}>Regenerate Data</button>
-            <button onClick={() => stressTest()}>
-              Stress Test (200k rows)
-            </button>
-          </div>
-          <table>
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <th key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <>
-                            <div>
-                              <table.FlexRender header={header} />
-                            </div>
-                            {header.column.getCanFilter() ? (
-                              <div>
-                                <Filter column={header.column} />
-                              </div>
-                            ) : null}
-                          </>
-                        )}
-                      </th>
-                    )
-                  })}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => {
+    <div className="demo-root">
+      <div>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
+        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+      </div>
+      <table>
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
                 return (
-                  <tr key={row.id}>
-                    {row.getAllCells().map((cell) => {
-                      return (
-                        <td key={cell.id}>
-                          <table.FlexRender cell={cell} />
-                        </td>
-                      )
-                    })}
-                  </tr>
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <>
+                        <div>
+                          <table.FlexRender header={header} />
+                        </div>
+                        {header.column.getCanFilter() ? (
+                          <div>
+                            <Filter column={header.column} />
+                          </div>
+                        ) : null}
+                      </>
+                    )}
+                  </th>
                 )
               })}
-            </tbody>
-          </table>
-          <div className="spacer-sm" />
-          <div className="controls">
-            <button
-              className="demo-button demo-button-sm"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {'<<'}
-            </button>
-            <button
-              className="demo-button demo-button-sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {'<'}
-            </button>
-            <button
-              className="demo-button demo-button-sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {'>'}
-            </button>
-            <button
-              className="demo-button demo-button-sm"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              {'>>'}
-            </button>
-            <span className="inline-controls">
-              <div>Page</div>
-              <strong>
-                {(state.pagination.pageIndex + 1).toLocaleString()} of{' '}
-                {table.getPageCount().toLocaleString()}
-              </strong>
-            </span>
-            <span className="inline-controls">
-              | Go to page:
-              <input
-                type="number"
-                defaultValue={state.pagination.pageIndex + 1}
-                onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0
-                  table.setPageIndex(page)
-                }}
-                className="page-size-input"
-              />
-            </span>
-            <select
-              value={state.pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e.target.value))
-              }}
-            >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
-          </div>
-          <div>
-            <button onClick={rerender}>Force Rerender</button>
-          </div>
-          <table.Subscribe selector={(state) => state}>
-            {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-          </table.Subscribe>
-        </div>
-      )}
-    </table.Subscribe>
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr key={row.id}>
+                {row.getAllCells().map((cell) => {
+                  return (
+                    <td key={cell.id}>
+                      <table.FlexRender cell={cell} />
+                    </td>
+                  )
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+      <div className="spacer-sm" />
+      <div className="controls">
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<<'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {'<'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>'}
+        </button>
+        <button
+          className="demo-button demo-button-sm"
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
+        >
+          {'>>'}
+        </button>
+        <span className="inline-controls">
+          <div>Page</div>
+          <strong>
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+        <span className="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            defaultValue={table.state.pagination.pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              table.setPageIndex(page)
+            }}
+            className="page-size-input"
+          />
+        </span>
+        <select
+          value={table.state.pagination.pageSize}
+          onChange={(e) => {
+            table.setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
+      </div>
+      <div>
+        <button onClick={rerender}>Force Rerender</button>
+      </div>
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+    </div>
   )
 }
 

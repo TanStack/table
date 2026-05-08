@@ -138,12 +138,10 @@ export function Subscribe<
 >(
   props: SubscribeProps<TFeatures, TSelected, TSourceValue>,
 ): ReturnType<FunctionComponent> {
-  const selectFn = props.selector ?? ((x: unknown) => x)
-
   const selected = useSelector(
     // Atom and store share the same selection protocol; union args need a widen for TS.
     props.source,
-    selectFn as Parameters<typeof useSelector>[1],
+    props.selector as Parameters<typeof useSelector>[1],
     {
       compare: shallow,
     },

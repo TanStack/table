@@ -146,7 +146,7 @@ function App() {
         columnOrder: columns.map((c) => c.id!),
       },
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   // reorder columns after drag & drop
@@ -223,9 +223,7 @@ function App() {
             ))}
           </tbody>
         </table>
-        <table.Subscribe selector={(state) => state}>
-          {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
-        </table.Subscribe>
+        <pre>{JSON.stringify(table.state, null, 2)}</pre>
       </div>
     </DndContext>
   )

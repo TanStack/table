@@ -823,6 +823,7 @@
             { "to": "framework/react/examples/basic-use-legacy-table", "label": "Basic (useLegacyTable)" },
             { "to": "framework/react/examples/basic-external-state", "label": "Basic (External State)" },
             { "to": "framework/react/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
+            { "to": "framework/react/examples/basic-subscribe", "label": "Basic (Subscribe)" },
             { "to": "framework/react/examples/column-groups", "label": "Header Groups" }
           ]
         },
@@ -864,6 +865,7 @@
             { "to": "framework/preact/examples/basic-use-app-table", "label": "Basic (useAppTable)" },
             { "to": "framework/preact/examples/basic-external-state", "label": "Basic (External State)" },
             { "to": "framework/preact/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
+            { "to": "framework/preact/examples/basic-subscribe", "label": "Basic (Subscribe)" },
             { "to": "framework/preact/examples/column-groups", "label": "Header Groups" }
           ]
         },

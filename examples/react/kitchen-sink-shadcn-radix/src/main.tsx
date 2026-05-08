@@ -446,7 +446,7 @@ function App() {
       columnResizeMode: 'onChange',
       debugTable: true,
     },
-    (state) => state, // subscribe to all re-renders
+    (state) => state, // default selector
   )
 
   const columnSizeVars = React.useMemo(() => {

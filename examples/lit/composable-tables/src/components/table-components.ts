@@ -113,6 +113,9 @@ export class TableToolbar extends LitElement {
   @property({ attribute: false })
   declare onRefresh: (() => void) | undefined
 
+  @property({ attribute: false })
+  declare onStressTest: (() => void) | undefined
+
   createRenderRoot() {
     return this
   }
@@ -124,14 +127,19 @@ export class TableToolbar extends LitElement {
     return html`
       <div class="table-toolbar">
         <h2>${this.title}</h2>
-        <div style="display: flex; gap: 8px">
+        <div class="table-toolbar-actions">
+          ${this.onRefresh
+            ? html`<button @click=${this.onRefresh}>Regenerate Data</button>`
+            : nothing}
+          ${this.onStressTest
+            ? html`<button @click=${this.onStressTest}>
+                Stress Test (200k rows)
+              </button>`
+            : nothing}
           <button @click=${() => table.resetColumnFilters()}>
             Clear Filters
           </button>
           <button @click=${() => table.resetSorting()}>Clear Sorting</button>
-          ${this.onRefresh
-            ? html`<button @click=${this.onRefresh}>Regenerate Data</button>`
-            : nothing}
         </div>
       </div>
     `

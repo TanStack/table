@@ -21,7 +21,7 @@ import type { FunctionComponent, ReactNode } from 'react'
 export type ReactTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
   /**
    * A React HOC (Higher Order Component) that allows you to subscribe to the table state.
@@ -108,11 +108,10 @@ export type ReactTable<
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = {},
+  TSelected = TableState<TFeatures>,
 >(
   tableOptions: TableOptions<TFeatures, TData>,
-  selector: (state: TableState<TFeatures>) => TSelected = () =>
-    ({}) as TSelected,
+  selector?: (state: TableState<TFeatures>) => TSelected,
 ): ReactTable<TFeatures, TData, TSelected> {
   const [table] = useState(() => {
     const tableInstance = constructTable({
