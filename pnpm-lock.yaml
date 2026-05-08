@@ -99,7 +99,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -145,7 +145,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -191,7 +191,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -237,7 +237,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -283,7 +283,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -329,7 +329,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -375,7 +375,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -421,7 +421,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -464,7 +464,7 @@ importers:
         specifier: ^21.2.11
         version: 21.2.11(@angular/common@21.2.11(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2))(@angular/platform-browser@21.2.11(@angular/animations@21.2.11(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)))(@angular/common@21.2.11(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.11(@angular/compiler@21.2.11)(rxjs@7.8.2)))(rxjs@7.8.2)
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -510,7 +510,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -556,7 +556,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -602,7 +602,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -648,7 +648,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -700,7 +700,7 @@ importers:
         specifier: ^21.2.9
         version: 21.2.9(51c1e057a4a6788656eb5be0adbc5436)
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       express:
         specifier: ^5.2.1
@@ -758,7 +758,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -807,7 +807,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -856,7 +856,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -905,7 +905,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -951,7 +951,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
       rxjs:
         specifier: ~7.8.2
@@ -982,7 +982,7 @@ importers:
         specifier: ^1.1.6
         version: 1.1.6
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1004,7 +1004,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       '@tanstack/store':
         specifier: ^0.11.0
@@ -1029,7 +1029,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1051,7 +1051,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1073,7 +1073,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1095,7 +1095,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1117,7 +1117,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1139,7 +1139,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1161,7 +1161,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1183,7 +1183,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1205,7 +1205,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1227,7 +1227,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1249,7 +1249,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1274,7 +1274,7 @@ importers:
         specifier: ^1.1.6
         version: 1.1.6
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1296,7 +1296,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1318,7 +1318,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1340,7 +1340,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1362,7 +1362,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
@@ -1387,7 +1387,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1409,7 +1409,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1431,7 +1431,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1453,7 +1453,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1475,7 +1475,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1497,7 +1497,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1519,7 +1519,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       lit:
         specifier: ^3.3.2
@@ -1541,7 +1541,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       '@tanstack/lit-virtual':
         specifier: ^3.13.25
@@ -1566,7 +1566,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       '@tanstack/lit-virtual':
         specifier: ^3.13.25
@@ -1591,7 +1591,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/lit-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/lit-table
       '@tanstack/lit-virtual':
         specifier: ^3.13.25
@@ -1619,7 +1619,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(preact@10.29.1)
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1644,7 +1644,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(preact@10.29.1)
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1669,7 +1669,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(preact@10.29.1)
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1694,7 +1694,7 @@ importers:
   examples/preact/basic-use-app-table:
     dependencies:
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1713,7 +1713,7 @@ importers:
   examples/preact/basic-use-table:
     dependencies:
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1735,7 +1735,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1757,7 +1757,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1779,7 +1779,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1801,7 +1801,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1823,7 +1823,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1845,7 +1845,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1867,7 +1867,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1889,7 +1889,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1911,7 +1911,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1936,7 +1936,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(preact@10.29.1)
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1958,7 +1958,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -1980,7 +1980,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2005,7 +2005,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2030,7 +2030,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2055,7 +2055,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2077,7 +2077,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2102,7 +2102,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(preact@10.29.1)
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2124,7 +2124,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2149,7 +2149,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(preact@10.29.1)
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2177,7 +2177,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2205,7 +2205,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2233,7 +2233,7 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(preact@10.29.1)
       '@tanstack/preact-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
       preact:
         specifier: ^10.29.1
@@ -2258,7 +2258,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2301,7 +2301,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2344,7 +2344,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2387,7 +2387,7 @@ importers:
   examples/react/basic-use-app-table:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2427,7 +2427,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2464,7 +2464,7 @@ importers:
   examples/react/basic-use-table:
     dependencies:
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2516,7 +2516,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2556,7 +2556,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2596,7 +2596,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2636,7 +2636,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2676,7 +2676,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2716,7 +2716,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2756,7 +2756,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2796,7 +2796,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2836,7 +2836,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2876,7 +2876,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2919,7 +2919,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2959,7 +2959,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -2999,7 +2999,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -3042,7 +3042,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -3085,7 +3085,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -3128,7 +3128,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -3168,7 +3168,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -3232,7 +3232,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       date-fns:
         specifier: ^4.1.0
@@ -3302,7 +3302,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       date-fns:
         specifier: ^4.1.0
@@ -3381,7 +3381,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       date-fns:
         specifier: ^4.1.0
@@ -3442,7 +3442,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       date-fns:
         specifier: ^4.1.0
@@ -3512,7 +3512,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       class-variance-authority:
         specifier: ^0.7.1
@@ -3597,7 +3597,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       class-variance-authority:
         specifier: ^0.7.1
@@ -3676,7 +3676,7 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -3728,7 +3728,7 @@ importers:
         specifier: ^3.41.1
         version: 3.41.1(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -3789,7 +3789,7 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react@19.2.5))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -3832,7 +3832,7 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -3884,7 +3884,7 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       class-variance-authority:
         specifier: ^0.7.1
@@ -3945,7 +3945,7 @@ importers:
         specifier: ^4.2.4
         version: 4.2.4(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       class-variance-authority:
         specifier: ^0.7.1
@@ -4024,7 +4024,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.24
@@ -4103,7 +4103,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.24
@@ -4152,7 +4152,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -4204,7 +4204,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -4244,7 +4244,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -4287,7 +4287,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -4333,7 +4333,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -4373,7 +4373,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -4413,7 +4413,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.24
@@ -4456,7 +4456,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.24
@@ -4502,7 +4502,7 @@ importers:
         specifier: ^5.100.7
         version: 5.100.7(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.24
@@ -4545,7 +4545,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.24
@@ -4588,7 +4588,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       '@tanstack/react-virtual':
         specifier: ^3.13.24
@@ -4634,7 +4634,7 @@ importers:
         specifier: ^1.29.1
         version: 1.29.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -4683,7 +4683,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -4726,7 +4726,7 @@ importers:
         specifier: ^1.169.1
         version: 1.169.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       '@tanstack/react-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
       react:
         specifier: ^19.2.5
@@ -4772,7 +4772,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4794,7 +4794,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(solid-js@1.9.12)
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4816,7 +4816,7 @@ importers:
   examples/solid/basic-external-state:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4838,7 +4838,7 @@ importers:
   examples/solid/basic-use-table:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4860,7 +4860,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4879,7 +4879,7 @@ importers:
   examples/solid/column-ordering:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4901,7 +4901,7 @@ importers:
   examples/solid/column-pinning:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4923,7 +4923,7 @@ importers:
   examples/solid/column-pinning-split:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4945,7 +4945,7 @@ importers:
   examples/solid/column-pinning-sticky:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4970,7 +4970,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -4989,7 +4989,7 @@ importers:
   examples/solid/column-resizing-performant:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5014,7 +5014,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5036,7 +5036,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5055,7 +5055,7 @@ importers:
   examples/solid/composable-tables:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5074,7 +5074,7 @@ importers:
   examples/solid/expanding:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5099,7 +5099,7 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3(solid-js@1.9.12)
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5124,7 +5124,7 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3(solid-js@1.9.12)
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5149,7 +5149,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5171,7 +5171,7 @@ importers:
   examples/solid/grouping:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5193,7 +5193,7 @@ importers:
   examples/solid/pagination:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5215,7 +5215,7 @@ importers:
   examples/solid/row-pinning:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5240,7 +5240,7 @@ importers:
         specifier: ^0.8.2
         version: 0.8.2(solid-js@1.9.12)
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       '@tanstack/solid-table-devtools':
         specifier: ^9.0.0-alpha.43
@@ -5265,7 +5265,7 @@ importers:
   examples/solid/sorting:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5287,7 +5287,7 @@ importers:
   examples/solid/sub-components:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5309,7 +5309,7 @@ importers:
   examples/solid/virtualized-columns:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       '@tanstack/solid-virtual':
         specifier: ^3.13.24
@@ -5340,7 +5340,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(solid-js@1.9.12)
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       '@tanstack/solid-virtual':
         specifier: ^3.13.24
@@ -5365,7 +5365,7 @@ importers:
   examples/solid/virtualized-rows:
     dependencies:
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       '@tanstack/solid-virtual':
         specifier: ^3.13.24
@@ -5393,7 +5393,7 @@ importers:
         specifier: ^1.29.1
         version: 1.29.1(solid-js@1.9.12)
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5424,7 +5424,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(solid-js@1.9.12)
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5452,7 +5452,7 @@ importers:
         specifier: ^1.169.1
         version: 1.169.1(solid-js@1.9.12)
       '@tanstack/solid-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
       solid-js:
         specifier: ^1.9.12
@@ -5486,7 +5486,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5516,7 +5516,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5550,7 +5550,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5580,7 +5580,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5610,7 +5610,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5640,7 +5640,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5670,7 +5670,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5700,7 +5700,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5730,7 +5730,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5760,7 +5760,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5790,7 +5790,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5820,7 +5820,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5850,7 +5850,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5880,7 +5880,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5910,7 +5910,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5940,7 +5940,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -5970,7 +5970,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -6000,7 +6000,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -6033,7 +6033,7 @@ importers:
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -6063,7 +6063,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -6093,7 +6093,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -6123,7 +6123,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -6153,7 +6153,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -6183,7 +6183,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -6213,7 +6213,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tsconfig/svelte':
         specifier: ^5.0.8
@@ -6243,7 +6243,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tanstack/svelte-virtual':
         specifier: ^3.13.24
@@ -6279,7 +6279,7 @@ importers:
         specifier: ^6.1.26
         version: 6.1.26(svelte@5.55.5(@typescript-eslint/types@8.59.1))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tanstack/svelte-virtual':
         specifier: ^3.13.24
@@ -6312,7 +6312,7 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(svelte@5.55.5(@typescript-eslint/types@8.59.1))(vite@8.0.10(@types/node@25.6.0)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.13))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       '@tanstack/svelte-virtual':
         specifier: ^3.13.24
@@ -6342,7 +6342,7 @@ importers:
         specifier: ^1.29.1
         version: 1.29.1(svelte@5.55.5(@typescript-eslint/types@8.59.1))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
       zod:
         specifier: ^4.4.2
@@ -6379,7 +6379,7 @@ importers:
         specifier: ^6.1.26
         version: 6.1.26(svelte@5.55.5(@typescript-eslint/types@8.59.1))
       '@tanstack/svelte-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
     devDependencies:
       '@faker-js/faker':
@@ -6482,7 +6482,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(vue@3.5.33(typescript@6.0.3))
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6513,7 +6513,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6541,7 +6541,7 @@ importers:
   examples/vue/basic-use-app-table:
     dependencies:
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6569,7 +6569,7 @@ importers:
   examples/vue/basic-use-table:
     dependencies:
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6600,7 +6600,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6631,7 +6631,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6662,7 +6662,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6693,7 +6693,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6724,7 +6724,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6755,7 +6755,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6786,7 +6786,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6817,7 +6817,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6848,7 +6848,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6879,7 +6879,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(vue@3.5.33(typescript@6.0.3))
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6910,7 +6910,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6941,7 +6941,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -6972,7 +6972,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -7003,7 +7003,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -7034,7 +7034,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -7065,7 +7065,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -7096,7 +7096,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -7130,7 +7130,7 @@ importers:
         specifier: ^0.2.16
         version: 0.2.16(solid-js@1.9.12)
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       '@tanstack/vue-table-devtools':
         specifier: ^9.0.0-alpha.43
@@ -7164,7 +7164,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -7195,7 +7195,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -7226,7 +7226,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       '@tanstack/vue-virtual':
         specifier: ^3.13.24
@@ -7266,7 +7266,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(vue@3.5.33(typescript@6.0.3))
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       '@tanstack/vue-virtual':
         specifier: ^3.13.24
@@ -7300,7 +7300,7 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       '@tanstack/vue-virtual':
         specifier: ^3.13.24
@@ -7337,7 +7337,7 @@ importers:
         specifier: ^1.29.1
         version: 1.29.1(vue@3.5.33(typescript@6.0.3))
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
@@ -7377,7 +7377,7 @@ importers:
         specifier: ^0.11.0
         version: 0.11.0(vue@3.5.33(typescript@6.0.3))
       '@tanstack/vue-table':
-        specifier: ^9.0.0-alpha.44
+        specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
       vue:
         specifier: ^3.5.33
