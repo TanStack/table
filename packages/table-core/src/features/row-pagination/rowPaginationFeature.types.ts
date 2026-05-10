@@ -22,7 +22,9 @@ export interface TableOptions_RowPagination {
    */
   manualPagination?: boolean
   /**
-   * If this function is provided, it will be called when the pagination state changes and you will be expected to manage the state yourself. You can pass the managed state back to the table via the `tableOptions.state.pagination` option.
+   * Called with an updater when pagination state changes. Pair this with
+   * `state.pagination` when using external state; external atoms can own the
+   * slice without this callback.
    */
   onPaginationChange?: OnChangeFn<PaginationState>
   /**
@@ -89,19 +91,20 @@ export interface Table_RowPagination<
    */
   resetPageSize: (defaultState?: boolean) => void
   /**
-   * Resets the **pagination** state to `initialState.pagination`, or `true` can be passed to force a default blank state reset to `[]`.
+   * Resets pagination state to `initialState.pagination`. Pass `true` to reset
+   * to the feature default of `{ pageIndex: 0, pageSize: 10 }`.
    */
   resetPagination: (defaultState?: boolean) => void
   /**
-   * Updates the page index using the provided function or value in the `state.pagination.pageIndex` state.
+   * Updates `pagination.pageIndex` using a value or updater.
    */
   setPageIndex: (updater: Updater<number>) => void
   /**
-   * Updates the page size using the provided function or value in the `state.pagination.pageSize` state.
+   * Updates `pagination.pageSize` using a value or updater.
    */
   setPageSize: (updater: Updater<number>) => void
   /**
-   * Sets or updates the `state.pagination` state.
+   * Sets pagination state using a value or updater.
    */
   setPagination: (updater: Updater<PaginationState>) => void
 }
@@ -125,8 +128,9 @@ export interface CreateRowModel_Paginated<
   TData extends RowData,
 > {
   /**
-   * Returns the row model after pagination has taken place, but no further.
-   * Pagination columns are automatically reordered by default to the start of the columns list. If you would rather remove them or leave them as-is, set the appropriate mode here.
+   * Factory used to retrieve the paginated row model. If using server-side
+   * pagination, this is not required. To use client-side pagination, pass
+   * `createPaginatedRowModel()` or implement your own factory.
    */
   paginatedRowModel?: (
     table: Table<TFeatures, TData>,

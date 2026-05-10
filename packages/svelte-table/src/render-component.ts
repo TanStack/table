@@ -46,7 +46,8 @@ export class RenderSnippetConfig<TProps> {
 }
 
 /**
- * A helper function to help create cells from Svelte components through ColumnDef's `cell` and `header` properties.
+ * Wraps a Svelte component so it can be returned from a column definition
+ * renderer such as `cell`, `header`, or `footer`.
  *
  * This is only to be used with Svelte Components - use `renderSnippet` for Svelte Snippets.
  *
@@ -76,15 +77,16 @@ export const renderComponent = <
 ) => new RenderComponentConfig(component, props)
 
 /**
- * A helper function to help create cells from Svelte Snippets through ColumnDef's `cell` and `header` properties.
+ * Wraps a Svelte snippet so it can be returned from a column definition
+ * renderer such as `cell`, `header`, or `footer`.
  *
  * *The snippet must only take one parameter.*
  *
  * This is only to be used with Snippets - use `renderComponent` for Svelte Components.
  *
- * @param snippet
- * @param params
- * @returns
+ * @param snippet The snippet to render.
+ * @param params The single parameter object passed to the snippet.
+ * @returns A `RenderSnippetConfig` consumed by the Svelte `FlexRender` component.
  * @example
  * ```ts
  * // +page.svelte

@@ -31,6 +31,11 @@ export interface GlobalFilteringFeatureConstructors<
   // TableState: TableState_GlobalFiltering
 }
 
+/**
+ * Creates the stock global filtering feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructGlobalFilteringFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -86,7 +91,9 @@ export function constructGlobalFilteringFeature<
 }
 
 /**
- * The Global Filtering feature adds global filtering state and APIs to the table and column objects.
- * **Note:** This is dependent on the columnFilteringFeature feature.
+ * The stock global filtering feature.
+ *
+ * Register this feature with column filtering support to add global filter
+ * state, global filter function resolution, and column eligibility APIs.
  */
 export const globalFilteringFeature = constructGlobalFilteringFeature()

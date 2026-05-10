@@ -76,9 +76,9 @@ export interface TableOptions_Table<
   /**
    * Optionally, provide your own external writable atoms for individual state slices.
    * When an atom is provided for a given slice, it takes precedence over `options.state[key]`
-   * and the internal base atom for that slice. Writes originating from the library are
-   * still routed through the internal base atom; consumers are responsible for
-   * mirroring changes back to their external atom via the corresponding `onXChange` callback.
+   * and the internal base atom for that slice. Feature state update APIs write through
+   * the corresponding atom updater, so external atoms are the preferred v9 ownership
+   * model for app-managed table state slices.
    */
   readonly atoms?: ExternalAtoms<TFeatures>
   /**
@@ -90,8 +90,10 @@ export interface TableOptions_Table<
    */
   readonly data: ReadonlyArray<TData>
   /**
-   * Use this option to optionally pass initial state to the table. This state will be used when resetting various table states either automatically by the table (eg. `options.autoResetPageIndex`) or via functions like `table.resetRowSelection()`. Most reset function allow you optionally pass a flag to reset to a blank/default state instead of the initial state.
-   * Table state will not be reset when this object changes, which also means that the initial state object does not need to be stable.
+   * Optionally provide starting values for registered table state slices.
+   * Feature reset APIs use this value by default, and many reset APIs accept
+   * `true` to reset to that feature's blank/default state instead. Changing this
+   * object later does not reset table state, so it does not need to be stable.
    */
   readonly initialState?: Partial<TableState<TFeatures>>
   /**
@@ -106,7 +108,11 @@ export interface TableOptions_Table<
    */
   readonly meta?: TableMeta<TFeatures, TData>
   /**
-   * Pass in individual self-managed state to the table.
+   * Optionally provide externally managed values for individual state slices.
+   *
+   * Pair each slice with its matching `on[State]Change` callback so table state
+   * updates can be persisted outside the table. External atoms take precedence
+   * over this option when both are provided for the same slice.
    */
   readonly state?: Partial<TableState<TFeatures>>
 }
@@ -167,10 +173,9 @@ export interface Table_CoreProperties<
    */
   readonly options: TableOptions<TFeatures, TData>
   /**
-   * Writable atom for table options. Only created when `createOptionsStore` is true
-   * on `coreReativityFeature` (e.g. Lit, Vue, Solid). React/Preact use `createOptionsStore: false`:
-   * options are held as plain data with a lightweight revision + subscribe source; there is
-   * no writable atom backing the full options object. Use {@link getTableOptionsStore} to subscribe.
+   * Writable atom for table options. Only created when `createOptionsStore` is
+   * true on the active core reactivity bindings. Adapters that opt out keep
+   * options as plain resolved data instead of backing them with an atom.
    */
   readonly optionsStore?: Atom<TableOptions<TFeatures, TData>> | undefined
   /**
@@ -185,11 +190,16 @@ export interface Table_Table<
   TData extends RowData,
 > extends Table_CoreProperties<TFeatures, TData> {
   /**
-   * Call this function to reset the table state to the initial state.
+   * Resets the table's internal base atoms to `table.initialState`.
+   *
+   * Prefer feature-specific reset APIs, such as `resetPagination`, when a state
+   * slice may be owned by an external atom or needs that feature's blank/default
+   * reset behavior.
    */
   reset: () => void
   /**
-   * This function can be used to update the table options.
+   * Updates the table options by applying a value or updater to the current
+   * resolved options and then merging them through `options.mergeOptions`.
    */
   setOptions: (newOptions: Updater<TableOptions<TFeatures, TData>>) => void
 }

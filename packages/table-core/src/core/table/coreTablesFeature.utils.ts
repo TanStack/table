@@ -4,6 +4,17 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 
+/**
+ * Synchronizes externally controlled state slices into the table's base atoms.
+ *
+ * This keeps legacy `options.state` values reflected in the atom graph so
+ * derived atoms, stores, and table APIs read a consistent snapshot.
+ *
+ * @example
+ * ```ts
+ * const value = table_syncExternalStateToBaseAtoms(table)
+ * ```
+ */
 export function table_syncExternalStateToBaseAtoms<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -28,6 +39,17 @@ export function table_syncExternalStateToBaseAtoms<
   })
 }
 
+/**
+ * Resets all internal table base atoms to `table.initialState`.
+ *
+ * This resets internally owned state slices in a single reactivity batch. Use
+ * feature-specific reset APIs when a slice may be externally owned.
+ *
+ * @example
+ * ```ts
+ * table_reset(table)
+ * ```
+ */
 export function table_reset<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -40,6 +62,17 @@ export function table_reset<
   })
 }
 
+/**
+ * Merges new table options with the current resolved options.
+ *
+ * If `options.mergeOptions` is provided, it owns the merge behavior; otherwise
+ * options are shallow-merged.
+ *
+ * @example
+ * ```ts
+ * const value = table_mergeOptions(table)
+ * ```
+ */
 export function table_mergeOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -57,6 +90,17 @@ export function table_mergeOptions<
   }
 }
 
+/**
+ * Updates the table options object.
+ *
+ * The updater receives the current resolved options and the merged result is
+ * immediately assigned to the table instance.
+ *
+ * @example
+ * ```ts
+ * table_setOptions(table, (old) => old)
+ * ```
+ */
 export function table_setOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,

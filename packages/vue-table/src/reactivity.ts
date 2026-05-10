@@ -46,6 +46,13 @@ function refToWritableAtom<T>(source: ShallowRef<T>): Atom<T> {
   })
 }
 
+/**
+ * Creates the table-core reactivity bindings used by the Vue adapter.
+ *
+ * Readonly table atoms are backed by Vue `computed` refs and writable atoms by
+ * `shallowRef`. Subscriptions use synchronous `watch` callbacks so table store
+ * updates are visible to Vue render and computed work immediately.
+ */
 export function vueReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: true,

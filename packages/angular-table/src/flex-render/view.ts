@@ -15,6 +15,13 @@ export type FlexRenderTypedContent =
   | { kind: 'templateRef'; content: TemplateRef<unknown> }
   | { kind: 'component'; content: Type<unknown> }
 
+/**
+ * Normalizes arbitrary Angular flex-render content into the renderer's internal
+ * tagged representation.
+ *
+ * This lets the directive decide whether to reuse, update, or recreate an
+ * embedded view or component view.
+ */
 export function mapToFlexRenderTypedContent(
   content: FlexRenderContent<any>,
 ): FlexRenderTypedContent {
@@ -80,6 +87,12 @@ export abstract class FlexRenderView<
   abstract unmount(): void
 }
 
+/**
+ * Tracks an Angular embedded template view rendered by `FlexRenderDirective`.
+ *
+ * Template views receive updated props through their proxied context and can be
+ * reused while the rendered content kind stays compatible.
+ */
 export class FlexRenderTemplateView extends FlexRenderView<
   EmbeddedViewRef<unknown>,
   Extract<FlexRenderTypedContent, { kind: 'primitive' | 'templateRef' }>
@@ -132,6 +145,12 @@ export class FlexRenderTemplateView extends FlexRenderView<
   }
 }
 
+/**
+ * Tracks an Angular component view rendered by `FlexRenderDirective`.
+ *
+ * Component views own input/output updates for `flexRenderComponent(...)`
+ * results and component classes rendered directly from column definitions.
+ */
 export class FlexRenderComponentView extends FlexRenderView<
   FlexRenderComponentRef<unknown>,
   Extract<FlexRenderTypedContent, { kind: 'component' | 'flexRenderComponent' }>

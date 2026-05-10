@@ -8,6 +8,11 @@ import type { Table, Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState } from '../../types/TableState'
 
+/**
+ * Builds the initial table state from registered features and user initial state.
+ *
+ * Each feature contributes its default state before user-provided `initialState` values are merged in.
+ */
 export function getInitialTableState<TFeatures extends TableFeatures>(
   features: TFeatures,
   initialState: Partial<TableState<TFeatures>> | undefined = {},
@@ -18,6 +23,11 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   return cloneState(initialState) as TableState<TFeatures>
 }
 
+/**
+ * Constructs a table instance from normalized table internals.
+ *
+ * This wires core properties, feature prototype APIs, and instance data used by table rendering and row-model operations.
+ */
 export function constructTable<
   TFeatures extends TableFeatures,
   TData extends RowData,

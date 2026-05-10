@@ -8,10 +8,30 @@ import type { Column_Internal } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { ColumnOrderState } from './columnOrderingFeature.types'
 
+/**
+ * Returns the default column order state.
+ *
+ * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ *
+ * @example
+ * ```ts
+ * const initialValue = getDefaultColumnOrderState()
+ * ```
+ */
 export function getDefaultColumnOrderState(): ColumnOrderState {
   return []
 }
 
+/**
+ * Returns index for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getIndex(column)
+ * ```
+ */
 export function column_getIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -24,6 +44,16 @@ export function column_getIndex<
   return columns.findIndex((d) => d.id === column.id)
 }
 
+/**
+ * Returns is first column for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getIsFirstColumn(column)
+ * ```
+ */
 export function column_getIsFirstColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -36,6 +66,16 @@ export function column_getIsFirstColumn<
   return columns[0]?.id === column.id
 }
 
+/**
+ * Returns is last column for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getIsLastColumn(column)
+ * ```
+ */
 export function column_getIsLastColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -48,6 +88,16 @@ export function column_getIsLastColumn<
   return columns[columns.length - 1]?.id === column.id
 }
 
+/**
+ * Updates the table's column order state slice.
+ *
+ * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ *
+ * @example
+ * ```ts
+ * table_setColumnOrder(table, (old) => old)
+ * ```
+ */
 export function table_setColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -55,6 +105,17 @@ export function table_setColumnOrder<
   table.options.onColumnOrderChange?.(updater)
 }
 
+/**
+ * Resets the table's column order state slice.
+ *
+ * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ *
+ * @example
+ * ```ts
+ * table_resetColumnOrder(table)
+ * table_resetColumnOrder(table, true)
+ * ```
+ */
 export function table_resetColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -65,6 +126,16 @@ export function table_resetColumnOrder<
   )
 }
 
+/**
+ * Returns order columns fn for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getOrderColumnsFn(table)
+ * ```
+ */
 export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -104,6 +175,16 @@ export function table_getOrderColumnsFn<
   }
 }
 
+/**
+ * Orders leaf columns with manual ordering, grouping, and pinning rules.
+ *
+ * This helper is used by the column ordering feature to produce the final visible column order.
+ *
+ * @example
+ * ```ts
+ * const orderedColumns = orderColumns(leafColumns, columnOrder, grouping, groupedColumnMode)
+ * ```
+ */
 export function orderColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,

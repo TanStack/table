@@ -167,7 +167,9 @@ export interface TableOptions_ColumnFiltering<
      */
   maxLeafRowFilterDepth?: number
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.columnFilters` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+   * Called with an updater when column filter state changes. Pair this with
+   * `state.columnFilters` when using external state; external atoms can own the
+   * slice without this callback.
    */
   onColumnFiltersChange?: OnChangeFn<ColumnFiltersState>
 }
@@ -178,7 +180,7 @@ export interface Table_ColumnFiltering {
    */
   resetColumnFilters: (defaultState?: boolean) => void
   /**
-   * Sets or updates the `state.columnFilters` state.
+   * Sets column filter state using a value or updater.
    */
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
 }
@@ -202,9 +204,10 @@ export interface CreateRowModel_Filtered<
   TData extends RowData,
 > {
   /**
-   * If provided, this function is called **once** per table and should return a **new function** which will calculate and return the row model for the table when it's filtered.
+   * If provided, this factory is called once per table and should return a
+   * function that calculates the filtered row model.
    * - For server-side filtering, this function is unnecessary and can be ignored since the server should already return the filtered row model.
-   * - For client-side filtering, this function is required. A default implementation is provided via any table adapter's `{ getFilteredRowModel }` export.
+   * - For client-side filtering, pass the exported `createFilteredRowModel()` or implement your own factory.
    */
   filteredRowModel?: (
     table: Table<TFeatures, TData>,

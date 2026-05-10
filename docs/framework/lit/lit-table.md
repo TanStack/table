@@ -2,62 +2,164 @@
 title: Lit Table
 ---
 
-The `@tanstack/lit-table` adapter is a wrapper around the core table logic. Most of it's job is related to managing state the "lit" way, providing types and the rendering implementation of cell/header/footer templates.
+The `@tanstack/lit-table` adapter wraps `@tanstack/table-core` with a Lit `ReactiveController`, rendering helpers, and types. `TableController` installs the Lit `coreReativityFeature` for you, so TanStack Store atom changes can request Lit host updates.
 
-## Exports
+TanStack Table v9 is explicit about what a table uses. Register features with `_features`, and register client-side row model factories with `_rowModels`. The core row model is included by default, so a basic table can use `_rowModels: {}`.
 
-`@tanstack/lit-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
+## Creating a Table
 
-### `TableController`
-
-Is a reactive controller that provides a `table` API that takes an `options` object and returns a table instance.
+Create one `TableController` for the Lit host, then call `tableController.table(...)` during render.
 
 ```ts
-import { TableController } from '@tanstack/lit-table'
+import { LitElement, html } from 'lit'
+import { customElement, state } from 'lit/decorators.js'
+import {
+  TableController,
+  tableFeatures,
+  type ColumnDef,
+} from '@tanstack/lit-table'
 
-@customElement('my-table-element')
-class MyTableElement extends LitElement {
-  private tableController = new TableController<Person>(this)
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+}
+
+const _features = tableFeatures({})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
+  {
+    accessorKey: 'firstName',
+    header: 'First name',
+    cell: (info) => info.getValue(),
+  },
+]
+
+@customElement('people-table')
+export class PeopleTable extends LitElement {
+  private tableController = new TableController<typeof _features, Person>(this)
+
+  @state()
+  private data: Person[] = []
 
   protected render() {
-    const table = this.tableController.table(options)
-    // ...render your table
+    const table = this.tableController.table({
+      _features,
+      _rowModels: {},
+      columns,
+      data: this.data,
+    })
+
+    return html`...`
   }
 }
 ```
 
-### `flexRender`
+For feature-specific row models, register the feature and put the row model factory under `_rowModels`.
 
-A utility function for rendering cell/header/footer templates with dynamic values.
+```ts
+import {
+  createPaginatedRowModel,
+  createSortedRowModel,
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/lit-table'
 
-Example:
+const _features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+})
 
-```jsx
-import { flexRender } from '@tanstack/lit-table'
-//...
+const tableOptions = {
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(sortFns),
+  },
+}
+```
+
+## Table State
+
+Table state is managed with TanStack Store atoms in v9. For most tables, you do not need to manage table state yourself: set `initialState` when you need starting values, and use feature APIs like `table.nextPage()`, `table.setSorting(...)`, and `row.toggleSelected()` instead of mutating state directly.
+
+Use `atoms` when your app should own one state slice with TanStack Store. Lit `@state()` values can also be passed through `state` with the matching `on[State]Change` option for simple integrations. Selected table state is available on `table.state` when you pass a selector to `tableController.table(...)`.
+
+```ts
+import { createAtom } from '@tanstack/store'
+import {
+  TableController,
+  rowPaginationFeature,
+  tableFeatures,
+  type PaginationState,
+} from '@tanstack/lit-table'
+
+const _features = tableFeatures({
+  rowPaginationFeature,
+})
+
+const paginationAtom = createAtom<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+
+const table = this.tableController.table({
+  _features,
+  _rowModels: {},
+  columns,
+  data: this.data,
+  atoms: {
+    pagination: paginationAtom,
+  },
+})
+```
+
+See the [Table State Guide](./guide/table-state.md) for selectors, external atoms, and state ownership patterns.
+
+## Rendering Headers, Cells, and Footers
+
+Use `table.FlexRender` to render column `header`, `cell`, and `footer` definitions. It handles plain values and Lit templates.
+
+```ts
 return html`
-<tbody>
-  ${table
-    .getRowModel()
-    .rows.slice(0, 10)
-    .map(
-      row => html`
+  <tbody>
+    ${table.getRowModel().rows.map(
+      (row) => html`
         <tr>
-          ${row
-            .getVisibleCells()
-            .map(
-              cell => html`
-                <td>
-                  ${flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                  )}
-                </td>
-              `
-            )}
+          ${row.getVisibleCells().map(
+            (cell) => html`<td>${table.FlexRender({ cell })}</td>`,
+          )}
         </tr>
-      `
+      `,
     )}
-</tbody>
+  </tbody>
 `
 ```
+
+## createTableHook
+
+`createTableHook` creates app-specific Lit table helpers. Use it when multiple tables should share `_features`, `_rowModels`, default options, column helpers, and component conventions.
+
+```ts
+import { createTableHook, tableFeatures } from '@tanstack/lit-table'
+
+const { useAppTable, createAppColumnHelper } = createTableHook({
+  _features: tableFeatures({}),
+  _rowModels: {},
+})
+
+const columnHelper = createAppColumnHelper<Person>()
+
+const table = useAppTable(this, {
+  columns,
+  data: this.data,
+})
+```
+
+See the [Composable Tables example](./examples/composable-tables) for the full pattern.
+
+## API Reference
+
+See the [Lit API Reference](./reference/index.md).

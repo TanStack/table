@@ -47,6 +47,11 @@ export interface RowSortingFeatureConstructors<
   // TableState: TableState_RowSorting
 }
 
+/**
+ * Creates the stock row sorting feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructRowSortingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -131,6 +136,9 @@ export function constructRowSortingFeature<
 }
 
 /**
- * The (Row) Sorting feature adds sorting state and APIs to the table and column objects.
+ * The stock row sorting feature.
+ *
+ * Register this feature to add sorting state, column sorting APIs, and sorted
+ * row-model support for client-side or manual sorting.
  */
 export const rowSortingFeature = constructRowSortingFeature()

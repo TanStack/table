@@ -75,6 +75,28 @@ export type SubscribeProps<
  *
  * For `table.Subscribe` from `useTable`, prefer that API — it uses overloads so
  * JSX contextual typing works. This standalone component uses a union `props` type.
+ *
+ * @example
+ * ```tsx
+ * <Subscribe
+ *   source={table.store}
+ *   selector={(state) => ({ rowSelection: state.rowSelection })}
+ * >
+ *   {({ rowSelection }) => (
+ *     <div>Selected rows: {Object.keys(rowSelection).length}</div>
+ *   )}
+ * </Subscribe>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <Subscribe
+ *   source={table.atoms.rowSelection}
+ *   selector={(rowSelection) => rowSelection[row.id]}
+ * >
+ *   {(selected) => <input checked={!!selected} type="checkbox" />}
+ * </Subscribe>
+ * ```
  */
 export function Subscribe<TSourceValue>(
   props: SubscribePropsWithSourceIdentity<TSourceValue>,

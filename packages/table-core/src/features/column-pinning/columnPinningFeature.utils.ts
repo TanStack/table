@@ -19,6 +19,16 @@ import type {
 
 // State
 
+/**
+ * Returns the default column pinning state.
+ *
+ * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ *
+ * @example
+ * ```ts
+ * const initialValue = getDefaultColumnPinningState()
+ * ```
+ */
 export function getDefaultColumnPinningState(): ColumnPinningState {
   return {
     left: [],
@@ -28,6 +38,16 @@ export function getDefaultColumnPinningState(): ColumnPinningState {
 
 // Column APIs
 
+/**
+ * Pin. for a column.
+ *
+ * This is the static implementation behind the matching column instance API.
+ *
+ * @example
+ * ```ts
+ * column_pin(column, 'left')
+ * ```
+ */
 export function column_pin<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -66,6 +86,16 @@ export function column_pin<
   })
 }
 
+/**
+ * Returns whether a column can use pin.
+ *
+ * This combines column options, table options, and any required accessor or feature state for the capability.
+ *
+ * @example
+ * ```ts
+ * const value = column_getCanPin(column)
+ * ```
+ */
 export function column_getCanPin<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -82,6 +112,16 @@ export function column_getCanPin<
   )
 }
 
+/**
+ * Returns is pinned for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getIsPinned(column)
+ * ```
+ */
 export function column_getIsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -100,6 +140,16 @@ export function column_getIsPinned<
   return isLeft ? 'left' : isRight ? 'right' : false
 }
 
+/**
+ * Returns pinned index for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getPinnedIndex(column)
+ * ```
+ */
 export function column_getPinnedIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -115,6 +165,16 @@ export function column_getPinnedIndex<
 
 // Row APIs
 
+/**
+ * Returns center visible cells for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getCenterVisibleCells(row)
+ * ```
+ */
 export function row_getCenterVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -130,6 +190,16 @@ export function row_getCenterVisibleCells<
   return allCells.filter((d) => !leftAndRight.includes(d.column.id))
 }
 
+/**
+ * Returns left visible cells for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getLeftVisibleCells(row)
+ * ```
+ */
 export function row_getLeftVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -151,6 +221,16 @@ export function row_getLeftVisibleCells<
   return cells as any
 }
 
+/**
+ * Returns right visible cells for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getRightVisibleCells(row)
+ * ```
+ */
 export function row_getRightVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -174,6 +254,16 @@ export function row_getRightVisibleCells<
 
 // Table APIs
 
+/**
+ * Updates the table's column pinning state slice.
+ *
+ * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ *
+ * @example
+ * ```ts
+ * table_setColumnPinning(table, (old) => old)
+ * ```
+ */
 export function table_setColumnPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -184,6 +274,17 @@ export function table_setColumnPinning<
   table.options.onColumnPinningChange?.(updater)
 }
 
+/**
+ * Resets the table's column pinning state slice.
+ *
+ * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ *
+ * @example
+ * ```ts
+ * table_resetColumnPinning(table)
+ * table_resetColumnPinning(table, true)
+ * ```
+ */
 export function table_resetColumnPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -198,6 +299,16 @@ export function table_resetColumnPinning<
   )
 }
 
+/**
+ * Returns is some columns pinned for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getIsSomeColumnsPinned(table)
+ * ```
+ */
 export function table_getIsSomeColumnsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -212,6 +323,16 @@ export function table_getIsSomeColumnsPinned<
 
 // header groups
 
+/**
+ * Returns left header groups for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getLeftHeaderGroups(table)
+ * ```
+ */
 export function table_getLeftHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -232,6 +353,16 @@ export function table_getLeftHeaderGroups<
   return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
 }
 
+/**
+ * Returns right header groups for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRightHeaderGroups(table)
+ * ```
+ */
 export function table_getRightHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -252,6 +383,16 @@ export function table_getRightHeaderGroups<
   return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
 }
 
+/**
+ * Returns center header groups for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getCenterHeaderGroups(table)
+ * ```
+ */
 export function table_getCenterHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -276,6 +417,16 @@ export function table_getCenterHeaderGroups<
 
 // footer groups
 
+/**
+ * Returns left footer groups for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getLeftFooterGroups(table)
+ * ```
+ */
 export function table_getLeftFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -288,6 +439,16 @@ export function table_getLeftFooterGroups<
   return [...headerGroups].reverse()
 }
 
+/**
+ * Returns right footer groups for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRightFooterGroups(table)
+ * ```
+ */
 export function table_getRightFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -300,6 +461,16 @@ export function table_getRightFooterGroups<
   return [...headerGroups].reverse()
 }
 
+/**
+ * Returns center footer groups for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getCenterFooterGroups(table)
+ * ```
+ */
 export function table_getCenterFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -314,6 +485,16 @@ export function table_getCenterFooterGroups<
 
 // flat headers
 
+/**
+ * Returns left flat headers for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getLeftFlatHeaders(table)
+ * ```
+ */
 export function table_getLeftFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -330,6 +511,16 @@ export function table_getLeftFlatHeaders<
     .flat()
 }
 
+/**
+ * Returns right flat headers for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRightFlatHeaders(table)
+ * ```
+ */
 export function table_getRightFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -346,6 +537,16 @@ export function table_getRightFlatHeaders<
     .flat()
 }
 
+/**
+ * Returns center flat headers for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getCenterFlatHeaders(table)
+ * ```
+ */
 export function table_getCenterFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -364,6 +565,16 @@ export function table_getCenterFlatHeaders<
 
 // leaf headers
 
+/**
+ * Returns left leaf headers for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getLeftLeafHeaders(table)
+ * ```
+ */
 export function table_getLeftLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -375,6 +586,16 @@ export function table_getLeftLeafHeaders<
   ).filter((header) => !header.subHeaders.length)
 }
 
+/**
+ * Returns right leaf headers for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRightLeafHeaders(table)
+ * ```
+ */
 export function table_getRightLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -386,6 +607,16 @@ export function table_getRightLeafHeaders<
   ).filter((header) => !header.subHeaders.length)
 }
 
+/**
+ * Returns center leaf headers for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getCenterLeafHeaders(table)
+ * ```
+ */
 export function table_getCenterLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -399,6 +630,16 @@ export function table_getCenterLeafHeaders<
 
 // leaf columns
 
+/**
+ * Returns left leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getLeftLeafColumns(table)
+ * ```
+ */
 export function table_getLeftLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -413,6 +654,16 @@ export function table_getLeftLeafColumns<
     .filter(Boolean)
 }
 
+/**
+ * Returns right leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRightLeafColumns(table)
+ * ```
+ */
 export function table_getRightLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -427,6 +678,16 @@ export function table_getRightLeafColumns<
     .filter(Boolean)
 }
 
+/**
+ * Returns center leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getCenterLeafColumns(table)
+ * ```
+ */
 export function table_getCenterLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -437,6 +698,16 @@ export function table_getCenterLeafColumns<
   return table.getAllLeafColumns().filter((d) => !leftAndRight.includes(d.id))
 }
 
+/**
+ * Returns pinned leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getPinnedLeafColumns(table)
+ * ```
+ */
 export function table_getPinnedLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -467,6 +738,16 @@ export function table_getPinnedLeafColumns<
 
 // visible leaf columns
 
+/**
+ * Returns left visible leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getLeftVisibleLeafColumns(table)
+ * ```
+ */
 export function table_getLeftVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -480,6 +761,16 @@ export function table_getLeftVisibleLeafColumns<
   )
 }
 
+/**
+ * Returns right visible leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRightVisibleLeafColumns(table)
+ * ```
+ */
 export function table_getRightVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -493,6 +784,16 @@ export function table_getRightVisibleLeafColumns<
   )
 }
 
+/**
+ * Returns center visible leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getCenterVisibleLeafColumns(table)
+ * ```
+ */
 export function table_getCenterVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -506,6 +807,16 @@ export function table_getCenterVisibleLeafColumns<
   )
 }
 
+/**
+ * Returns pinned visible leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getPinnedVisibleLeafColumns(table)
+ * ```
+ */
 export function table_getPinnedVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,

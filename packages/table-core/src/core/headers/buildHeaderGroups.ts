@@ -8,6 +8,11 @@ import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Column } from '../../types/Column'
 
+/**
+ * Builds the nested header group structure for a table.
+ *
+ * The result accounts for visible leaf columns, pinned column groups, and placeholder headers needed to render multi-level headers.
+ */
 export function buildHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,

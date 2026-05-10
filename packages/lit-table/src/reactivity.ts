@@ -4,6 +4,12 @@ import type {
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
 
+/**
+ * Creates the table-core reactivity bindings used by the Lit adapter.
+ *
+ * Lit uses TanStack Store atoms directly. `TableController` subscribes to the
+ * resulting table store and options store to request host updates.
+ */
 export function litReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: true,

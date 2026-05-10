@@ -4,6 +4,16 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 import type { RowModel } from './coreRowModelsFeature.types'
 
+/**
+ * Returns core row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getCoreRowModel(table)
+ * ```
+ */
 export function table_getCoreRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -17,6 +27,16 @@ export function table_getCoreRowModel<
   return table._rowModels.coreRowModel()
 }
 
+/**
+ * Returns pre filtered row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getPreFilteredRowModel(table)
+ * ```
+ */
 export function table_getPreFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -24,6 +44,16 @@ export function table_getPreFilteredRowModel<
   return table.getCoreRowModel()
 }
 
+/**
+ * Returns filtered row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getFilteredRowModel(table)
+ * ```
+ */
 export function table_getFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -40,6 +70,16 @@ export function table_getFilteredRowModel<
   return table._rowModels.filteredRowModel()
 }
 
+/**
+ * Returns pre grouped row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getPreGroupedRowModel(table)
+ * ```
+ */
 export function table_getPreGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -47,6 +87,16 @@ export function table_getPreGroupedRowModel<
   return table.getFilteredRowModel()
 }
 
+/**
+ * Returns grouped row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getGroupedRowModel(table)
+ * ```
+ */
 export function table_getGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -63,6 +113,16 @@ export function table_getGroupedRowModel<
   return table._rowModels.groupedRowModel()
 }
 
+/**
+ * Returns pre sorted row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getPreSortedRowModel(table)
+ * ```
+ */
 export function table_getPreSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -70,6 +130,16 @@ export function table_getPreSortedRowModel<
   return table.getGroupedRowModel()
 }
 
+/**
+ * Returns sorted row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getSortedRowModel(table)
+ * ```
+ */
 export function table_getSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -86,6 +156,16 @@ export function table_getSortedRowModel<
   return table._rowModels.sortedRowModel()
 }
 
+/**
+ * Returns pre expanded row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getPreExpandedRowModel(table)
+ * ```
+ */
 export function table_getPreExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -93,6 +173,16 @@ export function table_getPreExpandedRowModel<
   return table.getSortedRowModel()
 }
 
+/**
+ * Returns expanded row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getExpandedRowModel(table)
+ * ```
+ */
 export function table_getExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -109,6 +199,16 @@ export function table_getExpandedRowModel<
   return table._rowModels.expandedRowModel()
 }
 
+/**
+ * Returns pre paginated row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getPrePaginatedRowModel(table)
+ * ```
+ */
 export function table_getPrePaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -116,6 +216,16 @@ export function table_getPrePaginatedRowModel<
   return table.getExpandedRowModel()
 }
 
+/**
+ * Returns paginated row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getPaginatedRowModel(table)
+ * ```
+ */
 export function table_getPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -132,6 +242,16 @@ export function table_getPaginatedRowModel<
   return table._rowModels.paginatedRowModel()
 }
 
+/**
+ * Returns row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRowModel(table)
+ * ```
+ */
 export function table_getRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,

@@ -1,0 +1,42 @@
+---
+id: table_getLeftLeafHeaders
+title: table_getLeftLeafHeaders
+---
+
+# Function: table\_getLeftLeafHeaders()
+
+```ts
+function table_getLeftLeafHeaders<TFeatures, TData>(table): any[];
+```
+
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:578](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L578)
+
+Returns left leaf headers for the table.
+
+This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+
+## Type Parameters
+
+### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](../../index/interfaces/TableFeatures.md)
+
+### TData
+
+`TData` *extends* [`RowData`](../../index/type-aliases/RowData.md)
+
+## Parameters
+
+### table
+
+[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+
+## Returns
+
+`any`[]
+
+## Example
+
+```ts
+const value = table_getLeftLeafHeaders(table)
+```

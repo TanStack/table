@@ -25,7 +25,8 @@ export interface CreateRowModel_Core<
   TData extends RowData,
 > extends CreateRowModel_Plugins {
   /**
-   * This required option is a factory for a function that computes and returns the core row model for the table.
+   * Optional factory for the core row model. When omitted, the built-in
+   * `createCoreRowModel()` factory is used.
    */
   coreRowModel?: (
     table: Table<TFeatures, TData>,

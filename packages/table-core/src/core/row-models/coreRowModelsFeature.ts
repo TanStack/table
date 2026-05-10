@@ -24,6 +24,11 @@ export interface CoreRowModelsFeatureConstructors<
   // Table: Table_RowModels<TFeatures, TData>
 }
 
+/**
+ * Creates the stock core row models feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructCoreRowModelsFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,

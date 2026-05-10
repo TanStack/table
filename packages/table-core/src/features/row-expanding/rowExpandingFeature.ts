@@ -43,6 +43,11 @@ export interface RowExpandingFeatureConstructors<
   // TableState: TableState_RowExpanding
 }
 
+/**
+ * Creates the stock row expanding feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructRowExpandingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -117,6 +122,9 @@ export function constructRowExpandingFeature<
 }
 
 /**
- * The Row Expanding feature adds row expanding state and APIs to the table and row objects.
+ * The stock row expanding feature.
+ *
+ * Register this feature to add expanded row state, row expansion APIs, and
+ * helpers for deriving expanded row models and expansion depth.
  */
 export const rowExpandingFeature = constructRowExpandingFeature()

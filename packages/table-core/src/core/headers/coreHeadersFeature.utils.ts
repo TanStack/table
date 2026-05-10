@@ -14,6 +14,16 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { Header_Header } from './coreHeadersFeature.types'
 import type { Column } from '../../types/Column'
 
+/**
+ * Returns leaf headers for a header.
+ *
+ * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ *
+ * @example
+ * ```ts
+ * const value = header_getLeafHeaders(header)
+ * ```
+ */
 export function header_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -33,6 +43,16 @@ export function header_getLeafHeaders<
   return leafHeaders
 }
 
+/**
+ * Returns context for a header.
+ *
+ * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ *
+ * @example
+ * ```ts
+ * const value = header_getContext(header)
+ * ```
+ */
 export function header_getContext<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -45,6 +65,16 @@ export function header_getContext<
   }
 }
 
+/**
+ * Returns header groups for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getHeaderGroups(table)
+ * ```
+ */
 export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -79,6 +109,16 @@ export function table_getHeaderGroups<
   return headerGroups
 }
 
+/**
+ * Returns footer groups for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getFooterGroups(table)
+ * ```
+ */
 export function table_getFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -87,6 +127,16 @@ export function table_getFooterGroups<
   return [...headerGroups].reverse()
 }
 
+/**
+ * Returns flat headers for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getFlatHeaders(table)
+ * ```
+ */
 export function table_getFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -99,6 +149,16 @@ export function table_getFlatHeaders<
     .flat()
 }
 
+/**
+ * Returns leaf headers for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getLeafHeaders(table)
+ * ```
+ */
 export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,

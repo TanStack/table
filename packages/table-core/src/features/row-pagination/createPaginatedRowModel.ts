@@ -7,6 +7,11 @@ import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
+/**
+ * Creates a memoized paginated row model factory.
+ *
+ * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ */
 export function createPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,

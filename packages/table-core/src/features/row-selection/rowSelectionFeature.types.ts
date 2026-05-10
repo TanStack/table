@@ -29,7 +29,9 @@ export interface TableOptions_RowSelection<
    */
   enableSubRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.rowSelection` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+   * Called with an updater when row selection state changes. Pair this with
+   * `state.rowSelection` when using external state; external atoms can own the
+   * slice without this callback.
    */
   onRowSelectionChange?: OnChangeFn<RowSelectionState>
   // enableGroupingRowSelection?:
@@ -129,7 +131,7 @@ export interface Table_RowSelection<
    */
   resetRowSelection: (defaultState?: boolean) => void
   /**
-   * Sets or updates the `state.rowSelection` state.
+   * Sets row selection state using a value or updater.
    */
   setRowSelection: (updater: Updater<RowSelectionState>) => void
   /**

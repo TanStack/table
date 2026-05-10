@@ -73,6 +73,29 @@ export type SolidTable<
   FlexRender: typeof FlexRender
 }
 
+/**
+ * Creates a Solid table instance backed by Solid-aware TanStack Store atoms.
+ *
+ * The optional selector projects from `table.store`; the selected value is
+ * exposed as the `table.state` accessor. Table APIs and atom reads participate
+ * in Solid dependency tracking, so computations that read a specific slice can
+ * update without invalidating unrelated UI.
+ *
+ * @example
+ * ```tsx
+ * const table = createTable(
+ *   {
+ *     _features,
+ *     _rowModels: {},
+ *     columns,
+ *     data,
+ *   },
+ *   (state) => ({ pagination: state.pagination }),
+ * )
+ *
+ * table.state().pagination
+ * ```
+ */
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,

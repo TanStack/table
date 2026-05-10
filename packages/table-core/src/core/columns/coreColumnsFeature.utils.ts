@@ -11,6 +11,16 @@ import type {
 } from '../../types/ColumnDef'
 import type { Column } from '../../types/Column'
 
+/**
+ * Returns flat columns for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getFlatColumns(column)
+ * ```
+ */
 export function column_getFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -21,6 +31,16 @@ export function column_getFlatColumns<
   return [column, ...column.columns.flatMap((col) => col.getFlatColumns())]
 }
 
+/**
+ * Returns leaf columns for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getLeafColumns(column)
+ * ```
+ */
 export function column_getLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -43,6 +63,16 @@ export function column_getLeafColumns<
   return [column]
 }
 
+/**
+ * Returns default column def for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getDefaultColumnDef(table)
+ * ```
+ */
 export function table_getDefaultColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -72,6 +102,16 @@ export function table_getDefaultColumnDef<
   } as Partial<ColumnDef<TFeatures, TData, unknown>>
 }
 
+/**
+ * Returns all columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getAllColumns(table)
+ * ```
+ */
 export function table_getAllColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -103,6 +143,16 @@ export function table_getAllColumns<
   return recurseColumns(table.options.columns)
 }
 
+/**
+ * Returns all flat columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getAllFlatColumns(table)
+ * ```
+ */
 export function table_getAllFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -112,6 +162,16 @@ export function table_getAllFlatColumns<
   return table.getAllColumns().flatMap((column) => column.getFlatColumns())
 }
 
+/**
+ * Returns all flat columns by id for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getAllFlatColumnsById(table)
+ * ```
+ */
 export function table_getAllFlatColumnsById<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -127,6 +187,16 @@ export function table_getAllFlatColumnsById<
   )
 }
 
+/**
+ * Returns all leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getAllLeafColumns(table)
+ * ```
+ */
 export function table_getAllLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -143,6 +213,16 @@ export function table_getAllLeafColumns<
   )(leafColumns as any) as any
 }
 
+/**
+ * Returns column for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getColumn(table)
+ * ```
+ */
 export function table_getColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,

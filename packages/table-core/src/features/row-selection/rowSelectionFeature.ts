@@ -47,6 +47,11 @@ export interface RowSelectionFeatureConstructors<
   // TableState: TableState_RowSelection
 }
 
+/**
+ * Creates the stock row selection feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructRowSelectionFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -159,6 +164,9 @@ export function constructRowSelectionFeature<
 }
 
 /**
- * The Row Selection feature adds row selection state and APIs to the table and row objects.
+ * The stock row selection feature.
+ *
+ * Register this feature to add row selection state, selected row-model helpers,
+ * and table/row APIs for checkbox and bulk-selection UI.
  */
 export const rowSelectionFeature = constructRowSelectionFeature()

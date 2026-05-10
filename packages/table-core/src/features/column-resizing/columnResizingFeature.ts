@@ -32,6 +32,11 @@ export interface ColumnResizingFeatureConstructors<
   // TableState: TableState_ColumnResizing
 }
 
+/**
+ * Creates the stock column resizing feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructColumnResizingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -86,7 +91,9 @@ export function constructColumnResizingFeature<
 }
 
 /**
- * The Column Resizing feature adds column resizing state and APIs to the table and column objects.
- * **Note:** This is dependent on the Column Sizing feature.
+ * The stock column resizing feature.
+ *
+ * Register this feature with `columnSizingFeature` to add resize interaction
+ * state and APIs for drag-based column resizing.
  */
 export const columnResizingFeature = constructColumnResizingFeature()

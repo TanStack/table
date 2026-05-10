@@ -43,6 +43,13 @@ function signalToWritableAtom<T>(
   })
 }
 
+/**
+ * Creates the table-core reactivity bindings used by the Solid adapter.
+ *
+ * Readonly table atoms are backed by Solid memos and writable table atoms are
+ * backed by Solid signals. Subscriptions run with the captured owner so table
+ * APIs can safely participate in Solid computations.
+ */
 export function solidReactivity(owner: Owner): TableReactivityBindings {
   return {
     createOptionsStore: true,

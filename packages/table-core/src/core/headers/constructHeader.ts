@@ -22,6 +22,11 @@ function getHeaderPrototype<
   return table._headerPrototype
 }
 
+/**
+ * Constructs a header instance from normalized table internals.
+ *
+ * This wires core properties, feature prototype APIs, and instance data used by table rendering and row-model operations.
+ */
 export function constructHeader<
   TFeatures extends TableFeatures,
   TData extends RowData,

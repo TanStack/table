@@ -56,7 +56,9 @@ export interface TableOptions_GlobalFiltering<
    */
   globalFilterFn?: FilterFnOption<TFeatures, TData>
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.globalFilter` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+   * Called with an updater when global filter state changes. Pair this with
+   * `state.globalFilter` when using external state; external atoms can own the
+   * slice without this callback.
    */
   onGlobalFilterChange?: OnChangeFn<any>
 }
@@ -78,7 +80,7 @@ export interface Table_GlobalFiltering<
    */
   resetGlobalFilter: (defaultState?: boolean) => void
   /**
-   * Sets or updates the `state.globalFilter` state.
+   * Sets global filter state using a value or updater.
    */
   setGlobalFilter: (updater: Updater<any>) => void
 }

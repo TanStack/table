@@ -29,6 +29,11 @@ export interface ColumnFacetingFeatureConstructors<
   // CreateRowModels: CreateRowModel_Faceted<TFeatures, TData>
 }
 
+/**
+ * Creates the stock column faceting feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructColumnFacetingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -107,6 +112,9 @@ export function constructColumnFacetingFeature<
 }
 
 /**
- * The Column Faceting feature adds column faceting APIs to the column objects.
+ * The stock column faceting feature.
+ *
+ * Register this feature to add faceted row model, unique value, and min/max
+ * helpers for column and global filter UIs.
  */
 export const columnFacetingFeature = constructColumnFacetingFeature()

@@ -4,6 +4,12 @@ import type {
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
 
+/**
+ * Creates the table-core reactivity bindings used by the Preact adapter.
+ *
+ * Preact stores table state in TanStack Store atoms and leaves options as plain
+ * resolved data because `useTable` synchronizes options during render.
+ */
 export function preactReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: false,

@@ -30,6 +30,11 @@ export interface StockFeatures {
   rowSortingFeature: typeof rowSortingFeature
 }
 
+/**
+ * The complete set of stock optional table features.
+ *
+ * Use individual feature exports for tree-shaking, or this aggregate when a table should include every built-in feature.
+ */
 export const stockFeatures: StockFeatures = {
   columnFacetingFeature,
   columnFilteringFeature,

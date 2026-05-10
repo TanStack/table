@@ -3,8 +3,19 @@ import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
 import type { SortFn } from '../features/row-sorting/rowSortingFeature.types'
 
+/**
+ * Regular expression used to split mixed text and numeric chunks.
+ *
+ * The alphanumeric sort functions use these chunks for natural sorting of
+ * strings like `item2` before `item10`.
+ */
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
+/**
+ * Sorts rows with the built-in alphanumeric strategy.
+ *
+ * This comparator returns ascending-order results; descending order is applied by the sorting row model.
+ */
 export const sortFn_alphanumeric: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -19,6 +30,11 @@ export const sortFn_alphanumeric: SortFn<any, any> = <
   )
 }
 
+/**
+ * Sorts rows with the built-in alphanumeric case sensitive strategy.
+ *
+ * This comparator returns ascending-order results; descending order is applied by the sorting row model.
+ */
 export const sortFn_alphanumericCaseSensitive: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -35,6 +51,11 @@ export const sortFn_alphanumericCaseSensitive: SortFn<any, any> = <
 
 // The text filter is more basic (less numeric support)
 // but is much faster
+/**
+ * Sorts rows with the built-in text strategy.
+ *
+ * This comparator returns ascending-order results; descending order is applied by the sorting row model.
+ */
 export const sortFn_text: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -51,6 +72,11 @@ export const sortFn_text: SortFn<any, any> = <
 
 // The text filter is more basic (less numeric support)
 // but is much faster
+/**
+ * Sorts rows with the built-in text case sensitive strategy.
+ *
+ * This comparator returns ascending-order results; descending order is applied by the sorting row model.
+ */
 export const sortFn_textCaseSensitive: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -65,6 +91,11 @@ export const sortFn_textCaseSensitive: SortFn<any, any> = <
   )
 }
 
+/**
+ * Sorts rows with the built-in datetime strategy.
+ *
+ * This comparator returns ascending-order results; descending order is applied by the sorting row model.
+ */
 export const sortFn_datetime: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -82,6 +113,11 @@ export const sortFn_datetime: SortFn<any, any> = <
   return a > b ? 1 : a < b ? -1 : 0
 }
 
+/**
+ * Sorts rows with the built-in basic strategy.
+ *
+ * This comparator returns ascending-order results; descending order is applied by the sorting row model.
+ */
 export const sortFn_basic: SortFn<any, any> = <
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -161,6 +197,11 @@ function compareAlphanumeric(aStr: string, bStr: string) {
 
 // Exports
 
+/**
+ * The built-in sorting function registry.
+ *
+ * Pass this object to sorted row model creation or extend it with custom sorting functions.
+ */
 export const sortFns = {
   alphanumeric: sortFn_alphanumeric,
   alphanumericCaseSensitive: sortFn_alphanumericCaseSensitive,

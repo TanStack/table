@@ -3,6 +3,11 @@ import type { Header } from './types/Header'
 import type { TableFeatures } from './types/TableFeatures'
 import type { CellData, RowData } from './types/type-utils'
 
+/**
+ * Renders a static value or render function with the provided props.
+ *
+ * Framework adapters use this helper to support column definitions that contain either plain values or template functions.
+ */
 export function flexRender<TProps extends object>(
   comp: unknown,
   props: TProps,
@@ -33,6 +38,11 @@ export type FlexRenderProps<
       header?: never
     }
 
+/**
+ * Renders a static value or render function with the provided props.
+ *
+ * Framework adapters use this helper to support column definitions that contain either plain values or template functions.
+ */
 export function FlexRender<
   TFeatures extends TableFeatures,
   TData extends RowData,

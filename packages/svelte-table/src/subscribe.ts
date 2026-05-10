@@ -13,8 +13,23 @@ export type SubscribeSource<TValue> =
   | ReadonlyStore<TValue>
 
 /**
- * Fine-grained subscription to a source using `useSelector` with shallow
- * comparison. Omit `selector` to subscribe to the source value directly.
+ * Creates a fine-grained Svelte subscription to a TanStack Store source.
+ *
+ * Pass a table atom or store and optionally project it with a selector. The
+ * returned selector store exposes `.current`, making it useful for reading
+ * focused table state outside the broad `createTable` selector.
+ *
+ * @example
+ * ```svelte
+ * <script lang="ts">
+ *   const selected = subscribeTable(
+ *     table.atoms.rowSelection,
+ *     (rowSelection) => rowSelection[row.id],
+ *   )
+ * </script>
+ *
+ * <input type="checkbox" checked={!!selected.current} />
+ * ```
  */
 export function subscribeTable<TSourceValue>(
   source: SubscribeSource<TSourceValue>,

@@ -19,6 +19,11 @@ import type {
   Row_ColumnFiltering,
 } from './columnFilteringFeature.types'
 
+/**
+ * Creates a memoized filtered row model factory.
+ *
+ * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ */
 export function createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,

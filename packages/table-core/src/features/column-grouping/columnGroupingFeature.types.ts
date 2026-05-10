@@ -163,7 +163,9 @@ export interface TableOptions_ColumnGrouping {
    */
   manualGrouping?: boolean
   /**
-   * If this function is provided, it will be called when the grouping state changes and you will be expected to manage the state yourself. You can pass the managed state back to the table via the `tableOptions.state.grouping` option.
+   * Called with an updater when grouping state changes. Pair this with
+   * `state.grouping` when using external state; external atoms can own the
+   * slice without this callback.
    */
   onGroupingChange?: OnChangeFn<GroupingState>
 }
@@ -179,7 +181,7 @@ export interface Table_ColumnGrouping<
    */
   resetGrouping: (defaultState?: boolean) => void
   /**
-   * Updates the grouping state of the table via an update function or value.
+   * Sets grouping state using a value or updater.
    */
   setGrouping: (updater: Updater<GroupingState>) => void
 }
@@ -203,7 +205,9 @@ export interface CreateRowModel_Grouped<
   TData extends RowData,
 > {
   /**
-   * Returns the row model after grouping has taken place, but no further.
+   * Factory used to retrieve the grouped row model. If using server-side
+   * grouping, this is not required. To use client-side grouping, pass
+   * `createGroupedRowModel()` or implement your own factory.
    */
   groupedRowModel?: (
     table: Table<TFeatures, TData>,

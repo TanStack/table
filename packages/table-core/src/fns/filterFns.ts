@@ -355,6 +355,11 @@ filterFn_arrIncludesSome.autoRemove = (val: any) =>
 
 // Export
 
+/**
+ * The built-in filter function registry.
+ *
+ * Pass this object to filtered row model creation or extend it with custom filter functions.
+ */
 export const filterFns = {
   arrIncludes: filterFn_arrIncludes,
   arrIncludesAll: filterFn_arrIncludesAll,

@@ -7,6 +7,18 @@ import type {
 } from '@tanstack/table-core'
 import type { TemplateResult } from 'lit'
 
+/**
+ * Renders a Lit table template value with the provided context props.
+ *
+ * Use this lower-level helper for custom header, cell, or footer renderers when
+ * you already have the render function and context. `FlexRender` is the
+ * convenience wrapper for table cell/header/footer objects.
+ *
+ * @example
+ * ```ts
+ * flexRender(cell.column.columnDef.cell, cell.getContext())
+ * ```
+ */
 export function flexRender<TProps>(
   Comp:
     | ((props: TProps) => TemplateResult | string)

@@ -7,10 +7,30 @@ import type { Column_Internal } from '../../types/Column'
 import type { ColumnVisibilityState } from './columnVisibilityFeature.types'
 import type { Row } from '../../types/Row'
 
+/**
+ * Returns the default column visibility state.
+ *
+ * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ *
+ * @example
+ * ```ts
+ * const initialValue = getDefaultColumnVisibilityState()
+ * ```
+ */
 export function getDefaultColumnVisibilityState(): ColumnVisibilityState {
   return {}
 }
 
+/**
+ * Toggles visibility for a column.
+ *
+ * The update is applied through the owning table state slice and respects the feature options for that column.
+ *
+ * @example
+ * ```ts
+ * column_toggleVisibility(column)
+ * ```
+ */
 export function column_toggleVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -26,6 +46,16 @@ export function column_toggleVisibility<
   }
 }
 
+/**
+ * Returns is visible for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getIsVisible(column)
+ * ```
+ */
 export function column_getIsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -41,6 +71,16 @@ export function column_getIsVisible<
   )
 }
 
+/**
+ * Returns whether a column can use hide.
+ *
+ * This combines column options, table options, and any required accessor or feature state for the capability.
+ *
+ * @example
+ * ```ts
+ * const value = column_getCanHide(column)
+ * ```
+ */
 export function column_getCanHide<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -52,6 +92,16 @@ export function column_getCanHide<
   )
 }
 
+/**
+ * Returns an event handler for toggling visibility handler.
+ *
+ * The handler is intended for direct use in column header controls such as buttons or checkboxes.
+ *
+ * @example
+ * ```ts
+ * const value = column_getToggleVisibilityHandler(column)
+ * ```
+ */
 export function column_getToggleVisibilityHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -65,6 +115,16 @@ export function column_getToggleVisibilityHandler<
   }
 }
 
+/**
+ * Returns all visible cells for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getAllVisibleCells(row)
+ * ```
+ */
 export function row_getAllVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -76,6 +136,16 @@ export function row_getAllVisibleCells<
     )
 }
 
+/**
+ * Returns visible cells for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getVisibleCells(row)
+ * ```
+ */
 export function row_getVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -87,6 +157,16 @@ export function row_getVisibleCells<
   return [...left, ...center, ...right]
 }
 
+/**
+ * Returns visible flat columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getVisibleFlatColumns(table)
+ * ```
+ */
 export function table_getVisibleFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -98,6 +178,16 @@ export function table_getVisibleFlatColumns<
     )
 }
 
+/**
+ * Returns visible leaf columns for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getVisibleLeafColumns(table)
+ * ```
+ */
 export function table_getVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -109,6 +199,16 @@ export function table_getVisibleLeafColumns<
     )
 }
 
+/**
+ * Updates the table's column visibility state slice.
+ *
+ * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ *
+ * @example
+ * ```ts
+ * table_setColumnVisibility(table, (old) => old)
+ * ```
+ */
 export function table_setColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -119,6 +219,17 @@ export function table_setColumnVisibility<
   table.options.onColumnVisibilityChange?.(updater)
 }
 
+/**
+ * Resets the table's column visibility state slice.
+ *
+ * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ *
+ * @example
+ * ```ts
+ * table_resetColumnVisibility(table)
+ * table_resetColumnVisibility(table, true)
+ * ```
+ */
 export function table_resetColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -129,6 +240,16 @@ export function table_resetColumnVisibility<
   )
 }
 
+/**
+ * Toggles all columns visible for the table.
+ *
+ * This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+ *
+ * @example
+ * ```ts
+ * table_toggleAllColumnsVisible(table)
+ * ```
+ */
 export function table_toggleAllColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -147,6 +268,16 @@ export function table_toggleAllColumnsVisible<
   )
 }
 
+/**
+ * Returns is all columns visible for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getIsAllColumnsVisible(table)
+ * ```
+ */
 export function table_getIsAllColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -159,6 +290,16 @@ export function table_getIsAllColumnsVisible<
     )
 }
 
+/**
+ * Returns is some columns visible for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getIsSomeColumnsVisible(table)
+ * ```
+ */
 export function table_getIsSomeColumnsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -170,6 +311,16 @@ export function table_getIsSomeColumnsVisible<
     )
 }
 
+/**
+ * Returns an event handler for all columns visibility handler.
+ *
+ * The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+ *
+ * @example
+ * ```ts
+ * const value = table_getToggleAllColumnsVisibilityHandler(table)
+ * ```
+ */
 export function table_getToggleAllColumnsVisibilityHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,

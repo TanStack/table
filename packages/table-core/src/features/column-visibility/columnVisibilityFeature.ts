@@ -48,6 +48,11 @@ export interface ColumnVisibilityFeatureConstructors<
   // TableState: TableState_ColumnVisibility
 }
 
+/**
+ * Creates the stock column visibility feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructColumnVisibilityFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -152,6 +157,9 @@ export function constructColumnVisibilityFeature<
 }
 
 /**
- * The Column Visibility feature adds column visibility state and APIs to the table, row, and column objects.
+ * The stock column visibility feature.
+ *
+ * Register this feature to add column visibility state and APIs for deriving
+ * visible columns and visible row cells.
  */
 export const columnVisibilityFeature = constructColumnVisibilityFeature()

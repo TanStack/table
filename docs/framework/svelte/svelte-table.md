@@ -2,102 +2,172 @@
 title: Svelte Table
 ---
 
-> **IMPORTANT:** This version of `@tanstack/svelte-table` only supports **Svelte 5 or  newer**. For Svelte 3/4 support, use version 8 of `@tanstack/svelte-table`.
-> Alternatively, you can still use `@tanstack/table-core` v9 with Svelte 3/4 by copying the source code from the [v8 `@tanstack/svelte-table`](https://github.com/TanStack/table/tree/v8/packages/svelte-table/src) as a custom adapter.
+> **IMPORTANT:** This version of `@tanstack/svelte-table` only supports Svelte 5 or newer. For Svelte 3/4 support, use version 8 of `@tanstack/svelte-table`.
 
-The `@tanstack/svelte-table` adapter is a wrapper around the core table logic. Most of its job is related to managing state the "Svelte" way, providing types and the rendering implementation of cell/header/footer templates.
+The `@tanstack/svelte-table` adapter wraps `@tanstack/table-core` with Svelte 5 rune-based reactivity, rendering helpers, and types. It installs the Svelte `coreReativityFeature` for you, so table atoms can participate in Svelte dependency tracking.
 
-## Exports
+TanStack Table v9 is explicit about what a table uses. Register features with `_features`, and register client-side row model factories with `_rowModels`. The core row model is included by default, so a basic table can use `_rowModels: {}`.
 
-`@tanstack/svelte-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
+## Creating a Table
 
-### `createTable`
-
-Takes an `options` object and returns a table.
-
-```svelte
-<script>
-  import { createTable } from '@tanstack/svelte-table'
-
-  const table = createTable({
-      /* ...table options... */
-  })
-</script>
-
-<!-- ...render your table in markup -->
-```
-
-### FlexRender
-
-A Svelte component for rendering cell/header/footer templates with dynamic values.
-
-FlexRender supports any type of renderable content supported by Svelte:
-
-- Scalar data types such as numbers, strings, etc.
-- Svelte components (when wrapped with `renderComponent`)
-- Svelte snippets (when wrapped with `renderSnippet`)
-
-Example:
+Use `createTable` to create a Svelte table instance.
 
 ```svelte
 <script lang="ts">
   import {
-    type ColumnDef,
-    FlexRender,
     createTable,
-    getCoreRowModel,
-    renderComponent,
-    renderSnippet
+    tableFeatures,
+    type ColumnDef,
   } from '@tanstack/svelte-table'
-  import { StatusTag } from '$lib/components/status-tag.svelte'
-  import type { Person } from './types'
-  import { peopleData, type Person } from './people'
 
-  const columns: ColumnDef<Person>[] = [
+  type Person = {
+    firstName: string
+    lastName: string
+    age: number
+  }
+
+  const _features = tableFeatures({})
+
+  const columns: Array<ColumnDef<typeof _features, Person>> = [
     {
-      /* Renders a string */
-      accessorKey: 'name',
-      cell: info => info.getValue(),
+      accessorKey: 'firstName',
+      header: 'First name',
+      cell: (info) => info.getValue(),
     },
-    {
-      /* Renders a Svelte component */
-      accessorKey: 'status',
-      cell: (info) => renderComponent(StatusTag, { value: info.getValue() })
-    },
-    {
-      /* Renders a Svelte component */
-      accessorKey: 'email',
-      cell: (info) => renderSnippet(mailtoLink, info.getValue())
-    }
   ]
 
+  let data = $state<Person[]>([])
+
   const table = createTable({
-    data: peopleData,
+    _features,
+    _rowModels: {},
     columns,
-    getCoreRowModel: createCoreRowModel()
+    get data() {
+      return data
+    },
   })
 </script>
-
-{#snippet mailtoLink(email: string)}
-  <a href="mailto:{email}">
-    {email}
-  </a>
-{/snippet}
-
-<table>
-  <tbody>
-    {#each table.getRowModel().rows as row}
-      <tr>
-        {#each row.getVisibleCells() as cell}
-          <td>
-            <FlexRender
-              content={cell.column.columnDef.cell}
-              context={cell.getContext()}
-            />
-          </td>
-        {/each}
-      </tr>
-    {/each}
-  </tbody>
-</table>
 ```
+
+For feature-specific row models, register the feature and put the row model factory under `_rowModels`.
+
+```svelte
+<script lang="ts">
+  import {
+    createPaginatedRowModel,
+    createSortedRowModel,
+    rowPaginationFeature,
+    rowSortingFeature,
+    sortFns,
+    tableFeatures,
+  } from '@tanstack/svelte-table'
+
+  const _features = tableFeatures({
+    rowPaginationFeature,
+    rowSortingFeature,
+  })
+
+  const tableOptions = {
+    _features,
+    _rowModels: {
+      paginatedRowModel: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel(sortFns),
+    },
+  }
+</script>
+```
+
+## Table State
+
+Table state is managed with TanStack Store atoms in v9. For most tables, you do not need to manage table state yourself: set `initialState` when you need starting values, and use feature APIs like `table.nextPage()`, `table.setSorting(...)`, and `row.toggleSelected()` instead of mutating state directly.
+
+Use `atoms` when your app should own one state slice with TanStack Store. Use `state` with the matching `on[State]Change` option for simple Svelte state integration or migration paths. Selected table state is available on `table.state` when you pass a selector to `createTable`.
+
+```svelte
+<script lang="ts">
+  import { createAtom } from '@tanstack/svelte-store'
+  import {
+    createTable,
+    rowPaginationFeature,
+    tableFeatures,
+    type PaginationState,
+  } from '@tanstack/svelte-table'
+
+  const _features = tableFeatures({
+    rowPaginationFeature,
+  })
+
+  const paginationAtom = createAtom<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  const table = createTable({
+    _features,
+    _rowModels: {},
+    columns,
+    get data() {
+      return data
+    },
+    atoms: {
+      pagination: paginationAtom,
+    },
+  })
+</script>
+```
+
+See the [Table State Guide](./guide/table-state.md) for selectors, external atoms, and state ownership patterns.
+
+## Rendering Headers, Cells, and Footers
+
+Use `FlexRender` to render column `header`, `cell`, and `footer` definitions. It handles plain values, Svelte components wrapped with `renderComponent`, and snippets wrapped with `renderSnippet`.
+
+```svelte
+<script lang="ts">
+  import {
+    FlexRender,
+    renderComponent,
+    renderSnippet,
+  } from '@tanstack/svelte-table'
+</script>
+
+<tbody>
+  {#each table.getRowModel().rows as row (row.id)}
+    <tr>
+      {#each row.getVisibleCells() as cell (cell.id)}
+        <td>
+          <FlexRender cell={cell} />
+        </td>
+      {/each}
+    </tr>
+  {/each}
+</tbody>
+```
+
+## createTableHook
+
+`createTableHook` creates an app-specific table creator. Use it when multiple tables should share `_features`, `_rowModels`, default options, column helpers, and component conventions.
+
+```ts
+import { createTableHook, tableFeatures } from '@tanstack/svelte-table'
+
+const { createAppTable, createAppColumnHelper } = createTableHook({
+  _features: tableFeatures({}),
+  _rowModels: {},
+})
+
+const columnHelper = createAppColumnHelper<Person>()
+
+const table = createAppTable({
+  columns,
+  get data() {
+    return data
+  },
+})
+```
+
+See the [Composable Tables example](./examples/composable-tables) for the full pattern.
+
+## API Reference
+
+See the [Svelte API Reference](./reference/index.md).

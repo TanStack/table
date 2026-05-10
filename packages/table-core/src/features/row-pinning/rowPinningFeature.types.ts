@@ -26,7 +26,9 @@ export interface TableOptions_RowPinning<
    */
   keepPinnedRows?: boolean
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.rowPinning` changes. This overrides the default internal state management, so you will also need to supply `state.rowPinning` from your own managed state.
+   * Called with an updater when row pinning state changes. Pair this with
+   * `state.rowPinning` when using external state; external atoms can own the
+   * slice without this callback.
    */
   onRowPinningChange?: OnChangeFn<RowPinningState>
 }
@@ -83,7 +85,7 @@ export interface Table_RowPinning<
    */
   resetRowPinning: (defaultState?: boolean) => void
   /**
-   * Sets or updates the `state.rowPinning` state.
+   * Sets row pinning state using a value or updater.
    */
   setRowPinning: (updater: Updater<RowPinningState>) => void
 }

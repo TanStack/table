@@ -205,6 +205,11 @@ export const aggregationFn_count: AggregationFn<any, any> = <
   return leafRows.length
 }
 
+/**
+ * The built-in aggregation function registry.
+ *
+ * Pass this object to grouped row model creation or extend it with custom aggregation functions for grouped columns.
+ */
 export const aggregationFns = {
   sum: aggregationFn_sum,
   min: aggregationFn_min,

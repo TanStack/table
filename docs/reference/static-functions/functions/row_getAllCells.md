@@ -1,0 +1,42 @@
+---
+id: row_getAllCells
+title: row_getAllCells
+---
+
+# Function: row\_getAllCells()
+
+```ts
+function row_getAllCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
+```
+
+Defined in: [core/rows/coreRowsFeature.utils.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L163)
+
+Returns all cells for a row.
+
+This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+
+## Type Parameters
+
+### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](../../index/interfaces/TableFeatures.md)
+
+### TData
+
+`TData` *extends* [`RowData`](../../index/type-aliases/RowData.md)
+
+## Parameters
+
+### row
+
+[`Row`](../../index/type-aliases/Row.md)\<`TFeatures`, `TData`\>
+
+## Returns
+
+[`Cell`](../../index/type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
+
+## Example
+
+```ts
+const value = row_getAllCells(row)
+```

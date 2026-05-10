@@ -51,6 +51,11 @@ export interface ColumnGroupingFeatureConstructors<
   // TableState: TableState_ColumnGrouping
 }
 
+/**
+ * Creates the stock column grouping feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructColumnGroupingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -146,6 +151,9 @@ export function constructColumnGroupingFeature<
 }
 
 /**
- * The (Column) Grouping feature adds column grouping state and APIs to the table, row, column, and cell objects.
+ * The stock column grouping feature.
+ *
+ * Register this feature to add grouping state, aggregation defaults, grouped
+ * row-model support, and table/row/column/cell grouping APIs.
  */
 export const columnGroupingFeature = constructColumnGroupingFeature()

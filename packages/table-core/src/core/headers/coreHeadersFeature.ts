@@ -28,6 +28,11 @@ export interface CoreHeadersFeatureConstructors<
   // Table: Table_Headers<TFeatures, TData>
 }
 
+/**
+ * Creates the stock core headers feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructCoreHeadersFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,

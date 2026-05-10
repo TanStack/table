@@ -39,7 +39,7 @@ export interface TableOptions_RowExpanding<
   TData extends RowData,
 > {
   /**
-   * Enable this setting to automatically reset the expanded state of the table when expanding state changes.
+   * Enables automatic expanded-state resets when page-altering table state changes.
    */
   autoResetExpanded?: boolean
   /**
@@ -59,7 +59,9 @@ export interface TableOptions_RowExpanding<
    */
   manualExpanding?: boolean
   /**
-   * This function is called when the `expanded` table state changes. If a function is provided, you will be responsible for managing this state on your own. To pass the managed state back to the table, use the `tableOptions.state.expanded` option.
+   * Called with an updater when expanded state changes. Pair this with
+   * `state.expanded` when using external state; external atoms can own the
+   * slice without this callback.
    */
   onExpandedChange?: OnChangeFn<ExpandedState>
   /**
@@ -94,11 +96,12 @@ export interface Table_RowExpanding<
    */
   getToggleAllRowsExpandedHandler: () => (event: unknown) => void
   /**
-   * Resets the expanded state of the table to the initial state.
+   * Resets expanded state to `initialState.expanded`. Pass `true` to reset to
+   * the feature default of `{}`.
    */
   resetExpanded: (defaultState?: boolean) => void
   /**
-   * Updates the expanded state of the table via an update function or value.
+   * Sets expanded state using a value or updater.
    */
   setExpanded: (updater: Updater<ExpandedState>) => void
   /**
@@ -126,7 +129,9 @@ export interface CreateRowModel_Expanded<
   TData extends RowData,
 > {
   /**
-   * This function is responsible for returning the expanded row model. If this function is not provided, the table will not expand rows. You can use the default exported `getExpandedRowModel` function to get the expanded row model or implement your own.
+   * Factory used to retrieve the expanded row model. If this function is not
+   * provided, the table will not expand rows. To use client-side expansion,
+   * pass `createExpandedRowModel()` or implement your own factory.
    */
   expandedRowModel?: (
     table: Table<TFeatures, TData>,

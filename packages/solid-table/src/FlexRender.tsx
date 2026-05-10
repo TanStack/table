@@ -8,6 +8,18 @@ import type {
   TableFeatures,
 } from '@tanstack/table-core'
 
+/**
+ * Renders a Solid table template value with the provided context props.
+ *
+ * Use this for custom header, cell, or footer renderers when you need the
+ * lower-level function form. Most Solid UIs can use the `FlexRender` component
+ * instead.
+ *
+ * @example
+ * ```tsx
+ * flexRender(cell.column.columnDef.cell, cell.getContext())
+ * ```
+ */
 export function flexRender<TProps>(
   Comp: ((_props: TProps) => JSX.Element) | JSX.Element | undefined,
   props: TProps,

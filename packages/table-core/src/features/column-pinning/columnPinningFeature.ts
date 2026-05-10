@@ -61,6 +61,11 @@ export interface ColumnPinningFeatureConstructors<
   // TableState: TableState_ColumnPinning
 }
 
+/**
+ * Creates the stock column pinning feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructColumnPinningFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -342,6 +347,9 @@ export function constructColumnPinningFeature<
 }
 
 /**
- * The Column Pinning feature adds column pinning state and APIs to the table, row, and column objects.
+ * The stock column pinning feature.
+ *
+ * Register this feature to add column pinning state plus table, row, and column
+ * APIs for splitting columns into left, center, and right regions.
  */
 export const columnPinningFeature = constructColumnPinningFeature()

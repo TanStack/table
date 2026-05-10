@@ -23,6 +23,11 @@ function getCellPrototype<
   return table._cellPrototype
 }
 
+/**
+ * Constructs a cell instance from normalized table internals.
+ *
+ * This wires core properties, feature prototype APIs, and instance data used by table rendering and row-model operations.
+ */
 export function constructCell<
   TFeatures extends TableFeatures,
   TData extends RowData,

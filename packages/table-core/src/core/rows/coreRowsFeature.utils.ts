@@ -6,6 +6,16 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 
+/**
+ * Returns value for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getValue(row)
+ * ```
+ */
 export function row_getValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -25,6 +35,16 @@ export function row_getValue<
   return row._valuesCache[columnId]
 }
 
+/**
+ * Returns unique values for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getUniqueValues(row)
+ * ```
+ */
 export function row_getUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -52,6 +72,17 @@ export function row_getUniqueValues<
   return row._uniqueValuesCache[columnId]
 }
 
+/**
+ * Returns a renderable row value for a column.
+ *
+ * If the accessor value is nullish, the table's `renderFallbackValue` is used
+ * instead.
+ *
+ * @example
+ * ```ts
+ * const value = row_renderValue(row)
+ * ```
+ */
 export function row_renderValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -59,6 +90,16 @@ export function row_renderValue<
   return row.getValue(columnId) ?? row.table.options.renderFallbackValue
 }
 
+/**
+ * Returns leaf rows for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getLeafRows(row)
+ * ```
+ */
 export function row_getLeafRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -66,6 +107,16 @@ export function row_getLeafRows<
   return flattenBy(row.subRows, (d) => d.subRows)
 }
 
+/**
+ * Returns parent row for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getParentRow(row)
+ * ```
+ */
 export function row_getParentRow<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -73,6 +124,16 @@ export function row_getParentRow<
   return row.parentId ? row.table.getRow(row.parentId, true) : undefined
 }
 
+/**
+ * Returns parent rows for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getParentRows(row)
+ * ```
+ */
 export function row_getParentRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -89,6 +150,16 @@ export function row_getParentRows<
   return parentRows.reverse()
 }
 
+/**
+ * Returns all cells for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getAllCells(row)
+ * ```
+ */
 export function row_getAllCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -98,6 +169,16 @@ export function row_getAllCells<
   })
 }
 
+/**
+ * Returns all cells by column id for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getAllCellsByColumnId(row)
+ * ```
+ */
 export function row_getAllCellsByColumnId<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -111,6 +192,16 @@ export function row_getAllCellsByColumnId<
   )
 }
 
+/**
+ * Returns row id for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRowId(table)
+ * ```
+ */
 export function table_getRowId<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -126,6 +217,16 @@ export function table_getRowId<
   )
 }
 
+/**
+ * Returns row for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRow(table)
+ * ```
+ */
 export function table_getRow<
   TFeatures extends TableFeatures,
   TData extends RowData,

@@ -39,6 +39,11 @@ export interface RowPaginationFeatureConstructors<
   // TableState: TableState_RowPagination
 }
 
+/**
+ * Creates the stock row pagination feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructRowPaginationFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -116,6 +121,9 @@ export function constructRowPaginationFeature<
 }
 
 /**
- * The (Row) Pagination feature adds pagination state and APIs to the table object.
+ * The stock row pagination feature.
+ *
+ * Register this feature to add pagination state, page navigation APIs, and
+ * pagination-aware row model helpers to a table.
  */
 export const rowPaginationFeature = constructRowPaginationFeature()

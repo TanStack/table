@@ -6,6 +6,11 @@ import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
+/**
+ * Creates a memoized expanded row model factory.
+ *
+ * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ */
 export function createExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
@@ -48,6 +53,11 @@ function _createExpandedRowModel<
   return expandRows(rowModel)
 }
 
+/**
+ * Expands a row model according to the current expanded row state.
+ *
+ * Expanded sub-rows are inserted into the flattened row order while preserving the original row hierarchy.
+ */
 export function expandRows<
   TFeatures extends TableFeatures,
   TData extends RowData = any,

@@ -6,6 +6,11 @@ import type { Table_Internal } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 
+/**
+ * Filters a row model with the supplied row predicate.
+ *
+ * The helper supports both filtering from leaf rows upward and filtering parents before descendants, depending on table options.
+ */
 export function filterRows<
   TFeatures extends TableFeatures,
   TData extends RowData,

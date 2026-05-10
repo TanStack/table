@@ -13,6 +13,16 @@ import type { Column_Internal } from '../../types/Column'
 import type { ColumnSizingState } from '../column-sizing/columnSizingFeature.types'
 import type { columnResizingState } from './columnResizingFeature.types'
 
+/**
+ * Returns the default column resizing state.
+ *
+ * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ *
+ * @example
+ * ```ts
+ * const initialValue = getDefaultColumnResizingState()
+ * ```
+ */
 export function getDefaultColumnResizingState(): columnResizingState {
   return {
     startOffset: null,
@@ -24,6 +34,16 @@ export function getDefaultColumnResizingState(): columnResizingState {
   }
 }
 
+/**
+ * Returns whether a column can use resize.
+ *
+ * This combines column options, table options, and any required accessor or feature state for the capability.
+ *
+ * @example
+ * ```ts
+ * const value = column_getCanResize(column)
+ * ```
+ */
 export function column_getCanResize<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -35,6 +55,16 @@ export function column_getCanResize<
   )
 }
 
+/**
+ * Returns is resizing for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getIsResizing(column)
+ * ```
+ */
 export function column_getIsResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -45,6 +75,16 @@ export function column_getIsResizing<
   )
 }
 
+/**
+ * Returns resize handler for a header.
+ *
+ * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ *
+ * @example
+ * ```ts
+ * const onMouseDown = header_getResizeHandler(header)
+ * ```
+ */
 export function header_getResizeHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -222,6 +262,16 @@ export function header_getResizeHandler<
   }
 }
 
+/**
+ * Updates the table's column resizing state slice.
+ *
+ * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ *
+ * @example
+ * ```ts
+ * table_setColumnResizing(table, (old) => old)
+ * ```
+ */
 export function table_setColumnResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -232,6 +282,17 @@ export function table_setColumnResizing<
   table.options.onColumnResizingChange?.(updater)
 }
 
+/**
+ * Resets the table's header size info state slice.
+ *
+ * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ *
+ * @example
+ * ```ts
+ * table_resetHeaderSizeInfo(table)
+ * table_resetHeaderSizeInfo(table, true)
+ * ```
+ */
 export function table_resetHeaderSizeInfo<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -246,6 +307,16 @@ export function table_resetHeaderSizeInfo<
   )
 }
 
+/**
+ * Detects whether the current environment supports passive event listeners.
+ *
+ * Column resizing uses this to register pointer and touch listeners with the safest available options.
+ *
+ * @example
+ * ```ts
+ * const canUsePassiveListeners = passiveEventSupported()
+ * ```
+ */
 export function passiveEventSupported() {
   let passiveSupported: boolean | null = null
 
@@ -271,6 +342,16 @@ export function passiveEventSupported() {
   return passiveSupported
 }
 
+/**
+ * Returns whether an event is a touch-start event.
+ *
+ * Column resizing uses this to normalize mouse and touch resize interactions.
+ *
+ * @example
+ * ```ts
+ * const isTouch = isTouchStartEvent(event)
+ * ```
+ */
 export function isTouchStartEvent(e: unknown): e is TouchEvent {
   return (e as TouchEvent).type === 'touchstart'
 }

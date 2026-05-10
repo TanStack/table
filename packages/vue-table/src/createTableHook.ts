@@ -279,6 +279,24 @@ export const AppFlexRender = defineComponent({
   },
 })
 
+/**
+ * Creates app-scoped Vue table helpers with features, row models, and
+ * renderable component maps pre-bound.
+ *
+ * Use this when an app or design system wants typed `useAppTable`, a pre-bound
+ * column helper, and context helpers for table, cell, and header components.
+ *
+ * @example
+ * ```ts
+ * const { useAppTable, createAppColumnHelper } = createTableHook({
+ *   _features,
+ *   _rowModels: {},
+ *   tableComponents: {},
+ *   cellComponents: {},
+ *   headerComponents: {},
+ * })
+ * ```
+ */
 export function createTableHook<
   TFeatures extends TableFeatures,
   const TTableComponents extends Record<string, ComponentType<any>>,

@@ -3,12 +3,22 @@ import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState, TableState_All } from './types/TableState'
 
+/**
+ * Applies a TanStack updater to a value.
+ *
+ * If the updater is a function it is called with the previous value; otherwise the updater value is returned directly.
+ */
 export function functionalUpdate<T>(updater: Updater<T>, input: T): T {
   return typeof updater === 'function'
     ? (updater as (i: T) => T)(input)
     : updater
 }
 
+/**
+ * Clones table state values while preserving non-plain objects.
+ *
+ * Plain objects and arrays are copied recursively so state updates can avoid mutating existing references.
+ */
 export function cloneState<T>(value: T): T {
   if (Array.isArray(value)) {
     return value.map(cloneState) as T
@@ -33,8 +43,16 @@ export function cloneState<T>(value: T): T {
   return value
 }
 
+/**
+ * A no-operation function used as a safe default callback.
+ */
 export function noop() {}
 
+/**
+ * Creates a table state updater for a single state slice.
+ *
+ * The updater writes through the table base atom for the slice and supports both value and functional updater forms.
+ */
 export function makeStateUpdater<
   TFeatures extends TableFeatures,
   K extends (string & {}) | keyof TableState_All | keyof TableState<TFeatures>,
@@ -48,14 +66,25 @@ export function makeStateUpdater<
 
 type AnyFunction = (...args: any) => any
 
+/**
+ * Returns whether a value is a function.
+ */
 export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
 }
 
+/**
+ * Returns whether a value is an array containing only numbers.
+ */
 export function isNumberArray(d: any): d is Array<number> {
   return Array.isArray(d) && d.every((val) => typeof val === 'number')
 }
 
+/**
+ * Flattens a tree of nodes by recursively reading child nodes.
+ *
+ * The original nodes are preserved in depth-first order.
+ */
 export function flattenBy<TNode>(
   arr: Array<TNode>,
   getChildren: (item: TNode) => Array<TNode>,
@@ -77,6 +106,12 @@ export function flattenBy<TNode>(
   return flat
 }
 
+/**
+ * Symbol used to attach internal memo metadata to wrapped functions.
+ *
+ * This is exported so diagnostics can recognize memoized functions without
+ * depending on a string property name.
+ */
 export const $internalMemoFnMeta = Symbol('memoFnMeta')
 export type MemoFnMeta = { originalArgsLength?: number }
 
@@ -103,6 +138,11 @@ interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
   onBeforeUpdate?: () => void
 }
 
+/**
+ * Creates a dependency-tracked memoized function for table internals.
+ *
+ * The memo recomputes only when its dependency tuple changes and can emit debug timing information.
+ */
 export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   fn,
   memoDeps,
@@ -164,6 +204,11 @@ const pad = (str: number | string, num: number) => {
   return str
 }
 
+/**
+ * Creates a table-aware memoized function.
+ *
+ * This wraps `memo` with table debug options and feature metadata so row models and derived APIs can share consistent diagnostics.
+ */
 export function tableMemo<
   TFeatures extends TableFeatures,
   TDeps extends ReadonlyArray<any>,

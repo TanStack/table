@@ -12,10 +12,30 @@ import type {
 
 // State Utils
 
+/**
+ * Returns the default sorting state.
+ *
+ * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ *
+ * @example
+ * ```ts
+ * const initialValue = getDefaultSortingState()
+ * ```
+ */
 export function getDefaultSortingState(): SortingState {
   return []
 }
 
+/**
+ * Updates the table's sorting state slice.
+ *
+ * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ *
+ * @example
+ * ```ts
+ * table_setSorting(table, (old) => old)
+ * ```
+ */
 export function table_setSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -23,6 +43,17 @@ export function table_setSorting<
   table.options.onSortingChange?.(updater)
 }
 
+/**
+ * Resets the table's sorting state slice.
+ *
+ * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ *
+ * @example
+ * ```ts
+ * table_resetSorting(table)
+ * table_resetSorting(table, true)
+ * ```
+ */
 export function table_resetSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -35,6 +66,16 @@ export function table_resetSorting<
 
 // Column Utils
 
+/**
+ * Infers sort fn for a column.
+ *
+ * The inference uses the column definition, table options, and sampled row values when needed.
+ *
+ * @example
+ * ```ts
+ * const value = column_getAutoSortFn(column)
+ * ```
+ */
 export function column_getAutoSortFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -72,6 +113,16 @@ export function column_getAutoSortFn<
   return sortFn ?? sortFn_basic
 }
 
+/**
+ * Infers sort dir for a column.
+ *
+ * The inference uses the column definition, table options, and sampled row values when needed.
+ *
+ * @example
+ * ```ts
+ * const value = column_getAutoSortDir(column)
+ * ```
+ */
 export function column_getAutoSortDir<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -88,6 +139,16 @@ export function column_getAutoSortDir<
   return 'desc'
 }
 
+/**
+ * Returns sort fn for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getSortFn(column)
+ * ```
+ */
 export function column_getSortFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -103,6 +164,16 @@ export function column_getSortFn<
       : (sortFns?.[column.columnDef.sortFn as string] ?? sortFn_basic)
 }
 
+/**
+ * Toggles sorting for a column.
+ *
+ * The update is applied through the owning table state slice and respects the feature options for that column.
+ *
+ * @example
+ * ```ts
+ * column_toggleSorting(column)
+ * ```
+ */
 export function column_toggleSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -206,6 +277,16 @@ export function column_toggleSorting<
   })
 }
 
+/**
+ * Returns first sort dir for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getFirstSortDir(column)
+ * ```
+ */
 export function column_getFirstSortDir<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -218,6 +299,16 @@ export function column_getFirstSortDir<
   return sortDescFirst ? 'desc' : 'asc'
 }
 
+/**
+ * Returns next sorting order for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getNextSortingOrder(column)
+ * ```
+ */
 export function column_getNextSortingOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -240,6 +331,16 @@ export function column_getNextSortingOrder<
   return isSorted === 'desc' ? 'asc' : 'desc'
 }
 
+/**
+ * Returns whether a column can use sort.
+ *
+ * This combines column options, table options, and any required accessor or feature state for the capability.
+ *
+ * @example
+ * ```ts
+ * const value = column_getCanSort(column)
+ * ```
+ */
 export function column_getCanSort<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -252,6 +353,16 @@ export function column_getCanSort<
   )
 }
 
+/**
+ * Returns whether a column can use multi sort.
+ *
+ * This combines column options, table options, and any required accessor or feature state for the capability.
+ *
+ * @example
+ * ```ts
+ * const value = column_getCanMultiSort(column)
+ * ```
+ */
 export function column_getCanMultiSort<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -264,6 +375,16 @@ export function column_getCanMultiSort<
   )
 }
 
+/**
+ * Returns is sorted for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getIsSorted(column)
+ * ```
+ */
 export function column_getIsSorted<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -275,6 +396,16 @@ export function column_getIsSorted<
   return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
 }
 
+/**
+ * Returns sort index for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getSortIndex(column)
+ * ```
+ */
 export function column_getSortIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -286,6 +417,16 @@ export function column_getSortIndex<
   )
 }
 
+/**
+ * Clear Sorting. for a column.
+ *
+ * This is the static implementation behind the matching column instance API.
+ *
+ * @example
+ * ```ts
+ * const value = column_clearSorting(column)
+ * ```
+ */
 export function column_clearSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -297,6 +438,16 @@ export function column_clearSorting<
   )
 }
 
+/**
+ * Returns an event handler for toggling sorting handler.
+ *
+ * The handler is intended for direct use in column header controls such as buttons or checkboxes.
+ *
+ * @example
+ * ```ts
+ * const value = column_getToggleSortingHandler(column)
+ * ```
+ */
 export function column_getToggleSortingHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,

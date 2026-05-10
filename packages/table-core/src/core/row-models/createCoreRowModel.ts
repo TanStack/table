@@ -7,6 +7,11 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
+/**
+ * Creates a memoized core row model factory.
+ *
+ * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ */
 export function createCoreRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,

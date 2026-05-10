@@ -1,0 +1,30 @@
+---
+id: constructCoreRowModelsFeature
+title: constructCoreRowModelsFeature
+---
+
+# Function: constructCoreRowModelsFeature()
+
+```ts
+function constructCoreRowModelsFeature<TFeatures, TData>(): TableFeature<CoreRowModelsFeatureConstructors<TFeatures, TData>>;
+```
+
+Defined in: [core/row-models/coreRowModelsFeature.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.ts#L32)
+
+Creates the stock core row models feature.
+
+The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+
+## Type Parameters
+
+### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
+
+### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+## Returns
+
+[`TableFeature`](../interfaces/TableFeature.md)\<[`CoreRowModelsFeatureConstructors`](../interfaces/CoreRowModelsFeatureConstructors.md)\<`TFeatures`, `TData`\>\>

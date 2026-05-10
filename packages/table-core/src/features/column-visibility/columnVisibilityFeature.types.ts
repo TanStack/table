@@ -15,7 +15,9 @@ export interface TableOptions_ColumnVisibility {
    */
   enableHiding?: boolean
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.columnVisibility` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+   * Called with an updater when column visibility state changes. Pair this with
+   * `state.columnVisibility` when using external state; external atoms can own
+   * the slice without this callback.
    */
   onColumnVisibilityChange?: OnChangeFn<ColumnVisibilityState>
 }
@@ -54,7 +56,7 @@ export interface Table_ColumnVisibility<
    */
   resetColumnVisibility: (defaultState?: boolean) => void
   /**
-   * Sets or updates the `state.columnVisibility` state.
+   * Sets column visibility state using a value or updater.
    */
   setColumnVisibility: (updater: Updater<ColumnVisibilityState>) => void
   /**
@@ -74,6 +76,9 @@ export interface Row_ColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
+  /**
+   * Returns all cells for the row whose columns are currently visible.
+   */
   getAllVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
    * Returns an array of cells that account for column visibility for the row.

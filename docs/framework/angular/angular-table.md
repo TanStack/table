@@ -2,127 +2,171 @@
 title: Angular Table
 ---
 
-The `@tanstack/angular-table` adapter is a wrapper around the core table logic. Most of it's job is related to managing
-state using angular signals, providing types and the rendering implementation of cell/header/footer templates.
+The `@tanstack/angular-table` adapter wraps `@tanstack/table-core` with Angular signals, rendering directives, dependency-injection helpers, and types. `injectTable` installs the Angular `coreReativityFeature` for you, so table atoms can update Angular signals, computed values, effects, and templates.
 
-## Exports
+TanStack Table v9 is explicit about what a table uses. Register features with `_features`, and register client-side row model factories with `_rowModels`. The core row model is included by default, so a basic table can use `_rowModels: {}`.
 
-`@tanstack/angular-table` re-exports all of `@tanstack/table-core`'s APIs and the following:
+## Creating a Table
 
-### `injectTable`
-
-Creates and returns an Angular-reactive table instance.
-
-`injectTable` accepts either:
-
-- an options function `() => TableOptions`
-- a computed signal returning `TableOptions`
-
-The initializer is intentionally re-evaluated whenever any signal read inside it changes.
-This is how the adapter keeps the table in sync with Angular's reactivity model.
-
-Because of that behavior, keep expensive/static values (for example `columns`, feature setup, row models) as stable references outside the initializer, and only read reactive state (`data()`, pagination/filter/sorting signals, etc.) inside it.
-
-Since `ColumnDef` is stricter about generics, prefer building columns with `createColumnHelper<TFeatures, TData>()` so feature and row types are inferred consistently.
-
-The returned table is also signal-reactive: table state and table APIs are wired for Angular signals, so you can safely consume table methods inside `computed(...)` and `effect(...)`.
+Use `injectTable` inside an Angular injection context. The initializer is re-run when Angular signals read inside it change, then the adapter syncs the table options.
 
 ```ts
-import { computed, effect, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
-  createColumnHelper,
+  FlexRender,
   injectTable,
+  tableFeatures,
   type ColumnDef,
-  rowPaginationFeature,
-  stockFeatures
 } from '@tanstack/angular-table'
 
-// Register all table core features
-const _features = tableFeatures(stockFeatures);
-// ...or register only your needed features 
-const _features = tableFeatures({
-  rowPaginationFeature,
-  // ...all other features
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+}
+
+const _features = tableFeatures({})
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
+  {
+    accessorKey: 'firstName',
+    header: 'First name',
+    cell: (info) => info.getValue(),
+  },
+]
+
+@Component({
+  selector: 'app-root',
+  imports: [FlexRender],
+  templateUrl: './app.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-const columnHelper = createColumnHelper<typeof _features, Person>()
-
-export class AppComponent {
+export class App {
   readonly data = signal<Person[]>([])
 
-  // If you type columns manually, include both generics:
-  // readonly columns: ColumnDef<typeof _features, Person>[] = [...]
-  readonly columns = columnHelper.columns([
-    columnHelper.accessor('firstName', {
-      header: 'First name',
-      cell: info => info.getValue(),
-    }),
-    // ...
-  ])
-
-  // This function is re-run when any signal read inside changes.
   readonly table = injectTable(() => ({
-    _features: _features,
-    // Reactive state can be read directly
+    _features,
+    _rowModels: {},
+    columns,
     data: this.data(),
-
-    state: {
-      // ...
-    },
-
-    // Keep stable references outside the initializer
-    columns: this.columns,
   }))
-
-  constructor() {
-    effect(() => {
-      console.log('Visible rows:', this.table.getRowModel().rows.length)
-    })
-  }
 }
 ```
 
-See [injectTable API Reference](reference/functions/injectTable)
+For feature-specific row models, register the feature and put the row model factory under `_rowModels`.
 
-### `createTableHook`
+```ts
+import {
+  createPaginatedRowModel,
+  createSortedRowModel,
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/angular-table'
 
-`createTableHook` is the Angular composition API for building reusable table infrastructure.
+const _features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+})
 
-Use it when multiple tables should share the same defaults (features, row models, default options, and component registries) while keeping strong types across the app.
+const tableOptions = {
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(sortFns),
+  },
+}
+```
 
-At runtime, `createTableHook` wraps `injectTable` and returns typed helpers such as:
+## Table State
 
-- `injectAppTable` for creating tables with shared defaults
-- `createAppColumnHelper` for strongly typed column definitions
-- pre-typed context helpers (`injectTableContext`, `injectTableCellContext`, `injectTableHeaderContext`, `injectFlexRenderCellContext`, `injectFlexRenderHeaderContext`)
+Table state is managed with TanStack Store atoms in v9. For most tables, you do not need to manage table state yourself: set `initialState` when you need starting values, and use feature APIs like `table.nextPage()`, `table.setSorting(...)`, and `row.toggleSelected()` instead of mutating state directly.
 
-For full setup and patterns, see the [Table Composition Guide](./guide/table-composition.md).
+Angular apps usually own state with signals and pass it through `state` with the matching `on[State]Change` option. The `atoms` table option is also available for TanStack Store atom ownership. Selected table state is available through `table.state()`.
 
-### `FlexRender`
+```ts
+import { signal } from '@angular/core'
+import {
+  injectTable,
+  rowPaginationFeature,
+  tableFeatures,
+  type PaginationState,
+} from '@tanstack/angular-table'
 
-An Angular structural rendering primitive for cell/header/footer content.
+const _features = tableFeatures({
+  rowPaginationFeature,
+})
 
-It supports the same content kinds as Angular rendering:
+export class App {
+  readonly pagination = signal<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
 
-- primitive values (`string`, `number`, plain objects)
-- `TemplateRef`
-- component types
-- `flexRenderComponent(component, options?)` wrappers with typed `inputs`, `outputs`, `injector`, `bindings`, and `directives`
+  readonly table = injectTable(() => ({
+    _features,
+    _rowModels: {},
+    columns,
+    data: this.data(),
+    state: {
+      pagination: this.pagination(),
+    },
+    onPaginationChange: (updater) => {
+      this.pagination.update((old) =>
+        updater instanceof Function ? updater(old) : updater,
+      )
+    },
+  }))
+}
+```
 
-Column render functions (`header`, `cell`, `footer`) run in Angular injection context, so you can use `inject()` and signals directly in render logic.
+See the [Table State Guide](./guide/table-state.md) for selectors, external atoms, and state ownership patterns.
 
-For complete rendering details (`*flexRender`, shorthand directives, `flexRenderComponent`, `TemplateRef`, component inputs/outputs, and `injectFlexRenderContext`), see the [Rendering components Guide](./guide/rendering.md).
+## Rendering Headers, Cells, and Footers
 
-### Context helpers and directives
+Use the `FlexRender` directive helpers to render column `header`, `cell`, and `footer` definitions. They handle primitive values, templates, and components wrapped with `flexRenderComponent`.
 
-`@tanstack/angular-table` also exports Angular DI helpers and directives for table/cell/header context:
+```html
+<tbody>
+  @for (row of table.getRowModel().rows; track row.id) {
+    <tr>
+      @for (cell of row.getVisibleCells(); track cell.id) {
+        <td *flexRenderCell="cell; let rendered">
+          {{ rendered }}
+        </td>
+      }
+    </tr>
+  }
+</tbody>
+```
 
-- `TanStackTable` + `injectTableContext()`
-- `TanStackTableCell` + `injectTableCellContext()`
-- `TanStackTableHeader` + `injectTableHeaderContext()`
+For `*flexRender`, `*flexRenderHeader`, `*flexRenderFooter`, `flexRenderComponent`, and render context helpers, see the [Rendering components Guide](./guide/rendering.md).
 
-These APIs provide signal-based context values and are available from nearest directives or from `*flexRender`-rendered components when matching props are present.
+## createTableHook
 
-### Full API Reference
+`createTableHook` creates app-specific Angular table helpers. Use it when multiple tables should share `_features`, `_rowModels`, default options, column helpers, and component conventions.
 
-See [Angular API Reference](reference/index.md)
+```ts
+import { createTableHook, tableFeatures } from '@tanstack/angular-table'
+
+const { injectAppTable, createAppColumnHelper } = createTableHook({
+  _features: tableFeatures({}),
+  _rowModels: {},
+})
+
+const columnHelper = createAppColumnHelper<Person>()
+
+export class App {
+  readonly table = injectAppTable(() => ({
+    columns,
+    data: this.data(),
+  }))
+}
+```
+
+See the [Table Composition Guide](./guide/table-composition.md) and the [Composable Tables example](./examples/composable-tables) for the full pattern.
+
+## API Reference
+
+See the [Angular API Reference](./reference/index.md).

@@ -28,6 +28,13 @@ function subscribeToRune<T>(
   return { unsubscribe }
 }
 
+/**
+ * Creates the table-core reactivity bindings used by the Svelte adapter.
+ *
+ * Readonly table atoms are backed by `$derived.by`, writable atoms by `$state`,
+ * and subscriptions bridge through rune effects so table APIs participate in
+ * Svelte dependency tracking.
+ */
 export function svelteReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: true,

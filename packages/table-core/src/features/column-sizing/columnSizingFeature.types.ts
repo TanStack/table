@@ -9,7 +9,9 @@ export type ColumnSizingState = Record<string, number>
 
 export interface TableOptions_ColumnSizing {
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.columnSizing` changes. This overrides the default internal state management, so you will also need to supply `state.columnSizing` from your own managed state.
+   * Called with an updater when committed column sizing state changes. Pair
+   * this with `state.columnSizing` when using external state; external atoms
+   * can own the slice without this callback.
    */
   onColumnSizingChange?: OnChangeFn<ColumnSizingState>
 }
@@ -37,11 +39,12 @@ export interface Table_ColumnSizing {
    */
   getTotalSize: () => number
   /**
-   * Resets column sizing to its initial state. If `defaultState` is `true`, the default state for the table will be used instead of the initialValue provided to the table.
+   * Resets column sizing to `initialState.columnSizing`. Pass `true` to reset
+   * to the feature default of `{}`.
    */
   resetColumnSizing: (defaultState?: boolean) => void
   /**
-   * Sets the column sizing state using an updater function or a value. This will trigger the underlying `onColumnSizingChange` function if one is passed to the table options, otherwise the state will be managed automatically by the table.
+   * Sets committed column sizing state using a value or updater.
    */
   setColumnSizing: (updater: Updater<ColumnSizingState>) => void
 }

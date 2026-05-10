@@ -27,6 +27,31 @@ export type SvelteTable<
   readonly state: Readonly<TSelected>
 }
 
+/**
+ * Creates a Svelte 5 table instance backed by rune-aware TanStack Store atoms.
+ *
+ * The optional selector projects from `table.store`; the selected value is
+ * exposed on `table.state`. The adapter syncs options in `$effect.pre`, so
+ * reactive option getters and external `$state` values are applied before DOM
+ * updates read table APIs such as `getRowModel()`.
+ *
+ * @example
+ * ```svelte
+ * <script lang="ts">
+ *   const table = createTable(
+ *     {
+ *       _features,
+ *       _rowModels: {},
+ *       columns,
+ *       data,
+ *     },
+ *     (state) => ({ pagination: state.pagination }),
+ *   )
+ * </script>
+ *
+ * {table.state.pagination.pageIndex}
+ * ```
+ */
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,

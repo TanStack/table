@@ -35,6 +35,11 @@ export interface RowPinningFeatureConstructors<
   // TableState: TableState_RowPinning
 }
 
+/**
+ * Creates the stock row pinning feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructRowPinningFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -116,6 +121,9 @@ export function constructRowPinningFeature<
 }
 
 /**
- * The Row Pinning feature adds row pinning state and APIs to the table and row objects.
+ * The stock row pinning feature.
+ *
+ * Register this feature to add row pinning state and APIs for deriving top,
+ * center, and bottom row regions.
  */
 export const rowPinningFeature = constructRowPinningFeature()

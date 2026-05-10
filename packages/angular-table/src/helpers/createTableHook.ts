@@ -349,6 +349,25 @@ export type CreateTableHookResult<
   >
 }
 
+/**
+ * Creates app-scoped Angular table helpers with features, row models, and
+ * renderable component maps pre-bound.
+ *
+ * Use this when an app or design system wants typed `injectAppTable`,
+ * pre-bound column helpers, and typed table/cell/header context injection
+ * helpers without repeating the same feature and component generics.
+ *
+ * @example
+ * ```ts
+ * const { injectAppTable, createAppColumnHelper } = createTableHook({
+ *   _features,
+ *   _rowModels: {},
+ *   tableComponents: {},
+ *   cellComponents: {},
+ *   headerComponents: {},
+ * })
+ * ```
+ */
 export function createTableHook<
   TFeatures extends TableFeatures,
   const TTableComponents extends Record<string, RenderableComponent>,

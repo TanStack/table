@@ -19,19 +19,23 @@ export type ColumnResizeDirection = 'ltr' | 'rtl'
 
 export interface TableOptions_ColumnResizing {
   /**
-   * Determines when the columnSizing state is updated. `onChange` updates the state when the user is dragging the resize handle. `onEnd` updates the state when the user releases the resize handle.
+   * Determines when committed `columnSizing` values are updated. `onChange`
+   * commits sizes while the resize handle is dragged; `onEnd` commits when the
+   * resize interaction finishes.
    */
   columnResizeMode?: ColumnResizeMode
   /**
-   * Enables or disables column resizing for the column.
+   * Enables or disables column resizing for the whole table.
    */
   enableColumnResizing?: boolean
   /**
-   * Enables or disables right-to-left support for resizing the column. defaults to 'ltr'.
+   * Sets the resize direction used to calculate drag offsets. Defaults to `ltr`.
    */
   columnResizeDirection?: ColumnResizeDirection
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.columnResizing` changes. This overrides the default internal state management, so you will also need to supply `state.columnResizing` from your own managed state.
+   * Called with an updater when the transient `columnResizing` state changes.
+   * Pair this with `state.columnResizing` when using external state; external
+   * atoms can own the slice without this callback.
    */
   onColumnResizingChange?: OnChangeFn<columnResizingState>
 }
@@ -43,11 +47,15 @@ export type ColumnResizingDefaultOptions = Pick<
 
 export interface Table_ColumnResizing {
   /**
-   * Resets column sizing info to its initial state. If `defaultState` is `true`, the default state for the table will be used instead of the initialValue provided to the table.
+   * Resets transient resize interaction state to `initialState.columnResizing`.
+   * Pass `true` to reset to the feature's default blank resize state instead.
    */
   resetHeaderSizeInfo: (defaultState?: boolean) => void
   /**
-   * Sets the column sizing info state using an updater function or a value. This will trigger the underlying `oncolumnResizingChange` function if one is passed to the table options, otherwise the state will be managed automatically by the table.
+   * Sets the transient resize interaction state using a value or updater.
+   *
+   * The lowercase `c` in this API name matches the current generated v9 table
+   * API for the `columnResizing` state slice.
    */
   setcolumnResizing: (updater: Updater<columnResizingState>) => void
 }

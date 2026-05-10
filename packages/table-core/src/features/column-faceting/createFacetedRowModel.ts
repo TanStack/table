@@ -10,6 +10,11 @@ import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
+/**
+ * Creates a memoized faceted row model factory.
+ *
+ * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ */
 export function createFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,

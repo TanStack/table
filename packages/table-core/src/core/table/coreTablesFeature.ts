@@ -12,6 +12,11 @@ export interface CoreTablesFeatureConstructors<
   // TableOptions: TableOptions_Table<TFeatures, TData>
 }
 
+/**
+ * Creates the stock core tables feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructCoreTablesFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,

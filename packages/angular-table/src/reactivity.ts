@@ -40,6 +40,14 @@ function signalToWritableAtom<T>(
   })
 }
 
+/**
+ * Creates the table-core reactivity bindings used by the Angular adapter.
+ *
+ * Readonly table atoms are backed by Angular `computed` signals and writable
+ * atoms by Angular `signal`. Subscriptions bridge through `toObservable` with
+ * the caller's injector so table APIs can be consumed from Angular `computed`
+ * and `effect` calls.
+ */
 export function angularReactivity(injector: Injector): TableReactivityBindings {
   return {
     createOptionsStore: true,

@@ -8,10 +8,30 @@ import type {
   FilterFn,
 } from './columnFilteringFeature.types'
 
+/**
+ * Returns the default column filters state.
+ *
+ * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ *
+ * @example
+ * ```ts
+ * const initialValue = getDefaultColumnFiltersState()
+ * ```
+ */
 export function getDefaultColumnFiltersState(): ColumnFiltersState {
   return []
 }
 
+/**
+ * Infers filter fn for a column.
+ *
+ * The inference uses the column definition, table options, and sampled row values when needed.
+ *
+ * @example
+ * ```ts
+ * const value = column_getAutoFilterFn(column)
+ * ```
+ */
 export function column_getAutoFilterFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -47,6 +67,16 @@ export function column_getAutoFilterFn<
   return filterFns?.weakEquals
 }
 
+/**
+ * Returns filter fn for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getFilterFn(column)
+ * ```
+ */
 export function column_getFilterFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -72,6 +102,16 @@ export function column_getFilterFn<
   return filterFn
 }
 
+/**
+ * Returns whether a column can use filter.
+ *
+ * This combines column options, table options, and any required accessor or feature state for the capability.
+ *
+ * @example
+ * ```ts
+ * const value = column_getCanFilter(column)
+ * ```
+ */
 export function column_getCanFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -85,6 +125,16 @@ export function column_getCanFilter<
   )
 }
 
+/**
+ * Returns is filtered for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getIsFiltered(column)
+ * ```
+ */
 export function column_getIsFiltered<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -93,6 +143,16 @@ export function column_getIsFiltered<
   return column_getFilterIndex(column) > -1
 }
 
+/**
+ * Returns filter value for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getFilterValue(column)
+ * ```
+ */
 export function column_getFilterValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -103,6 +163,16 @@ export function column_getFilterValue<
     ?.find((d) => d.id === column.id)?.value
 }
 
+/**
+ * Returns filter index for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getFilterIndex(column)
+ * ```
+ */
 export function column_getFilterIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -115,6 +185,16 @@ export function column_getFilterIndex<
   )
 }
 
+/**
+ * Updates filter value for a column.
+ *
+ * This delegates to the owning table state updater so external state, external atoms, and internal state stay synchronized.
+ *
+ * @example
+ * ```ts
+ * column_setFilterValue(column, (old) => old)
+ * ```
+ */
 export function column_setFilterValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -152,6 +232,16 @@ export function column_setFilterValue<
   })
 }
 
+/**
+ * Updates the table's column filters state slice.
+ *
+ * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ *
+ * @example
+ * ```ts
+ * table_setColumnFilters(table, (old) => old)
+ * ```
+ */
 export function table_setColumnFilters<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -180,6 +270,17 @@ export function table_setColumnFilters<
   table.options.onColumnFiltersChange?.(updateFn)
 }
 
+/**
+ * Resets the table's column filters state slice.
+ *
+ * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ *
+ * @example
+ * ```ts
+ * table_resetColumnFilters(table)
+ * table_resetColumnFilters(table, true)
+ * ```
+ */
 export function table_resetColumnFilters<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -190,6 +291,16 @@ export function table_resetColumnFilters<
   )
 }
 
+/**
+ * Returns whether a filter value should be removed from filter state.
+ *
+ * This checks the filter function's `autoRemove` hook and built-in empty-value rules.
+ *
+ * @example
+ * ```ts
+ * const removeFilter = shouldAutoRemoveFilter(filterFn, value, column)
+ * ```
+ */
 export function shouldAutoRemoveFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,

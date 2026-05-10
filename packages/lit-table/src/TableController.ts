@@ -144,6 +144,22 @@ export class TableController<
     ;(this.host = host).addController(this)
   }
 
+  /**
+   * Returns the Lit-backed table instance for the current render pass.
+   *
+   * The first call constructs the table with Lit reactivity bindings and
+   * subscribes the host to table state/options changes. Later calls merge new
+   * options into the same table instance and expose selected state through
+   * `table.state`.
+   *
+   * @example
+   * ```ts
+   * const table = this.tableController.table(
+   *   { _features, _rowModels: {}, columns, data },
+   *   (state) => ({ sorting: state.sorting }),
+   * )
+   * ```
+   */
   public table<TSelected = TableState<TFeatures>>(
     tableOptions: TableOptions<TFeatures, TData>,
     selector?: (state: TableState<TFeatures>) => TSelected,

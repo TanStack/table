@@ -1,0 +1,315 @@
+---
+id: TableOptions_Core
+title: TableOptions_Core
+---
+
+# Interface: TableOptions\_Core\<TFeatures, TData\>
+
+Defined in: [types/TableOptions.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L27)
+
+## Extends
+
+- [`TableOptions_Table`](TableOptions_Table.md)\<`TFeatures`, `TData`\>.[`TableOptions_Cell`](TableOptions_Cell.md).[`TableOptions_Columns`](TableOptions_Columns.md)\<`TFeatures`, `TData`\>.[`TableOptions_Rows`](TableOptions_Rows.md)\<`TFeatures`, `TData`\>
+
+## Type Parameters
+
+### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+## Properties
+
+### \_features
+
+```ts
+readonly _features: TFeatures;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L71)
+
+The features that you want to enable for the table.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`_features`](TableOptions_Table.md#_features)
+
+***
+
+### \_rowModels?
+
+```ts
+readonly optional _rowModels: CreateRowModels_All<TFeatures, TData>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L75)
+
+The row model options that you want to enable for the table.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`_rowModels`](TableOptions_Table.md#_rowmodels)
+
+***
+
+### atoms?
+
+```ts
+readonly optional atoms: Partial<{ [K in string | number | symbol]: Atom<TableState<TFeatures>[K]> }>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:83](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L83)
+
+Optionally, provide your own external writable atoms for individual state slices.
+When an atom is provided for a given slice, it takes precedence over `options.state[key]`
+and the internal base atom for that slice. Feature state update APIs write through
+the corresponding atom updater, so external atoms are the preferred v9 ownership
+model for app-managed table state slices.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`atoms`](TableOptions_Table.md#atoms)
+
+***
+
+### autoResetAll?
+
+```ts
+readonly optional autoResetAll: boolean;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L87)
+
+Set this option to override any of the `autoReset...` feature options.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`autoResetAll`](TableOptions_Table.md#autoresetall)
+
+***
+
+### columns
+
+```ts
+columns: readonly ColumnDef<TFeatures, TData, unknown>[];
+```
+
+Defined in: [core/columns/coreColumnsFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L68)
+
+The array of column defs to use for the table.
+
+#### Inherited from
+
+[`TableOptions_Columns`](TableOptions_Columns.md).[`columns`](TableOptions_Columns.md#columns)
+
+***
+
+### data
+
+```ts
+readonly data: readonly TData[];
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L91)
+
+The data for the table to display. When the `data` option changes reference, the table will reprocess the data.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`data`](TableOptions_Table.md#data)
+
+***
+
+### defaultColumn?
+
+```ts
+optional defaultColumn: Partial<ColumnDef<TFeatures, TData, unknown>>;
+```
+
+Defined in: [core/columns/coreColumnsFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L72)
+
+Default column options to use for all column defs supplied to the table.
+
+#### Inherited from
+
+[`TableOptions_Columns`](TableOptions_Columns.md).[`defaultColumn`](TableOptions_Columns.md#defaultcolumn)
+
+***
+
+### getRowId()?
+
+```ts
+optional getRowId: (originalRow, index, parent?) => string;
+```
+
+Defined in: [core/rows/coreRowsFeature.types.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L90)
+
+This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with `.` using their grandparents' index eg. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity eg. a userId, taskId, database ID field, etc.
+
+#### Parameters
+
+##### originalRow
+
+`TData`
+
+##### index
+
+`number`
+
+##### parent?
+
+[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`string`
+
+#### Example
+
+```ts
+getRowId: row => row.userId
+```
+
+#### Inherited from
+
+[`TableOptions_Rows`](TableOptions_Rows.md).[`getRowId`](TableOptions_Rows.md#getrowid)
+
+***
+
+### getSubRows()?
+
+```ts
+optional getSubRows: (originalRow, index) => readonly TData[] | undefined;
+```
+
+Defined in: [core/rows/coreRowsFeature.types.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L99)
+
+This optional function is used to access the sub rows for any given row. If you are using nested rows, you will need to use this function to return the sub rows object (or undefined) from the row.
+
+#### Parameters
+
+##### originalRow
+
+`TData`
+
+##### index
+
+`number`
+
+#### Returns
+
+readonly `TData`[] \| `undefined`
+
+#### Example
+
+```ts
+getSubRows: row => row.subRows
+```
+
+#### Inherited from
+
+[`TableOptions_Rows`](TableOptions_Rows.md).[`getSubRows`](TableOptions_Rows.md#getsubrows)
+
+***
+
+### initialState?
+
+```ts
+readonly optional initialState: Partial<TableState<TFeatures>>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L98)
+
+Optionally provide starting values for registered table state slices.
+Feature reset APIs use this value by default, and many reset APIs accept
+`true` to reset to that feature's blank/default state instead. Changing this
+object later does not reset table state, so it does not need to be stable.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`initialState`](TableOptions_Table.md#initialstate)
+
+***
+
+### mergeOptions()?
+
+```ts
+readonly optional mergeOptions: (defaultOptions, options) => TableOptions<TFeatures, TData>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L102)
+
+This option is used to optionally implement the merging of table options.
+
+#### Parameters
+
+##### defaultOptions
+
+[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>
+
+##### options
+
+`Partial`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>\>
+
+#### Returns
+
+[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`mergeOptions`](TableOptions_Table.md#mergeoptions)
+
+***
+
+### meta?
+
+```ts
+readonly optional meta: TableMeta<TFeatures, TData>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L109)
+
+You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`meta`](TableOptions_Table.md#meta)
+
+***
+
+### renderFallbackValue?
+
+```ts
+optional renderFallbackValue: any;
+```
+
+Defined in: [core/cells/coreCellsFeature.types.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.types.ts#L67)
+
+Value used when the desired value is not found in the data.
+
+#### Inherited from
+
+[`TableOptions_Cell`](TableOptions_Cell.md).[`renderFallbackValue`](TableOptions_Cell.md#renderfallbackvalue)
+
+***
+
+### state?
+
+```ts
+readonly optional state: Partial<TableState<TFeatures>>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L117)
+
+Optionally provide externally managed values for individual state slices.
+
+Pair each slice with its matching `on[State]Change` callback so table state
+updates can be persisted outside the table. External atoms take precedence
+over this option when both are provided for the same slice.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`state`](TableOptions_Table.md#state)

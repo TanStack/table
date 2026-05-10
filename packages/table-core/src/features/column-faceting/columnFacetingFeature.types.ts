@@ -27,17 +27,17 @@ export interface Table_RowModels_Faceted<
 > {
   /**
    * A function that **computes and returns** a min/max tuple derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
-   * > ⚠️ Requires that you pass a valid `getFacetedMinMaxValues` function to `options.getFacetedMinMaxValues`. A default implementation is provided via the exported `getFacetedMinMaxValues` function.
+   * > Requires that you pass a valid `facetedMinMaxValues` row model factory in `_rowModels`. A default implementation is provided via the exported `createFacetedMinMaxValues` function.
    */
   getFacetedMinMaxValues: () => undefined | [number, number]
   /**
    * Returns the row model with all other column filters applied, excluding its own filter. Useful for displaying faceted result counts.
-   * > ⚠️ Requires that you pass a valid `getFacetedRowModel` function to `options.facetedRowModel`. A default implementation is provided via the exported `getFacetedRowModel` function.
+   * > Requires that you pass a valid `facetedRowModel` row model factory in `_rowModels`. A default implementation is provided via the exported `createFacetedRowModel` function.
    */
   getFacetedRowModel: () => RowModel<TFeatures, TData>
   /**
    * A function that **computes and returns** a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
-   * > ⚠️ Requires that you pass a valid `getFacetedUniqueValues` function to `options.getFacetedUniqueValues`. A default implementation is provided via the exported `getFacetedUniqueValues` function.
+   * > Requires that you pass a valid `facetedUniqueValues` row model factory in `_rowModels`. A default implementation is provided via the exported `createFacetedUniqueValues` function.
    */
   getFacetedUniqueValues: () => Map<any, number>
 }
@@ -47,21 +47,27 @@ export interface CreateRowModel_Faceted<
   TData extends RowData,
 > {
   /**
-   * This function is used to retrieve the faceted min/max values. If using server-side faceting, this function is not required. To use client-side faceting, pass the exported `getFacetedMinMaxValues()` from your adapter to your table or implement your own.
+   * Factory used to retrieve faceted min/max values. If using server-side
+   * faceting, this is not required. To use client-side faceting, pass
+   * `createFacetedMinMaxValues()` or implement your own factory.
    */
   facetedMinMaxValues?: (
     table: Table<TFeatures, TData>,
     columnId: string,
   ) => () => [number, number] | undefined
   /**
-   * This function is used to retrieve the faceted row model. If using server-side faceting, this function is not required. To use client-side faceting, pass the exported `getFacetedRowModel()` from your adapter to your table or implement your own.
+   * Factory used to retrieve the faceted row model. If using server-side
+   * faceting, this is not required. To use client-side faceting, pass
+   * `createFacetedRowModel()` or implement your own factory.
    */
   facetedRowModel?: (
     table: Table<TFeatures, TData>,
     columnId: string,
   ) => () => RowModel<TFeatures, TData>
   /**
-   * This function is used to retrieve the faceted unique values. If using server-side faceting, this function is not required. To use client-side faceting, pass the exported `getFacetedUniqueValues()` from your adapter to your table or implement your own.
+   * Factory used to retrieve faceted unique values. If using server-side
+   * faceting, this is not required. To use client-side faceting, pass
+   * `createFacetedUniqueValues()` or implement your own factory.
    */
   facetedUniqueValues?: (
     table: Table<TFeatures, TData>,

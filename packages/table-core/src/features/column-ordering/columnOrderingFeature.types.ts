@@ -10,7 +10,9 @@ export interface TableState_ColumnOrdering {
 
 export interface TableOptions_ColumnOrdering {
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.columnOrder` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+   * Called with an updater when column order state changes. Pair this with
+   * `state.columnOrder` when using external state; external atoms can own the
+   * slice without this callback.
    */
   onColumnOrderChange?: OnChangeFn<ColumnOrderState>
 }
@@ -43,7 +45,7 @@ export interface Table_ColumnOrdering<
    */
   resetColumnOrder: (defaultState?: boolean) => void
   /**
-   * Sets or updates the `state.columnOrder` state.
+   * Sets column order state using a value or updater.
    */
   setColumnOrder: (updater: Updater<ColumnOrderState>) => void
 }

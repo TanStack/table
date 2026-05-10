@@ -44,6 +44,11 @@ export interface ColumnFilteringFeatureConstructors<
   // TableState: TableState_ColumnFiltering
 }
 
+/**
+ * Creates the stock column filtering feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructColumnFilteringFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -115,7 +120,10 @@ export function constructColumnFilteringFeature<
 }
 
 /**
- * The Column Filtering feature adds column filtering state and APIs to the table, row, and column objects.
- * **Note:** This does not include Global Filtering. The globalFilteringFeature feature has been split out into its own standalone feature.
+ * The stock column filtering feature.
+ *
+ * Register this feature to add column filter state, filter defaults, and
+ * table/row/column APIs for client-side or manual column filtering. Global
+ * filtering is provided by `globalFilteringFeature`.
  */
 export const columnFilteringFeature = constructColumnFilteringFeature()

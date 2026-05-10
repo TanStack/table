@@ -11,6 +11,16 @@ import type {
 
 // State Utils
 
+/**
+ * Returns the default row pinning state.
+ *
+ * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ *
+ * @example
+ * ```ts
+ * const initialValue = getDefaultRowPinningState()
+ * ```
+ */
 export function getDefaultRowPinningState(): RowPinningState {
   return {
     top: [],
@@ -18,6 +28,16 @@ export function getDefaultRowPinningState(): RowPinningState {
   }
 }
 
+/**
+ * Updates the table's row pinning state slice.
+ *
+ * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ *
+ * @example
+ * ```ts
+ * table_setRowPinning(table, (old) => old)
+ * ```
+ */
 export function table_setRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -28,6 +48,17 @@ export function table_setRowPinning<
   table.options.onRowPinningChange?.(updater)
 }
 
+/**
+ * Resets the table's row pinning state slice.
+ *
+ * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ *
+ * @example
+ * ```ts
+ * table_resetRowPinning(table)
+ * table_resetRowPinning(table, true)
+ * ```
+ */
 export function table_resetRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -44,6 +75,16 @@ export function table_resetRowPinning<
 
 // Table Utils
 
+/**
+ * Returns is some rows pinned for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getIsSomeRowsPinned(table)
+ * ```
+ */
 export function table_getIsSomeRowsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -90,6 +131,16 @@ function table_getPinnedRows<
   return filteredRows
 }
 
+/**
+ * Returns top rows for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getTopRows(table)
+ * ```
+ */
 export function table_getTopRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -97,6 +148,16 @@ export function table_getTopRows<
   return table_getPinnedRows(table, 'top')
 }
 
+/**
+ * Returns bottom rows for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getBottomRows(table)
+ * ```
+ */
 export function table_getBottomRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -104,6 +165,16 @@ export function table_getBottomRows<
   return table_getPinnedRows(table, 'bottom')
 }
 
+/**
+ * Returns center rows for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getCenterRows(table)
+ * ```
+ */
 export function table_getCenterRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -118,6 +189,16 @@ export function table_getCenterRows<
 
 // Row Utils
 
+/**
+ * Returns whether a row can use pin.
+ *
+ * This evaluates row data, table options, and feature-specific enablement rules.
+ *
+ * @example
+ * ```ts
+ * const value = row_getCanPin(row)
+ * ```
+ */
 export function row_getCanPin<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -129,6 +210,16 @@ export function row_getCanPin<
   return enableRowPinning ?? true
 }
 
+/**
+ * Returns is pinned for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getIsPinned(row)
+ * ```
+ */
 export function row_getIsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -143,6 +234,16 @@ export function row_getIsPinned<
       : false
 }
 
+/**
+ * Returns pinned index for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getPinnedIndex(row)
+ * ```
+ */
 export function row_getPinnedIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -159,6 +260,17 @@ export function row_getPinnedIndex<
   return visiblePinnedRowIds.indexOf(row.id)
 }
 
+/**
+ * Pins or unpins a row.
+ *
+ * Optional flags let callers include parent rows or leaf rows when updating
+ * the row pinning state.
+ *
+ * @example
+ * ```ts
+ * row_pin(row, 'top')
+ * ```
+ */
 export function row_pin<TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
   position: RowPinningPosition,

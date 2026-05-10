@@ -172,7 +172,9 @@ export interface TableOptions_RowSorting {
    */
   maxMultiSortColCount?: number
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.sorting` changes. This overrides the default internal state management, so you will need to persist the state change either fully or partially outside of the table.
+   * Called with an updater when sorting state changes. Pair this with
+   * `state.sorting` when using external state; external atoms can own the slice
+   * without this callback.
    */
   onSortingChange?: OnChangeFn<SortingState>
   /**
@@ -190,7 +192,7 @@ export interface Table_RowSorting<
    */
   resetSorting: (defaultState?: boolean) => void
   /**
-   * Sets or updates the `state.sorting` state.
+   * Sets sorting state using a value or updater.
    */
   setSorting: (updater: Updater<SortingState>) => void
 }
@@ -214,7 +216,9 @@ export interface CreateRowModel_Sorted<
   TData extends RowData,
 > {
   /**
-   * This function is used to retrieve the sorted row model. If using server-side sorting, this function is not required. To use client-side sorting, pass the exported `getSortedRowModel()` from your adapter to your table or implement your own.
+   * Factory used to retrieve the sorted row model. If using server-side
+   * sorting, this is not required. To use client-side sorting, pass the
+   * exported `createSortedRowModel()` or implement your own factory.
    */
   sortedRowModel?: (
     table: Table<TFeatures, TData>,

@@ -21,6 +21,11 @@ function getRowPrototype<
   return table._rowPrototype
 }
 
+/**
+ * Constructs a row instance from normalized table internals.
+ *
+ * This wires core properties, feature prototype APIs, and instance data used by table rendering and row-model operations.
+ */
 export const constructRow = <
   TFeatures extends TableFeatures,
   TData extends RowData,

@@ -105,6 +105,30 @@ export type ReactTable<
   readonly state: Readonly<TSelected>
 }
 
+/**
+ * Creates a React table instance backed by TanStack Store atoms.
+ *
+ * The optional selector projects from `table.store`; the selected value is
+ * exposed on `table.state` and compared shallowly for React re-renders. Omit
+ * the selector to subscribe to every registered table state slice, or pass a
+ * narrower selector and use `table.Subscribe` lower in the tree for targeted
+ * subscriptions.
+ *
+ * @example
+ * ```tsx
+ * const table = useTable(
+ *   {
+ *     _features,
+ *     _rowModels: {},
+ *     columns,
+ *     data,
+ *   },
+ *   (state) => ({ pagination: state.pagination }),
+ * )
+ *
+ * table.state.pagination
+ * ```
+ */
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,

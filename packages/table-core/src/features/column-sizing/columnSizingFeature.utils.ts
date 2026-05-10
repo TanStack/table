@@ -14,10 +14,30 @@ import type { Header } from '../../types/Header'
 import type { Column_Internal } from '../../types/Column'
 import type { ColumnSizingState } from './columnSizingFeature.types'
 
+/**
+ * Returns the default column sizing state.
+ *
+ * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ *
+ * @example
+ * ```ts
+ * const initialValue = getDefaultColumnSizingState()
+ * ```
+ */
 export function getDefaultColumnSizingState(): ColumnSizingState {
   return {}
 }
 
+/**
+ * Returns the default column sizing column def.
+ *
+ * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ *
+ * @example
+ * ```ts
+ * const initialValue = getDefaultColumnSizingColumnDef()
+ * ```
+ */
 export function getDefaultColumnSizingColumnDef() {
   return {
     size: 150,
@@ -26,6 +46,16 @@ export function getDefaultColumnSizingColumnDef() {
   }
 }
 
+/**
+ * Returns size for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getSize(column)
+ * ```
+ */
 export function column_getSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -43,6 +73,16 @@ export function column_getSize<
   )
 }
 
+/**
+ * Returns start for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getStart(column)
+ * ```
+ */
 export function column_getStart<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -63,6 +103,16 @@ export function column_getStart<
     .reduce((sum: number, c) => sum + column_getSize(c), 0)
 }
 
+/**
+ * Returns after for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getAfter(column)
+ * ```
+ */
 export function column_getAfter<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -85,6 +135,16 @@ export function column_getAfter<
     .reduce((sum: number, c) => sum + column_getSize(c), 0)
 }
 
+/**
+ * Reset Size. for a column.
+ *
+ * This is the static implementation behind the matching column instance API.
+ *
+ * @example
+ * ```ts
+ * const value = column_resetSize(column)
+ * ```
+ */
 export function column_resetSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -95,6 +155,16 @@ export function column_resetSize<
   })
 }
 
+/**
+ * Returns size for a header.
+ *
+ * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ *
+ * @example
+ * ```ts
+ * const value = header_getSize(header)
+ * ```
+ */
 export function header_getSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -115,6 +185,16 @@ export function header_getSize<
   return sum
 }
 
+/**
+ * Returns start for a header.
+ *
+ * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ *
+ * @example
+ * ```ts
+ * const value = header_getStart(header)
+ * ```
+ */
 export function header_getStart<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -134,6 +214,16 @@ export function header_getStart<
 
 // Table APIs
 
+/**
+ * Updates the table's column sizing state slice.
+ *
+ * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ *
+ * @example
+ * ```ts
+ * table_setColumnSizing(table, (old) => old)
+ * ```
+ */
 export function table_setColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -144,6 +234,17 @@ export function table_setColumnSizing<
   table.options.onColumnSizingChange?.(updater)
 }
 
+/**
+ * Resets the table's column sizing state slice.
+ *
+ * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ *
+ * @example
+ * ```ts
+ * table_resetColumnSizing(table)
+ * table_resetColumnSizing(table, true)
+ * ```
+ */
 export function table_resetColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -154,6 +255,16 @@ export function table_resetColumnSizing<
   )
 }
 
+/**
+ * Returns total size for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getTotalSize(table)
+ * ```
+ */
 export function table_getTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -165,6 +276,16 @@ export function table_getTotalSize<
   )
 }
 
+/**
+ * Returns left total size for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getLeftTotalSize(table)
+ * ```
+ */
 export function table_getLeftTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -180,6 +301,16 @@ export function table_getLeftTotalSize<
   )
 }
 
+/**
+ * Returns center total size for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getCenterTotalSize(table)
+ * ```
+ */
 export function table_getCenterTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -195,6 +326,16 @@ export function table_getCenterTotalSize<
   )
 }
 
+/**
+ * Returns right total size for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getRightTotalSize(table)
+ * ```
+ */
 export function table_getRightTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,

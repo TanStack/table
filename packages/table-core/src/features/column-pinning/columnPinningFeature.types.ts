@@ -22,7 +22,9 @@ export interface TableOptions_ColumnPinning {
    */
   enableColumnPinning?: boolean
   /**
-   * If provided, this function will be called with an `updaterFn` when `state.columnPinning` changes. This overrides the default internal state management, so you will also need to supply `state.columnPinning` from your own managed state.
+   * Called with an updater when column pinning state changes. Pair this with
+   * `state.columnPinning` when using external state; external atoms can own the
+   * slice without this callback.
    */
   onColumnPinningChange?: OnChangeFn<ColumnPinningState>
 }
@@ -160,15 +162,17 @@ export interface Table_ColumnPinning<
    */
   resetColumnPinning: (defaultState?: boolean) => void
   /**
-   * Sets or updates the `state.columnPinning` state.
+   * Sets column pinning state using a value or updater.
    */
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   /**
+   * Returns pinned leaf columns for the requested pinning region.
    */
   getPinnedLeafColumns: (
     position: ColumnPinningPosition | 'center',
   ) => Array<Column<TFeatures, TData, unknown>>
   /**
+   * Returns visible pinned leaf columns for the requested pinning region.
    */
   getPinnedVisibleLeafColumns: (
     position: ColumnPinningPosition | 'center',

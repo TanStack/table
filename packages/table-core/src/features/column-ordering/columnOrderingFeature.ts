@@ -31,6 +31,11 @@ export interface ColumnOrderingFeatureConstructors<
   // TableState: TableState_ColumnOrdering
 }
 
+/**
+ * Creates the stock column ordering feature.
+ *
+ * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ */
 export function constructColumnOrderingFeature<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -91,6 +96,9 @@ export function constructColumnOrderingFeature<
 }
 
 /**
- * The Column Ordering feature adds column ordering state and APIs to the table and column objects.
+ * The stock column ordering feature.
+ *
+ * Register this feature to add column order state and APIs for deriving the
+ * ordered leaf column list alongside grouping and pinning.
  */
 export const columnOrderingFeature = constructColumnOrderingFeature()

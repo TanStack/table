@@ -11,6 +11,10 @@ import {
 } from '@angular/core'
 import { FlexRenderComponent } from './flexRenderComponent'
 
+/**
+ * Creates and manages Angular component instances used by flex-rendered table
+ * content.
+ */
 @Injectable()
 export class FlexRenderComponentFactory {
   readonly #viewContainerRef: ViewContainerRef
@@ -46,6 +50,12 @@ export class FlexRenderComponentFactory {
   }
 }
 
+/**
+ * Runtime wrapper around an Angular component rendered by `FlexRenderDirective`.
+ *
+ * It diffs inputs and outputs across table updates so component renderers can
+ * be reused instead of recreated on every cell/header render.
+ */
 export class FlexRenderComponentRef<T> {
   readonly #keyValueDiffersFactory: KeyValueDiffers
   #componentData: FlexRenderComponent<T>

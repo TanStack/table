@@ -5,6 +5,11 @@ import type { Table, Table_Internal } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 
+/**
+ * Creates a memoized faceted unique values helper for faceted filtering.
+ *
+ * The returned function derives facet data from the table row model and relevant filter state so filter UIs can display available values.
+ */
 export function createFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData = any,

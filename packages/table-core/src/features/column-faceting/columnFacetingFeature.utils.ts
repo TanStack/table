@@ -4,6 +4,16 @@ import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Column_Internal } from '../../types/Column'
 
+/**
+ * Returns faceted min max values for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getFacetedMinMaxValues(column)
+ * ```
+ */
 export function column_getFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -18,6 +28,16 @@ export function column_getFacetedMinMaxValues<
   return facetedMinMaxValuesFn()
 }
 
+/**
+ * Returns faceted row model for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getFacetedRowModel(column)
+ * ```
+ */
 export function column_getFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -32,6 +52,16 @@ export function column_getFacetedRowModel<
   return facetedRowModelFn()
 }
 
+/**
+ * Returns faceted unique values for a column.
+ *
+ * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ *
+ * @example
+ * ```ts
+ * const value = column_getFacetedUniqueValues(column)
+ * ```
+ */
 export function column_getFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -46,6 +76,16 @@ export function column_getFacetedUniqueValues<
   return facetedUniqueValuesFn()
 }
 
+/**
+ * Returns global faceted min max values for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getGlobalFacetedMinMaxValues(table)
+ * ```
+ */
 export function table_getGlobalFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -56,6 +96,16 @@ export function table_getGlobalFacetedMinMaxValues<
   return facetedMinMaxValuesFn()
 }
 
+/**
+ * Returns global faceted row model for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getGlobalFacetedRowModel(table)
+ * ```
+ */
 export function table_getGlobalFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -66,6 +116,16 @@ export function table_getGlobalFacetedRowModel<
   return facetedRowModelFn()
 }
 
+/**
+ * Returns global faceted unique values for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getGlobalFacetedUniqueValues(table)
+ * ```
+ */
 export function table_getGlobalFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
