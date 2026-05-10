@@ -16,14 +16,14 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@faker-js/faker": "^10.4.0",
-    "@tailwindcss/vite": "^4.2.4",
+    "@tailwindcss/vite": "^4.3.0",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/react-table": "^9.0.0-alpha.45",
     "date-fns": "^4.1.0",
-    "react": "^19.2.5",
+    "react": "^19.2.6",
     "react-aria-components": "^1.17.0",
-    "react-dom": "^19.2.5",
-    "tailwindcss": "^4.2.4"
+    "react-dom": "^19.2.6",
+    "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
     "@rolldown/plugin-babel": "^0.2.3",
@@ -33,6 +33,6 @@
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.10"
+    "vite": "^8.0.11"
   }
 }

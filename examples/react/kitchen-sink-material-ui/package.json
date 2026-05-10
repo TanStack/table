@@ -17,13 +17,13 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@faker-js/faker": "^10.4.0",
-    "@mui/icons-material": "^9.0.0",
-    "@mui/material": "^9.0.0",
+    "@mui/icons-material": "^9.0.1",
+    "@mui/material": "^9.0.1",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/react-table": "^9.0.0-alpha.45",
     "date-fns": "^4.1.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
   },
   "devDependencies": {
     "@rolldown/plugin-babel": "^0.2.3",
@@ -33,6 +33,6 @@
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.10"
+    "vite": "^8.0.11"
   }
 }

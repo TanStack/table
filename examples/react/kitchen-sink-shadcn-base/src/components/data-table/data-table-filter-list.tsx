@@ -375,7 +375,7 @@ export function DataTableFilterList<
                         }
                       }}
                       numberOfMonths={2}
-                      initialFocus
+                      autoFocus
                     />
                   </PopoverContent>
                 </Popover>
@@ -449,7 +449,7 @@ export function DataTableFilterList<
                       })
                     }
                   }}
-                  initialFocus
+                  autoFocus
                 />
               </PopoverContent>
             </Popover>

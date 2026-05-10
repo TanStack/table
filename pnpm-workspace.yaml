@@ -2,6 +2,15 @@ packages:
   - examples/**/*
   - packages/*
 
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  nx: true
+  unrs-resolver: true
+  vue-demi: true
+
 cleanupUnusedCatalogs: true
 
 linkWorkspacePackages: true
