@@ -1,5 +1,5 @@
 ---
-title: Table State (React) Guide
+title: Table State (Preact) Guide
 ---
 
 ## Examples
@@ -12,9 +12,9 @@ Want to skip to the implementation? Check out these examples:
 - [Basic Subscribe](../examples/basic-subscribe)
 - [With TanStack Query](../examples/with-tanstack-query)
 
-## Table State (React) Guide
+## Table State (Preact) Guide
 
-> **If you boil TanStack Table down to one sentence: TanStack Table is a large state-management coordinator for table states.** 
+> **If you boil TanStack Table down to one sentence: TanStack Table is a large state-management coordinator for table states.**
 
 Understanding this guide is fundamental to understanding how TanStack Table works and how to interact with it for the best results.
 
@@ -22,20 +22,20 @@ Understanding this guide is fundamental to understanding how TanStack Table work
 
 You usually do NOT need to manage table state yourself. If you pass nothing to `initialState`, `atoms`, `state`, or any of the `on[State]Change` table options, TanStack Table will manage its own state internally.
 
-There will be situations where you need to customize how you interact with the internal table state, or even hoist it up to your own scopes. TanStack Table lets you read, subscribe to, or own the state slices that matter to your app. This guide explains how table state works in React, how to read it, and when to use external atoms or external state.
+There will be situations where you need to customize how you interact with the internal table state, or even hoist it up to your own scopes. TanStack Table lets you read, subscribe to, or own the state slices that matter to your app. This guide explains how table state works in Preact, how to read it, and when to use external atoms or external state.
 
 ### State in v9
 
-TanStack Table v9 overhauled state management around TanStack Store. TanStack Store uses the `alien-signals` implementation and supports performant derived state. For TanStack Table, this means the table can derive a full state store from independent state atoms and React can subscribe to only the pieces of table state that a component actually needs.
+TanStack Table v9 overhauled state management around TanStack Store. TanStack Store uses the `alien-signals` implementation and supports performant derived state. For TanStack Table, this means the table can derive a full state store from independent state atoms and Preact can subscribe to only the pieces of table state that a component actually needs.
 
 A table instance has a few state surfaces:
 
 - `table.baseAtoms` are the internal writable atoms created from the resolved initial state.
 - `table.atoms` are readonly derived atoms exposed per registered state slice.
 - `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
-- `table.state` is React-only selected state. It is the value returned from the selector passed as the second argument to `useTable`.
+- `table.state` is Preact-only selected state. It is the value returned from the selector passed as the second argument to `useTable`.
 
-The important change from previous versions is that table state is now atomic. React can subscribe to all selected state, a selected subset of state, or a single atom such as `table.atoms.rowSelection`.
+The Preact adapter mirrors the React adapter. It uses TanStack Store atoms for table state, `useSelector` for reactive Preact updates, and `table.Subscribe` for more targeted subscriptions.
 
 ### Feature-based State
 
@@ -65,14 +65,12 @@ table.atoms.sorting.get()
 // table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-The same feature-based typing applies to built-in features and custom feature-provided state.
-
 ### Accessing Table State
 
 There are two different questions when reading table state:
 
 - Do you only need the current value?
-- Or should this React component re-render when that value changes?
+- Or should this Preact component re-render when that value changes?
 
 Use a direct atom or store read for the current value. Use a selector subscription for reactive rendering.
 
@@ -92,13 +90,13 @@ const tableState = table.store.state
 const pagination = table.store.state.pagination
 ```
 
-These reads are not React subscriptions. Calling `table.atoms.pagination.get()` or `table.store.state.pagination` during render reads the current value, but future changes will not automatically re-render that component unless something else causes a render. If the UI needs to stay reactive to table state changes, use `useTable` state selection, `table.Subscribe`, or even a `useSelector` hook from TanStack Store.
+These reads are not Preact subscriptions. Calling `table.atoms.pagination.get()` or `table.store.state.pagination` during render reads the current value, but future changes will not automatically re-render that component unless something else causes a render. If the UI needs to stay reactive to table state changes, use `useTable` state selection, `table.Subscribe`, or even a `useSelector` hook from TanStack Store.
 
 #### Reading Reactive State with useTable
 
 The second argument to `useTable` is a TanStack Store selector. By default, the selector effectively selects all registered table state, so `table.state` contains the full state and the component re-renders when any selected state changes.
 
-You can pass your own selector to make `table.state` contain only the reactive state values that you want to cause re-renders. The React adapter compares selected values shallowly. The default selector selects all registered table state.
+You can pass your own selector to make `table.state` contain only the reactive state values that you want to cause re-renders. The Preact adapter compares selected values shallowly. The default selector selects all registered table state.
 
 ```tsx
 const table = useTable(
@@ -136,7 +134,7 @@ With this pattern, the parent component will not re-render for table state chang
 
 #### Optimizing Re-renders with Selectors and table.Subscribe
 
-Use `table.Subscribe` when you want table-state re-renders to happen at a specific place in the React tree. This is useful for large or expensive tables, but it is usually something to reach for after the default `useTable` selector becomes a visible performance issue.
+Use `table.Subscribe` when you want table-state re-renders to happen at a specific place in the Preact tree. This is useful for large or expensive tables, but it is usually something to reach for after the default `useTable` selector becomes a visible performance issue.
 
 Without a `source` prop, `table.Subscribe` subscribes to `table.store` and requires a selector. With a `source` prop, it can subscribe directly to one atom or store, such as `table.atoms.rowSelection`.
 
@@ -190,13 +188,9 @@ You can also subscribe directly to a single atom and select one value from it:
 </table.Subscribe>
 ```
 
-Advanced subscription patterns require understanding which table APIs depend on which state slices. For example, a row model may depend on filtering, sorting, and pagination, while one row selection checkbox may only need one row's selection value. Start with the default selector, then optimize with selectors and `table.Subscribe` where render cost matters.
-
 ### Setting Table State
 
 You should almost never need to set table state directly. TanStack Table features expose dedicated APIs for interacting with their state, and those APIs are the safest way to make changes because they preserve the feature's own rules and related updates.
-
-For example, use pagination APIs instead of mutating pagination state yourself:
 
 ```tsx
 table.nextPage()
@@ -266,22 +260,20 @@ Slice reset APIs like `resetPagination()` update through that feature's state up
 
 ### Controlled State
 
-If you need easy access to table state in other parts of your application, you can control individual state slices. In v9, external atoms are the recommended way to do this because they preserve the atomic state model and let React subscribe to exactly the slices it needs.
+If you need easy access to table state in other parts of your application, you can control individual state slices. In v9, external atoms are the recommended way to do this because they preserve the atomic state model and let Preact subscribe to exactly the slices it needs.
 
 #### External Atoms
 
 Use external atoms when the app should own one or more table state slices. Create stable writable atoms with `useCreateAtom` from TanStack Store, pass them to the table's `atoms` option, and subscribe to them with `useSelector` anywhere else in your app.
 
-This is especially useful for server-side data fetching. Pagination, sorting, or filters often belong in a query key, and external atoms let the app and the table share those values without lifting the entire table state through React state.
-
 ```tsx
-import { useCreateAtom, useSelector } from '@tanstack/react-store'
+import { useCreateAtom, useSelector } from '@tanstack/preact-store'
 import {
   rowPaginationFeature,
   tableFeatures,
   useTable,
   type PaginationState,
-} from '@tanstack/react-table'
+} from '@tanstack/preact-table'
 
 const _features = tableFeatures({
   rowPaginationFeature,
@@ -316,17 +308,15 @@ function App() {
 }
 ```
 
-When using the `atoms` option for a slice, you do not need to add the matching `on[State]Change` option. For example, if you pass `atoms.pagination`, table pagination APIs update that atom directly.
+When using the `atoms` option for a slice, you do not need to add the matching `on[State]Change` option.
 
 #### External State
 
-The classic `state` plus `on[State]Change` pattern is still supported. This can be convenient for simple integrations or when migrating v8 code, but it is less fine-grained than external atoms. React state updates re-render the owner component, and that render cannot be avoided by the `useTable` selector in the same way atom subscriptions can be placed lower in the tree.
-
-To control a slice with external state, pass both the state value and the matching callback:
+The classic `state` plus `on[State]Change` pattern is still supported. This can be convenient for simple integrations or when migrating v8 code, but it is less fine-grained than external atoms.
 
 ```tsx
-const [sorting, setSorting] = React.useState<SortingState>([])
-const [pagination, setPagination] = React.useState<PaginationState>({
+const [sorting, setSorting] = useState<SortingState>([])
+const [pagination, setPagination] = useState<PaginationState>({
   pageIndex: 0,
   pageSize: 10,
 })
@@ -348,64 +338,29 @@ const table = useTable({
 })
 ```
 
-The v8-style `onStateChange` option is no longer part of the v9 `useTable` state model. It remains available through `useLegacyTable` for migration, but v9 encourages keeping table state slices atomic and separated for performance.
+The v8-style `onStateChange` option is no longer part of the v9 `useTable` state model. v9 encourages keeping table state slices atomic and separated for performance.
 
 ##### On State Change Callbacks
 
-The `on[State]Change` callbacks are useful when you are controlling a matching slice through the `state` option. They work like React state setters: an updater can be a raw value or a function that receives the previous value and returns the next value.
+The `on[State]Change` callbacks are useful when you are controlling a matching slice through the `state` option. They work like Preact state setters: an updater can be a raw value or a function that receives the previous value and returns the next value.
 
 If you provide an `on[State]Change` callback, also provide the corresponding value in `state`. For example, `onSortingChange` should be paired with `state.sorting`.
 
 ```tsx
-const [sorting, setSorting] = React.useState<SortingState>([])
+onPaginationChange: (updater) => {
+  setPagination((old) => {
+    const next = updater instanceof Function ? updater(old) : updater
 
-const table = useTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
-  columns,
-  data,
-  state: {
-    sorting,
-  },
-  onSortingChange: setSorting,
-})
-```
+    // side effects or validation can happen here
 
-If you need to add logic inside a callback, check whether the incoming updater is a function or a value:
-
-```tsx
-const [pagination, setPagination] = React.useState<PaginationState>({
-  pageIndex: 0,
-  pageSize: 10,
-})
-
-const table = useTable({
-  _features,
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
-  columns,
-  data,
-  state: {
-    pagination,
-  },
-  onPaginationChange: (updater) => {
-    setPagination((old) => {
-      const next = updater instanceof Function ? updater(old) : updater
-
-      // side effects or validation can happen here
-
-      return next
-    })
-  },
-})
+    return next
+  })
+}
 ```
 
 ### State Types
 
-Most complex states in TanStack Table have their own TypeScript types that you can import and use. This is useful for React state, external atoms, and helper functions that work with table state.
+Most complex states in TanStack Table have their own TypeScript types that you can import and use.
 
 ```tsx
 import {
@@ -414,9 +369,9 @@ import {
   type RowSelectionState,
   type SortingState,
   type TableState,
-} from '@tanstack/react-table'
+} from '@tanstack/preact-table'
 
-const [sorting, setSorting] = React.useState<SortingState>([
+const [sorting, setSorting] = useState<SortingState>([
   {
     id: 'age',
     desc: true,
@@ -427,12 +382,5 @@ const [sorting, setSorting] = React.useState<SortingState>([
 `TableState<typeof _features>` is inferred from the features registered on that table:
 
 ```tsx
-const _features = tableFeatures({
-  rowPaginationFeature,
-  rowSortingFeature,
-})
-
 type MyTableState = TableState<typeof _features>
 ```
-
-Prefer feature-specific state types like `SortingState`, `PaginationState`, or `RowSelectionState` when you are creating local state or external atoms for one slice.

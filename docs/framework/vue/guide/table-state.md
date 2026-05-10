@@ -2,247 +2,346 @@
 title: Table State (Vue) Guide
 ---
 
+## Examples
+
+Want to skip to the implementation? Check out these examples:
+
+- [Basic useTable](../examples/basic-use-table)
+- [Basic External Atoms](../examples/basic-external-atoms)
+- [Basic External State](../examples/basic-external-state)
+- [With TanStack Query](../examples/with-tanstack-query)
+
 ## Table State (Vue) Guide
 
-TanStack Table has a simple underlying internal state management system to store and manage the state of the table. It also lets you selectively pull out any state that you need to manage in your own state management. This guide will walk you through the different ways in which you can interact with and manage the state of the table.
+> **If you boil TanStack Table down to one sentence: TanStack Table is a large state-management coordinator for table states.**
+
+Understanding this guide is fundamental to understanding how TanStack Table works and how to interact with it for the best results.
+
+### Do you need to Manage External State?
+
+You usually do NOT need to manage table state yourself. If you pass nothing to `initialState`, `atoms`, `state`, or any of the `on[State]Change` table options, TanStack Table will manage its own state internally.
+
+There will be situations where you need to customize how you interact with the internal table state, or even hoist it up to your own scopes. TanStack Table lets you read, subscribe to, or own the state slices that matter to your app. This guide explains how table state works in Vue, how to read it, and when to use external atoms or external state.
+
+### State in v9
+
+TanStack Table v9 overhauled state management around TanStack Store. TanStack Store uses the `alien-signals` implementation and supports performant derived state. For Vue, the table adapter supplies custom reactivity so table state atoms are backed by Vue refs and computed values.
+
+A table instance has a few state surfaces:
+
+- `table.baseAtoms` are the internal writable atoms created from the resolved initial state.
+- `table.atoms` are readonly derived atoms exposed per registered state slice.
+- `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
+- `table.state` is Vue-only selected state. It is the value returned from the selector passed as the second argument to `useTable`.
+
+The Vue adapter provides `vueReactivity()` to the table's `coreReativityFeature`. Core readonly atoms are Vue `computed` values, writable atoms are `shallowRef` values, and subscriptions are backed by `watch(..., { flush: 'sync' })`. `useTable` also watches reactive option dependencies and controlled state values so it can call `table.setOptions` when Vue state changes.
+
+### Feature-based State
+
+State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+
+```ts
+const _features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+})
+
+const table = useTable({
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(sortFns),
+  },
+  columns,
+  data,
+})
+
+table.atoms.pagination.get()
+table.atoms.sorting.get()
+
+// table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
+```
+
+If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
-You do not need to set up anything special in order for the table state to work. If you pass nothing into either `state`, `initialState`, or any of the `on[State]Change` table options, the table will manage its own state internally. You can access any part of this internal state by using the `table.store.state` table instance API.
+There are two different questions when reading table state:
+
+- Do you only need the current value?
+- Or should Vue render or computed work update when that value changes?
+
+Use a direct atom or store read for the current value. Use selected state, `useSelector`, or `table.Subscribe` when you want Vue to track the selected value.
+
+#### Reading State Without Subscribing
+
+The simplest and most performant way to read a current state value is to read the matching atom:
 
 ```ts
+const pagination = table.atoms.pagination.get()
+const sorting = table.atoms.sorting.get()
+```
+
+You can also read the current flat store snapshot:
+
+```ts
+const tableState = table.store.state
+const pagination = table.store.state.pagination
+```
+
+These reads are current-value reads. They only participate in Vue dependency tracking when they are called in a Vue reactive context that tracks those reads. If the UI needs to stay reactive to table state changes, use `table.state`, `table.Subscribe`, or even a `useSelector` hook from TanStack Store.
+
+#### Reading Reactive State with useTable
+
+The second argument to `useTable` is a TanStack Store selector. The selected value is exposed as `table.state`. The default selector selects all registered table state.
+
+```ts
+const table = useTable(
+  {
+    _features,
+    _rowModels: {
+      paginatedRowModel: createPaginatedRowModel(),
+    },
+    columns,
+    data,
+  },
+  (state) => ({
+    pagination: state.pagination,
+  }),
+)
+
+table.state.pagination
+```
+
+Vue's `data` option can also be a `ref` or `computed`. The adapter unwraps reactive option values and syncs the table when those values change.
+
+```ts
+const data = ref(makeData(100))
+
 const table = useTable({
+  _features,
+  _rowModels: {},
   columns,
-  data: dataRef, // Reactive data support
-  //...
+  data,
 })
 
-console.log(table.store.state) //access the entire internal state
-console.log(table.store.state.rowSelection) //access just the row selection state
+data.value = makeData(200)
 ```
 
-### Using Reactive Data
+#### Fine-grained Updates with table.Subscribe
 
-> **New in v8.20.0**
+Use `table.Subscribe` in render functions or JSX when you want a specific part of the Vue tree to subscribe to a selected table state value.
 
-The `useVueTable` hook now supports reactive data. This means you can pass a Vue `ref` or `computed` containing your data to the `data`-option. The table will automatically react to changes in the data.
+Without a `source` prop, `table.Subscribe` subscribes to `table.store` and requires a selector. With a `source` prop, it can subscribe directly to one atom or store.
+
+```tsx
+<table.Subscribe
+  selector={(state) => ({
+    columnFilters: state.columnFilters,
+    globalFilter: state.globalFilter,
+    pagination: state.pagination,
+  })}
+>
+  {() => (
+    <tbody>
+      {table.getRowModel().rows.map((row) => (
+        <tr key={row.id}>...</tr>
+      ))}
+    </tbody>
+  )}
+</table.Subscribe>
+```
+
+### Setting Table State
+
+You should almost never need to set table state directly. TanStack Table features expose dedicated APIs for interacting with their state, and those APIs are the safest way to make changes.
 
 ```ts
-const columns = [
-  { accessor: 'id', Header: 'ID' },
-  { accessor: 'name', Header: 'Name' }
-]
-
-const dataRef = ref([
-  { id: 1, name: 'John' },
-  { id: 2, name: 'Jane' }
-])
-
-const table = useVueTable({
-  columns,
-  data: dataRef, // Pass the reactive data ref
-})
-
-// Later, updating dataRef will automatically update the table
-dataRef.value = [
-  { id: 1, name: 'John' },
-  { id: 2, name: 'Jane' },
-  { id: 3, name: 'Doe' }
-]
+table.nextPage()
+table.previousPage()
+table.setPageIndex(0)
+table.setPageSize(25)
 ```
 
-> ⚠️ `shallowRef` is used under the hood for performance reasons, meaning that the data is not deeply reactive, only the `.value` is. To update the data you have to mutate the data directly.
+Use APIs like `table.setSorting(...)`, `table.setColumnFilters(...)`, `column.toggleVisibility()`, or `row.toggleSelected()` instead of manually editing the underlying state object.
+
+If you only care about setting starting values, use `initialState`. If you want to reset a state slice back to its initial value, use that feature's reset API.
+
+If you really do need to write a state slice directly, the low-level write surface for internally owned state is the matching base atom:
 
 ```ts
-const dataRef = ref([
-  { id: 1, name: 'John' },
-  { id: 2, name: 'Jane' }
-])
-
-// This will NOT update the table ❌
-dataRef.value.push({ id: 4, name: 'John' })
-
-// This will update the table ✅
-dataRef.value = [
-  ...dataRef.value,
-  { id: 4, name: 'John' }
-]
+table.baseAtoms.pagination.set((old) => ({
+  ...old,
+  pageIndex: 0,
+}))
 ```
+
+Direct base atom writes should be rare. If a slice is owned by an external atom passed through `atoms`, write to that external atom instead; `table.atoms.pagination` will read from the external atom, not the internal base atom.
 
 ### Custom Initial State
 
-If all you need to do for certain states is customize their initial default values, you still do not need to manage any of the state yourself. You can simply set values in the `initialState` option of the table instance.
+If you only need to customize the starting value for some table state, use `initialState`. You still do not need to manage that state yourself.
 
-```jsx
+`initialState` only applies to registered state slices. It is used to create the table's initial state and is also used by reset APIs such as `table.resetSorting()` or `table.resetPagination()`. Changing the `initialState` object later does not reset table state.
+
+```ts
 const table = useTable({
+  _features,
+  _rowModels: {
+    sortedRowModel: createSortedRowModel(sortFns),
+    paginatedRowModel: createPaginatedRowModel(),
+  },
   columns,
   data,
   initialState: {
-    columnOrder: ['age', 'firstName', 'lastName'], //customize the initial column order
-    columnVisibility: {
-      id: false //hide the id column by default
-    },
-    expanded: true, //expand all rows by default
     sorting: [
       {
         id: 'age',
-        desc: true //sort by age in descending order by default
-      }
-    ]
+        desc: true,
+      },
+    ],
+    pagination: {
+      pageIndex: 0,
+      pageSize: 25,
+    },
   },
-  //...
 })
 ```
 
-> **Note**: Only specify each particular state in either `initialState` or `state`, but not both. If you pass in a particular state value to both `initialState` and `state`, the initialized state in `state` will take overwrite any corresponding value in `initialState`.
+> **Note:** Do not provide the same state slice in multiple ownership places unless you intentionally want one to win. For a slice like `pagination`, prefer exactly one of `initialState.pagination`, `atoms.pagination`, or `state.pagination` as the source of truth. External atoms take precedence over external `state`; external `state` syncs into the table's internal base atom.
+
+#### Resetting to Initial State
+
+Feature reset APIs reset to `table.initialState` by default. Many reset APIs also accept `true` to reset to that feature's blank/default state instead:
+
+```ts
+table.resetSorting()
+table.resetPagination()
+table.resetPagination(true)
+```
+
+Slice reset APIs like `resetPagination()` update through that feature's state updater and can update an externally owned atom. The core `table.reset()` API resets the internal base atoms, so do not use it as the primary way to reset state that is owned by external atoms.
 
 ### Controlled State
 
-If you need easy access to the table state in other areas of your application, TanStack Table makes it easy to control and manage any or all of the table state in your own state management system. You can do this by passing in your own state and state management functions to the `state` and `on[State]Change` table options.
+If you need easy access to table state in other parts of your application, you can control individual state slices. In v9, external atoms are the recommended way to do this when you want atomic ownership and fine-grained Vue updates.
 
-#### Individual Controlled State
+#### External Atoms
 
-You can control just the state that you need easy access to. You do NOT have to control all of the table state if you do not need to. It is recommended to only control the state that you need on a case-by-case basis.
-
-In order to control a particular state, you need to both pass in the corresponding `state` value and the `on[State]Change` function to the table instance.
-
-Let's take filtering, sorting, and pagination as an example in a "manual" server-side data fetching scenario. You can store the filtering, sorting, and pagination state in your own state management, but leave out any other state like column order, column visibility, etc. if your API does not care about those values.
+Use external atoms when the app should own one or more table state slices. Create stable writable atoms with `createAtom`, pass them to `atoms`, and subscribe to them with `useSelector`.
 
 ```ts
-const columnFilters = ref([]) //no default filters
-const sorting = ref([{
-  id: 'age',
-  desc: true, //sort by age in descending order by default
-}])
-const pagination = ref({ pageIndex: 0, pageSize: 15 }
+import { createAtom, useSelector } from '@tanstack/vue-store'
+import {
+  rowPaginationFeature,
+  tableFeatures,
+  useTable,
+  type PaginationState,
+} from '@tanstack/vue-table'
 
-//Use our controlled state values to fetch data
-const tableQuery = useQuery({
-  queryKey: ['users', columnFilters, sorting, pagination],
-  queryFn: () => fetchUsers(columnFilters, sorting, pagination),
-  //...
+const _features = tableFeatures({
+  rowPaginationFeature,
+})
+
+const paginationAtom = createAtom<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+
+const pagination = useSelector(paginationAtom)
+
+const table = useTable({
+  _features,
+  _rowModels: {},
+  columns,
+  data: tableData,
+  rowCount,
+  atoms: {
+    pagination: paginationAtom,
+  },
+  manualPagination: true,
+})
+
+// pagination.value is reactive, and table pagination APIs update paginationAtom
+```
+
+When using the `atoms` option for a slice, you do not need to add the matching `on[State]Change` option.
+
+#### External State
+
+The classic `state` plus `on[State]Change` pattern is still supported. This can be convenient for simple integrations or when migrating v8 code, but it is less atomic than external atoms.
+
+```ts
+const sorting = ref<SortingState>([])
+const pagination = ref<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
 })
 
 const table = useTable({
+  _features,
+  _rowModels: {
+    sortedRowModel: createSortedRowModel(sortFns),
+    paginatedRowModel: createPaginatedRowModel(),
+  },
   columns,
-  data: tableQuery.data,
-  //...
+  data,
   state: {
-    get columnFilters() {
-      return columnFilters.value
-    },
     get sorting() {
       return sorting.value
     },
     get pagination() {
       return pagination.value
-    }
-  },
-  onColumnFiltersChange: updater => {
-    columnFilters.value =
-      updater instanceof Function
-        ? updater(columnFilters.value)
-        : updater
-  },
-  onSortingChange: updater => {
-    sorting.value =
-      updater instanceof Function
-        ? updater(sorting.value)
-        : updater
-  },
-  onPaginationChange: updater => {
-    pagination.value =
-      updater instanceof Function
-        ? updater(pagination.value)
-        : updater
-  },
-})
-//...
-```
-
-#### Fully Controlled State
-
-Alternatively, you can control the entire table state with the `onStateChange` table option. It will hoist out the entire table state into your own state management system. Be careful with this approach, as you might find that raising some frequently changing state values up a react tree, like `columnSizingInfo` state`, might cause bad performance issues.
-
-A couple of more tricks may be needed to make this work. If you use the `onStateChange` table option, the initial values of the `state` must be populated with all of the relevant state values for all of the features that you want to use. You can either manually type out all of the initial state values, or use the `table.setOptions` API in a special way as shown below.
-
-```jsx
-//create a table instance with default state values
-const table = useTable({
-  get columns() {
-    return columns.value
-  },
-  data,
-  //... Note: `state` values are NOT passed in yet
-})
-
-const state = ref({
-  ...table.initialState,
-  pagination: {
-    pageIndex: 0,
-    pageSize: 15
-  }
-})
-const setState = updater => {
-  state.value = updater instanceof Function ? updater(state.value) : updater
-}
-
-//Use the table.setOptions API to merge our fully controlled state onto the table instance
-table.setOptions(prev => ({
-  ...prev, //preserve any other options that we have set up above
-  get state() {
-    return state.value
-  },
-  onStateChange: setState //any state changes will be pushed up to our own state management
-}))
-```
-
-### On State Change Callbacks
-
-So far, we have seen the `on[State]Change` and `onStateChange` table options work to "hoist" the table state changes into our own state management. However, there are a few things about these using these options that you should be aware of.
-
-#### 1. **State Change Callbacks MUST have their corresponding state value in the `state` option**.
-
-Specifying an `on[State]Change` callback tells the table instance that this will be a controlled state. If you do not specify the corresponding `state` value, that state will be "frozen" with its initial value.
-
-```jsx
-const sorting = ref([])
-const setSorting = updater => {
-  sorting.value = updater instanceof Function ? updater(sorting.value) : updater
-}
-//...
-const table = useTable({
-  columns,
-  data,
-  //...
-  state: {
-    get sorting() {
-      return sorting //required because we are using `onSortingChange`
     },
   },
-  onSortingChange: setSorting, //makes the `state.sorting` controlled
+  onSortingChange: (updater) => {
+    sorting.value = updater instanceof Function ? updater(sorting.value) : updater
+  },
+  onPaginationChange: (updater) => {
+    pagination.value =
+      updater instanceof Function ? updater(pagination.value) : updater
+  },
 })
 ```
 
-#### 2. **Updaters can either be raw values or callback functions**.
+The v8-style `onStateChange` option is no longer part of the v9 `useTable` state model. v9 encourages keeping table state slices atomic and separated for performance.
 
-The `on[State]Change` and `onStateChange` callbacks work exactly like the `setState` functions in React. The updater values can either be a new state value or a callback function that takes the previous state value and returns the new state value.
+##### On State Change Callbacks
 
-What implications does this have? It means that if you want to add in some extra logic in any of the `on[State]Change` callbacks, you can do so, but you need to check whether or not the new incoming updater value is a function or value.
+The `on[State]Change` callbacks are useful when you are controlling a matching slice through the `state` option. They receive either a raw value or an updater function.
 
-This is why we have the `updater instanceof Function` check in the `setState` functions above. This check allows us to handle both raw values and callback functions in the same function.
+If you provide an `on[State]Change` callback, also provide the corresponding value in `state`. For example, `onSortingChange` should be paired with `state.sorting`.
+
+```ts
+onPaginationChange: (updater) => {
+  pagination.value =
+    updater instanceof Function ? updater(pagination.value) : updater
+}
+```
 
 ### State Types
 
-All complex states in TanStack Table have their own TypeScript types that you can import and use. This can be handy for ensuring that you are using the correct data structures and properties for the state values that you are controlling.
+Most complex states in TanStack Table have their own TypeScript types that you can import and use.
 
-```tsx
-import { useTable, type SortingState } from '@tanstack/vue-table'
-//...
-const sorting = ref<SortingState[]>([
+```ts
+import {
+  useTable,
+  type PaginationState,
+  type RowSelectionState,
+  type SortingState,
+  type TableState,
+} from '@tanstack/vue-table'
+
+const sorting = ref<SortingState>([
   {
-    id: 'age', //you should get autocomplete for the `id` and `desc` properties
+    id: 'age',
     desc: true,
-  }
+  },
 ])
+```
+
+`TableState<typeof _features>` is inferred from the features registered on that table:
+
+```ts
+type MyTableState = TableState<typeof _features>
 ```

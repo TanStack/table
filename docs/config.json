@@ -198,6 +198,15 @@
           ]
         },
         {
+          "label": "preact",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/preact/guide/table-state"
+            }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             {
@@ -782,15 +791,6 @@
             { "label": "LegacyHeader", "to": "framework/react/reference/legacy/type-aliases/LegacyHeader" },
             { "label": "LegacyHeaderGroup", "to": "framework/react/reference/legacy/type-aliases/LegacyHeaderGroup" }
           ]
-        }
-      ]
-    },
-    {
-      "label": "Enterprise",
-      "children": [
-        {
-          "label": "AG Grid",
-          "to": "enterprise/ag-grid"
         }
       ]
     },
