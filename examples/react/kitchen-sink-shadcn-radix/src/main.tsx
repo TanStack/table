@@ -29,6 +29,7 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
+  createColumnHelper,
   createCoreRowModel,
   createExpandedRowModel,
   createFacetedRowModel,
@@ -51,7 +52,6 @@ import type { Person } from '@/lib/make-data'
 import type {
   CellData,
   Column,
-  ColumnDef,
   ColumnPinningState,
   ColumnSizingState,
   ExpandedState,
@@ -122,6 +122,7 @@ const _features = tableFeatures({
   globalFilteringFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
 /**
  * CSS for left/right pinned columns. Verbatim port of the helper from
  * `examples/react/column-pinning-sticky/src/main.tsx` so a pinned column gets
@@ -173,218 +174,210 @@ function App() {
   const [grouping, setGrouping] = React.useState<GroupingState>([])
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            checked={
-              table.getIsAllPageRowsSelected() ||
-              (table.getIsSomePageRowsSelected() && 'indeterminate')
-            }
-            onCheckedChange={(value) =>
-              table.toggleAllPageRowsSelected(!!value)
-            }
-            aria-label="Select all"
-            className="translate-y-0.5"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Select row"
-            className="translate-y-0.5"
-          />
-        ),
-        maxSize: 40,
-        enableSorting: false,
-        enableHiding: false,
-        enableResizing: false,
-      },
-      {
-        id: 'firstName',
-        accessorKey: 'firstName',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="First Name" />
-        ),
-        cell: (info) => String(info.getValue()),
-        meta: {
-          label: 'First Name',
-          variant: 'text',
-        },
-      },
-      {
-        id: 'lastName',
-        accessorFn: (row) => row.lastName,
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Last Name" />
-        ),
-        cell: (info) => String(info.getValue()),
-        meta: {
-          label: 'Last Name',
-          variant: 'text',
-        },
-      },
-      {
-        id: 'age',
-        accessorKey: 'age',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Age" />
-        ),
-        cell: (info) => <span>{String(info.getValue())}</span>,
-        aggregationFn: 'mean',
-        aggregatedCell: ({ getValue }) => (
-          <span className="text-muted-foreground">
-            Avg: {Math.round(Number(getValue()) * 10) / 10}
-          </span>
-        ),
-        meta: {
-          label: 'Age',
-          variant: 'number',
-        },
-      },
-      {
-        id: 'email',
-        accessorKey: 'email',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Email" />
-        ),
-        cell: (info) => info.cell.getValue<string>(),
-        meta: {
-          label: 'Email',
-          variant: 'text',
-        },
-      },
-      {
-        id: 'status',
-        accessorKey: 'status',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Status" />
-        ),
-        cell: (info) => {
-          const status = info.getValue<Person['status'] | undefined>()
-          // Group/aggregated rows can pass undefined here — bail out cleanly.
-          if (!status) return null
-          const icons: Record<Person['status'], React.ReactNode> = {
-            active: <CheckCircle />,
-            inactive: <XCircle />,
-            pending: <Clock />,
-          }
-
-          return (
-            <Badge
-              variant="outline"
-              className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0 rounded-full"
-            >
-              {icons[status]}
-              <span className="truncate">{toSentenceCase(status)}</span>
-            </Badge>
-          )
-        },
-        // Enum column has no useful aggregation; render nothing on group rows.
-        aggregatedCell: () => null,
-        meta: {
-          label: 'Status',
-          variant: 'select',
-          options: statuses.map((status) => ({
-            label: toSentenceCase(status),
-            value: status,
-          })),
-        },
-      },
-      {
-        id: 'department',
-        accessorKey: 'department',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Department" />
-        ),
-        cell: (info) => {
-          const department = info.getValue<Person['department'] | undefined>()
-          // Group/aggregated rows can pass undefined here — bail out cleanly.
-          if (!department) return null
-          const icons: Record<Person['department'], React.ReactNode> = {
-            engineering: <Code />,
-            marketing: <Megaphone />,
-            sales: <ShoppingCart />,
-            hr: <Users />,
-            finance: <CreditCard />,
-          }
-
-          return (
-            <Badge
-              variant="outline"
-              className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0 rounded-full"
-            >
-              {icons[department]}
-              <span className="truncate">{toSentenceCase(department)}</span>
-            </Badge>
-          )
-        },
-        // Enum column has no useful aggregation; render nothing on group rows.
-        aggregatedCell: () => null,
-        meta: {
-          label: 'Department',
-          variant: 'multi-select',
-          options: departments.map((department) => ({
-            label: toSentenceCase(department),
-            value: department,
-          })),
-        },
-      },
-      {
-        id: 'joinDate',
-        accessorKey: 'joinDate',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Join Date" />
-        ),
-        cell: (info) => formatDate(info.getValue<string>()),
-        aggregationFn: 'min',
-        aggregatedCell: ({ getValue }) => {
-          const earliest = getValue<string>()
-          return (
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'select',
+          header: ({ table }) => (
+            <Checkbox
+              checked={
+                table.getIsAllPageRowsSelected() ||
+                (table.getIsSomePageRowsSelected() && 'indeterminate')
+              }
+              onCheckedChange={(value) =>
+                table.toggleAllPageRowsSelected(!!value)
+              }
+              aria-label="Select all"
+              className="translate-y-0.5"
+            />
+          ),
+          cell: ({ row }) => (
+            <Checkbox
+              checked={row.getIsSelected()}
+              onCheckedChange={(value) => row.toggleSelected(!!value)}
+              aria-label="Select row"
+              className="translate-y-0.5"
+            />
+          ),
+          maxSize: 40,
+          enableSorting: false,
+          enableHiding: false,
+          enableResizing: false,
+        }),
+        columnHelper.accessor('firstName', {
+          id: 'firstName',
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="First Name" />
+          ),
+          cell: (info) => String(info.getValue()),
+          meta: {
+            label: 'First Name',
+            variant: 'text',
+          },
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Last Name" />
+          ),
+          cell: (info) => String(info.getValue()),
+          meta: {
+            label: 'Last Name',
+            variant: 'text',
+          },
+        }),
+        columnHelper.accessor('age', {
+          id: 'age',
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Age" />
+          ),
+          cell: (info) => <span>{String(info.getValue())}</span>,
+          aggregationFn: 'mean',
+          aggregatedCell: ({ getValue }) => (
             <span className="text-muted-foreground">
-              Earliest: {earliest ? formatDate(earliest) : '—'}
+              Avg: {Math.round(Number(getValue()) * 10) / 10}
             </span>
-          )
-        },
-        meta: {
-          label: 'Join Date',
-          variant: 'date',
-        },
-      },
-      {
-        id: 'actions',
-        enableHiding: false,
-        cell: ({ row }) => {
-          const person = row.original
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem
-                  onClick={() => navigator.clipboard.writeText(person.id)}
-                >
-                  Copy ID
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>View details</DropdownMenuItem>
-                <DropdownMenuItem>View profile</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )
-        },
-        maxSize: 30,
-        enableResizing: false,
-      },
-    ],
+          ),
+          meta: {
+            label: 'Age',
+            variant: 'number',
+          },
+        }),
+        columnHelper.accessor('email', {
+          id: 'email',
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Email" />
+          ),
+          cell: (info) => info.cell.getValue<string>(),
+          meta: {
+            label: 'Email',
+            variant: 'text',
+          },
+        }),
+        columnHelper.accessor('status', {
+          id: 'status',
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Status" />
+          ),
+          cell: (info) => {
+            const status = info.getValue<Person['status'] | undefined>()
+            // Group/aggregated rows can pass undefined here — bail out cleanly.
+            if (!status) return null
+            const icons: Record<Person['status'], React.ReactNode> = {
+              active: <CheckCircle />,
+              inactive: <XCircle />,
+              pending: <Clock />,
+            }
+
+            return (
+              <Badge
+                variant="outline"
+                className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0 rounded-full"
+              >
+                {icons[status]}
+                <span className="truncate">{toSentenceCase(status)}</span>
+              </Badge>
+            )
+          },
+          aggregatedCell: () => null,
+          meta: {
+            label: 'Status',
+            variant: 'select',
+            options: statuses.map((status) => ({
+              label: toSentenceCase(status),
+              value: status,
+            })),
+          },
+        }),
+        columnHelper.accessor('department', {
+          id: 'department',
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Department" />
+          ),
+          cell: (info) => {
+            const department = info.getValue<Person['department'] | undefined>()
+            // Group/aggregated rows can pass undefined here — bail out cleanly.
+            if (!department) return null
+            const icons: Record<Person['department'], React.ReactNode> = {
+              engineering: <Code />,
+              marketing: <Megaphone />,
+              sales: <ShoppingCart />,
+              hr: <Users />,
+              finance: <CreditCard />,
+            }
+
+            return (
+              <Badge
+                variant="outline"
+                className="gap-1 w-fit [&>svg]:size-3.5 px-3 py-1 [&>svg]:shrink-0 rounded-full"
+              >
+                {icons[department]}
+                <span className="truncate">{toSentenceCase(department)}</span>
+              </Badge>
+            )
+          },
+          aggregatedCell: () => null,
+          meta: {
+            label: 'Department',
+            variant: 'multi-select',
+            options: departments.map((department) => ({
+              label: toSentenceCase(department),
+              value: department,
+            })),
+          },
+        }),
+        columnHelper.accessor('joinDate', {
+          id: 'joinDate',
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title="Join Date" />
+          ),
+          cell: (info) => formatDate(info.getValue<string>()),
+          aggregationFn: 'min',
+          aggregatedCell: ({ getValue }) => {
+            const earliest = getValue<string>()
+            return (
+              <span className="text-muted-foreground">
+                Earliest: {earliest ? formatDate(earliest) : '—'}
+              </span>
+            )
+          },
+          meta: {
+            label: 'Join Date',
+            variant: 'date',
+          },
+        }),
+        columnHelper.display({
+          id: 'actions',
+          enableHiding: false,
+          cell: ({ row }) => {
+            const person = row.original
+            return (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuItem
+                    onClick={() => navigator.clipboard.writeText(person.id)}
+                  >
+                    Copy ID
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>View details</DropdownMenuItem>
+                  <DropdownMenuItem>View profile</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )
+          },
+          maxSize: 30,
+          enableResizing: false,
+        }),
+      ]),
     [],
   )
 

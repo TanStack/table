@@ -6,12 +6,13 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
+  createColumnHelper,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
-import type { Column, ColumnDef } from '@tanstack/react-table'
+import type { Column } from '@tanstack/react-table'
 import type { CSSProperties } from 'react'
 import type { Person } from './makeData'
 import './index.css'
@@ -24,6 +25,7 @@ const _features = tableFeatures({
   columnVisibilityFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
 // These are the important styles to make sticky column pinning work!
 // Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
 // View the index.css file for more needed styles such as border-collapse: collapse
@@ -51,52 +53,46 @@ const getCommonPinningStyles = (
   }
 }
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
-  {
-    accessorKey: 'firstName',
+const defaultColumns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
     id: 'firstName',
     header: 'First Name',
     cell: (info) => info.getValue(),
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorFn: (row) => row.lastName,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
     cell: (info) => info.getValue(),
     header: () => <span>Last Name</span>,
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'age',
+  }),
+  columnHelper.accessor('age', {
     id: 'age',
     header: 'Age',
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     id: 'visits',
     header: 'Visits',
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     id: 'status',
     header: 'Status',
     footer: (props) => props.column.id,
     size: 180,
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     id: 'progress',
     header: 'Profile Progress',
     footer: (props) => props.column.id,
     size: 180,
-  },
-]
+  }),
+])
 
 function App() {
   const [data, setData] = React.useState(() => makeData(20))

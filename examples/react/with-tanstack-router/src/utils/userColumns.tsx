@@ -1,9 +1,5 @@
-import type {
-  CellData,
-  ColumnDef,
-  RowData,
-  TableFeatures,
-} from '@tanstack/react-table'
+import { createColumnHelper } from '@tanstack/react-table'
+import type { CellData, RowData, TableFeatures } from '@tanstack/react-table'
 import type { User } from '../api/user'
 
 declare module '@tanstack/react-table' {
@@ -17,25 +13,23 @@ declare module '@tanstack/react-table' {
   }
 }
 
-export const USER_COLUMNS: Array<ColumnDef<any, User>> = [
-  {
-    accessorKey: 'id',
+const columnHelper = createColumnHelper<any, User>()
+
+export const USER_COLUMNS = columnHelper.columns([
+  columnHelper.accessor('id', {
     header: () => <span>ID</span>,
     meta: { filterKey: 'id', filterVariant: 'number' },
-  },
-  {
-    accessorKey: 'firstName',
+  }),
+  columnHelper.accessor('firstName', {
     header: () => <span>First Name</span>,
     meta: { filterKey: 'firstName' },
-  },
-  {
-    accessorKey: 'lastName',
+  }),
+  columnHelper.accessor('lastName', {
     header: () => <span>Last Name</span>,
     meta: { filterKey: 'lastName' },
-  },
-  {
-    accessorKey: 'age',
+  }),
+  columnHelper.accessor('age', {
     header: () => 'Age',
     meta: { filterKey: 'age', filterVariant: 'number' },
-  },
-]
+  }),
+])

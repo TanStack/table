@@ -7,6 +7,7 @@ import {
   useTanStackTableDevtools,
 } from '@tanstack/preact-table-devtools'
 import {
+  createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
   sortFns,
@@ -14,13 +15,14 @@ import {
   useTable,
 } from '@tanstack/preact-table'
 import { makeData } from './makeData'
-import type { ColumnDef, SortFn, SortingState } from '@tanstack/preact-table'
+import type { SortFn, SortingState } from '@tanstack/preact-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({
   rowSortingFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
 // custom sorting logic for one of our enum columns
 const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
@@ -32,52 +34,41 @@ const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
 function App() {
   const rerender = useReducer(() => ({}), {})[1]
 
-  const columns = useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        accessorKey: 'firstName',
-        cell: (info) => info.getValue(),
-        // this column will sort in ascending order by default since it is a string column
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-        sortUndefined: 'last', // force undefined values to the end
-        sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        // this column will sort in descending order by default since it is a number column
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        sortUndefined: 'last', // force undefined values to the end
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        sortFn: sortStatusFn, // use our custom sorting function for this enum column
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        // enableSorting: false, // disable sorting for this column
-      },
-      {
-        accessorKey: 'rank',
-        header: 'Rank',
-        invertSorting: true, // invert the sorting order (golf score-like where smaller is better)
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created At',
-        // sortFn: 'datetime' //make sure table knows this is a datetime column (usually can detect if no null values)
-      },
-    ],
+  const columns = useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+          sortUndefined: 'last',
+          sortDescFirst: false,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          sortUndefined: 'last',
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          sortFn: sortStatusFn,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+        }),
+        columnHelper.accessor('rank', {
+          header: 'Rank',
+          invertSorting: true,
+        }),
+        columnHelper.accessor('createdAt', {
+          header: 'Created At',
+        }),
+      ]),
     [],
   )
 

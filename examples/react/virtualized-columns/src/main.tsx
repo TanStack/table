@@ -4,6 +4,7 @@ import './index.css'
 import {
   columnSizingFeature,
   columnVisibilityFeature,
+  createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
   sortFns,
@@ -13,7 +14,6 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import { makeColumns, makeData } from './makeData'
 import type {
   Cell,
-  ColumnDef,
   Header,
   HeaderGroup,
   ReactTable,
@@ -28,9 +28,19 @@ const features = {
   rowSortingFeature,
 }
 
+const columnHelper = createColumnHelper<typeof features, Person>()
+
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<typeof features, Person>>>(
-    () => makeColumns(1_000),
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns(
+        makeColumns(1_000).map((column) =>
+          columnHelper.accessor(column.accessorKey, {
+            header: column.header,
+            size: column.size,
+          }),
+        ),
+      ),
     [],
   )
 

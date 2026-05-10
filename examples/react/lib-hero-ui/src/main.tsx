@@ -11,6 +11,7 @@ import {
   cn,
 } from '@heroui/react'
 import {
+  createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -24,7 +25,7 @@ import {
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
 import type { Key, SortDescriptor } from '@heroui/react'
-import type { ColumnDef, SortingState } from '@tanstack/react-table'
+import type { SortingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 import './index.css'
 
@@ -34,6 +35,7 @@ const _features = tableFeatures({
   globalFilteringFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
 function toSortDescriptor(sorting: SortingState): SortDescriptor | undefined {
   const sort = sorting[0]
   if (!sort) return undefined
@@ -52,37 +54,31 @@ function toSortingState(descriptor: SortDescriptor): SortingState {
   ]
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
-  {
-    accessorKey: 'firstName',
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
-  },
-  {
-    accessorFn: (row) => row.lastName,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
     header: 'Last Name',
     cell: (info) => <span className="italic">{info.getValue<string>()}</span>,
-  },
-  {
-    accessorFn: (row) => Number(row.age),
+  }),
+  columnHelper.accessor((row) => Number(row.age), {
     id: 'age',
     header: 'Age',
     cell: (info) => info.renderValue(),
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     header: 'Visits',
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     header: 'Status',
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     header: 'Profile Progress',
-  },
-]
+  }),
+])
 
 const pageSizeOptions = ['10', '20', '30', '40', '50']
 

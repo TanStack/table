@@ -1,6 +1,7 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
+  createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -41,7 +42,6 @@ import {
   TableRow,
 } from './components/ui/table'
 import { makeData } from './makeData'
-import type { ColumnDef } from '@tanstack/react-table'
 import type { Person } from './makeData'
 import './index.css'
 
@@ -54,38 +54,33 @@ const _features = tableFeatures({
   globalFilteringFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
 // 4. Define the columns for your table.
-const columns: Array<ColumnDef<typeof _features, Person>> = [
-  {
-    accessorKey: 'firstName',
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
-  },
-  {
-    accessorFn: (row) => row.lastName,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
     header: 'Last Name',
     cell: (info) => <i>{info.getValue<string>()}</i>,
-  },
-  {
-    accessorFn: (row) => Number(row.age),
+  }),
+  columnHelper.accessor((row) => Number(row.age), {
     id: 'age',
     header: 'Age',
     cell: (info) => info.renderValue(),
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     header: 'Visits',
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     header: 'Status',
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     header: 'Profile Progress',
-  },
-]
+  }),
+])
 
 function App() {
   // 5. Store data with a stable reference

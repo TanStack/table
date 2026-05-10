@@ -24,6 +24,7 @@ import {
   createTheme,
 } from '@mui/material'
 import {
+  createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -36,7 +37,6 @@ import {
   useTable,
 } from '@tanstack/react-table'
 import { makeData } from './makeData'
-import type { ColumnDef } from '@tanstack/react-table'
 import type { Person } from './makeData'
 import './index.css'
 
@@ -46,43 +46,38 @@ const _features = tableFeatures({
   globalFilteringFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
 function getAriaSort(sortDirection: false | 'asc' | 'desc') {
   if (sortDirection === 'asc') return 'ascending'
   if (sortDirection === 'desc') return 'descending'
   return 'none'
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
-  {
-    accessorKey: 'firstName',
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
-  },
-  {
-    accessorFn: (row) => row.lastName,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
     header: 'Last Name',
     cell: (info) => <Box component="i">{info.getValue<string>()}</Box>,
-  },
-  {
-    accessorFn: (row) => Number(row.age),
+  }),
+  columnHelper.accessor((row) => Number(row.age), {
     id: 'age',
     header: 'Age',
     cell: (info) => info.renderValue(),
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     header: 'Visits',
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     header: 'Status',
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     header: 'Profile Progress',
-  },
-]
+  }),
+])
 
 const theme = createTheme({
   palette: {

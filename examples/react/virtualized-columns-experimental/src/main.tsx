@@ -4,6 +4,7 @@ import './index.css'
 import {
   FlexRender,
   columnSizingFeature,
+  createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
   sortFns,
@@ -13,7 +14,6 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import { makeColumns, makeData } from './makeData'
 import type {
   Cell,
-  ColumnDef,
   Header,
   HeaderGroup,
   ReactTable,
@@ -27,10 +27,20 @@ const _features = {
   rowSortingFeature,
 }
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
 // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
 function App() {
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => makeColumns(1_000),
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns(
+        makeColumns(1_000).map((column) =>
+          columnHelper.accessor(column.accessorKey, {
+            header: column.header,
+            size: column.size,
+          }),
+        ),
+      ),
     [],
   )
 

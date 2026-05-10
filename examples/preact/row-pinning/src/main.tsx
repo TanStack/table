@@ -2,6 +2,8 @@ import { useMemo, useReducer, useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnFilteringFeature,
+  columnSizingFeature,
+  createColumnHelper,
   createExpandedRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
@@ -16,7 +18,6 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type {
   Column,
-  ColumnDef,
   ExpandedState,
   PreactTable,
   Row,
@@ -28,9 +29,11 @@ const _features = tableFeatures({
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
+  columnSizingFeature,
   rowPaginationFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
 function App() {
   const rerender = useReducer(() => ({}), {})[1]
 
@@ -47,100 +50,97 @@ function App() {
   const [includeParentRows, setIncludeParentRows] = useState(false)
   const [copyPinnedRows, setCopyPinnedRows] = useState(false)
 
-  const columns = useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        id: 'pin',
-        header: () => 'Pin',
-        cell: ({ row }) =>
-          row.getIsPinned() ? (
-            <button
-              onClick={() => row.pin(false, includeLeafRows, includeParentRows)}
+  const columns = useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'pin',
+          header: () => 'Pin',
+          cell: ({ row }) =>
+            row.getIsPinned() ? (
+              <button
+                onClick={() =>
+                  row.pin(false, includeLeafRows, includeParentRows)
+                }
+              >
+                ❌
+              </button>
+            ) : (
+              <div style={{ display: 'flex', gap: '4px' }}>
+                <button
+                  onClick={() =>
+                    row.pin('top', includeLeafRows, includeParentRows)
+                  }
+                >
+                  ⬆️
+                </button>
+                <button
+                  onClick={() =>
+                    row.pin('bottom', includeLeafRows, includeParentRows)
+                  }
+                >
+                  ⬇️
+                </button>
+              </div>
+            ),
+        }),
+        columnHelper.accessor('firstName', {
+          header: ({ table }) => (
+            <>
+              <button onClick={table.getToggleAllRowsExpandedHandler()}>
+                {table.getIsAllRowsExpanded() ? '👇' : '👉'}
+              </button>{' '}
+              First Name
+            </>
+          ),
+          cell: ({ row, getValue }) => (
+            <div
+              style={{
+                // Since rows are flattened by default,
+                // we can use the row.depth property
+                // and paddingLeft to visually indicate the depth
+                // of the row
+                paddingLeft: `${row.depth * 2}rem`,
+              }}
             >
-              ❌
-            </button>
-          ) : (
-            <div style={{ display: 'flex', gap: '4px' }}>
-              <button
-                onClick={() =>
-                  row.pin('top', includeLeafRows, includeParentRows)
-                }
-              >
-                ⬆️
-              </button>
-              <button
-                onClick={() =>
-                  row.pin('bottom', includeLeafRows, includeParentRows)
-                }
-              >
-                ⬇️
-              </button>
+              <>
+                {row.getCanExpand() ? (
+                  <button
+                    onClick={row.getToggleExpandedHandler()}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {row.getIsExpanded() ? '👇' : '👉'}
+                  </button>
+                ) : (
+                  '🔵'
+                )}{' '}
+                {getValue()}
+              </>
             </div>
           ),
-      },
-      {
-        accessorKey: 'firstName',
-        header: ({ table }) => (
-          <>
-            <button onClick={table.getToggleAllRowsExpandedHandler()}>
-              {table.getIsAllRowsExpanded() ? '👇' : '👉'}
-            </button>{' '}
-            First Name
-          </>
-        ),
-        cell: ({ row, getValue }) => (
-          <div
-            style={{
-              // Since rows are flattened by default,
-              // we can use the row.depth property
-              // and paddingLeft to visually indicate the depth
-              // of the row
-              paddingLeft: `${row.depth * 2}rem`,
-            }}
-          >
-            <>
-              {row.getCanExpand() ? (
-                <button
-                  onClick={row.getToggleExpandedHandler()}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {row.getIsExpanded() ? '👇' : '👉'}
-                </button>
-              ) : (
-                '🔵'
-              )}{' '}
-              {getValue()}
-            </>
-          </div>
-        ),
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorFn: (row) => row.lastName,
-        id: 'lastName',
-        cell: (info) => info.getValue(),
-        header: () => <span>Last Name</span>,
-      },
-      {
-        accessorKey: 'age',
-        header: () => 'Age',
-        size: 50,
-      },
-      {
-        accessorKey: 'visits',
-        header: () => <span>Visits</span>,
-        size: 50,
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-      },
-      {
-        accessorKey: 'progress',
-        header: 'Profile Progress',
-        size: 80,
-      },
-    ],
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          cell: (info) => info.getValue(),
+          header: () => <span>Last Name</span>,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          size: 50,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          size: 50,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          size: 80,
+        }),
+      ]),
     [includeLeafRows, includeParentRows],
   )
 

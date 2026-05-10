@@ -90,6 +90,7 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
+  createColumnHelper,
   createCoreRowModel,
   createExpandedRowModel,
   createFacetedRowModel,
@@ -113,7 +114,6 @@ import type { DragEndEvent } from '@dnd-kit/core'
 import type {
   CellData,
   Column,
-  ColumnDef,
   ColumnPinningState,
   ColumnSizingState,
   ExpandedState,
@@ -162,8 +162,9 @@ const _features = tableFeatures({
   globalFilteringFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
 type AppTable = Table<typeof _features, Person>
-type AppColumn = Column<typeof _features, Person>
+type AppColumn = Column<typeof _features, Person, any>
 
 function SortableFrame({
   id,
@@ -1235,147 +1236,149 @@ function App({
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
   const [data, setData] = React.useState(() => makeData(1_000))
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            checked={table.getIsAllPageRowsSelected()}
-            indeterminate={
-              !table.getIsAllPageRowsSelected() &&
-              table.getIsSomePageRowsSelected()
-            }
-            onChange={(_, checked) => table.toggleAllPageRowsSelected(checked)}
-            slotProps={{ input: { 'aria-label': 'Select all' } }}
-            size="small"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onChange={(_, checked) => row.toggleSelected(checked)}
-            slotProps={{ input: { 'aria-label': 'Select row' } }}
-            size="small"
-          />
-        ),
-        maxSize: 48,
-        enableSorting: false,
-        enableHiding: false,
-        enableResizing: false,
-      },
-      {
-        id: 'firstName',
-        accessorKey: 'firstName',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="First Name" />
-        ),
-        cell: (info) => <EllipsisText>{String(info.getValue())}</EllipsisText>,
-        meta: { label: 'First Name', variant: 'text' },
-      },
-      {
-        id: 'lastName',
-        accessorFn: (row) => row.lastName,
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Last Name" />
-        ),
-        cell: (info) => <EllipsisText>{String(info.getValue())}</EllipsisText>,
-        meta: { label: 'Last Name', variant: 'text' },
-      },
-      {
-        id: 'age',
-        accessorKey: 'age',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Age" />
-        ),
-        cell: (info) => (
-          <Typography variant="body2">{String(info.getValue())}</Typography>
-        ),
-        aggregationFn: 'mean',
-        aggregatedCell: ({ getValue }) => (
-          <Typography variant="body2" color="text.secondary">
-            Avg: {Math.round(Number(getValue()) * 10) / 10}
-          </Typography>
-        ),
-        meta: { label: 'Age', variant: 'number' },
-      },
-      {
-        id: 'email',
-        accessorKey: 'email',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Email" />
-        ),
-        cell: (info) => (
-          <EllipsisText>{info.cell.getValue<string>()}</EllipsisText>
-        ),
-        meta: { label: 'Email', variant: 'text' },
-      },
-      {
-        id: 'status',
-        accessorKey: 'status',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Status" />
-        ),
-        cell: (info) => {
-          const status = info.getValue<Person['status'] | undefined>()
-          return status ? <StatusChip status={status} /> : null
-        },
-        aggregatedCell: () => null,
-        meta: {
-          label: 'Status',
-          variant: 'select',
-          options: statuses.map((status) => ({
-            label: toSentenceCase(status),
-            value: status,
-          })),
-        },
-      },
-      {
-        id: 'department',
-        accessorKey: 'department',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Department" />
-        ),
-        cell: (info) => {
-          const department = info.getValue<Person['department'] | undefined>()
-          return department ? <DepartmentChip department={department} /> : null
-        },
-        aggregatedCell: () => null,
-        meta: {
-          label: 'Department',
-          variant: 'multi-select',
-          options: departments.map((department) => ({
-            label: toSentenceCase(department),
-            value: department,
-          })),
-        },
-      },
-      {
-        id: 'joinDate',
-        accessorKey: 'joinDate',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Join Date" />
-        ),
-        cell: (info) => formatDate(info.getValue<string>()),
-        aggregationFn: 'min',
-        aggregatedCell: ({ getValue }) => {
-          const earliest = getValue<string>()
-          return (
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'select',
+          header: ({ table }) => (
+            <Checkbox
+              checked={table.getIsAllPageRowsSelected()}
+              indeterminate={
+                !table.getIsAllPageRowsSelected() &&
+                table.getIsSomePageRowsSelected()
+              }
+              onChange={(_, checked) =>
+                table.toggleAllPageRowsSelected(checked)
+              }
+              slotProps={{ input: { 'aria-label': 'Select all' } }}
+              size="small"
+            />
+          ),
+          cell: ({ row }) => (
+            <Checkbox
+              checked={row.getIsSelected()}
+              onChange={(_, checked) => row.toggleSelected(checked)}
+              slotProps={{ input: { 'aria-label': 'Select row' } }}
+              size="small"
+            />
+          ),
+          maxSize: 48,
+          enableSorting: false,
+          enableHiding: false,
+          enableResizing: false,
+        }),
+        columnHelper.accessor('firstName', {
+          id: 'firstName',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="First Name" />
+          ),
+          cell: (info) => (
+            <EllipsisText>{String(info.getValue())}</EllipsisText>
+          ),
+          meta: { label: 'First Name', variant: 'text' },
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Last Name" />
+          ),
+          cell: (info) => (
+            <EllipsisText>{String(info.getValue())}</EllipsisText>
+          ),
+          meta: { label: 'Last Name', variant: 'text' },
+        }),
+        columnHelper.accessor('age', {
+          id: 'age',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Age" />
+          ),
+          cell: (info) => (
+            <Typography variant="body2">{String(info.getValue())}</Typography>
+          ),
+          aggregationFn: 'mean',
+          aggregatedCell: ({ getValue }) => (
             <Typography variant="body2" color="text.secondary">
-              Earliest: {earliest ? formatDate(earliest) : '—'}
+              Avg: {Math.round(Number(getValue()) * 10) / 10}
             </Typography>
-          )
-        },
-        meta: { label: 'Join Date', variant: 'date' },
-      },
-      {
-        id: 'actions',
-        enableHiding: false,
-        cell: ({ row }) => <RowActions person={row.original} />,
-        maxSize: 44,
-        enableResizing: false,
-      },
-    ],
+          ),
+          meta: { label: 'Age', variant: 'number' },
+        }),
+        columnHelper.accessor('email', {
+          id: 'email',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Email" />
+          ),
+          cell: (info) => (
+            <EllipsisText>{info.cell.getValue<string>()}</EllipsisText>
+          ),
+          meta: { label: 'Email', variant: 'text' },
+        }),
+        columnHelper.accessor('status', {
+          id: 'status',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Status" />
+          ),
+          cell: (info) => {
+            const status = info.getValue<Person['status'] | undefined>()
+            return status ? <StatusChip status={status} /> : null
+          },
+          aggregatedCell: () => null,
+          meta: {
+            label: 'Status',
+            variant: 'select',
+            options: statuses.map((status) => ({
+              label: toSentenceCase(status),
+              value: status,
+            })),
+          },
+        }),
+        columnHelper.accessor('department', {
+          id: 'department',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Department" />
+          ),
+          cell: (info) => {
+            const department = info.getValue<Person['department'] | undefined>()
+            return department ? (
+              <DepartmentChip department={department} />
+            ) : null
+          },
+          aggregatedCell: () => null,
+          meta: {
+            label: 'Department',
+            variant: 'multi-select',
+            options: departments.map((department) => ({
+              label: toSentenceCase(department),
+              value: department,
+            })),
+          },
+        }),
+        columnHelper.accessor('joinDate', {
+          id: 'joinDate',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Join Date" />
+          ),
+          cell: (info) => formatDate(info.getValue<string>()),
+          aggregationFn: 'min',
+          aggregatedCell: ({ getValue }) => {
+            const earliest = getValue<string>()
+            return (
+              <Typography variant="body2" color="text.secondary">
+                Earliest: {earliest ? formatDate(earliest) : '—'}
+              </Typography>
+            )
+          },
+          meta: { label: 'Join Date', variant: 'date' },
+        }),
+        columnHelper.display({
+          id: 'actions',
+          enableHiding: false,
+          cell: ({ row }) => <RowActions person={row.original} />,
+          maxSize: 44,
+          enableResizing: false,
+        }),
+      ]),
     [],
   )
 

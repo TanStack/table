@@ -53,6 +53,7 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
+  createColumnHelper,
   createCoreRowModel,
   createExpandedRowModel,
   createFacetedRowModel,
@@ -77,7 +78,6 @@ import type { Person } from '@/lib/make-data'
 import type {
   CellData,
   Column,
-  ColumnDef,
   ColumnPinningState,
   ColumnSizingState,
   ExpandedState,
@@ -127,8 +127,9 @@ const _features = tableFeatures({
   globalFilteringFeature,
 })
 
+const columnHelper = createColumnHelper<typeof _features, Person>()
 type AppTable = Table<typeof _features, Person>
-type AppColumn = Column<typeof _features, Person>
+type AppColumn = Column<typeof _features, Person, any>
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(' ')
@@ -1142,172 +1143,171 @@ function App() {
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
   const [data, setData] = React.useState(() => makeData(1_000))
 
-  const columns = React.useMemo<Array<ColumnDef<typeof _features, Person>>>(
-    () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <SelectionCheckbox
-            ariaLabel="Select all"
-            isSelected={table.getIsAllPageRowsSelected()}
-            isIndeterminate={
-              !table.getIsAllPageRowsSelected() &&
-              table.getIsSomePageRowsSelected()
-            }
-            onChange={(selected) => table.toggleAllPageRowsSelected(selected)}
-          />
-        ),
-        cell: ({ row }) => (
-          <SelectionCheckbox
-            ariaLabel="Select row"
-            isSelected={row.getIsSelected()}
-            onChange={(selected) => row.toggleSelected(selected)}
-          />
-        ),
-        size: 64,
-        minSize: 64,
-        maxSize: 64,
-        enableSorting: false,
-        enableHiding: false,
-        enableResizing: false,
-      },
-      {
-        id: 'firstName',
-        accessorKey: 'firstName',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="First Name" />
-        ),
-        cell: (info) => <EllipsisText>{String(info.getValue())}</EllipsisText>,
-        meta: { label: 'First Name', variant: 'text' },
-      },
-      {
-        id: 'lastName',
-        accessorFn: (row) => row.lastName,
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Last Name" />
-        ),
-        cell: (info) => <EllipsisText>{String(info.getValue())}</EllipsisText>,
-        meta: { label: 'Last Name', variant: 'text' },
-      },
-      {
-        id: 'age',
-        accessorKey: 'age',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Age" />
-        ),
-        cell: (info) => (
-          <span className="text-sm">{String(info.getValue())}</span>
-        ),
-        aggregationFn: 'mean',
-        aggregatedCell: ({ getValue }) => (
-          <span className="text-sm text-muted">
-            Avg: {Math.round(Number(getValue()) * 10) / 10}
-          </span>
-        ),
-        meta: { label: 'Age', variant: 'number' },
-      },
-      {
-        id: 'email',
-        accessorKey: 'email',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Email" />
-        ),
-        cell: (info) => (
-          <EllipsisText>{info.cell.getValue<string>()}</EllipsisText>
-        ),
-        meta: { label: 'Email', variant: 'text' },
-      },
-      {
-        id: 'status',
-        accessorKey: 'status',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Status" />
-        ),
-        cell: (info) => {
-          const status = info.getValue<Person['status'] | undefined>()
-          return status ? <StatusBadge status={status} /> : null
-        },
-        aggregatedCell: () => null,
-        meta: {
-          label: 'Status',
-          variant: 'select',
-          options: statuses.map((status) => ({
-            label: toSentenceCase(status),
-            value: status,
-          })),
-        },
-      },
-      {
-        id: 'department',
-        accessorKey: 'department',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Department" />
-        ),
-        cell: (info) => {
-          const department = info.getValue<Person['department'] | undefined>()
-          return department ? <DepartmentPill department={department} /> : null
-        },
-        aggregatedCell: () => null,
-        meta: {
-          label: 'Department',
-          variant: 'multi-select',
-          options: departments.map((department) => ({
-            label: toSentenceCase(department),
-            value: department,
-          })),
-        },
-      },
-      {
-        id: 'joinDate',
-        accessorKey: 'joinDate',
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Join Date" />
-        ),
-        cell: (info) => formatDate(info.getValue()),
-        aggregationFn: 'min',
-        aggregatedCell: ({ getValue }) => {
-          const earliest = getValue<Date | undefined>()
-          return (
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.display({
+          id: 'select',
+          header: ({ table }) => (
+            <SelectionCheckbox
+              ariaLabel="Select all"
+              isSelected={table.getIsAllPageRowsSelected()}
+              isIndeterminate={
+                !table.getIsAllPageRowsSelected() &&
+                table.getIsSomePageRowsSelected()
+              }
+              onChange={(selected) => table.toggleAllPageRowsSelected(selected)}
+            />
+          ),
+          cell: ({ row }) => (
+            <SelectionCheckbox
+              ariaLabel="Select row"
+              isSelected={row.getIsSelected()}
+              onChange={(selected) => row.toggleSelected(selected)}
+            />
+          ),
+          size: 64,
+          minSize: 64,
+          maxSize: 64,
+          enableSorting: false,
+          enableHiding: false,
+          enableResizing: false,
+        }),
+        columnHelper.accessor('firstName', {
+          id: 'firstName',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="First Name" />
+          ),
+          cell: (info) => (
+            <EllipsisText>{String(info.getValue())}</EllipsisText>
+          ),
+          meta: { label: 'First Name', variant: 'text' },
+        }),
+        columnHelper.accessor((row) => row.lastName, {
+          id: 'lastName',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Last Name" />
+          ),
+          cell: (info) => (
+            <EllipsisText>{String(info.getValue())}</EllipsisText>
+          ),
+          meta: { label: 'Last Name', variant: 'text' },
+        }),
+        columnHelper.accessor('age', {
+          id: 'age',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Age" />
+          ),
+          cell: (info) => (
+            <span className="text-sm">{String(info.getValue())}</span>
+          ),
+          aggregationFn: 'mean',
+          aggregatedCell: ({ getValue }) => (
             <span className="text-sm text-muted">
-              Earliest: {earliest ? formatDate(earliest) : '-'}
+              Avg: {Math.round(Number(getValue()) * 10) / 10}
             </span>
-          )
-        },
-        meta: { label: 'Join Date', variant: 'date' },
-      },
-      {
-        id: 'progress',
-        accessorFn: (row) => row.age,
-        header: ({ column }) => (
-          <ColumnHeaderMenu column={column} title="Profile Progress" />
-        ),
-        cell: (info) => {
-          const value = Math.min(100, Math.max(0, Number(info.getValue())))
-          return (
-            <ProgressBar value={value} aria-label="Profile progress">
-              {({ percentage }) => (
-                <div className="progress-track">
-                  <div
-                    className="progress-fill"
-                    style={{ width: `${percentage ?? 0}%` }}
-                  />
-                </div>
-              )}
-            </ProgressBar>
-          )
-        },
-        meta: { label: 'Profile Progress', variant: 'number' },
-      },
-      {
-        id: 'actions',
-        enableHiding: false,
-        cell: ({ row }) => <RowActions person={row.original} />,
-        size: 72,
-        minSize: 72,
-        maxSize: 72,
-        enableResizing: false,
-      },
-    ],
+          ),
+          meta: { label: 'Age', variant: 'number' },
+        }),
+        columnHelper.accessor('email', {
+          id: 'email',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Email" />
+          ),
+          cell: (info) => (
+            <EllipsisText>{info.cell.getValue<string>()}</EllipsisText>
+          ),
+          meta: { label: 'Email', variant: 'text' },
+        }),
+        columnHelper.accessor('status', {
+          id: 'status',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Status" />
+          ),
+          cell: (info) => {
+            const status = info.getValue<Person['status'] | undefined>()
+            return status ? <StatusBadge status={status} /> : null
+          },
+          aggregatedCell: () => null,
+          meta: {
+            label: 'Status',
+            variant: 'select',
+            options: statuses.map((status) => ({
+              label: toSentenceCase(status),
+              value: status,
+            })),
+          },
+        }),
+        columnHelper.accessor('department', {
+          id: 'department',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Department" />
+          ),
+          cell: (info) => {
+            const department = info.getValue<Person['department'] | undefined>()
+            return department ? (
+              <DepartmentPill department={department} />
+            ) : null
+          },
+          aggregatedCell: () => null,
+          meta: {
+            label: 'Department',
+            variant: 'multi-select',
+            options: departments.map((department) => ({
+              label: toSentenceCase(department),
+              value: department,
+            })),
+          },
+        }),
+        columnHelper.accessor('joinDate', {
+          id: 'joinDate',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Join Date" />
+          ),
+          cell: (info) => formatDate(info.getValue()),
+          aggregationFn: 'min',
+          aggregatedCell: ({ getValue }) => {
+            const earliest = getValue<Date | undefined>()
+            return (
+              <span className="text-sm text-muted">
+                Earliest: {earliest ? formatDate(earliest) : '-'}
+              </span>
+            )
+          },
+          meta: { label: 'Join Date', variant: 'date' },
+        }),
+        columnHelper.accessor((row) => row.age, {
+          id: 'progress',
+          header: ({ column }) => (
+            <ColumnHeaderMenu column={column} title="Profile Progress" />
+          ),
+          cell: (info) => {
+            const value = Math.min(100, Math.max(0, Number(info.getValue())))
+            return (
+              <ProgressBar value={value} aria-label="Profile progress">
+                {({ percentage }) => (
+                  <div className="progress-track">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${percentage ?? 0}%` }}
+                    />
+                  </div>
+                )}
+              </ProgressBar>
+            )
+          },
+          meta: { label: 'Profile Progress', variant: 'number' },
+        }),
+        columnHelper.display({
+          id: 'actions',
+          enableHiding: false,
+          cell: ({ row }) => <RowActions person={row.original} />,
+          size: 72,
+          minSize: 72,
+          maxSize: 72,
+          enableResizing: false,
+        }),
+      ]),
     [],
   )
 
