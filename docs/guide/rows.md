@@ -2,10 +2,6 @@
 title: Rows Guide
 ---
 
-## API
-
-[Row API](../api/core/row)
-
 ## Rows Guide
 
 This quick guide will discuss the different ways you can retrieve and interact with row objects in TanStack Table.

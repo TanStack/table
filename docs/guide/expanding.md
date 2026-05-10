@@ -6,13 +6,44 @@ title: Expanding Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [expanding](../framework/react/examples/expanding)
-- [grouping](../framework/react/examples/grouping)
-- [sub-components](../framework/react/examples/sub-components)
+<!-- ::start:framework -->
 
-## API
+# React
 
-[Expanding API](../api/features/expanding)
+- [Expanding](../framework/react/examples/expanding)
+- [Sub Components](../framework/react/examples/sub-components)
+
+# Preact
+
+- [Expanding](../framework/preact/examples/expanding)
+- [Sub Components](../framework/preact/examples/sub-components)
+
+# Solid
+
+- [Expanding](../framework/solid/examples/expanding)
+- [Sub Components](../framework/solid/examples/sub-components)
+
+# Svelte
+
+- [Expanding](../framework/svelte/examples/expanding)
+- [Sub Components](../framework/svelte/examples/sub-components)
+
+# Vue
+
+- [Expanding](../framework/vue/examples/expanding)
+- [Sub Components](../framework/vue/examples/sub-components)
+
+# Angular
+
+- [Expanding](../framework/angular/examples/expanding)
+- [Sub Components](../framework/angular/examples/sub-components)
+
+# Lit
+
+- [Expanding](../framework/lit/examples/expanding)
+- [Sub Components](../framework/lit/examples/sub-components)
+
+<!-- ::end:framework -->
 
 ## Expanding Feature Guide
 

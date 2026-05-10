@@ -6,18 +6,37 @@ title: Column Visibility Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [column-visibility](../framework/react/examples/column-visibility)
-- [column-ordering](../framework/react/examples/column-ordering)
-- [sticky-column-pinning](../framework/react/examples/column-pinning-sticky)
+<!-- ::start:framework -->
 
-### Other Examples
+# React
 
-- [SolidJS column-visibility](../framework/solid/examples/column-visibility)
-- [Svelte column-visibility](../framework/svelte/examples/column-visibility)
+- [Column Visibility](../framework/react/examples/column-visibility)
 
-## API
+# Preact
 
-[Column Visibility API](../api/features/column-visibility)
+- [Column Visibility](../framework/preact/examples/column-visibility)
+
+# Solid
+
+- [Column Visibility](../framework/solid/examples/column-visibility)
+
+# Svelte
+
+- [Column Visibility](../framework/svelte/examples/column-visibility)
+
+# Vue
+
+- [Column Visibility](../framework/vue/examples/column-visibility)
+
+# Angular
+
+- [Column Visibility](../framework/angular/examples/column-visibility)
+
+# Lit
+
+- [Column Visibility](../framework/lit/examples/column-visibility)
+
+<!-- ::end:framework -->
 
 ## Column Visibility Guide
 

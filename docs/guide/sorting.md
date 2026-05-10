@@ -6,12 +6,37 @@ title: Sorting Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [sorting](../framework/react/examples/sorting)
-- [filters](../framework/react/examples/filters)
+<!-- ::start:framework -->
 
-## API
+# React
 
-[Sorting API](../api/features/sorting)
+- [Sorting](../framework/react/examples/sorting)
+
+# Preact
+
+- [Sorting](../framework/preact/examples/sorting)
+
+# Solid
+
+- [Sorting](../framework/solid/examples/sorting)
+
+# Svelte
+
+- [Sorting](../framework/svelte/examples/sorting)
+
+# Vue
+
+- [Sorting](../framework/vue/examples/sorting)
+
+# Lit
+
+- [Sorting](../framework/lit/examples/sorting)
+
+# Vanilla
+
+- [Sorting](../framework/vanilla/examples/sorting)
+
+<!-- ::end:framework -->
 
 ## Sorting Guide
 
@@ -33,7 +58,7 @@ Since the sorting state is an array, it is possible to sort by multiple columns 
 
 #### Accessing Sorting State
 
-You can access the sorting state directly from the table instance just like any other state using the `table.store.state` API.
+You can access the sorting state directly from the table instance with `table.atoms.sorting.get()` or from the current `table.store.state` snapshot.
 
 ```tsx
 const table = useTable({
@@ -44,7 +69,7 @@ const table = useTable({
   //...
 })
 
-console.log(table.store.state.sorting) // access the sorting state from the table instance
+console.log(table.atoms.sorting.get()) // access the current sorting state
 ```
 
 However, if you need to access the sorting state before the table is initialized, you can "control" the sorting state like down below.
@@ -93,7 +118,7 @@ const table = useTable({
 })
 ```
 
-> **NOTE**: Do not use both `initialState.sorting` and `state.sorting` at the same time, as the initialized state in the `state.sorting` will override the `initialState.sorting`.
+> **NOTE**: Do not use both `initialState.sorting` and `state.sorting` at the same time, as the controlled `state.sorting` value will override the `initialState.sorting`.
 
 ### Client-Side vs Server-Side Sorting
 

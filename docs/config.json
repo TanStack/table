@@ -260,6 +260,10 @@
           "to": "guide/column-sizing"
         },
         {
+          "label": "Column Resizing",
+          "to": "guide/column-resizing"
+        },
+        {
           "label": "Column Visibility",
           "to": "guide/column-visibility"
         },

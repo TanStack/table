@@ -2,13 +2,9 @@
 title: Table Instance Guide
 ---
 
-## API
-
-[Table API](../api/core/table)
-
 ## Table Instance Guide
 
-TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that contains the table state and APIs. The `table` instance is created by calling your adapter's `_createTable` function (e.g. `useTable`, `createTable`, or `injectTable`).
+TanStack Table is a headless UI library. When we talk about the `table` or "table instance", we're not talking about a literal `<table>` element. Instead, we're referring to the core table object that coordinates table state and APIs. The `table` instance is created by calling your adapter's table creation function (e.g. `useTable`, `createTable`, `injectTable`, or `constructTable`).
 
 The `table` instance that is returned from the `_createTable` function (from the framework adapter) is the main object that you will interact with to read and mutate the table state. It is the one place where everything happens in TanStack Table. When you get to the point where you are rendering your UI, you will use APIs from this `table` instance.
 
@@ -83,25 +79,26 @@ So what's in the `table` instance? Let's take a look at what interactions we can
 
 ### Table State
 
-The table instance contains all of the table state, which can be accessed via the `table.store.state` API. Each table feature registers various states in the table state. For example, the row selection feature registers `rowSelection` state, the pagination feature registers `pagination` state, etc.
+The table instance contains the state slices registered by its `_features`. Each feature registers the state it owns. For example, the row selection feature registers `rowSelection` state, and the pagination feature registers `pagination` state. In v9, those slices are backed by TanStack Store atoms:
 
-Each feature will also have corresponding state setter APIs and state resetter APIs on the table instance. For example, the row selection feature will have a `setRowSelection` API and a `resetRowSelection`.
+- `table.baseAtoms` are the internal writable atoms.
+- `table.atoms` are the public readonly atoms for each slice.
+- `table.store` is the readonly flat store derived from `table.atoms`.
 
 ```ts
-table.store.state.rowSelection //read the row selection state
+table.atoms.rowSelection.get() // read the current row selection state
+table.store.state.rowSelection // read the current table state snapshot
 table.setRowSelection((old) => ({...old})) //set the row selection state
 table.resetRowSelection() //reset the row selection state
 ```
 
-This is covered in more detail in the [Table State Guides](../framework/react/guide/table-state)
+Direct reads like `table.atoms.rowSelection.get()` and `table.store.state.rowSelection` are current values. Framework adapters add their own reactive state access APIs where needed. This is covered in more detail in the [Table State Guides](../framework/react/guide/table-state).
 
 ### Table APIs
 
 There are dozens of table APIs created by each feature to help you either read or mutate the table state in different ways.
 
-API reference docs for the core table instance and all other feature APIs can be found throughout the API docs.
-
-For example, you can find the core table instance API docs here: [Table API](../api/core/table#table-api)
+API reference docs for the core table instance and all other feature APIs can be found throughout the [Reference Docs](../reference/index).
 
 ### Table Row Models
 

@@ -6,13 +6,38 @@ title: Row Selection Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [React row-selection](../framework/react/examples/row-selection)
-- [Vue row-selection](../framework/vue/row-selection)
-- [React expanding](../framework/react/examples/expanding)
+<!-- ::start:framework -->
 
-## API
+# React
 
-[Row Selection API](../api/features/row-selection)
+- [Row Selection](../framework/react/examples/row-selection)
+
+# Preact
+
+- [Row Selection](../framework/preact/examples/row-selection)
+
+# Solid
+
+- [Row Selection](../framework/solid/examples/row-selection)
+
+# Svelte
+
+- [Row Selection](../framework/svelte/examples/row-selection)
+
+# Vue
+
+- [Row Selection](../framework/vue/examples/row-selection)
+
+# Angular
+
+- [Row Selection](../framework/angular/examples/row-selection)
+- [Row Selection Signal](../framework/angular/examples/row-selection-signal)
+
+# Lit
+
+- [Row Selection](../framework/lit/examples/row-selection)
+
+<!-- ::end:framework -->
 
 ## Row Selection Guide
 
@@ -22,13 +47,13 @@ The row selection feature keeps track of which rows are selected and allows you 
 
 The table instance already manages the row selection state for you (though as seen down below, it may be more convenient to manage the row selection state in your own scope). You can access the internal row selection state or the selected rows from a few APIs.
 
-- `table.store.state.rowSelection` - returns the internal row selection state
+- `table.atoms.rowSelection.get()` - returns the current row selection state
 - `getSelectedRowModel()` - returns selected rows
 - `getFilteredSelectedRowModel()` - returns selected rows after filtering
 - `getGroupedSelectedRowModel()` - returns selected rows after grouping and sorting
 
 ```ts
-console.log(table.store.state.rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
+console.log(table.atoms.rowSelection.get()) //get the row selection state - { 1: true, 2: false, etc... }
 console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
 console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
 console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows

@@ -6,17 +6,50 @@ title: Column Pinning Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [column-pinning](../framework/react/examples/column-pinning)
-- [sticky-column-pinning](../framework/react/examples/column-pinning-sticky)
+<!-- ::start:framework -->
 
- ### Other Examples
- 
-- [Svelte column-pinning](../framework/svelte/examples/column-pinning)
-- [Vue column-pinning](../framework/vue/examples/column-pinning)
+# React
 
-## API
+- [Column Pinning](../framework/react/examples/column-pinning)
+- [Column Pinning Split](../framework/react/examples/column-pinning-split)
+- [Sticky Column Pinning](../framework/react/examples/column-pinning-sticky)
 
-[Column Pinning API](../api/features/column-pinning)
+# Preact
+
+- [Column Pinning](../framework/preact/examples/column-pinning)
+- [Column Pinning Split](../framework/preact/examples/column-pinning-split)
+- [Sticky Column Pinning](../framework/preact/examples/column-pinning-sticky)
+
+# Solid
+
+- [Column Pinning](../framework/solid/examples/column-pinning)
+- [Column Pinning Split](../framework/solid/examples/column-pinning-split)
+- [Sticky Column Pinning](../framework/solid/examples/column-pinning-sticky)
+
+# Svelte
+
+- [Column Pinning](../framework/svelte/examples/column-pinning)
+- [Column Pinning Split](../framework/svelte/examples/column-pinning-split)
+- [Sticky Column Pinning](../framework/svelte/examples/column-pinning-sticky)
+
+# Vue
+
+- [Column Pinning](../framework/vue/examples/column-pinning)
+- [Column Pinning Split](../framework/vue/examples/column-pinning-split)
+- [Sticky Column Pinning](../framework/vue/examples/column-pinning-sticky)
+
+# Angular
+
+- [Column Pinning](../framework/angular/examples/column-pinning)
+- [Sticky Column Pinning](../framework/angular/examples/column-pinning-sticky)
+
+# Lit
+
+- [Column Pinning](../framework/lit/examples/column-pinning)
+- [Column Pinning Split](../framework/lit/examples/column-pinning-split)
+- [Sticky Column Pinning](../framework/lit/examples/column-pinning-sticky)
+
+<!-- ::end:framework -->
 
 ## Column Pinning Guide
 
@@ -85,13 +118,13 @@ const table = useTable({
 
 There are a handful of useful Column API methods to help you implement column pinning features:
 
-- [`column.getCanPin`](../api/features/column-pinning#getcanpin): Use to determine if a column can be pinned.
-- [`column.pin`](../api/features/column-pinning#pin): Use to pin a column to the left or right. Or use to unpin a column.
-- [`column.getIsPinned`](../api/features/column-pinning#getispinned): Use to determine where a column is pinned.
-- [`column.getStart`](../api/features/column-pinning#getstart): Use to provide the correct `left` CSS value for a pinned column.
-- [`column.getAfter`](../api/features/column-pinning#getafter): Use to provide the correct `right` CSS value for a pinned column.
-- [`column.getIsLastColumn`](../api/features/column-pinning#getislastcolumn): Use to determine if a column is the last column in its pinned group. Useful for adding a box-shadow
-- [`column.getIsFirstColumn`](../api/features/column-pinning#getisfirstcolumn): Use to determine if a column is the first column in its pinned group. Useful for adding a box-shadow
+- `column.getCanPin`: Use to determine if a column can be pinned.
+- `column.pin`: Use to pin a column to the left or right. Or use to unpin a column.
+- `column.getIsPinned`: Use to determine where a column is pinned.
+- `column.getStart`: Use to provide the correct `left` CSS value for a pinned column.
+- `column.getAfter`: Use to provide the correct `right` CSS value for a pinned column.
+- `column.getIsLastColumn`: Use to determine if a column is the last column in its pinned group. Useful for adding a box-shadow.
+- `column.getIsFirstColumn`: Use to determine if a column is the first column in its pinned group. Useful for adding a box-shadow.
 
 ### Split Table Column Pinning
 

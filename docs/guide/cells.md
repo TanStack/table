@@ -2,10 +2,6 @@
 title: Cells Guide
 ---
 
-## API
-
-[Cell API](../api/core/cell)
-
 ## Cells Guide
 
 This quick guide will discuss the different ways you can retrieve and interact with `cell` objects in TanStack Table.

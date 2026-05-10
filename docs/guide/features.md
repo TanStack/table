@@ -9,6 +9,7 @@ TanStack Table comes with many features, each with their own associated options 
 - [Column Ordering](./column-ordering)
 - [Column Pinning](./column-pinning)
 - [Column Sizing](./column-sizing)
+- [Column Resizing](./column-resizing)
 - [Column Visibility](./column-visibility)
 - [Expanding](./expanding)
 - [Column Faceting](./column-faceting)

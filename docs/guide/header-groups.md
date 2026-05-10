@@ -2,10 +2,6 @@
 title: Header Groups Guide
 ---
 
-## API
-
-[Header Group API](../api/core/header-group)
-
 ## Header Groups Guide
 
 This quick guide will discuss the different ways you can retrieve and interact with header group objects in TanStack Table.

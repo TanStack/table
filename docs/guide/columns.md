@@ -2,10 +2,6 @@
 title: Columns Guide
 ---
 
-## API
-
-[Column API](../api/core/column)
-
 ## Columns Guide
 
 > Note: This guide is about the actual `column` objects that are generated within the table instance and NOT about setting up the [column definitions](./column-defs) for your table.

@@ -6,11 +6,37 @@ title: Grouping Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [grouping](../framework/react/examples/grouping)
+<!-- ::start:framework -->
 
-## API
+# React
 
-[Grouping API](../api/features/grouping)
+- [Grouping](../framework/react/examples/grouping)
+
+# Preact
+
+- [Grouping](../framework/preact/examples/grouping)
+
+# Solid
+
+- [Grouping](../framework/solid/examples/grouping)
+
+# Svelte
+
+- [Grouping](../framework/svelte/examples/grouping)
+
+# Vue
+
+- [Grouping](../framework/vue/examples/grouping)
+
+# Angular
+
+- [Grouping](../framework/angular/examples/grouping)
+
+# Lit
+
+- [Grouping](../framework/lit/examples/grouping)
+
+<!-- ::end:framework -->
 
 ## Grouping Guide
 

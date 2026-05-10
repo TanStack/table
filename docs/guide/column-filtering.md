@@ -6,18 +6,49 @@ title: Column Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
+<!-- ::start:framework -->
+
+# React
+
 - [Column Filters](../framework/react/examples/filters)
-- [Faceted Filters](../framework/react/examples/filters-faceted) (Autocomplete and Range filters)
-- [Fuzzy Search](../framework/react/examples/filters-fuzzy) (Match Sorter)
-- [Editable Data](../framework/react/examples/editable-data)
-- [Expanding](../framework/react/examples/expanding) (Filtering from Sub-Rows)
-- [Grouping](../framework/react/examples/grouping)
-- [Pagination](../framework/react/examples/pagination)
-- [Row Selection](../framework/react/examples/row-selection)
+- [Faceted Filters](../framework/react/examples/filters-faceted)
+- [Fuzzy Search](../framework/react/examples/filters-fuzzy)
 
-## API
+# Preact
 
-[Column Filtering API](../api/features/column-filtering)
+- [Column Filters](../framework/preact/examples/filters)
+- [Faceted Filters](../framework/preact/examples/filters-faceted)
+- [Fuzzy Search](../framework/preact/examples/filters-fuzzy)
+
+# Solid
+
+- [Column Filters](../framework/solid/examples/filters)
+- [Faceted Filters](../framework/solid/examples/filters-faceted)
+- [Fuzzy Search](../framework/solid/examples/filters-fuzzy)
+
+# Svelte
+
+- [Column Filters](../framework/svelte/examples/filtering)
+- [Faceted Filters](../framework/svelte/examples/filters-faceted)
+- [Fuzzy Search](../framework/svelte/examples/filters-fuzzy)
+
+# Vue
+
+- [Column Filters](../framework/vue/examples/filters)
+- [Faceted Filters](../framework/vue/examples/filters-faceted)
+- [Fuzzy Search](../framework/vue/examples/filters-fuzzy)
+
+# Angular
+
+- [Column Filters](../framework/angular/examples/filters)
+
+# Lit
+
+- [Column Filters](../framework/lit/examples/filters)
+- [Faceted Filters](../framework/lit/examples/filters-faceted)
+- [Fuzzy Search](../framework/lit/examples/filters-fuzzy)
+
+<!-- ::end:framework -->
 
 ## Column Filtering Guide
 
@@ -104,7 +135,7 @@ Since the column filter state is an array of objects, you can have multiple colu
 
 #### Accessing Column Filter State
 
-You can access the column filter state from the table instance just like any other table state using the `table.store.state` API.
+You can access the column filter state from the table instance with `table.atoms.columnFilters.get()` or from the current `table.store.state` snapshot.
 
 ```jsx
 const table = useTable({
@@ -115,7 +146,7 @@ const table = useTable({
   //...
 })
 
-console.log(table.store.state.columnFilters) // access the column filters state from the table instance
+console.log(table.atoms.columnFilters.get()) // access the current column filters state
 ```
 
 However, if you need to access the column filter state before the table is initialized, you can "control" the column filter state like down below.
@@ -162,7 +193,7 @@ const table = useTable({
 })
 ```
 
-> **NOTE**: Do not use both `initialState.columnFilters` and `state.columnFilters` at the same time, as the initialized state in the `state.columnFilters` will override the `initialState.columnFilters`.
+> **NOTE**: Do not use both `initialState.columnFilters` and `state.columnFilters` at the same time, as the controlled `state.columnFilters` value will override the `initialState.columnFilters`.
 
 ### FilterFns
 

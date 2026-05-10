@@ -6,17 +6,46 @@ title: Pagination Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [pagination](../framework/react/examples/pagination)
-- [pagination-controlled (React Query)](../framework/react/examples/pagination-controlled)
-- [editable-data](../framework/react/examples/editable-data)
-- [expanding](../framework/react/examples/expanding)
-- [filters](../framework/react/examples/filters)
-- [fully-controlled](../framework/react/examples/fully-controlled)
-- [row-selection](../framework/react/examples/row-selection)
+<!-- ::start:framework -->
 
-## API
+# React
 
-[Pagination API](../api/features/pagination)
+- [Pagination](../framework/react/examples/pagination)
+- [With TanStack Query](../framework/react/examples/with-tanstack-query)
+
+# Preact
+
+- [Pagination](../framework/preact/examples/pagination)
+- [With TanStack Query](../framework/preact/examples/with-tanstack-query)
+
+# Solid
+
+- [Pagination](../framework/solid/examples/pagination)
+- [With TanStack Query](../framework/solid/examples/with-tanstack-query)
+
+# Svelte
+
+- [Pagination](../framework/svelte/examples/pagination)
+- [With TanStack Query](../framework/svelte/examples/with-tanstack-query)
+
+# Vue
+
+- [Pagination](../framework/vue/examples/pagination)
+- [With TanStack Query](../framework/vue/examples/with-tanstack-query)
+
+# Angular
+
+- [Remote Data](../framework/angular/examples/remote-data)
+
+# Lit
+
+- [Pagination](../framework/lit/examples/pagination)
+
+# Vanilla
+
+- [Pagination](../framework/vanilla/examples/pagination)
+
+<!-- ::end:framework -->
 
 ## Pagination Guide
 
@@ -232,7 +261,7 @@ There are several pagination table instance APIs that are useful for hooking up 
   {'>>'}
 </Button>
 <select
-  value={table.store.state.pagination.pageSize}
+  value={table.atoms.pagination.get().pageSize}
   onChange={e => {
     table.setPageSize(Number(e.target.value))
   }}

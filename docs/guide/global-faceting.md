@@ -6,11 +6,33 @@ title: Global Faceting Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters-faceted](../framework/react/examples/filters)
+<!-- ::start:framework -->
 
-## API
+# React
 
-[Global Faceting API](../api/features/global-faceting)
+- [Faceted Filters](../framework/react/examples/filters-faceted)
+
+# Preact
+
+- [Faceted Filters](../framework/preact/examples/filters-faceted)
+
+# Solid
+
+- [Faceted Filters](../framework/solid/examples/filters-faceted)
+
+# Svelte
+
+- [Faceted Filters](../framework/svelte/examples/filters-faceted)
+
+# Vue
+
+- [Faceted Filters](../framework/vue/examples/filters-faceted)
+
+# Lit
+
+- [Faceted Filters](../framework/lit/examples/filters-faceted)
+
+<!-- ::end:framework -->
 
 ## Global Faceting Guide
 

@@ -2,10 +2,6 @@
 title: Headers Guide
 ---
 
-## API
-
-[Header API](../api/core/header)
-
 ## Headers Guide
 
 This quick guide will discuss the different ways you can retrieve and interact with `header` objects in TanStack Table.
@@ -69,7 +65,7 @@ Every header stores a reference to its parent [column](./columns) object and its
 
 ### More Header APIs
 
-Headers have a few more useful APIs attached to them that are useful for interacting with the table state. Most of them relate to the Column sizing and resizing features. See the [Column Resizing Guide](./column-resizing) for more information.
+Headers have a few more useful APIs attached to them that are useful for interacting with the table state. Most of them relate to the column sizing and resizing features. See the [Column Sizing Guide](./column-sizing) and [Column Resizing Guide](./column-resizing) for more information.
 
 ### Header Rendering
 

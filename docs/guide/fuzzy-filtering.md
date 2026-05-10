@@ -6,11 +6,33 @@ title: Fuzzy Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [filters-fuzzy](../framework/react/examples/filters-fuzzy)
+<!-- ::start:framework -->
 
-## API
+# React
 
-[Filters API](../api/features/filters)
+- [Fuzzy Search](../framework/react/examples/filters-fuzzy)
+
+# Preact
+
+- [Fuzzy Search](../framework/preact/examples/filters-fuzzy)
+
+# Solid
+
+- [Fuzzy Search](../framework/solid/examples/filters-fuzzy)
+
+# Svelte
+
+- [Fuzzy Search](../framework/svelte/examples/filters-fuzzy)
+
+# Vue
+
+- [Fuzzy Search](../framework/vue/examples/filters-fuzzy)
+
+# Lit
+
+- [Fuzzy Search](../framework/lit/examples/filters-fuzzy)
+
+<!-- ::end:framework -->
 
 ## Fuzzy Filtering Guide
 

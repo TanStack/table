@@ -6,7 +6,21 @@ title: Custom Features Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [custom-features](../framework/react/examples/custom-features)
+<!-- ::start:framework -->
+
+# React
+
+- [Custom Plugin](../framework/react/examples/custom-plugin)
+
+# Preact
+
+- [Custom Plugin](../framework/preact/examples/custom-plugin)
+
+# Angular
+
+- [Custom Plugin](../framework/angular/examples/custom-plugin)
+
+<!-- ::end:framework -->
 
 ## Custom Features Guide
 
@@ -29,22 +43,16 @@ TanStack Table's source code is arguably somewhat simple (at least we think so).
 All of the functionality of a feature object can be described with the `TableFeature` type that is exported from TanStack Table. This type is a TypeScript interface that describes the shape of a feature object needed to create a feature.
 
 ```ts
-export interface TableFeature<TFeatures extends TableFeatures,  TData extends RowData = any> {
-  constructCell?: (
-    cell: Cell<TFeatures, TData, unknown>,
-    column: Column<TFeatures, TData>,
-    row: Row<TFeatures, TData>,
-    table: Table<TFeatures, TData>
-  ) => void
-  constructColumn?: (column: Column<TFeatures, TData, unknown>, table: Table<TFeatures, TData>) => void
-  constructHeader?: (header: Header<TFeatures, TData, unknown>, table: Table<TFeatures, TData>) => void
-  constructRow?: (row: Row<TFeatures, TData>, table: Table<TFeatures, TData>) => void
-  constructTable?: (table: Table<TFeatures, TData>) => void
-  getDefaultColumnDef?: () => Partial<ColumnDef<TFeatures, TData, unknown>>
-  getDefaultTableOptions?: (
-    table: Table<TFeatures, TData>
-  ) => Partial<TableOptions<TFeatures, TData>>
-  getInitialState?: (initialState?: InitialTableState) => Partial<TableState>
+export interface TableFeature<TConstructors extends FeatureConstructors> {
+  assignCellPrototype?: AssignCellPrototype<TConstructors>
+  assignColumnPrototype?: AssignColumnPrototype<TConstructors>
+  assignHeaderPrototype?: AssignHeaderPrototype<TConstructors>
+  assignRowPrototype?: AssignRowPrototype<TConstructors>
+  constructTableAPIs?: ConstructTableAPIs<TConstructors>
+  getDefaultColumnDef?: GetDefaultColumnDef<TConstructors>
+  getDefaultTableOptions?: GetDefaultTableOptions<TConstructors>
+  getInitialState?: GetInitialState<TConstructors>
+  initRowInstanceData?: InitRowInstanceData<TConstructors>
 }
 ```
 
@@ -56,13 +64,13 @@ This might be a bit confusing, so let's break down what each of these methods do
 
 ##### getDefaultTableOptions
 
-The `getDefaultTableOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/columnSizingFeature.ts) feature, the `getDefaultTableOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
+The `getDefaultTableOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts) feature, the `getDefaultTableOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
 
 <br />
 
 ##### getDefaultColumnDef
 
-The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/rowSortingFeature.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
+The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
 
 <br />
 
@@ -74,39 +82,39 @@ The `getInitialState` method in a table feature is responsible for setting the d
 
 <br />
 
-##### constructTable
+##### constructTableAPIs
 
-The `constructTable` method in a table feature is responsible for adding methods to the `table` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/rowSelectionFeature.ts) feature, the `constructTable` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `rowSelectionFeature` feature.
-
-<br />
-
-##### constructHeader
-
-The `constructHeader` method in a table feature is responsible for adding methods to the `header` instance. For example, in the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/columnSizingFeature.ts) feature, the `constructHeader` method adds many header instance API methods such as `getStart`, and many others. So then, when you call `header.getStart()`, you are calling a method that was added to the header instance by the `columnSizingFeature` feature.
+The `constructTableAPIs` method in a table feature is responsible for adding methods to the `table` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature, the `constructTableAPIs` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `rowSelectionFeature` feature.
 
 <br />
 
-##### constructColumn
+##### assignHeaderPrototype
 
-The `constructColumn` method in a table feature is responsible for adding methods to the `column` instance. For example, in the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/rowSortingFeature.ts) feature, the `constructColumn` method adds many column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added to the column instance by the `rowSortingFeature` feature.
-
-<br />
-
-##### constructRow
-
-The `constructRow` method in a table feature is responsible for adding methods to the `row` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/rowSelectionFeature.ts) feature, the `constructRow` method adds many row instance API methods such as `toggleSelected`, `getIsSelected`, etc. So then, when you call `row.toggleSelected()`, you are calling a method that was added to the row instance by the `rowSelectionFeature` feature.
+The `assignHeaderPrototype` method in a table feature is responsible for adding methods to the shared `header` prototype. For example, the [Column Sizing](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts) feature adds header instance API methods such as `getStart`. So then, when you call `header.getStart()`, you are calling a method that was added by the column sizing feature.
 
 <br />
 
-##### constructCell
+##### assignColumnPrototype
 
-The `constructCell` method in a table feature is responsible for adding methods to the `cell` instance. For example, in the [Column Grouping](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/columnGroupingFeature.ts) feature, the `constructCell` method adds many cell instance API methods such as `getIsGrouped`, `getIsAggregated`, etc. So then, when you call `cell.getIsGrouped()`, you are calling a method that was added to the cell instance by the `columnGroupingFeature` feature.
+The `assignColumnPrototype` method in a table feature is responsible for adding methods to the shared `column` prototype. For example, the [Sorting](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature adds column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added by the row sorting feature.
+
+<br />
+
+##### assignRowPrototype and initRowInstanceData
+
+The `assignRowPrototype` method in a table feature is responsible for adding methods to the shared `row` prototype. The `initRowInstanceData` method is available for per-row instance data or caches that cannot live on the shared prototype. For example, the [Row Selection](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature adds row instance API methods such as `toggleSelected` and `getIsSelected`.
+
+<br />
+
+##### assignCellPrototype
+
+The `assignCellPrototype` method in a table feature is responsible for adding methods to the shared `cell` prototype. For example, the [Column Grouping](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.ts) feature adds cell instance API methods such as `getIsGrouped` and `getIsAggregated`.
 
 ### Adding a Custom Feature
 
 Let's walk through making a custom table feature for a hypothetical use case. Let's say we want to add a feature to the table instance that allows the user to change the "density" (padding of cells) of the table. 
 
-Check out the full [custom-features](../framework/react/examples/custom-features) example to see the full implementation, but here's an in-depth look at the steps to create a custom feature.
+Check out the full [custom-plugin](../framework/react/examples/custom-plugin) example to see the full implementation, but here's an in-depth look at the steps to create a custom feature.
 
 #### Step 1: Set up TypeScript Types
 
@@ -117,56 +125,42 @@ These types are following the naming convention used internally within TanStack 
 ```ts
 // define types for our new feature's custom state
 export type DensityState = 'sm' | 'md' | 'lg'
-export interface DensityTableState {
+export interface TableState_Density {
   density: DensityState
 }
 
 // define types for our new feature's table options
-export interface DensityOptions {
+export interface TableOptions_Density {
   enableDensity?: boolean
   onDensityChange?: OnChangeFn<DensityState>
 }
 
 // Define types for our new feature's table APIs
-export interface DensityInstance {
+export interface Table_Density {
   setDensity: (updater: Updater<DensityState>) => void
   toggleDensity: (value?: DensityState) => void
 }
-```
 
-#### Step 2: Use Declaration Merging to Add New Types to TanStack Table
-
-We can tell TypeScript to modify the exported types from TanStack Table to include our new feature's types. This is called "declaration merging" and it's a powerful feature of TypeScript. This way, we should not have to use any TypeScript hacks such as `as unknown as CustomTable` or `// @ts-ignore` in our new feature's code or in our application code.
-
-```ts
-// Use declaration merging to add our new feature APIs and state types to TanStack Table's existing types.
-declare module '@tanstack/react-table' { // or whatever framework adapter you are using
-  //merge our new feature's state with the existing table state
-  interface TableState extends DensityTableState {}
-  //merge our new feature's options with the existing table options
-  interface TableOptions<TFeatures extends TableFeatures,  TData extends RowData>
-    extends DensityOptions {}
-  //merge our new feature's instance APIs with the existing table instance APIs
-  interface Table<TFeatures extends TableFeatures,  TData extends RowData> extends DensityInstance {}
-  // if you need to add cell instance APIs...
-  // interface Cell<TFeatures extends TableFeatures,  TData extends RowData, TValue> extends DensityCell
-  // if you need to add row instance APIs...
-  // interface Row<TFeatures extends TableFeatures,  TData extends RowData> extends DensityRow
-  // if you need to add column instance APIs...
-  // interface Column<TFeatures extends TableFeatures,  TData extends RowData, TValue> extends DensityColumn
-  // if you need to add header instance APIs...
-  // interface Header<TFeatures extends TableFeatures,  TData extends RowData, TValue> extends DensityHeader
-
-  // Note: declaration merging on `ColumnDef` is not possible because it is a complex type, not an interface.
-  // But you can still use declaration merging on `ColumnDef.meta`
+interface DensityPluginConstructors {
+  Table: Table_Density
+  TableOptions: TableOptions_Density
+  TableState: TableState_Density
 }
 ```
 
-Once we do this correctly, we should have no TypeScript errors when we try to both create our new feature's code and use it in our application.
+#### Step 2: Add the Feature to the TableFeatures Interface
 
-##### Caveats of Using Declaration Merging
+TanStack Table uses the keys passed to `tableFeatures({ ... })` to infer which feature state, options, and APIs exist on a table. To make a custom feature key type-safe, add it to the exported `Plugins` interface with declaration merging.
 
-One caveat of using declaration merging is that it will affect the TanStack Table types for every table across your codebase. This is not a problem if you plan on loading the same feature set for every table in your application, but it could be a problem if some of your tables load extra features and some do not. Alternatively, you can just make a bunch of custom types that extend off of the TanStack Table types with your new features added. This is what [Material React Table](https://github.com/KevinVandy/material-react-table/blob/v2/packages/material-react-table/src/types.ts) does in order to avoid affecting the types of vanilla TanStack Table tables, but it's a bit more tedious, and requires a lot of type casting at certain points.
+```ts
+declare module '@tanstack/react-table' {
+  interface Plugins {
+    densityPlugin?: TableFeature<DensityPluginConstructors>
+  }
+}
+```
+
+Once the feature is registered this way, TypeScript can infer the feature's state, options, and APIs only on tables whose `_features` include `densityPlugin`.
 
 #### Step 3: Create the Feature Object
 
@@ -175,54 +169,51 @@ With all of that TypeScript setup out of the way, we can now create the feature 
 Use the `TableFeature` type to ensure that you are creating the feature object correctly. If the TypeScript types are set up correctly, you should have no TypeScript errors when you create the feature object with the new state, options, and instance APIs.
 
 ```ts
-export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
+export const densityPlugin: TableFeature<DensityPluginConstructors> = {
   // define the new feature's initial state
-  getInitialState: (state): DensityTableState => {
+  getInitialState: (initialState) => {
     return {
       density: 'md',
-      ...state,
+      ...initialState, // must come last
     }
   },
 
   // define the new feature's default options
-  getDefaultTableOptions: <TFeatures extends TableFeatures,  TData extends RowData>(
-    table: Partial<Table<TFeatures, TData>>
-  ): DensityOptions => {
+  getDefaultTableOptions: (table) => {
     return {
       enableDensity: true,
       onDensityChange: makeStateUpdater('density', table),
-    } as DensityOptions
+    }
   },
   // if you need to add a default column definition...
-  // getDefaultColumnDef: <TFeatures extends TableFeatures,  TData extends RowData>(): Partial<ColumnDef<TFeatures, TData>> => {
-  //   return { meta: {} } //use meta instead of directly adding to the columnDef to avoid typescript stuff that's hard to workaround
-  // },
+  // getDefaultColumnDef: () => {},
 
   // define the new feature's table instance methods
-  constructTable: <TFeatures extends TableFeatures,  TData extends RowData>(table: Table<TFeatures, TData>): void => {
-    table.setDensity = updater => {
-      const safeUpdater: Updater<DensityState> = old => {
-        let newState = functionalUpdate(updater, old)
+  constructTableAPIs: (table) => {
+    table.setDensity = (updater) => {
+      const safeUpdater: Updater<DensityState> = (old) => {
+        const newState = functionalUpdate(updater, old)
         return newState
       }
       return table.options.onDensityChange?.(safeUpdater)
     }
-    table.toggleDensity = value => {
-      table.setDensity(old => {
+    table.toggleDensity = (value) => {
+      table.setDensity?.((old) => {
         if (value) return value
-        return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' //cycle through the 3 options
+        return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg'
       })
     }
   },
 
   // if you need to add row instance APIs...
-  // constructRow: <TFeatures extends TableFeatures,  TData extends RowData>(row, table): void => {},
+  // assignRowPrototype: (prototype, table) => {},
+  // initRowInstanceData: (row) => {},
   // if you need to add cell instance APIs...
-  // constructCell: <TFeatures extends TableFeatures,  TData extends RowData>(cell, column, row, table): void => {},
+  // assignCellPrototype: (prototype, table) => {},
   // if you need to add column instance APIs...
-  // constructColumn: <TFeatures extends TableFeatures,  TData extends RowData>(column, table): void => {},
+  // assignColumnPrototype: (prototype, table) => {},
   // if you need to add header instance APIs...
-  // constructHeader: <TFeatures extends TableFeatures,  TData extends RowData>(header, table): void => {},
+  // assignHeaderPrototype: (prototype, table) => {},
 }
 ```
 
@@ -231,7 +222,7 @@ export const DensityFeature: TableFeature<any> = { //Use the TableFeature type!!
 Now that we have our feature object, we can add it to the table instance by including it in the `tableFeatures()` call and passing the result to the `_features` option when we create the table instance.
 
 ```ts
-const _features = tableFeatures({ DensityFeature })
+const _features = tableFeatures({ densityPlugin })
 
 const table = useTable({
   _features,
@@ -247,7 +238,7 @@ const table = useTable({
 Now that the feature is added to the table instance, you can use the new instance APIs options, and state in your application.
 
 ```tsx
-const _features = tableFeatures({ DensityFeature })
+const _features = tableFeatures({ densityPlugin })
 
 const table = useTable({
   _features,
@@ -261,7 +252,7 @@ const table = useTable({
   onDensityChange: setDensity,
 })
 //...
-const { density } = table.store.state
+const density = table.atoms.density.get()
 return(
   <td
     key={cell.id}

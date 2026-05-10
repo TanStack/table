@@ -6,11 +6,49 @@ title: Global Filtering Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [Global Filters](../framework/react/examples/filters-global)
+<!-- ::start:framework -->
 
-## API
+# React
 
-[Global Filtering API](../api/features/global-filtering)
+- [Column Filters](../framework/react/examples/filters)
+- [Faceted Filters](../framework/react/examples/filters-faceted)
+- [Fuzzy Search](../framework/react/examples/filters-fuzzy)
+
+# Preact
+
+- [Column Filters](../framework/preact/examples/filters)
+- [Faceted Filters](../framework/preact/examples/filters-faceted)
+- [Fuzzy Search](../framework/preact/examples/filters-fuzzy)
+
+# Solid
+
+- [Column Filters](../framework/solid/examples/filters)
+- [Faceted Filters](../framework/solid/examples/filters-faceted)
+- [Fuzzy Search](../framework/solid/examples/filters-fuzzy)
+
+# Svelte
+
+- [Column Filters](../framework/svelte/examples/filtering)
+- [Faceted Filters](../framework/svelte/examples/filters-faceted)
+- [Fuzzy Search](../framework/svelte/examples/filters-fuzzy)
+
+# Vue
+
+- [Column Filters](../framework/vue/examples/filters)
+- [Faceted Filters](../framework/vue/examples/filters-faceted)
+- [Fuzzy Search](../framework/vue/examples/filters-fuzzy)
+
+# Angular
+
+- [Column Filters](../framework/angular/examples/filters)
+
+# Lit
+
+- [Column Filters](../framework/lit/examples/filters)
+- [Faceted Filters](../framework/lit/examples/filters-faceted)
+- [Fuzzy Search](../framework/lit/examples/filters-fuzzy)
+
+<!-- ::end:framework -->
 
 ## Global Filtering Guide
 
@@ -117,7 +155,7 @@ You can also define your own custom filter functions either as the globalFilterF
 
 ### Global Filter State
 
-The global filter state is stored in the table's internal state and can be accessed via the table.store.state.globalFilter property. If you want to persist the global filter state outside of the table, you can use the onGlobalFilterChange option to provide a callback function that will be called whenever the global filter state changes.
+The global filter state is stored in the table's state atoms and can be read with `table.atoms.globalFilter.get()` or from the current `table.store.state.globalFilter` snapshot. If you want to persist the global filter state outside of the table, use the `state.globalFilter` and `onGlobalFilterChange` options together.
 
 ```jsx
 const [globalFilter, setGlobalFilter] = useState<any>([])
