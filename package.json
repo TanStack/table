@@ -20,7 +20,7 @@
     "format": "prettier --experimental-cli --ignore-unknown '**/*' --write",
     "lint:fix:all": "pnpm run format && nx run-many --targets=lint --fix",
     "lint:fix": "nx affected --target=lint:fix --exclude=examples/**",
-    "preinstall": "node -e \"if(process.env.CI == 'true') {console.log('Skipping preinstall...'); process.exit(1)}\" || npx -y only-allow pnpm",
+    "preinstall": "node -e \"if (process.env.CI !== 'true') require('child_process').execSync('npx -y only-allow pnpm', { stdio: 'inherit' })\"",
     "size": "size-limit",
     "test": "pnpm run test:ci",
     "test:build": "nx affected --target=test:build",
