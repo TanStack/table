@@ -36,8 +36,8 @@ importers:
         specifier: ^29.1.1
         version: 29.1.1
       knip:
-        specifier: ^6.12.1
-        version: 6.12.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
+        specifier: ^6.12.2
+        version: 6.12.2(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
       markdown-link-extractor:
         specifier: ^4.0.3
         version: 4.0.3
@@ -601,6 +601,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-pacer':
+        specifier: ^0.23.0
+        version: 0.23.0(@angular/common@21.2.12(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/angular-table
@@ -1616,8 +1619,8 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-store':
-        specifier: ^0.13.0
-        version: 0.13.0(preact@10.29.1)
+        specifier: ^0.13.1
+        version: 0.13.1(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -1641,8 +1644,8 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-store':
-        specifier: ^0.13.0
-        version: 0.13.0(preact@10.29.1)
+        specifier: ^0.13.1
+        version: 0.13.1(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -1666,8 +1669,8 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-store':
-        specifier: ^0.13.0
-        version: 0.13.0(preact@10.29.1)
+        specifier: ^0.13.1
+        version: 0.13.1(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -1933,8 +1936,8 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-store':
-        specifier: ^0.13.0
-        version: 0.13.0(preact@10.29.1)
+        specifier: ^0.13.1
+        version: 0.13.1(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -2004,6 +2007,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/preact-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -2029,6 +2035,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/preact-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -2054,6 +2063,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/preact-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -2099,8 +2111,8 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-store':
-        specifier: ^0.13.0
-        version: 0.13.0(preact@10.29.1)
+        specifier: ^0.13.1
+        version: 0.13.1(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -2146,8 +2158,8 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/preact-store':
-        specifier: ^0.13.0
-        version: 0.13.0(preact@10.29.1)
+        specifier: ^0.13.1
+        version: 0.13.1(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -2230,8 +2242,8 @@ importers:
         specifier: ^5.100.9
         version: 5.100.9(preact@10.29.1)
       '@tanstack/preact-store':
-        specifier: ^0.13.0
-        version: 0.13.0(preact@10.29.1)
+        specifier: ^0.13.1
+        version: 0.13.1(preact@10.29.1)
       '@tanstack/preact-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/preact-table
@@ -2340,6 +2352,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -2426,6 +2441,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -2958,6 +2976,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -2998,6 +3019,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3041,6 +3065,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3084,6 +3111,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3127,6 +3157,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3224,13 +3257,16 @@ importers:
         version: 3.0.4(@react-spectrum/provider@3.11.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(tailwindcss@4.3.0)
       '@heroui/styles':
         specifier: ^3.0.4
-        version: 3.0.4(tailwind-merge@3.5.0)(tailwindcss@4.3.0)
+        version: 3.0.4(tailwind-merge@3.4.0)(tailwindcss@4.3.0)
       '@tailwindcss/vite':
         specifier: ^4.3.0
         version: 4.3.0(vite@8.0.11(@types/node@25.6.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.8.3))
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3296,11 +3332,14 @@ importers:
         specifier: ^9.1.1
         version: 9.1.1(react@19.2.6)
       '@tabler/icons-react':
-        specifier: ^3.43.0
-        version: 3.43.0(react@19.2.6)
+        specifier: ^3.44.0
+        version: 3.44.0(react@19.2.6)
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3380,6 +3419,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3441,6 +3483,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3511,6 +3556,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3596,6 +3644,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3671,7 +3722,7 @@ importers:
         version: 3.0.4(@react-spectrum/provider@3.11.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(tailwindcss@4.3.0)
       '@heroui/styles':
         specifier: ^3.0.4
-        version: 3.0.4(tailwind-merge@3.4.0)(tailwindcss@4.3.0)
+        version: 3.0.4(tailwind-merge@3.5.0)(tailwindcss@4.3.0)
       '@tailwindcss/vite':
         specifier: ^4.3.0
         version: 4.3.0(vite@8.0.11(@types/node@25.6.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.8.3))
@@ -3725,8 +3776,8 @@ importers:
         specifier: ^9.1.1
         version: 9.1.1(react@19.2.6)
       '@tabler/icons-react':
-        specifier: ^3.43.0
-        version: 3.43.0(react@19.2.6)
+        specifier: ^3.44.0
+        version: 3.44.0(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3883,6 +3934,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.0
         version: 4.3.0(vite@8.0.11(@types/node@25.6.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.8.3))
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -3944,6 +3998,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.3.0
         version: 4.3.0(vite@8.0.11(@types/node@25.6.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.8.3))
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -4015,8 +4072,8 @@ importers:
         specifier: ^9.1.1
         version: 9.1.1(react@19.2.6)
       '@tabler/icons-react':
-        specifier: ^3.43.0
-        version: 3.43.0(react@19.2.6)
+        specifier: ^3.44.0
+        version: 3.44.0(react@19.2.6)
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
@@ -4099,6 +4156,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -4243,6 +4303,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -4283,6 +4346,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -4631,8 +4697,11 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/react-form':
-        specifier: ^1.29.3
-        version: 1.29.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        specifier: ^1.31.0
+        version: 1.31.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/react-table
@@ -4719,6 +4788,9 @@ importers:
 
   examples/react/with-tanstack-router:
     dependencies:
+      '@tanstack/react-pacer':
+        specifier: ^0.22.0
+        version: 0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-query':
         specifier: ^5.100.9
         version: 5.100.9(react@19.2.6)
@@ -5095,9 +5167,9 @@ importers:
 
   examples/solid/filters:
     dependencies:
-      '@solid-primitives/scheduled':
-        specifier: ^1.5.3
-        version: 1.5.3(solid-js@1.9.12)
+      '@tanstack/solid-pacer':
+        specifier: ^0.21.0
+        version: 0.21.0(solid-js@1.9.12)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
@@ -5120,9 +5192,9 @@ importers:
 
   examples/solid/filters-faceted:
     dependencies:
-      '@solid-primitives/scheduled':
-        specifier: ^1.5.3
-        version: 1.5.3(solid-js@1.9.12)
+      '@tanstack/solid-pacer':
+        specifier: ^0.21.0
+        version: 0.21.0(solid-js@1.9.12)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
@@ -5148,6 +5220,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: ^9.0.0-alpha.4
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/solid-pacer':
+        specifier: ^0.21.0
+        version: 0.21.0(solid-js@1.9.12)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
@@ -5390,8 +5465,8 @@ importers:
   examples/solid/with-tanstack-form:
     dependencies:
       '@tanstack/solid-form':
-        specifier: ^1.29.3
-        version: 1.29.3(solid-js@1.9.12)
+        specifier: ^1.31.0
+        version: 1.31.0(solid-js@1.9.12)
       '@tanstack/solid-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/solid-table
@@ -5445,6 +5520,9 @@ importers:
 
   examples/solid/with-tanstack-router:
     dependencies:
+      '@tanstack/solid-pacer':
+        specifier: ^0.21.0
+        version: 0.21.0(solid-js@1.9.12)
       '@tanstack/solid-query':
         specifier: ^5.100.9
         version: 5.100.9(solid-js@1.9.12)
@@ -6336,11 +6414,11 @@ importers:
   examples/svelte/with-tanstack-form:
     dependencies:
       '@tanstack/form-core':
-        specifier: ^1.29.3
-        version: 1.29.3
+        specifier: ^1.31.0
+        version: 1.31.0
       '@tanstack/svelte-form':
-        specifier: ^1.29.3
-        version: 1.29.3(svelte@5.55.5(@typescript-eslint/types@8.59.2))
+        specifier: ^1.31.0
+        version: 1.31.0(svelte@5.55.5(@typescript-eslint/types@8.59.2))
       '@tanstack/svelte-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/svelte-table
@@ -7334,8 +7412,8 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/vue-form':
-        specifier: ^1.29.3
-        version: 1.29.3(vue@3.5.34(typescript@6.0.3))
+        specifier: ^1.31.0
+        version: 1.31.0(vue@3.5.34(typescript@6.0.3))
       '@tanstack/vue-table':
         specifier: ^9.0.0-alpha.45
         version: link:../../../packages/vue-table
@@ -7458,8 +7536,8 @@ importers:
   packages/preact-table:
     dependencies:
       '@tanstack/preact-store':
-        specifier: ^0.13.0
-        version: 0.13.0(preact@10.29.1)
+        specifier: ^0.13.1
+        version: 0.13.1(preact@10.29.1)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -12274,13 +12352,13 @@ packages:
   '@swc/helpers@0.5.21':
     resolution: {integrity: sha512-jI/VAmtdjB/RnI8GTnokyX7Ug8c+g+ffD6QRLa6XQewtnGyukKkKSk3wLTM3b5cjt1jNh9x0jfVlagdN2gDKQg==}
 
-  '@tabler/icons-react@3.43.0':
-    resolution: {integrity: sha512-rXUuCQEeRbEk3lJxs3gwzdtaaITSwc/JUbp+AkqsGff5uBpzZw7eKPDk53xKoKLyjrbj82Ai4GuVG0kO89Jf5g==}
+  '@tabler/icons-react@3.44.0':
+    resolution: {integrity: sha512-8+rvzBbVm/1Z3sG3x7GUNAaxIKxwgz8xaMhRs23nrCnMTKRFAhEC+82zAIFeAA0seXdrAGX5HFCkaLpGK2rVHg==}
     peerDependencies:
       react: '>= 16'
 
-  '@tabler/icons@3.43.0':
-    resolution: {integrity: sha512-qXwS17Op9jqr3Asvu31fejyw8+OnRDKH7oR8nQXyUgW1pI44ET8OKG9kssy+XIvvAIyej6gZdGmviNUn1VMfPw==}
+  '@tabler/icons@3.44.0':
+    resolution: {integrity: sha512-Wn0AOZG9sg0L+bjfMqq4eNhC6pQjIrk94LvvWYNYkY8KH8wC3YILRzQlrnVJc4FUeMxH/AK97QsYCX35H3LndA==}
 
   '@tailwindcss/node@4.3.0':
     resolution: {integrity: sha512-aFb4gUhFOgdh9AXo4IzBEOzBkkAxm9VigwDJnMIYv3lcfXCJVesNfbEaBl4BNgVRyid92AmdviqwBUBRKSeY3g==}
@@ -12376,6 +12454,12 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
+  '@tanstack/angular-pacer@0.23.0':
+    resolution: {integrity: sha512-ejhXrN4xmdS01ubTotq5AuAcEsZVXjX2HgW8QaeE2f7mMhLqfGeY1tCBtUkdfgdboHAv+oG/SQtj7SmfIJIw/Q==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@angular/core': '>=17.0.0'
+
   '@tanstack/angular-store@0.11.0':
     resolution: {integrity: sha512-MZXax5LbzrmX8SERXv3GlzURkqJ+EW7tMTn3Hw7dFmOBxknNpMUbbzHUgpco7W1dNavnrQVdYJ1Sz5JcQ00qvg==}
     peerDependencies:
@@ -12436,8 +12520,8 @@ packages:
     peerDependencies:
       eslint: ^9.0.0 || ^10.0.0
 
-  '@tanstack/form-core@1.29.3':
-    resolution: {integrity: sha512-NNluDFsF/wjtOuhbqRJokVmR3GNuWQDeLeykcfDaEiod6mQ+/iwaXkLGVdlzXXLBOd+cb34KWP8seVaPhh5N6A==}
+  '@tanstack/form-core@1.31.0':
+    resolution: {integrity: sha512-t5G/LnrM/U10mQgzYis/WvHc6yTDj7jyF5cYf6GjVJpEbn0et0wDUQtafiOXY8hiXJ9D1HUqBi0u76ZX05uiHw==}
 
   '@tanstack/history@1.161.6':
     resolution: {integrity: sha512-NaOGLRrddszbQj9upGat6HG/4TKvXLvu+osAIgfxPYA+eIvYKv8GKDJOrY2D3/U9MRnKfMWD7bU4jeD4xmqyIg==}
@@ -12456,8 +12540,18 @@ packages:
     resolution: {integrity: sha512-y/xtNPNt/YeyoVxE/JCx+T7yjEzpezmbb+toK8DDD1P4m7Kzs5YR956+7OKexG3f8aXgC3rLZl7b1V+yNUSy5w==}
     engines: {node: '>=18'}
 
+  '@tanstack/pacer@0.21.0':
+    resolution: {integrity: sha512-EZyU3fQvdz7faj0vBVrPd5ejkSS9pbGKtrGZI56dLJgotca6iZKhaNDRv7dweG4dnWx0LovE9YYf1MAErGpbLQ==}
+    engines: {node: '>=18'}
+
   '@tanstack/preact-devtools@0.10.2':
     resolution: {integrity: sha512-riIk07IEu8mNTNgHO1ewI1V8h6s6phQBjDbeWh+cHGDe7sO+46mWl+We+nHMc/UXyjJgUDDbKnUR48ipyK95sA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      preact: '>=10.0.0'
+
+  '@tanstack/preact-pacer@0.22.0':
+    resolution: {integrity: sha512-uS6NkTsDsI8FhHlMC8dK1fduPX2WQhT3QArNU9lTiTXxy3dZxfbxPiWEdfTlFaCNmyLYqri/D93c83V9HLMzNw==}
     engines: {node: '>=18'}
     peerDependencies:
       preact: '>=10.0.0'
@@ -12467,8 +12561,8 @@ packages:
     peerDependencies:
       preact: ^10.0.0
 
-  '@tanstack/preact-store@0.13.0':
-    resolution: {integrity: sha512-jhzf4+gFomlaehFp4PhevM65d36FQSxuYcWx7MnwcBA/WqGu387xXjyng58yO17lhkXRPtonl/usK+3WAN+8eA==}
+  '@tanstack/preact-store@0.13.1':
+    resolution: {integrity: sha512-0h8ku2LfJ/TtVtgx24CLgS2OgzY5wVsRWIGktE0yq6b6fHlsCcY55IEJXTDRs0RTYWFOXu7N/1kfb2SLEOasaw==}
     peerDependencies:
       preact: ^10.0.0
 
@@ -12488,14 +12582,21 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
-  '@tanstack/react-form@1.29.3':
-    resolution: {integrity: sha512-L5XPwEGLu461cfV/7Vd7JF7+/E4ysf98Oex/gr77x6k2fQjt/cPuzi7C0NnVgMfbWMbl51bSnwjnoCVwgRF1Yg==}
+  '@tanstack/react-form@1.31.0':
+    resolution: {integrity: sha512-31hoeKlk45jCAnry85bOiL89FwySL9HtAhfWLHmCJ5WcvBlHJpoqnMvl6Cy8DM+7ey2eWHKiPiEL29BkG5o12w==}
     peerDependencies:
       '@tanstack/react-start': '*'
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
       '@tanstack/react-start':
         optional: true
+
+  '@tanstack/react-pacer@0.22.0':
+    resolution: {integrity: sha512-AuKrkcP/LheBuq1tJCN8DDkwU+RmSql3zpJ1RFwvdc7qJED7Ba+jwlfFkeOZ62WcMtV54RceG9Uyprr0j99Qnw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
 
   '@tanstack/react-query@5.100.9':
     resolution: {integrity: sha512-Oa44XkaI3kCNN6ME0KByU3xT3SEUNOMfZpHxL6+wFoTm+OeUFYHKdeYVe0aOXlRDm/f15sgLwEt2HDorIdW8+A==}
@@ -12570,10 +12671,16 @@ packages:
     peerDependencies:
       solid-js: '>=1.9.7'
 
-  '@tanstack/solid-form@1.29.3':
-    resolution: {integrity: sha512-0QR8mljqKmviQjhzYdqLvs+SoXYhfFXXRYtwtkrxIuO7BKwK/CcKXzQfRlqtpii/owtU/w2TsUwLKpOTv5g6ZA==}
+  '@tanstack/solid-form@1.31.0':
+    resolution: {integrity: sha512-syjJzrcgMA/CH5U3YY9+lzm1hXmgRPy6NPhG5N6xlU0vMxHF19LWf83S3cFaVBACMEWQV/mqlp5Uts6pBUB2rQ==}
     peerDependencies:
       solid-js: '>=1.9.9'
+
+  '@tanstack/solid-pacer@0.21.0':
+    resolution: {integrity: sha512-XEY0KPwbpf6DNbmZ4F2y6ulgZpIYe6dg2Op+M+1GioU9HezwzUcpFpq9WlXXqItnPjtnolxzz1UbgnRqXuKvsA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      solid-js: '>=1.9.5'
 
   '@tanstack/solid-query@5.100.9':
     resolution: {integrity: sha512-+r13DGHA/h/d2rBrDIFSqbvLN58dNh4zKNBiVYPYg+s5XDR4kBlEEjPttgWoeJiJru1UypCIV9bBZ7RroYDsJw==}
@@ -12607,8 +12714,8 @@ packages:
   '@tanstack/store@0.9.3':
     resolution: {integrity: sha512-8reSzl/qGWGGVKhBoxXPMWzATSbZLZFWhwBAFO9NAyp0TxzfBP0mIrGb8CP8KrQTmvzXlR/vFPPUrHTLBGyFyw==}
 
-  '@tanstack/svelte-form@1.29.3':
-    resolution: {integrity: sha512-cDqbqb11Fd4iwVG13uS7rT1QMmwOb0TGNraaU4eya/83kezfAcRDO0dIdYGj9oM12ca7wuVCM0fX3QjHlLJbfw==}
+  '@tanstack/svelte-form@1.31.0':
+    resolution: {integrity: sha512-KxICAvCFGDFnslCa91BoUY0L7WP/eLHtnLAMR9i7+X7fbWkP3a27309LeWF4kZOC5dwaC5YMhU3wl6ux//5LTg==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -12648,8 +12755,8 @@ packages:
     resolution: {integrity: sha512-/pJRaphqPvu/7T9x3AuWgjhXt44rOuIa2XJli5fJJFmZj9t6cWtXUUFNm4i2hSJdM2d19MB9Yo1kHGv6NYVrgA==}
     engines: {node: '>=18'}
 
-  '@tanstack/vue-form@1.29.3':
-    resolution: {integrity: sha512-A7dIdTFVfttQ6Kr86Naf68BBoCovQNJujE9Cl3E6ndrCy2SnVAXdLBR9BIqRoyz8JwrWM7cqG7ZIzqENvjlz0Q==}
+  '@tanstack/vue-form@1.31.0':
+    resolution: {integrity: sha512-mPx89d60B2xwBYhEz6/vSZx2LOKkvKDeXg9f9bM+Wt56bs1JRKuG64ijH5KqQ1C1cD+4iHiV9xxqzwkrrPPckw==}
     peerDependencies:
       vue: ^3.4.0
 
@@ -15022,8 +15129,8 @@ packages:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
 
-  knip@6.12.1:
-    resolution: {integrity: sha512-9JRZB1mENe8xNMpP4jJRiFXkRVBHTWzD7YtiLywkO7aKXCefbvI+hA0YDl7H7dPvJt7gcVolgxKgABJQ31NL3w==}
+  knip@6.12.2:
+    resolution: {integrity: sha512-RcZpT1sVziKZgDk1F0hAcp+bq71VJAF8vg1Y9ZLXc1+UXQaMm1rjiUqpJQTIj+lqwmiBQT19/u7ikgazs23cvA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
@@ -17677,7 +17784,7 @@ snapshots:
       tree-kill: 1.2.2
       tslib: 2.8.1
       typescript: 6.0.3
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
       webpack-dev-middleware: 7.4.5(tslib@2.8.1)(webpack@5.105.2(esbuild@0.27.3))
       webpack-dev-server: 5.2.3(tslib@2.8.1)(webpack@5.105.2(esbuild@0.27.3))
       webpack-merge: 6.0.1
@@ -17811,7 +17918,7 @@ snapshots:
     dependencies:
       '@angular-devkit/architect': 0.2102.10(chokidar@5.0.0)
       rxjs: 7.8.2
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
       webpack-dev-server: 5.2.3(tslib@2.8.1)(webpack@5.105.2(esbuild@0.27.3))
     transitivePeerDependencies:
       - chokidar
@@ -20311,7 +20418,7 @@ snapshots:
     dependencies:
       '@angular/compiler-cli': 21.2.12(@angular/compiler@21.2.12)(typescript@6.0.3)
       typescript: 6.0.3
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   '@noble/hashes@1.4.0': {}
 
@@ -22197,12 +22304,12 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@tabler/icons-react@3.43.0(react@19.2.6)':
+  '@tabler/icons-react@3.44.0(react@19.2.6)':
     dependencies:
-      '@tabler/icons': 3.43.0
+      '@tabler/icons': 3.44.0
       react: 19.2.6
 
-  '@tabler/icons@3.43.0': {}
+  '@tabler/icons@3.44.0': {}
 
   '@tailwindcss/node@4.3.0':
     dependencies:
@@ -22272,6 +22379,14 @@ snapshots:
       tailwindcss: 4.3.0
       vite: 8.0.11(@types/node@25.6.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.8.3)
 
+  '@tanstack/angular-pacer@0.23.0(@angular/common@21.2.12(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/core': 21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2)
+      '@tanstack/angular-store': 0.11.0(@angular/common@21.2.12(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))
+      '@tanstack/pacer': 0.21.0
+    transitivePeerDependencies:
+      - '@angular/common'
+
   '@tanstack/angular-store@0.11.0(@angular/common@21.2.12(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))':
     dependencies:
       '@angular/common': 21.2.12(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(rxjs@7.8.2)
@@ -22340,7 +22455,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@tanstack/form-core@1.29.3':
+  '@tanstack/form-core@1.31.0':
     dependencies:
       '@tanstack/devtools-event-client': 0.4.3
       '@tanstack/pacer-lite': 0.1.1
@@ -22359,6 +22474,11 @@ snapshots:
 
   '@tanstack/pacer-lite@0.1.1': {}
 
+  '@tanstack/pacer@0.21.0':
+    dependencies:
+      '@tanstack/devtools-event-client': 0.4.3
+      '@tanstack/store': 0.11.0
+
   '@tanstack/preact-devtools@0.10.2(preact@10.29.1)(solid-js@1.9.12)':
     dependencies:
       '@tanstack/devtools': 0.11.2(csstype@3.2.3)(solid-js@1.9.12)
@@ -22369,12 +22489,18 @@ snapshots:
       - solid-js
       - utf-8-validate
 
+  '@tanstack/preact-pacer@0.22.0(preact@10.29.1)':
+    dependencies:
+      '@tanstack/pacer': 0.21.0
+      '@tanstack/preact-store': 0.13.1(preact@10.29.1)
+      preact: 10.29.1
+
   '@tanstack/preact-query@5.100.9(preact@10.29.1)':
     dependencies:
       '@tanstack/query-core': 5.100.9
       preact: 10.29.1
 
-  '@tanstack/preact-store@0.13.0(preact@10.29.1)':
+  '@tanstack/preact-store@0.13.1(preact@10.29.1)':
     dependencies:
       '@tanstack/store': 0.11.0
       preact: 10.29.1
@@ -22416,13 +22542,20 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@tanstack/react-form@1.29.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+  '@tanstack/react-form@1.31.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
     dependencies:
-      '@tanstack/form-core': 1.29.3
+      '@tanstack/form-core': 1.31.0
       '@tanstack/react-store': 0.9.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react: 19.2.6
     transitivePeerDependencies:
       - react-dom
+
+  '@tanstack/react-pacer@0.22.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)':
+    dependencies:
+      '@tanstack/pacer': 0.21.0
+      '@tanstack/react-store': 0.11.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
 
   '@tanstack/react-query@5.100.9(react@19.2.6)':
     dependencies:
@@ -22535,10 +22668,16 @@ snapshots:
       - csstype
       - utf-8-validate
 
-  '@tanstack/solid-form@1.29.3(solid-js@1.9.12)':
+  '@tanstack/solid-form@1.31.0(solid-js@1.9.12)':
     dependencies:
-      '@tanstack/form-core': 1.29.3
+      '@tanstack/form-core': 1.31.0
       '@tanstack/solid-store': 0.9.3(solid-js@1.9.12)
+      solid-js: 1.9.12
+
+  '@tanstack/solid-pacer@0.21.0(solid-js@1.9.12)':
+    dependencies:
+      '@tanstack/pacer': 0.21.0
+      '@tanstack/solid-store': 0.11.0(solid-js@1.9.12)
       solid-js: 1.9.12
 
   '@tanstack/solid-query@5.100.9(solid-js@1.9.12)':
@@ -22575,9 +22714,9 @@ snapshots:
 
   '@tanstack/store@0.9.3': {}
 
-  '@tanstack/svelte-form@1.29.3(svelte@5.55.5(@typescript-eslint/types@8.59.2))':
+  '@tanstack/svelte-form@1.31.0(svelte@5.55.5(@typescript-eslint/types@8.59.2))':
     dependencies:
-      '@tanstack/form-core': 1.29.3
+      '@tanstack/form-core': 1.31.0
       '@tanstack/svelte-store': 0.10.3(svelte@5.55.5(@typescript-eslint/types@8.59.2))
       svelte: 5.55.5(@typescript-eslint/types@8.59.2)
 
@@ -22622,9 +22761,9 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@tanstack/vue-form@1.29.3(vue@3.5.34(typescript@6.0.3))':
+  '@tanstack/vue-form@1.31.0(vue@3.5.34(typescript@6.0.3))':
     dependencies:
-      '@tanstack/form-core': 1.29.3
+      '@tanstack/form-core': 1.31.0
       '@tanstack/vue-store': 0.9.3(vue@3.5.34(typescript@6.0.3))
       vue: 3.5.34(typescript@6.0.3)
     transitivePeerDependencies:
@@ -23573,7 +23712,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.0
       find-up: 5.0.0
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   babel-plugin-jsx-dom-expressions@0.40.6(@babel/core@7.29.0):
     dependencies:
@@ -23997,7 +24136,7 @@ snapshots:
       schema-utils: 4.3.3
       serialize-javascript: 7.0.5
       tinyglobby: 0.2.16
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   core-js-compat@3.49.0:
     dependencies:
@@ -24044,7 +24183,7 @@ snapshots:
       postcss-value-parser: 4.2.0
       semver: 7.7.4
     optionalDependencies:
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   css-select@5.2.2:
     dependencies:
@@ -25336,7 +25475,7 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  knip@6.12.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0):
+  knip@6.12.2(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0):
     dependencies:
       fdir: 6.5.0(picomatch@4.0.4)
       formatly: 0.3.0
@@ -25351,7 +25490,7 @@ snapshots:
       tinyglobby: 0.2.16
       unbash: 3.0.0
       yaml: 2.8.3
-      zod: 4.4.2
+      zod: 4.4.3
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -25369,7 +25508,7 @@ snapshots:
     dependencies:
       less: 4.4.2
     optionalDependencies:
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   less@4.4.2:
     dependencies:
@@ -25407,7 +25546,7 @@ snapshots:
     dependencies:
       webpack-sources: 3.4.0
     optionalDependencies:
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   lightningcss-android-arm64@1.32.0:
     optional: true
@@ -25680,7 +25819,7 @@ snapshots:
     dependencies:
       schema-utils: 4.3.3
       tapable: 2.3.3
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   minimalistic-assert@1.0.1: {}
 
@@ -26361,7 +26500,7 @@ snapshots:
       postcss: 8.5.12
       semver: 7.7.4
     optionalDependencies:
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
     transitivePeerDependencies:
       - typescript
 
@@ -26954,7 +27093,7 @@ snapshots:
       neo-async: 2.6.2
     optionalDependencies:
       sass: 1.97.3
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   sass@1.97.3:
     dependencies:
@@ -27254,7 +27393,7 @@ snapshots:
     dependencies:
       iconv-lite: 0.6.3
       source-map-js: 1.2.1
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   source-map-support@0.5.21:
     dependencies:
@@ -27477,6 +27616,16 @@ snapshots:
       minipass: 7.1.3
       minizlib: 3.1.0
       yallist: 5.0.0
+
+  terser-webpack-plugin@5.5.0(esbuild@0.27.3)(webpack@5.105.2(esbuild@0.27.3)):
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      jest-worker: 27.5.1
+      schema-utils: 4.3.3
+      terser: 5.46.0
+      webpack: 5.105.2(esbuild@0.27.3)
+    optionalDependencies:
+      esbuild: 0.27.3
 
   terser-webpack-plugin@5.5.0(esbuild@0.28.0)(webpack@5.105.2(esbuild@0.27.3)):
     dependencies:
@@ -28083,7 +28232,7 @@ snapshots:
       range-parser: 1.2.1
       schema-utils: 4.3.3
     optionalDependencies:
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
     transitivePeerDependencies:
       - tslib
 
@@ -28118,7 +28267,7 @@ snapshots:
       webpack-dev-middleware: 7.4.5(tslib@2.8.1)(webpack@5.105.2(esbuild@0.27.3))
       ws: 8.20.0
     optionalDependencies:
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -28137,9 +28286,41 @@ snapshots:
   webpack-subresource-integrity@5.1.0(webpack@5.105.2(esbuild@0.27.3)):
     dependencies:
       typed-assert: 1.0.9
-      webpack: 5.105.2(esbuild@0.28.0)
+      webpack: 5.105.2(esbuild@0.27.3)
 
   webpack-virtual-modules@0.6.2: {}
+
+  webpack@5.105.2(esbuild@0.27.3):
+    dependencies:
+      '@types/eslint-scope': 3.7.7
+      '@types/estree': 1.0.8
+      '@types/json-schema': 7.0.15
+      '@webassemblyjs/ast': 1.14.1
+      '@webassemblyjs/wasm-edit': 1.14.1
+      '@webassemblyjs/wasm-parser': 1.14.1
+      acorn: 8.16.0
+      acorn-import-phases: 1.0.4(acorn@8.16.0)
+      browserslist: 4.28.2
+      chrome-trace-event: 1.0.4
+      enhanced-resolve: 5.21.0
+      es-module-lexer: 2.1.0
+      eslint-scope: 5.1.1
+      events: 3.3.0
+      glob-to-regexp: 0.4.1
+      graceful-fs: 4.2.11
+      json-parse-even-better-errors: 2.3.1
+      loader-runner: 4.3.2
+      mime-types: 2.1.35
+      neo-async: 2.6.2
+      schema-utils: 4.3.3
+      tapable: 2.3.3
+      terser-webpack-plugin: 5.5.0(esbuild@0.27.3)(webpack@5.105.2(esbuild@0.27.3))
+      watchpack: 2.5.1
+      webpack-sources: 3.4.0
+    transitivePeerDependencies:
+      - '@swc/core'
+      - esbuild
+      - uglify-js
 
   webpack@5.105.2(esbuild@0.28.0):
     dependencies:

@@ -11,6 +11,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/preact-table'
+import { useDebouncedCallback } from '@tanstack/preact-pacer/debouncer'
 import { makeData } from './makeData'
 import type { JSX } from 'preact'
 import type {
@@ -310,19 +311,17 @@ function DebouncedInput({
     setValue(initialValue)
   }, [initialValue])
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value])
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
 
   return (
     <input
       {...props}
       value={value}
-      onInput={(e) => setValue((e.target as HTMLInputElement).value)}
+      onInput={(e) => {
+        const nextValue = (e.target as HTMLInputElement).value
+        setValue(nextValue)
+        debouncedOnChange(nextValue)
+      }}
     />
   )
 }

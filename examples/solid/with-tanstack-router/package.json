@@ -17,6 +17,7 @@
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
+    "@tanstack/solid-pacer": "^0.21.0",
     "@tanstack/solid-query": "^5.100.9",
     "@tanstack/solid-router": "^1.169.2",
     "@tanstack/solid-table": "^9.0.0-alpha.45",

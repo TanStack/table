@@ -13,7 +13,7 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
-import { debounce } from '@solid-primitives/scheduled'
+import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import ColumnFilter from './ColumnFilter'
@@ -106,9 +106,10 @@ function App() {
     debugColumns: false,
   })
 
-  const debounceSetGlobalFilter = debounce((value: string) => {
-    table.setGlobalFilter(value)
-  }, 500)
+  const globalFilterDebouncer = createDebouncer(
+    (value: string) => table.setGlobalFilter(value),
+    { wait: 500 },
+  )
 
   return (
     <div class="demo-root">
@@ -119,7 +120,9 @@ function App() {
       <input
         class="summary-panel"
         value={table.store.state.globalFilter ?? ''}
-        onInput={(e) => debounceSetGlobalFilter(e.currentTarget.value)}
+        onInput={(e) =>
+          globalFilterDebouncer.maybeExecute(e.currentTarget.value)
+        }
         placeholder="Search all columns..."
       />
       <div class="spacer-sm" />

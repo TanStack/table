@@ -14,6 +14,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { flexRender } from '@tanstack/react-table'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   getCoreRowModel,
   getFilteredRowModel,
@@ -356,19 +357,16 @@ function DebouncedInput({
     setValue(initialValue)
   }, [initialValue])
 
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value])
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
 
   return (
     <input
       {...props}
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(e) => {
+        setValue(e.target.value)
+        debouncedOnChange(e.target.value)
+      }}
     />
   )
 }

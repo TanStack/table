@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   DndContext,
   PointerSensor,
@@ -1196,19 +1197,16 @@ function DebouncedTextField({
     setValue(initialValue)
   }, [initialValue])
 
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value, debounce, onChange])
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
 
   return (
     <TextField
       {...props}
       value={value}
-      onChange={(event) => setValue(event.target.value)}
+      onChange={(event) => {
+        setValue(event.target.value)
+        debouncedOnChange(event.target.value)
+      }}
     />
   )
 }

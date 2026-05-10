@@ -12,6 +12,7 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/solid-table'
+import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { For, createEffect, createSignal } from 'solid-js'
 import { makeData } from './makeData'
@@ -283,12 +284,13 @@ function DebouncedInput(props: {
     setValue(props.value)
   })
 
+  const onChangeDebouncer = createDebouncer(
+    (nextValue: string | number) => props.onChange(nextValue),
+    { wait: () => props.debounce ?? 500 },
+  )
+
   createEffect(() => {
-    const v = value()
-    const timeout = setTimeout(() => {
-      props.onChange(v)
-    }, props.debounce ?? 500)
-    return () => clearTimeout(timeout)
+    onChangeDebouncer.maybeExecute(value())
   })
 
   return (

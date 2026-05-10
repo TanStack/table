@@ -12,6 +12,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
@@ -365,19 +366,16 @@ function DebouncedInput({
     setValue(initialValue)
   }, [initialValue])
 
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value])
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
 
   return (
     <input
       {...props}
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(e) => {
+        setValue(e.target.value)
+        debouncedOnChange(e.target.value)
+      }}
     />
   )
 }

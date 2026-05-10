@@ -1,22 +1,21 @@
-import { Directive, ElementRef, inject, input } from '@angular/core'
-import { debounceTime, fromEvent, switchMap } from 'rxjs'
-import { outputFromObservable, toObservable } from '@angular/core/rxjs-interop'
+import { Directive, HostListener, input, output } from '@angular/core'
+import { injectDebouncedCallback } from '@tanstack/angular-pacer'
 
 @Directive({
   standalone: true,
   selector: 'input[debouncedInput]',
 })
 export class DebouncedInput {
-  #ref = inject(ElementRef).nativeElement as HTMLInputElement
-
   readonly debounce = input<number>(500)
-  readonly debounce$ = toObservable(this.debounce)
+  readonly changeEvent = output<Event>()
 
-  readonly changeEvent = outputFromObservable(
-    this.debounce$.pipe(
-      switchMap((debounce: number) => {
-        return fromEvent(this.#ref, 'change').pipe(debounceTime(debounce))
-      }),
-    ),
+  readonly #emitChange = injectDebouncedCallback(
+    (event: Event) => this.changeEvent.emit(event),
+    { wait: () => this.debounce() },
   )
+
+  @HostListener('change', ['$event'])
+  onChange(event: Event) {
+    this.#emitChange(event)
+  }
 }

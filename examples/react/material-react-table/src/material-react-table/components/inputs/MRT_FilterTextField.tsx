@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Autocomplete from '@mui/material/Autocomplete'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
@@ -8,10 +8,10 @@ import InputAdornment from '@mui/material/InputAdornment'
 import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { debounce } from '@mui/material/utils'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   getColumnFilterInfo,
   useDropdownOptions,
@@ -153,22 +153,19 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
         : null,
     )
 
-  const handleChangeDebounced = useCallback(
-    debounce(
-      (newValue: any) => {
-        if (isRangeFilter) {
-          column.setFilterValue((old: Array<Date | null | number | string>) => {
-            const newFilterValues = old ?? ['', '']
-            newFilterValues[rangeFilterIndex as number] = newValue ?? undefined
-            return newFilterValues
-          })
-        } else {
-          column.setFilterValue(newValue ?? undefined)
-        }
-      },
-      isTextboxFilter ? (manualFiltering ? 400 : 200) : 1,
-    ),
-    [],
+  const handleChangeDebounced = useDebouncedCallback(
+    (newValue: any) => {
+      if (isRangeFilter) {
+        column.setFilterValue((old: Array<Date | null | number | string>) => {
+          const newFilterValues = old ?? ['', '']
+          newFilterValues[rangeFilterIndex as number] = newValue ?? undefined
+          return newFilterValues
+        })
+      } else {
+        column.setFilterValue(newValue ?? undefined)
+      }
+    },
+    { wait: isTextboxFilter ? (manualFiltering ? 400 : 200) : 1 },
   )
 
   const handleChange = (newValue: any) => {

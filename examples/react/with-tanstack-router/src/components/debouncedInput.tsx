@@ -1,3 +1,4 @@
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import { useEffect, useState } from 'react'
 import type { InputHTMLAttributes } from 'react'
 
@@ -17,25 +18,22 @@ export function DebouncedInput({
     setValue(initialValue)
   }, [initialValue])
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value])
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
 
   return (
     <input
       {...props}
       value={value}
       onChange={(e) => {
-        if (e.target.value === '') return setValue('')
-        if (props.type === 'number') {
-          setValue(e.target.valueAsNumber)
-        } else {
-          setValue(e.target.value)
-        }
+        const nextValue =
+          e.target.value === ''
+            ? ''
+            : props.type === 'number'
+              ? e.target.valueAsNumber
+              : e.target.value
+
+        setValue(nextValue)
+        debouncedOnChange(nextValue)
       }}
     />
   )

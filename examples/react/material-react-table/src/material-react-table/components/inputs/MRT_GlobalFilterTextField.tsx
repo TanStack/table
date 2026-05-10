@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { debounce } from '@mui/material/utils'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_FilterOptionMenu } from '../menus/MRT_FilterOptionMenu'
 import type { MRT_RowData, MRT_TableInstance } from '../../types'
@@ -46,19 +46,16 @@ export const MRT_GlobalFilterTextField = <TData extends MRT_RowData>({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
   const [searchValue, setSearchValue] = useState(globalFilter ?? '')
 
-  const handleChangeDebounced = useCallback(
-    debounce(
-      (event: ChangeEvent<HTMLInputElement>) => {
-        setGlobalFilter(event.target.value ?? undefined)
-      },
-      manualFiltering ? 500 : 250,
-    ),
-    [],
+  const handleChangeDebounced = useDebouncedCallback(
+    (value: string) => {
+      setGlobalFilter(value ?? undefined)
+    },
+    { wait: manualFiltering ? 500 : 250 },
   )
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value)
-    handleChangeDebounced(event)
+    handleChangeDebounced(event.target.value)
   }
 
   const handleGlobalFilterMenuOpen = (event: MouseEvent<HTMLElement>) => {

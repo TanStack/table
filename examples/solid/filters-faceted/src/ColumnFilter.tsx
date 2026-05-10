@@ -1,4 +1,4 @@
-import { debounce } from '@solid-primitives/scheduled'
+import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { For, Show, createMemo } from 'solid-js'
 import type { Person } from './makeData'
 import type { _features } from './App'
@@ -13,6 +13,10 @@ function ColumnFilter(props: {
     .flatRows[0]?.getValue(props.column.id)
 
   const columnFilterValue = () => props.column.getFilterValue()
+  const columnFilterDebouncer = createDebouncer(
+    (value: unknown) => props.column.setFilterValue(value),
+    { wait: 500 },
+  )
 
   const sortedUniqueValues = createMemo(() =>
     typeof firstValue === 'number'
@@ -33,10 +37,9 @@ function ColumnFilter(props: {
           <input
             type="text"
             value={(columnFilterValue() ?? '') as string}
-            onInput={debounce(
-              (e) => props.column.setFilterValue(e.target.value),
-              500,
-            )}
+            onInput={(e) =>
+              columnFilterDebouncer.maybeExecute(e.currentTarget.value)
+            }
             placeholder={`Search... (${props.column.getFacetedUniqueValues().size})`}
             class="filter-select"
             list={`${props.column.id}list`}
@@ -53,14 +56,12 @@ function ColumnFilter(props: {
             value={
               (columnFilterValue() as [number, number] | undefined)?.[0] ?? ''
             }
-            onInput={debounce(
-              (e) =>
-                props.column.setFilterValue((old: [number, number]) => [
-                  e.target.value,
-                  old[1],
-                ]),
-              500,
-            )}
+            onInput={(e) =>
+              columnFilterDebouncer.maybeExecute((old: [number, number]) => [
+                e.currentTarget.value,
+                old[1],
+              ])
+            }
             placeholder={`Min ${
               props.column.getFacetedMinMaxValues()?.[0]
                 ? `(${props.column.getFacetedMinMaxValues()?.[0]})`
@@ -75,14 +76,12 @@ function ColumnFilter(props: {
             value={
               (columnFilterValue() as [number, number] | undefined)?.[1] ?? ''
             }
-            onInput={debounce(
-              (e) =>
-                props.column.setFilterValue((old: [number, number]) => [
-                  old[0],
-                  e.target.value,
-                ]),
-              500,
-            )}
+            onInput={(e) =>
+              columnFilterDebouncer.maybeExecute((old: [number, number]) => [
+                old[0],
+                e.currentTarget.value,
+              ])
+            }
             placeholder={`Max ${
               props.column.getFacetedMinMaxValues()?.[1]
                 ? `(${props.column.getFacetedMinMaxValues()?.[1]})`

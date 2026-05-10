@@ -1,4 +1,4 @@
-import { debounce } from '@solid-primitives/scheduled'
+import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { Show } from 'solid-js'
 import type { Person } from './makeData'
 import type { _features } from './App'
@@ -13,6 +13,10 @@ function ColumnFilter(props: {
     .flatRows[0]?.getValue(props.column.id)
 
   const columnFilterValue = () => props.column.getFilterValue()
+  const columnFilterDebouncer = createDebouncer(
+    (value: unknown) => props.column.setFilterValue(value),
+    { wait: 500 },
+  )
 
   return (
     <Show
@@ -22,10 +26,9 @@ function ColumnFilter(props: {
           <input
             type="text"
             value={(columnFilterValue() ?? '') as string}
-            onInput={debounce(
-              (e) => props.column.setFilterValue(e.target.value),
-              500,
-            )}
+            onInput={(e) =>
+              columnFilterDebouncer.maybeExecute(e.currentTarget.value)
+            }
             placeholder={`Search...`}
             class="filter-select"
             list={`${props.column.id}list`}
@@ -42,16 +45,14 @@ function ColumnFilter(props: {
             value={
               (columnFilterValue() as [number, number] | undefined)?.[0] ?? ''
             }
-            onInput={debounce(
-              (e) =>
-                props.column.setFilterValue(
-                  (old: [number, number] | undefined) => [
-                    e.target.value,
-                    old?.[1] ?? '',
-                  ],
-                ),
-              500,
-            )}
+            onInput={(e) =>
+              columnFilterDebouncer.maybeExecute(
+                (old: [number, number] | undefined) => [
+                  e.currentTarget.value,
+                  old?.[1] ?? '',
+                ],
+              )
+            }
             placeholder={`Min`}
             class="filter-input"
           />
@@ -62,16 +63,14 @@ function ColumnFilter(props: {
             value={
               (columnFilterValue() as [number, number] | undefined)?.[1] ?? ''
             }
-            onInput={debounce(
-              (e) =>
-                props.column.setFilterValue(
-                  (old: [number, number] | undefined) => [
-                    old?.[0] ?? '',
-                    e.target.value,
-                  ],
-                ),
-              500,
-            )}
+            onInput={(e) =>
+              columnFilterDebouncer.maybeExecute(
+                (old: [number, number] | undefined) => [
+                  old?.[0] ?? '',
+                  e.currentTarget.value,
+                ],
+              )
+            }
             placeholder={`Max`}
             class="filter-input"
           />

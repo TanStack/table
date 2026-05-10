@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom/client'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   DndContext,
   PointerSensor,
@@ -1105,13 +1106,7 @@ function DebouncedTextInput({
     setValue(initialValue)
   }, [initialValue])
 
-  React.useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value, debounce, onChange])
+  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
 
   return (
     <Input
@@ -1121,7 +1116,10 @@ function DebouncedTextInput({
         typeof props.className === 'string' ? props.className : undefined,
       )}
       value={String(value)}
-      onChange={(event) => setValue(event.currentTarget.value)}
+      onChange={(event) => {
+        setValue(event.currentTarget.value)
+        debouncedOnChange(event.currentTarget.value)
+      }}
     />
   )
 }
