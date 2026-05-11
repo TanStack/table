@@ -1,0 +1,22 @@
+{
+  "name": "tanstack-alpine-table-example-basic-create-table",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "@tanstack/alpine-table": "^9.0.0-alpha.45",
+    "alpinejs": "^3.15.12"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.3",
+    "@types/alpinejs": "^3.13.11",
+    "typescript": "6.0.3",
+    "vite": "^8.0.10"
+  }
+}

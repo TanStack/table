@@ -14,6 +14,7 @@ solid: @tanstack/solid-table
 svelte: @tanstack/svelte-table
 angular: @tanstack/angular-table
 lit: @tanstack/lit-table
+alpine: @tanstack/alpine-table
 
 <!-- ::end:tabs -->
 
@@ -45,6 +46,10 @@ The `@tanstack/angular-table` package works with Angular 17. The Angular adapter
 # Lit
 
 The `@tanstack/lit-table` package works with Lit 3.
+
+# Alpine
+
+The `@tanstack/alpine-table` package works with Alpine 3.
 
 <!-- ::end:framework -->
 

@@ -17,6 +17,10 @@ export const packages = [
     packageDir: 'packages/table-devtools',
   },
   {
+    name: '@tanstack/alpine-table',
+    packageDir: 'packages/alpine-table',
+  },
+  {
     name: '@tanstack/angular-table',
     packageDir: 'packages/angular-table',
   },
