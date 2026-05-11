@@ -10,6 +10,7 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   injectTable,
+  shallow,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { makeData } from './makeData'
@@ -92,8 +93,8 @@ export class App {
     debugColumns: true,
   }))
 
-  readonly columnSizing = this.table.computed({
-    selector: (state) => state.columnSizing,
+  readonly columnSizing = computed(() => this.table.atoms.columnSizing.get(), {
+    equal: shallow,
   })
 
   /**

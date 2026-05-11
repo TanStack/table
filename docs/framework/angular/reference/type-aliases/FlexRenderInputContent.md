@@ -6,7 +6,7 @@ title: FlexRenderInputContent
 # Type Alias: FlexRenderInputContent\<TProps\>
 
 ```ts
-type FlexRenderInputContent<TProps> = 
+type FlexRenderInputContent<TProps> =
   | number
   | string
   | (props) => FlexRenderContent<TProps>

@@ -71,7 +71,7 @@ which the latter is preferred.
 
 ### TProps
 
-`TProps` *extends* 
+`TProps` *extends*
   \| `NonNullable`\<`unknown`\>
   \| `CellContext`\<`TFeatures`, `TRowData`, `TValue`\>
   \| `HeaderContext`\<`TFeatures`, `TRowData`, `TValue`\>

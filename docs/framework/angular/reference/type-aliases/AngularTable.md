@@ -3,40 +3,13 @@ id: AngularTable
 title: AngularTable
 ---
 
-# Type Alias: AngularTable\<TFeatures, TData, TSelected\>
+# Type Alias: AngularTable\<TFeatures, TData\>
 
 ```ts
-type AngularTable<TFeatures, TData, TSelected> = Table<TFeatures, TData> & object;
+type AngularTable<TFeatures, TData> = Table<TFeatures, TData>;
 ```
 
-Defined in: [injectTable.ts:57](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L57)
-
-## Type Declaration
-
-### computed
-
-```ts
-computed: AngularTableComputed<TFeatures>;
-```
-
-Creates a computed that subscribe to changes in the table store with a custom selector.
-Default equality function is "shallow".
-
-### state
-
-```ts
-readonly state: Signal<Readonly<TSelected>>;
-```
-
-The selected state from the table store, based on the selector provided.
-
-### value
-
-```ts
-readonly value: Signal<AngularTable<TFeatures, TData, TSelected>>;
-```
-
-A signal that returns the entire table instance. Will update on table/options change.
+Defined in: [injectTable.ts:30](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L30)
 
 ## Type Parameters
 
@@ -47,7 +20,3 @@ A signal that returns the entire table instance. Will update on table/options ch
 ### TData
 
 `TData` *extends* `RowData`
-
-### TSelected
-
-`TSelected` = `TableState`\<`TFeatures`\>

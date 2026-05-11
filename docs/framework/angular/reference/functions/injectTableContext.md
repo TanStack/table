@@ -6,10 +6,10 @@ title: injectTableContext
 # Function: injectTableContext()
 
 ```ts
-function injectTableContext<TFeatures, TData, TSelected>(): Signal<AngularTable<TFeatures, TData, TSelected>>;
+function injectTableContext<TFeatures, TData>(): Signal<AngularTable<TFeatures, TData>>;
 ```
 
-Defined in: [helpers/table.ts:81](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L81)
+Defined in: [helpers/table.ts:80](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L80)
 
 Injects the current TanStack Table instance signal.
 
@@ -27,10 +27,6 @@ Available when:
 
 `TData` *extends* `RowData`
 
-### TSelected
-
-`TSelected` *extends* `object` = `TableState`\<`TFeatures`\>
-
 ## Returns
 
-`Signal`\<[`AngularTable`](../type-aliases/AngularTable.md)\<`TFeatures`, `TData`, `TSelected`\>\>
+`Signal`\<[`AngularTable`](../type-aliases/AngularTable.md)\<`TFeatures`, `TData`\>\>

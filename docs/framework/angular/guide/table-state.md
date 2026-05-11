@@ -22,16 +22,15 @@ There will be situations where you need to customize how you interact with the i
 
 ### State in v9
 
-TanStack Table v9 overhauled state management around TanStack Store. TanStack Store uses the `alien-signals` implementation and supports performant derived state. For Angular, the table adapter supplies custom reactivity so table state atoms are backed by Angular signals.
+TanStack Table v9 overhauled state management around TanStack Store. TanStack Store uses the `alien-signals` implementation and supports performant derived state. For Angular, the table adapter supplies reactivity bindings so table state atoms are backed by Angular signals.
 
 A table instance has a few state surfaces:
 
 - `table.baseAtoms` are the internal writable atoms created from the resolved initial state.
 - `table.atoms` are readonly derived atoms exposed per registered state slice.
 - `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
-- `table.state()` is Angular-only selected state. It is the signal created from the selector passed as the second argument to `injectTable`.
 
-The Angular adapter provides `angularReactivity(injector)` to the table's `coreReativityFeature`. Core readonly atoms are Angular `computed` values, writable atoms are Angular `signal` values, and subscriptions bridge through `toObservable(computed(...), { injector })`. `injectTable` reruns the options initializer when Angular signals read inside it change, then calls `table.setOptions`.
+The Angular adapter provides `angularReactivity(injector)` as the table's reactivity binding. Core readonly atoms are Angular `computed` values, writable atoms are Angular `signal` values, and subscriptions bridge through `toObservable(computed(...), { injector })`. `injectTable` reruns the options initializer when Angular signals read inside it change, then calls `table.setOptions`.
 
 The returned table is also signal-reactive: table state and table APIs are wired for Angular signals, so you can consume table methods inside `computed(...)` and `effect(...)` and have those computations update when the underlying atom reads change.
 
@@ -61,7 +60,7 @@ this.table.atoms.sorting.get()
 // this.table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state()`, `initialState`, `state`, or `atoms`.
+If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -70,11 +69,11 @@ There are two different questions when reading table state:
 - Do you only need the current value?
 - Or should an Angular signal, computed value, effect, or template update when that value changes?
 
-Use a direct atom or store read for the current value. Use `table.state()` or `table.computed(...)` when you want signal updates.
+Use a direct atom read for the current value. Because Angular table atoms are backed by Angular signals, the same read also participates in Angular dependency tracking when it happens inside a template, `computed(...)`, or `effect(...)`.
 
-#### Reading State Without Subscribing
+#### Reading State
 
-The simplest and most performant way to read a current state value is to read the matching atom:
+The simplest and most performant way to read a state value is to read the matching atom:
 
 ```ts
 const pagination = this.table.atoms.pagination.get()
@@ -88,43 +87,44 @@ const tableState = this.table.store.state
 const pagination = this.table.store.state.pagination
 ```
 
-These reads are current-value reads. They only participate in Angular dependency tracking when they are called inside an Angular reactive context that tracks those reads. If the UI needs to stay reactive to table state changes, use `table.state()`, `table.computed(...)`, or even `injectSelector` from TanStack Store.
+Atom reads are signal reads in Angular. If `this.table.atoms.pagination.get()` is used in a template expression, `computed(...)`, or `effect(...)`, Angular tracks it and updates when that atom changes.
 
-#### Reading Reactive State with injectTable
+#### Selecting State with Angular computed
 
-The second argument to `injectTable` is a TanStack Store selector. The selected value is exposed as the `table.state()` signal. The default selector selects all registered table state.
+Use Angular's native `computed(...)` when you want to derive a value from table state or apply a custom equality function. For object or array slices, pass `shallow` to avoid unnecessary downstream work when the selected value is structurally unchanged.
 
 ```ts
-readonly table = injectTable(
-  () => ({
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
-    columns,
-    data: this.data(),
-  }),
-  (state) => ({
-    pagination: state.pagination,
-  }),
+import { computed } from '@angular/core'
+import { shallow } from '@tanstack/angular-table'
+
+readonly table = injectTable(() => ({
+  _features,
+  _rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
+  },
+  columns,
+  data: this.data(),
+}))
+
+readonly pagination = computed(
+  () => this.table.atoms.pagination.get(),
+  // if you want to pass a custom equality function
+  // { equal: shallow },
 )
-
-readonly pageIndex = computed(() => this.table.state().pagination.pageIndex)
-```
-
-#### Fine-grained Updates with table.computed
-
-Use `table.computed({ selector })` when you want an Angular signal for a selected slice of table state. The default equality behavior is shallow comparison.
-
-```ts
-readonly pagination = this.table.computed({
-  selector: (state) => state.pagination,
-})
 
 readonly pageIndex = computed(() => this.pagination().pageIndex)
 ```
 
-This is the recommended way to keep expensive computed values scoped to the state they actually depend on.
+You can also select from the flat store if that is more convenient.
+
+```ts
+readonly pagination = computed(
+  () => this.table.store.state.pagination,
+  { equal: shallow },
+)
+```
+
+Use `computed(...)` for selection, derivation, and equality control. You do not need it just to make an atom reactive; the atom already is backed by an Angular signal.
 
 ### Setting Table State
 

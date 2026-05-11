@@ -243,11 +243,10 @@ export type AppColumnHelper<
 export type AppAngularTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected,
   TTableComponents extends Record<string, RenderableComponent>,
   TCellComponents extends Record<string, RenderableComponent>,
   THeaderComponents extends Record<string, RenderableComponent>,
-> = AngularTable<TFeatures, TData, TSelected> &
+> = AngularTable<TFeatures, TData> &
   NoInfer<TTableComponents> & {
     appCell: <TValue>(
       cell: Cell<TFeatures, TData, TValue>,
@@ -333,16 +332,14 @@ export type CreateTableHookResult<
     TData extends RowData,
     TValue extends CellData,
   >() => CellContext<TFeatures, TData, TValue>
-  injectAppTable: <TData extends RowData, TSelected = TableState<TFeatures>>(
+  injectAppTable: <TData extends RowData>(
     tableOptions: () => Omit<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
     >,
-    selector?: (state: TableState<TFeatures>) => TSelected,
   ) => AppAngularTable<
     TFeatures,
     TData,
-    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -431,11 +428,9 @@ export function createTableHook<
       TableOptions<TFeatures, TData>,
       '_features' | '_rowModels'
     >,
-    selector?: (state: TableState<TFeatures>) => TSelected,
   ): AppAngularTable<
     TFeatures,
     TData,
-    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -464,8 +459,8 @@ export function createTableHook<
       },
     }
 
-    return injectTable<TFeatures, TData, TSelected>(() => {
-      const options = {
+    return injectTable<TFeatures, TData>(() => {
+      return {
         ...defaultTableOptions,
         ...tableOptions(),
         _features: {
@@ -473,8 +468,7 @@ export function createTableHook<
           appTableFeatures,
         },
       } as TableOptions<TFeatures, TData>
-      return options
-    }, selector) as AngularTable<any, any>
+    }) as AngularTable<any, any>
   }
 
   function createAppColumnHelper<TData extends RowData>(): AppColumnHelper<

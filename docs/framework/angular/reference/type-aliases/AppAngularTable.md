@@ -3,10 +3,10 @@ id: AppAngularTable
 title: AppAngularTable
 ---
 
-# Type Alias: AppAngularTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
+# Type Alias: AppAngularTable\<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents\>
 
 ```ts
-type AppAngularTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = AngularTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
+type AppAngularTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = AngularTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
 Defined in: [helpers/createTableHook.ts:243](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L243)
@@ -90,10 +90,6 @@ appHeader: <TValue>(header) => Header<TFeatures, TData, TValue> & NoInfer<THeade
 ### TData
 
 `TData` *extends* `RowData`
-
-### TSelected
-
-`TSelected`
 
 ### TTableComponents
 

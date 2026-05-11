@@ -3,7 +3,7 @@ id: TanStackTable
 title: TanStackTable
 ---
 
-# Class: TanStackTable\<TFeatures, TData, TSelected\>
+# Class: TanStackTable\<TFeatures, TData\>
 
 Defined in: [helpers/table.ts:59](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L59)
 
@@ -51,31 +51,27 @@ export class PaginationComponent {
 
 `TData` *extends* `RowData`
 
-### TSelected
-
-`TSelected` *extends* `object` = `TableState`\<`TFeatures`\>
-
 ## Constructors
 
 ### Constructor
 
 ```ts
-new TanStackTable<TFeatures, TData, TSelected>(): TanStackTable<TFeatures, TData, TSelected>;
+new TanStackTable<TFeatures, TData>(): TanStackTable<TFeatures, TData>;
 ```
 
 #### Returns
 
-`TanStackTable`\<`TFeatures`, `TData`, `TSelected`\>
+`TanStackTable`\<`TFeatures`, `TData`\>
 
 ## Properties
 
 ### table
 
 ```ts
-readonly table: InputSignal<AngularTable<TFeatures, TData, TSelected>>;
+readonly table: InputSignal<AngularTable<TFeatures, TData>>;
 ```
 
-Defined in: [helpers/table.ts:69](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L69)
+Defined in: [helpers/table.ts:68](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L68)
 
 The current TanStack Table instance.
 

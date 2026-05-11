@@ -9,7 +9,7 @@ title: createTableHook
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(__namedParameters): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [helpers/createTableHook.ts:371](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L371)
+Defined in: [helpers/createTableHook.ts:368](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L368)
 
 Creates app-scoped Angular table helpers with features, row models, and
 renderable component maps pre-bound.

@@ -13,6 +13,7 @@ import {
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
+  shallow,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { ReactiveFormsModule } from '@angular/forms'
@@ -105,9 +106,12 @@ export class App {
     JSON.stringify(this.expanded(), undefined, 2),
   )
 
-  readonly rowSelectionState = this.table.computed({
-    selector: (state) => state.rowSelection,
-  })
+  readonly rowSelectionState = computed(
+    () => this.table.atoms.rowSelection.get(),
+    {
+      equal: shallow,
+    },
+  )
   readonly rawRowSelectionState = computed(() =>
     JSON.stringify(this.rowSelectionState(), undefined, 2),
   )

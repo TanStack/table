@@ -6,10 +6,10 @@ title: injectTable
 # Function: injectTable()
 
 ```ts
-function injectTable<TFeatures, TData, TSelected>(options, selector?): AngularTable<TFeatures, TData, TSelected>;
+function injectTable<TFeatures, TData>(options): AngularTable<TFeatures, TData>;
 ```
 
-Defined in: [injectTable.ts:133](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L133)
+Defined in: [injectTable.ts:91](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L91)
 
 Creates and returns an Angular-reactive table instance.
 
@@ -32,23 +32,15 @@ The returned table is also signal-reactive: table state and table APIs are wired
 
 `TData` *extends* `RowData`
 
-### TSelected
-
-`TSelected` = `TableState`\<`TFeatures`\>
-
 ## Parameters
 
 ### options
 
 () => `TableOptions`\<`TFeatures`, `TData`\>
 
-### selector?
-
-(`state`) => `TSelected`
-
 ## Returns
 
-[`AngularTable`](../type-aliases/AngularTable.md)\<`TFeatures`, `TData`, `TSelected`\>
+[`AngularTable`](../type-aliases/AngularTable.md)\<`TFeatures`, `TData`\>
 
 An Angular-reactive TanStack Table instance.
 

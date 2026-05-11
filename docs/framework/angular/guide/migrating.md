@@ -14,7 +14,7 @@ TanStack Table v9 is a major release that introduces significant architectural i
 ### 2. State Management
 
 - **Uses TanStack Store**: The internal state system has been rebuilt on [TanStack Store](https://tanstack.com/store), providing a reactive, framework-agnostic foundation.
-- **Opt-in subscriptions instead of memo hacks**: In Angular, you consume state via signals and `computed(...)`. You can keep reads scoped to the state you actually need and avoid unnecessary template work.
+- **Opt-in subscriptions instead of memo hacks**: In Angular, table atoms are backed by signals. Use `computed(...)` when you want selector-style derivation or custom equality, and keep reads scoped to the state you actually need.
 
 ### 3. Composability
 
@@ -295,14 +295,13 @@ const { sorting: v9Sorting, pagination: v9Pagination } = v9
 
 In Angular, you have a few good options for consuming table state.
 
-#### Option 1: Prefer `table.store.subscribe(...)` for a sliced signal
+#### Option 1: Read table atoms directly
 
-TanStack Store lets you subscribe to (and derive) a slice of state. With the Angular adapter, you can use that to create a signal-like value that only updates when the selected slice changes.
-
-This is the closest equivalent to the fine-grained subscription examples you might see in other frameworks.
+The Angular adapter backs table atoms with Angular signals. Read the atom you care about directly in templates, effects, or computed values.
 
 ```ts
 import { computed, effect } from '@angular/core'
+import { shallow } from '@tanstack/angular-table'
 
 class TableCmp {
   readonly table = injectTable(() => ({
@@ -312,10 +311,10 @@ class TableCmp {
     data: this.data(),
   }))
 
-  // Create a computed to a slice of state.
-  // The store will only emit when this selected value changes.
-  private readonly pagination = this.table.computed(
-    state => state.pagination,
+  // Use computed when deriving from a slice or applying equality.
+  private readonly pagination = computed(
+    () => this.table.atoms.pagination.get(),
+    { equal: shallow },
   )
 
   constructor() {
@@ -327,12 +326,13 @@ class TableCmp {
 }
 ```
 
-#### Option 2: Use `computed(...)` and read from `table.store.state`
+#### Option 2: Use `computed(...)` for selected object slices
 
-You can also use Angular `computed(...)` and directly read from `table.store.state`. This is simple and works well, but for object/array slices you should provide an equality function to avoid unnecessary downstream work when the slice is recreated with the same values.
+Use Angular `computed(...)` when you want selector-style behavior, a derived value, or an equality function. For object/array slices, use `shallow` from `@tanstack/angular-table` to avoid unnecessary downstream work when the slice is recreated with the same values.
 
 ```ts
 import { computed, effect } from '@angular/core'
+import { shallow } from '@tanstack/angular-table'
 
 class TableCmp {
   readonly table = injectTable(() => ({
@@ -345,9 +345,7 @@ class TableCmp {
   // Provide an equality function for object slices
   readonly pagination = computed(
     () => this.table.store.state.pagination,
-    {
-      equal: (a, b) => a.pageIndex === b.pageIndex && a.pageSize === b.pageSize,
-    },
+    { equal: shallow },
   )
 
   constructor() {
@@ -759,6 +757,3 @@ Check out these examples to see v9 patterns in action:
 - [Grouping](../examples/grouping)
 - [Row Selection](../examples/row-selection)
 - [Composable Tables](../examples/composable-tables)
-
-
-

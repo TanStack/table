@@ -2,7 +2,7 @@
 title: Angular Table
 ---
 
-The `@tanstack/angular-table` adapter wraps `@tanstack/table-core` with Angular signals, rendering directives, dependency-injection helpers, and types. `injectTable` installs the Angular `coreReativityFeature` for you, so table atoms can update Angular signals, computed values, effects, and templates.
+The `@tanstack/angular-table` adapter wraps `@tanstack/table-core` with Angular signals, rendering directives, dependency-injection helpers, and types. `injectTable` supplies Angular reactivity bindings for you, so table atoms can update Angular signals, computed values, effects, and templates.
 
 TanStack Table v9 is explicit about what a table uses. Register features with `_features`, and register client-side row model factories with `_rowModels`. The core row model is included by default, so a basic table can use `_rowModels: {}`.
 
@@ -83,7 +83,7 @@ const tableOptions = {
 
 Table state is managed with TanStack Store atoms in v9. For most tables, you do not need to manage table state yourself: set `initialState` when you need starting values, and use feature APIs like `table.nextPage()`, `table.setSorting(...)`, and `row.toggleSelected()` instead of mutating state directly.
 
-Angular apps usually own state with signals and pass it through `state` with the matching `on[State]Change` option. The `atoms` table option is also available for TanStack Store atom ownership. Selected table state is available through `table.state()`.
+Angular apps usually own state with signals and pass it through `state` with the matching `on[State]Change` option. The `atoms` table option is also available for TanStack Store atom ownership. Table atoms are backed by Angular signals, so reading `table.atoms.someSlice.get()` in a template, `computed(...)`, or `effect(...)` participates in Angular reactivity.
 
 ```ts
 import { signal } from '@angular/core'
@@ -121,7 +121,7 @@ export class App {
 }
 ```
 
-See the [Table State Guide](./guide/table-state.md) for selectors, external atoms, and state ownership patterns.
+See the [Table State Guide](./guide/table-state.md) for reactive reads, external atoms, and state ownership patterns.
 
 ## Rendering Headers, Cells, and Footers
 
