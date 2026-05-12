@@ -53,10 +53,11 @@ export function constructGlobalFilteringFeature<
         onGlobalFilterChange: makeStateUpdater('globalFilter', table),
         globalFilterFn: 'auto',
         getColumnCanGlobalFilter: (column) => {
-          const value = table
-            .getCoreRowModel()
-            .flatRows[0]?.getAllCellsByColumnId()
-            [column.id]?.getValue()
+          let value: unknown
+          for (const row of table.getCoreRowModel().flatRows) {
+            value = row.getAllCellsByColumnId()[column.id]?.getValue()
+            if (value != null) break
+          }
 
           return typeof value === 'string' || typeof value === 'number'
         },
