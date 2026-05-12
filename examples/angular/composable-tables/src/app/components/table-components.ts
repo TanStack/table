@@ -107,8 +107,12 @@ export class PaginationControls {
 
   readonly canPreviousPage = computed(() => this.table().getCanPreviousPage())
   readonly canNextPage = computed(() => this.table().getCanNextPage())
-  readonly pageIndex = computed(() => this.table().state().pagination.pageIndex)
-  readonly pageSize = computed(() => this.table().state().pagination.pageSize)
+  readonly pageIndex = computed(
+    () => this.table().store.state.pagination.pageIndex,
+  )
+  readonly pageSize = computed(
+    () => this.table().store.state.pagination.pageSize,
+  )
   readonly pageCount = computed(() =>
     this.table().getPageCount().toLocaleString(),
   )
