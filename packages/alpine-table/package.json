@@ -1,0 +1,68 @@
+{
+  "name": "@tanstack/alpine-table",
+  "version": "9.0.0-alpha.45",
+  "description": "Headless UI for building powerful tables & datagrids for Alpine.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/alpine-table"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "alpine",
+    "table",
+    "alpine-table",
+    "datagrid"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.cts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./flex-render": {
+      "import": "./dist/flex-render.js",
+      "require": "./dist/flex-render.cjs"
+    },
+    "./static-functions": {
+      "import": "./dist/static-functions.js",
+      "require": "./dist/static-functions.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src",
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "tsdown"
+  },
+  "dependencies": {
+    "@tanstack/store": "^0.11.0",
+    "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/alpinejs": "^3.13.11",
+    "alpinejs": "^3.15.12"
+  },
+  "peerDependencies": {
+    "alpinejs": "^3.15.12"
+  }
+}

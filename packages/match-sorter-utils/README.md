@@ -39,6 +39,7 @@
 > - [Solid Table](https://tanstack.com/table/alpha/docs/framework/solid/solid-table)
 > - [Svelte Table](https://tanstack.com/table/alpha/docs/framework/svelte/svelte-table)
 > - [Vue Table](https://tanstack.com/table/alpha/docs/framework/vue/vue-table)
+> - [Alpine Table](https://tanstack.com/table/alpha/docs/framework/alpine/alpine-table)
 
 A headless table library for building powerful datagrids with full control over markup, styles, and behavior.
 
