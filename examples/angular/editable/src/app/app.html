@@ -81,7 +81,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {{ (table.state().pagination.pageIndex + 1).toLocaleString() }} of
+        {{ (table.store.state.pagination.pageIndex + 1).toLocaleString() }} of
         {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>

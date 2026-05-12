@@ -100,7 +100,7 @@ export class App {
   }))
 
   readonly stringifiedColumnVisibility = computed(() => {
-    return JSON.stringify(this.table.state().columnVisibility)
+    return JSON.stringify(this.table.store.state.columnVisibility)
   })
 
   refreshData = () => this.data.set(makeData(20))

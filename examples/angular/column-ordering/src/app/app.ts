@@ -107,7 +107,7 @@ export class App {
   }))
 
   readonly stringifiedColumnOrdering = computed(() => {
-    return JSON.stringify(this.table.state().columnOrder)
+    return JSON.stringify(this.table.store.state.columnOrder)
   })
 
   randomizeColumns() {
