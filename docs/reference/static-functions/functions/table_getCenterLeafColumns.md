@@ -9,7 +9,7 @@ title: table_getCenterLeafColumns
 function table_getCenterLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:691](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L691)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:713](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L713)
 
 Returns center leaf columns for the table.
 

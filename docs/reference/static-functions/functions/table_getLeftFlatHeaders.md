@@ -9,7 +9,7 @@ title: table_getLeftFlatHeaders
 function table_getLeftFlatHeaders<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:498](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L498)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:518](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L518)
 
 Returns left flat headers for the table.
 

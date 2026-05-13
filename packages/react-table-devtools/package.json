@@ -47,11 +47,11 @@
     "src"
   ],
   "dependencies": {
-    "@tanstack/devtools-utils": "^0.4.0",
+    "@tanstack/devtools-utils": "^0.5.0",
     "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^5.7.5",
+    "@eslint-react/eslint-plugin": "^5.7.7",
     "@tanstack/table-core": "workspace:*",
     "@types/react": "^19.2.14",
     "@vitejs/plugin-react": "^6.0.1",

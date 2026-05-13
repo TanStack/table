@@ -9,7 +9,7 @@ title: table_getIsSomeColumnsPinned
 function table_getIsSomeColumnsPinned<TFeatures, TData>(table, position?): boolean;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:312](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L312)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:318](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L318)
 
 Returns is some columns pinned for the table.
 

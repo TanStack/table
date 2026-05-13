@@ -6,6 +6,7 @@ import {
   table_getAllFlatColumns,
   table_getAllFlatColumnsById,
   table_getAllLeafColumns,
+  table_getAllLeafColumnsById,
   table_getColumn,
   table_getDefaultColumnDef,
 } from './coreColumnsFeature.utils'
@@ -80,6 +81,10 @@ export function constructCoreColumnsFeature<
             table.options.columns,
             table.options.groupedColumnMode,
           ],
+        },
+        table_getAllLeafColumnsById: {
+          fn: () => table_getAllLeafColumnsById(table),
+          memoDeps: () => [table.getAllLeafColumns()],
         },
         table_getColumn: {
           fn: (columnId) => table_getColumn(table, columnId),

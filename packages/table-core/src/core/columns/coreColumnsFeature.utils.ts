@@ -178,13 +178,11 @@ export function table_getAllFlatColumnsById<
 >(
   table: Table_Internal<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
-  return table.getAllFlatColumns().reduce(
-    (acc, column) => {
-      acc[column.id] = column
-      return acc
-    },
-    {} as Record<string, Column<TFeatures, TData, unknown>>,
-  )
+  const result: Record<string, Column<TFeatures, TData, unknown>> = {}
+  for (const column of table.getAllFlatColumns()) {
+    result[column.id] = column
+  }
+  return result
 }
 
 /**
@@ -210,7 +208,30 @@ export function table_getAllLeafColumns<
     table,
     'getOrderColumns',
     table_getOrderColumnsFn,
-  )(leafColumns as any) as any
+  )(leafColumns)
+}
+
+/**
+ * Returns all leaf columns by id for the table.
+ *
+ * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ *
+ * @example
+ * ```ts
+ * const value = table_getAllLeafColumnsById(table)
+ * ```
+ */
+export function table_getAllLeafColumnsById<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+): Record<string, Column<TFeatures, TData, unknown>> {
+  const result: Record<string, Column<TFeatures, TData, unknown>> = {}
+  for (const column of table.getAllLeafColumns()) {
+    result[column.id] = column
+  }
+  return result
 }
 
 /**

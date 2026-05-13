@@ -9,7 +9,7 @@ title: table_getLeftLeafHeaders
 function table_getLeftLeafHeaders<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:578](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L578)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:598](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L598)
 
 Returns left leaf headers for the table.
 

@@ -9,7 +9,7 @@ title: table_getLeftHeaderGroups
 function table_getLeftHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:336](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L336)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:342](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L342)
 
 Returns left header groups for the table.
 

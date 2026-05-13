@@ -9,7 +9,7 @@ title: injectTableContext
 function injectTableContext<TFeatures, TData>(): Signal<AngularTable<TFeatures, TData>>;
 ```
 
-Defined in: [helpers/table.ts:80](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L80)
+Defined in: [packages/angular-table/src/helpers/table.ts:80](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L80)
 
 Injects the current TanStack Table instance signal.
 

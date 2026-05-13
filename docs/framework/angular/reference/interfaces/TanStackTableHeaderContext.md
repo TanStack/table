@@ -5,7 +5,7 @@ title: TanStackTableHeaderContext
 
 # Interface: TanStackTableHeaderContext\<TFeatures, TData, TValue\>
 
-Defined in: [helpers/header.ts:11](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L11)
+Defined in: [packages/angular-table/src/helpers/header.ts:11](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L11)
 
 DI context shape for a TanStack Table header.
 
@@ -34,6 +34,6 @@ without passing it through inputs/props.
 header: Signal<Header<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [helpers/header.ts:17](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L17)
+Defined in: [packages/angular-table/src/helpers/header.ts:17](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L17)
 
 Signal that returns the current header instance.

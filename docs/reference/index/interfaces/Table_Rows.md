@@ -5,7 +5,7 @@ title: Table_Rows
 
 # Interface: Table\_Rows\<TFeatures, TData\>
 
-Defined in: [core/rows/coreRowsFeature.types.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L105)
+Defined in: [core/rows/coreRowsFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L108)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:105](https://github.com/TanStack
 getRow: (id, searchAll?) => Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L113)
+Defined in: [core/rows/coreRowsFeature.types.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L116)
 
 Returns the row with the given ID.
 
@@ -51,7 +51,7 @@ Returns the row with the given ID.
 getRowId: (_, index, parent?) => string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L109)
+Defined in: [core/rows/coreRowsFeature.types.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L112)
 
 #### Parameters
 

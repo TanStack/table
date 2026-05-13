@@ -9,7 +9,7 @@ title: table_getRightFooterGroups
 function table_getRightFooterGroups<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:452](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L452)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:472](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L472)
 
 Returns right footer groups for the table.
 

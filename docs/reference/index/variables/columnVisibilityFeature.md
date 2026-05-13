@@ -9,7 +9,7 @@ title: columnVisibilityFeature
 const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts#L165)
+Defined in: [features/column-visibility/columnVisibilityFeature.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts#L151)
 
 The stock column visibility feature.
 

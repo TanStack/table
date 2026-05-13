@@ -9,7 +9,7 @@ title: table_getCenterFooterGroups
 function table_getCenterFooterGroups<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:474](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L474)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:494](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L494)
 
 Returns center footer groups for the table.
 

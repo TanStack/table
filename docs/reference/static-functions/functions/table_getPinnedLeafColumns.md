@@ -9,7 +9,7 @@ title: table_getPinnedLeafColumns
 function table_getPinnedLeafColumns<TFeatures, TData>(table, position): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:711](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L711)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:733](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L733)
 
 Returns pinned leaf columns for the table.
 

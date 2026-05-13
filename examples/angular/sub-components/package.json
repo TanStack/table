@@ -9,7 +9,7 @@
     "lint": "eslint ./src"
   },
   "private": true,
-  "packageManager": "pnpm@11.0.9",
+  "packageManager": "pnpm@11.1.1",
   "dependencies": {
     "@angular/common": "^21.2.12",
     "@angular/compiler": "^21.2.12",
@@ -23,8 +23,8 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.10",
-    "@angular/cli": "^21.2.10",
+    "@angular/build": "^21.2.11",
+    "@angular/cli": "^21.2.11",
     "@angular/compiler-cli": "^21.2.12",
     "typescript": "6.0.3"
   }

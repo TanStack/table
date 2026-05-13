@@ -5,7 +5,7 @@ title: TanStackTable
 
 # Class: TanStackTable\<TFeatures, TData\>
 
-Defined in: [helpers/table.ts:59](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L59)
+Defined in: [packages/angular-table/src/helpers/table.ts:59](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L59)
 
 Provides a TanStack Table instance (`AngularTable`) in Angular DI.
 
@@ -71,7 +71,7 @@ new TanStackTable<TFeatures, TData>(): TanStackTable<TFeatures, TData>;
 readonly table: InputSignal<AngularTable<TFeatures, TData>>;
 ```
 
-Defined in: [helpers/table.ts:68](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L68)
+Defined in: [packages/angular-table/src/helpers/table.ts:68](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/table.ts#L68)
 
 The current TanStack Table instance.
 

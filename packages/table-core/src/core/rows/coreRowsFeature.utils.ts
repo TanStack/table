@@ -183,13 +183,11 @@ export function row_getAllCellsByColumnId<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  return row.getAllCells().reduce(
-    (acc, cell) => {
-      acc[cell.column.id] = cell
-      return acc
-    },
-    {} as Record<string, Cell<TFeatures, TData, unknown>>,
-  )
+  const result: Record<string, Cell<TFeatures, TData, unknown>> = {}
+  for (const cell of row.getAllCells()) {
+    result[cell.column.id] = cell
+  }
+  return result
 }
 
 /**

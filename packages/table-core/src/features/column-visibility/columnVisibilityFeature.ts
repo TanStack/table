@@ -4,17 +4,11 @@ import {
   makeStateUpdater,
 } from '../../utils'
 import {
-  row_getCenterVisibleCells,
-  row_getLeftVisibleCells,
-  row_getRightVisibleCells,
-} from '../column-pinning/columnPinningFeature.utils'
-import {
   column_getCanHide,
   column_getIsVisible,
   column_getToggleVisibilityHandler,
   column_toggleVisibility,
   getDefaultColumnVisibilityState,
-  row_getAllVisibleCells,
   row_getVisibleCells,
   table_getIsAllColumnsVisible,
   table_getIsSomeColumnsVisible,
@@ -95,20 +89,12 @@ export function constructColumnVisibilityFeature<
 
     assignRowPrototype: (prototype, table) => {
       assignPrototypeAPIs('columnVisibilityFeature', prototype, table, {
-        row_getAllVisibleCells: {
-          fn: (row) => row_getAllVisibleCells(row),
+        row_getVisibleCells: {
+          fn: (row) => row_getVisibleCells(row),
           memoDeps: (row) => [
             row.getAllCells(),
+            row.table.atoms.columnPinning?.get(),
             row.table.atoms.columnVisibility?.get(),
-          ],
-        },
-        row_getVisibleCells: {
-          fn: (row, left, center, right) =>
-            row_getVisibleCells(left, center, right),
-          memoDeps: (row) => [
-            row_getLeftVisibleCells(row),
-            row_getCenterVisibleCells(row),
-            row_getRightVisibleCells(row),
           ],
         },
       })

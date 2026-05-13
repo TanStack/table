@@ -97,6 +97,10 @@ export interface Table_Columns<
    */
   getAllLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
+   * Returns a map of all leaf-node columns by their ID. This does not include parent columns.
+   */
+  getAllLeafColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>
+  /**
    * Returns a single column by its ID.
    */
   getColumn: (columnId: string) => Column<TFeatures, TData, unknown> | undefined

@@ -9,7 +9,7 @@ title: CreateTableHookResult
 type CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = object;
 ```
 
-Defined in: [helpers/createTableHook.ts:304](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L304)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:304](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L304)
 
 ## Type Parameters
 
@@ -37,7 +37,7 @@ Defined in: [helpers/createTableHook.ts:304](https://github.com/TanStack/table/b
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [helpers/createTableHook.ts:310](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L310)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:310](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L310)
 
 #### Type Parameters
 
@@ -57,7 +57,7 @@ Defined in: [helpers/createTableHook.ts:310](https://github.com/TanStack/table/b
 injectAppTable: <TData>(tableOptions) => AppAngularTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [helpers/createTableHook.ts:335](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L335)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:335](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L335)
 
 #### Type Parameters
 
@@ -83,7 +83,7 @@ Defined in: [helpers/createTableHook.ts:335](https://github.com/TanStack/table/b
 injectFlexRenderCellContext: <TData, TValue>() => CellContext<TFeatures, TData, TValue>;
 ```
 
-Defined in: [helpers/createTableHook.ts:331](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L331)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:331](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L331)
 
 #### Type Parameters
 
@@ -107,7 +107,7 @@ Defined in: [helpers/createTableHook.ts:331](https://github.com/TanStack/table/b
 injectFlexRenderHeaderContext: <TData, TValue>() => HeaderContext<TFeatures, TData, TValue>;
 ```
 
-Defined in: [helpers/createTableHook.ts:327](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L327)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:327](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L327)
 
 #### Type Parameters
 
@@ -131,7 +131,7 @@ Defined in: [helpers/createTableHook.ts:327](https://github.com/TanStack/table/b
 injectTableCellContext: <TValue, TRowData>() => Signal<Cell<TFeatures, TRowData, TValue>>;
 ```
 
-Defined in: [helpers/createTableHook.ts:323](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L323)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:323](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L323)
 
 #### Type Parameters
 
@@ -155,7 +155,7 @@ Defined in: [helpers/createTableHook.ts:323](https://github.com/TanStack/table/b
 injectTableContext: <TData>() => Signal<AngularTable<TFeatures, TData>>;
 ```
 
-Defined in: [helpers/createTableHook.ts:316](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L316)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:316](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L316)
 
 #### Type Parameters
 
@@ -175,7 +175,7 @@ Defined in: [helpers/createTableHook.ts:316](https://github.com/TanStack/table/b
 injectTableHeaderContext: <TValue, TRowData>() => Signal<Header<TFeatures, TRowData, TValue>>;
 ```
 
-Defined in: [helpers/createTableHook.ts:319](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L319)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:319](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L319)
 
 #### Type Parameters
 

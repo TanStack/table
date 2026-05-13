@@ -4,7 +4,10 @@ import {
   table_getLeftHeaderGroups,
   table_getRightHeaderGroups,
 } from '../../features/column-pinning/columnPinningFeature.utils'
-import { table_getVisibleLeafColumns } from '../../features/column-visibility/columnVisibilityFeature.utils'
+import {
+  column_getIsVisible,
+  table_getVisibleLeafColumns,
+} from '../../features/column-visibility/columnVisibilityFeature.utils'
 import { callMemoOrStaticFn } from '../../utils'
 import { buildHeaderGroups } from './buildHeaderGroups'
 import type { Table_Internal } from '../../types/Table'
@@ -86,15 +89,30 @@ export function table_getHeaderGroups<
     table,
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
-  ) as unknown as Array<Column<TFeatures, TData, unknown>>
+  ) as Array<Column<TFeatures, TData, unknown>>
+  const leafColumnsById = table.getAllLeafColumnsById()
 
-  const leftColumns = left
-    .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
-    .filter(Boolean)
+  const leftColumns: typeof leafColumns = []
+  for (const columnId of left) {
+    const column = leafColumnsById[columnId]
+    if (
+      column &&
+      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
+    ) {
+      leftColumns.push(column)
+    }
+  }
 
-  const rightColumns = right
-    .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
-    .filter(Boolean)
+  const rightColumns: typeof leafColumns = []
+  for (const columnId of right) {
+    const column = leafColumnsById[columnId]
+    if (
+      column &&
+      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
+    ) {
+      rightColumns.push(column)
+    }
+  }
 
   const centerColumns = leafColumns.filter(
     (column) => !left.includes(column.id) && !right.includes(column.id),

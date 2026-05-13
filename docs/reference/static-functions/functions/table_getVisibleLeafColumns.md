@@ -9,7 +9,7 @@ title: table_getVisibleLeafColumns
 function table_getVisibleLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L191)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:210](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L210)
 
 Returns visible leaf columns for the table.
 

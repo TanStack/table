@@ -9,7 +9,7 @@ title: table_getCenterHeaderGroups
 function table_getCenterHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:396](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L396)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:416](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L416)
 
 Returns center header groups for the table.
 

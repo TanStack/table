@@ -9,7 +9,7 @@ title: constructColumnVisibilityFeature
 function constructColumnVisibilityFeature<TFeatures, TData>(): TableFeature<ColumnVisibilityFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts#L56)
+Defined in: [features/column-visibility/columnVisibilityFeature.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts#L50)
 
 Creates the stock column visibility feature.
 

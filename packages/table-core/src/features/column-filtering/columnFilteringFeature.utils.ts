@@ -249,11 +249,11 @@ export function table_setColumnFilters<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<ColumnFiltersState>,
 ) {
-  const leafColumns = table.getAllLeafColumns()
+  const leafColumnsById = table.getAllLeafColumnsById()
 
   const updateFn = (old: ColumnFiltersState) => {
     return functionalUpdate(updater, old).filter((filter) => {
-      const column = leafColumns.find((d) => d.id === filter.id)
+      const column = leafColumnsById[filter.id]
 
       if (column) {
         const filterFn = column_getFilterFn(column)

@@ -19,29 +19,13 @@ Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:75](htt
 
 ## Properties
 
-### getAllVisibleCells()
-
-```ts
-getAllVisibleCells: () => Cell<TFeatures, TData, unknown>[];
-```
-
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L82)
-
-Returns all cells for the row whose columns are currently visible.
-
-#### Returns
-
-[`Cell`](../type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
-
-***
-
 ### getVisibleCells()
 
 ```ts
 getVisibleCells: () => Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L86)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L82)
 
 Returns an array of cells that account for column visibility for the row.
 

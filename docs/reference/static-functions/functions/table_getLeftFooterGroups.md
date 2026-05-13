@@ -9,7 +9,7 @@ title: table_getLeftFooterGroups
 function table_getLeftFooterGroups<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:430](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L430)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:450](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L450)
 
 Returns left footer groups for the table.
 

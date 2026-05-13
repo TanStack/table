@@ -9,7 +9,7 @@ title: table_getRightHeaderGroups
 function table_getRightHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:366](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L366)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:379](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L379)
 
 Returns right header groups for the table.
 

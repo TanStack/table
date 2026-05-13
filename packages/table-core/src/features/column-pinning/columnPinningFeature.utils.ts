@@ -1,6 +1,6 @@
 import {
   column_getIsVisible,
-  row_getAllVisibleCells,
+  row_getVisibleCells,
   table_getVisibleLeafColumns,
 } from '../column-visibility/columnVisibilityFeature.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
@@ -181,8 +181,8 @@ export function row_getCenterVisibleCells<
 >(row: Row<TFeatures, TData>) {
   const allCells = callMemoOrStaticFn(
     row,
-    'getAllVisibleCells',
-    row_getAllVisibleCells,
+    'getVisibleCells',
+    row_getVisibleCells,
   )
   const { left, right } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
@@ -204,21 +204,24 @@ export function row_getLeftVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
-  const allCells = callMemoOrStaticFn(
-    row,
-    'getAllVisibleCells',
-    row_getAllVisibleCells,
-  )
   const { left } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  const cells = left
-    .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
-    .filter(Boolean)
-  // Assign position property directly to preserve prototype chain
-  cells.forEach((cell) => {
-    cell.position = 'left'
-  })
-  return cells as any
+  if (!left.length) return []
+  const allVisibleCells = callMemoOrStaticFn(
+    row,
+    'getVisibleCells',
+    row_getVisibleCells,
+  )
+  const cells: typeof allVisibleCells = []
+  for (const columnId of left) {
+    const cell = allVisibleCells.find((c) => c.column.id === columnId)
+    if (cell) {
+      // Assign position property directly to preserve prototype chain
+      cell.position = 'left'
+      cells.push(cell)
+    }
+  }
+  return cells
 }
 
 /**
@@ -235,21 +238,24 @@ export function row_getRightVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const allCells = callMemoOrStaticFn(
-    row,
-    'getAllVisibleCells',
-    row_getAllVisibleCells,
-  )
   const { right } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  const cells = right
-    .map((columnId) => allCells.find((cell) => cell.column.id === columnId)!)
-    .filter(Boolean)
-  // Assign position property directly to preserve prototype chain
-  cells.forEach((cell) => {
-    cell.position = 'right'
-  })
-  return cells as any
+  if (!right.length) return [] as Array<Cell<TFeatures, TData, unknown>>
+  const allVisibleCells = callMemoOrStaticFn(
+    row,
+    'getVisibleCells',
+    row_getVisibleCells,
+  )
+  const cells: typeof allVisibleCells = []
+  for (const columnId of right) {
+    const cell = allVisibleCells.find((c) => c.column.id === columnId)
+    if (cell) {
+      // Assign position property directly to preserve prototype chain
+      cell.position = 'right'
+      cells.push(cell)
+    }
+  }
+  return cells
 }
 
 // Table APIs
@@ -338,17 +344,24 @@ export function table_getLeftHeaderGroups<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const allColumns = table.getAllColumns()
-  const leafColumns = callMemoOrStaticFn(
-    table,
-    'getVisibleLeafColumns',
-    table_getVisibleLeafColumns,
-  ) as Array<Column_Internal<TFeatures, TData, unknown>>
+  const leafColumnsById = table.getAllLeafColumnsById() as Record<
+    string,
+    Column_Internal<TFeatures, TData, unknown>
+  >
   const { left } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
-  const orderedLeafColumns = left
-    .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
-    .filter(Boolean)
+  const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
+    []
+  for (const columnId of left) {
+    const column = leafColumnsById[columnId]
+    if (
+      column &&
+      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
+    ) {
+      orderedLeafColumns.push(column)
+    }
+  }
 
   return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
 }
@@ -368,17 +381,24 @@ export function table_getRightHeaderGroups<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const allColumns = table.getAllColumns()
-  const leafColumns = callMemoOrStaticFn(
-    table,
-    'getVisibleLeafColumns',
-    table_getVisibleLeafColumns,
-  ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
+  const leafColumnsById = table.getAllLeafColumnsById() as Record<
+    string,
+    Column_Internal<TFeatures, TData, unknown>
+  >
   const { right } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
-  const orderedLeafColumns = right
-    .map((columnId) => leafColumns.find((d) => d.id === columnId)!)
-    .filter(Boolean)
+  const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
+    []
+  for (const columnId of right) {
+    const column = leafColumnsById[columnId]
+    if (
+      column &&
+      callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
+    ) {
+      orderedLeafColumns.push(column)
+    }
+  }
 
   return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
 }
@@ -646,12 +666,13 @@ export function table_getLeftLeafColumns<
 >(table: Table_Internal<TFeatures, TData>) {
   const { left } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  return left
-    .map(
-      (columnId) =>
-        table.getAllLeafColumns().find((column) => column.id === columnId)!,
-    )
-    .filter(Boolean)
+  const leafColumnsById = table.getAllLeafColumnsById()
+  const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
+  for (const columnId of left) {
+    const column = leafColumnsById[columnId]
+    if (column) result.push(column)
+  }
+  return result
 }
 
 /**
@@ -670,12 +691,13 @@ export function table_getRightLeafColumns<
 >(table: Table_Internal<TFeatures, TData>) {
   const { right } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  return right
-    .map(
-      (columnId) =>
-        table.getAllLeafColumns().find((column) => column.id === columnId)!,
-    )
-    .filter(Boolean)
+  const leafColumnsById = table.getAllLeafColumnsById()
+  const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
+  for (const columnId of right) {
+    const column = leafColumnsById[columnId]
+    if (column) result.push(column)
+  }
+  return result
 }
 
 /**

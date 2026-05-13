@@ -17,11 +17,11 @@
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.8",
     "typescript": "6.0.3",
-    "vite": "^8.0.11"
+    "vite": "^8.0.12"
   },
   "dependencies": {
-    "@tanstack/form-core": "^1.31.0",
-    "@tanstack/svelte-form": "^1.31.0",
+    "@tanstack/form-core": "^1.32.0",
+    "@tanstack/svelte-form": "^1.32.0",
     "@tanstack/svelte-table": "^9.0.0-alpha.45",
     "zod": "^4.4.3"
   }
