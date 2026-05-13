@@ -733,7 +733,6 @@
         { "label": "passiveEventSupported", "to": "reference/static-functions/functions/passiveEventSupported" },
         { "label": "row_getAllCells", "to": "reference/static-functions/functions/row_getAllCells" },
         { "label": "row_getAllCellsByColumnId", "to": "reference/static-functions/functions/row_getAllCellsByColumnId" },
-        { "label": "row_getAllVisibleCells", "to": "reference/static-functions/functions/row_getAllVisibleCells" },
         { "label": "row_getCanExpand", "to": "reference/static-functions/functions/row_getCanExpand" },
         { "label": "row_getCanMultiSelect", "to": "reference/static-functions/functions/row_getCanMultiSelect" },
         { "label": "row_getCanPin", "to": "reference/static-functions/functions/row_getCanPin" },

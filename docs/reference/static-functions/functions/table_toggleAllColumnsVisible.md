@@ -9,7 +9,7 @@ title: table_toggleAllColumnsVisible
 function table_toggleAllColumnsVisible<TFeatures, TData>(table, value?): void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:253](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L253)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:272](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L272)
 
 Toggles all columns visible for the table.
 

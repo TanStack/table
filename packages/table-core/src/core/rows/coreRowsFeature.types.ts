@@ -48,6 +48,9 @@ export interface Row_Row<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > extends Row_CoreProperties<TFeatures, TData> {
+  /**
+   * Returns all of the cells for the row by column id.
+   */
   getAllCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>
   /**
    * Returns all of the cells for the row.

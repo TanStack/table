@@ -9,7 +9,7 @@ title: table_getPinnedVisibleLeafColumns
 function table_getPinnedVisibleLeafColumns<TFeatures, TData>(table, position?): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:820](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L820)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:842](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L842)
 
 Returns pinned visible leaf columns for the table.
 

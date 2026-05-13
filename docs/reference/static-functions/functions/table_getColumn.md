@@ -11,7 +11,7 @@ function table_getColumn<TFeatures, TData>(table, columnId):
   | undefined;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:226](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L226)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:247](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L247)
 
 Returns column for the table.
 

@@ -17,10 +17,10 @@
     "svelte": "^5.55.5",
     "svelte-check": "^4.4.8",
     "typescript": "6.0.3",
-    "vite": "^8.0.11"
+    "vite": "^8.0.12"
   },
   "dependencies": {
-    "@tanstack/svelte-query": "^6.1.28",
+    "@tanstack/svelte-query": "^6.1.29",
     "@tanstack/svelte-table": "^9.0.0-alpha.45"
   }
 }

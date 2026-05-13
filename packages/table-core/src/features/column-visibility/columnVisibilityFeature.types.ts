@@ -77,10 +77,6 @@ export interface Row_ColumnVisibility<
   TData extends RowData,
 > {
   /**
-   * Returns all cells for the row whose columns are currently visible.
-   */
-  getAllVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
-  /**
    * Returns an array of cells that account for column visibility for the row.
    */
   getVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>

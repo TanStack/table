@@ -9,7 +9,7 @@ title: table_getLeftVisibleLeafColumns
 function table_getLeftVisibleLeafColumns<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:751](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L751)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:773](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L773)
 
 Returns left visible leaf columns for the table.
 

@@ -6,13 +6,10 @@ title: row_getVisibleCells
 # Function: row\_getVisibleCells()
 
 ```ts
-function row_getVisibleCells<TFeatures, TData>(
-   left, 
-   center, 
-   right): Cell<TFeatures, TData, unknown>[];
+function row_getVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L149)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L150)
 
 Returns visible cells for a row.
 
@@ -30,17 +27,9 @@ This is the static implementation behind the matching row instance API and may r
 
 ## Parameters
 
-### left
+### row
 
-[`Cell`](../../index/type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
-
-### center
-
-[`Cell`](../../index/type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
-
-### right
-
-[`Cell`](../../index/type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
+[`Row`](../../index/type-aliases/Row.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

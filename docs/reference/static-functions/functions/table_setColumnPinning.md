@@ -9,7 +9,7 @@ title: table_setColumnPinning
 function table_setColumnPinning<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:267](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L267)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:273](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L273)
 
 Updates the table's column pinning state slice.
 

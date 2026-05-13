@@ -5,7 +5,7 @@ title: FlexRenderDirective
 
 # Class: FlexRenderDirective\<TFeatures, TRowData, TValue, TProps\>
 
-Defined in: [flexRender.ts:84](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L84)
+Defined in: [packages/angular-table/src/flexRender.ts:84](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L84)
 
 Use this utility directive to render headers, cells, or footers with custom markup.
 
@@ -71,7 +71,7 @@ which the latter is preferred.
 
 ### TProps
 
-`TProps` *extends*
+`TProps` *extends* 
   \| `NonNullable`\<`unknown`\>
   \| `CellContext`\<`TFeatures`, `TRowData`, `TValue`\>
   \| `HeaderContext`\<`TFeatures`, `TRowData`, `TValue`\>
@@ -84,7 +84,7 @@ which the latter is preferred.
 new FlexRenderDirective<TFeatures, TRowData, TValue, TProps>(): FlexRenderDirective<TFeatures, TRowData, TValue, TProps>;
 ```
 
-Defined in: [flexRender.ts:109](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L109)
+Defined in: [packages/angular-table/src/flexRender.ts:109](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L109)
 
 #### Returns
 
@@ -98,7 +98,7 @@ Defined in: [flexRender.ts:109](https://github.com/TanStack/table/blob/main/pack
 readonly content: InputSignal<FlexRenderInputContent<TProps>>;
 ```
 
-Defined in: [flexRender.ts:93](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L93)
+Defined in: [packages/angular-table/src/flexRender.ts:93](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L93)
 
 ***
 
@@ -108,7 +108,7 @@ Defined in: [flexRender.ts:93](https://github.com/TanStack/table/blob/main/packa
 readonly injector: InputSignal<Injector>;
 ```
 
-Defined in: [flexRender.ts:102](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L102)
+Defined in: [packages/angular-table/src/flexRender.ts:102](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L102)
 
 ***
 
@@ -118,4 +118,4 @@ Defined in: [flexRender.ts:102](https://github.com/TanStack/table/blob/main/pack
 readonly props: InputSignal<TProps>;
 ```
 
-Defined in: [flexRender.ts:98](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L98)
+Defined in: [packages/angular-table/src/flexRender.ts:98](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flexRender.ts#L98)

@@ -1,4 +1,5 @@
 import { callMemoOrStaticFn, cloneState } from '../../utils'
+import { getDefaultColumnPinningState } from '../column-pinning/columnPinningFeature.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -116,27 +117,6 @@ export function column_getToggleVisibilityHandler<
 }
 
 /**
- * Returns all visible cells for a row.
- *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
- *
- * @example
- * ```ts
- * const value = row_getAllVisibleCells(row)
- * ```
- */
-export function row_getAllVisibleCells<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(row: Row<TFeatures, TData>) {
-  return row
-    .getAllCells()
-    .filter((cell) =>
-      callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible),
-    )
-}
-
-/**
  * Returns visible cells for a row.
  *
  * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
@@ -149,12 +129,30 @@ export function row_getAllVisibleCells<
 export function row_getVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  left: Array<Cell<TFeatures, TData, unknown>>,
-  center: Array<Cell<TFeatures, TData, unknown>>,
-  right: Array<Cell<TFeatures, TData, unknown>>,
-) {
-  return [...left, ...center, ...right]
+>(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
+  const cells = row
+    .getAllCells()
+    .filter((cell) =>
+      callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible),
+    )
+  const { left, right } =
+    row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+  if (!left.length && !right.length) return cells // no pinning, return early
+
+  // re-order cells for column pinning
+  const leftCells = []
+  const rightCells = []
+  const centerCells = []
+  for (const cell of cells) {
+    if (left.includes(cell.column.id)) {
+      leftCells.push(cell)
+    } else if (right.includes(cell.column.id)) {
+      rightCells.push(cell)
+    } else {
+      centerCells.push(cell)
+    }
+  }
+  return [...leftCells, ...centerCells, ...rightCells]
 }
 
 /**
@@ -256,16 +254,12 @@ export function table_toggleAllColumnsVisible<
 >(table: Table_Internal<TFeatures, TData>, value?: boolean) {
   value = value ?? !table_getIsAllColumnsVisible(table)
 
-  table_setColumnVisibility(
-    table,
-    table.getAllLeafColumns().reduce(
-      (obj, column) => ({
-        ...obj,
-        [column.id]: !value ? !column_getCanHide(column) : value,
-      }),
-      {},
-    ),
-  )
+  const visibility: Record<string, boolean> = {}
+  for (const column of table.getAllLeafColumns()) {
+    visibility[column.id] = !value ? !column_getCanHide(column) : value
+  }
+
+  table_setColumnVisibility(table, visibility)
 }
 
 /**

@@ -65,10 +65,11 @@ export function constructColumn<
   } else if (accessorKey) {
     // Support deep accessor keys
     if (accessorKey.includes('.')) {
+      const keys = accessorKey.split('.')
       accessorFn = (originalRow: TData) => {
         let result = originalRow as Record<string, any> | undefined
 
-        for (const key of accessorKey.split('.')) {
+        for (const key of keys) {
           result = result?.[key]
           if (process.env.NODE_ENV === 'development' && result === undefined) {
             console.warn(

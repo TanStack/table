@@ -70,7 +70,8 @@ export function buildHeaderGroups<
     headersToGroup.forEach((headerToGroup) => {
       // What is the latest (last) parent column?
 
-      const latestPendingParentHeader = [...pendingParentHeaders].reverse()[0]
+      const latestPendingParentHeader =
+        pendingParentHeaders[pendingParentHeaders.length - 1]
 
       const isLeafHeader = headerToGroup.column.depth === headerGroup.depth
 

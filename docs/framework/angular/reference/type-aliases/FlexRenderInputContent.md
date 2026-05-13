@@ -6,7 +6,7 @@ title: FlexRenderInputContent
 # Type Alias: FlexRenderInputContent\<TProps\>
 
 ```ts
-type FlexRenderInputContent<TProps> =
+type FlexRenderInputContent<TProps> = 
   | number
   | string
   | (props) => FlexRenderContent<TProps>
@@ -14,7 +14,7 @@ type FlexRenderInputContent<TProps> =
   | undefined;
 ```
 
-Defined in: [flex-render/renderer.ts:57](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/renderer.ts#L57)
+Defined in: [packages/angular-table/src/flex-render/renderer.ts:57](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/renderer.ts#L57)
 
 Input content supported by the `flexRender` directives.
 

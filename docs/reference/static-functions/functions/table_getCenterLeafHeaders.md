@@ -9,7 +9,7 @@ title: table_getCenterLeafHeaders
 function table_getCenterLeafHeaders<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:620](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L620)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:640](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L640)
 
 Returns center leaf headers for the table.
 

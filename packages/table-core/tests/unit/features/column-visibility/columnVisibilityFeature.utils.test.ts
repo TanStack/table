@@ -10,7 +10,6 @@ import {
   column_getToggleVisibilityHandler,
   column_toggleVisibility,
   getDefaultColumnVisibilityState,
-  row_getAllVisibleCells,
   row_getVisibleCells,
   table_getIsAllColumnsVisible,
   table_getIsSomeColumnsVisible,
@@ -190,14 +189,14 @@ describe('columnVisibilityFeature.utils', () => {
       }
       const handler = column_getToggleVisibilityHandler(column)
 
-      handler({ target: { checked: true } } as any)
+      handler({ target: { checked: true } })
 
       const result = getUpdaterResult(onColumnVisibilityChange, {})
       expect(result).toEqual({ firstName: true })
     })
   })
 
-  describe('row_getAllVisibleCells', () => {
+  describe('row_getVisibleCells', () => {
     it('should return only visible cells', () => {
       const table = generateTestTableWithData(1, {
         _features,
@@ -209,27 +208,11 @@ describe('columnVisibilityFeature.utils', () => {
       })
       const row = table.getRowModel().rows[0]!
 
-      const visibleCells = row_getAllVisibleCells(row)
+      const visibleCells = row_getVisibleCells(row)
       const visibleColumnIds = visibleCells.map((cell) => cell.column.id)
 
       expect(visibleColumnIds).not.toContain('firstName')
       expect(visibleCells.length).toBe(row.getAllCells().length - 1)
-    })
-  })
-
-  describe('row_getVisibleCells', () => {
-    it('should combine left, center and right cells', () => {
-      const leftCells = [{ id: 'left' }]
-      const centerCells = [{ id: 'center' }]
-      const rightCells = [{ id: 'right' }]
-
-      const result = row_getVisibleCells(
-        leftCells as any,
-        centerCells as any,
-        rightCells as any,
-      )
-
-      expect(result).toEqual([...leftCells, ...centerCells, ...rightCells])
     })
   })
 
@@ -428,7 +411,7 @@ describe('columnVisibilityFeature.utils', () => {
       })
       const handler = table_getToggleAllColumnsVisibilityHandler(table)
 
-      handler({ target: { checked: true } } as any)
+      handler({ target: { checked: true } })
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
       const result = onColumnVisibilityChange.mock.calls[0]?.[0]

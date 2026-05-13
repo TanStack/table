@@ -9,7 +9,7 @@ title: table_getIsAllColumnsVisible
 function table_getIsAllColumnsVisible<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:281](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L281)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:296](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L296)
 
 Returns is all columns visible for the table.
 

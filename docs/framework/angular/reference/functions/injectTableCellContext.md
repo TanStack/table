@@ -9,7 +9,7 @@ title: injectTableCellContext
 function injectTableCellContext<TFeatures, TData, TValue>(): Signal<Cell<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [helpers/cell.ts:98](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L98)
+Defined in: [packages/angular-table/src/helpers/cell.ts:98](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L98)
 
 Injects the current TanStack Table cell signal.
 

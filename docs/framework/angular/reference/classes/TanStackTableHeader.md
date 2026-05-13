@@ -5,7 +5,7 @@ title: TanStackTableHeader
 
 # Class: TanStackTableHeader\<TFeatures, TData, TValue\>
 
-Defined in: [helpers/header.ts:71](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L71)
+Defined in: [packages/angular-table/src/helpers/header.ts:71](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L71)
 
 Provides a TanStack Table `Header` instance in Angular DI.
 
@@ -77,7 +77,7 @@ new TanStackTableHeader<TFeatures, TData, TValue>(): TanStackTableHeader<TFeatur
 readonly header: InputSignal<Header<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [helpers/header.ts:81](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L81)
+Defined in: [packages/angular-table/src/helpers/header.ts:81](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/header.ts#L81)
 
 The current TanStack Table header.
 

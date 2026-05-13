@@ -83,6 +83,22 @@ Returns all leaf-node columns in the table flattened to a single level. This doe
 
 ***
 
+### getAllLeafColumnsById()
+
+```ts
+getAllLeafColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>;
+```
+
+Defined in: [core/columns/coreColumnsFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L102)
+
+Returns a map of all leaf-node columns by their ID. This does not include parent columns.
+
+#### Returns
+
+`Record`\<`string`, [`Column`](../type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>\>
+
+***
+
 ### getColumn()
 
 ```ts
@@ -91,7 +107,7 @@ getColumn: (columnId) =>
   | undefined;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L102)
+Defined in: [core/columns/coreColumnsFeature.types.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L106)
 
 Returns a single column by its ID.
 

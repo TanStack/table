@@ -6,10 +6,10 @@ title: table_getLeftLeafColumns
 # Function: table\_getLeftLeafColumns()
 
 ```ts
-function table_getLeftLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
+function table_getLeftLeafColumns<TFeatures, TData>(table): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:643](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L643)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:663](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L663)
 
 Returns left leaf columns for the table.
 
@@ -33,7 +33,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ## Returns
 
-[`Column`](../../index/type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
