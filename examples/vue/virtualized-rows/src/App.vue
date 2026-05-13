@@ -144,7 +144,7 @@ function measureElement(el: Element | ComponentPublicInstance | null) {
     <p class="centered-text">
       For tables, the basis for the offset of the translate css function is from
       the row's initial position itself. Because of this, we need to calculate
-      the translateY pixel count different and base it off the the index.
+      the translateY pixel count different and base it off the index.
     </p>
     <h1 class="virtualized-title">Virtualized Rows</h1>
     <div class="centered-button-row" style="margin-bottom: 8px">
