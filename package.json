@@ -5,7 +5,7 @@
     "type": "git",
     "url": "git+https://github.com/TanStack/table.git"
   },
-  "packageManager": "pnpm@11.0.9",
+  "packageManager": "pnpm@11.1.0",
   "type": "module",
   "scripts": {
     "build": "nx affected --targets=build --exclude='examples/**' && size-limit",
@@ -71,21 +71,5 @@
     "typescript": "6.0.3",
     "vite": "^8.0.11",
     "vitest": "^4.1.5"
-  },
-  "overrides": {
-    "@tanstack/angular-table": "workspace:*",
-    "@tanstack/lit-table": "workspace:*",
-    "@tanstack/match-sorter-utils": "workspace:*",
-    "@tanstack/preact-table": "workspace:*",
-    "@tanstack/preact-table-devtools": "workspace:*",
-    "@tanstack/react-table": "workspace:*",
-    "@tanstack/react-table-devtools": "workspace:*",
-    "@tanstack/solid-table": "workspace:*",
-    "@tanstack/solid-table-devtools": "workspace:*",
-    "@tanstack/svelte-table": "workspace:*",
-    "@tanstack/table-core": "workspace:*",
-    "@tanstack/table-devtools": "workspace:*",
-    "@tanstack/vue-table": "workspace:*",
-    "@tanstack/vue-table-devtools": "workspace:*"
   }
 }
