@@ -118,8 +118,8 @@ export const GlobalFiltering: TableFeature = {
     } as GlobalFilterOptions<TData>
   },
 
-  createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
+  createColumn: <TData extends RowData, TValue>(
+    column: Column<TData, TValue>,
     table: Table<TData>,
   ): void => {
     column.getCanGlobalFilter = () => {
@@ -127,7 +127,7 @@ export const GlobalFiltering: TableFeature = {
         (column.columnDef.enableGlobalFilter ?? true) &&
         (table.options.enableGlobalFilter ?? true) &&
         (table.options.enableFilters ?? true) &&
-        (table.options.getColumnCanGlobalFilter?.(column) ?? true) &&
+        (table.options.getColumnCanGlobalFilter?.(column as Column<TData, unknown>) ?? true) &&
         !!column.accessorFn
       )
     }

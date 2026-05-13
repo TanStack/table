@@ -1,7 +1,7 @@
 import { RowData, Cell, Column, Row, Table } from '../types'
 import { Getter, getMemoOptions, memo } from '../utils'
 
-export interface CellContext<TData extends RowData, TValue> {
+export interface CellContext<in out TData extends RowData, in out TValue> {
   cell: Cell<TData, TValue>
   column: Column<TData, TValue>
   getValue: Getter<TValue>
@@ -10,7 +10,7 @@ export interface CellContext<TData extends RowData, TValue> {
   table: Table<TData>
 }
 
-export interface CoreCell<TData extends RowData, TValue> {
+export interface CoreCell<in out TData extends RowData, in out TValue> {
   /**
    * The associated Column object for the cell.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/cell#column)

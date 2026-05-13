@@ -88,8 +88,8 @@ export const ColumnOrdering: TableFeature = {
     }
   },
 
-  createColumn: <TData extends RowData>(
-    column: Column<TData, unknown>,
+  createColumn: <TData extends RowData, TValue>(
+    column: Column<TData, TValue>,
     table: Table<TData>,
   ): void => {
     column.getIndex = memo(

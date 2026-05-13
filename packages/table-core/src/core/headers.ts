@@ -16,7 +16,7 @@ export interface CoreHeaderGroup<TData extends RowData> {
   id: string
 }
 
-export interface HeaderContext<TData, TValue> {
+export interface HeaderContext<in out TData, in out TValue> {
   /**
    * An instance of a column.
    */
@@ -31,7 +31,7 @@ export interface HeaderContext<TData, TValue> {
   table: Table<TData>
 }
 
-export interface CoreHeader<TData extends RowData, TValue> {
+export interface CoreHeader<in out TData extends RowData, in out TValue> {
   /**
    * The col-span for the header.
    * @link [API Docs](https://tanstack.com/table/v8/docs/api/core/header#colspan)
