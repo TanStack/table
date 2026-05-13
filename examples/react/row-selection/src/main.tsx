@@ -108,6 +108,7 @@ function App() {
     data,
     columns,
     state: {
+      globalFilter,
       rowSelection,
     },
     enableRowSelection: true, //enable row selection for all rows
