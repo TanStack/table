@@ -57,7 +57,7 @@ const table = useReactTable({
 })
 ```
 
-> **Note:** When using manual filtering, many of the options that are discussed in the rest of this guide will have no effect. When is `manualFiltering` is set to `true`, the table instance will not apply any filtering logic to the rows that are passed to it. Instead, it will assume that the rows are already filtered and will use the `data` that you pass to it as-is.
+> **Note:** When using manual filtering, many of the options that are discussed in the rest of this guide will have no effect. When `manualFiltering` is set to `true`, the table instance will not apply any filtering logic to the rows that are passed to it. Instead, it will assume that the rows are already filtered and will use the `data` that you pass to it as-is.
 
 ### Client-Side Filtering
 
