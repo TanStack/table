@@ -301,11 +301,7 @@ export function constructColumnPinningFeature<
         },
         table_getPinnedLeafColumns: {
           fn: (position) => table_getPinnedLeafColumns(table, position),
-          memoDeps: (position) => [
-            position,
-            table.options.columns,
-            table.atoms.columnPinning?.get(),
-          ],
+          // must not memo here as it's just a shortcut function
         },
         // visible leaf columns
         table_getLeftVisibleLeafColumns: {
@@ -334,12 +330,7 @@ export function constructColumnPinningFeature<
         },
         table_getPinnedVisibleLeafColumns: {
           fn: (position) => table_getPinnedVisibleLeafColumns(table, position),
-          memoDeps: (position) => [
-            position,
-            table.options.columns,
-            table.atoms.columnPinning?.get(),
-            table.atoms.columnVisibility?.get(),
-          ],
+          // must not memo here as it's just a shortcut function
         },
       })
     },

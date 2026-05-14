@@ -1,7 +1,6 @@
 import {
   assignPrototypeAPIs,
   assignTableAPIs,
-  callMemoOrStaticFn,
   makeStateUpdater,
 } from '../../utils'
 import {
@@ -74,23 +73,31 @@ export function constructColumnSizingFeature<
       assignPrototypeAPIs('columnSizingFeature', prototype, table, {
         column_getSize: {
           fn: (column) => column_getSize(column),
+          memoDeps: (column) => [
+            table.options.columns,
+            table.atoms.columnSizing?.get()?.[column.id], // just this column's size state
+          ],
         },
         column_getStart: {
           fn: (column, position) => column_getStart(column, position),
           memoDeps: (column, position) => [
             position,
-            column.table.atoms.columnSizing?.get(),
-            column.table.atoms.columnOrder?.get(),
-            column.table.atoms.columnPinning?.get(),
+            table.options.columns,
+            table.atoms.columnSizing?.get(),
+            table.atoms.columnOrder?.get(),
+            table.atoms.columnPinning?.get(),
+            table.atoms.columnVisibility?.get(),
           ],
         },
         column_getAfter: {
           fn: (column, position) => column_getAfter(column, position),
           memoDeps: (column, position) => [
             position,
-            column.table.atoms.columnSizing?.get(),
-            column.table.atoms.columnOrder?.get(),
-            column.table.atoms.columnPinning?.get(),
+            table.options.columns,
+            table.atoms.columnSizing?.get(),
+            table.atoms.columnOrder?.get(),
+            table.atoms.columnPinning?.get(),
+            table.atoms.columnVisibility?.get(),
           ],
         },
         column_resetSize: {
@@ -103,14 +110,22 @@ export function constructColumnSizingFeature<
       assignPrototypeAPIs('columnSizingFeature', prototype, table, {
         header_getSize: {
           fn: (header) => header_getSize(header),
+          memoDeps: (header) => [
+            table.options.columns,
+            header.column.columns.length > 0
+              ? table.atoms.columnSizing?.get() // must be all columns (sum child columns)
+              : table.atoms.columnSizing?.get()?.[header.column.id], // can just check it's associated column size state
+          ],
         },
         header_getStart: {
           fn: (header) => header_getStart(header),
           memoDeps: (header, position) => [
             position,
-            header.table.atoms.columnSizing?.get(),
-            header.table.atoms.columnOrder?.get(),
-            header.table.atoms.columnPinning?.get(),
+            table.options.columns,
+            table.atoms.columnSizing?.get(),
+            table.atoms.columnOrder?.get(),
+            table.atoms.columnPinning?.get(),
+            table.atoms.columnVisibility?.get(),
           ],
         },
       })

@@ -63,6 +63,7 @@ export function constructColumnOrderingFeature<
             column.table.atoms.columnOrder?.get(),
             column.table.atoms.columnPinning?.get(),
             column.table.atoms.grouping?.get(),
+            column.table.atoms.columnVisibility?.get(),
           ],
         },
         column_getIsFirstColumn: {

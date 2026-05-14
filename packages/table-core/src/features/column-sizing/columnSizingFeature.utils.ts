@@ -109,7 +109,7 @@ export function column_getStart<
   const prevColumn = visibleLeafColumns[index - 1]!
   return (
     callMemoOrStaticFn(prevColumn, 'getStart', column_getStart, position) +
-    column_getSize(prevColumn)
+    callMemoOrStaticFn(prevColumn, 'getSize', column_getSize)
   )
 }
 
@@ -147,7 +147,7 @@ export function column_getAfter<
 
   const nextColumn = visibleLeafColumns[index + 1]!
   return (
-    column_getSize(nextColumn) +
+    callMemoOrStaticFn(nextColumn, 'getSize', column_getSize) +
     callMemoOrStaticFn(nextColumn, 'getAfter', column_getAfter, position)
   )
 }

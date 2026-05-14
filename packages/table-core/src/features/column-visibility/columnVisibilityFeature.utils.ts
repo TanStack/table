@@ -139,19 +139,30 @@ export function row_getVisibleCells<
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   if (!left.length && !right.length) return cells // no pinning, return early
 
-  // re-order cells for column pinning
-  const leftCells = []
-  const rightCells = []
-  const centerCells = []
-  for (const cell of cells) {
-    if (left.includes(cell.column.id)) {
-      leftCells.push(cell)
-    } else if (right.includes(cell.column.id)) {
-      rightCells.push(cell)
-    } else {
-      centerCells.push(cell)
-    }
+  const cellsByColumnId = new Map<string, Cell<TFeatures, TData, unknown>>()
+  for (const cell of cells) cellsByColumnId.set(cell.column.id, cell)
+
+  const leftCells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (const columnId of left) {
+    const cell = cellsByColumnId.get(columnId)
+    if (cell) leftCells.push(cell)
   }
+
+  const rightCells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (const columnId of right) {
+    const cell = cellsByColumnId.get(columnId)
+    if (cell) rightCells.push(cell)
+  }
+
+  // Center cells: visible cells in natural column order, minus pinned ones.
+  const leftSet = new Set(left)
+  const rightSet = new Set(right)
+  const centerCells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (const cell of cells) {
+    const id = cell.column.id
+    if (!leftSet.has(id) && !rightSet.has(id)) centerCells.push(cell)
+  }
+
   return [...leftCells, ...centerCells, ...rightCells]
 }
 
