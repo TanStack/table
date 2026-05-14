@@ -133,6 +133,57 @@ describe('table_getOrderColumnsFn', () => {
     expect(orderedColumns[0]?.id).toBe('lastName')
     expect(orderedColumns[1]?.id).toBe('firstName')
   })
+
+  it('should append leftover columns in original order when columnOrder is partial', () => {
+    const table = generateTestTableWithData<TableFeatures>(3, {
+      initialState: {
+        columnOrder: ['age', 'firstName'],
+      },
+    })
+    const columns = table.getAllLeafColumns()
+    const originalIds = columns.map((c: any) => c.id)
+    const orderFn = table_getOrderColumnsFn(table)
+    const orderedIds = orderFn(columns).map((c: any) => c.id)
+
+    expect(orderedIds.slice(0, 2)).toEqual(['age', 'firstName'])
+    const leftoverIds = originalIds.filter(
+      (id: string) => id !== 'age' && id !== 'firstName',
+    )
+    expect(orderedIds.slice(2)).toEqual(leftoverIds)
+  })
+
+  it('should skip unknown ids in columnOrder', () => {
+    const table = generateTestTableWithData<TableFeatures>(3, {
+      initialState: {
+        columnOrder: ['unknown1', 'lastName', 'unknown2', 'firstName'],
+      },
+    })
+    const columns = table.getAllLeafColumns()
+    const originalIds = columns.map((c: any) => c.id)
+    const orderFn = table_getOrderColumnsFn(table)
+    const orderedIds = orderFn(columns).map((c: any) => c.id)
+
+    expect(orderedIds.slice(0, 2)).toEqual(['lastName', 'firstName'])
+    expect(orderedIds).toHaveLength(originalIds.length)
+    expect(new Set(orderedIds)).toEqual(new Set(originalIds))
+  })
+
+  it('should not duplicate columns when columnOrder contains duplicates', () => {
+    const table = generateTestTableWithData<TableFeatures>(3, {
+      initialState: {
+        columnOrder: ['lastName', 'lastName', 'firstName'],
+      },
+    })
+    const columns = table.getAllLeafColumns()
+    const originalIds = columns.map((c: any) => c.id)
+    const orderFn = table_getOrderColumnsFn(table)
+    const orderedIds = orderFn(columns).map((c: any) => c.id)
+
+    expect(orderedIds).toHaveLength(originalIds.length)
+    expect(new Set(orderedIds)).toEqual(new Set(originalIds))
+    expect(orderedIds[0]).toBe('lastName')
+    expect(orderedIds[1]).toBe('firstName')
+  })
 })
 
 describe('orderColumns', () => {
@@ -167,5 +218,23 @@ describe('orderColumns', () => {
     const orderedColumns = orderColumns(table, columns)
 
     expect(orderedColumns[0]?.id).toBe('lastName')
+  })
+
+  it('should preserve grouping order and original order for non-grouping when reordering', () => {
+    const table = generateTestTableWithData<TableFeatures>(3, {
+      initialState: {
+        grouping: ['age', 'firstName'],
+      },
+      groupedColumnMode: 'reorder',
+    })
+    const columns = table.getAllLeafColumns()
+    const originalIds = columns.map((c: any) => c.id)
+    const orderedIds = orderColumns(table, columns).map((c: any) => c.id)
+
+    expect(orderedIds.slice(0, 2)).toEqual(['age', 'firstName'])
+    const leftoverIds = originalIds.filter(
+      (id: string) => id !== 'age' && id !== 'firstName',
+    )
+    expect(orderedIds.slice(2)).toEqual(leftoverIds)
   })
 })

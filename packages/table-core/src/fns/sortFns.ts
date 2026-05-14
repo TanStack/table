@@ -157,10 +157,14 @@ function compareAlphanumeric(aStr: string, bStr: string) {
   const a = aStr.split(reSplitAlphaNumeric).filter(Boolean)
   const b = bStr.split(reSplitAlphaNumeric).filter(Boolean)
 
-  // While
-  while (a.length && b.length) {
-    const aa = a.shift()!
-    const bb = b.shift()!
+  let ai = 0
+  let bi = 0
+  const aLen = a.length
+  const bLen = b.length
+
+  while (ai < aLen && bi < bLen) {
+    const aa = a[ai++]!
+    const bb = b[bi++]!
 
     const an = parseInt(aa, 10)
     const bn = parseInt(bb, 10)
@@ -192,7 +196,7 @@ function compareAlphanumeric(aStr: string, bStr: string) {
     }
   }
 
-  return a.length - b.length
+  return aLen - ai - (bLen - bi)
 }
 
 // Exports
