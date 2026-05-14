@@ -5,7 +5,7 @@ title: ColumnSizingFeatureConstructors
 
 # Interface: ColumnSizingFeatureConstructors\<TFeatures, TData\>
 
-Defined in: [features/column-sizing/columnSizingFeature.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L35)
+Defined in: [features/column-sizing/columnSizingFeature.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L33)
 
 ## Type Parameters
 

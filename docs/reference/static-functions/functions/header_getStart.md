@@ -9,7 +9,7 @@ title: header_getStart
 function header_getStart<TFeatures, TData, TValue>(header): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L198)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L215)
 
 Returns start for a header.
 

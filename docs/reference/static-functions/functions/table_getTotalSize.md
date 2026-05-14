@@ -9,7 +9,7 @@ title: table_getTotalSize
 function table_getTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:268](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L268)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:286](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L286)
 
 Returns total size for the table.
 

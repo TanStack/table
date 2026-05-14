@@ -9,7 +9,7 @@ title: columnOrderingFeature
 const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.ts#L104)
+Defined in: [features/column-ordering/columnOrderingFeature.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.ts#L105)
 
 The stock column ordering feature.
 

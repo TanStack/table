@@ -9,7 +9,7 @@ title: constructColumnSizingFeature
 function constructColumnSizingFeature<TFeatures, TData>(): TableFeature<ColumnSizingFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L52)
+Defined in: [features/column-sizing/columnSizingFeature.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L50)
 
 Creates the stock column sizing feature.
 
