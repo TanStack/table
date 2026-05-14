@@ -9,7 +9,7 @@ title: table_getLeftTotalSize
 function table_getLeftTotalSize<TFeatures, TData>(table): any;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L289)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:307](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L307)
 
 Returns left total size for the table.
 

@@ -9,7 +9,7 @@ title: row_getVisibleCells
 function row_getVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L150)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L129)
 
 Returns visible cells for a row.
 
