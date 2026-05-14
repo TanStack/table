@@ -103,15 +103,11 @@ export function constructColumnSizingFeature<
       assignPrototypeAPIs('columnSizingFeature', prototype, table, {
         header_getSize: {
           fn: (header) => header_getSize(header),
-          memoDeps: (header) => [
-            header.table.atoms.columnSizing?.get(),
-            header.table.atoms.columnOrder?.get(),
-            header.table.atoms.columnPinning?.get(),
-          ],
         },
         header_getStart: {
           fn: (header) => header_getStart(header),
-          memoDeps: (header) => [
+          memoDeps: (header, position) => [
+            position,
             header.table.atoms.columnSizing?.get(),
             header.table.atoms.columnOrder?.get(),
             header.table.atoms.columnPinning?.get(),
