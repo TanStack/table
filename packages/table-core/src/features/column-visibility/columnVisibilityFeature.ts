@@ -70,8 +70,8 @@ export function constructColumnVisibilityFeature<
         column_getIsVisible: {
           fn: (column) => column_getIsVisible(column),
           memoDeps: (column) => [
-            column.table.options.columns,
-            column.table.atoms.columnVisibility?.get(),
+            table.options.columns,
+            table.atoms.columnVisibility?.get(),
             column.columns,
           ],
         },
@@ -93,8 +93,8 @@ export function constructColumnVisibilityFeature<
           fn: (row) => row_getVisibleCells(row),
           memoDeps: (row) => [
             row.getAllCells(),
-            row.table.atoms.columnPinning?.get(),
-            row.table.atoms.columnVisibility?.get(),
+            table.atoms.columnPinning?.get(),
+            table.atoms.columnVisibility?.get(),
           ],
         },
       })
