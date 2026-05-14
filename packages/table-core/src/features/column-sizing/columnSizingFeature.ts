@@ -4,7 +4,6 @@ import {
   callMemoOrStaticFn,
   makeStateUpdater,
 } from '../../utils'
-import { table_getPinnedVisibleLeafColumns } from '../column-pinning/columnPinningFeature.utils'
 import {
   column_getAfter,
   column_getSize,
@@ -80,26 +79,18 @@ export function constructColumnSizingFeature<
           fn: (column, position) => column_getStart(column, position),
           memoDeps: (column, position) => [
             position,
-            callMemoOrStaticFn(
-              column.table,
-              'getPinnedVisibleLeafColumns',
-              table_getPinnedVisibleLeafColumns,
-              position,
-            ),
             column.table.atoms.columnSizing?.get(),
+            column.table.atoms.columnOrder?.get(),
+            column.table.atoms.columnPinning?.get(),
           ],
         },
         column_getAfter: {
           fn: (column, position) => column_getAfter(column, position),
           memoDeps: (column, position) => [
             position,
-            callMemoOrStaticFn(
-              column.table,
-              'getPinnedVisibleLeafColumns',
-              table_getPinnedVisibleLeafColumns,
-              position,
-            ),
             column.table.atoms.columnSizing?.get(),
+            column.table.atoms.columnOrder?.get(),
+            column.table.atoms.columnPinning?.get(),
           ],
         },
         column_resetSize: {
@@ -112,9 +103,19 @@ export function constructColumnSizingFeature<
       assignPrototypeAPIs('columnSizingFeature', prototype, table, {
         header_getSize: {
           fn: (header) => header_getSize(header),
+          memoDeps: (header) => [
+            header.table.atoms.columnSizing?.get(),
+            header.table.atoms.columnOrder?.get(),
+            header.table.atoms.columnPinning?.get(),
+          ],
         },
         header_getStart: {
           fn: (header) => header_getStart(header),
+          memoDeps: (header) => [
+            header.table.atoms.columnSizing?.get(),
+            header.table.atoms.columnOrder?.get(),
+            header.table.atoms.columnPinning?.get(),
+          ],
         },
       })
     },
