@@ -38,4 +38,8 @@ export interface TableReactivityBindings {
    * Batches reactive updates to avoid intermediate recomputation.
    */
   batch: (fn: () => void) => void
+  /**
+   * Schedules a function to run. This is used to defer updates after the current call stack (render, etc.) has finished
+   */
+  schedule: (fn: () => void) => void
 }

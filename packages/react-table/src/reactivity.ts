@@ -13,6 +13,7 @@ import type {
 export function reactReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: false,
+    schedule: (fn) => queueMicrotask(fn),
     batch,
     untrack: (fn) => fn(),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {

@@ -20,6 +20,7 @@ export function storeReactivityBindings(): TableReactivityBindings {
   return {
     createOptionsStore: true,
     batch,
+    schedule: (fn) => queueMicrotask(fn),
     untrack: (fn) => fn(),
     createReadonlyAtom: (fn, options) => {
       return createAtom(() => fn(), {
