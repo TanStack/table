@@ -42,8 +42,8 @@ The recommended way to access data values from a cell is to use either the `cell
 
 ```js
 // Access data from any of the columns
-const firstName = cell.getValue('firstName') // read the cell value from the firstName column
-const renderedLastName = cell.renderValue('lastName') // render the value from the lastName column
+const value = cell.getValue() // read the cell value
+const rendered = cell.renderValue() // render the value
 ```
 
 #### Access Other Row Data from Any Cell
