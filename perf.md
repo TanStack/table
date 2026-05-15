@@ -22,10 +22,10 @@ A code-level audit of `packages/table-core/src/**`. Each entry describes a concr
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 5
+- **Done `[x]`:** 6
 - **Partial `[~]`:** 0
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 54
+- **Not started `[ ]`:** 53
 
 _(Update these counters as you go.)_
 
@@ -535,8 +535,8 @@ for (let i = 0; i < columns.length; i++) {
 
 ## 14. `recurseHeadersForSpans` uses `Math.min(...arr)` spread — Score: 7
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Collapsed `.filter().map()` chain into a single `for…of` loop with `continue` on invisible headers (per project eslint preference for `for…of`). Inlined the inner `.forEach()` over recursive children as a `for…of` loop. Eliminated `Math.min(...childRowSpans)` spread (which would have hit engine arg-count limits on extremely wide header rows) by tracking `minChildRowSpan` inline during the same loop that sums `colSpan`. **Edge-case behavior preserved**: when a header has `subHeaders.length > 0` but none pass visibility (theoretically unreachable given `column_getIsVisible` semantics, but possible by construction), the original code's `Math.min(...[])` returned `Infinity` — the refactor initializes `minChildRowSpan = Infinity` so the empty-children branch naturally produces the same value. Per recursion level: removes 1 filtered array allocation, 1 mapped array allocation, 1 child-rowSpan array allocation, and the spread of that array.
 
 **Location:** `src/core/headers/buildHeaderGroups.ts:143–176`
 **Category:** `micro`, `big-o` (stack-overflow risk)
