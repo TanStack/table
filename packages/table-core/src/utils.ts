@@ -77,7 +77,11 @@ export function isFunction<T extends AnyFunction>(d: any): d is T {
  * Returns whether a value is an array containing only numbers.
  */
 export function isNumberArray(d: any): d is Array<number> {
-  return Array.isArray(d) && d.every((val) => typeof val === 'number')
+  if (!Array.isArray(d)) return false
+  for (const i of d) {
+    if (typeof d[i] !== 'number') return false
+  }
+  return true
 }
 
 /**

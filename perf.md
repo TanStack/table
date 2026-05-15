@@ -22,10 +22,10 @@ A code-level audit of `packages/table-core/src/**`. Each entry describes a concr
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 3
+- **Done `[x]`:** 4
 - **Partial `[~]`:** 0
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 56
+- **Not started `[ ]`:** 55
 
 _(Update these counters as you go.)_
 
@@ -209,8 +209,8 @@ const recurse = (subArr: Array<TNode>) => {
 
 ## 5. `isNumberArray()` uses `.every()` — Score: 1
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Replaced `.every()` callback with an indexed `for` loop + early `return false`. Semantics preserved (empty array still returns `true`, matching the original `.every()` behavior). Drops one closure allocation per call.
 
 **Location:** `src/utils.ts:79–81`
 **Category:** `micro`
