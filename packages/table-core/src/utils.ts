@@ -136,10 +136,15 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   const memoizedFn = (depArgs?: TDepArgs): TResult => {
     onBeforeCompare?.()
     const newDeps = memoDeps?.(depArgs)
-    const depsChanged =
-      !newDeps ||
-      newDeps.length !== deps?.length ||
-      newDeps.some((dep: any, index: number) => deps?.[index] !== dep)
+    let depsChanged = !newDeps || newDeps.length !== deps?.length
+    if (!depsChanged && newDeps) {
+      for (let i = 0; i < newDeps.length; i++) {
+        if (newDeps[i] !== deps![i]) {
+          depsChanged = true
+          break
+        }
+      }
+    }
     onAfterCompare?.(depsChanged)
 
     if (!depsChanged) {

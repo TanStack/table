@@ -22,10 +22,10 @@ A code-level audit of `packages/table-core/src/**`. Each entry describes a concr
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 0
+- **Done `[x]`:** 1
 - **Partial `[~]`:** 0
 - **Skipped `[-]`:** 0
-- **Not started `[ ]`:** 60
+- **Not started `[ ]`:** 59
 
 _(Update these counters as you go.)_
 
@@ -37,8 +37,8 @@ These are touched by every feature — wins compound.
 
 ## 1. `memo()` deps equality uses `.some()` callback per call — Score: 7
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Replaced the `.some()` callback with an indexed `for` loop + `break` in `src/utils.ts` (memoizedFn body). Drops one closure allocation per memo invocation. Implemented exactly as proposed.
 
 **Location:** `src/utils.ts:136–156`
 **Category:** `micro`
