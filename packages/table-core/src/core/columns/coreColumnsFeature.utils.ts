@@ -179,7 +179,9 @@ export function table_getAllFlatColumnsById<
   table: Table_Internal<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
   const result: Record<string, Column<TFeatures, TData, unknown>> = {}
-  for (const column of table.getAllFlatColumns()) {
+  const flatColumns = table.getAllFlatColumns()
+  for (let i = 0; i < flatColumns.length; i++) {
+    const column = flatColumns[i]!
     result[column.id] = column
   }
   return result
@@ -228,7 +230,9 @@ export function table_getAllLeafColumnsById<
   table: Table_Internal<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
   const result: Record<string, Column<TFeatures, TData, unknown>> = {}
-  for (const column of table.getAllLeafColumns()) {
+  const leafColumns = table.getAllLeafColumns()
+  for (let i = 0; i < leafColumns.length; i++) {
+    const column = leafColumns[i]!
     result[column.id] = column
   }
   return result

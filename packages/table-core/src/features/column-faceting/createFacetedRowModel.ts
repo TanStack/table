@@ -69,8 +69,8 @@ function _createFacetedRowModel<
     row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
   ) => {
     // Horizontally filter rows through each column
-    for (const colId of filterableIds) {
-      if (row.columnFilters?.[colId] === false) {
+    for (let i = 0; i < filterableIds.length; i++) {
+      if (row.columnFilters?.[filterableIds[i]!] === false) {
         return false
       }
     }

@@ -213,7 +213,8 @@ export function row_getLeftVisibleCells<
     row_getVisibleCells,
   )
   const cells: typeof allVisibleCells = []
-  for (const columnId of left) {
+  for (let i = 0; i < left.length; i++) {
+    const columnId = left[i]!
     const cell = allVisibleCells.find((c) => c.column.id === columnId)
     if (cell) {
       // Assign position property directly to preserve prototype chain
@@ -247,7 +248,8 @@ export function row_getRightVisibleCells<
     row_getVisibleCells,
   )
   const cells: typeof allVisibleCells = []
-  for (const columnId of right) {
+  for (let i = 0; i < right.length; i++) {
+    const columnId = right[i]!
     const cell = allVisibleCells.find((c) => c.column.id === columnId)
     if (cell) {
       // Assign position property directly to preserve prototype chain
@@ -353,8 +355,8 @@ export function table_getLeftHeaderGroups<
 
   const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
     []
-  for (const columnId of left) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < left.length; i++) {
+    const column = leafColumnsById[left[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -390,8 +392,8 @@ export function table_getRightHeaderGroups<
 
   const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
     []
-  for (const columnId of right) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < right.length; i++) {
+    const column = leafColumnsById[right[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -668,8 +670,8 @@ export function table_getLeftLeafColumns<
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
   const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (const columnId of left) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < left.length; i++) {
+    const column = leafColumnsById[left[i]!]
     if (column) result.push(column)
   }
   return result
@@ -693,8 +695,8 @@ export function table_getRightLeafColumns<
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
   const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (const columnId of right) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < right.length; i++) {
+    const column = leafColumnsById[right[i]!]
     if (column) result.push(column)
   }
   return result

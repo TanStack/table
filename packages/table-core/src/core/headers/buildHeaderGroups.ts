@@ -37,7 +37,8 @@ export function buildHeaderGroups<
   ) => {
     maxDepth = Math.max(maxDepth, depth)
 
-    for (const column of columns) {
+    for (let i = 0; i < columns.length; i++) {
+      const column = columns[i]!
       if (callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)) {
         if (column.columns.length) {
           findMaxDepth(column.columns, depth + 1)
@@ -139,7 +140,8 @@ export function buildHeaderGroups<
   ): Array<{ colSpan: number; rowSpan: number }> => {
     const results: Array<{ colSpan: number; rowSpan: number }> = []
 
-    for (const header of headers) {
+    for (let i = 0; i < headers.length; i++) {
+      const header = headers[i]!
       if (
         !callMemoOrStaticFn(header.column, 'getIsVisible', column_getIsVisible)
       ) {
@@ -150,7 +152,9 @@ export function buildHeaderGroups<
       let minChildRowSpan = Infinity
 
       if (header.subHeaders.length) {
-        for (const child of recurseHeadersForSpans(header.subHeaders)) {
+        const childSpans = recurseHeadersForSpans(header.subHeaders)
+        for (let j = 0; j < childSpans.length; j++) {
+          const child = childSpans[j]!
           colSpan += child.colSpan
           if (child.rowSpan < minChildRowSpan) {
             minChildRowSpan = child.rowSpan

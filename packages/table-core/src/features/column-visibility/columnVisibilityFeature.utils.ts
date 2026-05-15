@@ -130,8 +130,10 @@ export function row_getVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
+  const allCells = row.getAllCells()
   const visibleCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (const cell of row.getAllCells()) {
+  for (let i = 0; i < allCells.length; i++) {
+    const cell = allCells[i]!
     if (callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible)) {
       visibleCells.push(cell)
     }
@@ -148,20 +150,21 @@ export function row_getVisibleCells<
   )
 
   const leftCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (const columnId of left) {
-    const cell = visibleCellsByColumnId[columnId]
+  for (let i = 0; i < left.length; i++) {
+    const cell = visibleCellsByColumnId[left[i]!]
     if (cell) leftCells.push(cell)
   }
 
   const rightCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (const columnId of right) {
-    const cell = visibleCellsByColumnId[columnId]
+  for (let i = 0; i < right.length; i++) {
+    const cell = visibleCellsByColumnId[right[i]!]
     if (cell) rightCells.push(cell)
   }
 
   // Center cells: visible cells in natural column order, minus pinned ones.
   const centerCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (const cell of visibleCells) {
+  for (let i = 0; i < visibleCells.length; i++) {
+    const cell = visibleCells[i]!
     const id = cell.column.id
     if (!left.includes(id) && !right.includes(id)) centerCells.push(cell)
   }
@@ -184,7 +187,9 @@ export function row_getVisibleCellsByColumnId<
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Record<string, Cell<TFeatures, TData, unknown>> {
   const result: Record<string, Cell<TFeatures, TData, unknown>> = {}
-  for (const cell of row.getAllCells()) {
+  const allCells = row.getAllCells()
+  for (let i = 0; i < allCells.length; i++) {
+    const cell = allCells[i]!
     if (callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible)) {
       result[cell.column.id] = cell
     }
@@ -292,7 +297,9 @@ export function table_toggleAllColumnsVisible<
   value = value ?? !table_getIsAllColumnsVisible(table)
 
   const visibility: Record<string, boolean> = {}
-  for (const column of table.getAllLeafColumns()) {
+  const leafColumns = table.getAllLeafColumns()
+  for (let i = 0; i < leafColumns.length; i++) {
+    const column = leafColumns[i]!
     visibility[column.id] = !value ? !column_getCanHide(column) : value
   }
 

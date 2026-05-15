@@ -32,8 +32,10 @@ export function cloneState<T>(value: T): T {
     }
 
     const copy: Record<string, unknown> = {}
+    const keys = Object.keys(value)
 
-    for (const key of Object.keys(value)) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]!
       copy[key] = cloneState((value as Record<string, unknown>)[key])
     }
 
@@ -78,7 +80,7 @@ export function isFunction<T extends AnyFunction>(d: any): d is T {
  */
 export function isNumberArray(d: any): d is Array<number> {
   if (!Array.isArray(d)) return false
-  for (const i of d) {
+  for (let i = 0; i < d.length; i++) {
     if (typeof d[i] !== 'number') return false
   }
   return true

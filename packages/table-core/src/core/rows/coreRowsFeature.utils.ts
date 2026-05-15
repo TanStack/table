@@ -164,9 +164,14 @@ export function row_getAllCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
-  return row.table.getAllLeafColumns().map((column) => {
-    return constructCell(column, row, row.table)
-  })
+  const columns = row.table.getAllLeafColumns()
+  const cells: Array<Cell<TFeatures, TData, unknown>> = new Array(
+    columns.length,
+  )
+  for (let i = 0; i < columns.length; i++) {
+    cells[i] = constructCell(columns[i]!, row, row.table)
+  }
+  return cells
 }
 
 /**
@@ -184,7 +189,9 @@ export function row_getAllCellsByColumnId<
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
   const result: Record<string, Cell<TFeatures, TData, unknown>> = {}
-  for (const cell of row.getAllCells()) {
+  const cells = row.getAllCells()
+  for (let i = 0; i < cells.length; i++) {
+    const cell = cells[i]!
     result[cell.column.id] = cell
   }
   return result

@@ -156,11 +156,15 @@ export function table_getOrderColumnsFn<
         string,
         Column_Internal<TFeatures, TData, unknown>
       >()
-      for (const column of columns) remaining.set(column.id, column)
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i]!
+        remaining.set(column.id, column)
+      }
 
       // Place columns in the requested order, removing each as it's used
       // (handles duplicates and unknown ids in columnOrder)
-      for (const id of columnOrder) {
+      for (let i = 0; i < columnOrder.length; i++) {
+        const id = columnOrder[i]!
         const column = remaining.get(id)
         if (column) {
           orderedColumns.push(column)
@@ -169,7 +173,8 @@ export function table_getOrderColumnsFn<
       }
 
       // Append leftover columns in their original order
-      for (const column of columns) {
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i]!
         if (remaining.has(column.id)) orderedColumns.push(column)
       }
     }
@@ -214,11 +219,14 @@ export function orderColumns<
     string,
     Column_Internal<TFeatures, TData, unknown>
   >()
-  for (const col of leafColumns) leafColumnsById.set(col.id, col)
+  for (let i = 0; i < leafColumns.length; i++) {
+    const col = leafColumns[i]!
+    leafColumnsById.set(col.id, col)
+  }
 
   const groupingColumns: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (const g of grouping) {
-    const col = leafColumnsById.get(g)
+  for (let i = 0; i < grouping.length; i++) {
+    const col = leafColumnsById.get(grouping[i]!)
     if (col) groupingColumns.push(col)
   }
 

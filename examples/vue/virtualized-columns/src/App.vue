@@ -19,15 +19,28 @@ const _features = tableFeatures({
   rowSortingFeature,
 })
 
-const columns = makeColumns(1_000)
-const data = ref<Person[]>(makeData(1_000, columns))
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
+
+const columns = ref(makeColumns(DEFAULT_COLUMN_COUNT))
+const data = ref<Person[]>(makeData(DEFAULT_ROW_COUNT, columns.value))
 
 function refreshData() {
-  data.value = makeData(1_000, columns)
+  const nextColumns = makeColumns(DEFAULT_COLUMN_COUNT)
+  columns.value = nextColumns
+  data.value = makeData(DEFAULT_ROW_COUNT, nextColumns)
 }
 
-function stressTest() {
-  data.value = makeData(10_000, columns)
+function stressTestRows() {
+  data.value = makeData(STRESS_ROW_COUNT, columns.value)
+}
+
+function stressTestColumns() {
+  const nextColumns = makeColumns(STRESS_COLUMN_COUNT)
+  columns.value = nextColumns
+  data.value = makeData(data.value.length, nextColumns)
 }
 
 const table = useTable({
@@ -35,7 +48,9 @@ const table = useTable({
   _rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
   },
-  columns,
+  get columns() {
+    return columns.value
+  },
   data,
   debugTable: true,
 })
@@ -103,7 +118,8 @@ function measureRowElement(element: Element | ComponentPublicInstance | null) {
     <div>({{ data.length.toLocaleString() }} rows)</div>
     <div class="button-row">
       <button @click="refreshData">Regenerate Data</button>
-      <button @click="stressTest">Stress Test (10k rows)</button>
+      <button @click="stressTestRows">Stress Test (10k rows)</button>
+      <button @click="stressTestColumns">Stress Test (10k columns)</button>
     </div>
 
     <div

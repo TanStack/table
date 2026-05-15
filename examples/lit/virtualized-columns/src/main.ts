@@ -23,8 +23,13 @@ const _features = tableFeatures({
   rowSortingFeature,
 })
 
-const columns = makeColumns(1_000) as Array<ColumnDef<typeof _features, Person>>
-const data = makeData(1_000, columns)
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
+
+const createColumns = (columnCount: number) =>
+  makeColumns(columnCount) as Array<ColumnDef<typeof _features, Person>>
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
@@ -33,10 +38,13 @@ class LitTableExample extends LitElement {
   private tableContainerRef: Ref = createRef()
 
   @state()
-  private _data = data
+  private _columns = createColumns(DEFAULT_COLUMN_COUNT)
 
-  private columnVirtualizerController!: VirtualizerController<Element, Element>
-  private rowVirtualizerController!: VirtualizerController<Element, Element>
+  @state()
+  private _data = makeData(DEFAULT_ROW_COUNT, this._columns)
+
+  private columnVirtualizerController?: VirtualizerController<Element, Element>
+  private rowVirtualizerController?: VirtualizerController<Element, Element>
 
   connectedCallback() {
     super.connectedCallback()
@@ -70,7 +78,19 @@ class LitTableExample extends LitElement {
   }
 
   private _refreshData() {
-    this._data = makeData(1_000, columns)
+    const nextColumns = createColumns(DEFAULT_COLUMN_COUNT)
+    this._columns = nextColumns
+    this._data = makeData(DEFAULT_ROW_COUNT, nextColumns)
+  }
+
+  private _stressTestRows() {
+    this._data = makeData(STRESS_ROW_COUNT, this._columns)
+  }
+
+  private _stressTestColumns() {
+    const nextColumns = createColumns(STRESS_COLUMN_COUNT)
+    this._columns = nextColumns
+    this._data = makeData(this._data.length, nextColumns)
   }
 
   protected render() {
@@ -80,7 +100,7 @@ class LitTableExample extends LitElement {
         _rowModels: {
           sortedRowModel: createSortedRowModel(sortFns),
         },
-        columns,
+        columns: this._columns,
         data: this._data,
       },
       () => ({}),
@@ -124,15 +144,14 @@ class LitTableExample extends LitElement {
 
     return html`
       <div class="app">
-        <div>(${columns.length.toLocaleString()} columns)</div>
+        <div>(${this._columns.length.toLocaleString()} columns)</div>
         <div>(${this._data.length.toLocaleString()} rows)</div>
         <button @click="${() => this._refreshData()}">Regenerate Data</button>
-        <button
-          @click="${() => {
-            this._data = makeData(10_000, columns)
-          }}"
-        >
+        <button @click="${() => this._stressTestRows()}">
           Stress Test (10k rows)
+        </button>
+        <button @click="${() => this._stressTestColumns()}">
+          Stress Test (10k columns)
         </button>
         <div
           class="container"

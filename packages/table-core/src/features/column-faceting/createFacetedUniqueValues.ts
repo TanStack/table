@@ -46,10 +46,11 @@ function _createFacetedUniqueValues<
 >(columnId: string, flatRows: Array<Row<TFeatures, TData>>): Map<any, number> {
   const facetedUniqueValues = new Map<any, number>()
 
-  for (const row of flatRows) {
-    const values = row.getUniqueValues(columnId)
+  for (let i = 0; i < flatRows.length; i++) {
+    const values = flatRows[i]!.getUniqueValues(columnId)
 
-    for (const value of values) {
+    for (let j = 0; j < values.length; j++) {
+      const value = values[j]
       if (facetedUniqueValues.has(value)) {
         facetedUniqueValues.set(
           value,

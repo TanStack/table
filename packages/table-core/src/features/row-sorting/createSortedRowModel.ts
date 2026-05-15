@@ -88,7 +88,8 @@ function _createSortedRowModel<
     })
 
     sortedData.sort((rowA, rowB) => {
-      for (const sortEntry of availableSorting) {
+      for (let i = 0; i < availableSorting.length; i++) {
+        const sortEntry = availableSorting[i]!
         const columnInfo = columnInfoById[sortEntry.id]!
         const sortUndefined = columnInfo.sortUndefined
         const isDesc = sortEntry.desc

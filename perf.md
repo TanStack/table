@@ -19,13 +19,54 @@ A code-level audit of `packages/table-core/src/**`. Each entry describes a concr
 
   Fill in the implementation note when status changes from `[ ]`, with: PR/commit ref if relevant, any deviation from the proposed code, before/after benchmark numbers if measured, and follow-ups.
 
+## Cross-cutting sweep: `for...of` → indexed `for`
+
+**Status:** `[x]` done
+
+A codebase-wide conversion of `for (const x of arr)` to `for (let i = 0; i < arr.length; i++) { const x = arr[i]! }` for all `Array` iterations in `packages/table-core/src/**`. Roughly 50 loops touched across ~20 files. Rationale: at TanStack Table's scale targets (millions of rows, thousands of columns) the cumulative micro-cost of iterator-protocol overhead is meaningful — especially on cold-JIT first renders, row-model derivation passes that walk full datasets, and `.find` / pinning loops that run per visible row.
+
+Companion change: **flipped the `@typescript-eslint/prefer-for-of` rule from `'warn'` to `'off'`** at the repo root (`eslint.config.js`) with a comment explaining the rationale. New code should default to indexed `for` for Array iteration. `for...of` is still appropriate for `Map`, `Set`, and generators where indexed access isn't available.
+
+This sweep subsumes the loop-style portions of several individual findings:
+
+- #11 (`table_getAllFlatColumnsById` / `getAllLeafColumnsById` `for...of`)
+- #17 (`row_getAllCells` `.map` + `row_getAllCellsByColumnId` `for...of`) — also converted `.map` to a preallocated `new Array(length)` + indexed assignment for `row_getAllCells`.
+- #23 (faceted min/max — opportunistically swapped `if/if` for `if/else if` for the redundant max check)
+
+Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
+
+**Bug fix included**: `isNumberArray` had been previously auto-converted by the lint rule into `for (const i of d) { d[i] }` — which treats the iteration _value_ as an index and returns `false` for any non-empty number array. The sweep restores the correct indexed form and the function works again as intended.
+
+**Files changed:**
+
+- `utils.ts` (2 loops)
+- `core/cells/constructCell.ts` (1)
+- `core/columns/constructColumn.ts` (2)
+- `core/columns/coreColumnsFeature.utils.ts` (2)
+- `core/headers/buildHeaderGroups.ts` (3)
+- `core/headers/constructHeader.ts` (1)
+- `core/headers/coreHeadersFeature.utils.ts` (2)
+- `core/rows/constructRow.ts` (2)
+- `core/rows/coreRowsFeature.utils.ts` (1, plus `.map` → preallocated array)
+- `core/table/constructTable.ts` (3)
+- `core/table/coreTablesFeature.utils.ts` (1)
+- `features/column-faceting/createFacetedMinMaxValues.ts` (1)
+- `features/column-faceting/createFacetedRowModel.ts` (1)
+- `features/column-faceting/createFacetedUniqueValues.ts` (2)
+- `features/column-filtering/createFilteredRowModel.ts` (5)
+- `features/column-ordering/columnOrderingFeature.utils.ts` (5)
+- `features/column-pinning/columnPinningFeature.utils.ts` (6)
+- `features/column-visibility/columnVisibilityFeature.utils.ts` (6)
+- `features/row-sorting/createSortedRowModel.ts` (1)
+- `features/row-sorting/rowSortingFeature.utils.ts` (1)
+
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 7
+- **Done `[x]`:** 10
 - **Partial `[~]`:** 0
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 52
+- **Not started `[ ]`:** 49
 
 _(Update these counters as you go.)_
 
@@ -384,8 +425,8 @@ export function cell_getContext(cell) {
 
 ## 11. `table_getAllFlatColumnsById` / `getAllLeafColumnsById` use `for...of` — Score: 2
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Converted as part of the codebase-wide `for...of` → indexed `for` sweep. See the "Cross-cutting sweep" section near the top of this doc.
 
 **Location:** `src/core/columns/coreColumnsFeature.utils.ts:175–186, 224–235`
 **Category:** `micro`
@@ -684,8 +725,8 @@ memoDeps: () => [
 
 ## 17. `row_getAllCells` / `row_getAllCellsByColumnId` use `.map`/`for...of` — Score: 4
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Converted as part of the codebase-wide `for...of` → indexed `for` sweep. `row_getAllCells` `.map` was additionally replaced with a preallocated `new Array(columns.length)` + indexed assignment (avoids `.push` reallocation overhead). See the "Cross-cutting sweep" section near the top of this doc.
 
 **Location:** `src/core/rows/coreRowsFeature.utils.ts:163–191`
 **Category:** `micro`
@@ -841,8 +882,8 @@ for (let i = 0; i < flatRows.length; i++) {
 
 ## 23. Faceted min/max loop comparisons — Score: 1
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** `if/if` swapped for `if/else if` (skips the max comparison when min was a hit). Also loop start moved to `i = 1` since `numericValues[0]` is used to seed both `facetedMinValue` and `facetedMaxValue`. Done as part of the `for...of` → indexed `for` sweep.
 
 **Location:** `src/features/column-faceting/createFacetedMinMaxValues.ts:59–65`
 **Category:** `micro`

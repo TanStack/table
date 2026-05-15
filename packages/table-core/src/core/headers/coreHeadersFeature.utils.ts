@@ -94,8 +94,8 @@ export function table_getHeaderGroups<
   const leafColumnsById = table.getAllLeafColumnsById()
 
   const leftColumns: typeof leafColumns = []
-  for (const columnId of left) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < left.length; i++) {
+    const column = leafColumnsById[left[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -105,8 +105,8 @@ export function table_getHeaderGroups<
   }
 
   const rightColumns: typeof leafColumns = []
-  for (const columnId of right) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < right.length; i++) {
+    const column = leafColumnsById[right[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)

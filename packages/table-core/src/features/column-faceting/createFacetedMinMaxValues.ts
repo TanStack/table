@@ -59,9 +59,10 @@ function _createFacetedMinMaxValues<
   let facetedMinValue = numericValues[0]!
   let facetedMaxValue = numericValues[0]!
 
-  for (const value of numericValues) {
+  for (let i = 1; i < numericValues.length; i++) {
+    const value = numericValues[i]!
     if (value < facetedMinValue) facetedMinValue = value
-    if (value > facetedMaxValue) facetedMaxValue = value
+    else if (value > facetedMaxValue) facetedMaxValue = value
   }
 
   return [facetedMinValue, facetedMaxValue]
