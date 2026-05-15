@@ -22,10 +22,10 @@ A code-level audit of `packages/table-core/src/**`. Each entry describes a concr
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 6
+- **Done `[x]`:** 7
 - **Partial `[~]`:** 0
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 53
+- **Not started `[ ]`:** 52
 
 _(Update these counters as you go.)_
 
@@ -619,8 +619,23 @@ Mirror of finding #9 for headers.
 
 ## 16. `table_getLeafHeaders` memoDeps call expensive functions to compute deps — Score: 7
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Initially planned to replace the three cascading `callMemoOrStaticFn(...getLeft/Center/RightHeaderGroups)` calls in `memoDeps` with the six root atoms. On closer inspection the entire pinning branch in the function body was also redundant: `table.getHeaderGroups()` already builds the top row in left → center → right order via `buildHeaderGroups(allColumns, [...leftColumns, ...centerColumns, ...rightColumns], table)`, so the three side-specific getters give the same set of top-row headers as `getHeaderGroups()[0].headers`. Final form collapses to the same pattern as `table_getFooterGroups` / `table_getFlatHeaders`:
+
+```ts
+export function table_getLeafHeaders(table) {
+  return (table.getHeaderGroups()[0]?.headers ?? [])
+    .map((header) => header.getLeafHeaders())
+    .flat()
+}
+// in feature:
+table_getLeafHeaders: {
+  fn: () => table_getLeafHeaders(table),
+  memoDeps: () => [table.getHeaderGroups()],
+},
+```
+
+Eliminates three memoized cascades per call (down to one reference check against the cached header groups), removes the per-call `columnPinning` atom read, and removes the unused imports (`callMemoOrStaticFn`, `table_getLeftHeaderGroups`, `table_getCenterHeaderGroups`, `table_getRightHeaderGroups`, `HeaderGroup` type) from this file.
 
 **Location:** `src/core/headers/coreHeadersFeature.ts:75–94`
 **Category:** `memoization`

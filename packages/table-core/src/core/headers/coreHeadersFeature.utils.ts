@@ -1,9 +1,4 @@
-import {
-  getDefaultColumnPinningState,
-  table_getCenterHeaderGroups,
-  table_getLeftHeaderGroups,
-  table_getRightHeaderGroups,
-} from '../../features/column-pinning/columnPinningFeature.utils'
+import { getDefaultColumnPinningState } from '../../features/column-pinning/columnPinningFeature.utils'
 import {
   column_getIsVisible,
   table_getVisibleLeafColumns,
@@ -185,27 +180,7 @@ export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const left = callMemoOrStaticFn(
-    table,
-    'getLeftHeaderGroups',
-    table_getLeftHeaderGroups,
-  )
-  const center = callMemoOrStaticFn(
-    table,
-    'getCenterHeaderGroups',
-    table_getCenterHeaderGroups,
-  )
-  const right = callMemoOrStaticFn(
-    table,
-    'getRightHeaderGroups',
-    table_getRightHeaderGroups,
-  )
-
-  return [
-    ...(left[0]?.headers ?? []),
-    ...(center[0]?.headers ?? []),
-    ...(right[0]?.headers ?? []),
-  ]
+  return (table.getHeaderGroups()[0]?.headers ?? [])
     .map((header) => {
       return header.getLeafHeaders()
     })
