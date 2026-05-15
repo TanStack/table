@@ -82,10 +82,10 @@ export function constructRowSortingFeature<
 
     assignColumnPrototype(prototype, table) {
       assignPrototypeAPIs('rowSortingFeature', prototype, table, {
-        'column.getAutoSortFn': {
+        column_getAutoSortFn: {
           fn: (column) => column_getAutoSortFn(column),
         },
-        'column.getAutoSortDir': {
+        column_getAutoSortDir: {
           fn: (column) => column_getAutoSortDir(column),
         },
         column_getSortFn: {

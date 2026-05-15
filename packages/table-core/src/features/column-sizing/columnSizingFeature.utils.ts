@@ -91,6 +91,14 @@ export function column_getStart<
   column: Column_Internal<TFeatures, TData, TValue>,
   position: ColumnPinningPosition | 'center',
 ): number {
+  const index = callMemoOrStaticFn(
+    column,
+    'getIndex',
+    column_getIndex,
+    position,
+  )
+  if (index <= 0) return 0
+
   const visibleLeafColumns = callMemoOrStaticFn(
     column.table,
     'getPinnedVisibleLeafColumns',
@@ -98,9 +106,11 @@ export function column_getStart<
     position,
   )
 
-  return visibleLeafColumns
-    .slice(0, callMemoOrStaticFn(column, 'getIndex', column_getIndex, position))
-    .reduce((sum: number, c) => sum + column_getSize(c), 0)
+  const prevColumn = visibleLeafColumns[index - 1]!
+  return (
+    callMemoOrStaticFn(prevColumn, 'getStart', column_getStart, position) +
+    callMemoOrStaticFn(prevColumn, 'getSize', column_getSize)
+  )
 }
 
 /**
@@ -127,12 +137,19 @@ export function column_getAfter<
     table_getPinnedVisibleLeafColumns,
     position,
   )
+  const index = callMemoOrStaticFn(
+    column,
+    'getIndex',
+    column_getIndex,
+    position,
+  )
+  if (index < 0 || index >= visibleLeafColumns.length - 1) return 0
 
-  return visibleLeafColumns
-    .slice(
-      callMemoOrStaticFn(column, 'getIndex', column_getIndex, position) + 1,
-    )
-    .reduce((sum: number, c) => sum + column_getSize(c), 0)
+  const nextColumn = visibleLeafColumns[index + 1]!
+  return (
+    callMemoOrStaticFn(nextColumn, 'getSize', column_getSize) +
+    callMemoOrStaticFn(nextColumn, 'getAfter', column_getAfter, position)
+  )
 }
 
 /**
@@ -204,7 +221,8 @@ export function header_getStart<
     const prevSiblingHeader = header.headerGroup?.headers[header.index - 1]
     if (prevSiblingHeader) {
       return (
-        header_getStart(prevSiblingHeader) + header_getSize(prevSiblingHeader)
+        callMemoOrStaticFn(prevSiblingHeader, 'getStart', header_getStart) +
+        callMemoOrStaticFn(prevSiblingHeader, 'getSize', header_getSize)
       )
     }
   }

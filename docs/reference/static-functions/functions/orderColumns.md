@@ -9,7 +9,7 @@ title: orderColumns
 function orderColumns<TFeatures, TData>(table, leafColumns): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:188](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L188)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L191)
 
 Orders leaf columns with manual ordering, grouping, and pinning rules.
 

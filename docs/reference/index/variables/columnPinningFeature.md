@@ -9,7 +9,7 @@ title: columnPinningFeature
 const columnPinningFeature: TableFeature<ColumnPinningFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.ts:355](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L355)
+Defined in: [features/column-pinning/columnPinningFeature.ts:346](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L346)
 
 The stock column pinning feature.
 

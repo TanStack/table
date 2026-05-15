@@ -9,7 +9,7 @@ title: table_getCenterTotalSize
 function table_getCenterTotalSize<TFeatures, TData>(table): any;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:314](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L314)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:332](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L332)
 
 Returns center total size for the table.
 

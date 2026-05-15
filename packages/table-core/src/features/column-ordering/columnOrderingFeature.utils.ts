@@ -151,24 +151,27 @@ export function table_getOrderColumnsFn<
     if (!columnOrder?.length) {
       orderedColumns = columns
     } else {
-      const columnOrderCopy = [...columnOrder]
+      // Index columns by id for O(1) lookup
+      const remaining = new Map<
+        string,
+        Column_Internal<TFeatures, TData, unknown>
+      >()
+      for (const column of columns) remaining.set(column.id, column)
 
-      // If there is an order, make a copy of the columns
-      const columnsCopy = [...columns]
-
-      // And make a new ordered array of the columns
-
-      // Loop over the columns and place them in order into the new array
-      while (columnsCopy.length && columnOrderCopy.length) {
-        const targetColumnId = columnOrderCopy.shift()
-        const foundIndex = columnsCopy.findIndex((d) => d.id === targetColumnId)
-        if (foundIndex > -1) {
-          orderedColumns.push(columnsCopy.splice(foundIndex, 1)[0]!)
+      // Place columns in the requested order, removing each as it's used
+      // (handles duplicates and unknown ids in columnOrder)
+      for (const id of columnOrder) {
+        const column = remaining.get(id)
+        if (column) {
+          orderedColumns.push(column)
+          remaining.delete(id)
         }
       }
 
-      // If there are any columns left, add them to the end
-      orderedColumns = [...orderedColumns, ...columnsCopy]
+      // Append leftover columns in their original order
+      for (const column of columns) {
+        if (remaining.has(column.id)) orderedColumns.push(column)
+      }
     }
 
     return orderColumns(table, orderedColumns)
@@ -207,9 +210,17 @@ export function orderColumns<
     return nonGroupingColumns
   }
 
-  const groupingColumns = grouping
-    .map((g) => leafColumns.find((col) => col.id === g)!)
-    .filter(Boolean)
+  const leafColumnsById = new Map<
+    string,
+    Column_Internal<TFeatures, TData, unknown>
+  >()
+  for (const col of leafColumns) leafColumnsById.set(col.id, col)
+
+  const groupingColumns: Array<Column_Internal<TFeatures, TData, unknown>> = []
+  for (const g of grouping) {
+    const col = leafColumnsById.get(g)
+    if (col) groupingColumns.push(col)
+  }
 
   return [...groupingColumns, ...nonGroupingColumns]
 }

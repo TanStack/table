@@ -119,7 +119,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} className="demo-button">
-          Stress Test (5k rows)
+          Stress Test (2k rows)
         </button>
       </div>
       <div className="spacer-md" />
