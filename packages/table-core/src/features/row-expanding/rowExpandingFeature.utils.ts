@@ -41,7 +41,7 @@ export function table_autoResetExpanded<
     table.options.autoResetExpanded ??
     !table.options.manualExpanding
   ) {
-    queueMicrotask(() => table_resetExpanded(table))
+    table._reactivity.schedule(() => table_resetExpanded(table))
   }
 }
 

@@ -13,6 +13,7 @@ import type {
 export function litReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: true,
+    schedule: (fn) => queueMicrotask(() => fn()),
     batch,
     untrack: (fn) => fn(),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {

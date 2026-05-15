@@ -1,5 +1,6 @@
 import {
   Injector,
+  NgZone,
   assertInInjectionContext,
   effect,
   inject,
@@ -96,34 +97,37 @@ export function injectTable<
 ): AngularTable<TFeatures, TData> {
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
+  const ngZone = inject(NgZone)
 
-  return lazyInit(() => {
-    const table = constructTable({
-      ...options(),
-      _features: {
-        coreReativityFeature: angularReactivity(injector),
-        ...options()._features,
-      },
-    })
+  return ngZone.runOutsideAngular(() =>
+    lazyInit(() => {
+      const table = constructTable({
+        ...options(),
+        _features: {
+          coreReativityFeature: angularReactivity(injector),
+          ...options()._features,
+        },
+      })
 
-    let isMount = true
-    effect(
-      () => {
-        const newOptions = options()
-        if (isMount) {
-          isMount = false
-          return
-        }
-        untracked(() =>
-          table.setOptions((previous) => ({
-            ...previous,
-            ...newOptions,
-          })),
-        )
-      },
-      { injector, debugName: 'tableOptionsUpdate' },
-    )
+      let isMount = true
+      effect(
+        () => {
+          const newOptions = options()
+          if (isMount) {
+            isMount = false
+            return
+          }
+          untracked(() =>
+            table.setOptions((previous) => ({
+              ...previous,
+              ...newOptions,
+            })),
+          )
+        },
+        { injector, debugName: 'tableOptionsUpdate' },
+      )
 
-    return table
-  })
+      return table
+    }),
+  )
 }

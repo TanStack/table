@@ -106,29 +106,6 @@ export function flattenBy<TNode>(
   return flat
 }
 
-/**
- * Symbol used to attach internal memo metadata to wrapped functions.
- *
- * This is exported so diagnostics can recognize memoized functions without
- * depending on a string property name.
- */
-export const $internalMemoFnMeta = Symbol('memoFnMeta')
-export type MemoFnMeta = { originalArgsLength?: number }
-
-/**
- * @internal
- */
-function setMemoFnMeta(fn: Function, meta: MemoFnMeta) {
-  Object.defineProperty(fn, $internalMemoFnMeta, { value: meta })
-}
-
-/**
- * @internal
- */
-export function getMemoFnMeta(fn: any): MemoFnMeta | null {
-  return (typeof fn === 'function' && fn[$internalMemoFnMeta]) ?? null
-}
-
 interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
   fn: (...args: NoInfer<TDeps>) => TResult
   memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
@@ -177,8 +154,6 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
 
     return result
   }
-
-  setMemoFnMeta(memoizedFn, { originalArgsLength: fn.length })
 
   return memoizedFn
 }
@@ -283,6 +258,11 @@ export function tableMemo<
     console.groupEnd()
   }
 
+  const onAfterUpdateHandler = () => {
+    const { schedule, untrack } = table._reactivity
+    schedule(() => untrack(() => onAfterUpdate?.()))
+  }
+
   const debugOptions =
     process.env.NODE_ENV === 'development'
       ? {
@@ -313,12 +293,12 @@ export function tableMemo<
                 Math.round((endCalcTime - startCalcTime) * 100) / 100
               logTime(executionTime, true)
             }
-            queueMicrotask(() => onAfterUpdate?.())
+            onAfterUpdateHandler()
           },
         }
       : {
           onAfterUpdate: () => {
-            queueMicrotask(() => onAfterUpdate?.())
+            onAfterUpdateHandler()
           },
         }
 
@@ -440,8 +420,6 @@ export function assignPrototypeAPIs<
         return fn(this, ...args)
       }
     }
-
-    setMemoFnMeta(prototype[fnKey], { originalArgsLength: fn.length })
   }
 }
 

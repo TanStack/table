@@ -1,4 +1,4 @@
-import { computed, signal, untracked } from '@angular/core'
+import { NgZone, computed, signal, untracked } from '@angular/core'
 import { toObservable } from '@angular/core/rxjs-interop'
 import type { Atom, Observer, ReadonlyAtom } from '@tanstack/angular-store'
 import type {
@@ -49,8 +49,10 @@ function signalToWritableAtom<T>(
  * and `effect` calls.
  */
 export function angularReactivity(injector: Injector): TableReactivityBindings {
+  const ngZone = injector.get(NgZone)
   return {
     createOptionsStore: true,
+    schedule: (fn) => ngZone.runOutsideAngular(() => queueMicrotask(fn)),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
       const signal = computed(() => fn(), {
         equal: options?.compare,
