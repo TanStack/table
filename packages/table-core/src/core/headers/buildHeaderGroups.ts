@@ -37,15 +37,13 @@ export function buildHeaderGroups<
   ) => {
     maxDepth = Math.max(maxDepth, depth)
 
-    columns
-      .filter((column) =>
-        callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
-      )
-      .forEach((column) => {
+    for (const column of columns) {
+      if (callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)) {
         if (column.columns.length) {
           findMaxDepth(column.columns, depth + 1)
         }
-      }, 0)
+      }
+    }
   }
 
   findMaxDepth(allColumns)

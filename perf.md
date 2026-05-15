@@ -22,10 +22,10 @@ A code-level audit of `packages/table-core/src/**`. Each entry describes a concr
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 4
+- **Done `[x]`:** 5
 - **Partial `[~]`:** 0
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 55
+- **Not started `[ ]`:** 54
 
 _(Update these counters as you go.)_
 
@@ -486,8 +486,8 @@ const leafColumnsById = table.getAllLeafColumnsById()
 
 ## 13. `buildHeaderGroups.findMaxDepth` allocates intermediate filtered arrays — Score: 5
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Replaced `columns.filter(...).forEach(...)` with an indexed `for` loop + `continue` on invisible columns. Drops one filtered-array allocation per recursion level, two callback closures per call (filter + forEach), and removes the spurious `, 0)` second argument to `forEach` that was being ignored. Implemented as proposed.
 
 **Location:** `src/core/headers/buildHeaderGroups.ts:41–48`
 **Category:** `micro`
