@@ -90,6 +90,12 @@ export function table_getHeaderGroups<
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
   ) as Array<Column<TFeatures, TData, unknown>>
+
+  // Fast path: no columns are pinned — skip per-side lookups, partition, and spread.
+  if (!left.length && !right.length) {
+    return buildHeaderGroups(allColumns, leafColumns, table)
+  }
+
   const leafColumnsById = table.getAllLeafColumnsById()
 
   const leftColumns: typeof leafColumns = []
@@ -118,13 +124,11 @@ export function table_getHeaderGroups<
     (column) => !left.includes(column.id) && !right.includes(column.id),
   )
 
-  const headerGroups = buildHeaderGroups(
+  return buildHeaderGroups(
     allColumns,
     [...leftColumns, ...centerColumns, ...rightColumns],
     table,
   )
-
-  return headerGroups
 }
 
 /**

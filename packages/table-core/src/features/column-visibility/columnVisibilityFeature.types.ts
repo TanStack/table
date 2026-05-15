@@ -80,6 +80,13 @@ export interface Row_ColumnVisibility<
    * Returns an array of cells that account for column visibility for the row.
    */
   getVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
+  /**
+   * Returns visible cells by column id for the row.
+   */
+  getVisibleCellsByColumnId: () => Record<
+    string,
+    Cell<TFeatures, TData, unknown>
+  >
 }
 
 export interface Column_ColumnVisibility {

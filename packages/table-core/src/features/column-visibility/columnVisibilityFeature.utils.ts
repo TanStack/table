@@ -130,40 +130,66 @@ export function row_getVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
-  const cells = row
-    .getAllCells()
-    .filter((cell) =>
-      callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible),
-    )
+  const visibleCells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (const cell of row.getAllCells()) {
+    if (callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible)) {
+      visibleCells.push(cell)
+    }
+  }
+
   const { left, right } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  if (!left.length && !right.length) return cells // no pinning, return early
+  if (!left.length && !right.length) return visibleCells // no pinning, return early
 
-  const cellsByColumnId = new Map<string, Cell<TFeatures, TData, unknown>>()
-  for (const cell of cells) cellsByColumnId.set(cell.column.id, cell)
+  const visibleCellsByColumnId = callMemoOrStaticFn(
+    row,
+    'getVisibleCellsByColumnId',
+    row_getVisibleCellsByColumnId,
+  )
 
   const leftCells: Array<Cell<TFeatures, TData, unknown>> = []
   for (const columnId of left) {
-    const cell = cellsByColumnId.get(columnId)
+    const cell = visibleCellsByColumnId[columnId]
     if (cell) leftCells.push(cell)
   }
 
   const rightCells: Array<Cell<TFeatures, TData, unknown>> = []
   for (const columnId of right) {
-    const cell = cellsByColumnId.get(columnId)
+    const cell = visibleCellsByColumnId[columnId]
     if (cell) rightCells.push(cell)
   }
 
   // Center cells: visible cells in natural column order, minus pinned ones.
-  const leftSet = new Set(left)
-  const rightSet = new Set(right)
   const centerCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (const cell of cells) {
+  for (const cell of visibleCells) {
     const id = cell.column.id
-    if (!leftSet.has(id) && !rightSet.has(id)) centerCells.push(cell)
+    if (!left.includes(id) && !right.includes(id)) centerCells.push(cell)
   }
 
   return [...leftCells, ...centerCells, ...rightCells]
+}
+
+/**
+ * Returns visible cells by column id for a row.
+ *
+ * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ *
+ * @example
+ * ```ts
+ * const value = row_getVisibleCellsByColumnId(row)
+ * ```
+ */
+export function row_getVisibleCellsByColumnId<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>): Record<string, Cell<TFeatures, TData, unknown>> {
+  const result: Record<string, Cell<TFeatures, TData, unknown>> = {}
+  for (const cell of row.getAllCells()) {
+    if (callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible)) {
+      result[cell.column.id] = cell
+    }
+  }
+  return result
 }
 
 /**

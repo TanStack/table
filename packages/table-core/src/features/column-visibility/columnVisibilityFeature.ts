@@ -10,6 +10,7 @@ import {
   column_toggleVisibility,
   getDefaultColumnVisibilityState,
   row_getVisibleCells,
+  row_getVisibleCellsByColumnId,
   table_getIsAllColumnsVisible,
   table_getIsSomeColumnsVisible,
   table_getToggleAllColumnsVisibilityHandler,
@@ -94,6 +95,13 @@ export function constructColumnVisibilityFeature<
           memoDeps: (row) => [
             row.getAllCells(),
             table.atoms.columnPinning?.get(),
+            table.atoms.columnVisibility?.get(),
+          ],
+        },
+        row_getVisibleCellsByColumnId: {
+          fn: (row) => row_getVisibleCellsByColumnId(row),
+          memoDeps: (row) => [
+            row.getAllCells(),
             table.atoms.columnVisibility?.get(),
           ],
         },
