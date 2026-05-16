@@ -1,4 +1,3 @@
-import { isNumberArray } from '../utils'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
@@ -153,17 +152,22 @@ export const aggregationFn_median: AggregationFn<any, any> = <
     return
   }
 
-  const values = leafRows.map((row) => row.getValue(columnId))
-  if (!isNumberArray(values)) {
-    return
+  const values: Array<number> = new Array(leafRows.length)
+  for (let i = 0; i < leafRows.length; i++) {
+    const v = leafRows[i]!.getValue(columnId)
+    if (typeof v !== 'number') return
+    values[i] = v
   }
+
   if (values.length === 1) {
     return values[0]
   }
 
   const mid = Math.floor(values.length / 2)
-  const nums = values.sort((a, b) => a - b)
-  return values.length % 2 !== 0 ? nums[mid] : (nums[mid - 1]! + nums[mid]!) / 2
+  values.sort((a, b) => a - b)
+  return values.length % 2 !== 0
+    ? values[mid]
+    : (values[mid - 1]! + values[mid]!) / 2
 }
 
 /**
@@ -176,7 +180,11 @@ export const aggregationFn_unique: AggregationFn<any, any> = <
   columnId: string,
   leafRows: Array<Row<any, any>>,
 ) => {
-  return Array.from(new Set(leafRows.map((d) => d.getValue(columnId))).values())
+  const set = new Set<unknown>()
+  for (let i = 0; i < leafRows.length; i++) {
+    set.add(leafRows[i]!.getValue(columnId))
+  }
+  return Array.from(set.values())
 }
 
 /**
@@ -189,7 +197,11 @@ export const aggregationFn_uniqueCount: AggregationFn<any, any> = <
   columnId: string,
   leafRows: Array<Row<any, any>>,
 ) => {
-  return new Set(leafRows.map((d) => d.getValue(columnId))).size
+  const set = new Set<unknown>()
+  for (let i = 0; i < leafRows.length; i++) {
+    set.add(leafRows[i]!.getValue(columnId))
+  }
+  return set.size
 }
 
 /**

@@ -622,32 +622,33 @@ export function selectRowsFn<
   const newSelectedFlatRows: Array<Row<TFeatures, TData>> = []
   const newSelectedRowsById: Record<string, Row<TFeatures, TData>> = {}
 
-  // Filters top level and nested rows
+  // Filters top level and nested rows.
   const recurseRows = (
     rows: Array<Row<TFeatures, TData>>,
     depth = 0,
   ): Array<Row<TFeatures, TData>> => {
-    return rows
-      .map((row) => {
-        const isSelected = isRowSelected(row)
+    const result: Array<Row<TFeatures, TData>> = []
+    for (let i = 0; i < rows.length; i++) {
+      let row = rows[i]!
+      const isSelected = isRowSelected(row)
 
-        if (isSelected) {
-          newSelectedFlatRows.push(row)
-          newSelectedRowsById[row.id] = row
-        }
+      if (isSelected) {
+        newSelectedFlatRows.push(row)
+        newSelectedRowsById[row.id] = row
+      }
 
-        if (row.subRows.length) {
-          row = {
-            ...row,
-            subRows: recurseRows(row.subRows, depth + 1),
-          }
+      if (row.subRows.length) {
+        row = {
+          ...row,
+          subRows: recurseRows(row.subRows, depth + 1),
         }
+      }
 
-        if (isSelected) {
-          return row
-        }
-      })
-      .filter((x) => !!x)
+      if (isSelected) {
+        result.push(row)
+      }
+    }
+    return result
   }
 
   return {

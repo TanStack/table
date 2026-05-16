@@ -1,0 +1,317 @@
+html {
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+  max-width: 1400px;
+  border: 1px solid lightgray;
+}
+
+table {
+  /* box-shadow / borders + position: sticky don't play well otherwise */
+  border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;
+}
+
+thead {
+  position: relative;
+}
+
+th {
+  background-color: #f3f4f6;
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  font-weight: bold;
+  padding: 2px 4px;
+  position: relative;
+  text-align: left;
+  vertical-align: top;
+}
+
+td {
+  background-color: white;
+  border-bottom: 1px solid #eee;
+  padding: 2px 4px;
+  vertical-align: middle;
+}
+
+tfoot {
+  color: gray;
+}
+
+tfoot th {
+  font-weight: normal;
+}
+
+/* Resizer (column resizing handle) */
+.resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+  z-index: 2;
+}
+
+.resizer.isResizing {
+  background: blue;
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .resizer {
+    opacity: 0;
+  }
+
+  *:hover > .resizer {
+    opacity: 1;
+  }
+}
+
+/* Demo layout utilities. */
+.demo-root {
+  padding: 0.5rem;
+}
+
+.spacer-xs {
+  height: 0.25rem;
+}
+
+.spacer-sm {
+  height: 0.5rem;
+}
+
+.spacer-md {
+  height: 1rem;
+}
+
+.controls,
+.button-row,
+.inline-controls,
+.pin-actions,
+.filter-row,
+.form-actions,
+.header-row,
+.header-controls {
+  display: flex;
+  align-items: center;
+}
+
+.header-row {
+  gap: 0.25rem;
+  flex-wrap: nowrap;
+}
+
+.header-controls {
+  gap: 0.125rem;
+}
+
+.button-row {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.controls {
+  gap: 0.5rem;
+}
+
+.inline-controls,
+.pin-actions {
+  gap: 0.25rem;
+}
+
+.pin-actions {
+  justify-content: center;
+}
+
+.filter-row {
+  gap: 0.5rem;
+}
+
+.form-actions {
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid lightgray;
+  margin-bottom: 0.5rem;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.column-toggle-panel {
+  display: inline-block;
+  border: 1px solid #000;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  padding: 0.25rem;
+}
+
+.column-toggle-panel-header {
+  border-bottom: 1px solid #000;
+  padding: 0 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.column-toggle-row {
+  padding: 0 0.25rem;
+}
+
+.demo-button,
+.pin-button,
+.compact-input,
+.filter-input,
+.filter-select,
+.page-size-input,
+.text-input,
+.number-input,
+.icon-button {
+  border: 1px solid currentColor;
+  border-radius: 0.25rem;
+}
+
+.demo-button {
+  padding: 0.5rem;
+}
+
+.demo-button-sm {
+  padding: 0.25rem;
+}
+
+.demo-button-spaced {
+  margin-bottom: 0.5rem;
+}
+
+.pin-button,
+.icon-button {
+  padding: 0 0.25rem;
+  cursor: pointer;
+  background: transparent;
+  font-size: 0.875rem;
+}
+
+.icon-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.page-size-input {
+  width: 4rem;
+  padding: 0.25rem;
+}
+
+.number-input {
+  width: 5rem;
+  padding: 0 0.25rem;
+}
+
+.filter-input,
+.filter-select {
+  width: 6rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+}
+
+.filter-select {
+  width: 9rem;
+}
+
+.summary-panel {
+  border: 1px solid currentColor;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  padding: 0.5rem;
+}
+
+.global-filter-input {
+  border: 1px solid currentColor;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 24rem;
+}
+
+/* Sortable / draggable header affordances */
+.sortable-header,
+.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.drag-handle {
+  cursor: grab;
+  padding: 0 0.25rem;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Grouped / aggregated / placeholder cell backgrounds (from grouping example) */
+.cell-grouped {
+  background: #0aff0082;
+}
+
+.cell-aggregated {
+  background: #ffa50078;
+}
+
+.cell-placeholder {
+  background: #ff000042;
+}
+
+/* Row pinning — light blue tint + outline so pinned rows are obvious
+ * against sticky positioning. Outline applied via inset box-shadow on each
+ * cell (outline on <tr> doesn't render well with border-collapse: collapse). */
+.pinned-row td {
+  background-color: rgba(135, 206, 235, 0.18);
+  box-shadow:
+    inset 0 2px 0 #4aa3df,
+    inset 0 -2px 0 #4aa3df;
+}
+.pinned-row td:first-child {
+  box-shadow:
+    inset 2px 0 0 #4aa3df,
+    inset 0 2px 0 #4aa3df,
+    inset 0 -2px 0 #4aa3df;
+}
+.pinned-row td:last-child {
+  box-shadow:
+    inset -2px 0 0 #4aa3df,
+    inset 0 2px 0 #4aa3df,
+    inset 0 -2px 0 #4aa3df;
+}
+
+.label-offset {
+  margin-left: 0.5rem;
+}
+
+.state-dump {
+  background: #f3f4f6;
+  border: 1px solid lightgray;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+  max-height: 24rem;
+  overflow: auto;
+}

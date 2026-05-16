@@ -1,10 +1,12 @@
 import {
   column_getIsVisible,
   row_getVisibleCells,
+  row_getVisibleCellsByColumnId,
   table_getVisibleLeafColumns,
 } from '../column-visibility/columnVisibilityFeature.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import { callMemoOrStaticFn, cloneState } from '../../utils'
+import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Cell } from '../../types/Cell'
 import type { Row } from '../../types/Row'
@@ -56,10 +58,13 @@ export function column_pin<
   column: Column_Internal<TFeatures, TData, TValue>,
   position: ColumnPinningPosition,
 ) {
-  const columnIds = column
-    .getLeafColumns()
-    .map((d) => d.id)
-    .filter(Boolean)
+  // Single pass: collect non-empty leaf-column ids.
+  const leafColumns = column.getLeafColumns()
+  const columnIds: Array<string> = []
+  for (let i = 0; i < leafColumns.length; i++) {
+    const id = leafColumns[i]!.id
+    if (id) columnIds.push(id)
+  }
 
   table_setColumnPinning(column.table, (old) => {
     if (position === 'right') {
@@ -209,12 +214,13 @@ export function row_getLeftVisibleCells<
   if (!left.length) return []
   const allVisibleCells = callMemoOrStaticFn(
     row,
-    'getVisibleCells',
-    row_getVisibleCells,
+    'getVisibleCellsByColumnId',
+    row_getVisibleCellsByColumnId,
   )
-  const cells: typeof allVisibleCells = []
-  for (const columnId of left) {
-    const cell = allVisibleCells.find((c) => c.column.id === columnId)
+  const cells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < left.length; i++) {
+    const columnId = left[i]!
+    const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
       cell.position = 'left'
@@ -243,12 +249,13 @@ export function row_getRightVisibleCells<
   if (!right.length) return [] as Array<Cell<TFeatures, TData, unknown>>
   const allVisibleCells = callMemoOrStaticFn(
     row,
-    'getVisibleCells',
-    row_getVisibleCells,
+    'getVisibleCellsByColumnId',
+    row_getVisibleCellsByColumnId,
   )
-  const cells: typeof allVisibleCells = []
-  for (const columnId of right) {
-    const cell = allVisibleCells.find((c) => c.column.id === columnId)
+  const cells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < right.length; i++) {
+    const columnId = right[i]!
+    const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
       cell.position = 'right'
@@ -353,8 +360,8 @@ export function table_getLeftHeaderGroups<
 
   const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
     []
-  for (const columnId of left) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < left.length; i++) {
+    const column = leafColumnsById[left[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -390,8 +397,8 @@ export function table_getRightHeaderGroups<
 
   const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
     []
-  for (const columnId of right) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < right.length; i++) {
+    const column = leafColumnsById[right[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -524,11 +531,14 @@ export function table_getLeftFlatHeaders<
     'getLeftHeaderGroups',
     table_getLeftHeaderGroups,
   )
-  return leftHeaderGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < leftHeaderGroups.length; i++) {
+    const headers = leftHeaderGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j])
+    }
+  }
+  return result
 }
 
 /**
@@ -550,11 +560,14 @@ export function table_getRightFlatHeaders<
     'getRightHeaderGroups',
     table_getRightHeaderGroups,
   )
-  return rightHeaderGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < rightHeaderGroups.length; i++) {
+    const headers = rightHeaderGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j])
+    }
+  }
+  return result
 }
 
 /**
@@ -576,11 +589,14 @@ export function table_getCenterFlatHeaders<
     'getCenterHeaderGroups',
     table_getCenterHeaderGroups,
   )
-  return centerHeaderGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < centerHeaderGroups.length; i++) {
+    const headers = centerHeaderGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j])
+    }
+  }
+  return result
 }
 
 // leaf headers
@@ -668,8 +684,8 @@ export function table_getLeftLeafColumns<
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
   const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (const columnId of left) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < left.length; i++) {
+    const column = leafColumnsById[left[i]!]
     if (column) result.push(column)
   }
   return result
@@ -693,8 +709,8 @@ export function table_getRightLeafColumns<
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
   const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (const columnId of right) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < right.length; i++) {
+    const column = leafColumnsById[right[i]!]
     if (column) result.push(column)
   }
   return result

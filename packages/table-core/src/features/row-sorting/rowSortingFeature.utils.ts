@@ -90,8 +90,8 @@ export function column_getAutoSortFn<
 
   let isString = false
 
-  for (const row of firstRows) {
-    const value = row.getValue(column.id)
+  for (let i = 0; i < firstRows.length; i++) {
+    const value = firstRows[i]!.getValue(column.id)
 
     if (Object.prototype.toString.call(value) === '[object Date]') {
       sortFn = sortFns?.datetime

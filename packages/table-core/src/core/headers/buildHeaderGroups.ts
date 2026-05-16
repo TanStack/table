@@ -37,15 +37,14 @@ export function buildHeaderGroups<
   ) => {
     maxDepth = Math.max(maxDepth, depth)
 
-    columns
-      .filter((column) =>
-        callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
-      )
-      .forEach((column) => {
+    for (let i = 0; i < columns.length; i++) {
+      const column = columns[i]!
+      if (callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)) {
         if (column.columns.length) {
           findMaxDepth(column.columns, depth + 1)
         }
-      }, 0)
+      }
+    }
   }
 
   findMaxDepth(allColumns)
@@ -136,43 +135,43 @@ export function buildHeaderGroups<
 
   headerGroups.reverse()
 
-  // headerGroups = headerGroups.filter(headerGroup => {
-  //   return !headerGroup.headers.every(header => header.isPlaceholder)
-  // })
-
   const recurseHeadersForSpans = (
     headers: Array<Header<TFeatures, TData, TValue>>,
   ): Array<{ colSpan: number; rowSpan: number }> => {
-    const filteredHeaders = headers.filter((header) =>
-      callMemoOrStaticFn(header.column, 'getIsVisible', column_getIsVisible),
-    )
+    const results: Array<{ colSpan: number; rowSpan: number }> = []
 
-    return filteredHeaders.map((header) => {
-      let colSpan = 0
-      let rowSpan = 0
-      let childRowSpans = [0]
-
-      if (header.subHeaders.length) {
-        childRowSpans = []
-
-        recurseHeadersForSpans(header.subHeaders).forEach(
-          ({ colSpan: childColSpan, rowSpan: childRowSpan }) => {
-            colSpan += childColSpan
-            childRowSpans.push(childRowSpan)
-          },
-        )
-      } else {
-        colSpan = 1
+    for (let i = 0; i < headers.length; i++) {
+      const header = headers[i]!
+      if (
+        !callMemoOrStaticFn(header.column, 'getIsVisible', column_getIsVisible)
+      ) {
+        continue
       }
 
-      const minChildRowSpan = Math.min(...childRowSpans)
-      rowSpan = rowSpan + minChildRowSpan
+      let colSpan = 0
+      let minChildRowSpan = Infinity
+
+      if (header.subHeaders.length) {
+        const childSpans = recurseHeadersForSpans(header.subHeaders)
+        for (let j = 0; j < childSpans.length; j++) {
+          const child = childSpans[j]!
+          colSpan += child.colSpan
+          if (child.rowSpan < minChildRowSpan) {
+            minChildRowSpan = child.rowSpan
+          }
+        }
+      } else {
+        colSpan = 1
+        minChildRowSpan = 0
+      }
 
       header.colSpan = colSpan
-      header.rowSpan = rowSpan
+      header.rowSpan = minChildRowSpan
 
-      return { colSpan, rowSpan }
-    })
+      results.push({ colSpan, rowSpan: header.rowSpan })
+    }
+
+    return results
   }
 
   recurseHeadersForSpans(

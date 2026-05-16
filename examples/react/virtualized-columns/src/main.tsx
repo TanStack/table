@@ -30,29 +30,45 @@ const features = {
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
-function App() {
-  const columns = React.useMemo(
-    () =>
-      columnHelper.columns(
-        makeColumns(1_000).map((column) =>
-          columnHelper.accessor(column.accessorKey, {
-            header: column.header,
-            size: column.size,
-          }),
-        ),
-      ),
-    [],
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
+
+const makeTableColumns = (columnCount: number) =>
+  columnHelper.columns(
+    makeColumns(columnCount).map((column) =>
+      columnHelper.accessor(column.accessorKey, {
+        header: column.header,
+        size: column.size,
+      }),
+    ),
   )
 
-  const [data, setData] = React.useState(() => makeData(1_000, columns))
+function App() {
+  const [columns, setColumns] = React.useState(() =>
+    makeTableColumns(DEFAULT_COLUMN_COUNT),
+  )
+
+  const [data, setData] = React.useState(() =>
+    makeData(DEFAULT_ROW_COUNT, columns),
+  )
 
   const refreshData = React.useCallback(() => {
-    setData(makeData(1_000, columns))
+    const nextColumns = makeTableColumns(DEFAULT_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(DEFAULT_ROW_COUNT, nextColumns))
+  }, [])
+
+  const stressTestRows = React.useCallback(() => {
+    setData(makeData(STRESS_ROW_COUNT, columns))
   }, [columns])
 
-  const stressTest = React.useCallback(() => {
-    setData(makeData(10_000, columns))
-  }, [columns])
+  const stressTestColumns = React.useCallback(() => {
+    const nextColumns = makeTableColumns(STRESS_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(data.length, nextColumns))
+  }, [data.length])
 
   const table = useTable(
     {
@@ -79,7 +95,8 @@ function App() {
       <div>({data.length.toLocaleString()} rows)</div>
       <div>
         <button onClick={refreshData}>Regenerate Data</button>
-        <button onClick={stressTest}>Stress Test (10k rows)</button>
+        <button onClick={stressTestRows}>Stress Test (10k rows)</button>
+        <button onClick={stressTestColumns}>Stress Test (10k columns)</button>
       </div>
       <TableContainer table={table} />
     </div>

@@ -79,16 +79,11 @@ function _createSortedRowModel<
   })
 
   const sortData = (rows: Array<Row<TFeatures, TData>>) => {
-    // This will also perform a stable sorting using the row index
-    // if needed.
-    // Preserve prototype chain so methods like getValue() remain accessible
-    const sortedData = rows.map((row) => {
-      const cloned = Object.create(Object.getPrototypeOf(row))
-      return Object.assign(cloned, row)
-    })
+    const sortedData = rows.slice()
 
     sortedData.sort((rowA, rowB) => {
-      for (const sortEntry of availableSorting) {
+      for (let i = 0; i < availableSorting.length; i++) {
+        const sortEntry = availableSorting[i]!
         const columnInfo = columnInfoById[sortEntry.id]!
         const sortUndefined = columnInfo.sortUndefined
         const isDesc = sortEntry.desc
@@ -135,13 +130,21 @@ function _createSortedRowModel<
       return rowA.index - rowB.index
     })
 
-    // If there are sub-rows, sort them
-    sortedData.forEach((row) => {
-      sortedFlatRows.push(row)
+    // If there are sub-rows, sort them. Clone only rows that need mutation
+    // (i.e. have subRows) so we don't corrupt the source row model.
+    for (let i = 0; i < sortedData.length; i++) {
+      const row = sortedData[i]!
       if (row.subRows.length) {
-        row.subRows = sortData(row.subRows)
+        // Preserve prototype chain so methods like getValue() remain accessible
+        const cloned = Object.create(Object.getPrototypeOf(row))
+        Object.assign(cloned, row)
+        cloned.subRows = sortData(row.subRows)
+        sortedData[i] = cloned
+        sortedFlatRows.push(cloned)
+      } else {
+        sortedFlatRows.push(row)
       }
-    })
+    }
 
     return sortedData
   }

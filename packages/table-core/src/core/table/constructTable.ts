@@ -79,7 +79,8 @@ export function constructTable<
     string & keyof TableState<TFeatures>
   >
 
-  for (const key of stateKeys) {
+  for (let i = 0; i < stateKeys.length; i++) {
+    const key = stateKeys[i]!
     // create writable base atom
     table.baseAtoms[key] = _reactivity.createWritableAtom(
       table.initialState[key],
@@ -107,7 +108,8 @@ export function constructTable<
     _reactivity.createReadonlyAtom(
       () => {
         const snapshot = {} as TableState<TFeatures>
-        for (const key of stateKeys) {
+        for (let i = 0; i < stateKeys.length; i++) {
+          const key = stateKeys[i]!
           snapshot[key] = table.atoms[key].get()
         }
         return snapshot
@@ -136,8 +138,8 @@ export function constructTable<
     )
   }
 
-  for (const feature of featuresList) {
-    feature.constructTableAPIs?.(table)
+  for (let i = 0; i < featuresList.length; i++) {
+    featuresList[i]!.constructTableAPIs?.(table)
   }
 
   return table

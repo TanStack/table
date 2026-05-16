@@ -20,8 +20,9 @@ function getColumnPrototype<
 >(table: Table_Internal<TFeatures, TData>): object {
   if (!table._columnPrototype) {
     table._columnPrototype = { table }
-    for (const feature of Object.values(table._features)) {
-      feature.assignColumnPrototype?.(table._columnPrototype, table)
+    const features = Object.values(table._features)
+    for (let i = 0; i < features.length; i++) {
+      features[i]!.assignColumnPrototype?.(table._columnPrototype, table)
     }
   }
   return table._columnPrototype
@@ -69,7 +70,8 @@ export function constructColumn<
       accessorFn = (originalRow: TData) => {
         let result = originalRow as Record<string, any> | undefined
 
-        for (const key of keys) {
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i]!
           result = result?.[key]
           if (process.env.NODE_ENV === 'development' && result === undefined) {
             console.warn(

@@ -1,13 +1,4 @@
-import {
-  assignPrototypeAPIs,
-  assignTableAPIs,
-  callMemoOrStaticFn,
-} from '../../utils'
-import {
-  table_getCenterHeaderGroups,
-  table_getLeftHeaderGroups,
-  table_getRightHeaderGroups,
-} from '../../features/column-pinning/columnPinningFeature.utils'
+import { assignPrototypeAPIs, assignTableAPIs } from '../../utils'
 import {
   header_getContext,
   header_getLeafHeaders,
@@ -74,23 +65,7 @@ export function constructCoreHeadersFeature<
         },
         table_getLeafHeaders: {
           fn: () => table_getLeafHeaders(table),
-          memoDeps: () => [
-            callMemoOrStaticFn(
-              table,
-              'getLeftHeaderGroups',
-              table_getLeftHeaderGroups,
-            ),
-            callMemoOrStaticFn(
-              table,
-              'getCenterHeaderGroups',
-              table_getCenterHeaderGroups,
-            ),
-            callMemoOrStaticFn(
-              table,
-              'getRightHeaderGroups',
-              table_getRightHeaderGroups,
-            ),
-          ],
+          memoDeps: () => [table.getHeaderGroups()],
         },
       })
     },

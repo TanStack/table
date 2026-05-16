@@ -56,7 +56,9 @@ export function table_reset<
 >(table: Table_Internal<TFeatures, TData>): void {
   const snap = cloneState(table.initialState)
   table._reactivity.batch(() => {
-    for (const key of Object.keys(snap) as Array<keyof typeof snap>) {
+    const keys = Object.keys(snap) as Array<keyof typeof snap>
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]!
       ;(table.baseAtoms as any)[key].set(snap[key] as any)
     }
   })

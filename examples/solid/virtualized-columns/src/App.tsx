@@ -27,17 +27,37 @@ const _features = tableFeatures({
   rowSortingFeature,
 })
 
-function App() {
-  const columns = makeColumns(1_000)
-  const [data, setData] = createSignal(makeData(1_000, columns))
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
 
-  const refreshData = () => setData(makeData(1_000, columns))
-  const stressTest = () => setData(makeData(10_000, columns))
+function App() {
+  const [columns, setColumns] = createSignal(makeColumns(DEFAULT_COLUMN_COUNT))
+  const [data, setData] = createSignal(makeData(DEFAULT_ROW_COUNT, columns()))
+
+  const refreshData = () => {
+    const nextColumns = makeColumns(DEFAULT_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(DEFAULT_ROW_COUNT, nextColumns))
+  }
+
+  const stressTestRows = () => {
+    setData(makeData(STRESS_ROW_COUNT, columns()))
+  }
+
+  const stressTestColumns = () => {
+    const nextColumns = makeColumns(STRESS_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(data().length, nextColumns))
+  }
 
   const table = createTable({
     _features,
     _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-    columns,
+    get columns() {
+      return columns()
+    },
     get data() {
       return data()
     },
@@ -48,9 +68,12 @@ function App() {
     <div class="app">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (10k rows)</button>
+        <button onClick={() => stressTestRows()}>Stress Test (10k rows)</button>
+        <button onClick={() => stressTestColumns()}>
+          Stress Test (10k columns)
+        </button>
       </div>
-      <div>({columns.length.toLocaleString()} columns)</div>
+      <div>({columns().length.toLocaleString()} columns)</div>
       <div>({data().length.toLocaleString()} rows)</div>
       <TableContainer table={table} />
     </div>
