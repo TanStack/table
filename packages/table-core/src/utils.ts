@@ -46,11 +46,6 @@ export function cloneState<T>(value: T): T {
 }
 
 /**
- * A no-operation function used as a safe default callback.
- */
-export function noop() {}
-
-/**
  * Creates a table state updater for a single state slice.
  *
  * The updater writes through the table base atom for the slice and supports both value and functional updater forms.
@@ -73,17 +68,6 @@ type AnyFunction = (...args: any) => any
  */
 export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
-}
-
-/**
- * Returns whether a value is an array containing only numbers.
- */
-export function isNumberArray(d: any): d is Array<number> {
-  if (!Array.isArray(d)) return false
-  for (let i = 0; i < d.length; i++) {
-    if (typeof d[i] !== 'number') return false
-  }
-  return true
 }
 
 /**
