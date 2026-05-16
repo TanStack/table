@@ -1075,7 +1075,8 @@
             { "label": "Row DnD", "to": "framework/react/examples/row-dnd" },
             { "label": "Row Pinning", "to": "framework/react/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/react/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/react/examples/sorting" }
+            { "label": "Sorting", "to": "framework/react/examples/sorting" },
+            { "label": "Kitchen Sink (All Features)", "to": "framework/react/examples/kitchen-sink" }
           ]
         },
         {

@@ -94,10 +94,10 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 11
-- **Partial `[~]`:** 0
+- **Done `[x]`:** 12
+- **Partial `[~]`:** 2
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 48
+- **Not started `[ ]`:** 45
 
 _(Update these counters as you go.)_
 
@@ -1765,8 +1765,8 @@ if (newSubRows !== row.subRows) row = { ...row, subRows: newSubRows }
 
 ## 49. `createSortedRowModel` clones every row before sorting — Score: 7
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Investigated why the clone existed: the post-sort loop assigns `row.subRows = sortData(row.subRows)`, which would corrupt the source row model if `row` were the original. So the clone is genuinely necessary for **rows with subRows**, but pointless for leaf rows. Refactored: `rows.slice()` produces a sortable array copy (one allocation), the sort runs as before, and the post-sort loop clones only rows where `row.subRows.length > 0`. Leaf rows pass through as their original references. For a flat table (the common case) this drops from N heavy clones to **zero per-row clones** plus one `slice()`. For nested tables, only parent rows are cloned (typically a small fraction of total rows). The native `Array.prototype.sort` is stable since ES2019; the explicit `row.index` tiebreaker was preserved in the comparator for any caller that relied on it.
 
 **Location:** `src/features/row-sorting/createSortedRowModel.ts:81–89`
 **Category:** `big-o`, `micro`
@@ -1981,8 +1981,8 @@ Currently `>=` runs `>` then `=`. Could inline the comparison directly, at the c
 
 ## 57. `aggregationFn_median` full sorts for the median — Score: 3
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[~]` partial
+**Implementation note:** The quickselect-vs-sort question (the headline of this finding) was **not** addressed — `.sort()` is still used because quickselect adds ~50 LOC of complexity that isn't justified without profiling evidence that median is hot for very large groups. The smaller win **was** captured though: fused `.map((row) => row.getValue(columnId))` with the previous `isNumberArray(values)` validation pass into a single loop that extracts values into a preallocated array and bails immediately on the first non-number. Removes one full walk over the values array per call. The full-sort cost remains.
 
 **Location:** `src/fns/aggregationFns.ts:156–166`
 **Category:** `big-o`
@@ -1995,8 +1995,8 @@ Median requires only the middle element; quickselect is O(n) average vs `.sort()
 
 ## 58. `aggregationFn_unique` + `aggregationFn_uniqueCount` rebuild Set twice — Score: 2
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[~]` partial
+**Implementation note:** The cross-function memoization the original finding proposed (sharing a Set between `aggregationFn_unique` and `aggregationFn_uniqueCount` when both run on the same column in the same pass) was **not** implemented — the use case is rare enough that it's not worth the API plumbing. The per-call fusion **was** captured though: both functions now iterate `leafRows` directly into a Set instead of building an intermediate Array via `.map` and then constructing the Set from it. Saves one Array allocation of size `leafRows.length` per call.
 
 **Location:** `src/fns/aggregationFns.ts:172–193`
 **Category:** `memoization`
