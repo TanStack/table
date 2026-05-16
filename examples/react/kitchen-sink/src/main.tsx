@@ -286,123 +286,138 @@ function DraggableTableHeader({
   const { attributes, isDragging, listeners, setNodeRef, transform } =
     useSortable({ id: header.column.id })
 
-  const pinningStyles = getCommonPinningStyles(header.column)
-  const style: CSSProperties = {
-    ...pinningStyles,
-    opacity: isDragging ? 0.8 : (pinningStyles.opacity ?? 1),
-    transform: CSS.Translate.toString(transform),
-    transition: 'width transform 0.2s ease-in-out',
-    whiteSpace: 'nowrap',
-    width: `calc(var(--header-${header.id}-size) * 1px)`,
-    zIndex: isDragging ? 2 : pinningStyles.zIndex,
-  }
-
   const column = header.column
 
-  if (header.isPlaceholder) {
-    return <th ref={setNodeRef} style={style} colSpan={header.colSpan} />
-  }
-
   return (
-    <th ref={setNodeRef} style={style} colSpan={header.colSpan}>
-      <div className="header-row">
-        {column.id !== 'select' ? (
-          <button
-            className="drag-handle"
-            type="button"
-            {...attributes}
-            {...listeners}
-            title="Drag to reorder"
-          >
-            ⠿
-          </button>
-        ) : null}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div className="header-controls">
-            {column.getCanPin() ? (
-              <span className="pin-actions">
-                {column.getIsPinned() !== 'left' ? (
+    // work around react compiler memoization for nested components using table/column/header APIs
+    <Subscribe
+      source={table.store}
+      selector={(state) => ({
+        columnPinning: state.columnPinning,
+        grouping: state.grouping,
+        sorting: state.sorting,
+      })}
+    >
+      {() => {
+        const pinningStyles = getCommonPinningStyles(column)
+        const style: CSSProperties = {
+          ...pinningStyles,
+          opacity: isDragging ? 0.8 : (pinningStyles.opacity ?? 1),
+          transform: CSS.Translate.toString(transform),
+          transition: 'width transform 0.2s ease-in-out',
+          whiteSpace: 'nowrap',
+          width: `calc(var(--header-${header.id}-size) * 1px)`,
+          zIndex: isDragging ? 2 : pinningStyles.zIndex,
+        }
+
+        if (header.isPlaceholder) {
+          return <th ref={setNodeRef} style={style} colSpan={header.colSpan} />
+        }
+
+        return (
+          <th ref={setNodeRef} style={style} colSpan={header.colSpan}>
+            <div className="header-row">
+              {column.id !== 'select' ? (
+                <button
+                  className="drag-handle"
+                  type="button"
+                  {...attributes}
+                  {...listeners}
+                  title="Drag to reorder"
+                >
+                  ⠿
+                </button>
+              ) : null}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="header-controls">
+                  {column.getCanPin() ? (
+                    <span className="pin-actions">
+                      {column.getIsPinned() !== 'left' ? (
+                        <button
+                          className="pin-button"
+                          onClick={() => column.pin('left')}
+                          title="Pin left"
+                        >
+                          ←
+                        </button>
+                      ) : null}
+                      {column.getIsPinned() ? (
+                        <button
+                          className="pin-button"
+                          onClick={() => column.pin(false)}
+                          title="Unpin"
+                        >
+                          ×
+                        </button>
+                      ) : null}
+                      {column.getIsPinned() !== 'right' ? (
+                        <button
+                          className="pin-button"
+                          onClick={() => column.pin('right')}
+                          title="Pin right"
+                        >
+                          →
+                        </button>
+                      ) : null}
+                    </span>
+                  ) : null}
+                  {column.getCanGroup() ? (
+                    <button
+                      className="pin-button"
+                      onClick={column.getToggleGroupingHandler()}
+                      title={
+                        column.getIsGrouped()
+                          ? 'Stop grouping by this column'
+                          : 'Group by this column'
+                      }
+                    >
+                      {column.getIsGrouped()
+                        ? `🛑(${column.getGroupedIndex()})`
+                        : '👊'}
+                    </button>
+                  ) : null}
+                </div>
+                {column.getCanSort() ? (
                   <button
-                    className="pin-button"
-                    onClick={() => column.pin('left')}
-                    title="Pin left"
+                    type="button"
+                    className="sortable-header"
+                    onClick={column.getToggleSortingHandler()}
+                    title={
+                      column.getNextSortingOrder() === 'asc'
+                        ? 'Sort ascending'
+                        : column.getNextSortingOrder() === 'desc'
+                          ? 'Sort descending'
+                          : 'Clear sort'
+                    }
                   >
-                    ←
+                    <table.FlexRender header={header} />
+                    {{
+                      asc: ' 🔼',
+                      desc: ' 🔽',
+                    }[column.getIsSorted() as string] ?? null}
                   </button>
+                ) : (
+                  <table.FlexRender header={header} />
+                )}
+                {column.getCanFilter() ? (
+                  <div>
+                    <Filter column={column} />
+                  </div>
                 ) : null}
-                {column.getIsPinned() ? (
-                  <button
-                    className="pin-button"
-                    onClick={() => column.pin(false)}
-                    title="Unpin"
-                  >
-                    ×
-                  </button>
-                ) : null}
-                {column.getIsPinned() !== 'right' ? (
-                  <button
-                    className="pin-button"
-                    onClick={() => column.pin('right')}
-                    title="Pin right"
-                  >
-                    →
-                  </button>
-                ) : null}
-              </span>
-            ) : null}
-            {column.getCanGroup() ? (
-              <button
-                className="pin-button"
-                onClick={column.getToggleGroupingHandler()}
-                title={
-                  column.getIsGrouped()
-                    ? 'Stop grouping by this column'
-                    : 'Group by this column'
-                }
-              >
-                {column.getIsGrouped()
-                  ? `🛑(${column.getGroupedIndex()})`
-                  : '👊'}
-              </button>
-            ) : null}
-          </div>
-          {column.getCanSort() ? (
-            <span
-              className="sortable-header"
-              onClick={column.getToggleSortingHandler()}
-              title={
-                column.getNextSortingOrder() === 'asc'
-                  ? 'Sort ascending'
-                  : column.getNextSortingOrder() === 'desc'
-                    ? 'Sort descending'
-                    : 'Clear sort'
-              }
-            >
-              <table.FlexRender header={header} />
-              {{
-                asc: ' 🔼',
-                desc: ' 🔽',
-              }[column.getIsSorted() as string] ?? null}
-            </span>
-          ) : (
-            <table.FlexRender header={header} />
-          )}
-          {column.getCanFilter() ? (
-            <div>
-              <Filter column={column} />
+              </div>
             </div>
-          ) : null}
-        </div>
-      </div>
-      {column.getCanResize() ? (
-        <div
-          onDoubleClick={() => column.resetSize()}
-          onMouseDown={header.getResizeHandler()}
-          onTouchStart={header.getResizeHandler()}
-          className={`resizer ${column.getIsResizing() ? 'isResizing' : ''}`}
-        />
-      ) : null}
-    </th>
+            {column.getCanResize() ? (
+              <div
+                onDoubleClick={() => column.resetSize()}
+                onMouseDown={header.getResizeHandler()}
+                onTouchStart={header.getResizeHandler()}
+                className={`resizer ${column.getIsResizing() ? 'isResizing' : ''}`}
+              />
+            ) : null}
+          </th>
+        )
+      }}
+    </Subscribe>
   )
 }
 
@@ -807,23 +822,11 @@ function App() {
                     strategy={horizontalListSortingStrategy}
                   >
                     {headerGroup.headers.map((header) => (
-                      // work around react compiler memoization for nested components using table/header APIs
-                      <Subscribe
+                      <DraggableTableHeader
                         key={header.id}
-                        source={table.store}
-                        selector={(s) => ({
-                          columnOrder: s.columnOrder,
-                          columnPinning: s.columnPinning,
-                        })}
-                      >
-                        {() => (
-                          <DraggableTableHeader
-                            key={header.id}
-                            header={header}
-                            table={table}
-                          />
-                        )}
-                      </Subscribe>
+                        header={header}
+                        table={table}
+                      />
                     ))}
                   </SortableContext>
                 </tr>

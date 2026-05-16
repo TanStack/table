@@ -258,6 +258,15 @@ tfoot th {
   user-select: none;
 }
 
+.sortable-header {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
 .drag-handle {
   cursor: grab;
   padding: 0 0.25rem;
