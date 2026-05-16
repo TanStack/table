@@ -1028,7 +1028,8 @@
             { "label": "Row Expanding", "to": "framework/angular/examples/expanding" },
             { "label": "Column Grouping", "to": "framework/angular/examples/grouping" },
             { "label": "Row Selection", "to": "framework/angular/examples/row-selection" },
-            { "label": "Row Selection (Signal)", "to": "framework/angular/examples/row-selection-signal" }
+            { "label": "Row Selection (Signal)", "to": "framework/angular/examples/row-selection-signal" },
+            { "label": "Kitchen Sink (All Features)", "to": "framework/angular/examples/kitchen-sink" }
           ]
         },
         {
@@ -1051,7 +1052,8 @@
             { "label": "Row Pinning", "to": "framework/lit/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/lit/examples/row-selection" },
             { "label": "Sorting", "to": "framework/lit/examples/sorting" },
-            { "label": "Sorting (Dynamic Data)", "to": "framework/lit/examples/sorting-dynamic-data" }
+            { "label": "Sorting (Dynamic Data)", "to": "framework/lit/examples/sorting-dynamic-data" },
+            { "label": "Kitchen Sink (All Features)", "to": "framework/lit/examples/kitchen-sink" }
           ]
         },
         {
@@ -1098,7 +1100,8 @@
             { "label": "Pagination", "to": "framework/solid/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/solid/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/solid/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/solid/examples/sorting" }
+            { "label": "Sorting", "to": "framework/solid/examples/sorting" },
+            { "label": "Kitchen Sink (All Features)", "to": "framework/solid/examples/kitchen-sink" }
           ]
         },
         {
@@ -1120,7 +1123,8 @@
             { "label": "Pagination", "to": "framework/svelte/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/svelte/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/svelte/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/svelte/examples/sorting" }
+            { "label": "Sorting", "to": "framework/svelte/examples/sorting" },
+            { "label": "Kitchen Sink (All Features)", "to": "framework/svelte/examples/kitchen-sink" }
           ]
         },
         {
@@ -1142,7 +1146,8 @@
             { "label": "Pagination", "to": "framework/vue/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/vue/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/vue/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/vue/examples/sorting" }
+            { "label": "Sorting", "to": "framework/vue/examples/sorting" },
+            { "label": "Kitchen Sink (All Features)", "to": "framework/vue/examples/kitchen-sink" }
           ]
         },
         {
@@ -1164,7 +1169,8 @@
             { "label": "Pagination", "to": "framework/preact/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/preact/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/preact/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/preact/examples/sorting" }
+            { "label": "Sorting", "to": "framework/preact/examples/sorting" },
+            { "label": "Kitchen Sink (All Features)", "to": "framework/preact/examples/kitchen-sink" }
           ]
         },
         {
