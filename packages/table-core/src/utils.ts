@@ -94,9 +94,15 @@ export function makeStateUpdater<K extends keyof TableState>(
 ) {
   return (updater: Updater<TableState[K]>) => {
     ;(instance as any).setState(<TTableState>(old: TTableState) => {
+      const newValue = functionalUpdate(updater, (old as any)[key])
+
+      if (Object.is((old as any)[key], newValue)) {
+        return old
+      }
+
       return {
         ...old,
-        [key]: functionalUpdate(updater, (old as any)[key]),
+        [key]: newValue,
       }
     })
   }
