@@ -147,7 +147,7 @@ export function memo<TDeps extends readonly any[], TDepArgs, TResult>(
 
   return (depArgs) => {
     let depTime: number
-    if (opts.key && opts.debug) depTime = Date.now()
+    if (opts.key && opts.debug) depTime = performance.now()
 
     const newDeps = getDeps(depArgs)
 
@@ -162,15 +162,15 @@ export function memo<TDeps extends readonly any[], TDepArgs, TResult>(
     deps = newDeps
 
     let resultTime: number
-    if (opts.key && opts.debug) resultTime = Date.now()
+    if (opts.key && opts.debug) resultTime = performance.now()
 
     result = fn(...newDeps)
     opts?.onChange?.(result)
 
     if (opts.key && opts.debug) {
       if (opts?.debug()) {
-        const depEndTime = Math.round((Date.now() - depTime!) * 100) / 100
-        const resultEndTime = Math.round((Date.now() - resultTime!) * 100) / 100
+        const depEndTime = Math.round((performance.now() - depTime!) * 100) / 100
+        const resultEndTime = Math.round((performance.now() - resultTime!) * 100) / 100
         const resultFpsPercentage = resultEndTime / 16
 
         const pad = (str: number | string, num: number) => {
