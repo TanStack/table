@@ -49,21 +49,18 @@ function _createFacetedMinMaxValues<
 ): undefined | [number, number] {
   if (!flatRows.length) return undefined
 
-  const numericValues = flatRows
-    .map((flatRow) => flatRow.getValue(columnId))
-    .map(Number)
-    .filter((value) => !Number.isNaN(value))
+  let facetedMinValue = Number.POSITIVE_INFINITY
+  let facetedMaxValue = Number.NEGATIVE_INFINITY
+  let foundAny = false
 
-  if (!numericValues.length) return undefined
-
-  let facetedMinValue = numericValues[0]!
-  let facetedMaxValue = numericValues[0]!
-
-  for (let i = 1; i < numericValues.length; i++) {
-    const value = numericValues[i]!
+  for (let i = 0; i < flatRows.length; i++) {
+    const value = Number(flatRows[i]!.getValue(columnId))
+    if (Number.isNaN(value)) continue
+    foundAny = true
     if (value < facetedMinValue) facetedMinValue = value
-    else if (value > facetedMaxValue) facetedMaxValue = value
+    if (value > facetedMaxValue) facetedMaxValue = value
   }
 
+  if (!foundAny) return undefined
   return [facetedMinValue, facetedMaxValue]
 }

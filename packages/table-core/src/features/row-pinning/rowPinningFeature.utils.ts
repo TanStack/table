@@ -109,26 +109,28 @@ function table_getPinnedRows<
 ): Array<Row<TFeatures, TData>> {
   const visibleRows = table.getRowModel().rows
   const pinnedRowIds = table.atoms.rowPinning?.get()?.[position] ?? []
+  const keepPinnedRows = table.options.keepPinnedRows ?? true
 
-  const rows =
-    (table.options.keepPinnedRows ?? true)
-      ? // get all rows that are pinned even if they would not be otherwise visible
-        // account for expanded parent rows, but not pagination or filtering
-        pinnedRowIds.map((rowId) => {
-          const row = table.getRow(rowId, true)
-          return row_getIsAllParentsExpanded(row) ? row : null
-        })
-      : // else get only visible rows that are pinned
-        pinnedRowIds.map(
-          (rowId) => visibleRows.find((row) => row.id === rowId)!,
-        )
-
-  const filteredRows = rows.filter((r) => !!r)
-  // Assign position property directly to preserve prototype chain
-  filteredRows.forEach((row) => {
+  const result: Array<Row<TFeatures, TData>> = []
+  for (let i = 0; i < pinnedRowIds.length; i++) {
+    const rowId = pinnedRowIds[i]!
+    let row: Row<TFeatures, TData> | undefined
+    if (keepPinnedRows) {
+      // get all rows that are pinned even if they would not be otherwise
+      // visible; account for expanded parent rows, but not pagination/filtering
+      const fullRow = table.getRow(rowId, true)
+      if (row_getIsAllParentsExpanded(fullRow)) row = fullRow
+    } else {
+      // else get only visible rows that are pinned
+      row = visibleRows.find((r) => r.id === rowId)
+    }
+    if (!row)
+      continue
+      // Assign position property directly to preserve prototype chain
     ;(row as any).position = position
-  })
-  return filteredRows
+    result.push(row)
+  }
+  return result
 }
 
 /**

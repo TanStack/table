@@ -5,6 +5,7 @@ import {
 } from '../column-visibility/columnVisibilityFeature.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import { callMemoOrStaticFn, cloneState } from '../../utils'
+import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Cell } from '../../types/Cell'
 import type { Row } from '../../types/Row'
@@ -56,10 +57,13 @@ export function column_pin<
   column: Column_Internal<TFeatures, TData, TValue>,
   position: ColumnPinningPosition,
 ) {
-  const columnIds = column
-    .getLeafColumns()
-    .map((d) => d.id)
-    .filter(Boolean)
+  // Single pass: collect non-empty leaf-column ids.
+  const leafColumns = column.getLeafColumns()
+  const columnIds: Array<string> = []
+  for (let i = 0; i < leafColumns.length; i++) {
+    const id = leafColumns[i]!.id
+    if (id) columnIds.push(id)
+  }
 
   table_setColumnPinning(column.table, (old) => {
     if (position === 'right') {
@@ -526,11 +530,14 @@ export function table_getLeftFlatHeaders<
     'getLeftHeaderGroups',
     table_getLeftHeaderGroups,
   )
-  return leftHeaderGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < leftHeaderGroups.length; i++) {
+    const headers = leftHeaderGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j])
+    }
+  }
+  return result
 }
 
 /**
@@ -552,11 +559,14 @@ export function table_getRightFlatHeaders<
     'getRightHeaderGroups',
     table_getRightHeaderGroups,
   )
-  return rightHeaderGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < rightHeaderGroups.length; i++) {
+    const headers = rightHeaderGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j])
+    }
+  }
+  return result
 }
 
 /**
@@ -578,11 +588,14 @@ export function table_getCenterFlatHeaders<
     'getCenterHeaderGroups',
     table_getCenterHeaderGroups,
   )
-  return centerHeaderGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < centerHeaderGroups.length; i++) {
+    const headers = centerHeaderGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j])
+    }
+  }
+  return result
 }
 
 // leaf headers

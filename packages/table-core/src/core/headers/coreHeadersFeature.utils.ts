@@ -159,11 +159,14 @@ export function table_getFlatHeaders<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = table.getHeaderGroups()
-  return headerGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < headerGroups.length; i++) {
+    const headers = headerGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j]!)
+    }
+  }
+  return result
 }
 
 /**
@@ -180,9 +183,13 @@ export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (table.getHeaderGroups()[0]?.headers ?? [])
-    .map((header) => {
-      return header.getLeafHeaders()
-    })
-    .flat()
+  const topHeaders = table.getHeaderGroups()[0]?.headers ?? []
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < topHeaders.length; i++) {
+    const leafHeaders = topHeaders[i]!.getLeafHeaders()
+    for (let j = 0; j < leafHeaders.length; j++) {
+      result.push(leafHeaders[j]!)
+    }
+  }
+  return result
 }

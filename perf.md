@@ -19,6 +19,37 @@ A code-level audit of `packages/table-core/src/**`. Each entry describes a concr
 
   Fill in the implementation note when status changes from `[ ]`, with: PR/commit ref if relevant, any deviation from the proposed code, before/after benchmark numbers if measured, and follow-ups.
 
+## Cross-cutting sweep: loop fusion (`.map().flat()`, `.map().filter()`, `.map().map().filter()`)
+
+**Status:** `[x]` done
+
+Eliminated back-to-back Array method chains across `packages/table-core/src/**` by fusing multiple passes into a single loop. Each chain was producing one intermediate array per stage; fused versions allocate exactly the final result array.
+
+**Patterns covered:**
+
+1. **`.map(hg => hg.headers).flat()`** — 5 sites, all flattening header-groups into a flat header list. Replaced each with a nested indexed `for` loop pushing into a single result array.
+   - `core/headers/coreHeadersFeature.utils.ts` — `table_getFlatHeaders`
+   - `core/headers/coreHeadersFeature.utils.ts` — `table_getLeafHeaders` (variant: maps to `header.getLeafHeaders()` arrays, same fusion shape)
+   - `features/column-pinning/columnPinningFeature.utils.ts` — `table_getLeftFlatHeaders`, `table_getRightFlatHeaders`, `table_getCenterFlatHeaders`
+
+2. **`.map().map().filter()` triple chain** — `createFacetedMinMaxValues.ts`. Fused into the min/max scan loop (which previously ran _after_ the three array stages). Single pass over `flatRows` with `Number()` coercion + NaN skip + inline min/max tracking. Replaces 3 intermediate array allocations of size N and the subsequent min/max walk over the resulting array.
+
+3. **`.map(...).filter(predicate).forEach(mutate)` three-pass chain** — `rowPinningFeature.utils.ts` (`getPinnedRows`). Resolves pinned-row ids → row instances → drops misses → tags `position`, all in one loop. Eliminates 2 intermediate arrays.
+
+4. **`.map().filter()` chain producing-then-cleaning undefineds** — `rowSelectionFeature.utils.ts` (`selectRowsFn` `recurseRows`). The `.map` returns `undefined` for unselected rows; the `.filter(x => !!x)` then removes them. Replaced with single push-into-result loop that skips unselected rows. Saves one intermediate array per recursion level.
+
+5. **Smaller `.map().filter()` chains:**
+   - `createFacetedRowModel.ts` — `columnFilters?.map(d => d.id).filter(d => d !== columnId)` + outer `.filter(Boolean)` → single loop pushing matching ids.
+   - `columnPinningFeature.utils.ts` `column_pin` — `column.getLeafColumns().map(d => d.id).filter(Boolean)` → single loop.
+
+**Why it matters at scale.** In modern V8, `.map`/`.filter` per-iteration overhead is competitive with hand-written loops (~5–15% per element). The win is **eliminating the intermediate arrays themselves**. Each chain stage allocates an array of size N where N is rows/cells/headers. For a 1M-row faceting pass the prior triple-chain in `createFacetedMinMaxValues` allocated ~3 × 8MB of intermediate buffers per faceted column rebuild; the fused version allocates none of those. Across all 5 patterns and all derivation passes (filter, sort, group, facet, pin), this saves tens of MB of allocations and meaningful GC time on cold builds at 1M-row scale.
+
+**Subsumes existing findings:**
+
+- #21 (`createFacetedMinMaxValues` chain) — done as part of pattern 2 above.
+
+**Type-check verified clean** after the fusion sweep.
+
 ## Cross-cutting sweep: `for...of` → indexed `for`
 
 **Status:** `[x]` done
@@ -63,10 +94,10 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 10
+- **Done `[x]`:** 11
 - **Partial `[~]`:** 0
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 49
+- **Not started `[ ]`:** 48
 
 _(Update these counters as you go.)_
 
@@ -815,8 +846,8 @@ Today's dep is `table.options.data`. If a consumer recreates the options object 
 
 ## 21. `createFacetedMinMaxValues` chains `.map().map().filter()` — Score: 5
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Fused as part of the loop-fusion sweep (see "Cross-cutting sweep: loop fusion" section near the top). Went further than the original proposal: instead of just collapsing the three `.map().map().filter()` passes into a single `numericValues` loop, the subsequent min/max scan was fused into that same pass too. Net result: one pass over `flatRows`, zero intermediate arrays, inline min/max tracking with `Number.POSITIVE_INFINITY` / `Number.NEGATIVE_INFINITY` seeds and a `foundAny` flag to return `undefined` when no numeric values exist.
 
 **Location:** `src/features/column-faceting/createFacetedMinMaxValues.ts:50–56`
 **Category:** `micro`
