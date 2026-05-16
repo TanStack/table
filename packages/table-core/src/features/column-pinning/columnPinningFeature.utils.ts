@@ -1,6 +1,7 @@
 import {
   column_getIsVisible,
   row_getVisibleCells,
+  row_getVisibleCellsByColumnId,
   table_getVisibleLeafColumns,
 } from '../column-visibility/columnVisibilityFeature.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
@@ -213,13 +214,13 @@ export function row_getLeftVisibleCells<
   if (!left.length) return []
   const allVisibleCells = callMemoOrStaticFn(
     row,
-    'getVisibleCells',
-    row_getVisibleCells,
+    'getVisibleCellsByColumnId',
+    row_getVisibleCellsByColumnId,
   )
-  const cells: typeof allVisibleCells = []
+  const cells: Array<Cell<TFeatures, TData, unknown>> = []
   for (let i = 0; i < left.length; i++) {
     const columnId = left[i]!
-    const cell = allVisibleCells.find((c) => c.column.id === columnId)
+    const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
       cell.position = 'left'
@@ -248,13 +249,13 @@ export function row_getRightVisibleCells<
   if (!right.length) return [] as Array<Cell<TFeatures, TData, unknown>>
   const allVisibleCells = callMemoOrStaticFn(
     row,
-    'getVisibleCells',
-    row_getVisibleCells,
+    'getVisibleCellsByColumnId',
+    row_getVisibleCellsByColumnId,
   )
-  const cells: typeof allVisibleCells = []
+  const cells: Array<Cell<TFeatures, TData, unknown>> = []
   for (let i = 0; i < right.length; i++) {
     const columnId = right[i]!
-    const cell = allVisibleCells.find((c) => c.column.id === columnId)
+    const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
       cell.position = 'right'

@@ -378,14 +378,18 @@
                           onchange={table.getToggleAllPageRowsSelectedHandler()}
                         />
                       {:else if header.column.getCanSort()}
-                        <span class="sortable-header" onclick={header.column.getToggleSortingHandler()}>
+                        <button
+                          type="button"
+                          class="sortable-header header-sort-button"
+                          onclick={header.column.getToggleSortingHandler()}
+                        >
                           <FlexRender header={header} />
                           {header.column.getIsSorted() === 'asc'
                             ? ' ▲'
                             : header.column.getIsSorted() === 'desc'
                               ? ' ▼'
                               : ''}
-                        </span>
+                        </button>
                       {:else}
                         <FlexRender header={header} />
                       {/if}
@@ -465,12 +469,14 @@
                     </div>
                   </div>
                   {#if header.column.getCanResize()}
-                    <div
+                    <button
+                      type="button"
+                      aria-label={`Resize ${header.column.id} column`}
                       ondblclick={() => header.column.resetSize()}
                       onmousedown={header.getResizeHandler()}
                       ontouchstart={header.getResizeHandler()}
                       class={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''}`}
-                    ></div>
+                    ></button>
                   {/if}
                 {/if}
               </th>

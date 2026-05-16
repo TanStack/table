@@ -54,6 +54,8 @@ tfoot th {
   right: 0;
   height: 100%;
   width: 5px;
+  border: 0;
+  padding: 0;
   background: rgba(0, 0, 0, 0.5);
   cursor: col-resize;
   user-select: none;
@@ -256,6 +258,15 @@ tfoot th {
 .sortable {
   cursor: pointer;
   user-select: none;
+}
+
+.header-sort-button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
 }
 
 .drag-handle {

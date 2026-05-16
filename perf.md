@@ -94,10 +94,10 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 12
+- **Done `[x]`:** 14
 - **Partial `[~]`:** 2
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 45
+- **Not started `[ ]`:** 43
 
 _(Update these counters as you go.)_
 
@@ -1242,8 +1242,8 @@ const nonGroupingColumns = leafColumns.filter((col) => !groupingSet.has(col.id))
 
 ## 35. `row_getLeftVisibleCells` / `row_getRightVisibleCells` use `.find` in pin loop — Score: 8
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Original audit proposed building a per-call `Map<columnId, cell>` inside each getter. Final implementation went further: reuses the already-memoized `row_getVisibleCellsByColumnId` lookup record (deps `[row.getAllCells(), columnVisibility]`) rather than rebuilding a Map on every call. Result: O(P) bracket lookups per call, with the underlying record amortized to zero rebuild cost across multiple pin-side getters on the same row. Added an early return when the pin side is empty (consistent with the rest of the codebase). Behavior preserved: `cell.position = 'left' | 'right'` mutation, ordering by pin-array index, and hidden-column exclusion via the visible-cells record.
 
 **Location:** `src/features/column-pinning/columnPinningFeature.utils.ts:216–224, 250–257`
 **Category:** `big-o`
@@ -1384,8 +1384,8 @@ export function passiveEventSupported() {
 
 ## 38. `table_getTotalSize` and the L/C/R variants are not memoized — Score: 8
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Added `memoDeps: () => [table.atoms.columnSizing?.get(), table.getHeaderGroups()]` to all four entries (`table_getTotalSize`, `table_getLeftTotalSize`, `table_getCenterTotalSize`, `table_getRightTotalSize`) in `columnSizingFeature.ts`. Matches the pattern already used by `table_getFooterGroups` / `table_getFlatHeaders`: `table.getHeaderGroups()` is itself memoized against every input that can change the header-row composition (columns, columnOrder, grouping, columnPinning, columnVisibility, groupedColumnMode), so its ref is a compact proxy that holds steady while the underlying inputs don't change. The only other dep is `columnSizing` for per-column width state. Deliberately omitted `columnResizing` — with `columnResizeMode: 'onChange'` (the typical resize-aware setup) the resize handler writes through to `columnSizing` directly, so depending on `columnResizing` would cause redundant invalidations on every drag-move tick without changing the output.
 
 **Location:** `src/features/column-sizing/columnSizingFeature.ts:142–154`
 **Category:** `memoization`, `big-o`
