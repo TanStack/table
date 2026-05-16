@@ -13,7 +13,7 @@
     "@faker-js/faker": "^10.4.0",
     "@tanstack/react-pacer": "^0.22.0",
     "@tanstack/react-store": "^0.11.0",
-    "@tanstack/react-table": "^9.0.0-alpha.46",
+    "@tanstack/react-table": "^9.0.0-alpha.47",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
@@ -21,7 +21,7 @@
     "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
     "@tanstack/react-devtools": "^0.10.5",
-    "@tanstack/react-table-devtools": "^9.0.0-alpha.46",
+    "@tanstack/react-table-devtools": "^9.0.0-alpha.47",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
