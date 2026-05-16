@@ -94,10 +94,10 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 14
+- **Done `[x]`:** 15
 - **Partial `[~]`:** 2
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 43
+- **Not started `[ ]`:** 42
 
 _(Update these counters as you go.)_
 
@@ -1592,8 +1592,8 @@ return {
 
 ## 42. `row_getIsAllParentsExpanded` checks the wrong row (bug) — Score: 8 (bug)
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** One-character fix — changed `row_getIsExpanded(row)` to `row_getIsExpanded(currentRow)` inside the parent-walk loop. Previously the function checked the original `row` on every iteration instead of the parent it had just walked to, which made the loop a no-op past the first iteration and returned wrong results (e.g. a leaf row would report "all parents expanded" whenever the leaf itself was expanded, regardless of any collapsed ancestor). Added a comment explaining the intent. Downstream caller in `rowPinningFeature.utils.ts:122` (the `if (row_getIsAllParentsExpanded(fullRow))` check that decides whether a pinned row should appear) automatically gets the correct semantic — pinned rows now correctly account for their ancestor chain's expansion state instead of accidentally tracking the pinned row's own expansion.
 
 **Location:** `src/features/row-expanding/rowExpandingFeature.utils.ts:324–337`
 **Category:** `bug`

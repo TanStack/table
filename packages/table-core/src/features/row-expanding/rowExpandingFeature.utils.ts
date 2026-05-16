@@ -330,7 +330,7 @@ export function row_getIsAllParentsExpanded<
 
   while (isFullyExpanded && currentRow.parentId) {
     currentRow = row.table.getRow(currentRow.parentId, true)
-    isFullyExpanded = row_getIsExpanded(row)
+    isFullyExpanded = row_getIsExpanded(currentRow)
   }
 
   return isFullyExpanded
