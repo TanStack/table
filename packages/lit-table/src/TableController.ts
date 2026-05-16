@@ -1,7 +1,13 @@
 import { constructTable } from '@tanstack/table-core'
+import { TanStackStoreSelector } from '@tanstack/lit-store'
 import { litReactivity } from './reactivity'
 import { FlexRender } from './flexRender'
-import type { Atom, ReadonlyAtom, ReadonlyStore, Store } from '@tanstack/store'
+import type {
+  Atom,
+  ReadonlyAtom,
+  ReadonlyStore,
+  Store,
+} from '@tanstack/lit-store'
 import type {
   NoInfer,
   RowData,
@@ -198,23 +204,28 @@ export class TableController<
     const tableInstance = this._table
 
     // Attach Subscribe function
-    const Subscribe = function Subscribe(props: {
+    const Subscribe = ((props: {
       source?: SubscribeSource<unknown>
       selector?: (state: unknown) => unknown
       children:
         | ((state: Readonly<unknown>) => TemplateResult | string)
         | TemplateResult
         | string
-    }): TemplateResult | string {
+    }): TemplateResult | string => {
       const source = props.source ?? tableInstance.store
-      const value = source.get()
-      const selectedState =
-        props.selector !== undefined ? props.selector(value) : value
+
+      const storeSelector: TanStackStoreSelector<unknown> =
+        this._getOrCreateSelector(source, props.selector)
+
+      // TODO: update to newest version of Tanstack Store: https://github.com/TanStack/store/pull/329
+      const selectedState = storeSelector.value
+
       if (typeof props.children === 'function') {
         return props.children(selectedState as Readonly<unknown>)
       }
+
       return props.children
-    } as LitTable<TFeatures, TData, TSelected>['Subscribe']
+    }) as LitTable<TFeatures, TData, TSelected>['Subscribe']
 
     return {
       ...this._table,
@@ -250,5 +261,21 @@ export class TableController<
     this._storeSubscription = undefined
     this._optionsSubscription?.unsubscribe()
     this._optionsSubscription = undefined
+  }
+
+  /**
+   * Get or create a TanStackStoreSelector for the given source and selector.
+   *
+   * TODO: check if caching of controllers can improve performance and reduce memory usage.
+   *
+   * @param source The atom or store to subscribe to
+   * @param selector Optional selector function to select a slice of the source state
+   * @returns A TanStackStoreSelector instance that subscribes to the source and applies the selector
+   */
+  private _getOrCreateSelector = (
+    source?: SubscribeSource<unknown>,
+    selector?: (state: unknown) => unknown,
+  ): TanStackStoreSelector<unknown> => {
+    return new TanStackStoreSelector(this.host, () => source, selector)
   }
 }

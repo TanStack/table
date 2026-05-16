@@ -1,4 +1,4 @@
-import { batch, createAtom } from '@tanstack/store'
+import { batch, createAtom } from '@tanstack/lit-store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
