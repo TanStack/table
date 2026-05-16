@@ -61,28 +61,28 @@ A headless table library for building powerful datagrids with full control over 
 <table align="center">
   <tr>
     <td>
-        <a href="https://www.coderabbit.ai/?via=tanstack&dub_id=aCcEEdAOqqutX6OS">
-			<picture>
-			  <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/coderabbit-dark-CMcuvjEy.svg" height="40" />
-			  <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/coderabbit-light-DVMJ2jHi.svg" height="40" />
-			  <img src="https://tanstack.com/assets/coderabbit-light-DVMJ2jHi.svg" height="40" alt="CodeRabbit" />
-			</picture>        
-		</a>
+      <a href="https://www.coderabbit.ai/?via=tanstack&dub_id=aCcEEdAOqqutX6OS" >
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/coderabbit-dark-D643Zkrv.svg" height="40" />
+          <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/coderabbit-light-CIzGLYU_.svg" height="40" />
+          <img src="https://tanstack.com/assets/coderabbit-light-CIzGLYU_.svg" height="40" alt="CodeRabbit" />
+        </picture>
+      </a>
     </td>
     <td padding="20">
       <a href="https://www.cloudflare.com?utm_source=tanstack">
-         <picture>
-		  <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/cloudflare-white-DQDB7UaL.svg" height="60" />
-		  <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/cloudflare-black-CPufaW0B.svg" height="60" />
-		  <img src="https://tanstack.com/assets/cloudflare-black-CPufaW0B.svg" height="60" alt="Cloudflare" />
-		</picture>
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/cloudflare-white-Co-Tyjbl.svg" />
+          <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/cloudflare-black-6Ojsn8yh.svg" />
+          <img src="https://tanstack.com/assets/cloudflare-white-Co-Tyjbl.svg" height="60" alt="Cloudflare" />
+        </picture>
       </a>
     </td>
     <td>
      <a href="https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable" style="display: flex; align-items: center; border: none;">
        <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="./media/ag-grid-dark.svg" height="40" />
-        <source media="(prefers-color-scheme: light)" srcset="./media/ag-grid-light.svg" height="40" />
+        <source media="(prefers-color-scheme: dark)" srcset="https://tanstack.com/assets/ag-grid-dark.svg" height="40" />
+        <source media="(prefers-color-scheme: light)" srcset="https://tanstack.com/assets/ag-grid-light.svg" height="40" />
         <img src="https://raw.githubusercontent.com/tannerlinsley/files/master/partners/ag-grid.svg" height="60" alt="AG Grid" />
       </picture>
       </a>
