@@ -57,8 +57,8 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "@tanstack/store": "^0.11.0",
-    "@tanstack/table-core": "workspace:*"
+    "@tanstack/lit-store": "^0.14.0",
+    "@tanstack/table-core": "^9.0.0-beta.5"
   },
   "devDependencies": {
     "@lit/context": "^1.1.6",

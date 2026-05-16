@@ -7,6 +7,7 @@ title: "@tanstack/lit-table"
 
 ## Classes
 
+- [SubscribeDirective](classes/SubscribeDirective.md)
 - [TableController](classes/TableController.md)
 
 ## Type Aliases
@@ -23,7 +24,11 @@ title: "@tanstack/lit-table"
 - [CreateTableHookOptions](type-aliases/CreateTableHookOptions.md)
 - [FlexRenderProps](type-aliases/FlexRenderProps.md)
 - [LitTable](type-aliases/LitTable.md)
-- [SubscribeSource](type-aliases/SubscribeSource.md)
+- [SelectionSource](type-aliases/SelectionSource.md)
+
+## Variables
+
+- [subscribe](variables/subscribe.md)
 
 ## Functions
 

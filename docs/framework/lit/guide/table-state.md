@@ -70,7 +70,7 @@ There are two different questions when reading table state:
 - Do you only need the current value?
 - Or should the Lit host update when that value changes?
 
-Use a direct atom or store read for the current value. Use `table.state` or `table.Subscribe` in render output when the host should reflect selected table state.
+Use a direct atom or store read for the current value. Use `table.state` or `table.subscribe` in render output when the host should reflect selected table state.
 
 #### Reading State Without Subscribing
 
@@ -88,7 +88,7 @@ const tableState = table.store.state
 const pagination = table.store.state.pagination
 ```
 
-These reads are current-value reads. The `TableController` handles host invalidation through its subscriptions to the table store and options store. If the UI needs to stay reactive to table state changes, use `table.state`, `table.Subscribe`, or a TanStack Store subscription.
+These reads are current-value reads. The `TableController` handles host invalidation through its subscriptions to the table store and options store. If the UI needs to stay reactive to table state changes, use `table.state`, `table.subscribe`, or a TanStack Store subscription.
 
 #### Reading Reactive State with TableController
 
@@ -109,22 +109,28 @@ const table = this.tableController.table(
 table.state.pagination
 ```
 
-#### Selecting State with table.Subscribe
+#### Selecting State with table.subscribe
 
-Use `table.Subscribe` in templates to select a slice of table state while rendering.
+Use `table.subscribe` in templates to select a slice of table state while rendering.
 
 ```ts
-${table.Subscribe({
-  selector: (state) => ({
-    pagination: state.pagination,
-  }),
-  children: ({ pagination }) => html`
+private paginationSelector = (state) => ({
+  pagination: state.pagination,
+})
+
+${table.subscribe(
+  table.store,
+  this.paginationSelector,
+  ({ pagination }) => html`
     <span>Page ${pagination.pageIndex + 1}</span>
   `,
-})}
+)}
 ```
 
-`table.Subscribe` can also accept a `source`, but in the current Lit adapter host invalidation is wired through the full `table.store` subscription. Treat source mode as a render-time selection convenience, not a guarantee of source-only host invalidation.
+The template will only be evaluated when the selected state slice changes. The `table.subscribe` API is useful for fine-grained reactivity in templates.
+It is important to provide a stable reference for the selector function to avoid unnecessary re-renders. You can define the selector as a class property or method to ensure it remains stable across renders.
+
+
 
 ### Setting Table State
 

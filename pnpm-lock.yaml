@@ -63,7 +63,7 @@ importers:
         version: 4.0.3
       nx:
         specifier: ^22.7.5
-        version: 22.7.5
+        version: 22.7.5(debug@4.4.3)
       prettier:
         specifier: ^3.8.3
         version: 3.8.3
@@ -1911,6 +1911,31 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/lit-table':
+        specifier: workspace:*
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.3
+        version: 3.3.3
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.0.16
+        version: 8.0.16(@types/node@25.9.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)
+
+  examples/lit/basic-subscribe:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/lit-store':
+        specifier: ^0.13.2
+        version: 0.13.2(lit@3.3.3)
       '@tanstack/lit-table':
         specifier: workspace:*
         version: link:../../../packages/lit-table
@@ -8797,9 +8822,9 @@ importers:
 
   packages/lit-table:
     dependencies:
-      '@tanstack/store':
-        specifier: ^0.11.0
-        version: 0.11.0
+      '@tanstack/lit-store':
+        specifier: ^0.14.0
+        version: 0.14.0(lit@3.3.3)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -8887,13 +8912,13 @@ importers:
         version: 0.5.0(@angular/core@22.0.0(@angular/compiler@22.0.0)(rxjs@7.8.2))(@types/react@19.2.17)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.35(typescript@6.0.3))
       '@tanstack/react-devtools':
         specifier: '>=0.10.0'
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.6(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.6(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/table-devtools':
         specifier: workspace:*
         version: link:../table-devtools
       '@types/react-dom':
         specifier: '>=18.0.0'
-        version: 19.2.3(@types/react@19.2.16)
+        version: 19.2.3(@types/react@19.2.17)
       react-dom:
         specifier: '>=18'
         version: 19.2.6(react@19.2.7)
@@ -9237,6 +9262,7 @@ packages:
   '@angular/animations@22.0.0':
     resolution: {integrity: sha512-Klo9ZiRj5ykXPliUmwy0eXvDad079YMy+Ob4EITSFSXVLRy55qv64/8SvWNtKEQPelF50H9O2vULoqpIvdWoAw==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
+    deprecated: '@angular/animations is deprecated. Use `animate.enter` and `animate.leave` instead. For more information see: https://v22.angular.dev/guide/animations.'
     peerDependencies:
       '@angular/core': 22.0.0
 
@@ -9349,6 +9375,7 @@ packages:
   '@angular/platform-browser-dynamic@22.0.0':
     resolution: {integrity: sha512-xGOk/XLg+XiuuFa5FEMsrYSdkuKIdx2Xqo1kAGpIdjnI0o7qV8pVmW7S/1NMmEULnbmjzxjFUtNX5RPZ17iA/Q==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
+    deprecated: '@angular/platform-browser-dynamic is deprecated. Use `@angular/platform-browser` instead.'
     peerDependencies:
       '@angular/common': 22.0.0
       '@angular/compiler': 22.0.0
@@ -13741,6 +13768,16 @@ packages:
     resolution: {integrity: sha512-Psl+oDiidLvtctswkTQ1P6sQIihwrMLcdfQVfkLpO42oKwxWEr1lodWUHiOG5jFXsGwDDvpUv/WAdlmJF+yGpw==}
     hasBin: true
 
+  '@tanstack/lit-store@0.13.2':
+    resolution: {integrity: sha512-uAa5gQbmPOESokHM5t+AhQ3Ye8S2/bN+PB6CHKjHXixNN6aMDSQEtHoguPoMb3a3q/NeJ2NdiseyoUg4vsh/ng==}
+    peerDependencies:
+      lit: ^3.0.0
+
+  '@tanstack/lit-store@0.14.0':
+    resolution: {integrity: sha512-Y7aS5V8b5IdAhJQ+Jx+pNAuHLIyuZlI/qybIEFBOXVivsx/GSYUuQNCesLoiEH9RrBi8+pU5D+UeHPmpnNSIQg==}
+    peerDependencies:
+      lit: ^3.0.0
+
   '@tanstack/lit-virtual@3.13.29':
     resolution: {integrity: sha512-fnFZ2cFcOEskbLIzNwPgN1sZ9R4xxG3wWsD8WnHRbKlUZUs9qs1lyYiakXaIHHpKedYNbhmYaP9iYYGoXwYSYQ==}
     peerDependencies:
@@ -14108,9 +14145,6 @@ packages:
     resolution: {integrity: sha512-8TV6R3h2j7a91c+1DXdJi3Syo69zzIZbz7Lg5tORM5LEJG7X/E6a1V3drRyBRZq7/utz7A+c4OgYLiLcYGHG6w==}
     peerDependencies:
       '@types/react': '*'
-
-  '@types/react@19.2.16':
-    resolution: {integrity: sha512-esJiCAnl0kfpNdE69f3So4WJUXy95dLZydX0KwK46riIHDzHM7O9Vtf9xCHW0PXIqvgqNrswl522kA/5yx+F4w==}
 
   '@types/react@19.2.17':
     resolution: {integrity: sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw==}
@@ -23719,6 +23753,16 @@ snapshots:
       semver: 7.8.2
       yaml: 2.8.3
 
+  '@tanstack/lit-store@0.13.2(lit@3.3.3)':
+    dependencies:
+      '@tanstack/store': 0.11.0
+      lit: 3.3.3
+
+  '@tanstack/lit-store@0.14.0(lit@3.3.3)':
+    dependencies:
+      '@tanstack/store': 0.11.0
+      lit: 3.3.3
+
   '@tanstack/lit-virtual@3.13.29(lit@3.3.3)':
     dependencies:
       '@tanstack/virtual-core': 3.17.0
@@ -23771,11 +23815,11 @@ snapshots:
   '@tanstack/query-devtools@5.101.0':
     optional: true
 
-  '@tanstack/react-devtools@0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.6(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)':
+  '@tanstack/react-devtools@0.10.5(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.6(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)':
     dependencies:
       '@tanstack/devtools': 0.12.2(csstype@3.2.3)(solid-js@1.9.13)
-      '@types/react': 19.2.16
-      '@types/react-dom': 19.2.3(@types/react@19.2.16)
+      '@types/react': 19.2.17
+      '@types/react-dom': 19.2.3(@types/react@19.2.17)
       react: 19.2.7
       react-dom: 19.2.6(react@19.2.7)
     transitivePeerDependencies:
@@ -24178,10 +24222,6 @@ snapshots:
 
   '@types/range-parser@1.2.7': {}
 
-  '@types/react-dom@19.2.3(@types/react@19.2.16)':
-    dependencies:
-      '@types/react': 19.2.16
-
   '@types/react-dom@19.2.3(@types/react@19.2.17)':
     dependencies:
       '@types/react': 19.2.17
@@ -24189,10 +24229,6 @@ snapshots:
   '@types/react-transition-group@4.4.12(@types/react@19.2.17)':
     dependencies:
       '@types/react': 19.2.17
-
-  '@types/react@19.2.16':
-    dependencies:
-      csstype: 3.2.3
 
   '@types/react@19.2.17':
     dependencies:
@@ -24824,7 +24860,7 @@ snapshots:
       postcss: 8.5.13
       postcss-value-parser: 4.2.0
 
-  axios@1.16.0:
+  axios@1.16.0(debug@4.4.3):
     dependencies:
       follow-redirects: 1.16.0(debug@4.4.3)
       form-data: 4.0.5
@@ -27241,7 +27277,7 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
-  nx@22.7.5:
+  nx@22.7.5(debug@4.4.3):
     dependencies:
       '@emnapi/core': 1.4.5
       '@emnapi/runtime': 1.4.5
@@ -27256,7 +27292,7 @@ snapshots:
       ansi-styles: 4.3.0
       argparse: 2.0.1
       asynckit: 0.4.0
-      axios: 1.16.0
+      axios: 1.16.0(debug@4.4.3)
       balanced-match: 4.0.3
       base64-js: 1.5.1
       bl: 4.1.0
