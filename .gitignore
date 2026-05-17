@@ -63,6 +63,3 @@ vite.config.ts.timestamp-*
 Agents.md
 .agents/*
 terminalOutput
-
-# one-time scaffolding script — derived from _artifacts/skill_tree.yaml
-_artifacts/skill-labels.sh
