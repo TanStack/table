@@ -5,7 +5,9 @@ title: filterFn_includesStringSensitive
 
 # filterFn\_includesStringSensitive
 
-Filter function for checking if a string includes a given substring. (Case-sensitive)
+Keeps rows whose stringified column value includes the filter text.
+
+Matching is case-sensitive and empty filter values are auto-removed.
 
 ## Functions
 

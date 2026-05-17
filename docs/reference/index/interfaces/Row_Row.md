@@ -79,7 +79,7 @@ getAllCells: () => Cell<TFeatures, TData, unknown>[];
 
 Defined in: [core/rows/coreRowsFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L58)
 
-Returns all of the cells for the row.
+Builds one cell for each leaf column, including cells for hidden columns.
 
 #### Returns
 
@@ -95,7 +95,7 @@ getAllCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>;
 
 Defined in: [core/rows/coreRowsFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L54)
 
-Returns all of the cells for the row by column id.
+Builds a lookup of this row's cells keyed by leaf column id.
 
 #### Returns
 
@@ -159,7 +159,7 @@ getUniqueValues: <TValue>(columnId) => TValue[];
 
 Defined in: [core/rows/coreRowsFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L74)
 
-Returns a unique array of values from the row for a given columnId.
+Reads the values this row contributes to faceting/grouping for a column.
 
 #### Type Parameters
 
@@ -187,7 +187,7 @@ getValue: <TValue>(columnId) => TValue;
 
 Defined in: [core/rows/coreRowsFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L78)
 
-Returns the value from the row for a given columnId.
+Reads this row's accessor value for a column id and caches the result.
 
 #### Type Parameters
 

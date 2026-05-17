@@ -9,11 +9,12 @@ title: table_getGroupedSelectedRowModel
 function table_getGroupedSelectedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:220](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L220)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:229](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L229)
 
-Returns grouped selected row model for the table.
+Builds a row model containing selected rows from the grouped row model.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+If no row ids are selected, an empty row model is returned without walking
+the rows.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getGroupedSelectedRowModel(table)
+const selectedRows = table_getGroupedSelectedRowModel(table)
 ```

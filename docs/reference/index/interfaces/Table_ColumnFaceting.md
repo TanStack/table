@@ -5,7 +5,7 @@ title: Table_ColumnFaceting
 
 # Interface: Table\_ColumnFaceting\<TFeatures, TData\>
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L87)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L93)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:87](https:/
 getGlobalFacetedMinMaxValues: () => [number, number] | undefined;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L94)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L100)
 
 Returns the min and max values for the global filter.
 
@@ -41,9 +41,9 @@ Returns the min and max values for the global filter.
 getGlobalFacetedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L98)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L104)
 
-Returns the row model for the table after **global** filtering has been applied.
+Computes the row model used to derive global facet values.
 
 #### Returns
 
@@ -57,7 +57,7 @@ Returns the row model for the table after **global** filtering has been applied.
 getGlobalFacetedUniqueValues: () => Map<any, number>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L102)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L108)
 
 Returns the faceted unique values for the global filter.
 

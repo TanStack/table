@@ -9,11 +9,13 @@ title: table_toggleAllRowsExpanded
 function table_toggleAllRowsExpanded<TFeatures, TData>(table, expanded?): void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L75)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L81)
 
-Toggles all rows expanded for the table.
+Expands or collapses every row.
 
-This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+Passing `true` stores the special expanded-all state. Passing `false` stores
+an empty map. Omitting the value toggles based on whether all rows are
+currently expanded.
 
 ## Type Parameters
 

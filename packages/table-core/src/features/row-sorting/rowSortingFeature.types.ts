@@ -115,7 +115,7 @@ export interface Column_RowSorting<
    */
   getFirstSortDir: () => SortDirection
   /**
-   * Returns the current sort direction of this column.
+   * Reads this column's current sort direction, or `false` when unsorted.
    */
   getIsSorted: () => false | SortDirection
   /**
@@ -123,7 +123,7 @@ export interface Column_RowSorting<
    */
   getNextSortingOrder: () => SortDirection | false
   /**
-   * Returns the index position of this column's sorting within the sorting state
+   * Finds this column's position in the ordered sorting state.
    */
   getSortIndex: () => number
   /**
@@ -131,7 +131,7 @@ export interface Column_RowSorting<
    */
   getSortFn: () => SortFn<TFeatures, TData>
   /**
-   * Returns a function that can be used to toggle this column's sorting state. This is useful for attaching a click handler to the column header.
+   * Creates a header/control handler that toggles this column's sorting state.
    */
   getToggleSortingHandler: () => undefined | ((event: unknown) => void)
   /**
@@ -142,7 +142,7 @@ export interface Column_RowSorting<
 
 export interface TableOptions_RowSorting {
   /**
-   * Enables/disables the ability to remove multi-sorts
+   * Allows multi-sort toggles to remove a column from sorting state.
    */
   enableMultiRemove?: boolean
   /**
@@ -188,11 +188,13 @@ export interface Table_RowSorting<
   TData extends RowData,
 > {
   /**
-   * Resets the **sorting** state to `initialState.sorting`, or `true` can be passed to force a default blank state reset to `[]`.
+   * Resets `sorting` to `initialState.sorting`.
+   *
+   * Pass `true` to ignore initial state and reset to `[]`.
    */
   resetSorting: (defaultState?: boolean) => void
   /**
-   * Sets sorting state using a value or updater.
+   * Updates sorting state with a next ordered array or updater function.
    */
   setSorting: (updater: Updater<SortingState>) => void
 }
@@ -202,11 +204,11 @@ export interface Table_RowModels_Sorted<
   TData extends RowData,
 > {
   /**
-   * Returns the row model for the table before any sorting has been applied.
+   * Reads the row model immediately before sorting.
    */
   getPreSortedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns the row model for the table after sorting has been applied.
+   * Resolves the row model after sorting has been applied.
    */
   getSortedRowModel: () => RowModel<TFeatures, TData>
 }

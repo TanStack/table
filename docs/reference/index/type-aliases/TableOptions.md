@@ -22,7 +22,13 @@ type TableOptions<TFeatures, TData> = TableOptions_Core<TFeatures, TData> & Unio
 | "rowSortingFeature" extends keyof TFeatures ? TableOptions_RowSorting : never> & ExtractFeatureTypes<"TableOptions", TFeatures> & TableOptions_Plugins<TFeatures, TData> & DebugOptions<TFeatures>;
 ```
 
-Defined in: [types/TableOptions.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L51)
+Defined in: [types/TableOptions.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L62)
+
+Complete table options for a specific feature set.
+
+Feature options are included only when their feature is present in
+`TFeatures`, then custom feature/plugin options and debug options are mixed
+in.
 
 ## Type Parameters
 

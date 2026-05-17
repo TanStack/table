@@ -15,9 +15,12 @@ Defined in: [features/column-sizing/columnSizingFeature.types.ts:67](https://git
 getAfter: (position?) => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L71)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L74)
 
-Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all succeeding (right) headers in relation to the current column.
+Measures the offset from this column's end edge to the end of its region.
+
+Pass a pinned region to measure within that region. The value is the sum
+of visible leaf column sizes after this column.
 
 #### Parameters
 
@@ -37,9 +40,9 @@ Returns the offset measurement along the row-axis (usually the x-axis for standa
 getSize: () => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L75)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L78)
 
-Returns the current size of the column.
+Resolves the column's current size after state and min/max constraints.
 
 #### Returns
 
@@ -53,9 +56,13 @@ Returns the current size of the column.
 getStart: (position?) => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L79)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L86)
 
-Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all preceding (left) headers in relation to the current column.
+Measures the offset from the start of this column's region to its start
+edge.
+
+Pass a pinned region to measure within that region. The value is the sum
+of visible leaf column sizes before this column.
 
 #### Parameters
 
@@ -75,7 +82,7 @@ Returns the offset measurement along the row-axis (usually the x-axis for standa
 resetSize: () => void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:83](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L83)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L90)
 
 Resets the column to its initial size.
 

@@ -9,6 +9,6 @@ title: filterFn_arrIncludesAll
 const filterFn_arrIncludesAll: FilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:321](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L321)
+Defined in: [fns/filterFns.ts:352](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L352)
 
-Filter function for checking if an array includes all of the given values.
+Keeps rows whose array column value includes every filter value.

@@ -5,7 +5,9 @@ title: filterFn_equals
 
 # filterFn\_equals
 
-Filter function for checking if a value is exactly equal to a given value. (JS === comparison)
+Keeps rows whose column value is strictly equal to the filter value.
+
+Uses JavaScript `===` comparison and auto-removes empty filter values.
 
 ## Functions
 

@@ -5,7 +5,7 @@ title: Table_RowModels_Faceted
 
 # Interface: Table\_RowModels\_Faceted\<TFeatures, TData\>
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L24)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L27)
 
 ## Type Parameters
 
@@ -25,10 +25,11 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:24](https:/
 getFacetedMinMaxValues: () => [number, number] | undefined;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L32)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L36)
 
-A function that **computes and returns** a min/max tuple derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
-> Requires that you pass a valid `facetedMinMaxValues` row model factory in `_rowModels`. A default implementation is provided via the exported `createFacetedMinMaxValues` function.
+Computes min/max numeric facet values for the active faceting context.
+
+Requires a `facetedMinMaxValues` row-model factory in `_rowModels`.
 
 #### Returns
 
@@ -42,10 +43,11 @@ A function that **computes and returns** a min/max tuple derived from `column.ge
 getFacetedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L37)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L42)
 
-Returns the row model with all other column filters applied, excluding its own filter. Useful for displaying faceted result counts.
-> Requires that you pass a valid `facetedRowModel` row model factory in `_rowModels`. A default implementation is provided via the exported `createFacetedRowModel` function.
+Computes the row model used to derive facet values.
+
+Requires a `facetedRowModel` row-model factory in `_rowModels`.
 
 #### Returns
 
@@ -59,10 +61,11 @@ Returns the row model with all other column filters applied, excluding its own f
 getFacetedUniqueValues: () => Map<any, number>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L42)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L48)
 
-A function that **computes and returns** a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
-> Requires that you pass a valid `facetedUniqueValues` row model factory in `_rowModels`. A default implementation is provided via the exported `createFacetedUniqueValues` function.
+Computes unique facet values and occurrence counts.
+
+Requires a `facetedUniqueValues` row-model factory in `_rowModels`.
 
 #### Returns
 

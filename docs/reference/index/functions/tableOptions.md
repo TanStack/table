@@ -16,11 +16,12 @@ overloads preserving table option inference at compile time.
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "columns"> & object;
 ```
 
-Defined in: [helpers/tableOptions.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L10)
+Defined in: [helpers/tableOptions.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L11)
 
-Returns table options while preserving generic inference.
+Preserves table option inference when reusable options omit `columns`.
 
-This helper is useful when composing reusable table options outside of a framework adapter call.
+This is useful for composing shared options that will receive columns later
+from a framework adapter or table factory.
 
 ### Type Parameters
 
@@ -48,9 +49,9 @@ This helper is useful when composing reusable table options outside of a framewo
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "data"> & object;
 ```
 
-Defined in: [helpers/tableOptions.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L24)
+Defined in: [helpers/tableOptions.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L25)
 
-Returns table options while preserving generic inference when `data` is supplied later.
+Preserves table option inference when reusable options omit `data`.
 
 ### Type Parameters
 
@@ -78,9 +79,10 @@ Returns table options while preserving generic inference when `data` is supplied
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "data" | "columns"> & object;
 ```
 
-Defined in: [helpers/tableOptions.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L38)
+Defined in: [helpers/tableOptions.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L40)
 
-Returns table options while preserving generic inference when both `data` and `columns` are supplied later.
+Preserves table option inference when reusable options omit both `data` and
+`columns`.
 
 ### Type Parameters
 
@@ -108,9 +110,9 @@ Returns table options while preserving generic inference when both `data` and `c
 function tableOptions<TFeatures, TData>(options): TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [helpers/tableOptions.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L52)
+Defined in: [helpers/tableOptions.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L54)
 
-Returns a fully specified table options object without changing its runtime value.
+Preserves inference for a fully specified table options object.
 
 ### Type Parameters
 
@@ -138,9 +140,9 @@ Returns a fully specified table options object without changing its runtime valu
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features">;
 ```
 
-Defined in: [helpers/tableOptions.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L60)
+Defined in: [helpers/tableOptions.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L62)
 
-Returns table options while preserving generic inference when `_features` is supplied by a wrapper.
+Preserves inference when a wrapper supplies `_features`.
 
 ### Type Parameters
 
@@ -168,9 +170,9 @@ Returns table options while preserving generic inference when `_features` is sup
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "_features">;
 ```
 
-Defined in: [helpers/tableOptions.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L70)
+Defined in: [helpers/tableOptions.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L72)
 
-Returns table options while preserving generic inference when `data` and `_features` are supplied by a wrapper.
+Preserves inference when a wrapper supplies both `data` and `_features`.
 
 ### Type Parameters
 
@@ -198,9 +200,9 @@ Returns table options while preserving generic inference when `data` and `_featu
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "columns" | "_features">;
 ```
 
-Defined in: [helpers/tableOptions.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L80)
+Defined in: [helpers/tableOptions.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L82)
 
-Returns table options while preserving generic inference when `columns` and `_features` are supplied by a wrapper.
+Preserves inference when a wrapper supplies both `columns` and `_features`.
 
 ### Type Parameters
 
@@ -228,9 +230,10 @@ Returns table options while preserving generic inference when `columns` and `_fe
 function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "columns" | "_features">;
 ```
 
-Defined in: [helpers/tableOptions.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L90)
+Defined in: [helpers/tableOptions.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L93)
 
-Returns table options while preserving generic inference when `data`, `columns`, and `_features` are supplied by a wrapper.
+Preserves inference when a wrapper supplies `data`, `columns`, and
+`_features`.
 
 ### Type Parameters
 

@@ -5,7 +5,7 @@ title: Table_RowModels_Paginated
 
 # Interface: Table\_RowModels\_Paginated\<TFeatures, TData\>
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L112)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L119)
 
 ## Type Parameters
 
@@ -25,9 +25,9 @@ Defined in: [features/row-pagination/rowPaginationFeature.types.ts:112](https://
 getPaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L119)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L126)
 
-Returns the row model for the table after pagination has been applied.
+Resolves the row model after pagination has sliced the current page.
 
 #### Returns
 
@@ -41,9 +41,9 @@ Returns the row model for the table after pagination has been applied.
 getPrePaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L123)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L130)
 
-Returns the row model for the table before any pagination has been applied.
+Reads the row model immediately before pagination.
 
 #### Returns
 

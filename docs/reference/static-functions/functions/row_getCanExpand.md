@@ -9,11 +9,12 @@ title: row_getCanExpand
 function row_getCanExpand<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:304](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L304)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:319](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L319)
 
-Returns whether a row can use expand.
+Checks whether this row can be expanded.
 
-This evaluates row data, table options, and feature-specific enablement rules.
+`options.getRowCanExpand` wins when provided. Otherwise rows can expand when
+expanding is enabled and the row has subRows.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This evaluates row data, table options, and feature-specific enablement rules.
 ## Example
 
 ```ts
-const value = row_getCanExpand(row)
+const canExpand = row_getCanExpand(row)
 ```

@@ -9,11 +9,12 @@ title: row_getToggleSelectedHandler
 function row_getToggleSelectedHandler<TFeatures, TData>(row): (e) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:563](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L563)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:582](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L582)
 
-Returns an event handler for toggling selected handler.
+Creates a checkbox-style handler that selects or deselects this row.
 
-The handler is intended for direct use in row-level controls such as expansion or selection buttons.
+The handler is a no-op when the row cannot be selected and reads
+`event.target.checked`.
 
 ## Type Parameters
 
@@ -50,5 +51,5 @@ The handler is intended for direct use in row-level controls such as expansion o
 ## Example
 
 ```ts
-const value = row_getToggleSelectedHandler(row)
+const onChange = row_getToggleSelectedHandler(row)
 ```

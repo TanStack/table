@@ -9,11 +9,12 @@ title: table_getIsSomeRowsSelected
 function table_getIsSomeRowsSelected<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:312](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L312)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:323](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L323)
 
-Returns is some rows selected for the table.
+Checks whether selection is partially applied across filtered rows.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The result is true when at least one row id is selected but fewer ids are
+selected than the current filtered flat row count.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getIsSomeRowsSelected(table)
+const someRowsSelected = table_getIsSomeRowsSelected(table)
 ```

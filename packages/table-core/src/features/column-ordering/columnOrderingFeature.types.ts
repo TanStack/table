@@ -19,15 +19,22 @@ export interface TableOptions_ColumnOrdering {
 
 export interface Column_ColumnOrdering {
   /**
-   * Returns the index of the column in the order of the visible columns. Optionally pass a `position` parameter to get the index of the column in a sub-section of the table
+   * Finds this column's zero-based index among visible columns.
+   *
+   * Pass `'left'`, `'center'`, or `'right'` to measure within that pinned
+   * region instead of the full visible leaf order.
    */
   getIndex: (position?: ColumnPinningPosition | 'center') => number
   /**
-   * Returns `true` if the column is the first column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the first in a sub-section of the table.
+   * Checks whether this column is the first visible column.
+   *
+   * Pass a pinned region to check the first column within that region.
    */
   getIsFirstColumn: (position?: ColumnPinningPosition | 'center') => boolean
   /**
-   * Returns `true` if the column is the last column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the last in a sub-section of the table.
+   * Checks whether this column is the last visible column.
+   *
+   * Pass a pinned region to check the last column within that region.
    */
   getIsLastColumn: (position?: ColumnPinningPosition | 'center') => boolean
 }
@@ -41,11 +48,13 @@ export interface Table_ColumnOrdering<
   TData extends RowData,
 > {
   /**
-   * Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be passed to force a default blank state reset to `[]`.
+   * Resets `columnOrder` to `initialState.columnOrder`.
+   *
+   * Pass `true` to ignore initial state and reset to `[]`.
    */
   resetColumnOrder: (defaultState?: boolean) => void
   /**
-   * Sets column order state using a value or updater.
+   * Updates column order state with a next ordered id array or updater function.
    */
   setColumnOrder: (updater: Updater<ColumnOrderState>) => void
 }

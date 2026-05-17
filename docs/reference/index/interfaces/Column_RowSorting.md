@@ -123,7 +123,7 @@ getIsSorted: () => false | SortDirection;
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L120)
 
-Returns the current sort direction of this column.
+Reads this column's current sort direction, or `false` when unsorted.
 
 #### Returns
 
@@ -171,7 +171,7 @@ getSortIndex: () => number;
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L128)
 
-Returns the index position of this column's sorting within the sorting state
+Finds this column's position in the ordered sorting state.
 
 #### Returns
 
@@ -187,7 +187,7 @@ getToggleSortingHandler: () => (event) => void | undefined;
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L136)
 
-Returns a function that can be used to toggle this column's sorting state. This is useful for attaching a click handler to the column header.
+Creates a header/control handler that toggles this column's sorting state.
 
 #### Returns
 

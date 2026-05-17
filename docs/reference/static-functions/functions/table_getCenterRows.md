@@ -9,11 +9,12 @@ title: table_getCenterRows
 function table_getCenterRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L180)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:188](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L188)
 
-Returns center rows for the table.
+Resolves rows that are not pinned to top or bottom.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The current row model is filtered by `state.rowPinning.top` and
+`state.rowPinning.bottom`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getCenterRows(table)
+const rows = table_getCenterRows(table)
 ```

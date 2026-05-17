@@ -9,11 +9,12 @@ title: row_getCanMultiSelect
 function row_getCanMultiSelect<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:541](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L541)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:559](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L559)
 
-Returns whether a row can use multi select.
+Checks whether this row can be selected alongside other rows.
 
-This evaluates row data, table options, and feature-specific enablement rules.
+`options.enableMultiRowSelection` may be a boolean or a row predicate; it
+defaults to `true`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This evaluates row data, table options, and feature-specific enablement rules.
 ## Example
 
 ```ts
-const value = row_getCanMultiSelect(row)
+const canMultiSelect = row_getCanMultiSelect(row)
 ```

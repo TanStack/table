@@ -9,11 +9,11 @@ title: row_getToggleExpandedHandler
 function row_getToggleExpandedHandler<TFeatures, TData>(row): () => void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:349](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L349)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:364](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L364)
 
-Returns an event handler for toggling expanded handler.
+Creates a row control handler that toggles this row's expanded state.
 
-The handler is intended for direct use in row-level controls such as expansion or selection buttons.
+The handler is a no-op when the row cannot expand.
 
 ## Type Parameters
 
@@ -44,5 +44,5 @@ The handler is intended for direct use in row-level controls such as expansion o
 ## Example
 
 ```ts
-const value = row_getToggleExpandedHandler(row)
+const onClick = row_getToggleExpandedHandler(row)
 ```

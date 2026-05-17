@@ -12,13 +12,14 @@ import type {
 // State Utils
 
 /**
- * Returns the default row pinning state.
+ * Creates the default row pinning state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * Both pinning regions start empty. Reset APIs use this value when
+ * `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultRowPinningState()
+ * const pinning = getDefaultRowPinningState()
  * ```
  */
 export function getDefaultRowPinningState(): RowPinningState {
@@ -29,13 +30,14 @@ export function getDefaultRowPinningState(): RowPinningState {
 }
 
 /**
- * Updates the table's row pinning state slice.
+ * Routes a row pinning updater through the table's row-pinning change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next `{ top, bottom }` state or a function of the
+ * previous state, matching the instance `table.setRowPinning` behavior.
  *
  * @example
  * ```ts
- * table_setRowPinning(table, (old) => old)
+ * table_setRowPinning(table, (old) => ({ ...old, top: [rowId] }))
  * ```
  */
 export function table_setRowPinning<
@@ -49,9 +51,11 @@ export function table_setRowPinning<
 }
 
 /**
- * Resets the table's row pinning state slice.
+ * Resets `rowPinning` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.rowPinning` when it
+ * exists. Passing `true` ignores initial state and resets to empty top/bottom
+ * arrays.
  *
  * @example
  * ```ts
@@ -76,13 +80,14 @@ export function table_resetRowPinning<
 // Table Utils
 
 /**
- * Returns is some rows pinned for the table.
+ * Checks whether any rows are pinned.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Omit `position` to check both regions, or pass `'top'`/`'bottom'` to inspect
+ * one region.
  *
  * @example
  * ```ts
- * const value = table_getIsSomeRowsPinned(table)
+ * const hasPinnedRows = table_getIsSomeRowsPinned(table)
  * ```
  */
 export function table_getIsSomeRowsPinned<
@@ -134,13 +139,14 @@ function table_getPinnedRows<
 }
 
 /**
- * Returns top rows for the table.
+ * Resolves the visible rows pinned to the top region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The result follows `state.rowPinning.top` order and marks each row with
+ * `position = 'top'`.
  *
  * @example
  * ```ts
- * const value = table_getTopRows(table)
+ * const rows = table_getTopRows(table)
  * ```
  */
 export function table_getTopRows<
@@ -151,13 +157,14 @@ export function table_getTopRows<
 }
 
 /**
- * Returns bottom rows for the table.
+ * Resolves the visible rows pinned to the bottom region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The result follows `state.rowPinning.bottom` order and marks each row with
+ * `position = 'bottom'`.
  *
  * @example
  * ```ts
- * const value = table_getBottomRows(table)
+ * const rows = table_getBottomRows(table)
  * ```
  */
 export function table_getBottomRows<
@@ -168,13 +175,14 @@ export function table_getBottomRows<
 }
 
 /**
- * Returns center rows for the table.
+ * Resolves rows that are not pinned to top or bottom.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The current row model is filtered by `state.rowPinning.top` and
+ * `state.rowPinning.bottom`.
  *
  * @example
  * ```ts
- * const value = table_getCenterRows(table)
+ * const rows = table_getCenterRows(table)
  * ```
  */
 export function table_getCenterRows<
@@ -192,13 +200,14 @@ export function table_getCenterRows<
 // Row Utils
 
 /**
- * Returns whether a row can use pin.
+ * Checks whether this row can be pinned.
  *
- * This evaluates row data, table options, and feature-specific enablement rules.
+ * `options.enableRowPinning` may be a boolean or a row predicate; it defaults
+ * to `true`.
  *
  * @example
  * ```ts
- * const value = row_getCanPin(row)
+ * const canPin = row_getCanPin(row)
  * ```
  */
 export function row_getCanPin<
@@ -213,13 +222,14 @@ export function row_getCanPin<
 }
 
 /**
- * Returns is pinned for a row.
+ * Reads this row's current pinning region.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Rows listed in `state.rowPinning.top` return `'top'`, rows listed in
+ * `bottom` return `'bottom'`, and unpinned rows return `false`.
  *
  * @example
  * ```ts
- * const value = row_getIsPinned(row)
+ * const position = row_getIsPinned(row)
  * ```
  */
 export function row_getIsPinned<
@@ -237,13 +247,13 @@ export function row_getIsPinned<
 }
 
 /**
- * Returns pinned index for a row.
+ * Finds this row's visible index within its pinned region.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Unpinned rows return `-1`.
  *
  * @example
  * ```ts
- * const value = row_getPinnedIndex(row)
+ * const index = row_getPinnedIndex(row)
  * ```
  */
 export function row_getPinnedIndex<

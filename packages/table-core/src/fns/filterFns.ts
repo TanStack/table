@@ -6,7 +6,9 @@ import type { FilterFn } from '../features/column-filtering/columnFilteringFeatu
 // Basic filters
 
 /**
- * Filter function for checking if a value is exactly equal to a given value. (JS === comparison)
+ * Keeps rows whose column value is strictly equal to the filter value.
+ *
+ * Uses JavaScript `===` comparison and auto-removes empty filter values.
  */
 export const filterFn_equals: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -22,7 +24,10 @@ export const filterFn_equals: FilterFn<any, any> = <
 filterFn_equals.autoRemove = (val: any) => testFalsy(val)
 
 /**
- * Filter function for checking if a value is weakly equal to a given value. (JS == comparison)
+ * Keeps rows whose column value is loosely equal to the filter value.
+ *
+ * Uses JavaScript `==` comparison and auto-removes empty filter values. This is
+ * useful for matching string input against numeric row values.
  */
 export const filterFn_weakEquals: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -40,7 +45,9 @@ filterFn_weakEquals.autoRemove = (val: any) => testFalsy(val)
 // String filters
 
 /**
- * Filter function for checking if a string includes a given substring. (Case-sensitive)
+ * Keeps rows whose stringified column value includes the filter text.
+ *
+ * Matching is case-sensitive and empty filter values are auto-removed.
  */
 export const filterFn_includesStringSensitive: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -58,7 +65,10 @@ export const filterFn_includesStringSensitive: FilterFn<any, any> = <
 filterFn_includesStringSensitive.autoRemove = (val: any) => testFalsy(val)
 
 /**
- * Filter function for checking if a string includes a given substring. (Non-case-sensitive)
+ * Keeps rows whose stringified column value includes the filter text.
+ *
+ * Both values are lowercased before comparison, and empty filter values are
+ * auto-removed.
  */
 export const filterFn_includesString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -80,7 +90,10 @@ export const filterFn_includesString: FilterFn<any, any> = <
 filterFn_includesString.autoRemove = (val: any) => testFalsy(val)
 
 /**
- * Filter function for checking if a string is exactly equal to a given string. (Non-case-sensitive)
+ * Keeps rows whose stringified column value equals the filter text.
+ *
+ * Both values are lowercased before comparison, and empty filter values are
+ * auto-removed.
  */
 export const filterFn_equalsString: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -99,7 +112,9 @@ export const filterFn_equalsString: FilterFn<any, any> = <
 filterFn_equalsString.autoRemove = (val: any) => testFalsy(val)
 
 /**
- * Filter function for checking if a string is exactly equal to a given string. (Case-sensitive)
+ * Keeps rows whose stringified column value exactly equals the filter text.
+ *
+ * Matching is case-sensitive and empty filter values are auto-removed.
  */
 export const filterFn_equalsStringSensitive: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -117,7 +132,10 @@ filterFn_equalsStringSensitive.autoRemove = (val: any) => testFalsy(val)
 // Number filters
 
 /**
- * Filter function for checking if a number is greater than a given number.
+ * Keeps rows whose value is greater than the filter value.
+ *
+ * Numeric values are compared numerically when both sides can be coerced to
+ * numbers; otherwise normalized strings are compared.
  */
 export const filterFn_greaterThan: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -144,7 +162,9 @@ export const filterFn_greaterThan: FilterFn<any, any> = <
 filterFn_greaterThan.resolveFilterValue = (val: any) => testFalsy(val)
 
 /**
- * Filter function for checking if a number is greater than or equal to a given number.
+ * Keeps rows whose value is greater than or equal to the filter value.
+ *
+ * Delegates to the built-in greater-than and equality comparisons.
  */
 export const filterFn_greaterThanOrEqualTo: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -163,7 +183,9 @@ export const filterFn_greaterThanOrEqualTo: FilterFn<any, any> = <
 filterFn_greaterThanOrEqualTo.resolveFilterValue = (val: any) => testFalsy(val)
 
 /**
- * Filter function for checking if a number is less than a given number.
+ * Keeps rows whose value is less than the filter value.
+ *
+ * This is implemented as the inverse of greater-than-or-equal comparison.
  */
 export const filterFn_lessThan: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -179,7 +201,9 @@ export const filterFn_lessThan: FilterFn<any, any> = <
 filterFn_lessThan.resolveFilterValue = (val: any) => testFalsy(val)
 
 /**
- * Filter function for checking if a number is less than or equal to a given number.
+ * Keeps rows whose value is less than or equal to the filter value.
+ *
+ * This is implemented as the inverse of greater-than comparison.
  */
 export const filterFn_lessThanOrEqualTo: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -197,7 +221,9 @@ filterFn_lessThanOrEqualTo.resolveFilterValue = (val: any) => testFalsy(val)
 // Range filters
 
 /**
- * Filter function for checking if a number or a string is between two given values.
+ * Keeps rows whose value falls between an exclusive min/max pair.
+ *
+ * Blank range endpoints are treated as open-ended.
  */
 const filterFn_between: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -218,7 +244,9 @@ const filterFn_between: FilterFn<any, any> = <
 filterFn_between.autoRemove = (val: any) => !val
 
 /**
- * Filter function for checking if a number or a string is between two given values or equal to them.
+ * Keeps rows whose value falls between an inclusive min/max pair.
+ *
+ * Blank range endpoints are treated as open-ended.
  */
 const filterFn_betweenInclusive: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -239,7 +267,10 @@ const filterFn_betweenInclusive: FilterFn<any, any> = <
 filterFn_betweenInclusive.autoRemove = (val: any) => !val
 
 /**
- * Filter function for checking if a number is within a given range.
+ * Keeps rows whose numeric value is inside an inclusive `[min, max]` range.
+ *
+ * Filter values are normalized so blank endpoints become open-ended and
+ * reversed endpoints are swapped.
  */
 export const filterFn_inNumberRange: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -282,7 +313,7 @@ filterFn_inNumberRange.autoRemove = (val: any) =>
 // Array filters
 
 /**
- * Filter function for checking if an array has a given value.
+ * Keeps rows whose scalar column value equals at least one filter value.
  */
 export const filterFn_arrHas: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -296,7 +327,7 @@ export const filterFn_arrHas: FilterFn<any, any> = <
 }
 
 /**
- * Filter function for checking if an array includes a given value.
+ * Keeps rows whose array or string column value includes at least one filter value.
  */
 export const filterFn_arrIncludes: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -316,7 +347,7 @@ export const filterFn_arrIncludes: FilterFn<any, any> = <
 filterFn_arrIncludes.autoRemove = (val: any) => testFalsy(val) || !val?.length
 
 /**
- * Filter function for checking if an array includes all of the given values.
+ * Keeps rows whose array column value includes every filter value.
  */
 export const filterFn_arrIncludesAll: FilterFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -335,7 +366,7 @@ filterFn_arrIncludesAll.autoRemove = (val: any) =>
   testFalsy(val) || !val?.length
 
 /**
- * Filter function for checking if an array includes any of the given values.
+ * Keeps rows whose array column value includes at least one filter value.
  */
 export const filterFn_arrIncludesSome: FilterFn<any, any> = <
   TFeatures extends TableFeatures,

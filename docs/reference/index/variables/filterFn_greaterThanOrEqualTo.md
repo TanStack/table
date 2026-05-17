@@ -9,6 +9,8 @@ title: filterFn_greaterThanOrEqualTo
 const filterFn_greaterThanOrEqualTo: FilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L149)
+Defined in: [fns/filterFns.ts:169](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L169)
 
-Filter function for checking if a number is greater than or equal to a given number.
+Keeps rows whose value is greater than or equal to the filter value.
+
+Delegates to the built-in greater-than and equality comparisons.

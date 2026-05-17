@@ -9,11 +9,11 @@ title: row_getIsSomeSelected
 function row_getIsSomeSelected<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:463](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L463)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:478](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L478)
 
-Returns is some selected for a row.
+Checks whether some, but not all, selectable descendants are selected.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+This supports indeterminate selection UI for parent rows.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getIsSomeSelected(row)
+const partial = row_getIsSomeSelected(row)
 ```

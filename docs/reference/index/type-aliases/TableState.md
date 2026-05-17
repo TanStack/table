@@ -22,7 +22,12 @@ type TableState<TFeatures> = UnionToIntersection<
 | "rowSortingFeature" extends keyof TFeatures ? TableState_RowSorting : never> & ExtractFeatureTypes<"TableState", TFeatures> & TableState_Plugins<TFeatures>;
 ```
 
-Defined in: [types/TableState.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L23)
+Defined in: [types/TableState.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L29)
+
+Complete table state for a specific feature set.
+
+State slices are included only when their feature is present in `TFeatures`,
+then custom feature/plugin state is mixed in.
 
 ## Type Parameters
 

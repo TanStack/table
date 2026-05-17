@@ -47,23 +47,26 @@ export interface Table_RowPagination<
 > {
   _autoResetPageIndex: () => void
   /**
-   * Returns whether the table can go to the next page.
+   * Checks whether the current page index can move forward.
    */
   getCanNextPage: () => boolean
   /**
-   * Returns whether the table can go to the previous page.
+   * Checks whether the current page index can move backward.
    */
   getCanPreviousPage: () => boolean
   /**
-   * Returns the page count. If manually paginating or controlling the pagination state, this will come directly from the `options.pageCount` table option, otherwise it will be calculated from the table data using the total row count and current page size.
+   * Resolves the current page count from `options.pageCount` or row count and
+   * page size.
    */
   getPageCount: () => number
   /**
-   * Returns the row count. If manually paginating or controlling the pagination state, this will come directly from the `options.rowCount` table option, otherwise it will be calculated from the table data.
+   * Resolves the row count used for pagination math.
+   *
+   * `options.rowCount` wins; otherwise the pre-paginated row model is counted.
    */
   getRowCount: () => number
   /**
-   * Returns an array of page options (zero-index-based) for the current page size.
+   * Builds zero-based page indexes for the current page count.
    */
   getPageOptions: () => Array<number>
   /**
@@ -83,16 +86,20 @@ export interface Table_RowPagination<
    */
   lastPage: () => void
   /**
-   * Resets the page index to its initial state. If `defaultState` is `true`, the page index will be reset to `0` regardless of initial state.
+   * Resets `pagination.pageIndex` to initial state, or to `0` when
+   * `defaultState` is `true`.
    */
   resetPageIndex: (defaultState?: boolean) => void
   /**
-   * Resets the page size to its initial state. If `defaultState` is `true`, the page size will be reset to `10` regardless of initial state.
+   * Resets `pagination.pageSize` to initial state, or to `10` when
+   * `defaultState` is `true`.
    */
   resetPageSize: (defaultState?: boolean) => void
   /**
-   * Resets pagination state to `initialState.pagination`. Pass `true` to reset
-   * to the feature default of `{ pageIndex: 0, pageSize: 10 }`.
+   * Resets `pagination` to `initialState.pagination`.
+   *
+   * Pass `true` to ignore initial state and reset to
+   * `{ pageIndex: 0, pageSize: 10 }`.
    */
   resetPagination: (defaultState?: boolean) => void
   /**
@@ -104,7 +111,7 @@ export interface Table_RowPagination<
    */
   setPageSize: (updater: Updater<number>) => void
   /**
-   * Sets pagination state using a value or updater.
+   * Updates pagination state with a next state or updater function.
    */
   setPagination: (updater: Updater<PaginationState>) => void
 }
@@ -114,11 +121,11 @@ export interface Table_RowModels_Paginated<
   TData extends RowData,
 > {
   /**
-   * Returns the row model for the table after pagination has been applied.
+   * Resolves the row model after pagination has sliced the current page.
    */
   getPaginatedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns the row model for the table before any pagination has been applied.
+   * Reads the row model immediately before pagination.
    */
   getPrePaginatedRowModel: () => RowModel<TFeatures, TData>
 }

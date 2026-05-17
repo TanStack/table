@@ -5,7 +5,7 @@ title: CachedRowModel_Sorted
 
 # Interface: CachedRowModel\_Sorted\<TFeatures, TData\>
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:228](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L228)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:230](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L230)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:228](https://github
 sortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:232](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L232)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:234](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L234)
 
 #### Returns
 

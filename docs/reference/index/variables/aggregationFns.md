@@ -9,7 +9,7 @@ title: aggregationFns
 const aggregationFns: object;
 ```
 
-Defined in: [fns/aggregationFns.ts:225](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L225)
+Defined in: [fns/aggregationFns.ts:249](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L249)
 
 The built-in aggregation function registry.
 

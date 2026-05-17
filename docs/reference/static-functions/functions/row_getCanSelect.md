@@ -9,11 +9,12 @@ title: row_getCanSelect
 function row_getCanSelect<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:497](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L497)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:513](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L513)
 
-Returns whether a row can use select.
+Checks whether this row can be selected.
 
-This evaluates row data, table options, and feature-specific enablement rules.
+`options.enableRowSelection` may be a boolean or a row predicate; it defaults
+to `true`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This evaluates row data, table options, and feature-specific enablement rules.
 ## Example
 
 ```ts
-const value = row_getCanSelect(row)
+const canSelect = row_getCanSelect(row)
 ```

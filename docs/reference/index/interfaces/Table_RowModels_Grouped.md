@@ -5,7 +5,7 @@ title: Table_RowModels_Grouped
 
 # Interface: Table\_RowModels\_Grouped\<TFeatures, TData\>
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:189](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L189)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:193](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L193)
 
 ## Type Parameters
 
@@ -25,9 +25,9 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:189](https:
 getGroupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:196](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L196)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:200](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L200)
 
-Returns the row model for the table after grouping has been applied.
+Resolves the row model after grouping and aggregation have been applied.
 
 #### Returns
 
@@ -41,9 +41,9 @@ Returns the row model for the table after grouping has been applied.
 getPreGroupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:200](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L200)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:204](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L204)
 
-Returns the row model for the table before any grouping has been applied.
+Reads the row model immediately before grouping.
 
 #### Returns
 

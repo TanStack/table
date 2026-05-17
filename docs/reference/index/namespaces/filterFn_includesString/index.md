@@ -5,7 +5,10 @@ title: filterFn_includesString
 
 # filterFn\_includesString
 
-Filter function for checking if a string includes a given substring. (Non-case-sensitive)
+Keeps rows whose stringified column value includes the filter text.
+
+Both values are lowercased before comparison, and empty filter values are
+auto-removed.
 
 ## Functions
 

@@ -9,6 +9,8 @@ title: aggregationFn_unique
 const aggregationFn_unique: AggregationFn<any, any>;
 ```
 
-Defined in: [fns/aggregationFns.ts:176](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L176)
+Defined in: [fns/aggregationFns.ts:196](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L196)
 
-Aggregation function for finding the unique values of a column.
+Collects unique leaf-row values for a grouped column.
+
+Values are compared with JavaScript `Set` semantics.

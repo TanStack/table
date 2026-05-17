@@ -13,7 +13,7 @@ function row_pin<TFeatures, TData>(
    includeParentRows?): void;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:276](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L276)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:286](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L286)
 
 Pins or unpins a row.
 

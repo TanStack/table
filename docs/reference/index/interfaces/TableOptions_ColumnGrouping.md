@@ -5,7 +5,7 @@ title: TableOptions_ColumnGrouping
 
 # Interface: TableOptions\_ColumnGrouping
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:152](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L152)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L154)
 
 ## Properties
 
@@ -15,9 +15,9 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:152](https:
 optional enableGrouping: boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L156)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:158](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L158)
 
-Enables/disables grouping for the table.
+Allows columns to be grouped for this table.
 
 ***
 
@@ -27,7 +27,7 @@ Enables/disables grouping for the table.
 optional groupedColumnMode: false | "reorder" | "remove";
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L160)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L162)
 
 Grouping columns are automatically reordered by default to the start of the columns list. If you would rather remove them or leave them as-is, set the appropriate mode here.
 
@@ -39,7 +39,7 @@ Grouping columns are automatically reordered by default to the start of the colu
 optional manualGrouping: boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:164](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L164)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:166](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L166)
 
 Enables manual grouping. If this option is set to `true`, the table will not automatically group rows using `getGroupedRowModel()` and instead will expect you to manually group the rows before passing them to the table. This is useful if you are doing server-side grouping and aggregation.
 
@@ -51,7 +51,7 @@ Enables manual grouping. If this option is set to `true`, the table will not aut
 optional onGroupingChange: OnChangeFn<GroupingState>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:170](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L170)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:172](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L172)
 
 Called with an updater when grouping state changes. Pair this with
 `state.grouping` when using external state; external atoms can own the

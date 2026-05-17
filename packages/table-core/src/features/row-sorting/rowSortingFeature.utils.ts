@@ -390,7 +390,7 @@ export function column_getCanMultiSort<
 }
 
 /**
- * Returns is sorted for a column.
+ * Reads this column's current sort direction.
  *
  * The result is `false` when the column is not sorted, otherwise `'asc'` or
  * `'desc'` based on the column's entry in `state.sorting`.

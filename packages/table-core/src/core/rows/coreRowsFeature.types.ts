@@ -49,11 +49,11 @@ export interface Row_Row<
   TData extends RowData,
 > extends Row_CoreProperties<TFeatures, TData> {
   /**
-   * Returns all of the cells for the row by column id.
+   * Builds a lookup of this row's cells keyed by leaf column id.
    */
   getAllCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>
   /**
-   * Returns all of the cells for the row.
+   * Builds one cell for each leaf column, including cells for hidden columns.
    */
   getAllCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
@@ -69,11 +69,11 @@ export interface Row_Row<
    */
   getParentRows: () => Array<Row<TFeatures, TData>>
   /**
-   * Returns a unique array of values from the row for a given columnId.
+   * Reads the values this row contributes to faceting/grouping for a column.
    */
   getUniqueValues: <TValue>(columnId: string) => Array<TValue>
   /**
-   * Returns the value from the row for a given columnId.
+   * Reads this row's accessor value for a column id and caches the result.
    */
   getValue: <TValue>(columnId: string) => TValue
   /**
