@@ -85,7 +85,7 @@ Key points:
 
 ## Lifecycle Diagram
 
-```
+```text
    constructor                    render()                       hostDisconnected
         │                             │                                  │
         ▼                             ▼                                  ▼

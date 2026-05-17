@@ -320,6 +320,10 @@ the `examples/angular/editable/` pattern with `flexRenderComponent` and a
 local edit signal.
 
 ```ts
+import { inject } from '@angular/core'
+import { injectMutation, QueryClient } from '@tanstack/angular-query-experimental'
+import { lastValueFrom } from 'rxjs'
+
 private readonly queryClient = inject(QueryClient)
 
 readonly toggleTodoMutation = injectMutation(() => ({

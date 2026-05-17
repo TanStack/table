@@ -1,6 +1,6 @@
 # Advanced state patterns — Preact
 
-Extended state patterns extracted from `SKILL.md`. The two essential patterns (`useTable` selector, `<table.Subscribe>` walls, and external atoms via `useCreateAtom` + `options.atoms`) remain inline in the SKILL; this file covers the additional patterns.
+Extended state patterns extracted from `SKILL.md`. The three essential patterns (`useTable` selector, `<table.Subscribe>` walls, and external atoms via `useCreateAtom` + `options.atoms`) remain inline in the SKILL; this file covers the additional patterns.
 
 ## External state with `state` + `on*Change`
 

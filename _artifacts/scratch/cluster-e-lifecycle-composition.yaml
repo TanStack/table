@@ -42,7 +42,7 @@ skills:
         any state change, mirroring v8 ergonomics. Narrow it later only when
         you measure a problem.
       - |-
-        Where to go next: `migrate-v8-to-v9` if upgrading, `production- readiness` once it works.
+        Where to go next: `migrate-v8-to-v9` if upgrading, `production-readiness` once it works.
     packages:
       - '@tanstack/react-table'
       - '@tanstack/vue-table'
