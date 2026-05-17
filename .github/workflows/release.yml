@@ -14,6 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
 permissions:
@@ -54,7 +55,6 @@ jobs:
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           pnpm run cipublish
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: ${{ github.ref_name }}
           TAG: ${{ inputs.tag }}
       - name: Open Version Bump Pull Request
@@ -71,5 +71,4 @@ jobs:
             --title "release: version packages" \
             --body "Automated version bump created after publishing packages."
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BRANCH: ${{ steps.release-branch.outputs.branch }}
