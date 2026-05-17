@@ -49,6 +49,16 @@ A headless table library for building powerful datagrids with full control over 
 
 ### <a href="https://tanstack.com/table">Read the Docs →</a>
 
+## Using an AI Coding Agent?
+
+TanStack Table ships [TanStack Intent](https://github.com/TanStack/intent) skills inside each adapter package. After installing the library, run:
+
+```sh
+npx @tanstack/intent@latest install
+```
+
+to add skill-loading guidance for your agent (Claude Code, Cursor, Copilot, etc.). The same CLI also exposes `intent list` to browse available skills and `intent load <skill>` to print one for inspection. Skills version with the library — your agent gets guidance that matches the version of `@tanstack/<framework>-table` you installed. Only available for v9 and above.
+
 ## Get Involved
 
 - We welcome issues and pull requests!

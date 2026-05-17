@@ -33,6 +33,9 @@ importers:
       '@tanstack/eslint-config':
         specifier: 0.4.0
         version: 0.4.0(@typescript-eslint/utils@8.59.3(eslint@10.3.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.3.0(jiti@2.7.0))(typescript@6.0.3)
+      '@tanstack/intent':
+        specifier: ^0.0.41
+        version: 0.0.41
       '@tanstack/publish-config':
         specifier: 0.2.7
         version: 0.2.7
@@ -12697,6 +12700,10 @@ packages:
     resolution: {integrity: sha512-NaOGLRrddszbQj9upGat6HG/4TKvXLvu+osAIgfxPYA+eIvYKv8GKDJOrY2D3/U9MRnKfMWD7bU4jeD4xmqyIg==}
     engines: {node: '>=20.19'}
 
+  '@tanstack/intent@0.0.41':
+    resolution: {integrity: sha512-Psl+oDiidLvtctswkTQ1P6sQIihwrMLcdfQVfkLpO42oKwxWEr1lodWUHiOG5jFXsGwDDvpUv/WAdlmJF+yGpw==}
+    hasBin: true
+
   '@tanstack/lit-virtual@3.13.25':
     resolution: {integrity: sha512-/WSo8RzWSMxhncpcfo8CCClZxpdHubk3Lh3JfTAwhrCOgH9LEOOEW+B/YNHgTSN3Mhkvke7UEZXFO5Vr6ySzUg==}
     peerDependencies:
@@ -13826,6 +13833,10 @@ packages:
   bytestreamjs@2.0.1:
     resolution: {integrity: sha512-U1Z/ob71V/bXfVABvNr/Kumf5VyeQRBEm6Txb0PQ6S7V5GpBM3w4Cbqz/xPDicR5tN0uvDifng8C+5qECeGwyQ==}
     engines: {node: '>=6.0.0'}
+
+  cac@6.7.14:
+    resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
+    engines: {node: '>=8'}
 
   cac@7.0.0:
     resolution: {integrity: sha512-tixWYgm5ZoOD+3g6UTea91eow5z6AAHaho3g0V9CNSNb45gM8SmflpAc+GRd1InC4AqN/07Unrgp56Y94N9hJQ==}
@@ -17675,6 +17686,11 @@ packages:
 
   yaml@2.8.0:
     resolution: {integrity: sha512-4lLa/EcQCB0cJkyts+FpIRx5G/llPxfP6VQU5KByHEhLxY3IJCH0f0Hy1MHI8sClTvsIb8qwRJ6R/ZdlDJ/leQ==}
+    engines: {node: '>= 14.6'}
+    hasBin: true
+
+  yaml@2.8.3:
+    resolution: {integrity: sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg==}
     engines: {node: '>= 14.6'}
     hasBin: true
 
@@ -22611,6 +22627,13 @@ snapshots:
 
   '@tanstack/history@1.161.6': {}
 
+  '@tanstack/intent@0.0.41':
+    dependencies:
+      cac: 6.7.14
+      jsonc-parser: 3.3.1
+      semver: 7.8.0
+      yaml: 2.8.3
+
   '@tanstack/lit-virtual@3.13.25(lit@3.3.2)':
     dependencies:
       '@tanstack/virtual-core': 3.14.0
@@ -24007,6 +24030,8 @@ snapshots:
   bytes@3.1.2: {}
 
   bytestreamjs@2.0.1: {}
+
+  cac@6.7.14: {}
 
   cac@7.0.0: {}
 
@@ -28683,6 +28708,8 @@ snapshots:
   yaml@1.10.3: {}
 
   yaml@2.8.0: {}
+
+  yaml@2.8.3: {}
 
   yaml@2.8.4: {}
 

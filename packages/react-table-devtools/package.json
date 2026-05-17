@@ -18,7 +18,8 @@
     "react",
     "tanstack",
     "table",
-    "devtools"
+    "devtools",
+    "tanstack-intent"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
@@ -44,7 +45,8 @@
   },
   "files": [
     "dist/",
-    "src"
+    "src",
+    "skills"
   ],
   "dependencies": {
     "@tanstack/devtools-utils": "^0.5.0",
