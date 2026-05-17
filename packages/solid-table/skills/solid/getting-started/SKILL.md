@@ -10,7 +10,7 @@ description: >
 type: lifecycle
 library: tanstack-table
 framework: solid
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - setup
   - column-definitions

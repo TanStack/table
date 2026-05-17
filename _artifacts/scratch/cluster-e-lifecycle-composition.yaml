@@ -1,4 +1,4 @@
-# Cluster E — Lifecycle & Composition skills for TanStack Table v9.0.0-alpha.47
+# Cluster E — Lifecycle & Composition skills for TanStack Table v9.0.0-alpha.48
 # Sources: docs/framework/{react,angular,preact}/guide/*.md, docs/devtools.md,
 #          docs/installation.md, docs/guide/virtualization.md, examples/* (primary)
 # Maintainer: Kevin Vandy
@@ -6,7 +6,7 @@
 
 version: 1
 cluster: lifecycle-composition
-target_version: '9.0.0-alpha.47'
+target_version: '9.0.0-alpha.48'
 
 skills:
   # =========================================================================

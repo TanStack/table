@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: 9.0.0-alpha.47
+  version: 9.0.0-alpha.48
   repository: https://github.com/TanStack/table
   homepage: https://tanstack.com/table
   description:
@@ -1257,7 +1257,7 @@ skills:
         source: packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - filtering
       - mistake:
@@ -1300,7 +1300,7 @@ skills:
         source: packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - filtering
       - mistake:
@@ -1349,7 +1349,7 @@ skills:
         source: examples/react/filters-fuzzy/src/main.tsx
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - filtering
           - sorting
@@ -1389,7 +1389,7 @@ skills:
         source: docs/guide/column-filtering.md
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - filtering
       - mistake:
@@ -1425,7 +1425,7 @@ skills:
         source: packages/table-core/src/features/global-filtering/globalFilteringFeature.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - filtering
       - mistake: Expecting `filterFromLeafRows` to keep child rows visible when only the parent matches.
@@ -1462,7 +1462,7 @@ skills:
         source: packages/table-core/src/features/column-filtering/filterRowsUtils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - filtering
           - row-expanding
@@ -1665,7 +1665,7 @@ skills:
         source: packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - sorting
       - mistake: "Expecting `sortUndefined: 'first' | 'last'` to work in v8 (they only exist in v9)."
@@ -1689,7 +1689,7 @@ skills:
         source: packages/table-core/src/features/row-sorting/createSortedRowModel.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - sorting
       - mistake: Custom `sortFn` returns `desc`-aware values (i.e. negating inside the function).
@@ -1717,7 +1717,7 @@ skills:
         source: packages/table-core/src/features/row-sorting/createSortedRowModel.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - sorting
       - mistake:
@@ -1757,7 +1757,7 @@ skills:
         source: examples/react/filters-fuzzy/src/main.tsx
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - sorting
           - filtering
@@ -1935,7 +1935,7 @@ skills:
         source: packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - pagination
       - mistake: Putting `pagination` in BOTH `state.pagination` and `initialState.pagination`.
@@ -1967,7 +1967,7 @@ skills:
         source: docs/guide/pagination.md
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - pagination
       - mistake:
@@ -2000,7 +2000,7 @@ skills:
         source: packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - pagination
       - mistake:
@@ -2027,7 +2027,7 @@ skills:
         source: docs/guide/row-models.md
         priority: low
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - pagination
           - filtering
@@ -2217,7 +2217,7 @@ skills:
         source: examples/react/grouping/src/main.tsx
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - grouping
           - row-expanding
@@ -2264,7 +2264,7 @@ skills:
         source: packages/table-core/src/features/column-grouping/createGroupedRowModel.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - grouping
       - mistake: 'Confusing `aggregationFn` signature: `(columnId, leafRows, childRows)` vs filter/sort signatures.'
@@ -2301,7 +2301,7 @@ skills:
         source: packages/table-core/src/fns/aggregationFns.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - grouping
       - mistake:
@@ -2345,7 +2345,7 @@ skills:
         source: packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - grouping
           - column-ordering
@@ -2368,7 +2368,7 @@ skills:
         source: packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts
         priority: low
         status: warning
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - grouping
           - row-selection
@@ -2506,7 +2506,7 @@ skills:
         source: packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - row-expanding
       - mistake:
@@ -2541,7 +2541,7 @@ skills:
         source: packages/table-core/src/features/row-pagination/createPaginatedRowModel.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - row-expanding
           - pagination
@@ -2575,7 +2575,7 @@ skills:
         source: packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - row-expanding
       - mistake:
@@ -2621,7 +2621,7 @@ skills:
         source: packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - row-expanding
       - mistake: Reimplementing what TanStack Table's built-in APIs already provide
@@ -3608,7 +3608,7 @@ skills:
         source: docs/framework/react/guide/table-state.md (Reading State Without Subscribing); examples/react/basic-subscribe/src/main.tsx
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Passing both atoms.pagination and state.pagination for the same slice
         mechanism:
           When a slice is owned both ways, external atoms take precedence over external state. The
@@ -3636,7 +3636,7 @@ skills:
         source: docs/framework/react/guide/table-state.md (Custom Initial State Note); examples/react/basic-external-atoms
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Using table.Subscribe inside a column cell / header definition
         mechanism:
           In cell and header render contexts, the table field is typed as the core Table<TFeatures,
@@ -3671,7 +3671,7 @@ skills:
         source: docs/framework/react/guide/table-state.md (Tips section); examples/react/basic-subscribe/src/main.tsx
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills:
           - react-subscribe-compiler-compat
       - &id001
@@ -3775,7 +3775,7 @@ skills:
         source: docs/framework/vue/guide/table-state.md (External State); examples/vue/basic-external-state
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Reading table.atoms.pagination.get() outside a reactive context and expecting Vue updates
         mechanism:
           Atom .get() is a current-value read. It only participates in Vue tracking when called inside
@@ -3790,7 +3790,7 @@ skills:
         source: docs/framework/vue/guide/table-state.md (Reading State Without Subscribing)
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Using the v8 useVueTable name
         mechanism:
           v9 renamed the adapter creator to useTable for every framework. useVueTable is no longer
@@ -3802,7 +3802,7 @@ skills:
         source: docs/framework/vue/vue-table.md; packages/vue-table/src/useTable.ts
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - *id001
   - name: Solid Table State, Subscribe & createTableHook
     slug: table-state
@@ -3843,7 +3843,7 @@ skills:
         source: docs/framework/solid/guide/table-state.md (Reading Reactive State with createTable)
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Passing data as a plain reactive accessor value instead of a getter
         mechanism:
           Solid loses fine-grained reactivity once a signal value is destructured into a plain object.
@@ -3867,7 +3867,7 @@ skills:
         source: docs/framework/solid/guide/table-state.md (Reading Reactive State with createTable); examples/solid/basic-use-table/src/App.tsx
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Using table.Subscribe child callback as a raw value
         mechanism:
           In Solid, table.Subscribe child receives an accessor function. Treating it as a value renders
@@ -3889,7 +3889,7 @@ skills:
         source: docs/framework/solid/guide/table-state.md (Fine-grained Updates with table.Subscribe)
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - *id001
     maintainer_notes:
       - 'Signal-based adapter: TanStack Store atoms and native framework state are equally supported. Most
@@ -3943,7 +3943,7 @@ skills:
         source: docs/framework/svelte/guide/table-state.md (Fine-grained Updates with subscribeTable)
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47; Svelte 5+ only
+        version_context: v9.0.0-alpha.48; Svelte 5+ only
       - mistake: Passing $state values directly to options.state without getters
         mechanism:
           createTable resolves options once and reads state.pagination as a snapshot. Without a getter,
@@ -3977,7 +3977,7 @@ skills:
         source: docs/framework/svelte/guide/table-state.md (External State); examples/svelte/basic-external-state
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47; Svelte 5+ only
+        version_context: v9.0.0-alpha.48; Svelte 5+ only
       - mistake: Using the legacy createSvelteTable name from Svelte 4 era
         mechanism:
           v9 is Svelte 5+ only and exports createTable. Older codebases referencing createSvelteTable
@@ -3989,7 +3989,7 @@ skills:
         source: packages/svelte-table/src/createTable.svelte.ts; docs/framework/svelte/svelte-table.md
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47; Svelte 5+ only
+        version_context: v9.0.0-alpha.48; Svelte 5+ only
       - *id001
     maintainer_notes:
       - 'Signal-based adapter: TanStack Store atoms and native framework state are equally supported. Most
@@ -4043,7 +4043,7 @@ skills:
           examples/angular/basic-inject-table
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47; Angular >=19 with signals
+        version_context: v9.0.0-alpha.48; Angular >=19 with signals
       - mistake: Using the v8 createAngularTable name
         mechanism:
           v9 renamed the adapter creator to injectTable to match Angular DI conventions. createAngularTable
@@ -4055,7 +4055,7 @@ skills:
         source: docs/framework/angular/angular-table.md; packages/angular-table/src/injectTable.ts
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Selecting object slices with computed without shallow equality
         mechanism:
           'Object/array slice references change on every store update even when their contents are
@@ -4073,7 +4073,7 @@ skills:
         source: docs/framework/angular/guide/table-state.md (Selecting State with Angular computed)
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - *id001
     maintainer_notes:
       - 'Signal-based adapter: TanStack Store atoms and native framework state are equally supported. Most
@@ -4136,7 +4136,7 @@ skills:
         source: packages/lit-table/src/TableController.ts; docs/framework/lit/guide/table-state.md; examples/lit/basic-table-controller/src/main.ts
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Expecting source-only host invalidation from table.Subscribe with a source prop
         mechanism:
           TableController currently wires host requestUpdate through the full table.store and optionsStore
@@ -4158,7 +4158,7 @@ skills:
         source: packages/lit-table/src/TableController.ts (LitTable Subscribe note); docs/framework/lit/guide/table-state.md
         priority: MEDIUM
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Reading atom.get() in render and never seeing UI update
         mechanism:
           Atom .get() reads a value but does not register with the controller. Host invalidation
@@ -4190,7 +4190,7 @@ skills:
         source: docs/framework/lit/guide/table-state.md (Reading State Without Subscribing); packages/lit-table/src/TableController.ts
         priority: MEDIUM
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - *id001
     maintainer_notes:
       - Lit adapter is scheduled for a rewrite with TanStack Lit Store during beta. Treat the current API
@@ -4259,7 +4259,7 @@ skills:
         source: docs/framework/preact/preact-table.md; examples/preact/basic-use-table/src/main.tsx
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Using table.Subscribe inside a cell or header render context
         mechanism:
           The cell and header table field is typed as the core Table<TFeatures, TData> and does not
@@ -4289,7 +4289,7 @@ skills:
           packages/preact-table/src/Subscribe.ts
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Passing useTable both atoms.pagination and state.pagination for the same slice
         mechanism:
           External atoms take precedence over external state. Mixing them silently hides on[State]Change-driven
@@ -4316,7 +4316,7 @@ skills:
         source: docs/framework/preact/guide/table-state.md (Custom Initial State Note); examples/preact/basic-external-atoms
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - *id001
   - name: React Subscribe for React Compiler Compatibility
     slug: react-subscribe-compiler-compat
@@ -4377,7 +4377,7 @@ skills:
           packages/react-table/src/Subscribe.ts
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47; React Compiler enabled
+        version_context: v9.0.0-alpha.48; React Compiler enabled
       - mistake:
           Using table.Subscribe from inside a cell or header definition where table is the core Table
           type
@@ -4408,7 +4408,7 @@ skills:
         source: docs/framework/react/guide/table-state.md (Tips); packages/react-table/src/Subscribe.ts
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Wrapping every cell in Subscribe by default
         mechanism:
           Subscribe is overhead. For inline JSX in the parent component, the compiler always re-evaluates
@@ -4430,7 +4430,7 @@ skills:
         source: docs/framework/react/guide/table-state.md (Subscribe for React Compiler Compatibility)
         priority: MEDIUM
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Subscribing to the whole table.store for one row's selection checkbox
         mechanism:
           Every store change re-renders the Subscribe child. Subscribing to table.atoms.rowSelection
@@ -4453,7 +4453,7 @@ skills:
         source: docs/framework/react/guide/table-state.md (Tips bullets); examples/react/basic-subscribe/src/main.tsx
         priority: MEDIUM
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Reading raw v8 state on v9 ReactTable instead of using Subscribe
         mechanism: |
           v9 ReactTable returns an object whose state slices live on `table.atoms.*` / `table.store`.
@@ -4485,7 +4485,7 @@ skills:
         status: active
         version_context:
           v9 alpha pattern. Agents trained on v8 will reach for table.getState() and never
-          subscribe. Default selector now subscribes to ALL state slices since alpha.47, but selectors are
+          subscribe. Default selector now subscribes to ALL state slices since alpha.48, but selectors are
           the documented pattern.
         skills:
           - react-subscribe-compiler-compat
@@ -4511,7 +4511,7 @@ skills:
           }
         correct_pattern: |
           // ✅ Until the upstream fix lands, drive controlled state through onChange handlers
-          //    so `state` doesn't change on every parent render, or wait for the post-alpha.47 fix.
+          //    so `state` doesn't change on every parent render, or wait for the post-alpha.48 fix.
           //    See PR #6244 / #6246 — KevinVandy's WIP refactor of the optionsStore for react/preact.
           function MyTable() {
             const [globalFilter, setGlobalFilter] = useState('')
@@ -4740,7 +4740,7 @@ skills:
         source: docs/framework/angular/guide/rendering.md (FlexRender import)
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47; Angular >=19
+        version_context: v9.0.0-alpha.48; Angular >=19
       - mistake:
           Returning a component class but expecting all CellContext properties to be visible without
           input signals
@@ -4764,7 +4764,7 @@ skills:
         source: docs/framework/angular/guide/rendering.md (Returning a component class)
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47; Angular >=19
+        version_context: v9.0.0-alpha.48; Angular >=19
       - mistake: Mixing bindings with inputs / outputs on the same property in flexRenderComponent
         mechanism:
           bindings are applied at component creation, inputs / outputs are applied post-creation.
@@ -4784,7 +4784,7 @@ skills:
         source: docs/framework/angular/guide/rendering.md (bindings API note)
         priority: MEDIUM
         status: active
-        version_context: v9.0.0-alpha.47; Angular v20+ for bindings
+        version_context: v9.0.0-alpha.48; Angular v20+ for bindings
       - mistake: Drilling cell or header through input() in nested presentational components
         mechanism:
           Using FlexRender + context directives makes injectTableCellContext / injectTableHeaderContext
@@ -4810,7 +4810,7 @@ skills:
         source: docs/framework/angular/guide/rendering.md (Context directives)
         priority: MEDIUM
         status: active
-        version_context: v9.0.0-alpha.47; Angular >=19
+        version_context: v9.0.0-alpha.48; Angular >=19
       - mistake:
           Calling injectFlexRenderContext outside a *flexRender rendered subtree without applying the
           corresponding context directive
@@ -4832,7 +4832,7 @@ skills:
         source: docs/framework/angular/guide/rendering.md (Automatic token injection in FlexRender)
         priority: MEDIUM
         status: active
-        version_context: v9.0.0-alpha.47; Angular >=19
+        version_context: v9.0.0-alpha.48; Angular >=19
       - mistake: Defining columns inside createAngularTable signal causes flexRender remount on every tick
         mechanism: |
           When the `columns` array is defined inside the `createAngularTable` options
@@ -4943,7 +4943,7 @@ skills:
         source: packages/lit-table/src/TableController.ts; examples/lit/basic-table-controller/src/main.ts
         priority: CRITICAL
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Using table.FlexRender as a Lit directive instead of a function call
         mechanism:
           table.FlexRender is a function that returns a TemplateResult. It is invoked inside ${...}
@@ -4955,7 +4955,7 @@ skills:
         source: packages/lit-table/src/TableController.ts (FlexRender attached); docs/framework/lit/lit-table.md
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake: Calling table.Subscribe children outside a template interpolation
         mechanism:
           table.Subscribe returns a TemplateResult or string. It must be embedded with ${...} inside
@@ -4982,7 +4982,7 @@ skills:
         source: packages/lit-table/src/TableController.ts (Subscribe shape); docs/framework/lit/guide/table-state.md
         priority: HIGH
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
       - mistake:
           Forgetting that host update is wired through table.store, so source-only Subscribe does not
           skip host updates
@@ -5015,7 +5015,7 @@ skills:
           (Selecting State with table.Subscribe)
         priority: MEDIUM
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
     maintainer_notes:
       - The Lit adapter is scheduled to be rewritten with TanStack Lit Store during the v9 beta cycle. Current
         contracts (TableController, store-level invalidation) may change. Skill content should describe the

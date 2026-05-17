@@ -13,7 +13,7 @@ description: >
   and why `getRowId` is essentially mandatory — especially under server pagination.
 type: core
 library: tanstack-table
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - state-management
   - column-definitions

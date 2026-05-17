@@ -11,7 +11,7 @@ description: >
 type: lifecycle
 library: tanstack-table
 framework: lit
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - setup
   - state-management
@@ -23,7 +23,7 @@ sources:
   - TanStack/table:packages/lit-table/src/TableController.ts
 ---
 
-> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill may change in a future beta. The patterns below match `9.0.0-alpha.47`.
+> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill may change in a future beta. The patterns below match `9.0.0-alpha.48`.
 
 The Lit v9 adapter mirrors v9's React surface (atoms, `_features`, `_rowModels`, FlexRender) wrapped in a `ReactiveController`. There is no `useLegacyTable` shim — migrate directly.
 

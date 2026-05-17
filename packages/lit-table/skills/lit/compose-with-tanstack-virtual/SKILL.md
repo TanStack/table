@@ -12,7 +12,7 @@ description: >
 type: composition
 library: tanstack-table
 framework: lit
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - lit/table-state
   - row-expanding
@@ -23,7 +23,7 @@ sources:
   - TanStack/table:examples/react/virtualized-columns/
 ---
 
-> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill may change in a future beta. The patterns below match `9.0.0-alpha.47`.
+> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill may change in a future beta. The patterns below match `9.0.0-alpha.48`.
 
 TanStack Table is headless — it does not virtualize rows or columns. For long lists, pair the table with `@tanstack/lit-virtual`, which ships `VirtualizerController` — a `ReactiveController` like `TableController`.
 
