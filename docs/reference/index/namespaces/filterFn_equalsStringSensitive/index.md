@@ -5,7 +5,9 @@ title: filterFn_equalsStringSensitive
 
 # filterFn\_equalsStringSensitive
 
-Filter function for checking if a string is exactly equal to a given string. (Case-sensitive)
+Keeps rows whose stringified column value exactly equals the filter text.
+
+Matching is case-sensitive and empty filter values are auto-removed.
 
 ## Functions
 

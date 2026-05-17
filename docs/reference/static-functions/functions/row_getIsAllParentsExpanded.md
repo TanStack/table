@@ -9,11 +9,11 @@ title: row_getIsAllParentsExpanded
 function row_getIsAllParentsExpanded<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:324](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L324)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:339](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L339)
 
-Returns is all parents expanded for a row.
+Checks whether every ancestor of this row is expanded.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+The current row is not considered; only its parent chain is walked.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getIsAllParentsExpanded(row)
+const parentsExpanded = row_getIsAllParentsExpanded(row)
 ```

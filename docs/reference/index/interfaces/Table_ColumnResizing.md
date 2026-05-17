@@ -15,10 +15,11 @@ Defined in: [features/column-resizing/columnResizingFeature.types.ts:48](https:/
 resetHeaderSizeInfo: (defaultState?) => void;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L53)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L54)
 
-Resets transient resize interaction state to `initialState.columnResizing`.
-Pass `true` to reset to the feature's default blank resize state instead.
+Resets `columnResizing` to `initialState.columnResizing`.
+
+Pass `true` to ignore initial state and reset to the no-drag default state.
 
 #### Parameters
 
@@ -38,9 +39,9 @@ Pass `true` to reset to the feature's default blank resize state instead.
 setcolumnResizing: (updater) => void;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L60)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L61)
 
-Sets the transient resize interaction state using a value or updater.
+Updates transient resize interaction state with a next state or updater function.
 
 The lowercase `c` in this API name matches the current generated v9 table
 API for the `columnResizing` state slice.

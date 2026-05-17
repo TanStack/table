@@ -5,7 +5,10 @@ title: filterFn_weakEquals
 
 # filterFn\_weakEquals
 
-Filter function for checking if a value is weakly equal to a given value. (JS == comparison)
+Keeps rows whose column value is loosely equal to the filter value.
+
+Uses JavaScript `==` comparison and auto-removes empty filter values. This is
+useful for matching string input against numeric row values.
 
 ## Functions
 

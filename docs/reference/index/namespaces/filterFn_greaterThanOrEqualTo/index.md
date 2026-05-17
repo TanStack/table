@@ -5,7 +5,9 @@ title: filterFn_greaterThanOrEqualTo
 
 # filterFn\_greaterThanOrEqualTo
 
-Filter function for checking if a number is greater than or equal to a given number.
+Keeps rows whose value is greater than or equal to the filter value.
+
+Delegates to the built-in greater-than and equality comparisons.
 
 ## Functions
 

@@ -83,7 +83,10 @@ export interface ColumnDef_ColumnFiltering<
   TData extends RowData,
 > {
   /**
-   * Enables/disables the **column** filter for this column.
+   * Enables this column to participate in column-specific filtering.
+   *
+   * Defaults to `true`; table-level `enableColumnFilters` and `enableFilters`
+   * must also allow filtering.
    */
   enableColumnFilter?: boolean
   /**
@@ -101,7 +104,7 @@ export interface Column_ColumnFiltering<
    */
   getAutoFilterFn: () => FilterFn<TFeatures, TData>
   /**
-   * Returns whether or not the column can be **column** filtered.
+   * Checks whether this accessor column can currently be column-filtered.
    */
   getCanFilter: () => boolean
   /**
@@ -113,15 +116,18 @@ export interface Column_ColumnFiltering<
    */
   getFilterIndex: () => number
   /**
-   * Returns the current filter value for the column.
+   * Reads this column's current value from `state.columnFilters`.
    */
   getFilterValue: () => unknown
   /**
-   * Returns whether or not the column is currently filtered.
+   * Checks whether this column has an active entry in `state.columnFilters`.
    */
   getIsFiltered: () => boolean
   /**
-   * A function that sets the current filter value for the column. You can pass it a value or an updater function for immutability-safe operations on existing values.
+   * Adds, updates, or removes this column's filter value.
+   *
+   * Updater functions receive the previous filter value. Values that satisfy
+   * the filter function's `autoRemove` rule are removed from filter state.
    */
   setFilterValue: (updater: Updater<any>) => void
 }
@@ -145,11 +151,13 @@ export interface TableOptions_ColumnFiltering<
   TData extends RowData,
 > {
   /**
-   * Enables/disables **column** filtering for all columns.
+   * Enables column-specific filtering for all columns that also allow it.
    */
   enableColumnFilters?: boolean
   /**
-   * Enables/disables all filtering for the table.
+   * Enables all filtering features for the table.
+   *
+   * Set this to `false` to disable both column filtering and global filtering.
    */
   enableFilters?: boolean
   /**
@@ -176,11 +184,13 @@ export interface TableOptions_ColumnFiltering<
 
 export interface Table_ColumnFiltering {
   /**
-   * Resets the **columnFilters** state to `initialState.columnFilters`, or `true` can be passed to force a default blank state reset to `[]`.
+   * Resets `columnFilters` to `initialState.columnFilters`.
+   *
+   * Pass `true` to ignore initial state and reset to `[]`.
    */
   resetColumnFilters: (defaultState?: boolean) => void
   /**
-   * Sets column filter state using a value or updater.
+   * Updates column filter state with a next array or updater function.
    */
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
 }
@@ -190,11 +200,11 @@ export interface Table_RowModels_Filtered<
   TData extends RowData,
 > {
   /**
-   * Returns the row model for the table after **column** filtering has been applied.
+   * Resolves the row model after column and global filters have been applied.
    */
   getFilteredRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns the row model for the table before any **column** filtering has been applied.
+   * Reads the row model immediately before filtering.
    */
   getPreFilteredRowModel: () => RowModel<TFeatures, TData>
 }

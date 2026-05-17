@@ -9,11 +9,12 @@ title: table_setExpanded
 function table_setExpanded<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L58)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L62)
 
-Updates the table's expanded state slice.
+Routes an expanded-state updater through the table's expanded change handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The updater may be `true`, a row-id map, or a function of the previous
+expanded state, matching the instance `table.setExpanded` behavior.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setExpanded(table, (old) => old)
+table_setExpanded(table, (old) => ({ ...old, [rowId]: true }))
 ```

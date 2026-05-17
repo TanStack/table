@@ -9,6 +9,8 @@ title: filterFn_equals
 const filterFn_equals: FilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L11)
+Defined in: [fns/filterFns.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L13)
 
-Filter function for checking if a value is exactly equal to a given value. (JS === comparison)
+Keeps rows whose column value is strictly equal to the filter value.
+
+Uses JavaScript `===` comparison and auto-removes empty filter values.

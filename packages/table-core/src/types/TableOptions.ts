@@ -24,6 +24,10 @@ export interface TableOptions_Plugins<
   TData extends RowData,
 > {}
 
+/**
+ * Core options that are always available on a table, before optional feature
+ * options are mixed in.
+ */
 export interface TableOptions_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -48,6 +52,13 @@ export type DebugOptions<TFeatures extends TableFeatures> = {
   debugTable?: boolean
 } & DebugKeysFor<CoreFeatures & TFeatures>
 
+/**
+ * Complete table options for a specific feature set.
+ *
+ * Feature options are included only when their feature is present in
+ * `TFeatures`, then custom feature/plugin options and debug options are mixed
+ * in.
+ */
 export type TableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -104,6 +115,10 @@ export type TableOptions<
 //   ExtractFeatureTypes<'TableOptions', TFeatures> &
 //   TableOptions_Plugins<TFeatures, TData>
 
+/**
+ * Internal broad option shape used where feature code may need to read options
+ * from features that are not present in the current generic feature set.
+ */
 export type TableOptions_All<
   TFeatures extends TableFeatures,
   TData extends RowData,

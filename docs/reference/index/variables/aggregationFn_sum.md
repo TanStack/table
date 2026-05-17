@@ -9,6 +9,9 @@ title: aggregationFn_sum
 const aggregationFn_sum: AggregationFn<any, any>;
 ```
 
-Defined in: [fns/aggregationFns.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L9)
+Defined in: [fns/aggregationFns.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L12)
 
-Aggregation function for summing up the values of a column.
+Sums numeric child-row values for a grouped column.
+
+Non-number values contribute `0`. Child rows are used so nested group totals
+can reuse already aggregated values.

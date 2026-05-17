@@ -9,6 +9,8 @@ title: filterFn_equalsStringSensitive
 const filterFn_equalsStringSensitive: FilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L104)
+Defined in: [fns/filterFns.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L119)
 
-Filter function for checking if a string is exactly equal to a given string. (Case-sensitive)
+Keeps rows whose stringified column value exactly equals the filter text.
+
+Matching is case-sensitive and empty filter values are auto-removed.

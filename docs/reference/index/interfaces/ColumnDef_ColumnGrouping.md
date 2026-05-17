@@ -53,9 +53,11 @@ The resolved aggregation function for the column.
 optional enableGrouping: boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L71)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L73)
 
-Enables/disables grouping for this column.
+Allows this column to be added to grouping state.
+
+Defaults to `true`; table-level `enableGrouping` must also allow grouping.
 
 ***
 
@@ -65,7 +67,7 @@ Enables/disables grouping for this column.
 optional getGroupingValue: (row) => any;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L75)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L77)
 
 Specify a value to be used for grouping rows on this column. If this option is not specified, the value derived from `accessorKey` / `accessorFn` will be used instead.
 

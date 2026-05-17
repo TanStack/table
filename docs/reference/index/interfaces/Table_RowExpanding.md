@@ -41,7 +41,7 @@ getCanSomeRowsExpand: () => boolean;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L81)
 
-Returns whether there are any rows that can be expanded.
+Checks whether at least one row can be expanded.
 
 #### Returns
 
@@ -57,7 +57,7 @@ getExpandedDepth: () => number;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L85)
 
-Returns the maximum depth of the expanded rows.
+Computes the deepest expanded row id depth.
 
 #### Returns
 
@@ -73,7 +73,7 @@ getIsAllRowsExpanded: () => boolean;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L89)
 
-Returns whether all rows are currently expanded.
+Checks whether all rows in the current row model are expanded.
 
 #### Returns
 
@@ -89,7 +89,7 @@ getIsSomeRowsExpanded: () => boolean;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L93)
 
-Returns whether there are any rows that are currently expanded.
+Checks whether any row is currently expanded.
 
 #### Returns
 
@@ -105,7 +105,7 @@ getToggleAllRowsExpandedHandler: () => (event) => void;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L97)
 
-Returns a handler that can be used to toggle the expanded state of all rows. This handler is meant to be used with an `input[type=checkbox]` element.
+Creates a handler that toggles all rows expanded.
 
 #### Returns
 
@@ -131,10 +131,11 @@ Returns a handler that can be used to toggle the expanded state of all rows. Thi
 resetExpanded: (defaultState?) => void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L102)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:103](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L103)
 
-Resets expanded state to `initialState.expanded`. Pass `true` to reset to
-the feature default of `{}`.
+Resets `expanded` to `initialState.expanded`.
+
+Pass `true` to ignore initial state and reset to `{}`.
 
 #### Parameters
 
@@ -154,9 +155,9 @@ the feature default of `{}`.
 setExpanded: (updater) => void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L106)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L107)
 
-Sets expanded state using a value or updater.
+Updates expanded state with `true`, a row-id map, or an updater function.
 
 #### Parameters
 
@@ -176,7 +177,7 @@ Sets expanded state using a value or updater.
 toggleAllRowsExpanded: (expanded?) => void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:110](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L110)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L111)
 
 Toggles the expanded state for all rows.
 

@@ -9,7 +9,7 @@ title: autoRemove
 function autoRemove(val): boolean;
 ```
 
-Defined in: [fns/filterFns.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L38)
+Defined in: [fns/filterFns.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L43)
 
 ## Parameters
 

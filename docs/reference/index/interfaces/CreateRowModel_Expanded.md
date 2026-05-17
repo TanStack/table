@@ -5,7 +5,7 @@ title: CreateRowModel_Expanded
 
 # Interface: CreateRowModel\_Expanded\<TFeatures, TData\>
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L127)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L128)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/row-expanding/rowExpandingFeature.types.ts:127](https://gi
 optional expandedRowModel: (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L136)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:137](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L137)
 
 Factory used to retrieve the expanded row model. If this function is not
 provided, the table will not expand rows. To use client-side expansion,

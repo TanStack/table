@@ -5,7 +5,7 @@ title: Table_ColumnOrdering
 
 # Interface: Table\_ColumnOrdering\<TFeatures, TData\>
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L39)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L46)
 
 ## Type Parameters
 
@@ -25,9 +25,11 @@ Defined in: [features/column-ordering/columnOrderingFeature.types.ts:39](https:/
 resetColumnOrder: (defaultState?) => void;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L46)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L55)
 
-Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be passed to force a default blank state reset to `[]`.
+Resets `columnOrder` to `initialState.columnOrder`.
+
+Pass `true` to ignore initial state and reset to `[]`.
 
 #### Parameters
 
@@ -47,9 +49,9 @@ Resets the **columnOrder** state to `initialState.columnOrder`, or `true` can be
 setColumnOrder: (updater) => void;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L50)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L59)
 
-Sets column order state using a value or updater.
+Updates column order state with a next ordered id array or updater function.
 
 #### Parameters
 

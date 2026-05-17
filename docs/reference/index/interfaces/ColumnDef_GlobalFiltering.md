@@ -15,6 +15,9 @@ Defined in: [features/global-filtering/globalFilteringFeature.types.ts:18](https
 optional enableGlobalFilter: boolean;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L22)
+Defined in: [features/global-filtering/globalFilteringFeature.types.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L25)
 
-Enables/disables the **global** filter for this column.
+Allows this column to be scanned by global filtering.
+
+Defaults to `true`; table-level global filtering and `enableFilters` must
+also allow filtering.

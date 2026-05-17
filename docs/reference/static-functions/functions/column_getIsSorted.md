@@ -11,7 +11,7 @@ function column_getIsSorted<TFeatures, TData, TValue>(column): false | SortDirec
 
 Defined in: [features/row-sorting/rowSortingFeature.utils.ts:403](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L403)
 
-Returns is sorted for a column.
+Reads this column's current sort direction.
 
 The result is `false` when the column is not sorted, otherwise `'asc'` or
 `'desc'` based on the column's entry in `state.sorting`.

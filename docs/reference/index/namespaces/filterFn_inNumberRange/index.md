@@ -5,7 +5,10 @@ title: filterFn_inNumberRange
 
 # filterFn\_inNumberRange
 
-Filter function for checking if a number is within a given range.
+Keeps rows whose numeric value is inside an inclusive `[min, max]` range.
+
+Filter values are normalized so blank endpoints become open-ended and
+reversed endpoints are swapped.
 
 ## Functions
 

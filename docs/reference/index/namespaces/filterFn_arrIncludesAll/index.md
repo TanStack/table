@@ -5,7 +5,7 @@ title: filterFn_arrIncludesAll
 
 # filterFn\_arrIncludesAll
 
-Filter function for checking if an array includes all of the given values.
+Keeps rows whose array column value includes every filter value.
 
 ## Functions
 

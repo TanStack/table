@@ -5,7 +5,7 @@ title: CreateRowModel_Paginated
 
 # Interface: CreateRowModel\_Paginated\<TFeatures, TData\>
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L126)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L133)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/row-pagination/rowPaginationFeature.types.ts:126](https://
 optional paginatedRowModel: (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L135)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:142](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L142)
 
 Factory used to retrieve the paginated row model. If using server-side
 pagination, this is not required. To use client-side pagination, pass

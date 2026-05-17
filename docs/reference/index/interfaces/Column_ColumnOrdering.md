@@ -15,9 +15,12 @@ Defined in: [features/column-ordering/columnOrderingFeature.types.ts:20](https:/
 getIndex: (position?) => number;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L24)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L27)
 
-Returns the index of the column in the order of the visible columns. Optionally pass a `position` parameter to get the index of the column in a sub-section of the table
+Finds this column's zero-based index among visible columns.
+
+Pass `'left'`, `'center'`, or `'right'` to measure within that pinned
+region instead of the full visible leaf order.
 
 #### Parameters
 
@@ -37,9 +40,11 @@ Returns the index of the column in the order of the visible columns. Optionally 
 getIsFirstColumn: (position?) => boolean;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L28)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L33)
 
-Returns `true` if the column is the first column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the first in a sub-section of the table.
+Checks whether this column is the first visible column.
+
+Pass a pinned region to check the first column within that region.
 
 #### Parameters
 
@@ -59,9 +64,11 @@ Returns `true` if the column is the first column in the order of the visible col
 getIsLastColumn: (position?) => boolean;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L32)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L39)
 
-Returns `true` if the column is the last column in the order of the visible columns. Optionally pass a `position` parameter to check if the column is the last in a sub-section of the table.
+Checks whether this column is the last visible column.
+
+Pass a pinned region to check the last column within that region.
 
 #### Parameters
 

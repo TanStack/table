@@ -5,7 +5,7 @@ title: CreateRowModel_Grouped
 
 # Interface: CreateRowModel\_Grouped\<TFeatures, TData\>
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L203)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:207](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L207)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:203](https:
 optional groupedRowModel: (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:212](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L212)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:216](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L216)
 
 Factory used to retrieve the grouped row model. If using server-side
 grouping, this is not required. To use client-side grouping, pass

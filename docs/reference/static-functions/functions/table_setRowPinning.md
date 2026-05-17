@@ -9,11 +9,12 @@ title: table_setRowPinning
 function table_setRowPinning<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L41)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L43)
 
-Updates the table's row pinning state slice.
+Routes a row pinning updater through the table's row-pinning change handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The updater may be a next `{ top, bottom }` state or a function of the
+previous state, matching the instance `table.setRowPinning` behavior.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setRowPinning(table, (old) => old)
+table_setRowPinning(table, (old) => ({ ...old, top: [rowId] }))
 ```

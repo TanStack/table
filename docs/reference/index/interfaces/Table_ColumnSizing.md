@@ -17,7 +17,7 @@ getCenterTotalSize: () => number;
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L28)
 
-If pinning, returns the total size of the center portion of the table by calculating the sum of the sizes of all unpinned/center leaf-columns.
+Sums the current sizes of visible center-region leaf columns.
 
 #### Returns
 
@@ -33,7 +33,7 @@ getLeftTotalSize: () => number;
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L32)
 
-Returns the total size of the left portion of the table by calculating the sum of the sizes of all left leaf-columns.
+Sums the current sizes of visible left-pinned leaf columns.
 
 #### Returns
 
@@ -49,7 +49,7 @@ getRightTotalSize: () => number;
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L36)
 
-Returns the total size of the right portion of the table by calculating the sum of the sizes of all right leaf-columns.
+Sums the current sizes of visible right-pinned leaf columns.
 
 #### Returns
 
@@ -65,7 +65,7 @@ getTotalSize: () => number;
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L40)
 
-Returns the total size of the table by calculating the sum of the sizes of all leaf-columns.
+Sums the current sizes of all visible leaf columns.
 
 #### Returns
 
@@ -104,7 +104,7 @@ setColumnSizing: (updater) => void;
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L49)
 
-Sets committed column sizing state using a value or updater.
+Updates committed column sizing state with a next map or updater function.
 
 #### Parameters
 

@@ -9,13 +9,14 @@ import type { RowSelectionState } from './rowSelectionFeature.types'
 // State APIs
 
 /**
- * Returns the default row selection state.
+ * Creates the default row selection state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default is an empty map, meaning no rows are selected. Reset APIs
+ * use this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultRowSelectionState()
+ * const selection = getDefaultRowSelectionState()
  * ```
  */
 export function getDefaultRowSelectionState(): RowSelectionState {
@@ -23,13 +24,14 @@ export function getDefaultRowSelectionState(): RowSelectionState {
 }
 
 /**
- * Updates the table's row selection state slice.
+ * Routes a row selection updater through the table's selection change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next selection map or a function of the previous map,
+ * matching the instance `table.setRowSelection` behavior.
  *
  * @example
  * ```ts
- * table_setRowSelection(table, (old) => old)
+ * table_setRowSelection(table, (old) => ({ ...old, [rowId]: true }))
  * ```
  */
 export function table_setRowSelection<
@@ -43,9 +45,10 @@ export function table_setRowSelection<
 }
 
 /**
- * Resets the table's row selection state slice.
+ * Resets `rowSelection` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.rowSelection` when it
+ * exists. Passing `true` ignores initial state and resets to `{}`.
  *
  * @example
  * ```ts
@@ -66,9 +69,10 @@ export function table_resetRowSelection<
 // Table APIs
 
 /**
- * Toggles all rows selected for the table.
+ * Selects or deselects every selectable row before grouping.
  *
- * This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+ * Omitting `value` toggles based on `table_getIsAllRowsSelected(table)`.
+ * Deselecting removes matching ids from the existing selection map.
  *
  * @example
  * ```ts
@@ -107,9 +111,10 @@ export function table_toggleAllRowsSelected<
 }
 
 /**
- * Toggles all page rows selected for the table.
+ * Selects or deselects every selectable row on the current page.
  *
- * This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+ * Omitting `value` toggles based on `table_getIsAllPageRowsSelected(table)`.
+ * Child rows are included when sub-row selection allows it.
  *
  * @example
  * ```ts
@@ -137,13 +142,14 @@ export function table_toggleAllPageRowsSelected<
 }
 
 /**
- * Returns pre selected row model for the table.
+ * Reads the row model before row selection is projected into selected rows.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Selection does not alter the base row pipeline, so this returns the core row
+ * model.
  *
  * @example
  * ```ts
- * const value = table_getPreSelectedRowModel(table)
+ * const rowsBeforeSelection = table_getPreSelectedRowModel(table)
  * ```
  */
 export function table_getPreSelectedRowModel<
@@ -154,13 +160,14 @@ export function table_getPreSelectedRowModel<
 }
 
 /**
- * Returns selected row model for the table.
+ * Builds a row model containing selected rows from the core row model.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * If no row ids are selected, an empty row model is returned without walking
+ * the rows.
  *
  * @example
  * ```ts
- * const value = table_getSelectedRowModel(table)
+ * const selectedRows = table_getSelectedRowModel(table)
  * ```
  */
 export function table_getSelectedRowModel<
@@ -181,13 +188,14 @@ export function table_getSelectedRowModel<
 }
 
 /**
- * Returns filtered selected row model for the table.
+ * Builds a row model containing selected rows from the filtered row model.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * If no row ids are selected, an empty row model is returned without walking
+ * the rows.
  *
  * @example
  * ```ts
- * const value = table_getFilteredSelectedRowModel(table)
+ * const selectedRows = table_getFilteredSelectedRowModel(table)
  * ```
  */
 export function table_getFilteredSelectedRowModel<
@@ -208,13 +216,14 @@ export function table_getFilteredSelectedRowModel<
 }
 
 /**
- * Returns grouped selected row model for the table.
+ * Builds a row model containing selected rows from the grouped row model.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * If no row ids are selected, an empty row model is returned without walking
+ * the rows.
  *
  * @example
  * ```ts
- * const value = table_getGroupedSelectedRowModel(table)
+ * const selectedRows = table_getGroupedSelectedRowModel(table)
  * ```
  */
 export function table_getGroupedSelectedRowModel<
@@ -235,13 +244,14 @@ export function table_getGroupedSelectedRowModel<
 }
 
 /**
- * Returns is all rows selected for the table.
+ * Checks whether every selectable filtered row is selected.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The result is false when there are no filtered rows or when selection state is
+ * empty.
  *
  * @example
  * ```ts
- * const value = table_getIsAllRowsSelected(table)
+ * const allSelected = table_getIsAllRowsSelected(table)
  * ```
  */
 export function table_getIsAllRowsSelected<
@@ -269,13 +279,13 @@ export function table_getIsAllRowsSelected<
 }
 
 /**
- * Returns is all page rows selected for the table.
+ * Checks whether every selectable row on the current page is selected.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Non-selectable rows are ignored for this calculation.
  *
  * @example
  * ```ts
- * const value = table_getIsAllPageRowsSelected(table)
+ * const allPageRowsSelected = table_getIsAllPageRowsSelected(table)
  * ```
  */
 export function table_getIsAllPageRowsSelected<
@@ -300,13 +310,14 @@ export function table_getIsAllPageRowsSelected<
 }
 
 /**
- * Returns is some rows selected for the table.
+ * Checks whether selection is partially applied across filtered rows.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The result is true when at least one row id is selected but fewer ids are
+ * selected than the current filtered flat row count.
  *
  * @example
  * ```ts
- * const value = table_getIsSomeRowsSelected(table)
+ * const someRowsSelected = table_getIsSomeRowsSelected(table)
  * ```
  */
 export function table_getIsSomeRowsSelected<
@@ -323,13 +334,14 @@ export function table_getIsSomeRowsSelected<
 }
 
 /**
- * Returns is some page rows selected for the table.
+ * Checks whether the current page has a partial selection.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * This is false when all selectable page rows are selected. Otherwise it is true
+ * if any selectable page row or descendant is selected.
  *
  * @example
  * ```ts
- * const value = table_getIsSomePageRowsSelected(table)
+ * const somePageRowsSelected = table_getIsSomePageRowsSelected(table)
  * ```
  */
 export function table_getIsSomePageRowsSelected<
@@ -345,13 +357,14 @@ export function table_getIsSomePageRowsSelected<
 }
 
 /**
- * Returns an event handler for all rows selected handler.
+ * Creates a checkbox-style handler that selects or deselects all rows.
  *
- * The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+ * The handler reads `event.target.checked`, so it is intended for controls whose
+ * checked state means "all rows selected".
  *
  * @example
  * ```ts
- * const value = table_getToggleAllRowsSelectedHandler(table)
+ * const onChange = table_getToggleAllRowsSelectedHandler(table)
  * ```
  */
 export function table_getToggleAllRowsSelectedHandler<
@@ -367,13 +380,14 @@ export function table_getToggleAllRowsSelectedHandler<
 }
 
 /**
- * Returns an event handler for all page rows selected handler.
+ * Creates a checkbox-style handler that selects or deselects current page rows.
  *
- * The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+ * The handler reads `event.target.checked`, so it is intended for controls whose
+ * checked state means "all page rows selected".
  *
  * @example
  * ```ts
- * const value = table_getToggleAllPageRowsSelectedHandler(table)
+ * const onChange = table_getToggleAllPageRowsSelectedHandler(table)
  * ```
  */
 export function table_getToggleAllPageRowsSelectedHandler<
@@ -391,9 +405,10 @@ export function table_getToggleAllPageRowsSelectedHandler<
 // Row APIs
 
 /**
- * Toggles selected for a row.
+ * Selects or deselects this row.
  *
- * The update is routed through the table state updater for the owning feature state slice.
+ * Omitting `value` toggles the row. Child rows are selected recursively unless
+ * `opts.selectChildren` is `false` or sub-row selection is disabled.
  *
  * @example
  * ```ts
@@ -434,13 +449,13 @@ export function row_toggleSelected<
 }
 
 /**
- * Returns is selected for a row.
+ * Checks whether this row id is selected in `state.rowSelection`.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Missing row ids are treated as not selected.
  *
  * @example
  * ```ts
- * const value = row_getIsSelected(row)
+ * const selected = row_getIsSelected(row)
  * ```
  */
 export function row_getIsSelected<
@@ -451,13 +466,13 @@ export function row_getIsSelected<
 }
 
 /**
- * Returns is some selected for a row.
+ * Checks whether some, but not all, selectable descendants are selected.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * This supports indeterminate selection UI for parent rows.
  *
  * @example
  * ```ts
- * const value = row_getIsSomeSelected(row)
+ * const partial = row_getIsSomeSelected(row)
  * ```
  */
 export function row_getIsSomeSelected<
@@ -468,13 +483,13 @@ export function row_getIsSomeSelected<
 }
 
 /**
- * Returns is all sub rows selected for a row.
+ * Checks whether all selectable descendants are selected.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Rows without selectable descendants return false.
  *
  * @example
  * ```ts
- * const value = row_getIsAllSubRowsSelected(row)
+ * const allChildrenSelected = row_getIsAllSubRowsSelected(row)
  * ```
  */
 export function row_getIsAllSubRowsSelected<
@@ -485,13 +500,14 @@ export function row_getIsAllSubRowsSelected<
 }
 
 /**
- * Returns whether a row can use select.
+ * Checks whether this row can be selected.
  *
- * This evaluates row data, table options, and feature-specific enablement rules.
+ * `options.enableRowSelection` may be a boolean or a row predicate; it defaults
+ * to `true`.
  *
  * @example
  * ```ts
- * const value = row_getCanSelect(row)
+ * const canSelect = row_getCanSelect(row)
  * ```
  */
 export function row_getCanSelect<
@@ -507,13 +523,14 @@ export function row_getCanSelect<
 }
 
 /**
- * Returns whether a row can use select sub rows.
+ * Checks whether selecting this row should also select its subRows.
  *
- * This evaluates row data, table options, and feature-specific enablement rules.
+ * `options.enableSubRowSelection` may be a boolean or a row predicate; it
+ * defaults to `true`.
  *
  * @example
  * ```ts
- * const value = row_getCanSelectSubRows(row)
+ * const canSelectChildren = row_getCanSelectSubRows(row)
  * ```
  */
 export function row_getCanSelectSubRows<
@@ -529,13 +546,14 @@ export function row_getCanSelectSubRows<
 }
 
 /**
- * Returns whether a row can use multi select.
+ * Checks whether this row can be selected alongside other rows.
  *
- * This evaluates row data, table options, and feature-specific enablement rules.
+ * `options.enableMultiRowSelection` may be a boolean or a row predicate; it
+ * defaults to `true`.
  *
  * @example
  * ```ts
- * const value = row_getCanMultiSelect(row)
+ * const canMultiSelect = row_getCanMultiSelect(row)
  * ```
  */
 export function row_getCanMultiSelect<
@@ -551,13 +569,14 @@ export function row_getCanMultiSelect<
 }
 
 /**
- * Returns an event handler for toggling selected handler.
+ * Creates a checkbox-style handler that selects or deselects this row.
  *
- * The handler is intended for direct use in row-level controls such as expansion or selection buttons.
+ * The handler is a no-op when the row cannot be selected and reads
+ * `event.target.checked`.
  *
  * @example
  * ```ts
- * const value = row_getToggleSelectedHandler(row)
+ * const onChange = row_getToggleSelectedHandler(row)
  * ```
  */
 export function row_getToggleSelectedHandler<
@@ -608,11 +627,12 @@ const mutateRowIsSelected = <
 /**
  * Builds a row model containing rows selected by the current row selection state.
  *
- * The result is derived from the supplied row model, so selected ids absent from the current data are not materialized as rows.
+ * The result is derived from the supplied row model, so selected ids absent from
+ * that model are not materialized as rows.
  *
  * @example
  * ```ts
- * const selectedRows = selectRowsFn(table, rowModel)
+ * const selectedRows = selectRowsFn(rowModel)
  * ```
  */
 export function selectRowsFn<
@@ -663,7 +683,7 @@ export function selectRowsFn<
  *
  * @example
  * ```ts
- * const selected = isRowSelected(row, selection)
+ * const selected = isRowSelected(row)
  * ```
  */
 export function isRowSelected<
@@ -680,7 +700,7 @@ export function isRowSelected<
  *
  * @example
  * ```ts
- * const selectedState = isSubRowSelected(row, selection, table)
+ * const selectedState = isSubRowSelected(row)
  * ```
  */
 export function isSubRowSelected<

@@ -17,7 +17,7 @@ optional maxSize: number;
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L56)
 
-The maximum allowed size for the column
+Upper bound used when resolving this column's size.
 
 ***
 
@@ -29,7 +29,7 @@ optional minSize: number;
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L60)
 
-The minimum allowed size for the column
+Lower bound used when resolving this column's size.
 
 ***
 
@@ -41,4 +41,4 @@ optional size: number;
 
 Defined in: [features/column-sizing/columnSizingFeature.types.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L64)
 
-The desired size for the column
+Initial size used before column sizing state overrides it.

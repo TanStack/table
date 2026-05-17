@@ -9,4 +9,9 @@ title: TableState_All
 type TableState_All = Partial<TableState_ColumnFiltering & TableState_ColumnGrouping & TableState_ColumnOrdering & TableState_ColumnPinning & TableState_ColumnResizing & TableState_ColumnSizing & TableState_ColumnVisibility & TableState_GlobalFiltering & TableState_RowExpanding & TableState_RowPagination & TableState_RowPinning & TableState_RowSelection & TableState_RowSorting>;
 ```
 
-Defined in: [types/TableState.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L74)
+Defined in: [types/TableState.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L86)
+
+Internal broad state shape containing every stock feature state slice.
+
+Feature internals use this when they may need to inspect optional slices owned
+by other features.

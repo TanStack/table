@@ -9,11 +9,12 @@ title: table_getToggleAllPageRowsSelectedHandler
 function table_getToggleAllPageRowsSelectedHandler<TFeatures, TData>(table): (e) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:379](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L379)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:393](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L393)
 
-Returns an event handler for all page rows selected handler.
+Creates a checkbox-style handler that selects or deselects current page rows.
 
-The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+The handler reads `event.target.checked`, so it is intended for controls whose
+checked state means "all page rows selected".
 
 ## Type Parameters
 
@@ -50,5 +51,5 @@ The handler calls the matching table toggle API and can be attached directly to 
 ## Example
 
 ```ts
-const value = table_getToggleAllPageRowsSelectedHandler(table)
+const onChange = table_getToggleAllPageRowsSelectedHandler(table)
 ```

@@ -5,7 +5,7 @@ title: Column_ColumnPinning
 
 # Interface: Column\_ColumnPinning
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L43)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L49)
 
 ## Properties
 
@@ -15,9 +15,9 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:43](https://g
 getCanPin: () => boolean;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L47)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L53)
 
-Returns whether or not the column can be pinned.
+Checks whether this column or any of its leaves can be pinned.
 
 #### Returns
 
@@ -31,9 +31,9 @@ Returns whether or not the column can be pinned.
 getIsPinned: () => ColumnPinningPosition;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L51)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L57)
 
-Returns the pinned position of the column. (`'left'`, `'right'` or `false`)
+Reads the column's pinned position: `'left'`, `'right'`, or `false`.
 
 #### Returns
 
@@ -47,9 +47,9 @@ Returns the pinned position of the column. (`'left'`, `'right'` or `false`)
 getPinnedIndex: () => number;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L55)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L61)
 
-Returns the numeric pinned index of the column within a pinned column group.
+Finds this column's index within its pinned region.
 
 #### Returns
 
@@ -63,9 +63,10 @@ Returns the numeric pinned index of the column within a pinned column group.
 pin: (position) => void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L59)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L66)
 
-Pins a column to the `'left'` or `'right'`, or unpins the column to the center if `false` is passed.
+Pins this column's leaf columns left or right, or unpins them when `false`
+is passed.
 
 #### Parameters
 

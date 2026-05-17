@@ -17,7 +17,7 @@ optional enableMultiRemove: boolean;
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:147](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L147)
 
-Enables/disables the ability to remove multi-sorts
+Allows multi-sort toggles to remove a column from sorting state.
 
 ***
 

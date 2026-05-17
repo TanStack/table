@@ -9,6 +9,9 @@ title: aggregationFn_max
 const aggregationFn_max: AggregationFn<any, any>;
 ```
 
-Defined in: [fns/aggregationFns.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L56)
+Defined in: [fns/aggregationFns.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L65)
 
-Aggregation function for finding the maximum value of a column.
+Finds the maximum numeric child-row value for a grouped column.
+
+Nullish and non-number values are ignored. Returns `undefined` when no
+numeric value is found.

@@ -17,7 +17,7 @@ getCanExpand: () => boolean;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L18)
 
-Returns whether the row can be expanded.
+Checks whether this row can be expanded.
 
 #### Returns
 
@@ -33,7 +33,7 @@ getIsAllParentsExpanded: () => boolean;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L22)
 
-Returns whether all parent rows of the row are expanded.
+Checks whether every ancestor of this row is expanded.
 
 #### Returns
 
@@ -49,7 +49,7 @@ getIsExpanded: () => boolean;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L26)
 
-Returns whether the row is expanded.
+Checks whether this row is currently expanded.
 
 #### Returns
 
@@ -65,7 +65,7 @@ getToggleExpandedHandler: () => () => void;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L30)
 
-Returns a function that can be used to toggle the expanded state of the row. This function can be used to bind to an event handler to a button.
+Creates a handler that toggles this row's expanded state.
 
 #### Returns
 

@@ -18,7 +18,10 @@ export interface TableState_ColumnPinning {
 
 export interface TableOptions_ColumnPinning {
   /**
-   * Enables/disables column pinning for the table. Defaults to `true`.
+   * Allows columns to be pinned into left and right regions.
+   *
+   * Defaults to `true`; column-level `enablePinning` can still opt individual
+   * columns out.
    */
   enableColumnPinning?: boolean
   /**
@@ -35,26 +38,30 @@ export interface ColumnPinningDefaultOptions {
 
 export interface ColumnDef_ColumnPinning {
   /**
-   * Enables/disables column pinning for this column. Defaults to `true`.
+   * Allows this column's leaf columns to be pinned.
+   *
+   * Defaults to `true`; table-level `enableColumnPinning` must also allow
+   * pinning.
    */
   enablePinning?: boolean
 }
 
 export interface Column_ColumnPinning {
   /**
-   * Returns whether or not the column can be pinned.
+   * Checks whether this column or any of its leaves can be pinned.
    */
   getCanPin: () => boolean
   /**
-   * Returns the pinned position of the column. (`'left'`, `'right'` or `false`)
+   * Reads the column's pinned position: `'left'`, `'right'`, or `false`.
    */
   getIsPinned: () => ColumnPinningPosition
   /**
-   * Returns the numeric pinned index of the column within a pinned column group.
+   * Finds this column's index within its pinned region.
    */
   getPinnedIndex: () => number
   /**
-   * Pins a column to the `'left'` or `'right'`, or unpins the column to the center if `false` is passed.
+   * Pins this column's leaf columns left or right, or unpins them when `false`
+   * is passed.
    */
   pin: (position: ColumnPinningPosition) => void
 }
@@ -64,15 +71,15 @@ export interface Row_ColumnPinning<
   TData extends RowData,
 > {
   /**
-   * Returns all center pinned (unpinned) leaf cells in the row.
+   * Gets visible row cells whose columns are not pinned left or right.
    */
   getCenterVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
-   * Returns all left pinned leaf cells in the row.
+   * Gets visible row cells whose columns are pinned left.
    */
   getLeftVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
-   * Returns all right pinned leaf cells in the row.
+   * Gets visible row cells whose columns are pinned right.
    */
   getRightVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
 }
@@ -82,87 +89,92 @@ export interface Table_ColumnPinning<
   TData extends RowData,
 > {
   /**
-   * If pinning, returns headers for all columns that are not pinned, including parent headers.
+   * Builds flat center-region headers for columns that are not pinned,
+   * including parent headers.
    */
   getCenterFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * If pinning, returns the footer groups for columns that are not pinned.
+   * Builds footer groups for the center region of unpinned columns.
    */
   getCenterFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * If pinning, returns the header groups for columns that are not pinned.
+   * Builds header groups for the center region of unpinned columns.
    */
   getCenterHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Returns all center pinned (unpinned) leaf columns.
+   * Gets leaf columns that are not pinned left or right.
    */
   getCenterLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * If pinning, returns headers for all columns that are not pinned, (not including parent headers).
+   * Builds center-region leaf headers for columns that are not pinned.
    */
   getCenterLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * If column pinning, returns a flat array of leaf-node columns that are visible in the unpinned/center portion of the table.
+   * Lists visible leaf columns in the unpinned center region.
    */
   getCenterVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Returns whether or not any columns are pinned. Optionally specify to only check for pinned columns in either the `left` or `right` position.
+   * Checks whether any columns are pinned, optionally limited to one side.
    */
   getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
   /**
-   * If pinning, returns headers for all left pinned columns in the table, including parent headers.
+   * Builds flat left-region headers for pinned columns, including parent
+   * headers.
    */
   getLeftFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * If pinning, returns the footer groups for the left pinned columns.
+   * Builds footer groups for left-pinned columns.
    */
   getLeftFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * If pinning, returns the header groups for the left pinned columns.
+   * Builds header groups for left-pinned columns.
    */
   getLeftHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Returns all left pinned leaf columns.
+   * Gets leaf columns pinned to the left region in pinning-state order.
    */
   getLeftLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * If pinning, returns headers for all left pinned leaf columns in the table, (not including parent headers).
+   * Builds leaf headers for left-pinned columns.
    */
   getLeftLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * If column pinning, returns a flat array of leaf-node columns that are visible in the left portion of the table.
+   * Lists visible leaf columns in the left pinned region.
    */
   getLeftVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * If pinning, returns headers for all right pinned columns in the table, including parent headers.
+   * Builds flat right-region headers for pinned columns, including parent
+   * headers.
    */
   getRightFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * If pinning, returns the footer groups for the right pinned columns.
+   * Builds footer groups for right-pinned columns.
    */
   getRightFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * If pinning, returns the header groups for the right pinned columns.
+   * Builds header groups for right-pinned columns.
    */
   getRightHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Returns all right pinned leaf columns.
+   * Gets leaf columns pinned to the right region in pinning-state order.
    */
   getRightLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * If pinning, returns headers for all right pinned leaf columns in the table, (not including parent headers).
+   * Builds leaf headers for right-pinned columns.
    */
   getRightLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * If column pinning, returns a flat array of leaf-node columns that are visible in the right portion of the table.
+   * Lists visible leaf columns in the right pinned region.
    */
   getRightVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Resets the **columnPinning** state to `initialState.columnPinning`, or `true` can be passed to force a default blank state reset to `{ left: [], right: [], }`.
+   * Resets `columnPinning` to `initialState.columnPinning`.
+   *
+   * Pass `true` to ignore initial state and reset to empty left/right arrays.
    */
   resetColumnPinning: (defaultState?: boolean) => void
   /**
-   * Sets column pinning state using a value or updater.
+   * Updates column pinning state with a next state or updater function.
    */
   setColumnPinning: (updater: Updater<ColumnPinningState>) => void
   /**
@@ -172,7 +184,7 @@ export interface Table_ColumnPinning<
     position: ColumnPinningPosition | 'center',
   ) => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Returns visible pinned leaf columns for the requested pinning region.
+   * Lists visible leaf columns for the requested pinning region.
    */
   getPinnedVisibleLeafColumns: (
     position: ColumnPinningPosition | 'center',
