@@ -61,14 +61,15 @@ jobs:
         run: |
           if [[ "$(git rev-list --count "origin/${GITHUB_REF_NAME}..HEAD")" == "0" ]]; then
             echo "No version bump commit was created; skipping pull request."
-            git push origin --delete "${{ steps.release-branch.outputs.branch }}"
+            git push origin --delete "$RELEASE_BRANCH"
             exit 0
           fi
 
           gh pr create \
             --base "$GITHUB_REF_NAME" \
-            --head "${{ steps.release-branch.outputs.branch }}" \
+            --head "$RELEASE_BRANCH" \
             --title "release: version packages" \
             --body "Automated version bump created after publishing packages."
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_BRANCH: ${{ steps.release-branch.outputs.branch }}
