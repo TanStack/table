@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
-    "preact": "^10.29.1"
+    "preact": "^10.29.2"
   },
   "peerDependencies": {
     "preact": ">=10"

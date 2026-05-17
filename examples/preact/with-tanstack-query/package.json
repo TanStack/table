@@ -15,11 +15,11 @@
     "@tanstack/preact-query": "^5.100.10",
     "@tanstack/preact-store": "^0.13.1",
     "@tanstack/preact-table": "^9.0.0-alpha.48",
-    "preact": "^10.29.1"
+    "preact": "^10.29.2"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
     "typescript": "6.0.3",
-    "vite": "^8.0.12"
+    "vite": "^8.0.13"
   }
 }

@@ -18,7 +18,7 @@
     "@mui/material": "^9.0.1",
     "@mui/x-date-pickers": "^9.2.0",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
-    "@tanstack/react-pacer": "^0.22.0",
+    "@tanstack/react-pacer": "^0.22.1",
     "@tanstack/react-store": "^0.11.0",
     "@tanstack/react-table": "^9.0.0-alpha.48",
     "@tanstack/react-virtual": "^3.13.24",
@@ -31,9 +31,9 @@
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^6.0.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.12"
+    "vite": "^8.0.13"
   }
 }
