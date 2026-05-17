@@ -36,3 +36,5 @@ cleanupUnusedCatalogs: true
 
 linkWorkspacePackages: true
 preferWorkspacePackages: true
+blockExoticSubdeps: true
+trustPolicy: 'no-downgrade'
