@@ -1,4 +1,4 @@
-import { Match, Show, Switch } from 'solid-js'
+import { For, Match, Show, Switch } from 'solid-js'
 import { Header, HeaderLogo, MainPanel, Select } from '@tanstack/devtools-ui'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useStyles } from '../styles/use-styles'
@@ -63,17 +63,19 @@ export function Shell() {
         </Show>
 
         <div class={styles().tabBar}>
-          {tabs.map((tab) => (
-            <button
-              type="button"
-              class={`${styles().tabButton} ${
-                activeTab() === tab.id ? styles().tabButtonActive : ''
-              }`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
+          <For each={tabs}>
+            {(tab) => (
+              <button
+                type="button"
+                class={`${styles().tabButton} ${
+                  activeTab() === tab.id ? styles().tabButtonActive : ''
+                }`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            )}
+          </For>
         </div>
 
         <div class={styles().contentArea}>

@@ -15,7 +15,7 @@ import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 import type { TableDevtoolsRegistration } from './tableTarget'
 
 type TableDevtoolsTabId = 'features' | 'state' | 'options' | 'rows' | 'columns'
-type AnyTable = Table<TableFeatures, RowData>
+type AnyTable = Table<{}, RowData>
 
 interface TableDevtoolsContextValue {
   targets: Accessor<Array<TableDevtoolsRegistration>>
@@ -31,12 +31,12 @@ const TableDevtoolsContext = createContext<
 >(undefined)
 
 export const TableContextProvider: ParentComponent = (props) => {
-  const [targets, setTargets] = createSignal<Array<TableDevtoolsRegistration>>(
-    getTableDevtoolsTargets(),
-  )
+  const initialTargets = getTableDevtoolsTargets()
+  const [targets, setTargets] =
+    createSignal<Array<TableDevtoolsRegistration>>(initialTargets)
   const [selectedTargetId, setSelectedTargetId] = createSignal<
     string | undefined
-  >(targets()[0]?.id)
+  >(initialTargets[0]?.id)
   const [activeTab, setActiveTab] = createSignal<TableDevtoolsTabId>('features')
 
   const selectedTarget = createMemo(() =>

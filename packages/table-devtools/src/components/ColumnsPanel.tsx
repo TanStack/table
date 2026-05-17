@@ -1,4 +1,4 @@
-import { For } from 'solid-js'
+import { For, Show, createMemo } from 'solid-js'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
@@ -32,65 +32,57 @@ export function ColumnsPanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
 
-  const tableInstance = table()
   const tableState = useTableStore(
-    tableInstance ? tableInstance.store : undefined,
+    () => table()?.store,
     (state) => state,
   )
 
-  if (!tableInstance) {
-    return <NoTableConnected title="Columns" />
-  }
-
-  const getColumns = (): Array<AnyColumn> => {
-    tableState?.()
-    const tableWithColumnFns = tableInstance as unknown as {
-      getAllFlatColumns?: () => Array<AnyColumn>
-      getAllLeafColumns?: () => Array<AnyColumn>
+  const columns = createMemo<Array<AnyColumn>>(() => {
+    const tableInstance = table()
+    if (!tableInstance) {
+      return []
     }
 
-    return (
-      tableWithColumnFns.getAllFlatColumns?.() ??
-      tableWithColumnFns.getAllLeafColumns?.() ??
-      []
-    )
-  }
+    tableState()
 
-  const columns = getColumns()
+    return tableInstance.getAllFlatColumns()
+  })
 
   return (
-    <div class={styles().panelScroll}>
-      <div class={styles().sectionTitle}>Columns ({columns.length})</div>
-      <div class={styles().tableWrapper}>
-        <table class={styles().rowsTable}>
-          <thead>
-            <tr>
-              <th class={styles().headerCell}>#</th>
-              <th class={styles().headerCell}>id</th>
-              <th class={styles().headerCell}>depth</th>
-              <th class={styles().headerCell}>accessor</th>
-              <th class={styles().headerCell}>columnDef</th>
-            </tr>
-          </thead>
-          <tbody>
-            <For each={columns}>
-              {(column, index) => (
-                <tr>
-                  <td class={styles().bodyCellMono}>{index() + 1}</td>
-                  <td class={styles().bodyCellMono}>{column.id}</td>
-                  <td class={styles().bodyCellMono}>{column.depth}</td>
-                  <td class={styles().bodyCellMono}>
-                    {column.accessorFn ? '✓' : '○'}
-                  </td>
-                  <td class={styles().bodyCell}>
-                    {getColumnDefSummary(column)}
-                  </td>
-                </tr>
-              )}
-            </For>
-          </tbody>
-        </table>
+    <Show fallback={<NoTableConnected title={'Columns'} />} when={table()}>
+      <div class={styles().panelScroll}>
+        <div class={styles().sectionTitle}>Columns ({columns().length})</div>
+        <div class={styles().tableWrapper}>
+          <table class={styles().rowsTable}>
+            <thead>
+              <tr>
+                <th class={styles().headerCell}>#</th>
+                <th class={styles().headerCell}>id</th>
+                <th class={styles().headerCell}>depth</th>
+                <th class={styles().headerCell}>accessor</th>
+                <th class={styles().headerCell}>columnDef</th>
+              </tr>
+            </thead>
+            <tbody>
+              <For each={columns()}>
+                {(column, index) => (
+                  <tr>
+                    <td class={styles().bodyCellMono}>{index() + 1}</td>
+                    <td class={styles().bodyCellMono}>{column.id}</td>
+                    <td class={styles().bodyCellMono}>{column.depth}</td>
+                    <td class={styles().bodyCellMono}>
+                      {column.accessorFn ? '✓' : '○'}
+                    </td>
+                    <td class={styles().bodyCell}>
+                      {getColumnDefSummary(column)}
+                    </td>
+                  </tr>
+                )}
+              </For>
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </Show>
   )
 }
