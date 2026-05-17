@@ -203,16 +203,14 @@ In the template, drive sorting from the header:
 
 ```html
 @if (!header.isPlaceholder) {
-  <th
-    (click)="header.column.toggleSorting()"
-    [style.cursor]="header.column.getCanSort() ? 'pointer' : ''"
-  >
-    <ng-container *flexRenderHeader="header; let value">{{ value }}</ng-container>
-    @switch (header.column.getIsSorted()) {
-      @case ('asc') { ▲ }
-      @case ('desc') { ▼ }
-    }
-  </th>
+<th
+  (click)="header.column.toggleSorting()"
+  [style.cursor]="header.column.getCanSort() ? 'pointer' : ''"
+>
+  <ng-container *flexRenderHeader="header; let value">{{ value }}</ng-container>
+  @switch (header.column.getIsSorted()) { @case ('asc') { ▲ } @case ('desc') { ▼
+  } }
+</th>
 }
 ```
 
