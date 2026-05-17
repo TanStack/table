@@ -19,6 +19,7 @@ env:
 permissions:
   contents: write
   id-token: write
+  pull-requests: write
 
 jobs:
   release:
@@ -40,11 +41,34 @@ jobs:
       - name: Stop Nx Agents
         if: ${{ always() }}
         run: npx nx-cloud stop-all-agents
+      - name: Prepare Release PR Branch
+        id: release-branch
+        run: |
+          branch="release/${GITHUB_REF_NAME}/version-bump-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git switch -c "$branch"
+          git push --set-upstream origin "$branch"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
       - name: Publish
         run: |
-          git config --global user.name 'Tanner Linsley'
-          git config --global user.email 'tannerlinsley@users.noreply.github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           pnpm run cipublish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ github.ref_name }}
           TAG: ${{ inputs.tag }}
+      - name: Open Version Bump Pull Request
+        run: |
+          if [[ "$(git rev-list --count "origin/${GITHUB_REF_NAME}..HEAD")" == "0" ]]; then
+            echo "No version bump commit was created; skipping pull request."
+            git push origin --delete "${{ steps.release-branch.outputs.branch }}"
+            exit 0
+          fi
+
+          gh pr create \
+            --base "$GITHUB_REF_NAME" \
+            --head "${{ steps.release-branch.outputs.branch }}" \
+            --title "release: version packages" \
+            --body "Automated version bump created after publishing packages."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
