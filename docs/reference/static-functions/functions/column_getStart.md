@@ -9,11 +9,12 @@ title: column_getStart
 function column_getStart<TFeatures, TData, TValue>(column, position): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L86)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L91)
 
-Returns start for a column.
+Computes the offset from the start edge of a pinning region to this column.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The value is the sum of all previous visible leaf column sizes in the
+requested `'left'`, `'center'`, or `'right'` region.
 
 ## Type Parameters
 
@@ -46,5 +47,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getStart(column)
+const leftOffset = column_getStart(column, 'left')
 ```

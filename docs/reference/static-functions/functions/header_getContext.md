@@ -9,11 +9,11 @@ title: header_getContext
 function header_getContext<TFeatures, TData, TValue>(header): object;
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L59)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L55)
 
-Returns context for a header.
+Builds the render context passed to a column's `header` or `footer` template.
 
-This is the static implementation behind the matching header instance API and can account for nested header groups.
+The context contains the header, its column, and the owning table instance.
 
 ## Type Parameters
 
@@ -60,5 +60,5 @@ table: Table_Internal<TFeatures, TData> = header.column.table;
 ## Example
 
 ```ts
-const value = header_getContext(header)
+const context = header_getContext(header)
 ```

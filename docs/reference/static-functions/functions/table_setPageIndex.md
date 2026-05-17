@@ -9,11 +9,12 @@ title: table_setPageIndex
 function table_setPageIndex<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L108)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L116)
 
-Updates the table's page index state slice.
+Updates `pagination.pageIndex` and clamps it to the known page range.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+Unknown page counts (`undefined` or `-1`) allow any non-negative page index.
+Known page counts clamp the index between `0` and `pageCount - 1`.
 
 ## Type Parameters
 

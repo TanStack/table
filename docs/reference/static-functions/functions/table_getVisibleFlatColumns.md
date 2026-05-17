@@ -9,11 +9,12 @@ title: table_getVisibleFlatColumns
 function table_getVisibleFlatColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:179](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L179)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:217](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L217)
 
-Returns visible flat columns for the table.
+Filters the flat column list down to visible columns.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Parent/group columns are included when `column_getIsVisible` considers them
+visible.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getVisibleFlatColumns(table)
+const columns = table_getVisibleFlatColumns(table)
 ```

@@ -9,11 +9,12 @@ title: table_setSorting
 function table_setSorting<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L39)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L41)
 
-Updates the table's sorting state slice.
+Routes a sorting updater through the table's sorting change handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The updater may be a next `SortingState` array or a function of the previous
+sorting state, matching the instance `table.setSorting` behavior.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setSorting(table, (old) => old)
+table_setSorting(table, (old) => [...old, { id: 'age', desc: true }])
 ```

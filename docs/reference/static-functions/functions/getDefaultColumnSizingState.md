@@ -9,11 +9,12 @@ title: getDefaultColumnSizingState
 function getDefaultColumnSizingState(): ColumnSizingState;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L27)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L28)
 
-Returns the default column sizing state.
+Creates the default committed column sizing state.
 
-Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+The feature default is an empty map, so columns fall back to their column def
+size or the built-in sizing defaults.
 
 ## Returns
 
@@ -22,5 +23,5 @@ Feature constructors use this value to initialize the table state or option defa
 ## Example
 
 ```ts
-const initialValue = getDefaultColumnSizingState()
+const sizing = getDefaultColumnSizingState()
 ```

@@ -9,11 +9,12 @@ title: table_resetColumnSizing
 function table_resetColumnSizing<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:266](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L266)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:277](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L277)
 
-Resets the table's column sizing state slice.
+Resets `columnSizing` to the configured initial state or feature default.
 
-By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+With no argument, the reset clones `table.initialState.columnSizing` when it
+exists. Passing `true` ignores initial state and resets to `{}`.
 
 ## Type Parameters
 

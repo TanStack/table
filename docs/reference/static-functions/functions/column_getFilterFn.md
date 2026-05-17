@@ -11,11 +11,13 @@ function column_getFilterFn<TFeatures, TData, TValue>(column):
   | undefined;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L80)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L85)
 
-Returns filter fn for a column.
+Resolves the filter function configured for a column.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Function-valued `columnDef.filterFn` is returned directly, `'auto'` delegates
+to `column_getAutoFilterFn`, and string values are looked up in the table's
+filter function registry.
 
 ## Type Parameters
 
@@ -45,5 +47,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getFilterFn(column)
+const filterFn = column_getFilterFn(column)
 ```

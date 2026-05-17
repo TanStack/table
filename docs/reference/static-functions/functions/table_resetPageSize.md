@@ -9,11 +9,12 @@ title: table_resetPageSize
 function table_resetPageSize<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L165)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L175)
 
-Resets the table's page size state slice.
+Resets only `pagination.pageSize`.
 
-By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+With no argument, the reset uses `table.initialState.pagination?.pageSize`
+or `10`. Passing `true` always resets the page size to `10`.
 
 ## Type Parameters
 

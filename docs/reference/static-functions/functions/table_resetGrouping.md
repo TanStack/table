@@ -9,11 +9,12 @@ title: table_resetGrouping
 function table_resetGrouping<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L221)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:230](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L230)
 
-Resets the table's grouping state slice.
+Resets `grouping` to the configured initial state or feature default.
 
-By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+With no argument, the reset clones `table.initialState.grouping` when it
+exists. Passing `true` ignores initial state and resets to `[]`.
 
 ## Type Parameters
 

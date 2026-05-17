@@ -9,11 +9,12 @@ title: table_getAllFlatColumnsById
 function table_getAllFlatColumnsById<TFeatures, TData>(table): Record<string, Column<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L175)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:182](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L182)
 
-Returns all flat columns by id for the table.
+Builds an id lookup for every flat column in the table.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Group columns and leaf columns are included. Later columns with the same id
+replace earlier entries.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getAllFlatColumnsById(table)
+const columnsById = table_getAllFlatColumnsById(table)
 ```

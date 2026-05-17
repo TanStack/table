@@ -9,11 +9,13 @@ title: column_getIsVisible
 function column_getIsVisible<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L60)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L64)
 
-Returns is visible for a column.
+Checks whether this column is visible.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Leaf columns read `state.columnVisibility[column.id]`, where missing entries
+default to visible. Parent columns are visible when at least one child column
+is visible.
 
 ## Type Parameters
 
@@ -42,5 +44,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getIsVisible(column)
+const visible = column_getIsVisible(column)
 ```

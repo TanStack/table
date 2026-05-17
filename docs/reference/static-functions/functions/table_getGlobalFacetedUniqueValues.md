@@ -9,11 +9,12 @@ title: table_getGlobalFacetedUniqueValues
 function table_getGlobalFacetedUniqueValues<TFeatures, TData>(table): Map<any, number>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L129)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:137](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L137)
 
-Returns global faceted unique values for the table.
+Computes unique values and occurrence counts for the global filter context.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The global context is requested with the internal `__global__` column id. If
+no factory is registered, an empty `Map` is returned.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getGlobalFacetedUniqueValues(table)
+const values = table_getGlobalFacetedUniqueValues(table)
 ```

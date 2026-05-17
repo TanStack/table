@@ -11,11 +11,13 @@ function column_getAggregationFn<TFeatures, TData, TValue>(column):
   | undefined;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:177](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L177)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L184)
 
-Returns aggregation fn for a column.
+Resolves the aggregation function configured for a column.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Function-valued `columnDef.aggregationFn` is returned directly, `'auto'`
+delegates to `column_getAutoAggregationFn`, and string values are looked up in
+the table's aggregation function registry.
 
 ## Type Parameters
 
@@ -45,5 +47,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getAggregationFn(column)
+const aggregationFn = column_getAggregationFn(column)
 ```

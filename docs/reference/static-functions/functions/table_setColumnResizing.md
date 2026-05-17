@@ -9,11 +9,12 @@ title: table_setColumnResizing
 function table_setColumnResizing<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.utils.ts:275](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L275)
+Defined in: [features/column-resizing/columnResizingFeature.utils.ts:280](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L280)
 
-Updates the table's column resizing state slice.
+Routes a transient column resizing updater through the table's resize handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+This state tracks the active drag interaction; committed widths live in
+`columnSizing`.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setColumnResizing(table, (old) => old)
+table_setColumnResizing(table, (old) => ({ ...old, deltaOffset: 12 }))
 ```

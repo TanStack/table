@@ -9,7 +9,7 @@ title: columnSizingFeature
 const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.ts:166](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L166)
+Defined in: [features/column-sizing/columnSizingFeature.ts:182](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L182)
 
 The stock column sizing feature.
 

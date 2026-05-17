@@ -9,11 +9,11 @@ title: column_getIsResizing
 function column_getIsResizing<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.utils.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L68)
+Defined in: [features/column-resizing/columnResizingFeature.utils.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L70)
 
-Returns is resizing for a column.
+Checks whether this column is the active column resize target.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The value is read from `state.columnResizing.isResizingColumn`.
 
 ## Type Parameters
 
@@ -42,5 +42,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getIsResizing(column)
+const isResizing = column_getIsResizing(column)
 ```

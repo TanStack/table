@@ -9,11 +9,12 @@ title: table_getFooterGroups
 function table_getFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L140)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:142](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L142)
 
-Returns footer groups for the table.
+Builds footer groups by reversing the current header groups.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Footer rendering uses the same header objects and grouping structure, but
+renders them from leaf level back toward the root.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getFooterGroups(table)
+const footerGroups = table_getFooterGroups(table)
 ```

@@ -9,11 +9,12 @@ title: table_getGlobalAutoFilterFn
 function table_getGlobalAutoFilterFn(): FilterFn<any, any>;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L43)
+Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L45)
 
-Returns global auto filter fn for the table.
+Provides the built-in automatic global filter function.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Global filtering defaults to `includesString`, which gives search-box style
+matching across globally filterable columns.
 
 ## Returns
 
@@ -22,5 +23,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getGlobalAutoFilterFn(table)
+const filterFn = table_getGlobalAutoFilterFn()
 ```

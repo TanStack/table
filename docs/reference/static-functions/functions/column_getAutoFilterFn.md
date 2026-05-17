@@ -11,11 +11,13 @@ function column_getAutoFilterFn<TFeatures, TData, TValue>(column):
   | undefined;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L35)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L38)
 
-Infers filter fn for a column.
+Chooses a built-in filter function from the column's first core row value.
 
-The inference uses the column definition, table options, and sampled row values when needed.
+Strings use `includesString`, numbers use `inNumberRange`, booleans and
+objects use `equals`, arrays use `arrIncludes`, and unknown values fall back
+to `weakEquals`.
 
 ## Type Parameters
 
@@ -45,5 +47,5 @@ The inference uses the column definition, table options, and sampled row values 
 ## Example
 
 ```ts
-const value = column_getAutoFilterFn(column)
+const filterFn = column_getAutoFilterFn(column)
 ```

@@ -9,11 +9,12 @@ title: getDefaultColumnVisibilityState
 function getDefaultColumnVisibilityState(): ColumnVisibilityState;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L21)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L22)
 
-Returns the default column visibility state.
+Creates the default column visibility state.
 
-Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+The feature default is an empty object, where missing column ids are treated
+as visible. Reset APIs use this value when `defaultState` is `true`.
 
 ## Returns
 
@@ -22,5 +23,5 @@ Feature constructors use this value to initialize the table state or option defa
 ## Example
 
 ```ts
-const initialValue = getDefaultColumnVisibilityState()
+const visibility = getDefaultColumnVisibilityState()
 ```

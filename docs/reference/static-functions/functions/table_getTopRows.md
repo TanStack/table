@@ -9,7 +9,7 @@ title: table_getTopRows
 function table_getTopRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:144](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L144)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:146](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L146)
 
 Returns top rows for the table.
 

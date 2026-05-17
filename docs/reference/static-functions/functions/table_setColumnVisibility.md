@@ -9,11 +9,12 @@ title: table_setColumnVisibility
 function table_setColumnVisibility<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L221)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L261)
 
-Updates the table's column visibility state slice.
+Routes a column visibility updater through the table's visibility change handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The updater may be a next visibility map or a function of the previous map,
+matching the instance `table.setColumnVisibility` behavior.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setColumnVisibility(table, (old) => old)
+table_setColumnVisibility(table, (old) => ({ ...old, age: false }))
 ```

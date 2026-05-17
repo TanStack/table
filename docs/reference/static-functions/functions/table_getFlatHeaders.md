@@ -9,11 +9,12 @@ title: table_getFlatHeaders
 function table_getFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:158](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L158)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:161](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L161)
 
-Returns flat headers for the table.
+Flattens every header from every header group into one array.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The result includes parent headers and placeholder headers, in header-group
+order from top to bottom.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getFlatHeaders(table)
+const flatHeaders = table_getFlatHeaders(table)
 ```

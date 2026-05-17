@@ -9,7 +9,7 @@ title: table_getCenterRows
 function table_getCenterRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:178](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L178)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L180)
 
 Returns center rows for the table.
 

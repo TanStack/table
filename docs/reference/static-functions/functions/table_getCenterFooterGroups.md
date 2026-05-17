@@ -9,11 +9,11 @@ title: table_getCenterFooterGroups
 function table_getCenterFooterGroups<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:494](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L494)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:516](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L516)
 
-Returns center footer groups for the table.
+Builds footer groups for the center, unpinned region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Footer groups reuse the center header groups in reverse order.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getCenterFooterGroups(table)
+const footerGroups = table_getCenterFooterGroups(table)
 ```

@@ -9,11 +9,12 @@ title: row_getAllCells
 function row_getAllCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L163)
+Defined in: [core/rows/coreRowsFeature.utils.ts:167](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L167)
 
-Returns all cells for a row.
+Constructs one cell for each leaf column in this row.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+The result follows `table.getAllLeafColumns()` order and includes hidden
+columns; visibility-specific APIs filter this list later.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getAllCells(row)
+const cells = row_getAllCells(row)
 ```

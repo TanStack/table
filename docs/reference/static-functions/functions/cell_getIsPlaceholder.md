@@ -9,11 +9,12 @@ title: cell_getIsPlaceholder
 function cell_getIsPlaceholder<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:315](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L315)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:326](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L326)
 
-Returns is placeholder for a cell.
+Checks whether this cell is a placeholder hidden by grouping.
 
-This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+Placeholder cells belong to grouped columns other than the row's active
+grouping column.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This is the static implementation behind the matching cell instance API and uses
 ## Example
 
 ```ts
-const value = cell_getIsPlaceholder(cell)
+const isPlaceholder = cell_getIsPlaceholder(cell)
 ```

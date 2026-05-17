@@ -8,13 +8,14 @@ const defaultPageIndex = 0
 const defaultPageSize = 10
 
 /**
- * Returns the default pagination state.
+ * Creates the default pagination state used by the pagination feature.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default starts at the first page with a page size of 10. Reset
+ * APIs use this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultPaginationState()
+ * const pagination = getDefaultPaginationState()
  * ```
  */
 export function getDefaultPaginationState(): PaginationState {
@@ -25,9 +26,11 @@ export function getDefaultPaginationState(): PaginationState {
 }
 
 /**
- * Schedules an automatic reset for page index.
+ * Resets the page index when a page-altering change should return to page 0.
  *
- * The reset only runs when the related feature options allow automatic resets for the current table state change.
+ * The reset runs when `autoResetAll`, `autoResetPageIndex`, or the default
+ * client-side pagination behavior allows it. Manual pagination opts out unless
+ * the reset options explicitly opt back in.
  *
  * @example
  * ```ts
@@ -48,9 +51,11 @@ export function table_autoResetPageIndex<
 }
 
 /**
- * Updates the table's pagination state slice.
+ * Routes a pagination updater through the table's pagination change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next state object or a function of the previous
+ * `PaginationState`; controlled state and external atoms observe the same
+ * updater path as the instance API.
  *
  * @example
  * ```ts
@@ -71,9 +76,11 @@ export function table_setPagination<
 }
 
 /**
- * Resets the table's pagination state slice.
+ * Resets `pagination` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.pagination` when it
+ * exists. Passing `true` ignores initial state and resets to
+ * `{ pageIndex: 0, pageSize: 10 }`.
  *
  * @example
  * ```ts
@@ -96,9 +103,10 @@ export function table_resetPagination<
 }
 
 /**
- * Updates the table's page index state slice.
+ * Updates `pagination.pageIndex` and clamps it to the known page range.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * Unknown page counts (`undefined` or `-1`) allow any non-negative page index.
+ * Known page counts clamp the index between `0` and `pageCount - 1`.
  *
  * @example
  * ```ts
@@ -128,9 +136,10 @@ export function table_setPageIndex<
 }
 
 /**
- * Resets the table's page index state slice.
+ * Resets only `pagination.pageIndex`.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset uses `table.initialState.pagination?.pageIndex`
+ * or `0`. Passing `true` always resets the page index to `0`.
  *
  * @example
  * ```ts
@@ -152,9 +161,10 @@ export function table_resetPageIndex<
 }
 
 /**
- * Resets the table's page size state slice.
+ * Resets only `pagination.pageSize`.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset uses `table.initialState.pagination?.pageSize`
+ * or `10`. Passing `true` always resets the page size to `10`.
  *
  * @example
  * ```ts
@@ -176,9 +186,10 @@ export function table_resetPageSize<
 }
 
 /**
- * Updates the table's page size state slice.
+ * Updates `pagination.pageSize` while preserving the current top row.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The new size is clamped to at least `1`, and `pageIndex` is recalculated so
+ * the row that was previously at the top of the page remains in view.
  *
  * @example
  * ```ts
@@ -203,13 +214,14 @@ export function table_setPageSize<
 }
 
 /**
- * Returns page options for the table.
+ * Builds the zero-based page indexes available for the current page count.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Unknown or empty page counts return an empty array; otherwise the result is
+ * `[0, 1, ...pageCount - 1]`.
  *
  * @example
  * ```ts
- * const value = table_getPageOptions(table)
+ * const pageIndexes = table_getPageOptions(table)
  * ```
  */
 export function table_getPageOptions<
@@ -225,13 +237,14 @@ export function table_getPageOptions<
 }
 
 /**
- * Returns can previous page for the table.
+ * Checks whether the current page index can move backward.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The first page is page index `0`, so only positive page indexes can navigate
+ * to a previous page.
  *
  * @example
  * ```ts
- * const value = table_getCanPreviousPage(table)
+ * const canGoBack = table_getCanPreviousPage(table)
  * ```
  */
 export function table_getCanPreviousPage<
@@ -242,13 +255,14 @@ export function table_getCanPreviousPage<
 }
 
 /**
- * Returns can next page for the table.
+ * Checks whether the current page index can move forward.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * A `pageCount` of `-1` means the caller does not know the total page count, so
+ * this returns `true`. A page count of `0` returns `false`.
  *
  * @example
  * ```ts
- * const value = table_getCanNextPage(table)
+ * const canGoForward = table_getCanNextPage(table)
  * ```
  */
 export function table_getCanNextPage<
@@ -343,13 +357,14 @@ export function table_lastPage<
 }
 
 /**
- * Returns page count for the table.
+ * Resolves the number of pages for the current pagination state.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * `options.pageCount` wins for manual pagination. Otherwise the value is
+ * calculated from `table_getRowCount(table)` and the current `pageSize`.
  *
  * @example
  * ```ts
- * const value = table_getPageCount(table)
+ * const pages = table_getPageCount(table)
  * ```
  */
 export function table_getPageCount<
@@ -366,13 +381,15 @@ export function table_getPageCount<
 }
 
 /**
- * Returns row count for the table.
+ * Resolves the total row count used for pagination math.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * `options.rowCount` wins for manual pagination. Otherwise the count comes
+ * from the pre-paginated row model so filtering, grouping, sorting, and
+ * expansion are reflected before the page slice is applied.
  *
  * @example
  * ```ts
- * const value = table_getRowCount(table)
+ * const rows = table_getRowCount(table)
  * ```
  */
 export function table_getRowCount<

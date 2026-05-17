@@ -9,11 +9,12 @@ title: table_getLeftHeaderGroups
 function table_getLeftHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:342](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L342)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:362](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L362)
 
-Returns left header groups for the table.
+Builds header groups for visible columns pinned to the left region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The leaf columns are read in `state.columnPinning.left` order and then passed
+through the same header-group builder as the unpinned table.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getLeftHeaderGroups(table)
+const headerGroups = table_getLeftHeaderGroups(table)
 ```

@@ -9,11 +9,13 @@ title: header_getResizeHandler
 function header_getResizeHandler<TFeatures, TData, TValue>(header, _contextDocument?): (event) => void;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.utils.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L88)
+Defined in: [features/column-resizing/columnResizingFeature.utils.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L92)
 
-Returns resize handler for a header.
+Creates the pointer/touch start handler for resizing a header.
 
-This is the static implementation behind the matching header instance API and can account for nested header groups.
+The handler records starting sizes for all leaf headers, tracks drag deltas,
+writes transient resize info, and commits column sizes on change or drag end
+depending on `columnResizeMode`.
 
 ## Type Parameters
 

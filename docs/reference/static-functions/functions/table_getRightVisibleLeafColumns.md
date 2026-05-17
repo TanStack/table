@@ -9,11 +9,11 @@ title: table_getRightVisibleLeafColumns
 function table_getRightVisibleLeafColumns<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:796](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L796)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:830](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L830)
 
-Returns right visible leaf columns for the table.
+Resolves visible leaf columns pinned to the right region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Hidden pinned columns are filtered out after the right pin order is applied.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getRightVisibleLeafColumns(table)
+const columns = table_getRightVisibleLeafColumns(table)
 ```

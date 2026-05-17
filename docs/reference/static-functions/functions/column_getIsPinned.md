@@ -9,11 +9,12 @@ title: column_getIsPinned
 function column_getIsPinned<TFeatures, TData, TValue>(column): ColumnPinningPosition;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L125)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L135)
 
-Returns is pinned for a column.
+Reads this column's current pinning region.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Group columns report `'left'` or `'right'` when any leaf column is pinned in
+that region. Unpinned columns return `false`.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getIsPinned(column)
+const position = column_getIsPinned(column)
 ```

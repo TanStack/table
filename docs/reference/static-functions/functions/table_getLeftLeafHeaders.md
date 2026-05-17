@@ -9,11 +9,11 @@ title: table_getLeftLeafHeaders
 function table_getLeftLeafHeaders<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:598](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L598)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:629](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L629)
 
-Returns left leaf headers for the table.
+Collects leaf headers for the left pinned region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Parent headers are filtered out from the left flat header list.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getLeftLeafHeaders(table)
+const headers = table_getLeftLeafHeaders(table)
 ```

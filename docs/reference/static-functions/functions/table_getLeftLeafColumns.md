@@ -9,11 +9,12 @@ title: table_getLeftLeafColumns
 function table_getLeftLeafColumns<TFeatures, TData>(table): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:663](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L663)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:695](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L695)
 
-Returns left leaf columns for the table.
+Resolves leaf columns pinned to the left region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The result follows `state.columnPinning.left` order and skips stale ids that
+no longer correspond to a leaf column.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getLeftLeafColumns(table)
+const columns = table_getLeftLeafColumns(table)
 ```

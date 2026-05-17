@@ -9,11 +9,11 @@ title: row_getLeafRows
 function row_getLeafRows<TFeatures, TData>(row): Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:103](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L103)
+Defined in: [core/rows/coreRowsFeature.utils.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L105)
 
-Returns leaf rows for a row.
+Flattens this row's descendant tree into leaf rows.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+The row itself is not included; only nested `subRows` are walked.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getLeafRows(row)
+const descendants = row_getLeafRows(row)
 ```

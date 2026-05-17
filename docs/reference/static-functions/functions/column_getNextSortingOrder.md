@@ -9,11 +9,12 @@ title: column_getNextSortingOrder
 function column_getNextSortingOrder<TFeatures, TData, TValue>(column, multi?): false | "asc" | "desc";
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:312](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L312)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:324](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L324)
 
-Returns next sorting order for a column.
+Resolves the next sort order for this column's toggle cycle.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The cycle starts with the first sort direction, flips between `asc` and
+`desc`, and can return `false` when sorting removal is enabled.
 
 ## Type Parameters
 
@@ -46,5 +47,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getNextSortingOrder(column)
+const nextOrder = column_getNextSortingOrder(column)
 ```

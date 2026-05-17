@@ -13,13 +13,14 @@ import type { Header_Header } from './coreHeadersFeature.types'
 import type { Column } from '../../types/Column'
 
 /**
- * Returns leaf headers for a header.
+ * Walks a header tree and collects all descendant leaf headers.
  *
- * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ * The header itself is included after its descendants, matching the recursive
+ * shape used by nested header groups.
  *
  * @example
  * ```ts
- * const value = header_getLeafHeaders(header)
+ * const leafHeaders = header_getLeafHeaders(header)
  * ```
  */
 export function header_getLeafHeaders<
@@ -42,13 +43,13 @@ export function header_getLeafHeaders<
 }
 
 /**
- * Returns context for a header.
+ * Builds the render context passed to a column's `header` or `footer` template.
  *
- * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ * The context contains the header, its column, and the owning table instance.
  *
  * @example
  * ```ts
- * const value = header_getContext(header)
+ * const context = header_getContext(header)
  * ```
  */
 export function header_getContext<
@@ -64,13 +65,14 @@ export function header_getContext<
 }
 
 /**
- * Returns header groups for the table.
+ * Builds visible header groups for the current column tree.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Column visibility and pinning are applied before groups are built. When no
+ * columns are pinned, the fast path skips pin partitioning.
  *
  * @example
  * ```ts
- * const value = table_getHeaderGroups(table)
+ * const headerGroups = table_getHeaderGroups(table)
  * ```
  */
 export function table_getHeaderGroups<
@@ -127,13 +129,14 @@ export function table_getHeaderGroups<
 }
 
 /**
- * Returns footer groups for the table.
+ * Builds footer groups by reversing the current header groups.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Footer rendering uses the same header objects and grouping structure, but
+ * renders them from leaf level back toward the root.
  *
  * @example
  * ```ts
- * const value = table_getFooterGroups(table)
+ * const footerGroups = table_getFooterGroups(table)
  * ```
  */
 export function table_getFooterGroups<
@@ -145,13 +148,14 @@ export function table_getFooterGroups<
 }
 
 /**
- * Returns flat headers for the table.
+ * Flattens every header from every header group into one array.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The result includes parent headers and placeholder headers, in header-group
+ * order from top to bottom.
  *
  * @example
  * ```ts
- * const value = table_getFlatHeaders(table)
+ * const flatHeaders = table_getFlatHeaders(table)
  * ```
  */
 export function table_getFlatHeaders<
@@ -170,13 +174,14 @@ export function table_getFlatHeaders<
 }
 
 /**
- * Returns leaf headers for the table.
+ * Collects only the leaf headers from the current header tree.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Parent/group headers are skipped, making the result suitable for rendering
+ * one header per visible leaf column.
  *
  * @example
  * ```ts
- * const value = table_getLeafHeaders(table)
+ * const leafHeaders = table_getLeafHeaders(table)
  * ```
  */
 export function table_getLeafHeaders<

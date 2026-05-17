@@ -9,11 +9,12 @@ title: table_getPrePaginatedRowModel
 function table_getPrePaginatedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.utils.ts:212](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L212)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L221)
 
-Returns pre paginated row model for the table.
+Reads the row model immediately before pagination.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Pagination is the final built-in row-model stage, so this aliases
+`table.getExpandedRowModel()`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getPrePaginatedRowModel(table)
+const rowsBeforePagination = table_getPrePaginatedRowModel(table)
 ```

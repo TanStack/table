@@ -9,11 +9,12 @@ title: column_getFirstSortDir
 function column_getFirstSortDir<TFeatures, TData, TValue>(column): "asc" | "desc";
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:290](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L290)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L301)
 
-Returns first sort dir for a column.
+Resolves the first direction used when this column begins sorting.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Column-level `sortDescFirst` wins, then table-level `sortDescFirst`, then the
+auto direction inferred from sampled values.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getFirstSortDir(column)
+const firstDirection = column_getFirstSortDir(column)
 ```

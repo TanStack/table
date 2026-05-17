@@ -5,7 +5,7 @@ title: CoreHeadersFeatureConstructors
 
 # Interface: CoreHeadersFeatureConstructors\<TFeatures, TData\>
 
-Defined in: [core/headers/coreHeadersFeature.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.ts#L23)
+Defined in: [core/headers/coreHeadersFeature.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.ts#L14)
 
 ## Type Parameters
 

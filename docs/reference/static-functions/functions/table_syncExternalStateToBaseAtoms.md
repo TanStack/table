@@ -39,5 +39,5 @@ derived atoms, stores, and table APIs read a consistent snapshot.
 ## Example
 
 ```ts
-const value = table_syncExternalStateToBaseAtoms(table)
+table_syncExternalStateToBaseAtoms(table)
 ```

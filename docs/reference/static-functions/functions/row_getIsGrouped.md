@@ -9,11 +9,11 @@ title: row_getIsGrouped
 function row_getIsGrouped<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:241](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L241)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:250](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L250)
 
-Returns is grouped for a row.
+Checks whether this row was created as a grouped row.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+Grouped rows carry a `groupingColumnId`; ordinary leaf rows do not.
 
 ## Type Parameters
 
@@ -45,5 +45,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getIsGrouped(row)
+const isGrouped = row_getIsGrouped(row)
 ```

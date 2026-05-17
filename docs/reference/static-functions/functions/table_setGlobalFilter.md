@@ -9,11 +9,12 @@ title: table_setGlobalFilter
 function table_setGlobalFilter<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L84)
+Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L89)
 
-Updates the table's global filter state slice.
+Routes a global filter updater through the table's global filter handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The updater may be a next value or a function of the previous value, matching
+the instance `table.setGlobalFilter` behavior.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setGlobalFilter(table, (old) => old)
+table_setGlobalFilter(table, 'search text')
 ```

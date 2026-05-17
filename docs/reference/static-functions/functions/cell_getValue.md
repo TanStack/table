@@ -9,11 +9,12 @@ title: cell_getValue
 function cell_getValue<TFeatures, TData, TValue>(cell): TValue;
 ```
 
-Defined in: [core/cells/coreCellsFeature.utils.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L15)
+Defined in: [core/cells/coreCellsFeature.utils.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L16)
 
-Returns value for a cell.
+Reads this cell's accessor value from its owning row and column.
 
-This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+This is the standalone implementation behind `cell.getValue()`, useful when
+importing static APIs instead of calling methods from the cell prototype.
 
 ## Type Parameters
 

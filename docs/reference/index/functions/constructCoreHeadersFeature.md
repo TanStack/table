@@ -9,7 +9,7 @@ title: constructCoreHeadersFeature
 function constructCoreHeadersFeature<TFeatures, TData>(): TableFeature<CoreHeadersFeatureConstructors<TFeatures, TData>>;
 ```
 
-Defined in: [core/headers/coreHeadersFeature.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.ts#L36)
+Defined in: [core/headers/coreHeadersFeature.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.ts#L27)
 
 Creates the stock core headers feature.
 

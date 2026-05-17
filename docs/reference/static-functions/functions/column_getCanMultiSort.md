@@ -9,11 +9,12 @@ title: column_getCanMultiSort
 function column_getCanMultiSort<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:366](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L366)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:380](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L380)
 
-Returns whether a column can use multi sort.
+Checks whether this column can be added to a multi-sort state.
 
-This combines column options, table options, and any required accessor or feature state for the capability.
+Column-level `enableMultiSort` wins over table-level `enableMultiSort`; if
+neither is set, accessor columns can multi-sort by default.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This combines column options, table options, and any required accessor or featur
 ## Example
 
 ```ts
-const value = column_getCanMultiSort(column)
+const canMultiSort = column_getCanMultiSort(column)
 ```

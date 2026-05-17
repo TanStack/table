@@ -9,11 +9,13 @@ title: column_getFacetedRowModel
 function column_getFacetedRowModel<TFeatures, TData, TValue>(column, table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L41)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L44)
 
-Returns faceted row model for a column.
+Computes the row model used to derive one column's facet values.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The faceted row model normally applies every other active filter while
+excluding this column's own filter. If no factory is registered, the
+pre-filtered row model is returned.
 
 ## Type Parameters
 
@@ -46,5 +48,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getFacetedRowModel(column)
+const rows = column_getFacetedRowModel(column, table)
 ```

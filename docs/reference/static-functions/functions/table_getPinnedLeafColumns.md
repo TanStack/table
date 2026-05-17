@@ -9,11 +9,12 @@ title: table_getPinnedLeafColumns
 function table_getPinnedLeafColumns<TFeatures, TData>(table, position): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:733](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L733)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:767](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L767)
 
-Returns pinned leaf columns for the table.
+Resolves leaf columns for a requested pinning region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Pass `'left'`, `'center'`, or `'right'` for a partition, or pass `false` to
+read all leaf columns without partitioning.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getPinnedLeafColumns(table)
+const columns = table_getPinnedLeafColumns(table, 'center')
 ```

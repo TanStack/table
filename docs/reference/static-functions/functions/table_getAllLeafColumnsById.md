@@ -9,11 +9,12 @@ title: table_getAllLeafColumnsById
 function table_getAllLeafColumnsById<TFeatures, TData>(table): Record<string, Column<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:224](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L224)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L235)
 
-Returns all leaf columns by id for the table.
+Builds an id lookup for terminal leaf columns only.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Parent/group columns are excluded, making this lookup appropriate for row
+cells and feature state keyed by data columns.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getAllLeafColumnsById(table)
+const leavesById = table_getAllLeafColumnsById(table)
 ```

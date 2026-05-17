@@ -9,11 +9,13 @@ title: column_pin
 function column_pin<TFeatures, TData, TValue>(column, position): void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L51)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L56)
 
-Pin. for a column.
+Moves this column's leaf column ids into a pinning region.
 
-This is the static implementation behind the matching column instance API.
+Pinning a group column pins all of its leaves. The leaf ids are first removed
+from both regions, then appended to the requested `'left'` or `'right'`
+region. Passing `false` unpins them back to the center.
 
 ## Type Parameters
 

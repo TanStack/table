@@ -9,11 +9,12 @@ title: table_getIsAllColumnsVisible
 function table_getIsAllColumnsVisible<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:286](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L286)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:330](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L330)
 
-Returns is all columns visible for the table.
+Checks whether every leaf column is currently visible.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Non-hideable columns are naturally visible because missing visibility entries
+default to `true`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getIsAllColumnsVisible(table)
+const allVisible = table_getIsAllColumnsVisible(table)
 ```

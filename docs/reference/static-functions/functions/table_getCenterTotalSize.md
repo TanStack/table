@@ -9,11 +9,11 @@ title: table_getCenterTotalSize
 function table_getCenterTotalSize<TFeatures, TData>(table): any;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:332](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L332)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:343](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L343)
 
-Returns center total size for the table.
+Sums the rendered size of the center, unpinned header region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+An empty center region returns `0`.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getCenterTotalSize(table)
+const width = table_getCenterTotalSize(table)
 ```

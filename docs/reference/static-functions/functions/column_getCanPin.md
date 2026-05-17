@@ -9,11 +9,12 @@ title: column_getCanPin
 function column_getCanPin<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L99)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L108)
 
-Returns whether a column can use pin.
+Checks whether this column or any of its leaf columns can be pinned.
 
-This combines column options, table options, and any required accessor or feature state for the capability.
+Column-level `enablePinning` and table `enableColumnPinning` both default to
+`true`; at least one leaf column must allow pinning.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This combines column options, table options, and any required accessor or featur
 ## Example
 
 ```ts
-const value = column_getCanPin(column)
+const canPin = column_getCanPin(column)
 ```

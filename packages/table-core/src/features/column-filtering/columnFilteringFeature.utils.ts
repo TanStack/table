@@ -9,13 +9,14 @@ import type {
 } from './columnFilteringFeature.types'
 
 /**
- * Returns the default column filters state.
+ * Creates the default column filter state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default is an empty array, meaning no column filters are active.
+ * Reset APIs use this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultColumnFiltersState()
+ * const filters = getDefaultColumnFiltersState()
  * ```
  */
 export function getDefaultColumnFiltersState(): ColumnFiltersState {
@@ -23,13 +24,15 @@ export function getDefaultColumnFiltersState(): ColumnFiltersState {
 }
 
 /**
- * Infers filter fn for a column.
+ * Chooses a built-in filter function from the column's first core row value.
  *
- * The inference uses the column definition, table options, and sampled row values when needed.
+ * Strings use `includesString`, numbers use `inNumberRange`, booleans and
+ * objects use `equals`, arrays use `arrIncludes`, and unknown values fall back
+ * to `weakEquals`.
  *
  * @example
  * ```ts
- * const value = column_getAutoFilterFn(column)
+ * const filterFn = column_getAutoFilterFn(column)
  * ```
  */
 export function column_getAutoFilterFn<
@@ -68,13 +71,15 @@ export function column_getAutoFilterFn<
 }
 
 /**
- * Returns filter fn for a column.
+ * Resolves the filter function configured for a column.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Function-valued `columnDef.filterFn` is returned directly, `'auto'` delegates
+ * to `column_getAutoFilterFn`, and string values are looked up in the table's
+ * filter function registry.
  *
  * @example
  * ```ts
- * const value = column_getFilterFn(column)
+ * const filterFn = column_getFilterFn(column)
  * ```
  */
 export function column_getFilterFn<
@@ -103,13 +108,14 @@ export function column_getFilterFn<
 }
 
 /**
- * Returns whether a column can use filter.
+ * Checks whether column filtering is enabled for this accessor column.
  *
- * This combines column options, table options, and any required accessor or feature state for the capability.
+ * The column must have an accessor and filtering must be enabled by the column
+ * definition, `enableColumnFilters`, and the table-wide `enableFilters` option.
  *
  * @example
  * ```ts
- * const value = column_getCanFilter(column)
+ * const canFilter = column_getCanFilter(column)
  * ```
  */
 export function column_getCanFilter<
@@ -126,13 +132,14 @@ export function column_getCanFilter<
 }
 
 /**
- * Returns is filtered for a column.
+ * Checks whether this column currently has an entry in `state.columnFilters`.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * This only reflects filter state presence; it does not indicate whether the
+ * filter removes any rows.
  *
  * @example
  * ```ts
- * const value = column_getIsFiltered(column)
+ * const isFiltered = column_getIsFiltered(column)
  * ```
  */
 export function column_getIsFiltered<
@@ -144,9 +151,9 @@ export function column_getIsFiltered<
 }
 
 /**
- * Returns filter value for a column.
+ * Reads this column's current filter value from `state.columnFilters`.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Missing filter entries return `undefined`.
  *
  * @example
  * ```ts
@@ -164,13 +171,13 @@ export function column_getFilterValue<
 }
 
 /**
- * Returns filter index for a column.
+ * Finds this column's position in the ordered `state.columnFilters` array.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The result is `-1` when the column has no active filter.
  *
  * @example
  * ```ts
- * const value = column_getFilterIndex(column)
+ * const index = column_getFilterIndex(column)
  * ```
  */
 export function column_getFilterIndex<
@@ -186,13 +193,14 @@ export function column_getFilterIndex<
 }
 
 /**
- * Updates filter value for a column.
+ * Adds, updates, or removes this column's filter value.
  *
- * This delegates to the owning table state updater so external state, external atoms, and internal state stay synchronized.
+ * The incoming value may be an updater. After resolution, `autoRemove` rules
+ * decide whether the filter should be removed instead of stored.
  *
  * @example
  * ```ts
- * column_setFilterValue(column, (old) => old)
+ * column_setFilterValue(column, (old) => String(old ?? '').trim())
  * ```
  */
 export function column_setFilterValue<
@@ -233,13 +241,15 @@ export function column_setFilterValue<
 }
 
 /**
- * Updates the table's column filters state slice.
+ * Routes a column filter updater through the table's filter change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The resolved filters are cleaned before they are emitted: filters for known
+ * columns are removed when their filter function says the value should be
+ * auto-removed.
  *
  * @example
  * ```ts
- * table_setColumnFilters(table, (old) => old)
+ * table_setColumnFilters(table, (old) => old.filter((filter) => filter.id !== 'age'))
  * ```
  */
 export function table_setColumnFilters<
@@ -271,9 +281,10 @@ export function table_setColumnFilters<
 }
 
 /**
- * Resets the table's column filters state slice.
+ * Resets `columnFilters` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.columnFilters` when it
+ * exists. Passing `true` ignores initial state and resets to `[]`.
  *
  * @example
  * ```ts

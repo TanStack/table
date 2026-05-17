@@ -13,13 +13,14 @@ import type {
 } from './columnGroupingFeature.types'
 
 /**
- * Returns the default grouping state.
+ * Creates the default grouping state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default is an empty array, meaning no columns are grouped. Reset
+ * APIs use this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultGroupingState()
+ * const grouping = getDefaultGroupingState()
  * ```
  */
 export function getDefaultGroupingState(): GroupingState {
@@ -27,9 +28,10 @@ export function getDefaultGroupingState(): GroupingState {
 }
 
 /**
- * Toggles grouping for a column.
+ * Adds or removes this column id from the grouping state.
  *
- * The update is applied through the owning table state slice and respects the feature options for that column.
+ * Existing grouped columns keep their order. A column already present in
+ * `state.grouping` is removed; otherwise it is appended.
  *
  * @example
  * ```ts
@@ -52,13 +54,14 @@ export function column_toggleGrouping<
 }
 
 /**
- * Returns whether a column can use group.
+ * Checks whether this column can be used for grouping.
  *
- * This combines column options, table options, and any required accessor or feature state for the capability.
+ * Grouping must be enabled at the column and table level, and the column must
+ * either have an accessor or provide `getGroupingValue`.
  *
  * @example
  * ```ts
- * const value = column_getCanGroup(column)
+ * const canGroup = column_getCanGroup(column)
  * ```
  */
 export function column_getCanGroup<
@@ -74,13 +77,14 @@ export function column_getCanGroup<
 }
 
 /**
- * Returns is grouped for a column.
+ * Checks whether this column id is present in `state.grouping`.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The result only reflects grouping state, not whether the grouped row model has
+ * been calculated yet.
  *
  * @example
  * ```ts
- * const value = column_getIsGrouped(column)
+ * const isGrouped = column_getIsGrouped(column)
  * ```
  */
 export function column_getIsGrouped<
@@ -92,13 +96,13 @@ export function column_getIsGrouped<
 }
 
 /**
- * Returns grouped index for a column.
+ * Finds this column's position in the ordered grouping state.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The result is `-1` when the column is not grouped.
  *
  * @example
  * ```ts
- * const value = column_getGroupedIndex(column)
+ * const index = column_getGroupedIndex(column)
  * ```
  */
 export function column_getGroupedIndex<
@@ -110,13 +114,13 @@ export function column_getGroupedIndex<
 }
 
 /**
- * Returns an event handler for toggling grouping handler.
+ * Creates a header/control handler that toggles grouping for this column.
  *
- * The handler is intended for direct use in column header controls such as buttons or checkboxes.
+ * The handler is a no-op when `column_getCanGroup(column)` is false.
  *
  * @example
  * ```ts
- * const value = column_getToggleGroupingHandler(column)
+ * const onClick = column_getToggleGroupingHandler(column)
  * ```
  */
 export function column_getToggleGroupingHandler<
@@ -133,13 +137,14 @@ export function column_getToggleGroupingHandler<
 }
 
 /**
- * Infers aggregation fn for a column.
+ * Chooses a built-in aggregation function from the first core row value.
  *
- * The inference uses the column definition, table options, and sampled row values when needed.
+ * Numeric columns default to `sum`, date-like values default to `extent`, and
+ * other value types leave aggregation unspecified.
  *
  * @example
  * ```ts
- * const value = column_getAutoAggregationFn(column)
+ * const aggregationFn = column_getAutoAggregationFn(column)
  * ```
  */
 export function column_getAutoAggregationFn<
@@ -165,13 +170,15 @@ export function column_getAutoAggregationFn<
 }
 
 /**
- * Returns aggregation fn for a column.
+ * Resolves the aggregation function configured for a column.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Function-valued `columnDef.aggregationFn` is returned directly, `'auto'`
+ * delegates to `column_getAutoAggregationFn`, and string values are looked up in
+ * the table's aggregation function registry.
  *
  * @example
  * ```ts
- * const value = column_getAggregationFn(column)
+ * const aggregationFn = column_getAggregationFn(column)
  * ```
  */
 export function column_getAggregationFn<
@@ -191,13 +198,14 @@ export function column_getAggregationFn<
 }
 
 /**
- * Updates the table's grouping state slice.
+ * Routes a grouping updater through the table's grouping change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next `GroupingState` array or a function of the previous
+ * grouping state, matching the instance `table.setGrouping` behavior.
  *
  * @example
  * ```ts
- * table_setGrouping(table, (old) => old)
+ * table_setGrouping(table, (old) => [...old, 'status'])
  * ```
  */
 export function table_setGrouping<
@@ -208,9 +216,10 @@ export function table_setGrouping<
 }
 
 /**
- * Resets the table's grouping state slice.
+ * Resets `grouping` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.grouping` when it
+ * exists. Passing `true` ignores initial state and resets to `[]`.
  *
  * @example
  * ```ts
@@ -229,13 +238,13 @@ export function table_resetGrouping<
 }
 
 /**
- * Returns is grouped for a row.
+ * Checks whether this row was created as a grouped row.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Grouped rows carry a `groupingColumnId`; ordinary leaf rows do not.
  *
  * @example
  * ```ts
- * const value = row_getIsGrouped(row)
+ * const isGrouped = row_getIsGrouped(row)
  * ```
  */
 export function row_getIsGrouped<
@@ -246,13 +255,14 @@ export function row_getIsGrouped<
 }
 
 /**
- * Returns grouping value for a row.
+ * Reads and caches this row's grouping value for a column.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * `columnDef.getGroupingValue` wins when provided; otherwise the normal row
+ * accessor value is used.
  *
  * @example
  * ```ts
- * const value = row_getGroupingValue(row)
+ * const groupValue = row_getGroupingValue(row, 'status')
  * ```
  */
 export function row_getGroupingValue<
@@ -282,13 +292,13 @@ export function row_getGroupingValue<
 }
 
 /**
- * Returns is grouped for a cell.
+ * Checks whether this cell represents the grouped column for a grouped row.
  *
- * This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+ * This is the cell that usually renders the grouped value and expansion control.
  *
  * @example
  * ```ts
- * const value = cell_getIsGrouped(cell)
+ * const isGroupedCell = cell_getIsGrouped(cell)
  * ```
  */
 export function cell_getIsGrouped<
@@ -303,13 +313,14 @@ export function cell_getIsGrouped<
 }
 
 /**
- * Returns is placeholder for a cell.
+ * Checks whether this cell is a placeholder hidden by grouping.
  *
- * This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+ * Placeholder cells belong to grouped columns other than the row's active
+ * grouping column.
  *
  * @example
  * ```ts
- * const value = cell_getIsPlaceholder(cell)
+ * const isPlaceholder = cell_getIsPlaceholder(cell)
  * ```
  */
 export function cell_getIsPlaceholder<
@@ -321,13 +332,14 @@ export function cell_getIsPlaceholder<
 }
 
 /**
- * Returns is aggregated for a cell.
+ * Checks whether this cell should render an aggregated value.
  *
- * This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+ * Aggregated cells are non-placeholder, non-grouped cells on rows that have
+ * subRows.
  *
  * @example
  * ```ts
- * const value = cell_getIsAggregated(cell)
+ * const isAggregated = cell_getIsAggregated(cell)
  * ```
  */
 export function cell_getIsAggregated<
