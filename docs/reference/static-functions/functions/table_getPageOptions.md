@@ -9,11 +9,12 @@ title: table_getPageOptions
 function table_getPageOptions<TFeatures, TData>(table): number[];
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L215)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:227](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L227)
 
-Returns page options for the table.
+Builds the zero-based page indexes available for the current page count.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Unknown or empty page counts return an empty array; otherwise the result is
+`[0, 1, ...pageCount - 1]`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getPageOptions(table)
+const pageIndexes = table_getPageOptions(table)
 ```

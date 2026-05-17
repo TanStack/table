@@ -9,11 +9,12 @@ title: column_getAutoSortDir
 function column_getAutoSortDir<TFeatures, TData, TValue>(column): "asc" | "desc";
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L126)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:132](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L132)
 
-Infers sort dir for a column.
+Chooses the default first sort direction from the first filtered row value.
 
-The inference uses the column definition, table options, and sampled row values when needed.
+String columns start ascending so alphabetical order is natural; other value
+types start descending.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ The inference uses the column definition, table options, and sampled row values 
 ## Example
 
 ```ts
-const value = column_getAutoSortDir(column)
+const direction = column_getAutoSortDir(column)
 ```

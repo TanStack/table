@@ -9,11 +9,12 @@ title: cell_getIsAggregated
 function cell_getIsAggregated<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:333](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L333)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:345](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L345)
 
-Returns is aggregated for a cell.
+Checks whether this cell should render an aggregated value.
 
-This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+Aggregated cells are non-placeholder, non-grouped cells on rows that have
+subRows.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This is the static implementation behind the matching cell instance API and uses
 ## Example
 
 ```ts
-const value = cell_getIsAggregated(cell)
+const isAggregated = cell_getIsAggregated(cell)
 ```

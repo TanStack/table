@@ -9,7 +9,7 @@ title: getFunctionNameInfo
 function getFunctionNameInfo(staticFnName, splitBy): object;
 ```
 
-Defined in: [utils.ts:344](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L344)
+Defined in: [utils.ts:319](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L319)
 
 Assumes that a function name is in the format of `parentName_fnKey` and returns the `fnKey` and `fnName` in the format of `parentName.fnKey`.
 

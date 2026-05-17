@@ -9,11 +9,11 @@ title: table_getPreExpandedRowModel
 function table_getPreExpandedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.utils.ts:169](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L169)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:176](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L176)
 
-Returns pre expanded row model for the table.
+Reads the row model immediately before row expansion.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Expansion runs after sorting, so this aliases `table.getSortedRowModel()`.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getPreExpandedRowModel(table)
+const rowsBeforeExpansion = table_getPreExpandedRowModel(table)
 ```

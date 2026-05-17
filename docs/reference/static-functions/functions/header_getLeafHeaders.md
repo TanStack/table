@@ -9,11 +9,12 @@ title: header_getLeafHeaders
 function header_getLeafHeaders<TFeatures, TData, TValue>(header): Header<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L30)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L26)
 
-Returns leaf headers for a header.
+Walks a header tree and collects all descendant leaf headers.
 
-This is the static implementation behind the matching header instance API and can account for nested header groups.
+The header itself is included after its descendants, matching the recursive
+shape used by nested header groups.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This is the static implementation behind the matching header instance API and ca
 ## Example
 
 ```ts
-const value = header_getLeafHeaders(header)
+const leafHeaders = header_getLeafHeaders(header)
 ```

@@ -9,11 +9,12 @@ title: cell_getContext
 function cell_getContext<TFeatures, TData, TValue>(cell): object;
 ```
 
-Defined in: [core/cells/coreCellsFeature.utils.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L51)
+Defined in: [core/cells/coreCellsFeature.utils.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L54)
 
-Returns context for a cell.
+Builds the render context passed to a column's `cell` template.
 
-This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+The returned object includes stable references to the table, row, column, and
+cell, plus bound `getValue` and `renderValue` helpers for render functions.
 
 ## Type Parameters
 
@@ -86,5 +87,5 @@ table: Table_Internal<TFeatures, TData> = cell.table;
 ## Example
 
 ```ts
-const value = cell_getContext(cell)
+const context = cell_getContext(cell)
 ```

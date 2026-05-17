@@ -9,11 +9,12 @@ title: column_getFacetedUniqueValues
 function column_getFacetedUniqueValues<TFeatures, TData, TValue>(column, table): Map<any, number>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L65)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L69)
 
-Returns faceted unique values for a column.
+Computes unique facet values and their occurrence counts for one column.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The configured `facetedUniqueValues` row-model factory owns the calculation.
+If no factory is registered, an empty `Map` is returned.
 
 ## Type Parameters
 
@@ -46,5 +47,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getFacetedUniqueValues(column)
+const values = column_getFacetedUniqueValues(column, table)
 ```

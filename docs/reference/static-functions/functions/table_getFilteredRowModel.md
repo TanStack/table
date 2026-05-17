@@ -9,11 +9,13 @@ title: table_getFilteredRowModel
 function table_getFilteredRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.utils.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L57)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L61)
 
-Returns filtered row model for the table.
+Resolves the row model after column and global filtering.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+When `manualFiltering` is enabled, or no filtered row-model factory was
+registered, this returns the pre-filtered row model because filtering is
+expected to happen outside the table.
 
 ## Type Parameters
 
@@ -38,5 +40,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getFilteredRowModel(table)
+const filteredRows = table_getFilteredRowModel(table)
 ```

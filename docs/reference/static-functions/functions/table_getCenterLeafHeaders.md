@@ -9,11 +9,11 @@ title: table_getCenterLeafHeaders
 function table_getCenterLeafHeaders<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:640](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L640)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:671](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L671)
 
-Returns center leaf headers for the table.
+Collects leaf headers for the center, unpinned region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Parent headers are filtered out from the center flat header list.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getCenterLeafHeaders(table)
+const headers = table_getCenterLeafHeaders(table)
 ```

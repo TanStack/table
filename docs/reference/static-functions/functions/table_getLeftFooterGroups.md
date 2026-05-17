@@ -9,11 +9,11 @@ title: table_getLeftFooterGroups
 function table_getLeftFooterGroups<TFeatures, TData>(table): any[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:450](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L450)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:472](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L472)
 
-Returns left footer groups for the table.
+Builds footer groups for the left pinned region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Footer groups reuse the left header groups in reverse order.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getLeftFooterGroups(table)
+const footerGroups = table_getLeftFooterGroups(table)
 ```

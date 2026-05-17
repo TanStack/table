@@ -9,11 +9,11 @@ title: table_getRightTotalSize
 function table_getRightTotalSize<TFeatures, TData>(table): any;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:357](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L357)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:368](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L368)
 
-Returns right total size for the table.
+Sums the rendered size of the right pinned header region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+An empty right pinning region returns `0`.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getRightTotalSize(table)
+const width = table_getRightTotalSize(table)
 ```

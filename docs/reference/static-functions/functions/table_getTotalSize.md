@@ -9,11 +9,11 @@ title: table_getTotalSize
 function table_getTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:286](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L286)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:297](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L297)
 
-Returns total size for the table.
+Sums the rendered size of the full table header row.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+This includes left, center, and right columns in the main header group.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getTotalSize(table)
+const width = table_getTotalSize(table)
 ```

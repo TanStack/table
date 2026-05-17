@@ -9,11 +9,11 @@ title: table_getIsSomeColumnsVisible
 function table_getIsSomeColumnsVisible<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:308](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L308)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:352](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L352)
 
-Returns is some columns visible for the table.
+Checks whether at least one leaf column is currently visible.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+This is useful for tri-state "show all columns" controls.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getIsSomeColumnsVisible(table)
+const someVisible = table_getIsSomeColumnsVisible(table)
 ```

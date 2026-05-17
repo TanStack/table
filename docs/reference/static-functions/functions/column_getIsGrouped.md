@@ -9,11 +9,12 @@ title: column_getIsGrouped
 function column_getIsGrouped<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L86)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L90)
 
-Returns is grouped for a column.
+Checks whether this column id is present in `state.grouping`.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The result only reflects grouping state, not whether the grouped row model has
+been calculated yet.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getIsGrouped(column)
+const isGrouped = column_getIsGrouped(column)
 ```

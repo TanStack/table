@@ -9,11 +9,12 @@ title: table_getCanNextPage
 function table_getCanNextPage<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:254](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L254)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:268](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L268)
 
-Returns can next page for the table.
+Checks whether the current page index can move forward.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+A `pageCount` of `-1` means the caller does not know the total page count, so
+this returns `true`. A page count of `0` returns `false`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getCanNextPage(table)
+const canGoForward = table_getCanNextPage(table)
 ```

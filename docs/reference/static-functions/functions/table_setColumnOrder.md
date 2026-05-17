@@ -9,11 +9,12 @@ title: table_setColumnOrder
 function table_setColumnOrder<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L101)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L104)
 
-Updates the table's column order state slice.
+Routes a column order updater through the table's column-order change handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The updater may be a next ordered id array or a function of the previous
+array, matching the instance `table.setColumnOrder` behavior.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setColumnOrder(table, (old) => old)
+table_setColumnOrder(table, ['firstName', 'lastName', 'age'])
 ```

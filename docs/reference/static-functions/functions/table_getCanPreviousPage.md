@@ -9,11 +9,12 @@ title: table_getCanPreviousPage
 function table_getCanPreviousPage<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:237](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L237)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:250](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L250)
 
-Returns can previous page for the table.
+Checks whether the current page index can move backward.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The first page is page index `0`, so only positive page indexes can navigate
+to a previous page.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getCanPreviousPage(table)
+const canGoBack = table_getCanPreviousPage(table)
 ```

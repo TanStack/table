@@ -7,13 +7,14 @@ import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 
 /**
- * Returns value for a row.
+ * Reads and caches this row's value for a column.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * The value is produced by the column accessor. Missing columns or display
+ * columns without an accessor return `undefined`.
  *
  * @example
  * ```ts
- * const value = row_getValue(row)
+ * const firstName = row_getValue(row, 'firstName')
  * ```
  */
 export function row_getValue<
@@ -36,13 +37,14 @@ export function row_getValue<
 }
 
 /**
- * Returns unique values for a row.
+ * Reads and caches the values used by faceting/grouping for a column.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * If the column defines `getUniqueValues`, that result is used. Otherwise the
+ * row's accessor value is wrapped in a single-item array.
  *
  * @example
  * ```ts
- * const value = row_getUniqueValues(row)
+ * const values = row_getUniqueValues(row, 'tags')
  * ```
  */
 export function row_getUniqueValues<
@@ -80,7 +82,7 @@ export function row_getUniqueValues<
  *
  * @example
  * ```ts
- * const value = row_renderValue(row)
+ * const value = row_renderValue(row, 'firstName')
  * ```
  */
 export function row_renderValue<
@@ -91,13 +93,13 @@ export function row_renderValue<
 }
 
 /**
- * Returns leaf rows for a row.
+ * Flattens this row's descendant tree into leaf rows.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * The row itself is not included; only nested `subRows` are walked.
  *
  * @example
  * ```ts
- * const value = row_getLeafRows(row)
+ * const descendants = row_getLeafRows(row)
  * ```
  */
 export function row_getLeafRows<
@@ -108,13 +110,14 @@ export function row_getLeafRows<
 }
 
 /**
- * Returns parent row for a row.
+ * Looks up this row's direct parent, if it has one.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Parent lookup searches the pre-pagination row model so parent relationships
+ * are available even when the parent is not on the current page.
  *
  * @example
  * ```ts
- * const value = row_getParentRow(row)
+ * const parent = row_getParentRow(row)
  * ```
  */
 export function row_getParentRow<
@@ -125,13 +128,13 @@ export function row_getParentRow<
 }
 
 /**
- * Returns parent rows for a row.
+ * Collects this row's ancestor chain from root to direct parent.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * The current row is not included. Rows without a parent return an empty array.
  *
  * @example
  * ```ts
- * const value = row_getParentRows(row)
+ * const ancestors = row_getParentRows(row)
  * ```
  */
 export function row_getParentRows<
@@ -151,13 +154,14 @@ export function row_getParentRows<
 }
 
 /**
- * Returns all cells for a row.
+ * Constructs one cell for each leaf column in this row.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * The result follows `table.getAllLeafColumns()` order and includes hidden
+ * columns; visibility-specific APIs filter this list later.
  *
  * @example
  * ```ts
- * const value = row_getAllCells(row)
+ * const cells = row_getAllCells(row)
  * ```
  */
 export function row_getAllCells<
@@ -175,13 +179,13 @@ export function row_getAllCells<
 }
 
 /**
- * Returns all cells by column id for a row.
+ * Builds a lookup map of this row's cells keyed by column id.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * This is the static implementation behind `row.getAllCellsByColumnId()`.
  *
  * @example
  * ```ts
- * const value = row_getAllCellsByColumnId(row)
+ * const cellsById = row_getAllCellsByColumnId(row)
  * ```
  */
 export function row_getAllCellsByColumnId<
@@ -198,13 +202,14 @@ export function row_getAllCellsByColumnId<
 }
 
 /**
- * Returns row id for the table.
+ * Resolves the stable id for a row.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * `options.getRowId` wins when provided. Otherwise root rows use their index
+ * and child rows append their index to the parent id, such as `0.2`.
  *
  * @example
  * ```ts
- * const value = table_getRowId(table)
+ * const id = table_getRowId(originalRow, table, index, parentRow)
  * ```
  */
 export function table_getRowId<
@@ -223,13 +228,14 @@ export function table_getRowId<
 }
 
 /**
- * Returns row for the table.
+ * Looks up a row by id from the current or full row model.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * By default this searches `table.getRowModel()`. Passing `searchAll` searches
+ * the pre-pagination model first, then falls back to the core model.
  *
  * @example
  * ```ts
- * const value = table_getRow(table)
+ * const row = table_getRow(table, rowId, true)
  * ```
  */
 export function table_getRow<

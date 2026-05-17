@@ -9,11 +9,12 @@ title: column_toggleGrouping
 function column_toggleGrouping<TFeatures, TData, TValue>(column): void;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L39)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L41)
 
-Toggles grouping for a column.
+Adds or removes this column id from the grouping state.
 
-The update is applied through the owning table state slice and respects the feature options for that column.
+Existing grouped columns keep their order. A column already present in
+`state.grouping` is removed; otherwise it is appended.
 
 ## Type Parameters
 

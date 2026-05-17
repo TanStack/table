@@ -9,11 +9,12 @@ title: row_getVisibleCells
 function row_getVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L129)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L135)
 
-Returns visible cells for a row.
+Collects the cells from this row whose columns are visible.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+When column pinning is active, the result is ordered as left-pinned cells,
+center cells, then right-pinned cells.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getVisibleCells(row)
+const visibleCells = row_getVisibleCells(row)
 ```

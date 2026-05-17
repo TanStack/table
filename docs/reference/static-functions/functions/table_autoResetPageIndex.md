@@ -9,11 +9,13 @@ title: table_autoResetPageIndex
 function table_autoResetPageIndex<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L37)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L40)
 
-Schedules an automatic reset for page index.
+Resets the page index when a page-altering change should return to page 0.
 
-The reset only runs when the related feature options allow automatic resets for the current table state change.
+The reset runs when `autoResetAll`, `autoResetPageIndex`, or the default
+client-side pagination behavior allows it. Manual pagination opts out unless
+the reset options explicitly opt back in.
 
 ## Type Parameters
 

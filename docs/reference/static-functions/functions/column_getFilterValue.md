@@ -9,11 +9,11 @@ title: column_getFilterValue
 function column_getFilterValue<TFeatures, TData, TValue>(column): unknown;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L156)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L163)
 
-Returns filter value for a column.
+Reads this column's current filter value from `state.columnFilters`.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Missing filter entries return `undefined`.
 
 ## Type Parameters
 

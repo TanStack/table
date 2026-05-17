@@ -9,11 +9,12 @@ title: getDefaultColumnPinningState
 function getDefaultColumnPinningState(): ColumnPinningState;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L32)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L35)
 
-Returns the default column pinning state.
+Creates the default column pinning state.
 
-Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+Both pinning regions start empty. Reset APIs use this value when
+`defaultState` is `true`.
 
 ## Returns
 
@@ -22,5 +23,5 @@ Feature constructors use this value to initialize the table state or option defa
 ## Example
 
 ```ts
-const initialValue = getDefaultColumnPinningState()
+const pinning = getDefaultColumnPinningState()
 ```

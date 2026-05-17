@@ -9,11 +9,12 @@ title: column_getIsFiltered
 function column_getIsFiltered<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:138](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L138)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L145)
 
-Returns is filtered for a column.
+Checks whether this column currently has an entry in `state.columnFilters`.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+This only reflects filter state presence; it does not indicate whether the
+filter removes any rows.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getIsFiltered(column)
+const isFiltered = column_getIsFiltered(column)
 ```

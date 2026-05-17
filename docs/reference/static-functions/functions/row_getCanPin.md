@@ -9,7 +9,7 @@ title: row_getCanPin
 function row_getCanPin<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:202](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L202)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:204](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L204)
 
 Returns whether a row can use pin.
 

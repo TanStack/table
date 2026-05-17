@@ -32,3 +32,19 @@ Returns an array of cells that account for column visibility for the row.
 #### Returns
 
 [`Cell`](../type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
+
+***
+
+### getVisibleCellsByColumnId()
+
+```ts
+getVisibleCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>;
+```
+
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L86)
+
+Returns visible cells by column id for the row.
+
+#### Returns
+
+`Record`\<`string`, [`Cell`](../type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>\>

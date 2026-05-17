@@ -9,11 +9,12 @@ title: row_getGroupingValue
 function row_getGroupingValue<TFeatures, TData>(row, columnId): any;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:258](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L258)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:268](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L268)
 
-Returns grouping value for a row.
+Reads and caches this row's grouping value for a column.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+`columnDef.getGroupingValue` wins when provided; otherwise the normal row
+accessor value is used.
 
 ## Type Parameters
 
@@ -49,5 +50,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getGroupingValue(row)
+const groupValue = row_getGroupingValue(row, 'status')
 ```

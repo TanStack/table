@@ -9,11 +9,12 @@ title: header_getSize
 function header_getSize<TFeatures, TData, TValue>(header): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:185](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L185)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:193](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L193)
 
-Returns size for a header.
+Computes a header's rendered size from its leaf headers.
 
-This is the static implementation behind the matching header instance API and can account for nested header groups.
+Group headers sum the sizes of all descendant leaf columns. Leaf headers use
+their column's current size.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This is the static implementation behind the matching header instance API and ca
 ## Example
 
 ```ts
-const value = header_getSize(header)
+const width = header_getSize(header)
 ```

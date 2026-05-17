@@ -9,11 +9,13 @@ title: column_getSortFn
 function column_getSortFn<TFeatures, TData, TValue>(column): SortFn<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:152](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L152)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L160)
 
-Returns sort fn for a column.
+Resolves the sorting function configured for a column.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Function-valued `columnDef.sortFn` is returned directly, `'auto'` delegates
+to `column_getAutoSortFn`, and string values are looked up in the table's
+sorting function registry before falling back to `basic`.
 
 ## Type Parameters
 
@@ -42,5 +44,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getSortFn(column)
+const sortFn = column_getSortFn(column)
 ```

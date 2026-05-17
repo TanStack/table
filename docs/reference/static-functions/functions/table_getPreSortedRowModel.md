@@ -9,11 +9,11 @@ title: table_getPreSortedRowModel
 function table_getPreSortedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.utils.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L126)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L131)
 
-Returns pre sorted row model for the table.
+Reads the row model immediately before sorting.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Sorting runs after grouping, so this aliases `table.getGroupedRowModel()`.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getPreSortedRowModel(table)
+const rowsBeforeSorting = table_getPreSortedRowModel(table)
 ```

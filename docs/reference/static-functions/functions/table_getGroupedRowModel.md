@@ -9,11 +9,12 @@ title: table_getGroupedRowModel
 function table_getGroupedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.utils.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L100)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L105)
 
-Returns grouped row model for the table.
+Resolves the row model after grouping has produced grouped and aggregated rows.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+When `manualGrouping` is enabled, or no grouped row-model factory was
+registered, this returns the pre-grouped row model unchanged.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getGroupedRowModel(table)
+const groupedRows = table_getGroupedRowModel(table)
 ```

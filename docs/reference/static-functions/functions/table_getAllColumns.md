@@ -9,11 +9,12 @@ title: table_getAllColumns
 function table_getAllColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L115)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L120)
 
-Returns all columns for the table.
+Normalizes `options.columns` into the table's nested column tree.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Each column definition is constructed with its parent and depth, and group
+column children are recursively constructed.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getAllColumns(table)
+const columns = table_getAllColumns(table)
 ```

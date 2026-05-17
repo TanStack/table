@@ -9,11 +9,13 @@ title: getDefaultColumnSizingColumnDef
 function getDefaultColumnSizingColumnDef(): object;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L41)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L44)
 
-Returns the default column sizing column def.
+Creates the built-in sizing defaults for column definitions.
 
-Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+Columns default to `size: 150`, `minSize: 20`, and
+`maxSize: Number.MAX_SAFE_INTEGER` unless overridden by column definitions or
+table defaults.
 
 ## Returns
 
@@ -40,5 +42,5 @@ size: number = 150;
 ## Example
 
 ```ts
-const initialValue = getDefaultColumnSizingColumnDef()
+const defaults = getDefaultColumnSizingColumnDef()
 ```

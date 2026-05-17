@@ -9,11 +9,13 @@ title: table_resetPagination
 function table_resetPagination<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L84)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L91)
 
-Resets the table's pagination state slice.
+Resets `pagination` to the configured initial state or feature default.
 
-By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+With no argument, the reset clones `table.initialState.pagination` when it
+exists. Passing `true` ignores initial state and resets to
+`{ pageIndex: 0, pageSize: 10 }`.
 
 ## Type Parameters
 

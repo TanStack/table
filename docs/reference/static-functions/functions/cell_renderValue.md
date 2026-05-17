@@ -9,11 +9,12 @@ title: cell_renderValue
 function cell_renderValue<TFeatures, TData, TValue>(cell): any;
 ```
 
-Defined in: [core/cells/coreCellsFeature.utils.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L33)
+Defined in: [core/cells/coreCellsFeature.utils.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.utils.ts#L35)
 
-Returns value for a cell.
+Reads the value that should be rendered for this cell.
 
-This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+Nullish accessor values are replaced with `table.options.renderFallbackValue`,
+matching the behavior of `cell.renderValue()`.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This is the static implementation behind the matching cell instance API and uses
 ## Example
 
 ```ts
-const value = cell_renderValue(cell)
+const rendered = cell_renderValue(cell)
 ```

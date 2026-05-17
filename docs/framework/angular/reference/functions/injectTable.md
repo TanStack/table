@@ -9,7 +9,7 @@ title: injectTable
 function injectTable<TFeatures, TData>(options): AngularTable<TFeatures, TData>;
 ```
 
-Defined in: [packages/angular-table/src/injectTable.ts:91](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L91)
+Defined in: [packages/angular-table/src/injectTable.ts:92](https://github.com/TanStack/table/blob/main/packages/angular-table/src/injectTable.ts#L92)
 
 Creates and returns an Angular-reactive table instance.
 

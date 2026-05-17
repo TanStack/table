@@ -9,11 +9,11 @@ title: table_getPreGroupedRowModel
 function table_getPreGroupedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.utils.ts:83](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L83)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L87)
 
-Returns pre grouped row model for the table.
+Reads the row model immediately before grouping.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Grouping runs after filtering, so this aliases `table.getFilteredRowModel()`.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getPreGroupedRowModel(table)
+const rowsBeforeGrouping = table_getPreGroupedRowModel(table)
 ```

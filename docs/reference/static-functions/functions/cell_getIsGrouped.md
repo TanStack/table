@@ -9,11 +9,11 @@ title: cell_getIsGrouped
 function cell_getIsGrouped<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:294](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L294)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:304](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L304)
 
-Returns is grouped for a cell.
+Checks whether this cell represents the grouped column for a grouped row.
 
-This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+This is the cell that usually renders the grouped value and expansion control.
 
 ## Type Parameters
 
@@ -42,5 +42,5 @@ This is the static implementation behind the matching cell instance API and uses
 ## Example
 
 ```ts
-const value = cell_getIsGrouped(cell)
+const isGroupedCell = cell_getIsGrouped(cell)
 ```

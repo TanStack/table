@@ -9,11 +9,11 @@ title: column_getToggleGroupingHandler
 function column_getToggleGroupingHandler<TFeatures, TData, TValue>(column): () => void;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L122)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L126)
 
-Returns an event handler for toggling grouping handler.
+Creates a header/control handler that toggles grouping for this column.
 
-The handler is intended for direct use in column header controls such as buttons or checkboxes.
+The handler is a no-op when `column_getCanGroup(column)` is false.
 
 ## Type Parameters
 
@@ -48,5 +48,5 @@ The handler is intended for direct use in column header controls such as buttons
 ## Example
 
 ```ts
-const value = column_getToggleGroupingHandler(column)
+const onClick = column_getToggleGroupingHandler(column)
 ```

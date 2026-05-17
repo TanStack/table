@@ -12,7 +12,7 @@ import type { TableOptions } from '../../types/TableOptions'
  *
  * @example
  * ```ts
- * const value = table_syncExternalStateToBaseAtoms(table)
+ * table_syncExternalStateToBaseAtoms(table)
  * ```
  */
 export function table_syncExternalStateToBaseAtoms<
@@ -72,7 +72,7 @@ export function table_reset<
  *
  * @example
  * ```ts
- * const value = table_mergeOptions(table)
+ * const options = table_mergeOptions(table, nextOptions)
  * ```
  */
 export function table_mergeOptions<

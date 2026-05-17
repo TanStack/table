@@ -9,11 +9,12 @@ title: column_getCanGlobalFilter
 function column_getCanGlobalFilter<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L19)
+Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L20)
 
-Returns whether a column can use global filter.
+Checks whether this accessor column participates in global filtering.
 
-This combines column options, table options, and any required accessor or feature state for the capability.
+The column must have an accessor and pass column-level, table-level, and
+optional `getColumnCanGlobalFilter` checks.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This combines column options, table options, and any required accessor or featur
 ## Example
 
 ```ts
-const value = column_getCanGlobalFilter(column)
+const canGlobalFilter = column_getCanGlobalFilter(column)
 ```

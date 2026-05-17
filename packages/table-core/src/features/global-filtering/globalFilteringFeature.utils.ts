@@ -7,13 +7,14 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 
 /**
- * Returns whether a column can use global filter.
+ * Checks whether this accessor column participates in global filtering.
  *
- * This combines column options, table options, and any required accessor or feature state for the capability.
+ * The column must have an accessor and pass column-level, table-level, and
+ * optional `getColumnCanGlobalFilter` checks.
  *
  * @example
  * ```ts
- * const value = column_getCanGlobalFilter(column)
+ * const canGlobalFilter = column_getCanGlobalFilter(column)
  * ```
  */
 export function column_getCanGlobalFilter<
@@ -31,13 +32,14 @@ export function column_getCanGlobalFilter<
 }
 
 /**
- * Returns global auto filter fn for the table.
+ * Provides the built-in automatic global filter function.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Global filtering defaults to `includesString`, which gives search-box style
+ * matching across globally filterable columns.
  *
  * @example
  * ```ts
- * const value = table_getGlobalAutoFilterFn(table)
+ * const filterFn = table_getGlobalAutoFilterFn()
  * ```
  */
 export function table_getGlobalAutoFilterFn() {
@@ -45,13 +47,15 @@ export function table_getGlobalAutoFilterFn() {
 }
 
 /**
- * Returns global filter fn for the table.
+ * Resolves the filter function used for global filtering.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Function-valued `options.globalFilterFn` is returned directly, `'auto'`
+ * delegates to `table_getGlobalAutoFilterFn`, and string values are looked up in
+ * the table's filter function registry.
  *
  * @example
  * ```ts
- * const value = table_getGlobalFilterFn(table)
+ * const filterFn = table_getGlobalFilterFn(table)
  * ```
  */
 export function table_getGlobalFilterFn<
@@ -72,13 +76,14 @@ export function table_getGlobalFilterFn<
 }
 
 /**
- * Updates the table's global filter state slice.
+ * Routes a global filter updater through the table's global filter handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next value or a function of the previous value, matching
+ * the instance `table.setGlobalFilter` behavior.
  *
  * @example
  * ```ts
- * table_setGlobalFilter(table, (old) => old)
+ * table_setGlobalFilter(table, 'search text')
  * ```
  */
 export function table_setGlobalFilter<
@@ -89,9 +94,10 @@ export function table_setGlobalFilter<
 }
 
 /**
- * Resets the table's global filter state slice.
+ * Resets `globalFilter` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.globalFilter`. Passing
+ * `true` ignores initial state and resets to `undefined`.
  *
  * @example
  * ```ts

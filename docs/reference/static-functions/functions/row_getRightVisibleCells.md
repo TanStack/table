@@ -6,14 +6,15 @@ title: row_getRightVisibleCells
 # Function: row\_getRightVisibleCells()
 
 ```ts
-function row_getRightVisibleCells<TFeatures, TData>(row): any[];
+function row_getRightVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:237](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L237)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:251](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L251)
 
-Returns right visible cells for a row.
+Collects visible cells for columns pinned to the right region.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+Cells are returned in `state.columnPinning.right` order and are marked with
+`cell.position = 'right'`.
 
 ## Type Parameters
 
@@ -33,10 +34,10 @@ This is the static implementation behind the matching row instance API and may r
 
 ## Returns
 
-`any`[]
+[`Cell`](../../index/type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = row_getRightVisibleCells(row)
+const rightCells = row_getRightVisibleCells(row)
 ```

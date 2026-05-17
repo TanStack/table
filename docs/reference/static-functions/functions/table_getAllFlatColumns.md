@@ -9,11 +9,12 @@ title: table_getAllFlatColumns
 function table_getAllFlatColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L156)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L162)
 
-Returns all flat columns for the table.
+Flattens every table column, including group columns and leaf columns.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Use this when parent/group columns must be included in addition to data leaf
+columns.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getAllFlatColumns(table)
+const flatColumns = table_getAllFlatColumns(table)
 ```

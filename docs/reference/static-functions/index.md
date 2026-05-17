@@ -112,6 +112,7 @@ title: static-functions
 - [row\_getUniqueValues](functions/row_getUniqueValues.md)
 - [row\_getValue](functions/row_getValue.md)
 - [row\_getVisibleCells](functions/row_getVisibleCells.md)
+- [row\_getVisibleCellsByColumnId](functions/row_getVisibleCellsByColumnId.md)
 - [row\_pin](functions/row_pin.md)
 - [row\_renderValue](functions/row_renderValue.md)
 - [row\_toggleExpanded](functions/row_toggleExpanded.md)
