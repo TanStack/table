@@ -220,95 +220,9 @@ function MyTable({ data }) {
 
 Source: `examples/preact/basic-external-atoms/src/main.tsx`.
 
-### 4. External state with `state` + `on*Change`
+### 4. External state with `state` + `on*Change` and `createTableHook`
 
-Classic Preact `useState` integration is still supported via `state` and matching `on[State]Change`. Useful for v8 migration paths or simple cases. Less fine-grained than external atoms.
-
-```tsx
-const [sorting, setSorting] = useState<SortingState>([])
-const [pagination, setPagination] = useState<PaginationState>({
-  pageIndex: 0,
-  pageSize: 10,
-})
-
-const table = useTable({
-  _features,
-  _rowModels: {
-    /* … */
-  },
-  columns,
-  data,
-  state: { sorting, pagination },
-  onSortingChange: setSorting,
-  onPaginationChange: setPagination,
-})
-```
-
-Source: `docs/framework/preact/guide/table-state.md`.
-
-### 5. `createTableHook` for reusable shared config
-
-When you ship the same `_features` / `_rowModels` / cell components across many tables, package them with `createTableHook`. You get `useAppTable`, `createAppColumnHelper`, `useTableContext` / `useCellContext` / `useHeaderContext`, and `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries.
-
-```tsx
-import {
-  createTableHook,
-  rowPaginationFeature,
-  rowSortingFeature,
-  createPaginatedRowModel,
-  createSortedRowModel,
-  sortFns,
-  tableFeatures,
-} from '@tanstack/preact-table'
-
-export const {
-  useAppTable,
-  createAppColumnHelper,
-  useTableContext,
-  useCellContext,
-  useHeaderContext,
-} = createTableHook({
-  _features: tableFeatures({ rowPaginationFeature, rowSortingFeature }),
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
-  tableComponents: { PaginationControls, RowCount },
-  cellComponents: { TextCell, NumberCell },
-  headerComponents: { SortIndicator },
-})
-
-const columnHelper = createAppColumnHelper<Person>()
-
-function UsersTable({ data }: { data: Person[] }) {
-  const table = useAppTable({ columns, data })
-
-  return (
-    <table.AppTable>
-      <table>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getAllCells().map((c) => (
-                <table.AppCell cell={c} key={c.id}>
-                  {(cell) => (
-                    <td>
-                      <cell.TextCell />
-                    </td>
-                  )}
-                </table.AppCell>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <table.PaginationControls />
-    </table.AppTable>
-  )
-}
-```
-
-Source: `docs/framework/preact/guide/create-table-hook.md`; `examples/preact/basic-use-app-table/src/main.tsx`; `packages/preact-table/src/createTableHook.tsx`.
+Classic `useState` + `on*Change` integration (v8 migration paths) and the `createTableHook` factory for packaging shared `_features` / `_rowModels` / cell components into `useAppTable` + `createAppColumnHelper` + `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries — see [advanced-state-patterns.md](references/advanced-state-patterns.md).
 
 ## Common Mistakes
 
@@ -512,3 +426,7 @@ Source: `docs/guide/features.md`.
 - `tanstack-table/preact/migrate-v8-to-v9` — mechanical v8 → v9 breaking changes.
 - `tanstack-table/preact/production-readiness` — narrowing selectors, tree-shaking, reference stability.
 - `tanstack-table/preact/compose-with-tanstack-store` — sharing slice atoms across components, persistence.
+
+## References
+
+- [advanced-state-patterns.md](references/advanced-state-patterns.md) — `state` + `on*Change` external state and `createTableHook` for reusable shared config
