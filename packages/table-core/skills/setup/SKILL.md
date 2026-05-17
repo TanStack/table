@@ -10,7 +10,7 @@ description: >
   be module-scoped, when to reach for `stockFeatures`, and `coreFeatures`.
 type: core
 library: tanstack-table
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - state-management
   - column-definitions

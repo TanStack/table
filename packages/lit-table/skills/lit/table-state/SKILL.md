@@ -14,7 +14,7 @@ description: >
 type: framework
 library: tanstack-table
 framework: lit
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - state-management
   - setup
@@ -30,7 +30,7 @@ sources:
   - TanStack/table:examples/lit/basic-app-table/src/main.ts
 ---
 
-> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill (especially `table.Subscribe` and the `TableController` invalidation strategy) may change in a future beta. The patterns below match `9.0.0-alpha.47`.
+> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill (especially `table.Subscribe` and the `TableController` invalidation strategy) may change in a future beta. The patterns below match `9.0.0-alpha.48`.
 
 This skill builds on `tanstack-table/state-management` and `tanstack-table/setup`. Read those first — `state-management` explains the v9 atom model. The Lit adapter wires that atom model into a `ReactiveController` (`TableController`) attached to a `LitElement` host.
 

@@ -10,7 +10,7 @@ description: >
 type: framework
 library: tanstack-table
 framework: vue
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - state-management
   - setup
@@ -36,7 +36,7 @@ pnpm add @tanstack/vue-table @tanstack/vue-store
 `@tanstack/vue-store` is a peer for `createAtom` / `useSelector`. It is only required when you
 opt into external atoms — basic tables that use `initialState` or built-in state work without it.
 
-This skill is v9-specific (`9.0.0-alpha.47`). The hook is `useTable` for every framework now; the
+This skill is v9-specific (`9.0.0-alpha.48`). The hook is `useTable` for every framework now; the
 v8 name `useVueTable` no longer exists.
 
 ## Setup

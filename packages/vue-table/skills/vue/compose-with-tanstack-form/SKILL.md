@@ -12,7 +12,7 @@ description: >
 type: composition
 library: tanstack-table
 framework: vue
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - row-selection
   - column-definitions

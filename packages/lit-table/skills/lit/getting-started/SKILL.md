@@ -12,7 +12,7 @@ description: >
 type: lifecycle
 library: tanstack-table
 framework: lit
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - setup
   - column-definitions
@@ -25,7 +25,7 @@ sources:
   - TanStack/table:packages/lit-table/src/TableController.ts
 ---
 
-> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill may change in a future beta. The patterns below match `9.0.0-alpha.47`.
+> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill may change in a future beta. The patterns below match `9.0.0-alpha.48`.
 
 This skill walks through a first working Lit v9 table end-to-end. Read `tanstack-table/setup` and `tanstack-table/state-management` for v9 core concepts and `tanstack-table/lit/lit-table-controller` for the controller lifecycle.
 

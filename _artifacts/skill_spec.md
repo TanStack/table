@@ -2,7 +2,7 @@
 
 Headless data-grid library: features, state, and APIs for building powerful, type-safe tables and datagrids while keeping full control of markup, styles, and behavior. Framework-agnostic core (`@tanstack/table-core`) with adapters for React, Vue, Solid, Svelte, Angular, Lit, and Preact.
 
-**Version:** 9.0.0-alpha.47 · **Status:** reviewed · **Date:** 2026-05-17
+**Version:** 9.0.0-alpha.48 · **Status:** reviewed · **Date:** 2026-05-17
 
 > Generated via the `@tanstack/intent` three-phase scaffold flow (domain discovery → tree generation → SKILL.md generation). Domain map artifacts live at the repo root (`_artifacts/`); skills will live inside each package's `skills/` directory. Status is `reviewed` after the maintainer interview on 2026-05-17.
 

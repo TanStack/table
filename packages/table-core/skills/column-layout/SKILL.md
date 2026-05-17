@@ -14,7 +14,7 @@ description: >
   performant resize pattern). Pipeline: Column Pinning → columnOrder → Grouping.
 type: core
 library: tanstack-table
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - state-management
 sources:

@@ -11,7 +11,7 @@ description: >
 type: composition
 library: tanstack-table
 framework: svelte
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - svelte/client-to-server
   - pagination

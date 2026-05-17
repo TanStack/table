@@ -14,7 +14,7 @@ description: >
 type: framework
 library: tanstack-table
 framework: react
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - state-management
   - setup

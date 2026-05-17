@@ -11,7 +11,7 @@ description: >
 type: framework
 library: tanstack-table
 framework: lit
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - lit/table-state
 sources:
@@ -22,7 +22,7 @@ sources:
   - TanStack/table:examples/lit/basic-table-controller/src/main.ts
 ---
 
-> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. `TableController`'s invalidation model and `Subscribe` mode may change in a future beta. The patterns below match `9.0.0-alpha.47`.
+> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. `TableController`'s invalidation model and `Subscribe` mode may change in a future beta. The patterns below match `9.0.0-alpha.48`.
 
 `TableController` is the Lit-specific entry point for `@tanstack/lit-table`. It implements the Lit `ReactiveController` interface, hosts the underlying core `Table` instance, and bridges TanStack Store atom changes to `host.requestUpdate()` calls. This skill explains the lifecycle in detail.
 

@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: 9.0.0-alpha.47
+  version: 9.0.0-alpha.48
   repository: https://github.com/TanStack/table
   description:
     Headless data-grid library for building powerful, type-safe tables and datagrids while keeping full control

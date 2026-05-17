@@ -11,7 +11,7 @@ description: >
 type: composition
 library: tanstack-table
 framework: preact
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 requires:
   - preact/table-state
   - row-expanding
@@ -24,7 +24,7 @@ sources:
 
 TanStack Table is headless — it does not virtualize rows or columns. For long lists, pair the table with TanStack Virtual.
 
-> **Adapter status:** There is no published `@tanstack/preact-virtual` adapter as of `@tanstack/table` v9.0.0-alpha.47. The two supported paths are:
+> **Adapter status:** There is no published `@tanstack/preact-virtual` adapter as of `@tanstack/table` v9.0.0-alpha.48. The two supported paths are:
 >
 > 1. **Use `@tanstack/virtual-core` directly.** The framework-agnostic `Virtualizer` class wrapped in a small Preact hook is the recommended path.
 > 2. **Use `@tanstack/react-virtual` via `preact/compat`.** Works if your project already aliases `react` → `preact/compat`.

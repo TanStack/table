@@ -9,7 +9,7 @@ description: >
   required `id` rules, and `getRowId` for stable row identity.
 type: core
 library: tanstack-table
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 sources:
   - TanStack/table:docs/guide/column-defs.md
   - TanStack/table:docs/guide/columns.md

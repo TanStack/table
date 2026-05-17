@@ -1,4 +1,4 @@
-# Cluster B — Row-Model Features (TanStack Table v9.0.0-alpha.47)
+# Cluster B — Row-Model Features (TanStack Table v9.0.0-alpha.48)
 # Maintainer: Kevin Vandy
 # Source repo:
 # Generated for TanStack Intent skill set
@@ -7,7 +7,7 @@
 # Pipeline order anchor: Core -> Filtered -> Grouped -> Sorted -> Expanded -> Paginated -> getRowModel
 # (see packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts)
 
-version: v9.0.0-alpha.47
+version: v9.0.0-alpha.48
 cluster: B
 domain: row-model-features
 
@@ -124,7 +124,7 @@ skills:
         source: packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [filtering]
 
       - mistake: 'Using `manualFiltering: true` without removing the `filteredRowModel` factory (works), or expecting `manualFiltering` to filter the row model anyway.'
@@ -165,7 +165,7 @@ skills:
         source: packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [filtering]
 
       - mistake: 'Custom fuzzy filter without merging into `filterFns`: passing only `{ fuzzy: fuzzyFilter }` to `createFilteredRowModel`, dropping the 10 built-in filters.'
@@ -212,7 +212,7 @@ skills:
         source: examples/react/filters-fuzzy/src/main.tsx
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [filtering, sorting]
 
       - mistake: 'Using `state.columnFilters` AND `initialState.columnFilters` at the same time (or same for globalFilter).'
@@ -249,7 +249,7 @@ skills:
         source: docs/guide/column-filtering.md
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [filtering]
 
       - mistake: "Globally filtering on columns whose values aren't strings or numbers and getting silently-ignored search."
@@ -283,7 +283,7 @@ skills:
         source: packages/table-core/src/features/global-filtering/globalFilteringFeature.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [filtering]
 
       - mistake: 'Expecting `filterFromLeafRows` to keep child rows visible when only the parent matches.'
@@ -320,7 +320,7 @@ skills:
         source: packages/table-core/src/features/column-filtering/filterRowsUtils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [filtering, row-expanding]
 
     reference_candidates:
@@ -429,7 +429,7 @@ skills:
         source: packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [sorting]
 
       - mistake: "Expecting `sortUndefined: 'first' | 'last'` to work in v8 (they only exist in v9)."
@@ -453,7 +453,7 @@ skills:
         source: packages/table-core/src/features/row-sorting/createSortedRowModel.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [sorting]
 
       - mistake: 'Custom `sortFn` returns `desc`-aware values (i.e. negating inside the function).'
@@ -481,7 +481,7 @@ skills:
         source: packages/table-core/src/features/row-sorting/createSortedRowModel.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [sorting]
 
       - mistake: 'Using fuzzy filter on a column but not pairing it with a fuzzy-aware sortFn that reads `itemRank` from `columnFiltersMeta`.'
@@ -519,7 +519,7 @@ skills:
         source: examples/react/filters-fuzzy/src/main.tsx
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [sorting, filtering]
 
     reference_candidates:
@@ -609,7 +609,7 @@ skills:
         source: packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [pagination]
 
       - mistake: 'Putting `pagination` in BOTH `state.pagination` and `initialState.pagination`.'
@@ -641,7 +641,7 @@ skills:
         source: docs/guide/pagination.md
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [pagination]
 
       - mistake: 'Disabling `autoResetPageIndex: false` and forgetting to clamp `pageIndex` when the data shrinks below the current page.'
@@ -672,7 +672,7 @@ skills:
         source: packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [pagination]
 
       - mistake: 'Computing `getRowCount()` and expecting it to match `data.length` when grouping/filtering/expansion is active.'
@@ -697,7 +697,7 @@ skills:
         source: docs/guide/row-models.md
         priority: low
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [pagination, filtering, grouping]
 
     reference_candidates: []
@@ -791,7 +791,7 @@ skills:
         source: examples/react/grouping/src/main.tsx
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [grouping, row-expanding]
 
       - mistake: 'Customizing `aggregationFns` like the v8 `aggregationFns` option (passing the registry through `tableOptions.aggregationFns` instead of `createGroupedRowModel`).'
@@ -835,7 +835,7 @@ skills:
         source: packages/table-core/src/features/column-grouping/createGroupedRowModel.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [grouping]
 
       - mistake: 'Confusing `aggregationFn` signature: `(columnId, leafRows, childRows)` vs filter/sort signatures.'
@@ -872,7 +872,7 @@ skills:
         source: packages/table-core/src/fns/aggregationFns.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [grouping]
 
       - mistake: "Expecting grouped columns to appear in their original position — and missing the default `groupedColumnMode: 'reorder'`."
@@ -914,7 +914,7 @@ skills:
         source: packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [grouping, column-ordering]
 
       - mistake: 'Calling `getSelectedRowModel()` on a grouped table and expecting it to include grouped rows.'
@@ -936,7 +936,7 @@ skills:
         source: packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts
         priority: low
         status: warning # current source files appear to call selectRowsFn against getCoreRowModel for all 3 — may be a stub
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [grouping, row-selection]
 
     reference_candidates:
@@ -1034,7 +1034,7 @@ skills:
         source: packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
         priority: high
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [row-expanding]
 
       - mistake: "Setting `paginateExpandedRows: false` and expecting the page size to stay 10 (it doesn't — more rows render)."
@@ -1067,7 +1067,7 @@ skills:
         source: packages/table-core/src/features/row-pagination/createPaginatedRowModel.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [row-expanding, pagination]
 
       - mistake: 'Storing `expanded` as `true` then writing into it as if it were a Record.'
@@ -1100,7 +1100,7 @@ skills:
         source: packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [row-expanding]
 
       - mistake: 'Setting `manualExpanding: true` and still passing `expandedRowModel: createExpandedRowModel()` AND expecting client-side flattening.'
@@ -1144,7 +1144,7 @@ skills:
         source: packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
         priority: medium
         status: active
-        version_context: v9.0.0-alpha.47
+        version_context: v9.0.0-alpha.48
         skills: [row-expanding]
 
     reference_candidates: []

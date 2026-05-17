@@ -12,7 +12,7 @@ description: >
   `GroupingState` shapes. Foundational for every other skill.
 type: core
 library: tanstack-table
-library_version: '9.0.0-alpha.47'
+library_version: '9.0.0-alpha.48'
 sources:
   - TanStack/table:docs/framework/vanilla/guide/table-state.md
   - TanStack/table:docs/framework/react/guide/table-state.md

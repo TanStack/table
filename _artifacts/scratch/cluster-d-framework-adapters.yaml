@@ -51,7 +51,7 @@ skills:
         source: 'docs/framework/react/guide/table-state.md (Reading State Without Subscribing); examples/react/basic-subscribe/src/main.tsx'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Passing both atoms.pagination and state.pagination for the same slice'
         mechanism: 'When a slice is owned both ways, external atoms take precedence over external state. The on[State]Change callback may stop firing or write into a base atom whose value is shadowed by the external atom, producing surprising divergence.'
         wrong_pattern: |
@@ -76,7 +76,7 @@ skills:
         source: 'docs/framework/react/guide/table-state.md (Custom Initial State Note); examples/react/basic-external-atoms'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Using table.Subscribe inside a column cell / header definition'
         mechanism: 'In cell and header render contexts, the table field is typed as the core Table<TFeatures, TData>, not the React-extended ReactTable, so table.Subscribe is not on the object. Calling it crashes or fails to compile.'
         wrong_pattern: |
@@ -108,7 +108,7 @@ skills:
         source: 'docs/framework/react/guide/table-state.md (Tips section); examples/react/basic-subscribe/src/main.tsx'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
         skills: ['react-subscribe-compiler-compat']
 
   - name: 'Vue Table State, Subscribe & createTableHook'
@@ -167,7 +167,7 @@ skills:
         source: 'docs/framework/vue/guide/table-state.md (External State); examples/vue/basic-external-state'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Reading table.atoms.pagination.get() outside a reactive context and expecting Vue updates'
         mechanism: 'Atom .get() is a current-value read. It only participates in Vue tracking when called inside a reactive scope such as a template, computed, or watch. From plain script setup top-level code it is a one-shot read.'
         wrong_pattern: |
@@ -179,7 +179,7 @@ skills:
         source: 'docs/framework/vue/guide/table-state.md (Reading State Without Subscribing)'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Using the v8 useVueTable name'
         mechanism: 'v9 renamed the adapter creator to useTable for every framework. useVueTable is no longer exported.'
         wrong_pattern: |
@@ -189,7 +189,7 @@ skills:
         source: 'docs/framework/vue/vue-table.md; packages/vue-table/src/useTable.ts'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
 
   - name: 'Solid Table State, Subscribe & createTableHook'
     slug: 'table-state'
@@ -225,7 +225,7 @@ skills:
         source: 'docs/framework/solid/guide/table-state.md (Reading Reactive State with createTable)'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Passing data as a plain reactive accessor value instead of a getter'
         mechanism: 'Solid loses fine-grained reactivity once a signal value is destructured into a plain object. Without a get data() getter, createTable never re-syncs setOptions when the underlying signal changes.'
         wrong_pattern: |
@@ -247,7 +247,7 @@ skills:
         source: 'docs/framework/solid/guide/table-state.md (Reading Reactive State with createTable); examples/solid/basic-use-table/src/App.tsx'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Using table.Subscribe child callback as a raw value'
         mechanism: 'In Solid, table.Subscribe child receives an accessor function. Treating it as a value renders the function reference, not the selected state.'
         wrong_pattern: |
@@ -267,7 +267,7 @@ skills:
         source: 'docs/framework/solid/guide/table-state.md (Fine-grained Updates with table.Subscribe)'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
 
   - name: 'Svelte Table State, subscribeTable & createTableHook'
     slug: 'table-state'
@@ -312,7 +312,7 @@ skills:
         source: 'docs/framework/svelte/guide/table-state.md (Fine-grained Updates with subscribeTable)'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; Svelte 5+ only'
+        version_context: 'v9.0.0-alpha.48; Svelte 5+ only'
       - mistake: 'Passing $state values directly to options.state without getters'
         mechanism: 'createTable resolves options once and reads state.pagination as a snapshot. Without a getter, runes do not surface the latest value to the table, and the controlled slice falls out of sync.'
         wrong_pattern: |
@@ -344,7 +344,7 @@ skills:
         source: 'docs/framework/svelte/guide/table-state.md (External State); examples/svelte/basic-external-state'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; Svelte 5+ only'
+        version_context: 'v9.0.0-alpha.48; Svelte 5+ only'
       - mistake: 'Using the legacy createSvelteTable name from Svelte 4 era'
         mechanism: 'v9 is Svelte 5+ only and exports createTable. Older codebases referencing createSvelteTable will fail to import.'
         wrong_pattern: |
@@ -354,7 +354,7 @@ skills:
         source: 'packages/svelte-table/src/createTable.svelte.ts; docs/framework/svelte/svelte-table.md'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; Svelte 5+ only'
+        version_context: 'v9.0.0-alpha.48; Svelte 5+ only'
 
   - name: 'Angular Table State & injectTable'
     slug: 'table-state'
@@ -397,7 +397,7 @@ skills:
         source: 'docs/framework/angular/guide/table-state.md (Feature-based State); packages/angular-table/src/injectTable.ts; examples/angular/basic-inject-table'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; Angular >=19 with signals'
+        version_context: 'v9.0.0-alpha.48; Angular >=19 with signals'
       - mistake: 'Using the v8 createAngularTable name'
         mechanism: 'v9 renamed the adapter creator to injectTable to match Angular DI conventions. createAngularTable is no longer exported.'
         wrong_pattern: |
@@ -407,7 +407,7 @@ skills:
         source: 'docs/framework/angular/angular-table.md; packages/angular-table/src/injectTable.ts'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Selecting object slices with computed without shallow equality'
         mechanism: 'Object/array slice references change on every store update even when their contents are unchanged. Without { equal: shallow }, downstream computeds and templates re-run unnecessarily, defeating fine-grained signal performance.'
         wrong_pattern: |
@@ -422,7 +422,7 @@ skills:
         source: 'docs/framework/angular/guide/table-state.md (Selecting State with Angular computed)'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
 
   - name: 'Lit Table State & createTableHook'
     slug: 'table-state'
@@ -475,7 +475,7 @@ skills:
         source: 'packages/lit-table/src/TableController.ts; docs/framework/lit/guide/table-state.md; examples/lit/basic-table-controller/src/main.ts'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Expecting source-only host invalidation from table.Subscribe with a source prop'
         mechanism: 'TableController currently wires host requestUpdate through the full table.store and optionsStore subscriptions. table.Subscribe with a source is render-time selection sugar, not a per-source invalidation guarantee.'
         wrong_pattern: |
@@ -494,7 +494,7 @@ skills:
         source: 'packages/lit-table/src/TableController.ts (LitTable Subscribe note); docs/framework/lit/guide/table-state.md'
         priority: 'MEDIUM'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Reading atom.get() in render and never seeing UI update'
         mechanism: 'Atom .get() reads a value but does not register with the controller. Host invalidation is wired through the full table.store subscription, so updates that change the read slice still trigger render, but state from a non-controller-bound atom that is not part of table.store will not invalidate the host.'
         wrong_pattern: |
@@ -522,7 +522,7 @@ skills:
         source: 'docs/framework/lit/guide/table-state.md (Reading State Without Subscribing); packages/lit-table/src/TableController.ts'
         priority: 'MEDIUM'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
 
   - name: 'Preact Table State, Subscribe & createTableHook'
     slug: 'table-state'
@@ -582,7 +582,7 @@ skills:
         source: 'docs/framework/preact/preact-table.md; examples/preact/basic-use-table/src/main.tsx'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Using table.Subscribe inside a cell or header render context'
         mechanism: 'The cell and header table field is typed as the core Table<TFeatures, TData> and does not expose Subscribe. Import the standalone Subscribe and pass source={table.store}.'
         wrong_pattern: |
@@ -608,7 +608,7 @@ skills:
         source: 'docs/framework/preact/guide/table-state.md (Optimizing Re-renders with Selectors and table.Subscribe); packages/preact-table/src/Subscribe.ts'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Passing useTable both atoms.pagination and state.pagination for the same slice'
         mechanism: 'External atoms take precedence over external state. Mixing them silently hides on[State]Change-driven setState writes and leaves React-style state stale.'
         wrong_pattern: |
@@ -633,7 +633,7 @@ skills:
         source: 'docs/framework/preact/guide/table-state.md (Custom Initial State Note); examples/preact/basic-external-atoms'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
 
   - name: 'React Subscribe for React Compiler Compatibility'
     slug: 'react-subscribe-compiler-compat'
@@ -681,7 +681,7 @@ skills:
         source: 'docs/framework/react/guide/table-state.md (Subscribe for React Compiler Compatibility); examples/react/basic-subscribe/src/main.tsx; packages/react-table/src/Subscribe.ts'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; React Compiler enabled'
+        version_context: 'v9.0.0-alpha.48; React Compiler enabled'
       - mistake: 'Using table.Subscribe from inside a cell or header definition where table is the core Table type'
         mechanism: 'Cell and header render contexts type table as Table<TFeatures, TData>, not ReactTable. table.Subscribe is undefined. The fix is to import the standalone Subscribe and pass source={table.store} or source={table.atoms.X}.'
         wrong_pattern: |
@@ -707,7 +707,7 @@ skills:
         source: 'docs/framework/react/guide/table-state.md (Tips); packages/react-table/src/Subscribe.ts'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Wrapping every cell in Subscribe by default'
         mechanism: 'Subscribe is overhead. For inline JSX in the parent component, the compiler always re-evaluates when the parent re-renders, so wrapping is unnecessary. Over-wrapping adds subscription churn without correctness benefit.'
         wrong_pattern: |
@@ -726,7 +726,7 @@ skills:
         source: 'docs/framework/react/guide/table-state.md (Subscribe for React Compiler Compatibility)'
         priority: 'MEDIUM'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: "Subscribing to the whole table.store for one row's selection checkbox"
         mechanism: 'Every store change re-renders the Subscribe child. Subscribing to table.atoms.rowSelection (or a per-row selector returning s[row.id]) limits re-renders to actual selection changes for that row.'
         wrong_pattern: |
@@ -746,7 +746,7 @@ skills:
         source: 'docs/framework/react/guide/table-state.md (Tips bullets); examples/react/basic-subscribe/src/main.tsx'
         priority: 'MEDIUM'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
 
   - name: 'Angular Rendering Directives & DI Context'
     slug: 'angular-rendering-directives'
@@ -793,7 +793,7 @@ skills:
         source: 'docs/framework/angular/guide/rendering.md (FlexRender import)'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; Angular >=19'
+        version_context: 'v9.0.0-alpha.48; Angular >=19'
       - mistake: 'Returning a component class but expecting all CellContext properties to be visible without input signals'
         mechanism: 'FlexRender wires render context onto the component via ComponentRef.setInput, but only declared input() / input.required() properties receive values. Undeclared properties are silently ignored.'
         wrong_pattern: |
@@ -812,7 +812,7 @@ skills:
         source: 'docs/framework/angular/guide/rendering.md (Returning a component class)'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; Angular >=19'
+        version_context: 'v9.0.0-alpha.48; Angular >=19'
       - mistake: 'Mixing bindings with inputs / outputs on the same property in flexRenderComponent'
         mechanism: 'bindings are applied at component creation, inputs / outputs are applied post-creation. Combining them on the same property causes double initialization or conflicting values.'
         wrong_pattern: |
@@ -830,7 +830,7 @@ skills:
         source: 'docs/framework/angular/guide/rendering.md (bindings API note)'
         priority: 'MEDIUM'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; Angular v20+ for bindings'
+        version_context: 'v9.0.0-alpha.48; Angular v20+ for bindings'
       - mistake: 'Drilling cell or header through input() in nested presentational components'
         mechanism: 'Using FlexRender + context directives makes injectTableCellContext / injectTableHeaderContext / injectTableContext available to any descendant of the [tanStackTableCell] / [tanStackTableHeader] / [tanStackTable] host. Drilling defeats the DI pattern and complicates refactors.'
         wrong_pattern: |
@@ -853,7 +853,7 @@ skills:
         source: 'docs/framework/angular/guide/rendering.md (Context directives)'
         priority: 'MEDIUM'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; Angular >=19'
+        version_context: 'v9.0.0-alpha.48; Angular >=19'
       - mistake: 'Calling injectFlexRenderContext outside a *flexRender rendered subtree without applying the corresponding context directive'
         mechanism: 'Tokens are only provided in the child injector that FlexRender creates, or where the [tanStackTable] / [tanStackTableHeader] / [tanStackTableCell] directives are applied. Components outside both scopes throw a NullInjectorError.'
         wrong_pattern: |
@@ -870,7 +870,7 @@ skills:
         source: 'docs/framework/angular/guide/rendering.md (Automatic token injection in FlexRender)'
         priority: 'MEDIUM'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47; Angular >=19'
+        version_context: 'v9.0.0-alpha.48; Angular >=19'
 
   - name: 'Lit TableController Pattern'
     slug: 'lit-table-controller'
@@ -916,7 +916,7 @@ skills:
         source: 'packages/lit-table/src/TableController.ts; examples/lit/basic-table-controller/src/main.ts'
         priority: 'CRITICAL'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Using table.FlexRender as a Lit directive instead of a function call'
         mechanism: 'table.FlexRender is a function that returns a TemplateResult. It is invoked inside ${...} interpolation with a header / cell / footer argument, not used as a custom element.'
         wrong_pattern: |
@@ -926,7 +926,7 @@ skills:
         source: 'packages/lit-table/src/TableController.ts (FlexRender attached); docs/framework/lit/lit-table.md'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Calling table.Subscribe children outside a template interpolation'
         mechanism: 'table.Subscribe returns a TemplateResult or string. It must be embedded with ${...} inside an html`` template. Calling it as a statement produces a value that the renderer never sees.'
         wrong_pattern: |
@@ -951,7 +951,7 @@ skills:
         source: 'packages/lit-table/src/TableController.ts (Subscribe shape); docs/framework/lit/guide/table-state.md'
         priority: 'HIGH'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
       - mistake: 'Forgetting that host update is wired through table.store, so source-only Subscribe does not skip host updates'
         mechanism: 'TableController subscribes the host to the full table.store and optionsStore. table.Subscribe with a source prop reads source.get() at render time but does not currently install an independent host subscription, so the host still updates on any store change.'
         wrong_pattern: |
@@ -977,7 +977,7 @@ skills:
         source: 'packages/lit-table/src/TableController.ts (LitTable Subscribe note); docs/framework/lit/guide/table-state.md (Selecting State with table.Subscribe)'
         priority: 'MEDIUM'
         status: 'active'
-        version_context: 'v9.0.0-alpha.47'
+        version_context: 'v9.0.0-alpha.48'
 
 gaps:
   - skill: 'table-state (Angular)'

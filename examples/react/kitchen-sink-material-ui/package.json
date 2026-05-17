@@ -21,7 +21,7 @@
     "@mui/material": "^9.0.1",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/react-pacer": "^0.22.0",
-    "@tanstack/react-table": "^9.0.0-alpha.47",
+    "@tanstack/react-table": "^9.0.0-alpha.48",
     "date-fns": "^4.1.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
