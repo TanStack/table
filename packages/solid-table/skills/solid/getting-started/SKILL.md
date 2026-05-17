@@ -1,0 +1,269 @@
+---
+name: solid/getting-started
+description: >
+  End-to-end first table with `@tanstack/solid-table` v9. Install, declare
+  `_features` via `tableFeatures()`, declare `_rowModels` with the matching
+  factories (e.g. `createSortedRowModel(sortFns)`), create a column helper
+  with `createColumnHelper<typeof _features, TData>()`, build the table with
+  `createTable(options)` using reactive `get data() {...}` getters, and render
+  rows via `FlexRender` (or `table.FlexRender`).
+type: lifecycle
+library: tanstack-table
+framework: solid
+library_version: '9.0.0-alpha.47'
+requires:
+  - setup
+  - column-definitions
+  - state-management
+  - solid/table-state
+sources:
+  - docs/installation.md
+  - docs/framework/solid/solid-table.md
+  - docs/framework/solid/guide/table-state.md
+  - packages/solid-table/src/createTable.ts
+  - examples/solid/basic-use-table/
+  - examples/solid/basic-app-table/
+---
+
+# Getting Started — `@tanstack/solid-table`
+
+A working Solid table from a clean install. The five steps below cover every
+concept you will need before reaching for feature-specific skills.
+
+## 1. Install
+
+```bash
+pnpm add @tanstack/solid-table
+# or
+npm install @tanstack/solid-table
+```
+
+`@tanstack/solid-table` re-exports everything from `@tanstack/table-core` plus
+the Solid-specific `createTable`, `FlexRender`, and `createTableHook`. You
+should not install `@tanstack/table-core` separately.
+
+## 2. Declare features (`_features`)
+
+v9 is explicit about what a table uses. Only registered features expose APIs
+and state slices. This is what makes the bundle tree-shake.
+
+```tsx
+import {
+  tableFeatures,
+  rowPaginationFeature,
+  rowSortingFeature,
+  columnFilteringFeature,
+} from '@tanstack/solid-table'
+
+const _features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+  columnFilteringFeature,
+})
+```
+
+`tableFeatures()` is **essential** — it produces a stable typed `TFeatures`
+object used everywhere (column helper, table options, etc.). Use it even for a
+no-feature table: `tableFeatures({})`.
+
+## 3. Declare row-model factories (`_rowModels`)
+
+Each non-core row-model feature needs its factory called and registered. The
+core row model is included by default.
+
+```tsx
+import {
+  createPaginatedRowModel,
+  createSortedRowModel,
+  createFilteredRowModel,
+  sortFns,
+  filterFns,
+} from '@tanstack/solid-table'
+
+const _rowModels = {
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(sortFns),
+  filteredRowModel: createFilteredRowModel(filterFns),
+}
+```
+
+`sortFns` and `filterFns` are the bundled `*Fns` registries. Pass only the
+registry you need — these are tree-shakeable too. You may also pass a narrowed
+object like `{ alphanumeric: sortFns.alphanumeric }`.
+
+## 4. Define columns
+
+`createColumnHelper` takes **both** generics: `typeof _features` first, then
+`TData`. (This is the v9 ordering. v8 only had `TData`.)
+
+```tsx
+import { createColumnHelper } from '@tanstack/solid-table'
+
+type Person = { firstName: string; lastName: string; age: number }
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    header: () => <span>Last Name</span>,
+  }),
+  columnHelper.accessor('age', { header: 'Age' }),
+])
+```
+
+`columnHelper.columns([...])` preserves each column's individual `TValue` type.
+Prefer it over a bare array.
+
+## 5. Create the table and render
+
+```tsx
+import { createTable, FlexRender } from '@tanstack/solid-table'
+import { For, createSignal } from 'solid-js'
+
+function App() {
+  const [data, setData] = createSignal<Array<Person>>([
+    { firstName: 'tanner', lastName: 'linsley', age: 24 },
+    { firstName: 'kevin', lastName: 'vandy', age: 12 },
+  ])
+
+  const table = createTable({
+    _features,
+    _rowModels,
+    columns,
+    get data() {
+      return data() // reactive getter
+    },
+  })
+
+  return (
+    <table>
+      <thead>
+        <For each={table.getHeaderGroups()}>
+          {(hg) => (
+            <tr>
+              <For each={hg.headers}>
+                {(header) => (
+                  <th>
+                    {header.isPlaceholder ? null : (
+                      <FlexRender header={header} />
+                    )}
+                  </th>
+                )}
+              </For>
+            </tr>
+          )}
+        </For>
+      </thead>
+      <tbody>
+        <For each={table.getRowModel().rows}>
+          {(row) => (
+            <tr>
+              <For each={row.getAllCells()}>
+                {(cell) => (
+                  <td>
+                    <FlexRender cell={cell} />
+                  </td>
+                )}
+              </For>
+            </tr>
+          )}
+        </For>
+      </tbody>
+    </table>
+  )
+}
+```
+
+That's a complete v9 Solid table.
+
+## Alternative entry point: `createTableHook`
+
+If you have more than one table sharing features and row models, declare them
+once with `createTableHook`:
+
+```tsx
+import { createTableHook } from '@tanstack/solid-table'
+
+const { createAppTable, createAppColumnHelper } = createTableHook({
+  _features: tableFeatures({}),
+  _rowModels: {},
+})
+
+const columnHelper = createAppColumnHelper<Person>()
+
+function App(props: { data: Array<Person> }) {
+  const table = createAppTable({
+    columns,
+    get data() {
+      return props.data
+    },
+  })
+  // ...
+}
+```
+
+`createAppTable` returns a normal `SolidTable` plus app-wrapper components
+(`AppTable`, `AppCell`, `AppHeader`, `AppFooter`). See the table-state skill.
+
+## Common pitfalls
+
+### Forgetting `get` on reactive options
+
+```tsx
+// ❌ Reads once at construction — table never updates when data() changes
+createTable({ _features, _rowModels: {}, columns, data: data() })
+
+// ✅ Tracked
+createTable({
+  _features,
+  _rowModels: {},
+  columns,
+  get data() {
+    return data()
+  },
+})
+```
+
+Use getters for any option that depends on a reactive source: `data`, dynamic
+`columns`, controlled `state` slices, `rowCount`, etc.
+
+### Calling `table.state` as a value
+
+`table.state` is an Accessor (a function). Always call it:
+
+```tsx
+// ❌
+table.state.pagination
+
+// ✅
+table.state().pagination
+```
+
+### Missing feature → missing API
+
+If you write `table.setSorting(...)` without `rowSortingFeature` in `_features`,
+TS errors and the method is undefined at runtime. The fix is registration, not
+a cast.
+
+### Bundling `stockFeatures` defeats the v9 tree-shake
+
+Don't import everything. Register only the features you use. A no-feature table
+is `tableFeatures({})` — not `stockFeatures`.
+
+### Reimplementing built-ins
+
+v9 already exposes `table.setSorting`, `table.nextPage`, `column.toggleVisibility`,
+`row.toggleSelected`, `column.setFilterValue`, etc. Reach for the API before
+rolling your own state update.
+
+### Hallucinated names from older versions
+
+v9 is `createTable`, not `createSolidTable` (that was v8). Row models go under
+`_rowModels`, not top-level `getCoreRowModel` / `getSortedRowModel` options.
+`createColumnHelper` takes `<typeof _features, TData>` (two generics, features
+first).

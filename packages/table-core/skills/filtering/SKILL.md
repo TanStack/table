@@ -17,8 +17,8 @@ type: core
 library: tanstack-table
 library_version: '9.0.0-alpha.47'
 requires:
-  - tanstack-table/state-management
-  - tanstack-table/customizing-feature-behavior
+  - state-management
+  - customizing-feature-behavior
 sources:
   - TanStack/table:docs/guide/column-filtering.md
   - TanStack/table:docs/guide/global-filtering.md

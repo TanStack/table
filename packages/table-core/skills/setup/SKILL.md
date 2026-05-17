@@ -12,8 +12,8 @@ type: core
 library: tanstack-table
 library_version: '9.0.0-alpha.47'
 requires:
-  - tanstack-table/state-management
-  - tanstack-table/column-definitions
+  - state-management
+  - column-definitions
 sources:
   - TanStack/table:docs/installation.md
   - TanStack/table:docs/overview.md

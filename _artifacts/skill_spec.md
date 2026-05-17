@@ -174,7 +174,7 @@ From Phase 4 (2026-05-17). Full Q&A is in `domain_map.yaml :: maintainer_intervi
 
 ## Recommended Skill File Structure
 
-```
+```text
 _artifacts/
   domain_map.yaml          # this domain map
   skill_spec.md            # this human-readable companion

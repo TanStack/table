@@ -18,9 +18,9 @@ type: lifecycle
 library: tanstack-table
 library_version: '9.0.0-alpha.47'
 requires:
-  - tanstack-table/setup
-  - tanstack-table/state-management
-  - tanstack-table/column-definitions
+  - setup
+  - state-management
+  - column-definitions
 sources:
   - TanStack/table:docs/framework/table-core/guide/migrating.md
   - TanStack/table:docs/framework/react/guide/use-legacy-table.md

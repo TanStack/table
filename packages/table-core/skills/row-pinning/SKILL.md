@@ -14,7 +14,7 @@ type: core
 library: tanstack-table
 library_version: '9.0.0-alpha.47'
 requires:
-  - tanstack-table/state-management
+  - state-management
 sources:
   - TanStack/table:docs/guide/row-pinning.md
   - TanStack/table:packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts

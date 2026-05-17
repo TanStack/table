@@ -15,8 +15,8 @@ type: core
 library: tanstack-table
 library_version: '9.0.0-alpha.47'
 requires:
-  - tanstack-table/state-management
-  - tanstack-table/customizing-feature-behavior
+  - state-management
+  - customizing-feature-behavior
 sources:
   - TanStack/table:docs/guide/grouping.md
   - TanStack/table:packages/table-core/src/fns/aggregationFns.ts

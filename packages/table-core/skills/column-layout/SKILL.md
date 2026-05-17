@@ -16,7 +16,7 @@ type: core
 library: tanstack-table
 library_version: '9.0.0-alpha.47'
 requires:
-  - tanstack-table/state-management
+  - state-management
 sources:
   - TanStack/table:docs/guide/column-visibility.md
   - TanStack/table:docs/guide/column-ordering.md
@@ -72,13 +72,13 @@ const table = constructTable({
 
 ## Subsystems
 
-| Feature                  | State slice               | Key APIs                                              |
-| ------------------------ | ------------------------- | ----------------------------------------------------- |
-| `columnVisibilityFeature`| `columnVisibility`        | `column.toggleVisibility()`, `row.getVisibleCells()`  |
-| `columnOrderingFeature`  | `columnOrder`             | `table.setColumnOrder()`, `column.getIndex()`         |
-| `columnPinningFeature`   | `columnPinning` (l/r)     | `column.pin()`, `column.getStart()`, `getAfter()`     |
-| `columnSizingFeature`    | `columnSizing`            | `column.getSize()`, `table.getTotalSize()`            |
-| `columnResizingFeature`  | (transient drag state)    | `header.getResizeHandler()`, `columnResizeMode`       |
+| Feature                   | State slice            | Key APIs                                             |
+| ------------------------- | ---------------------- | ---------------------------------------------------- |
+| `columnVisibilityFeature` | `columnVisibility`     | `column.toggleVisibility()`, `row.getVisibleCells()` |
+| `columnOrderingFeature`   | `columnOrder`          | `table.setColumnOrder()`, `column.getIndex()`        |
+| `columnPinningFeature`    | `columnPinning` (l/r)  | `column.pin()`, `column.getStart()`, `getAfter()`    |
+| `columnSizingFeature`     | `columnSizing`         | `column.getSize()`, `table.getTotalSize()`           |
+| `columnResizingFeature`   | (transient drag state) | `header.getResizeHandler()`, `columnResizeMode`      |
 
 Full API surface, render strategies, and additional MEDIUM-priority failure modes (reorder-pinned-via-columnOrder, react-dnd/react-beautiful-dnd avoidance, touch-resize handler) in [subsystems.md](references/subsystems.md).
 

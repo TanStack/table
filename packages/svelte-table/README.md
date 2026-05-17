@@ -57,7 +57,7 @@ TanStack Table ships [TanStack Intent](https://github.com/TanStack/intent) skill
 npx @tanstack/intent@latest install
 ```
 
-to add skill-loading guidance for your agent (Claude Code, Cursor, Copilot, etc.). Then `npx @tanstack/intent@latest list` shows available skills and `npx @tanstack/intent@latest load <skill>` prints one for inspection. Skills version with the library — your agent gets guidance that matches the version of `@tanstack/<framework>-table` you installed. Only available for v9 and above.
+to add skill-loading guidance for your agent (Claude Code, Cursor, Copilot, etc.). The same CLI also exposes `intent list` to browse available skills and `intent load <skill>` to print one for inspection. Skills version with the library — your agent gets guidance that matches the version of `@tanstack/<framework>-table` you installed. Only available for v9 and above.
 
 ## Get Involved
 

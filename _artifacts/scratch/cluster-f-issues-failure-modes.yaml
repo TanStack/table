@@ -502,8 +502,26 @@ issue_findings:
     status: 'active'
     version_context: 'v8.21.3 bug, likely inherited in v9 alpha'
 
-  - |-
-    skill_slugs: ['filtering', 'state-management'] mistake: 'Global filter silently ignores columns with object accessors' mechanism: | If `accessorKey` (or `accessorFn`) resolves to an object/array, the built-in global filter coerces it to string via `String(value)` — which gives `[object Object]` — and the filter function shortcuts to false. Users see their `filterFn` never being called and assume their custom function is broken. wrong_pattern: | // ❌ accessorFn returns an object — global filter never calls fuzzyFilter columnHelper.accessor((row) => row.user, { id: 'user', filterFn: fuzzyFilter }) correct_pattern: | // ✅ Flatten the value to a primitive in accessorFn, do the rich match in filterFn columnHelper.accessor((row) => `${row.user.firstName} ${row.user.lastName}`, { id: 'user', filterFn: fuzzyFilter, }) // OR explicitly set columnDef.getCanGlobalFilter: () => true source: 'https://github.com/TanStack/table/issues/4673 (Global filter doesn't run when accessor key points to an object, 16 comments), https://github.com/TanStack/table/issues/4942 (Cell's filterFn never gets called)' priority: 'HIGH' status: 'active' version_context: 'v8 behavior — silent failure makes this a high-priority skill teaching point'
+  - skill_slugs: ['filtering', 'state-management']
+    mistake: 'Global filter silently ignores columns with object accessors'
+    mechanism: |
+      If `accessorKey` (or `accessorFn`) resolves to an object/array, the built-in
+      global filter coerces it to string via `String(value)` — which gives
+      `[object Object]` — and the filter function shortcuts to false. Users see
+      their `filterFn` never being called and assume their custom function is broken.
+    wrong_pattern: |
+      // ❌ accessorFn returns an object — global filter never calls fuzzyFilter
+      columnHelper.accessor((row) => row.user, { id: 'user', filterFn: fuzzyFilter })
+    correct_pattern: |
+      // ✅ Flatten the value to a primitive in accessorFn, do the rich match in filterFn
+      columnHelper.accessor((row) => `${row.user.firstName} ${row.user.lastName}`, {
+        id: 'user', filterFn: fuzzyFilter,
+      })
+      // OR explicitly set columnDef.getCanGlobalFilter: () => true
+    source: "https://github.com/TanStack/table/issues/4673 (Global filter doesn't run when accessor key points to an object, 16 comments); https://github.com/TanStack/table/issues/4942 (Cell's filterFn never gets called)"
+    priority: 'HIGH'
+    status: 'active'
+    version_context: 'v8 behavior — silent failure makes this a high-priority skill teaching point'
   - skill_slugs: ['filtering', 'column-definitions']
     mistake: 'Column filter returns no matches when first row has null in that column'
     mechanism: |

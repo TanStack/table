@@ -1206,7 +1206,7 @@ skills:
       - row.columnFiltersMeta (FilterMeta extended via declare module)
       - addMeta callback (4th argument to FilterFn)
     tasks:
-      - Wire up text/range/select per-column filters with debounced inputs (see /Users/kevinvancott/Documents/tanstack/table/examples/react/filters/src/main.tsx).
+      - Wire up text/range/select per-column filters with debounced inputs (see examples/react/filters/src/main.tsx).
       - 'Add a faceted filter UI: autocomplete from `column.getFacetedUniqueValues()` and a range slider from
         `column.getFacetedMinMaxValues()` (requires `createFacetedRowModel()` PLUS the unique/minMax row models).'
       - Implement fuzzy global search with `@tanstack/match-sorter-utils` and a custom `fuzzySort` that reads
@@ -1237,7 +1237,7 @@ skills:
           ```
         correct_pattern: |
           ```tsx
-          // From /Users/kevinvancott/Documents/tanstack/table/examples/react/filters-faceted/src/main.tsx
+          // From examples/react/filters-faceted/src/main.tsx
           const table = useTable({
             _features: tableFeatures({
               columnFacetingFeature,
@@ -1254,7 +1254,7 @@ skills:
             columns, data,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts
+        source: packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts
         priority: high
         status: active
         version_context: v9.0.0-alpha.47
@@ -1297,7 +1297,7 @@ skills:
             onColumnFiltersChange: setColumnFilters,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
+        source: packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
         priority: high
         status: active
         version_context: v9.0.0-alpha.47
@@ -1318,7 +1318,7 @@ skills:
           ```
         correct_pattern: |
           ```tsx
-          // From /Users/kevinvancott/Documents/tanstack/table/examples/react/filters-fuzzy/src/main.tsx
+          // From examples/react/filters-fuzzy/src/main.tsx
           import { filterFns, sortFns } from '@tanstack/react-table'
           import { rankItem, compareItems } from '@tanstack/match-sorter-utils'
 
@@ -1346,7 +1346,7 @@ skills:
             columns, data,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/examples/react/filters-fuzzy/src/main.tsx
+        source: examples/react/filters-fuzzy/src/main.tsx
         priority: high
         status: active
         version_context: v9.0.0-alpha.47
@@ -1386,7 +1386,7 @@ skills:
             onColumnFiltersChange: setColumnFilters,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/docs/guide/column-filtering.md
+        source: docs/guide/column-filtering.md
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -1422,7 +1422,7 @@ skills:
             enableGlobalFilter: true,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/global-filtering/globalFilteringFeature.ts
+        source: packages/table-core/src/features/global-filtering/globalFilteringFeature.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -1459,7 +1459,7 @@ skills:
             maxLeafRowFilterDepth: 0, // only filter root-level rows
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/column-filtering/filterRowsUtils.ts
+        source: packages/table-core/src/features/column-filtering/filterRowsUtils.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -1553,7 +1553,7 @@ skills:
       - name: built-in filterFns
         kind: function-registry
         count: 12
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/fns/filterFns.ts
+        source: packages/table-core/src/fns/filterFns.ts
         documented_in_guide:
           - includesString
           - includesStringSensitive
@@ -1622,7 +1622,7 @@ skills:
       - column.getFirstSortDir / getNextSortingOrder / getAutoSortDir / getAutoSortFn / getSortFn
       - 'sortFns built-in registry  # v9 renamed from sortingFns'
     tasks:
-      - Add clickable column-header sorting with multi-sort on Shift+click (see /Users/kevinvancott/Documents/tanstack/table/examples/react/sorting/src/main.tsx).
+      - Add clickable column-header sorting with multi-sort on Shift+click (see examples/react/sorting/src/main.tsx).
       - 'Wire a column-specific custom `sortFn` for an enum (e.g. status: single < complicated < relationship).'
       - "Sort nullable values with explicit placement using `sortUndefined: 'last'` so undefined never confuses
         the auto sortFn picker."
@@ -1644,7 +1644,7 @@ skills:
           ```
         correct_pattern: |
           ```tsx
-          // v9 names. From /Users/kevinvancott/Documents/tanstack/table/examples/react/sorting/src/main.tsx
+          // v9 names. From examples/react/sorting/src/main.tsx
           import { sortFns, createSortedRowModel } from '@tanstack/react-table'
 
           columnHelper.accessor('firstName', {
@@ -1662,7 +1662,7 @@ skills:
             columns, data,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts
+        source: packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts
         priority: high
         status: active
         version_context: v9.0.0-alpha.47
@@ -1679,14 +1679,14 @@ skills:
           ```
         correct_pattern: |
           ```tsx
-          // From /Users/kevinvancott/Documents/tanstack/table/examples/react/sorting/src/main.tsx
+          // From examples/react/sorting/src/main.tsx
           columnHelper.accessor((row) => row.lastName, {
             id: 'lastName',
             sortUndefined: 'last',     // ABSOLUTE: always at end regardless of asc/desc
             sortDescFirst: false,      // nullable values can mess up auto detection
           }),
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-sorting/createSortedRowModel.ts
+        source: packages/table-core/src/features/row-sorting/createSortedRowModel.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -1706,7 +1706,7 @@ skills:
           ```
         correct_pattern: |
           ```tsx
-          // From /Users/kevinvancott/Documents/tanstack/table/examples/react/sorting/src/main.tsx
+          // From examples/react/sorting/src/main.tsx
           // Always return ascending-order comparison; the row model handles desc.
           const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
             const statusOrder = ['single', 'complicated', 'relationship']
@@ -1714,7 +1714,7 @@ skills:
                    statusOrder.indexOf(rowB.original.status)
           }
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-sorting/createSortedRowModel.ts
+        source: packages/table-core/src/features/row-sorting/createSortedRowModel.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -1734,7 +1734,7 @@ skills:
           ```
         correct_pattern: |
           ```tsx
-          // From /Users/kevinvancott/Documents/tanstack/table/examples/react/filters-fuzzy/src/main.tsx
+          // From examples/react/filters-fuzzy/src/main.tsx
           import { compareItems } from '@tanstack/match-sorter-utils'
           import { sortFns } from '@tanstack/react-table'
 
@@ -1754,7 +1754,7 @@ skills:
             sortFn: fuzzySort,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/examples/react/filters-fuzzy/src/main.tsx
+        source: examples/react/filters-fuzzy/src/main.tsx
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -1842,7 +1842,7 @@ skills:
       - name: built-in sortFns
         kind: function-registry
         count: 6
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/fns/sortFns.ts
+        source: packages/table-core/src/fns/sortFns.ts
         entries:
           - alphanumeric
           - alphanumericCaseSensitive
@@ -1888,7 +1888,7 @@ skills:
       - table.getPaginatedRowModel / getPrePaginatedRowModel
     tasks:
       - Add a pagination toolbar with `<<`, `<`, `>`, `>>` buttons, current page indicator, page size selector,
-        and 'go to page' input (see /Users/kevinvancott/Documents/tanstack/table/examples/react/pagination/src/main.tsx).
+        and 'go to page' input (see examples/react/pagination/src/main.tsx).
       - 'Switch to server-side pagination: `manualPagination: true`, supply `rowCount` (or `pageCount`) from
         the server, omit `paginatedRowModel`, refetch when `state.pagination` changes.'
       - 'Stop the automatic page-index reset when filters change: `autoResetPageIndex: false` (e.g., to keep
@@ -1932,7 +1932,7 @@ skills:
             onPaginationChange: setPagination,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
+        source: packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
         priority: high
         status: active
         version_context: v9.0.0-alpha.47
@@ -1964,7 +1964,7 @@ skills:
             onPaginationChange: setPagination,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/docs/guide/pagination.md
+        source: docs/guide/pagination.md
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -1997,7 +1997,7 @@ skills:
             }
           }, [data, columnFilters])
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
+        source: packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -2024,7 +2024,7 @@ skills:
           table.getRowCount()                        // pre-paginated count (server count if rowCount option set)
           table.getRowModel().rows.length            // current page only
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/docs/guide/row-models.md
+        source: docs/guide/row-models.md
         priority: low
         status: active
         version_context: v9.0.0-alpha.47
@@ -2152,7 +2152,7 @@ skills:
       - aggregationFns built-in registry (8 fns)
     tasks:
       - Add per-column 'group' toggles in headers and render grouped cells with subRow counts + expand icons
-        (see /Users/kevinvancott/Documents/tanstack/table/examples/react/grouping/src/main.tsx).
+        (see examples/react/grouping/src/main.tsx).
       - 'Mix aggregation strategies across columns: `sum` for visits, `median` for age, `mean` for progress,
         `count` for the implicit grouping column.'
       - "Override a column's grouping key with `getGroupingValue: row => ${row.firstName} ${row.lastName}`
@@ -2180,7 +2180,7 @@ skills:
           ```
         correct_pattern: |
           ```tsx
-          // From /Users/kevinvancott/Documents/tanstack/table/examples/react/grouping/src/main.tsx
+          // From examples/react/grouping/src/main.tsx
           import {
             aggregationFns,
             columnGroupingFeature,
@@ -2214,7 +2214,7 @@ skills:
             </button>
           )}
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/examples/react/grouping/src/main.tsx
+        source: examples/react/grouping/src/main.tsx
         priority: high
         status: active
         version_context: v9.0.0-alpha.47
@@ -2261,7 +2261,7 @@ skills:
           // Then on a column:
           { accessorKey: 'sales', aggregationFn: 'myCustomAggregation' }
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/column-grouping/createGroupedRowModel.ts
+        source: packages/table-core/src/features/column-grouping/createGroupedRowModel.ts
         priority: high
         status: active
         version_context: v9.0.0-alpha.47
@@ -2279,7 +2279,7 @@ skills:
           ```
         correct_pattern: |
           ```tsx
-          // From /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/fns/aggregationFns.ts
+          // From packages/table-core/src/fns/aggregationFns.ts
           // For pure leaf averages, use leafRows:
           const aggregationFn_mean: AggregationFn<any, any> = (columnId, leafRows) => {
             let count = 0, sum = 0
@@ -2298,7 +2298,7 @@ skills:
             }, 0)
           }
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/fns/aggregationFns.ts
+        source: packages/table-core/src/fns/aggregationFns.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -2342,7 +2342,7 @@ skills:
           // Or hide grouped columns entirely:
           groupedColumnMode: 'remove',
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts
+        source: packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -2365,7 +2365,7 @@ skills:
           table.getFilteredSelectedRowModel()   // selection within current filters
           table.getGroupedSelectedRowModel()    // selection within current groups
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts
+        source: packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts
         priority: low
         status: warning
         version_context: v9.0.0-alpha.47
@@ -2403,7 +2403,7 @@ skills:
         kind: function-registry
         count: 8
         actual_count: 9
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/fns/aggregationFns.ts
+        source: packages/table-core/src/fns/aggregationFns.ts
         entries:
           - sum
           - min
@@ -2458,9 +2458,9 @@ skills:
       - 'row.subRows  # populated via getSubRows'
     tasks:
       - 'Render a tree table: provide nested `subRows` data, set `getSubRows: row => row.subRows`, render
-        `paddingLeft: ${row.depth * 2}rem` on the first cell (see /Users/kevinvancott/Documents/tanstack/table/examples/react/expanding/src/main.tsx).'
+        `paddingLeft: ${row.depth * 2}rem` on the first cell (see examples/react/expanding/src/main.tsx).'
       - 'Render detail panels (sub-components) for flat data: set `getRowCanExpand: () => true`, render a
-        second `<tr>` with a `colSpan` cell when `row.getIsExpanded()` (see /Users/kevinvancott/Documents/tanstack/table/examples/react/sub-components/src/main.tsx).'
+        second `<tr>` with a `colSpan` cell when `row.getIsExpanded()` (see examples/react/sub-components/src/main.tsx).'
       - 'Toggle ALL rows at once with a header button: `table.getToggleAllRowsExpandedHandler()`.'
       - "Keep expanded children on their parent's page (so the page count doesn't expand): `paginateExpandedRows:
         false`."
@@ -2485,7 +2485,7 @@ skills:
         correct_pattern: |
           ```tsx
           // For pure tree data, omit getRowCanExpand and let it auto-detect:
-          // From /Users/kevinvancott/Documents/tanstack/table/examples/react/expanding/src/main.tsx
+          // From examples/react/expanding/src/main.tsx
           const table = useTable({
             _features,
             _rowModels: { expandedRowModel: createExpandedRowModel(), /* ... */ },
@@ -2495,7 +2495,7 @@ skills:
           })
 
           // For pure detail panels, override and skip getSubRows:
-          // From /Users/kevinvancott/Documents/tanstack/table/examples/react/sub-components/src/main.tsx
+          // From examples/react/sub-components/src/main.tsx
           const table = useTable({
             _features: tableFeatures({ rowExpandingFeature }),
             _rowModels: { expandedRowModel: createExpandedRowModel() },
@@ -2503,7 +2503,7 @@ skills:
             getRowCanExpand: (row) => true, // every row expands to show <subComponent>
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
+        source: packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
         priority: high
         status: active
         version_context: v9.0.0-alpha.47
@@ -2538,7 +2538,7 @@ skills:
           // OR explicitly keep children with parent:
           paginateExpandedRows: false, // accept that pageSize is a soft cap
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-pagination/createPaginatedRowModel.ts
+        source: packages/table-core/src/features/row-pagination/createPaginatedRowModel.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -2557,7 +2557,7 @@ skills:
         correct_pattern: |
           ```tsx
           // Use row.toggleExpanded() / row.getToggleExpandedHandler() — they materialize properly:
-          // From /Users/kevinvancott/Documents/tanstack/table/examples/react/expanding/src/main.tsx
+          // From examples/react/expanding/src/main.tsx
           <button onClick={row.getToggleExpandedHandler()}>
             {row.getIsExpanded() ? '👇' : '👉'}
           </button>
@@ -2572,7 +2572,7 @@ skills:
             return { ...old, [row.id]: !old[row.id] }
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
+        source: packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -2618,7 +2618,7 @@ skills:
             getSubRows: r => r.subRows,
           })
           ```
-        source: /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
+        source: packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
         priority: medium
         status: active
         version_context: v9.0.0-alpha.47
@@ -6857,7 +6857,7 @@ gaps:
       beyond the 10 documented), 6 sortFns ✓, 9 aggregationFns. Need maintainer review."
   - issue: v9 sortFn auto-detection samples flatRows.slice(10)
     detail:
-      /Users/kevinvancott/Documents/tanstack/table/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:94
+      packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:94
       reads `getFilteredRowModel().flatRows.slice(10)` — note this is `.slice(10)` not `.slice(0, 10)`.
       It skips the first 10 rows. Likely a bug or oversight. Worth flagging.
   - issue: Three selected-row-model APIs appear functionally identical in source

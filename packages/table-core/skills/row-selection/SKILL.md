@@ -15,8 +15,8 @@ type: core
 library: tanstack-table
 library_version: '9.0.0-alpha.47'
 requires:
-  - tanstack-table/state-management
-  - tanstack-table/column-definitions
+  - state-management
+  - column-definitions
 sources:
   - TanStack/table:docs/guide/row-selection.md
   - TanStack/table:packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts
