@@ -18,7 +18,8 @@
     "svelte",
     "table",
     "svelte-table",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
   "type": "module",
   "types": "dist/index.d.ts",
@@ -47,7 +48,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "skills"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",

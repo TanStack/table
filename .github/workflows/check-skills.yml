@@ -1,0 +1,105 @@
+# check-skills.yml — Drop this into your library repo's .github/workflows/
+#
+# Validates intent skills on PRs. After a release or manual run, opens or
+# updates one review PR when existing skills, artifact coverage, or workspace
+# package coverage need review.
+#
+# Triggers: pull requests touching skills/artifacts, new release published, or
+# manual workflow_dispatch.
+#
+# intent-workflow-version: 3
+#
+# Template variables (replaced by `intent setup`):
+#   @tanstack/table — e.g. @tanstack/query or my-workspace workspace
+
+name: Check Skills
+
+on:
+  pull_request:
+    paths:
+      - 'skills/**'
+      - '**/skills/**'
+      - '_artifacts/**'
+      - '**/_artifacts/**'
+  release:
+    types: [published]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  validate:
+    name: Validate intent skills
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install intent
+        run: npm install -g @tanstack/intent
+
+      - name: Validate skills
+        run: intent validate --github-summary
+
+  review:
+    name: Check intent skill coverage
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install intent
+        run: npm install -g @tanstack/intent
+
+      - name: Check skills
+        id: stale
+        run: |
+          intent stale --github-review --package-label "@tanstack/table"
+
+      - name: Open or update review PR
+        if: steps.stale.outputs.has_review == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ github.event.release.tag_name || 'manual' }}"
+          BRANCH="skills/review-${VERSION}"
+          BASE_BRANCH="${{ github.event.repository.default_branch }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin "$BRANCH" || true
+          if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+          else
+            git checkout -b "$BRANCH"
+            git commit --allow-empty -m "chore: review intent skills for ${VERSION}"
+            git push origin "$BRANCH"
+          fi
+
+          PR_URL="$(gh pr list --head "$BRANCH" --json url --jq '.[0].url')"
+          if [ -n "$PR_URL" ]; then
+            gh pr edit "$PR_URL" --body-file pr-body.md
+          else
+            gh pr create \
+              --title "Review intent skills (${VERSION})" \
+              --body-file pr-body.md \
+              --head "$BRANCH" \
+              --base "$BASE_BRANCH"
+          fi

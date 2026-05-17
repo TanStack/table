@@ -18,7 +18,8 @@
     "angular",
     "table",
     "angular-table",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
   "type": "module",
   "module": "dist/fesm2022/tanstack-angular-table.mjs",
@@ -46,7 +47,8 @@
   "files": [
     "dist",
     "src",
-    "static-functions"
+    "static-functions",
+    "skills"
   ],
   "scripts": {
     "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./dist/package.json",
