@@ -20,7 +20,7 @@ import {
 import { makeData, Person } from './makeData'
 
 //This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
-//See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
+//See https://tanstack.com/virtual/v3/docs/framework/react/examples/table.
 function App() {
   const columns = React.useMemo<ColumnDef<Person>[]>(
     () => [
