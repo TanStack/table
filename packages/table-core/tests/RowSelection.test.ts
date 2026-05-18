@@ -320,4 +320,74 @@ describe('RowSelection', () => {
       expect(result).toEqual('some')
     })
   })
+
+  describe('toggleAllRowsSelected', () => {
+    it('should respect enableRowSelection when selecting all rows', () => {
+      const data = makeData(5)
+      const columns = generateColumns(data)
+
+      let rowSelection: Record<string, boolean> = {}
+
+      const table = createTable<Person>({
+        enableRowSelection: row => row.index !== 2, // Row at index 2 cannot be selected
+        onStateChange: updater => {
+          const newState =
+            typeof updater === 'function' ? updater(table.getState()) : updater
+          rowSelection = newState.rowSelection
+        },
+        renderFallbackValue: '',
+        data,
+        get state() {
+          return { rowSelection }
+        },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      table.toggleAllRowsSelected(true)
+
+      expect(rowSelection['0']).toBe(true)
+      expect(rowSelection['1']).toBe(true)
+      expect(rowSelection['2']).toBeUndefined() // Row 2 should not be selected
+      expect(rowSelection['3']).toBe(true)
+      expect(rowSelection['4']).toBe(true)
+    })
+
+    it('should respect enableRowSelection when deselecting all rows', () => {
+      const data = makeData(5)
+      const columns = generateColumns(data)
+
+      let rowSelection: Record<string, boolean> = {
+        '0': true,
+        '1': true,
+        '2': true, // This row was somehow selected (maybe rules changed)
+        '3': true,
+        '4': true,
+      }
+
+      const table = createTable<Person>({
+        enableRowSelection: row => row.index !== 2, // Row at index 2 cannot be selected
+        onStateChange: updater => {
+          const newState =
+            typeof updater === 'function' ? updater(table.getState()) : updater
+          rowSelection = newState.rowSelection
+        },
+        renderFallbackValue: '',
+        data,
+        get state() {
+          return { rowSelection }
+        },
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+      })
+
+      table.toggleAllRowsSelected(false)
+
+      expect(rowSelection['0']).toBeUndefined()
+      expect(rowSelection['1']).toBeUndefined()
+      expect(rowSelection['2']).toBe(true) // Row 2 should remain selected since it can't be deselected
+      expect(rowSelection['3']).toBeUndefined()
+      expect(rowSelection['4']).toBeUndefined()
+    })
+  })
 })
