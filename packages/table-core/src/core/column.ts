@@ -6,7 +6,7 @@ import {
   RowData,
   ColumnDefResolved,
 } from '../types'
-import { getMemoOptions, memo } from '../utils'
+import { getMemoOptions, isDev, memo } from '../utils'
 
 export interface CoreColumn<TData extends RowData, TValue> {
   /**
@@ -100,7 +100,7 @@ export function createColumn<TData extends RowData, TValue>(
 
         for (const key of accessorKey.split('.')) {
           result = result?.[key]
-          if (process.env.NODE_ENV !== 'production' && result === undefined) {
+          if (isDev() && result === undefined) {
             console.warn(
               `"${key}" in deeply nested key "${accessorKey}" returned undefined.`,
             )
@@ -116,7 +116,7 @@ export function createColumn<TData extends RowData, TValue>(
   }
 
   if (!id) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (isDev()) {
       throw new Error(
         resolvedColumnDef.accessorFn
           ? `Columns require an id when using an accessorFn`

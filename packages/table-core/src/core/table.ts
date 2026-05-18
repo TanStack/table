@@ -1,4 +1,4 @@
-import { functionalUpdate, getMemoOptions, memo, RequiredKeys } from '../utils'
+import { functionalUpdate, getMemoOptions, isDev, memo, RequiredKeys } from '../utils'
 
 import {
   Updater,
@@ -284,7 +284,7 @@ export function createTable<TData extends RowData>(
   options: TableOptionsResolved<TData>,
 ): Table<TData> {
   if (
-    process.env.NODE_ENV !== 'production' &&
+    isDev() &&
     (options.debugAll || options.debugTable)
   ) {
     console.info('Creating Table Instance...')
@@ -399,7 +399,7 @@ export function createTable<TData extends RowData>(
       if (!row) {
         row = table.getCoreRowModel().rowsById[id]
         if (!row) {
-          if (process.env.NODE_ENV !== 'production') {
+          if (isDev()) {
             throw new Error(`getRow could not find row with ID: ${id}`)
           }
           throw new Error()
@@ -510,7 +510,7 @@ export function createTable<TData extends RowData>(
     getColumn: (columnId) => {
       const column = table._getAllFlatColumnsById()[columnId]
 
-      if (process.env.NODE_ENV !== 'production' && !column) {
+      if (isDev() && !column) {
         console.error(`[Table] Column with id '${columnId}' does not exist.`)
       }
 
