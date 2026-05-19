@@ -5,6 +5,7 @@ import {
   removeTableDevtoolsTarget,
   upsertTableDevtoolsTarget,
 } from '@tanstack/table-devtools'
+import { useEffect } from 'react'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 export interface UseTanStackTableDevtoolsOptions {
@@ -25,24 +26,32 @@ export function useTanStackTableDevtools<
   options?: UseTanStackTableDevtoolsOptions,
 ): void {
   const registrationId = React.useId()
+  const normalizedName = normalizeName(name)
+
+  const instanceId =
+    // instanceId from react table adapter (if it exists) allows for stable devtools registration even if the table instance changes
+    (table as unknown as { instanceId?: string }).instanceId ||
+    `${registrationId}${normalizedName ? `-${normalizedName}` : ``}`
+
   const enabled = options?.enabled ?? true
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!enabled || !table) {
-      removeTableDevtoolsTarget(registrationId)
+      removeTableDevtoolsTarget(instanceId)
       return
     }
 
     upsertTableDevtoolsTarget({
-      id: registrationId,
+      id: instanceId,
       table,
-      name: normalizeName(name),
+      name: normalizedName,
     })
 
     return () => {
-      removeTableDevtoolsTarget(registrationId)
+      removeTableDevtoolsTarget(instanceId)
     }
-  }, [enabled, name, registrationId, table])
+    // eslint-disable-next-line @eslint-react/exhaustive-deps,react-hooks/exhaustive-deps
+  }, [enabled, registrationId, instanceId])
 }
 
 export function useTanStackTableDevtoolsNoOp<

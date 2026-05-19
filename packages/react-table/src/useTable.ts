@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useId, useMemo, useRef, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
 import { shallow, useSelector } from '@tanstack/react-store'
 import { reactReactivity } from './reactivity'
@@ -23,6 +23,10 @@ export type ReactTable<
   TData extends RowData,
   TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
+  /**
+   * A stable id reference for table instance
+   */
+  instanceId?: string
   /**
    * A React HOC (Higher Order Component) that allows you to subscribe to the table state.
    *
@@ -137,6 +141,12 @@ export function useTable<
   tableOptions: TableOptions<TFeatures, TData>,
   selector?: (state: TableState<TFeatures>) => TSelected,
 ): ReactTable<TFeatures, TData, TSelected> {
+  const instanceIdRef = useRef<string | undefined>(undefined)
+  const id = useId()
+  if (!instanceIdRef.current) {
+    // eslint-disable-next-line @eslint-react/purity
+    instanceIdRef.current = `${id}-${Math.random().toString(36).slice(2, 9)}`
+  }
   const [table] = useState(() => {
     const tableInstance = constructTable({
       ...tableOptions,
@@ -156,6 +166,7 @@ export function useTable<
     }) as ReactTable<TFeatures, TData, TSelected>['Subscribe']
 
     tableInstance.FlexRender = FlexRender
+    tableInstance.instanceId = id
 
     return tableInstance
   })

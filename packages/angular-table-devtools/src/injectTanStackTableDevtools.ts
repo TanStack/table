@@ -5,18 +5,12 @@ import {
 import {
   APP_ID,
   DestroyRef,
-  Injectable,
   Injector,
   assertInInjectionContext,
   effect,
   inject,
 } from '@angular/core'
-import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
-
-export interface InjectTanStackTableDevtoolsOptions {
-  enabled?: () => boolean
-  injector?: Injector
-}
+import type { Table } from '@tanstack/table-core'
 
 function normalizeName(name?: string) {
   const trimmedName = name?.trim()
@@ -29,30 +23,32 @@ function generateId(): string {
   return `tanstacktable-${appId}_${autoId++}${Date.now().toString(36)}`
 }
 
-export function injectTanStackTableDevtools<
-  TFeatures extends TableFeatures = TableFeatures,
-  TData extends RowData = RowData,
->(
-  table: () => Table<TFeatures, TData> | undefined,
-  name?: string,
-  options?: InjectTanStackTableDevtoolsOptions,
+export interface InjectTanStackTableDevtoolsOptions {
+  table: Table<any, any> | undefined
+  name: string
+  enabled?: () => boolean
+  injector?: Injector
+}
+
+export function injectTanStackTableDevtools(
+  options: () => InjectTanStackTableDevtoolsOptions,
 ): void {
   const registrationId = generateId()
-  const enabled = () => options?.enabled?.() ?? true
+  const enabled = () => options().enabled?.() ?? true
   assertInInjectionContext(injectTanStackTableDevtools)
-  const injector = options?.injector ?? inject(Injector)
+  const injector = options().injector ?? inject(Injector)
   const destroyRef = inject(DestroyRef)
 
   effect(
     (onCleanup) => {
+      const { table, name } = options()
       const enabledValue = enabled()
-      const tableValue = table()
-      if (!enabledValue || !tableValue) {
+      if (!enabledValue || !table) {
         removeTableDevtoolsTarget(registrationId)
       }
       upsertTableDevtoolsTarget({
         id: registrationId,
-        table: tableValue,
+        table: table,
         name: normalizeName(name),
       })
       onCleanup(() => {
@@ -67,11 +63,6 @@ export function injectTanStackTableDevtools<
   })
 }
 
-export function injectTanStackTableDevtoolsNoOp<
-  TFeatures extends TableFeatures = TableFeatures,
-  TData extends RowData = RowData,
->(
-  _table: Table<TFeatures, TData> | undefined,
-  _name?: string,
-  _options?: InjectTanStackTableDevtoolsOptions,
+export function injectTanStackTableDevtoolsNoOp(
+  options: () => InjectTanStackTableDevtoolsOptions,
 ): void {}
