@@ -94,10 +94,10 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 ## Progress
 
 - **Total findings:** 60
-- **Done `[x]`:** 15
+- **Done `[x]`:** 17
 - **Partial `[~]`:** 2
 - **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 42
+- **Not started `[ ]`:** 40
 
 _(Update these counters as you go.)_
 
@@ -1338,8 +1338,8 @@ return allCells.filter((d) => !leftAndRight.has(d.column.id))
 
 ## 37. `passiveEventSupported()` caching bug — Score: 8 (bug)
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Hoisted `let passiveSupported: boolean | null = null` from inside the function to module scope. Previously the cache check `if (typeof passiveSupported === 'boolean') return passiveSupported` was unreachable on first call and the variable was reset to `null` on every subsequent call, so each invocation re-probed the DOM via `window.addEventListener('test', ...)` + `removeEventListener`. After the hoist the cache actually persists: first call probes once, all later calls short-circuit. Implemented exactly as proposed.
 
 **Location:** `src/features/column-resizing/columnResizingFeature.utils.ts:320–343`
 **Category:** `bug`, `micro`
@@ -1809,8 +1809,8 @@ return indexed.map((x) => x.row)
 
 ## 50. `column_getAutoSortFn` `slice(10)` should be `slice(0, 10)` (bug) — Score: 7 (bug)
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** One-character fix — `slice(10)` → `slice(0, 10)`. Now correctly samples the first 10 filtered rows for sort-fn auto-detection instead of dropping the first 10 and taking everything after. With ≤10 rows the prior `slice(10)` returned an empty array, so the loop was a no-op and the function silently fell back to the basic/alphanumeric default regardless of actual data types. No existing tests pinned the broken behavior; typecheck clean.
 
 **Location:** `src/features/row-sorting/rowSortingFeature.utils.ts:79–114`
 **Category:** `bug`

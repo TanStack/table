@@ -314,6 +314,7 @@ export function table_resetHeaderSizeInfo<
   )
 }
 
+let passiveSupported: boolean | null = null
 /**
  * Detects whether the current environment supports passive event listeners.
  *
@@ -326,8 +327,6 @@ export function table_resetHeaderSizeInfo<
  * ```
  */
 export function passiveEventSupported() {
-  let passiveSupported: boolean | null = null
-
   if (typeof passiveSupported === 'boolean') return passiveSupported
 
   let supported = false

@@ -91,7 +91,7 @@ export function column_getAutoSortFn<
 
   let sortFn: SortFn<TFeatures, TData> | undefined
 
-  const firstRows = column.table.getFilteredRowModel().flatRows.slice(10)
+  const firstRows = column.table.getFilteredRowModel().flatRows.slice(0, 10)
 
   let isString = false
 
