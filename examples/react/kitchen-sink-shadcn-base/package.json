@@ -21,7 +21,7 @@
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/react-pacer": "^0.22.1",
-    "@tanstack/react-table": "^9.0.0-alpha.48",
+    "@tanstack/react-table": "^9.0.0-alpha.49",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.1.1",
