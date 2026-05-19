@@ -289,7 +289,9 @@ export function FeaturesPanel() {
               </div>
 
               <div class={styles().featureSubsection}>
-                <div class={styles().featureSubsectionTitle}>Stock Features</div>
+                <div class={styles().featureSubsectionTitle}>
+                  Stock Features
+                </div>
                 <For each={STOCK_FEATURE_NAMES}>
                   {(name) =>
                     renderFeatureItem(
@@ -338,19 +340,24 @@ export function FeaturesPanel() {
                 )}
               </For>
               {rowModelNames().length === 0 && (
-                <div class={styles().rowModelItem}>No row models configured</div>
+                <div class={styles().rowModelItem}>
+                  No row models configured
+                </div>
               )}
               <div class={styles().featureEstimateSummaryNote}>
                 Full package reference:{' '}
                 {formatEstimatedSize(PACKAGE_SIZE_LIMIT_BYTES)}
               </div>
               <div class={styles().rowModelExecutionOrder}>
-                <div class={styles().featureSubsectionTitle}>Execution Order</div>
+                <div class={styles().featureSubsectionTitle}>
+                  Execution Order
+                </div>
                 <For each={EXECUTION_ORDER_GETTERS}>
                   {(getter, index) => {
                     const rowModelKey = getterToRowModelKey(getter)
                     const isPresent =
-                      rowModelKey !== null && rowModelNames().includes(rowModelKey)
+                      rowModelKey !== null &&
+                      rowModelNames().includes(rowModelKey)
 
                     return (
                       <>

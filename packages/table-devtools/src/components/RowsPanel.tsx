@@ -105,16 +105,18 @@ export function RowsPanel() {
     )
   })
 
-  const availableGetters = createMemo((): Array<(typeof ROW_MODEL_GETTERS)[number]> => {
-    const tableInstance = table()
-    if (!tableInstance) return []
+  const availableGetters = createMemo(
+    (): Array<(typeof ROW_MODEL_GETTERS)[number]> => {
+      const tableInstance = table()
+      if (!tableInstance) return []
 
-    const tableRecord = tableInstance as unknown as Record<string, unknown>
+      const tableRecord = tableInstance as unknown as Record<string, unknown>
 
-    return ROW_MODEL_GETTERS.filter(
-      (name) => typeof tableRecord[name] === 'function',
-    )
-  })
+      return ROW_MODEL_GETTERS.filter(
+        (name) => typeof tableRecord[name] === 'function',
+      )
+    },
+  )
 
   createEffect(() => {
     const getters = availableGetters()
@@ -193,7 +195,8 @@ export function RowsPanel() {
                   value={selectedRowModel()}
                   onChange={(e) =>
                     setSelectedRowModel(
-                      e.currentTarget.value as (typeof ROW_MODEL_GETTERS)[number],
+                      e.currentTarget
+                        .value as (typeof ROW_MODEL_GETTERS)[number],
                     )
                   }
                 >
