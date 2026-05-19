@@ -12,15 +12,15 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^21.2.12",
-    "@angular/common": "^21.2.12",
-    "@angular/compiler": "^21.2.12",
-    "@angular/core": "^21.2.12",
-    "@angular/forms": "^21.2.12",
-    "@angular/platform-browser": "^21.2.12",
+    "@angular/common": "^21.2.13",
+    "@angular/compiler": "^21.2.13",
+    "@angular/core": "^21.2.13",
+    "@angular/forms": "^21.2.13",
+    "@angular/platform-browser": "^21.2.13",
     "@angular/platform-browser-dynamic": "^21.2.12",
     "@faker-js/faker": "^10.4.0",
     "@tanstack/angular-devtools": "^0.0.4",
-    "@tanstack/angular-table": "^9.0.0-alpha.47",
+    "@tanstack/angular-table": "^9.0.0-alpha.49",
     "@tanstack/angular-table-devtools": "^9.0.0-alpha.43",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1"
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@angular/build": "^21.2.11",
     "@angular/cli": "^21.2.11",
-    "@angular/compiler-cli": "^21.2.12",
+    "@angular/compiler-cli": "^21.2.13",
     "typescript": "6.0.3"
   }
 }
